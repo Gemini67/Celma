@@ -1,0 +1,40 @@
+
+/*==
+**
+**    ####   ######  #       #    #   ####
+**   #    #  #       #       ##  ##  #    #
+**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #    #  #       #       #    #  #    #        LGPL
+**    ####   ######  ######  #    #  #    #
+**
+--*/
+
+
+/// @file
+/// Contains automatically generated version information.
+
+
+#ifndef CELMA_CELMA_VERSION_HPP
+#define CELMA_CELMA_VERSION_HPP
+
+
+namespace celma {
+
+
+static const int  MAJOR_VERSION   = @MAJORVERSION@;
+static const int  MINOR_VERSION   = @MINORVERSION@;
+static const int  RELEASE_VERSION = @RELEASE_VERSION@;
+static const int  PATCH_LEVEL     = @PATCHLEVEL@;
+
+
+static const char* const  VersionString  = "@MAJORVERSION@.@MINORVERSION@.@RELEASE_VERSION@-@PATCHLEVEL@";
+
+
+} // namespace celma
+
+
+#endif   // CELMA_CELMA_VERSION_HPP
+
+
+// ==========  END OF celma_version.hpp  ==========
+

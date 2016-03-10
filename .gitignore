@@ -1,0 +1,6 @@
+bin/
+build/
+lib64/
+doc/html/
+tags
+src/celma/celma_version.hpp
