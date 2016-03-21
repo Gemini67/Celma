@@ -9,11 +9,6 @@
 
 cmake_minimum_required( VERSION 2.8 )
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-   configure_file(
-      "${CMAKE_CURRENT_SOURCE_DIR}/detail/celma_version.hpp.in"
-      "${CMAKE_CURRENT_SOURCE_DIR}/celma_version.hpp"
-   )
-endif()
+add_definitions( -DBOOST_TEST_DYN_LINK)
 
-add_subdirectory( test )
+celma_add_boost_testprogram( test_type_name )
