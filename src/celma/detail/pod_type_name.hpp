@@ -32,7 +32,7 @@ namespace celma {
    template<> class type< t> \
    { \
    public: \
-      static const char* name() \
+      static constexpr const char* name() \
       { \
          return #t ; \
       } \

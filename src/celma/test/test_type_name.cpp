@@ -145,7 +145,7 @@ public:
    /// Returns the name of the type.
    /// @return  'UserDefinedType'.
    /// @since  0.1, 15.03.2016
-   static const char* name()
+   static constexpr const char* name()
    {
       return "UserDefinedType";
    } // end celma::type< UserDefinedType>::name

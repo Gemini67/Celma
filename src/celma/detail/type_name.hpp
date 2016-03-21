@@ -35,7 +35,7 @@ public:
    /// Returns the name of the type.
    /// @return  'unknown'.
    /// @since  0.1, 15.03.2016
-   static const char* name()
+   static constexpr const char* name()
    {
       return "unknown";
    } // end type< T>::name

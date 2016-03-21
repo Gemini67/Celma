@@ -43,7 +43,7 @@ public:
    /// Returns the name of the type.
    /// @return  'std::string'.
    /// @since  0.1, 15.03.2016
-   static const char* name()
+   static constexpr const char* name()
    {
       return "std::string";
    } // end type< std::string>::name
@@ -60,7 +60,7 @@ public:
    /// Returns the name of the type.
    /// @return  'std::bitset<n>'.
    /// @since  0.1, 15.03.2016
-   static const char* name()
+   static constexpr const char* name()
    {
       if (mName[ 0] == 0)
       {
@@ -87,7 +87,7 @@ template< std::size_t N> char  type< std::bitset< N> >::mName[ 128] = { 0 };
    template< typename T> class type< c< T> > \
    { \
    public: \
-      static const char* name() \
+      static constexpr const char* name() \
       { \
          if (mName[ 0] == 0) \
          { \
@@ -121,7 +121,7 @@ PROVIDE_TEMPLATE_TYPE_NAME( std::vector);
    template< typename K, typename V> class type< c< K, V> > \
    { \
    public: \
-      static const char* name() \
+      static constexpr const char* name() \
       { \
          if (mName[ 0] == 0) \
          { \
