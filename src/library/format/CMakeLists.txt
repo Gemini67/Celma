@@ -9,8 +9,8 @@
 
 cmake_minimum_required( VERSION 2.8 )
 
-add_subdirectory( celma )
-add_subdirectory( library )
+set( format_sources
+   ${CMAKE_CURRENT_SOURCE_DIR}/text_block.cpp
+)
 
-# add_subdirectory( tools )
-# add_subdirectory( examples )
+add_subdirectory( test )
