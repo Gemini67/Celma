@@ -32,7 +32,7 @@ namespace celma { namespace common {
 /// separator.<br>
 /// Internally, the Boost.Tokenizer is used.
 /// @since  0.2, 04.04.2016
-class Tokenizer: public TokenizerBase< boost::char_separator< char> >
+class Tokenizer: public TokenizerBase< boost::char_separator< char>>
 {
 public:
    /// Constructor. Empty tokens are ignored.
@@ -73,14 +73,14 @@ inline const char* Tokenizer::convChar2String( char c)
 
 
 inline Tokenizer::Tokenizer( const std::string& s, char separator):
-   TokenizerBase< boost::char_separator< char> >( s, boost::char_separator< char>( convChar2String( separator)))
+   TokenizerBase< boost::char_separator< char>>( s, boost::char_separator< char>( convChar2String( separator)))
 {
 } // end Tokenizer::Tokenizer
 
 
 inline Tokenizer::Tokenizer( const std::string& s, char separator,
                              bool /* keepEmpty */):
-   TokenizerBase< boost::char_separator< char> >( s, boost::char_separator< char>( convChar2String( separator), "", boost::keep_empty_tokens))
+   TokenizerBase< boost::char_separator< char>>( s, boost::char_separator< char>( convChar2String( separator), "", boost::keep_empty_tokens))
 {
 } // end Tokenizer::Tokenizer
 

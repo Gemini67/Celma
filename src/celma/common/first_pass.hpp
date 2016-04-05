@@ -50,8 +50,8 @@ public:
    bool operator !();
 
    /// Writes the current value of the flag to the stream.
-   /// @param[in]  os  The stream to write to.
-   /// @param[in]  fp  The object to dump the value of the flag from.
+   /// @param[in,out]  os  The stream to write to.
+   /// @param[in]      fp  The object to dump the value of the flag from.
    /// @return  The stream as passed in.
    /// @since  0.2, 04.04.2016
    friend std::ostream& operator <<( std::ostream& os, const FirstPass& fp);

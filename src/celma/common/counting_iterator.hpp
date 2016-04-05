@@ -22,6 +22,10 @@
 namespace celma { namespace common {
 
 
+// Class ICountResult
+// ==================
+
+
 /// Interface of the class that holds the final counter.
 /// @since  0.2, 04.04.2016
 class ICountResult
@@ -129,7 +133,7 @@ template< class BaseType>
 template< class BaseType>
    CountingIterator< BaseType>::~CountingIterator()
 {
-   if (mpObj != NULL)
+   if (mpObj != nullptr)
       mpObj->setCount( mIterCounter);
 }
 

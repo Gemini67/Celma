@@ -21,7 +21,6 @@
 
 #include <iosfwd>
 #include <string>
-#include <boost/noncopyable.hpp>
 
 
 namespace celma { namespace format {
@@ -42,7 +41,7 @@ namespace celma { namespace format {
 ///   To force a line break in list (like thise line here), use the token ' nn '
 ///   in the text.
 /// @since  0.2, 04.04.2016
-class TextBlock: private boost::noncopyable
+class TextBlock
 {
 public:
    /// Constructor.
@@ -55,12 +54,20 @@ public:
    TextBlock( int indent, int length, bool indentFirst);
 
    /// Formats the text (string) as specified in the constructor.
-   /// @param[in]   txt  The text to format.
    /// @param[out]  os   The stream to write to.
+   /// @param[in]   txt  The text to format.
    /// @since  0.2, 04.04.2016
-   void format( const std::string& txt, std::ostream& os);
+   void format( std::ostream& os, const std::string& txt);
 
 private:
+   /// Do not copy.
+   /// @since  0.2, 05.04.2016
+   TextBlock( const TextBlock&) = delete;
+
+   /// Do not assign.
+   /// @since  0.2, 05.04.2016
+   TextBlock& operator =( const TextBlock&) = delete;
+
    /// Formats a single line of output.<br>
    /// Writes words until the specified line length would be exceeded, then
    /// starts a new line with indention.<br>

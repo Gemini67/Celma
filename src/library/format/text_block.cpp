@@ -54,20 +54,18 @@ TextBlock::TextBlock( int indent, int length, bool indentFirst):
 /// Formats the text (string) as specified in the constructor.<br>
 /// This function splits the text into separate lines and then takes care of
 /// the indention for each (new) line.
-/// @param[in]   txt  The text to format.
 /// @param[out]  os   The stream to write to.
+/// @param[in]   txt  The text to format.
 /// @since  0.2, 04.04.2016
-void TextBlock::format( const string& txt, ostream& os)
+void TextBlock::format( ostream& os, const string& txt)
 {
 
    common::Tokenizer  tokNL( txt, '\n');
    common::FirstPass  firstLine;
 
 
-   for (common::Tokenizer::iterator tiNL = tokNL.begin(); tiNL != tokNL.end(); ++tiNL)
+   for (auto tiNL : tokNL)
    {
-      const string  currLine( *tiNL);
-
       if (firstLine)
       {
          if (mIndentFirst)
@@ -77,7 +75,7 @@ void TextBlock::format( const string& txt, ostream& os)
          os << endl << mIndentSpaces;
       } // end if
 
-      formatLine( os, currLine);
+      formatLine( os, tiNL);
    } // end for
 
 } // end TextBlock::format
@@ -100,14 +98,12 @@ void TextBlock::formatLine( ostream& os, const string& line)
    bool               lineStartsWithDash = false;
 
 
-   for (common::Tokenizer::iterator tiWord = tokWord.begin(); tiWord != tokWord.end(); ++tiWord)
+   for (auto tiWord : tokWord)
    {
-      const string  currWord( *tiWord);
-
       // check if the current word still fits onto the current line,
       // otherwise start a new line
       // allow output length == defined length to include the last column
-      if (currWord == "nn")
+      if (tiWord == "nn")
       {
          os << endl << mIndentSpaces;
          currLength = mIndentSpaces.length();
@@ -122,13 +118,13 @@ void TextBlock::formatLine( ostream& os, const string& line)
             os << " ";
             ++currLength;
          } // end if
-      } else if (currLength + currWord.length() + 1 > mLength)
+      } else if (currLength + tiWord.length() + 1 > mLength)
       {
          os << endl << mIndentSpaces;
          if (lineStartsWithDash)
             os << "  ";
-         os << currWord;
-         currLength = mIndentSpaces.length() + currWord.length();
+         os << tiWord;
+         currLength = mIndentSpaces.length() + tiWord.length();
          if (lineStartsWithDash)
             currLength += 2;
       } else
@@ -138,13 +134,13 @@ void TextBlock::formatLine( ostream& os, const string& line)
          {
             os << " ";
             ++currLength;
-         } else if (currWord[ 0] == '-')
+         } else if (tiWord[ 0] == '-')
          {
             lineStartsWithDash = true;
          } // end if
 
-         os << currWord;
-         currLength += currWord.length();
+         os << tiWord;
+         currLength += tiWord.length();
       } // end if
    } // end for
 

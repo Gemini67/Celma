@@ -20,7 +20,6 @@
 
 
 #include <string>
-#include <boost/noncopyable.hpp>
 #include <boost/tokenizer.hpp>
 #include "celma/common/counting_iterator.hpp"
 
@@ -30,9 +29,9 @@ namespace celma { namespace common {
 
 /// Helper class to easily set up a string tokenizer for various separators.
 /// Internally, the Boost.Tokenizer is used.
+/// @tparam  T  The type of the separator to use.
 /// @since  0.2, 04.04.2016
-template< typename T> class TokenizerBase:
-   public ICountResult, private boost::noncopyable
+template< typename T> class TokenizerBase: public ICountResult
 {
 public:
    /// Type of the tokenizer.
@@ -47,6 +46,10 @@ public:
    /// @param[in]  separator  The separator token.
    /// @since  0.2, 04.04.2016
    TokenizerBase( const std::string& s, T separator);
+
+   /// Default destructor is just fine.
+   /// @since  0.2, 05.04.2016
+   virtual ~TokenizerBase() = default;
 
    /// Returns an iterator that points to the first token.
    /// @return  Iterator that points to the first token.
@@ -78,6 +81,14 @@ public:
    int numTokens() const;
 
 private:
+   /// Don't copy.
+   /// @since  0.2, 05.04.2016
+   TokenizerBase( const TokenizerBase&) = delete;
+
+   /// Don't assign.
+   /// @since  0.2, 05.04.2016
+   TokenizerBase& operator =( const TokenizerBase&) = delete;
+
    /// Sets the number of tokens found.
    /// @param[in]  theCount  The number of tokens that were found.
    /// @since  0.2, 04.04.2016

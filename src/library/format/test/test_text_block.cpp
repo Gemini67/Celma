@@ -45,14 +45,14 @@ BOOST_AUTO_TEST_CASE( test_Formatting_0_80_false)
    string             expResult;
 
 
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), input);
 
    input += ". Append more text with an unbelievable_impossible_ridiculous long word at then end.";
    expResult = "This is the string with the input to format. Append more text with an\n"
                "unbelievable_impossible_ridiculous long word at then end.";
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
    input = "New test with a string with a lot of short words which make it "
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_0_80_false)
                "that is returned from the TextBlock formatting routine.";
 
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
    input = "Last but not least:\n"
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_0_80_false)
                "again.";
 
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
 } // end test_Formatting_0_80_false
@@ -111,14 +111,14 @@ BOOST_AUTO_TEST_CASE( test_Formatting_10_80_true)
    string             expResult( "          This is the string with the input to format");
 
 
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
    input += ". Append more text with an unbelievable_impossible_ridiculous long word at then end.";
    expResult = "          This is the string with the input to format. Append more text with an\n"
                "          unbelievable_impossible_ridiculous long word at then end.";
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
    input = "New test with a string with a lot of short words which make it "
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_10_80_true)
                "          routine.";
 
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
    input = "Last but not least:\n"
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_10_80_true)
                "          line again.";
 
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
 } // end test_Formatting_10_80_true
@@ -179,14 +179,14 @@ BOOST_AUTO_TEST_CASE( test_Formatting_5_75_true)
    string             expResult( "     This is the string with the input to format");
 
 
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
    input += ". Append more text with an unbelievable_impossible_ridiculous long word at then end.";
    expResult = "     This is the string with the input to format. Append more text with an\n"
                "     unbelievable_impossible_ridiculous long word at then end.";
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
    input = "New test with a string with a lot of short words which make it "
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_5_75_true)
                "     routine.";
 
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
    input = "Last but not least:\n"
@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_5_75_true)
                "     line again.";
 
    result.str( "");
-   tb.format( input, result);
+   tb.format( result, input);
    BOOST_REQUIRE_EQUAL( result.str(), expResult);
 
 } // end test_Formatting_5_75_true
