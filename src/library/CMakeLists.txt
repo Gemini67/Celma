@@ -10,6 +10,9 @@
 cmake_minimum_required( VERSION 2.8 )
 
 add_subdirectory( common )
+get_directory_property( common_sources DIRECTORY ./common
+   DEFINITION common_sources
+)
 
 add_subdirectory( format )
 get_directory_property( format_sources DIRECTORY ./format
@@ -17,6 +20,7 @@ get_directory_property( format_sources DIRECTORY ./format
 )
 
 set( celma_lib_sources
+   ${common_sources}
    ${format_sources}
 )
 
