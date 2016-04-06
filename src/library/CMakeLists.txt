@@ -19,9 +19,15 @@ get_directory_property( format_sources DIRECTORY ./format
    DEFINITION format_sources
 )
 
+add_subdirectory( prog_args )
+get_directory_property( prog_args_sources DIRECTORY ./prog_args
+   DEFINITION prog_args_sources
+)
+
 set( celma_lib_sources
    ${common_sources}
    ${format_sources}
+   ${prog_args_sources}
 )
 
 add_library( celma SHARED
