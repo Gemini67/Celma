@@ -10,6 +10,7 @@
 cmake_minimum_required( VERSION 2.8 )
 
 set( format_sources
+   ${CMAKE_CURRENT_SOURCE_DIR}/auto_sprintf.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/text_block.cpp
 )
 
