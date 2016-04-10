@@ -21,6 +21,7 @@
 
 #include <iosfwd>
 #include <string>
+#include "celma/format/text_block_fwd.hpp"
 
 
 namespace celma { namespace format {

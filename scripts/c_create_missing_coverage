@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Make empty .gcda files for each existing .gcno file.
+# This is so report will show 0.0% for missing tests.
+
+find ${1} -name "*.gcno" | while read line; do
+   gcda=`echo $line | sed 's/\.gcno$/.gcda/'`
+   if [ ! -e $gcda ] ; then
+      touch $gcda && echo created empty $gcda
+   fi
+done
+

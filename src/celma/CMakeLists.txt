@@ -15,5 +15,3 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
       "${CMAKE_CURRENT_SOURCE_DIR}/celma_version.hpp"
    )
 endif()
-
-add_subdirectory( test )
