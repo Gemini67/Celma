@@ -13,17 +13,33 @@ project( Celma )
 
 set( MAJORVERSION    0 )
 set( MINORVERSION    0 )
-set( RELEASE_VERSION 1 )
+set( RELEASE_VERSION 2 )
 set( PATCHLEVEL      0 )
 
 enable_testing()
 include( CTest)
+
+# Celma specific CMake extensions
+set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-macros" )
+include( celma_add_test )
+include( celma_add_test_output_check )
 
 add_definitions( --std=c++1y
                  -Wall -W -Wshadow -Wunused-variable -Wunused-parameter
                  -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated
                  -Woverloaded-virtual -Wwrite-strings -Wextra -pedantic
                  -fdiagnostics-show-option )
+
+if (CMAKE_BUILD_TYPE MATCHES Coverage)
+   set( CMAKE_BUILD_TYPE Debug)
+   include( CodeCoverage)
+   set( CMAKE_CXX_FLAGS "-g -O0 --coverage -fprofile-arcs -ftest-coverage" )
+   set( CMAKE_SHARED_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
+
+   # setup_target_for_coverage( <target name> <test runner script> <output name>)
+   setup_target_for_coverage( Celma_coverage c_coverage_test_runner coverage )
+endif (CMAKE_BUILD_TYPE MATCHES Coverage)
+
 
 # Boost stuff ------------------------------------------------------------------
 find_package( Boost ${BOOST_VERSION} REQUIRED
@@ -53,11 +69,6 @@ include_directories(
 add_definitions( -isystem ${Boost_INCLUDE_DIR} )
 
 link_directories( ${Boost_LIBRARY_DIRS} )
-
-# Celma specific CMake extensions
-set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-macros" )
-include( celma_add_test )
-include( celma_add_test_output_check )
 
 add_subdirectory( src)
 

@@ -9,8 +9,6 @@
 
 cmake_minimum_required( VERSION 2.8 )
 
-add_subdirectory( celma )
-add_subdirectory( library )
+add_definitions( -DBOOST_TEST_DYN_LINK)
 
-# add_subdirectory( tools )
-# add_subdirectory( examples )
+celma_add_celma_boost_testprogram( test_text_block )

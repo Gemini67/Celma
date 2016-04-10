@@ -1,0 +1,6 @@
+#!/bin/sh
+
+ctest $*
+
+exit 0
+

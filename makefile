@@ -1,4 +1,7 @@
 
+PATH := $(shell pwd)/scripts:$(PATH)
+
+
 all:	debug release release-dbg
 
 debug:
@@ -79,4 +82,19 @@ test-release:
 
 doxygen:
 	doxygen celma.doxy
+
+
+coverage:
+	@if [ ! -d build/coverage ]; then \
+	   mkdir -p build/coverage; \
+	   cd build/coverage; \
+	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
+	         -DBOOST_VERSION=${BOOST_VERSION} \
+	         -DCMAKE_BUILD_TYPE=Coverage \
+	         ../..; \
+	   cd -; \
+	fi; \
+	cd build/coverage; \
+	/usr/bin/time --format="-- Build Duration: %E" make -j7 install; \
+	/usr/bin/time --format="-- Build Duration: %E" make Celma_coverage
 
