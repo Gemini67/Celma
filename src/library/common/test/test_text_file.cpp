@@ -39,6 +39,7 @@ using namespace std;
 using namespace celma;
 
 
+
 /// Use the class with the default policies: no filter, no line handler.
 /// @since  0.3, 13.04.2016
 BOOST_AUTO_TEST_CASE( default_policies)
