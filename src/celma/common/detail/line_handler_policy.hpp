@@ -69,9 +69,9 @@ public:
       mLinesProcessed( 0),
       mpFileLineStat( nullptr)
    {
-   }
+   } // end StatLineHandler::StatLineHandler
 
-   ///
+   /// Destructor, stores the final values in the destination statistic object.
    /// @since  0.3, 13.04.2016
    ~StatLineHandler()
    {
@@ -80,30 +80,47 @@ public:
          mpFileLineStat->linesRead      = mLinesRead;
          mpFileLineStat->linesFiltered  = mLinesFiltered;
          mpFileLineStat->linesProcessed = mLinesProcessed;
-      }
-   }
+      } // end if
+   } // end StatLineHandler::~StatLineHandler
 
+   /// Sets the object in which the final statistic should be stored.
+   /// @param  fls  Pointer to the file line statistic object.
+   /// @since  0.3, 13.04.2016
    void setEndStat( FileLineStat* fls)
    {
       mpFileLineStat = fls;
-   }
+   } // end StatLineHandler::setEndStat
 
+   /// Returns the number of lines read.
+   /// @return  Number of lines read.
+   /// @since  0.3, 13.04.2016
    int linesRead() const
    {
       return mLinesRead;
-   }
+   } // end StatLineHandler::linesRead
 
+   /// Returns the number of lines that were ignored by the filter.
+   /// @return  Number of lines ignored by the filter.
+   /// @since  0.3, 13.04.2016
    int linesFiltered() const
    {
       return mLinesFiltered;
-   }
+   } // end StatLineHandler::linesFiltered
 
+   /// Returns the number of lines that were actually processed, i.e. returned
+   /// by the iterator to the application.
+   /// @return  .
+   /// @since  0.3, 13.04.2016
    int linesProcessed() const
    {
       return mLinesProcessed;
-   }
+   } // end StatLineHandler::linesProcessed
 
 protected:
+   /// Increments the counter depending on the type of the call point.
+   /// @param[in]  lhcp  The call point from which this methd was called.
+   /// @param[in]        The current line, ignored.
+   /// @since  0.3, 13.04.2016
    void handleLine( LineHandlerCallPoints lhcp, const std::string&) 
    {
       switch (lhcp)
@@ -113,15 +130,20 @@ protected:
       case LineHandlerCallPoints::lineProcessed:  ++mLinesProcessed;  break;
       default:                                    assert( false);     break;
       } // end switch
-   }
+   } // end StatLineHandler::handleLine
 
 private:
-   int  mLinesRead;
-   int  mLinesFiltered;
-   int  mLinesProcessed;
+   /// Counter how many lines were read from the file.
+   int            mLinesRead;
+   /// Counter how many lines were filtered.
+   int            mLinesFiltered;
+   /// Counter how many lines were processed.
+   int            mLinesProcessed;
+   /// Pointer to the object to store the final values in.
    FileLineStat*  mpFileLineStat;
 
-};
+}; // StatLineHandler
+
 
 
 } // namespace detail

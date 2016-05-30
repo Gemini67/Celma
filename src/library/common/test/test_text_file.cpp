@@ -53,13 +53,13 @@ BOOST_AUTO_TEST_CASE( default_policies)
       ++num_lines;
    } // end for
 
-   BOOST_REQUIRE_EQUAL( num_lines, 128);
+   BOOST_REQUIRE_EQUAL( num_lines, 163);
 
 } // end default_policies
 
 
 
-/// 
+/// Read the text file but ignore empty lines.
 /// @since  0.3, 13.04.2016
 BOOST_AUTO_TEST_CASE( no_empty_lines)
 {
@@ -73,13 +73,13 @@ BOOST_AUTO_TEST_CASE( no_empty_lines)
       ++num_lines;
    } // end for
 
-   BOOST_REQUIRE_EQUAL( num_lines, 87);
+   BOOST_REQUIRE_EQUAL( num_lines, 118);
 
 } // end no_empty_lines
 
 
 
-/// 
+/// Read all lines, now also create a statistic.
 /// @since  0.3, 13.04.2016
 BOOST_AUTO_TEST_CASE( statistics_only)
 {
@@ -93,15 +93,15 @@ BOOST_AUTO_TEST_CASE( statistics_only)
       it.setEndStat( &fls);
    } // end for
 
-   BOOST_REQUIRE_EQUAL( fls.linesRead,      128);
+   BOOST_REQUIRE_EQUAL( fls.linesRead,      163);
    BOOST_REQUIRE_EQUAL( fls.linesFiltered,    0);
-   BOOST_REQUIRE_EQUAL( fls.linesProcessed, 128);
+   BOOST_REQUIRE_EQUAL( fls.linesProcessed, 163);
 
 } // end statistics_only
 
 
 
-/// 
+/// Read file, filter empty lines, create statistic.
 /// @since  0.3, 13.04.2016
 BOOST_AUTO_TEST_CASE( statistics_no_empty_lines)
 {
@@ -115,9 +115,9 @@ BOOST_AUTO_TEST_CASE( statistics_no_empty_lines)
       it.setEndStat( &fls);
    } // end for
 
-   BOOST_REQUIRE_EQUAL( fls.linesRead,      128);
-   BOOST_REQUIRE_EQUAL( fls.linesFiltered,  41);
-   BOOST_REQUIRE_EQUAL( fls.linesProcessed, 87);
+   BOOST_REQUIRE_EQUAL( fls.linesRead,      163);
+   BOOST_REQUIRE_EQUAL( fls.linesFiltered,   45);
+   BOOST_REQUIRE_EQUAL( fls.linesProcessed, 118);
 
 } // end statistics_no_empty_lines
 

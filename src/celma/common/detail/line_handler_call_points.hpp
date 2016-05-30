@@ -12,8 +12,7 @@
 
 
 /// @file
-/// See documentation of classes celma::common::detail::NoFilter and
-/// celma::common::detail::EmptyLineFilter.
+/// See documentation of enum  celma::common::detail::LineHandlerCallPoints.
 
 
 #ifndef CELMA_COMMON_DETAIL_LINE_HANDLER_CALL_POINTS_HPP
