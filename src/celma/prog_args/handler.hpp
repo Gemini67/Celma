@@ -187,6 +187,33 @@ class Groups;
 /// @todo  Flag and/or argument that changes the processing: Process all
 ///        arguments and throw/exit at the end only. This would help to detect
 ///        multiple errors in the argument string.
+/// @todo  Add support for arguments with +/- logic?<br>
+///        Boolean flags with - would set the flag to \c false, with + it would
+///        be set to \c true.<br>
+///        What with other types? Maybe it would make sense to specify two
+///        different handlers, one for - and one for +? Or one handler with two
+///        different destinations, one for - and one for +?<b>
+///        If +/- is distinguished on short arguments, what about long
+///        arguments?
+/// @todo  Refactor typed arg for std::vector so that any std container can be
+///        used.
+/// @todo  Similar solution that allows to use an std container with key/value
+///        pairs.
+/// @todo  Check comments of constraints classes (all_of).
+///        All of: Use as dynamic constraint? Otherwise, all the arguments could
+///        simply be mandatory.
+/// @todo  Add feature to specify the behaviour when the same argument is used
+///        multiple times (and cardinality is 1):<br>
+///        Error/Exception (as is), store the first value (ignore additional
+///        calls), store the last value.
+/// @todo  Add test-feature: Process all arguments, print all errors.
+/// @todo  Use different exit codes from evalArgumentErrorExit(), depending on
+///        the type of the exception that was called.
+/// @todo  When multiple argument handlers are used with an argument group:<br>
+///        Optional parameter for the help argument, which allows to specify the
+///        (single) argument handler to display the help of.
+/// @todo  Add pre- and post-argument list help texts also to argument handlers
+///        used in a group?
 ///
 /// @since  0.2, 10.04.2016
 class Handler: private boost::noncopyable
