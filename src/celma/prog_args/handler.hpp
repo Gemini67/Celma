@@ -19,6 +19,7 @@
 #define CELMA_PROG_ARGS_HANDLER_HPP
 
 
+#include <ostream>
 #include <string>
 #include <vector>
 #include <boost/noncopyable.hpp>
@@ -282,10 +283,28 @@ public:
    ///                      text for the usage.
    /// @param[in]  txt2     Optional pointer to the object to provide additional
    ///                      text for the usage.
+   /// @since  0.3, 04.06.2016  (same interface, now implemented as delegating
+   ///                           constructor)
    /// @since  0.2, 10.04.2016
    explicit Handler( int flagSet = hfHelpShort | hfHelpLong,
                      IUsageText* txt1 = nullptr,
                      IUsageText* txt2 = nullptr);
+
+   /// Constructor that allows to specify the output streams to write to.
+   /// @param[in]  os        The stream to write normal out to.
+   /// @param[in]  error_os  The stream to write error output to.
+   /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
+   ///                       of possible values.
+   /// @param[in]  txt1      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @param[in]  txt2      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @since  0.3, 04.06.2016  (added parameters for output streams)
+   /// @since  0.2, 10.04.2016
+   Handler( std::ostream& os, std::ostream& error_os,
+            int flag_set = hfHelpShort | hfHelpLong,
+            IUsageText* txt1 = nullptr,
+            IUsageText* txt2 = nullptr);
 
    /// Destructor, deletes dynamically allocated objects.
    /// @since  0.2, 10.04.2016
@@ -723,6 +742,10 @@ private:
                              const std::string& arg_spec,
                              const std::string& value = "");
 
+   /// Stream to write output to.
+   std::ostream&                mOutput;
+   /// Stream to write error output to.
+   std::ostream&                mErrorOutput;
    /// Set when the flag #hfReadProgArg was passed to the constructor. Then the
    /// default program arguments file is read before the command line arguments
    /// are evaluated.
@@ -736,6 +759,10 @@ private:
    /// Set when the flag #hfUsageCont was passed to the constructor. Specifies
    /// that the program flow should continue after printing the usage.
    const bool                   mUsageContinues;
+   /// Set when the usage was printed.<br>
+   /// Needed together with the flag #mUsageContinues to bypass end-of-arguments
+   /// checks so that evalArgument() can return.
+   bool                         mUsagePrinted;
    /// The (top-level) arguments known by this class.
    detail::ArgumentContainer    mArguments;
    /// Argument sub-groups.

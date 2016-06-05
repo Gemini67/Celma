@@ -27,7 +27,10 @@
 #include "celma/prog_args/handler.hpp"
 
 
-using namespace std;
+using std::endl;
+using std::invalid_argument;
+using std::runtime_error;
+using std::string;
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -272,10 +275,10 @@ void ArgumentContainer::addArgObj( const string& singleArgSpec,
 /// @param[in]   ac  The object to dump the data of.
 /// @return  The stream as passed in.
 /// @since  0.2, 10.04.2016
-ostream& operator <<( ostream& os, const ArgumentContainer& ac)
+std::ostream& operator <<( std::ostream& os, const ArgumentContainer& ac)
 {
 
-   cout << "Short (character) arguments:" << endl;
+   os << "Short (character) arguments:" << endl;
 
    for (ArgumentContainer::CharArgCont::const_iterator cit = ac.mCharArgs.begin();
         cit != ac.mCharArgs.end(); ++cit)
@@ -283,7 +286,7 @@ ostream& operator <<( ostream& os, const ArgumentContainer& ac)
       os << "'-" << cit->first << "' " << cit->second << endl;
    } // end for
 
-   cout << endl << "Long (string) arguments:" << endl;
+   os << endl << "Long (string) arguments:" << endl;
 
    for (ArgumentContainer::LongArgCont::const_iterator cit = ac.mLongArgs.begin();
         cit != ac.mLongArgs.end(); ++cit)
