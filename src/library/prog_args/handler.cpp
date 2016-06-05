@@ -35,10 +35,19 @@
 #include "celma/prog_args/i_usage_text.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args {
+
+
+using std::endl;
+using std::exception;
+using std::invalid_argument;
+using std::logic_error;
+using std::overflow_error;
+using std::range_error;
+using std::runtime_error;
+using std::string;
+using std::underflow_error;
+
 
 
 /// Constructor.
@@ -48,12 +57,36 @@ namespace celma { namespace prog_args {
 ///                      text for the usage.
 /// @param[in]  txt2     Optional pointer to the object to provide additional
 ///                      text for the usage.
+/// @since  0.3, 04.06.2016  (same interface, now implemented as delegating
+///                           constructor)
 /// @since  0.2, 10.04.2016
 Handler::Handler( int flagSet, IUsageText* txt1, IUsageText* txt2):
-   mReadProgramArguments( (flagSet & hfReadProgArg) != 0),
-   mVerbose( (flagSet & hfVerboseArgs) != 0),
-   mPrintHidden( (flagSet & hfUsageHidden) != 0),
-   mUsageContinues( (flagSet & hfUsageCont) != 0),
+   Handler( std::cout, std::cerr, flagSet, txt1, txt2)
+{
+} // end Handler::Handler
+
+
+
+/// Constructor that allows to specify the output streams to write to.
+/// @param[in]  os        The stream to write normal out to.
+/// @param[in]  error_os  The stream to write error output to.
+/// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
+///                       of possible values.
+/// @param[in]  txt1      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @param[in]  txt2      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @since  0.3, 04.06.2016  (added parameters for output streams)
+/// @since  0.2, 10.04.2016
+Handler::Handler( std::ostream& os, std::ostream& error_os,
+                  int flag_set, IUsageText* txt1, IUsageText* txt2):
+   mOutput( os),
+   mErrorOutput( error_os),
+   mReadProgramArguments( (flag_set & hfReadProgArg) != 0),
+   mVerbose( (flag_set & hfVerboseArgs) != 0),
+   mPrintHidden( (flag_set & hfUsageHidden) != 0),
+   mUsageContinues( (flag_set & hfUsageCont) != 0),
+   mUsagePrinted( false),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
    mpExclamationMarkHdlr(),
@@ -66,11 +99,11 @@ Handler::Handler( int flagSet, IUsageText* txt1, IUsageText* txt2):
    string  args;
 
 
-   if ((flagSet & hfHelpShort) && (flagSet & hfHelpLong))
+   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
       args = "h,help";
-   else if (flagSet & hfHelpShort)
+   else if (flag_set & hfHelpShort)
       args = "h";
-   else if (flagSet & hfHelpLong)
+   else if (flag_set & hfHelpLong)
       args = "help";
 
    if (!args.empty())
@@ -78,13 +111,13 @@ Handler::Handler( int flagSet, IUsageText* txt1, IUsageText* txt2):
                    "Handler::usage",
                    "Prints the program usage");
 
-   if (flagSet & hfArgHidden)
+   if (flag_set & hfArgHidden)
       addArgumentPrintHidden( "print-hidden");
 
-   if (flagSet & hfListArgVar)
+   if (flag_set & hfListArgVar)
       addArgumentListArgVars( "list-arg-vars");
 
-   if (flagSet & hfEndValues)
+   if (flag_set & hfEndValues)
       addArgumentEndValues( "endvalues");
 
 } // end Handler::Handler
@@ -261,15 +294,20 @@ void Handler::evalArguments( int argc, char* argv[])
 
    iterateArguments( alp);
 
-   // phew, we're done. check for missing mandatory arguments
-   mArguments.checkMandatoryCardinality();
-   mSubGroupArgs.checkMandatoryCardinality();
+   // if the usage was printed, and we still get here, we don't need to perform
+   // the final checks
+   if (!mUsagePrinted)
+   {
+      // phew, we're done. check for missing mandatory arguments
+      mArguments.checkMandatoryCardinality();
+      mSubGroupArgs.checkMandatoryCardinality();
 
-   // check for missing required arguments through constraints
-   mConstraints.checkRequired();
+      // check for missing required arguments through constraints
+      mConstraints.checkRequired();
 
-   // and check for global constraints not met
-   checkGlobalConstraints();
+      // and check for global constraints not met
+      checkGlobalConstraints();
+   } // end if
 
 } // end Handler::evalArguments
 
@@ -297,28 +335,28 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
 
    } catch (const invalid_argument& ia)
    {
-      cerr << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
+      mErrorOutput << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
    } catch (const logic_error& le)
    {
-      cerr << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
+      mErrorOutput << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
    } catch (const overflow_error& oe)
    {
-      cerr << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
+      mErrorOutput << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
    } catch (const range_error& re)
    {
-      cerr << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
+      mErrorOutput << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
    } catch (const underflow_error& ue)
    {
-      cerr << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;
+      mErrorOutput << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;
    } catch (const runtime_error& rte)
    {
-      cerr << prefix << "Caught 'runtime error' exception: " << rte.what() << "!" << endl;
+      mErrorOutput << prefix << "Caught 'runtime error' exception: " << rte.what() << "!" << endl;
    } catch (const exception& e)
    {
-      cerr << prefix << "Caught unspecific std::exception: " << e.what() << "!" << endl;
+      mErrorOutput << prefix << "Caught unspecific std::exception: " << e.what() << "!" << endl;
    } catch (...)
    {
-      cerr << prefix << "Caught unknown exception!" << endl;
+      mErrorOutput << prefix << "Caught unknown exception!" << endl;
    } // end try
 
    exit( EXIT_FAILURE);
@@ -547,8 +585,8 @@ void Handler::checkMaxArgLen( size_t& maxArgLen)
    size_t  myArgLength = 0;
 
 
-   myArgLength = max( myArgLength, mDescription.maxArgLen());
-   maxArgLen   = max( myArgLength, maxArgLen);
+   myArgLength = std::max( myArgLength, mDescription.maxArgLen());
+   maxArgLen   = std::max( myArgLength, maxArgLen);
 
 } // end Handler::checkMaxArgLen
 
@@ -610,7 +648,7 @@ void Handler::readEvalFileArguments( const char* arg0)
 void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
 {
 
-   ifstream  progArgs( pathFilename.c_str());
+   std::ifstream  progArgs( pathFilename.c_str());
 
 
    if (!progArgs || !progArgs.is_open())
@@ -625,7 +663,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
 
    // now read the lines with arguments and process them
    string  line;
-   while (!getline( progArgs, line).eof())
+   while (!std::getline( progArgs, line).eof())
    {
       if (line.empty() || (line[ 0] == '#'))
          continue;   // while
@@ -647,10 +685,10 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
 void Handler::listArgVars()
 {
 
-   cout << mArguments << endl;
+   mOutput << mArguments << endl;
 
    if (!mSubGroupArgs.empty())
-      cout << mSubGroupArgs << endl;
+      mOutput << mSubGroupArgs << endl;
 
 } // end Handler::listArgVars
 
@@ -703,7 +741,7 @@ void Handler::iterateArguments( detail::ArgListParser& alp)
 /// @param[in]   ah  The object to print the data of.
 /// @return  The stream.
 /// @since  0.2, 10.04.2016
-ostream& operator <<( ostream& os, const Handler& ah)
+std::ostream& operator <<( std::ostream& os, const Handler& ah)
 {
    return os << ah.mDescription;
 } // end operator <<
@@ -730,24 +768,26 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
            (txt1->usagePos() != txt2->usagePos()));
 
    if ((txt1 != nullptr) && (txt1->usagePos() == upBeforeArgs))
-      cout << txt1 << endl << endl;
+      mOutput << txt1 << endl << endl;
 
    size_t  stdArgLength = 0;
 
    mDescription.setMinArgLen( stdArgLength);
 
-   cout << "Usage:" << endl;
+   mOutput << "Usage:" << endl;
 
    mDescription.setPrintHidden( mPrintHidden);
-   cout << mDescription << endl;
+   mOutput << mDescription << endl;
 
    if ((txt1 != nullptr) && (txt1->usagePos() == upAfterArgs))
-      cout << txt1 << endl << endl;
+      mOutput << txt1 << endl << endl;
    else if ((txt2 != nullptr) && (txt2->usagePos() == upAfterArgs))
-      cout << txt2 << endl << endl;
+      mOutput << txt2 << endl << endl;
 
    if (!mUsageContinues)
       ::exit( EXIT_SUCCESS);
+
+   mUsagePrinted = true;
 
 } // end Handler::usage
 
@@ -907,9 +947,9 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
    if (mVerbose)
    {
       if (value.empty())
-         cout << hdl->varName() << ": is set" << endl;
+         mOutput << hdl->varName() << ": is set" << endl;
       else
-         cout << hdl->varName() << ": value '" << value << "' is assigned" << endl;
+         mOutput << hdl->varName() << ": value '" << value << "' is assigned" << endl;
    } // end if
 
    hdl->calledAssign( mReadingArgumentFile, value);
