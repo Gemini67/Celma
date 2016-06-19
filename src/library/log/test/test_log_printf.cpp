@@ -38,6 +38,7 @@
 
 
 using celma::log::Logging;
+using celma::log::LogLevel;
 
 
 
@@ -60,12 +61,12 @@ BOOST_AUTO_TEST_CASE( log_printf_id)
    Logging::instance().getLog( my_log)
                       ->addDestination( "msg", new celma::log::test::LogDestMsg( msg));
 
-   LOG_PRINTF( my_log, llInfo, communication,
+   LOG_PRINTF( my_log, info, communication,
                "log message create %s-like function call with %d parameters",
                "printf()", 2);
    const int  log_message_line = __LINE__ - 1 ;
 
-   BOOST_REQUIRE_EQUAL( msg.getLevel(), celma::log::llInfo);
+   BOOST_REQUIRE_EQUAL( msg.getLevel(), LogLevel::info);
    BOOST_REQUIRE_EQUAL( msg.getClass(), celma::log::LogClass::communication);
    BOOST_REQUIRE_EQUAL( msg.getProcessId(), getpid());
    BOOST_REQUIRE_EQUAL( msg.getFileName(), "test_log_printf.cpp");
@@ -93,12 +94,12 @@ BOOST_AUTO_TEST_CASE( log_printf_name)
    Logging::instance().getLog( my_log)
                       ->addDestination( "msg", new celma::log::test::LogDestMsg( msg));
 
-   LOG_PRINTF( std::string( "mine"), llInfo, communication,
+   LOG_PRINTF( std::string( "mine"), info, communication,
                "log message create %s-like function call with %d parameters",
                "printf()", 2);
    const int  log_message_line = __LINE__ - 1 ;
 
-   BOOST_REQUIRE_EQUAL( msg.getLevel(), celma::log::llInfo);
+   BOOST_REQUIRE_EQUAL( msg.getLevel(), LogLevel::info);
    BOOST_REQUIRE_EQUAL( msg.getClass(), celma::log::LogClass::communication);
    BOOST_REQUIRE_EQUAL( msg.getProcessId(), getpid());
    BOOST_REQUIRE_EQUAL( msg.getFileName(), "test_log_printf.cpp");

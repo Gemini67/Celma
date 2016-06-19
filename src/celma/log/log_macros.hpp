@@ -50,11 +50,11 @@
 /// @param  l  The log level of the message, is already set on the log message
 ///            too.
 #define  LOG_LEVEL( a, l) \
-   if (celma::log::detail::discard_by_level( a, celma::log::l)) \
+   if (celma::log::detail::discard_by_level( a, celma::log::LogLevel::l)) \
    { } \
    else \
       celma::log::detail::StreamLog( a, LOG_MSG_OBJECT_INIT).self() \
-                                                            << celma::log::l
+                                                    << celma::log::LogLevel::l
 
 
 /// Macro to create a log message using a printf()-like format string with the
@@ -68,7 +68,7 @@
 /// @param     Optional additional parameters.
 #define  LOG_PRINTF( i, l, c, f, ...) \
    celma::log::detail::printf( LOG_MSG_OBJECT_INIT, i, \
-                               celma::log::l, \
+                               celma::log::LogLevel::l, \
                                celma::log::LogClass::c, f, ## __VA_ARGS__)
 
 

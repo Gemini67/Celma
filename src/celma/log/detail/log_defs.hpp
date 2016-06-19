@@ -48,15 +48,15 @@ enum class LogClass
 
 
 /// List of possible log levels of a message:
-enum LogLevel
+enum class LogLevel
 {
-   llUndefined,   //!< Undefined.
-   llFatal,       //!< Fatal error.
-   llError,       //!< Recoverable error.
-   llWarning,     //!< Warning.
-   llInfo,        //!< Information.
-   llDebug,       //!< Debug information.
-   llFullDebug    //!< Extended debug information.
+   undefined,   //!< Undefined.
+   fatal,       //!< Fatal error.
+   error,       //!< Recoverable error.
+   warning,     //!< Warning.
+   info,        //!< Information.
+   debug,       //!< Debug information.
+   fullDebug    //!< Extended debug information.
 }; // LogLevel
 
 
@@ -91,14 +91,14 @@ inline const char* logLevel2text( LogLevel ll)
 {
    switch (ll)
    {
-   case llFatal:      return "Fatal Error";
-   case llError:      return "Error";
-   case llWarning:    return "Warning";
-   case llInfo:       return "Info";
-   case llDebug:      return "Debug";
-   case llFullDebug:  return "Full Debug";
+   case LogLevel::fatal:      return "Fatal Error";
+   case LogLevel::error:      return "Error";
+   case LogLevel::warning:    return "Warning";
+   case LogLevel::info:       return "Info";
+   case LogLevel::debug:      return "Debug";
+   case LogLevel::fullDebug:  return "Full Debug";
    default:
-   case llUndefined:  return "undefined";
+   case LogLevel::undefined:  return "undefined";
    } // end switch
 } // end logLevel2text
 
@@ -127,7 +127,7 @@ inline LogClass text2logClass( const char* lcText)
 inline LogLevel text2logLevel( const char* llText)
 {
 
-   for (int  i = 0; i <= static_cast< int>( llFullDebug); i++)
+   for (int  i = 0; i <= static_cast< int>( LogLevel::fullDebug); i++)
    {
       if (::strcasecmp( logLevel2text( static_cast< LogLevel>( i)), llText) == 0)
          return static_cast< LogLevel>( i);

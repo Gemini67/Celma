@@ -33,20 +33,23 @@
 #include "celma/log/detail/log_filter_max_level.hpp"
 
 
+using celma::log::LogLevel;
+
+
 
 /// Test the log filter for a maximum log level.
 /// @since  0.3, 19.06.2016
 BOOST_AUTO_TEST_CASE( max_level)
 {
 
-   celma::log::detail::LogFilterMaxLevel  maxFilter( celma::log::llWarning);
+   celma::log::detail::LogFilterMaxLevel  maxFilter( LogLevel::warning);
 
-   BOOST_REQUIRE( maxFilter.processLevel( celma::log::llFatal));
-   BOOST_REQUIRE( maxFilter.processLevel( celma::log::llError));
-   BOOST_REQUIRE( maxFilter.processLevel( celma::log::llWarning));
-   BOOST_REQUIRE( !maxFilter.processLevel( celma::log::llInfo));
-   BOOST_REQUIRE( !maxFilter.processLevel( celma::log::llDebug));
-   BOOST_REQUIRE( !maxFilter.processLevel( celma::log::llFullDebug));
+   BOOST_REQUIRE( maxFilter.processLevel( LogLevel::fatal));
+   BOOST_REQUIRE( maxFilter.processLevel( LogLevel::error));
+   BOOST_REQUIRE( maxFilter.processLevel( LogLevel::warning));
+   BOOST_REQUIRE( !maxFilter.processLevel( LogLevel::info));
+   BOOST_REQUIRE( !maxFilter.processLevel( LogLevel::debug));
+   BOOST_REQUIRE( !maxFilter.processLevel( LogLevel::fullDebug));
 
 } // end max_level
 
@@ -57,26 +60,26 @@ BOOST_AUTO_TEST_CASE( max_level)
 BOOST_AUTO_TEST_CASE( max_level_pass_filter)
 {
 
-   celma::log::detail::LogFilterMaxLevel  maxFilter( celma::log::llWarning);
+   celma::log::detail::LogFilterMaxLevel  maxFilter( LogLevel::warning);
    celma::log::detail::LogMsg             msg( LOG_MSG_OBJECT_INIT);
 
 
-   msg.setLevel( celma::log::llFatal);
+   msg.setLevel( LogLevel::fatal);
    BOOST_REQUIRE( maxFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llError);
+   msg.setLevel( LogLevel::error);
    BOOST_REQUIRE( maxFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llWarning);
+   msg.setLevel( LogLevel::warning);
    BOOST_REQUIRE( maxFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llInfo);
+   msg.setLevel( LogLevel::info);
    BOOST_REQUIRE( !maxFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llDebug);
+   msg.setLevel( LogLevel::debug);
    BOOST_REQUIRE( !maxFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llFullDebug);
+   msg.setLevel( LogLevel::fullDebug);
    BOOST_REQUIRE( !maxFilter.passFilter( msg));
 
 } // end max_level_pass_filter

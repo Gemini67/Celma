@@ -100,11 +100,13 @@ public:
    /// @since  0.3, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so, LogLevel ll)
    {
-      if (so.mLogMsg.getLevel() == llUndefined)
+      if (so.mLogMsg.getLevel() == LogLevel::undefined)
       {
          // range check
-         if ((ll <= llUndefined) || (ll > llFullDebug)) so.mLogMsg.setLevel( llUndefined);
-         else                                           so.mLogMsg.setLevel( ll);
+         if ((ll <= LogLevel::undefined) || (ll > LogLevel::fullDebug))
+            so.mLogMsg.setLevel( LogLevel::undefined);
+         else
+            so.mLogMsg.setLevel( ll);
       } else
       {
          // seems that user wants to write a log level into the log message
@@ -116,7 +118,7 @@ public:
 
    /// Logs an exception of type 'Celma runtime error'.<br>
    /// If the log level and class are not already set, they are set to
-   /// \a llError and \a lcSysCall, respectively. Of course they can also be set
+   /// \a error and \a lcSysCall, respectively. Of course they can also be set
    /// afterwards.
    /// @param[in]  so   Me.
    /// @param[in]  cre  The exception object to log.
@@ -131,7 +133,7 @@ public:
 
    /// Logs an exception of type 'Celma logic error'.<br>
    /// If the log level and class are not already set, they are set to
-   /// \a llError and \a lcSysCall, respectively. Of course they can also be set
+   /// \a error and \a lcSysCall, respectively. Of course they can also be set
    /// afterwards.
    /// @param[in]  so   Me.
    /// @param[in]  sre  The exception object to log.
@@ -148,7 +150,7 @@ public:
    /// The exception object needs a cast to the type \c 'const ExceptionBase&'
    /// for this operator to be called.<br>
    /// If the log level and class are not already set, they are set to
-   /// \a llError and \a lcSysCall, respectively. Of course they can also be set
+   /// \a error and \a lcSysCall, respectively. Of course they can also be set
    /// afterwards.
    /// @param[in]  so  Me.
    /// @param[in]  eb  The exception object to log.

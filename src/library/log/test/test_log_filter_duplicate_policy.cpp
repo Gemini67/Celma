@@ -31,6 +31,7 @@
 
 
 using celma::log::detail::LogFilter;
+using celma::log::LogLevel;
 
 
 
@@ -42,10 +43,10 @@ BOOST_AUTO_TEST_CASE( policy_ignore)
    LogFilter  lf;
 
 
-   lf.maxLevel( celma::log::llError);
+   lf.maxLevel( LogLevel::error);
 
    // now we try to set another max level that should be ignored
-   BOOST_REQUIRE_NO_THROW( lf.maxLevel( celma::log::llDebug));
+   BOOST_REQUIRE_NO_THROW( lf.maxLevel( LogLevel::debug));
 
 } // end policy_ignore
 
@@ -59,13 +60,13 @@ BOOST_AUTO_TEST_CASE( policy_throw)
    LogFilter  lf;
 
 
-   lf.maxLevel( celma::log::llError);
+   lf.maxLevel( LogLevel::error);
 
    LogFilter::setDuplicatePolicy( celma::log::detail::dpThrow);
 
    // now we try to set another max level which should result in an exception
    // being thrown
-   BOOST_REQUIRE_THROW( lf.maxLevel( celma::log::llDebug), celma::common::CelmaRuntimeError);
+   BOOST_REQUIRE_THROW( lf.maxLevel( LogLevel::debug), celma::common::CelmaRuntimeError);
 
 } // end policy_ignore
 
@@ -79,12 +80,12 @@ BOOST_AUTO_TEST_CASE( policy_replace)
    LogFilter  lf;
 
 
-   lf.maxLevel( celma::log::llError);
+   lf.maxLevel( LogLevel::error);
 
    LogFilter::setDuplicatePolicy( celma::log::detail::dpReplace);
 
    // now we try to set another max level that should be used afterwards
-   BOOST_REQUIRE_NO_THROW( lf.maxLevel( celma::log::llDebug));
+   BOOST_REQUIRE_NO_THROW( lf.maxLevel( LogLevel::debug));
 
 } // end policy_ignore
 

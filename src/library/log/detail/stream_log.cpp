@@ -111,8 +111,8 @@ StreamLog::~StreamLog()
 void StreamLog::storeException( const common::ExceptionBase& eb)
 {
 
-   if (mLogMsg.getLevel() == llUndefined)
-      mLogMsg.setLevel( llError);
+   if (mLogMsg.getLevel() == LogLevel::undefined)
+      mLogMsg.setLevel( LogLevel::error);
    if (mLogMsg.getClass() == LogClass::undefined)
       mLogMsg.setClass( LogClass::sysCall);
    mLogMsg.assign( eb);

@@ -39,6 +39,7 @@
 
 
 using celma::log::Logging;
+using celma::log::LogLevel;
 
 
 // module definitions
@@ -47,6 +48,7 @@ static int  exception_line = -1;
 
 // static functions prototypes
 static void exceptionFunc();
+
 
 
 /// Test that the data of an exception is correctly copied into the log message
@@ -70,7 +72,7 @@ BOOST_AUTO_TEST_CASE( log_exception)
       LOG( my_log) << eb;
    } // end try
 
-   BOOST_REQUIRE_EQUAL( msg.getLevel(), celma::log::llError);
+   BOOST_REQUIRE_EQUAL( msg.getLevel(), LogLevel::error);
    BOOST_REQUIRE_EQUAL( msg.getClass(), celma::log::LogClass::sysCall);
    BOOST_REQUIRE_EQUAL( msg.getProcessId(), getpid());
    BOOST_REQUIRE_EQUAL( msg.getFileName(), "test_log_exception.cpp");
@@ -104,10 +106,10 @@ BOOST_AUTO_TEST_CASE( log_exception_class_level)
       BOOST_FAIL( "no exception thrown");
    } catch (const celma::common::CelmaRuntimeError& eb)
    {
-      LOG( my_log) << celma::log::llFatal << celma::log::LogClass::communication << eb;
+      LOG( my_log) << LogLevel::fatal << celma::log::LogClass::communication << eb;
    } // end try
 
-   BOOST_REQUIRE_EQUAL( msg.getLevel(), celma::log::llFatal);
+   BOOST_REQUIRE_EQUAL( msg.getLevel(), LogLevel::fatal);
    BOOST_REQUIRE_EQUAL( msg.getClass(), celma::log::LogClass::communication);
    BOOST_REQUIRE_EQUAL( msg.getProcessId(), getpid());
    BOOST_REQUIRE_EQUAL( msg.getFileName(), "test_log_exception.cpp");

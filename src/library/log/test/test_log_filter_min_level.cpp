@@ -33,20 +33,23 @@
 #include "celma/log/detail/log_filter_min_level.hpp"
 
 
+using celma::log::LogLevel;
+
+
 
 /// Test the log filter for a minimum log level.
 /// @since  0.3, 19.06.2016
 BOOST_AUTO_TEST_CASE( min_level)
 {
 
-   celma::log::detail::LogFilterMinLevel  minFilter( celma::log::llWarning);
+   celma::log::detail::LogFilterMinLevel  minFilter( LogLevel::warning);
 
-   BOOST_REQUIRE( !minFilter.processLevel( celma::log::llFatal));
-   BOOST_REQUIRE( !minFilter.processLevel( celma::log::llError));
-   BOOST_REQUIRE( minFilter.processLevel( celma::log::llWarning));
-   BOOST_REQUIRE( minFilter.processLevel( celma::log::llInfo));
-   BOOST_REQUIRE( minFilter.processLevel( celma::log::llDebug));
-   BOOST_REQUIRE( minFilter.processLevel( celma::log::llFullDebug));
+   BOOST_REQUIRE( !minFilter.processLevel( LogLevel::fatal));
+   BOOST_REQUIRE( !minFilter.processLevel( LogLevel::error));
+   BOOST_REQUIRE( minFilter.processLevel( LogLevel::warning));
+   BOOST_REQUIRE( minFilter.processLevel( LogLevel::info));
+   BOOST_REQUIRE( minFilter.processLevel( LogLevel::debug));
+   BOOST_REQUIRE( minFilter.processLevel( LogLevel::fullDebug));
 
 } // end min_level
 
@@ -57,26 +60,26 @@ BOOST_AUTO_TEST_CASE( min_level)
 BOOST_AUTO_TEST_CASE( min_level_pass_filter)
 {
 
-   celma::log::detail::LogFilterMinLevel  minFilter( celma::log::llWarning);
+   celma::log::detail::LogFilterMinLevel  minFilter( LogLevel::warning);
    celma::log::detail::LogMsg             msg( LOG_MSG_OBJECT_INIT);
 
 
-   msg.setLevel( celma::log::llFatal);
+   msg.setLevel( LogLevel::fatal);
    BOOST_REQUIRE( !minFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llError);
+   msg.setLevel( LogLevel::error);
    BOOST_REQUIRE( !minFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llWarning);
+   msg.setLevel( LogLevel::warning);
    BOOST_REQUIRE( minFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llInfo);
+   msg.setLevel( LogLevel::info);
    BOOST_REQUIRE( minFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llDebug);
+   msg.setLevel( LogLevel::debug);
    BOOST_REQUIRE( minFilter.passFilter( msg));
 
-   msg.setLevel( celma::log::llFullDebug);
+   msg.setLevel( LogLevel::fullDebug);
    BOOST_REQUIRE( minFilter.passFilter( msg));
 
 } // end min_level_pass_filter

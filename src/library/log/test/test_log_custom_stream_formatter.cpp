@@ -98,7 +98,7 @@ BOOST_FIXTURE_TEST_CASE( default_log_format, TestCaseLogDestStream)
    Logging::instance().getLog( mMyLog)
                       ->addDestination( "msg", new celma::log::test::LogDestMsg( msg));
 
-   LOG( mMyLog) << celma::log::llDebug << "A simple text built from " << 3 << " parts.";
+   LOG( mMyLog) << celma::log::LogLevel::debug << "A simple text built from " << 3 << " parts.";
 
    std::ostringstream  exp_string;
    std::unique_ptr< celma::log::detail::IFormatStream> fsd =
@@ -121,7 +121,7 @@ BOOST_FIXTURE_TEST_CASE( custom_log_format, TestCaseLogDestStream)
 
    GET_LOG( mMyLog)->getDestination( "stream")->setFormatter( new CustomStreamFormatter());
 
-   LOG( mMyLog) << celma::log::llDebug << "A simple text built from " << 3 << " parts.";
+   LOG( mMyLog) << celma::log::LogLevel::debug << "A simple text built from " << 3 << " parts.";
 
    // with this formatter, the log message should contain only the text
    BOOST_REQUIRE_EQUAL( mDest.str(), "A simple text built from 3 parts.");

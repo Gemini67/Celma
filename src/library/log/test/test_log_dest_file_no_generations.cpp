@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE( log_dest_file)
    Logging::instance().getLog( my_log)
       ->addDestination( "file", new celma::log::detail::LogDestFileGenerations<>( "/tmp", "logfile.txt"));
 
-   LOG_PRINTF( my_log, llInfo, communication,
+   LOG_PRINTF( my_log, info, communication,
                "log message create %s-like function call with %d parameters",
                "printf()", 2);
 

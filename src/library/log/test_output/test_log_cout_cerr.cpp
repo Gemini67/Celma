@@ -26,23 +26,23 @@ int main()
    auto const log_console = Logging::instance().findCreateLog( "console");
    Logging::instance().getLog( log_console)
       ->addDestination( "cerr", new celma::log::LogDestStream( cerr, true))
-         ->maxLevel( log::llError);
+         ->maxLevel( log::error);
 
    Logging::instance().getLog( log_console)
       ->addDestination( "cout", new celma::log::LogDestStream( cout, true))
-         ->minLevel( log::llWarning);
+         ->minLevel( log::warning);
 
-   LOG_LEVEL( log_console, log::llFatal)
+   LOG_LEVEL( log_console, log::fatal)
       << "message with level 'fatal' expected on stderr!";
-   LOG_LEVEL( log_console, log::llError)
+   LOG_LEVEL( log_console, log::error)
       << "message with level 'error' expected on stderr!";
-   LOG_LEVEL( log_console, log::llWarning)
+   LOG_LEVEL( log_console, log::warning)
       << "message with level 'warning' expected on stdout!";
-   LOG_LEVEL( log_console, log::llInfo)
+   LOG_LEVEL( log_console, log::info)
       << "message with level 'info' expected on stdout!";
-   LOG_LEVEL( log_console, log::llDebug)
+   LOG_LEVEL( log_console, log::debug)
       << "message with level 'debug' expected on stdout!";
-   LOG_LEVEL( log_console, log::llFullDebug)
+   LOG_LEVEL( log_console, log::fullDebug)
       << "message with level 'full debug' expected on stdout!";
 
    return EXIT_SUCCESS;

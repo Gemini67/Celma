@@ -47,7 +47,7 @@ LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_
    mFunctionName(),
    mLineNbr( line_nbr),
    mClass( LogClass::undefined),
-   mLevel( llUndefined),
+   mLevel( LogLevel::undefined),
    mErrNbr( 0),
    mText()
 {

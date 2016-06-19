@@ -22,6 +22,7 @@
 
 
 using celma::log::Logging;
+using celma::log::LogLevel;
 using std::cout;
 using std::endl;
 
@@ -59,59 +60,59 @@ int main()
    operation_output.str( "");
 
    // set a maximum log level
-   Logging::instance().getLog( log_trace)->maxLevel( celma::log::llDebug);
-   GET_LOG( log_operation)->maxLevel( celma::log::llWarning);
+   Logging::instance().getLog( log_trace)->maxLevel( LogLevel::debug);
+   GET_LOG( log_operation)->maxLevel( LogLevel::warning);
 
    // operation log message should still be written
-   LOG( log_operation) << celma::log::llWarning << "operation message with level '"
-                       << celma::log::llWarning << "' should be printed.";
+   LOG( log_operation) << LogLevel::warning << "operation message with level '"
+                       << LogLevel::warning << "' should be printed.";
    cout << "Operation: " << operation_output.str() << endl;
    operation_output.str( "");
 
    // trace log message should still be written
-   LOG( log_trace) << celma::log::llDebug << "trace message with level 'debug' should be printed.";
+   LOG( log_trace) << LogLevel::debug << "trace message with level 'debug' should be printed.";
    cout << "Trace:     " << trace_output.str() << endl;
    trace_output.str( "");
 
    // operation log message should still be written with macro LOG_LEVEL
-   LOG_LEVEL( log_operation, llWarning) << "operation message with level 'warning' should still be printed.";
+   LOG_LEVEL( log_operation, warning) << "operation message with level 'warning' should still be printed.";
    cout << "Operation: " << operation_output.str() << endl;
    operation_output.str( "");
 
    // trace log message should still be written with macro LOG_LEVEL
-   LOG_LEVEL( log_trace, llDebug) << "trace message with level 'debug' should still be printed.";
+   LOG_LEVEL( log_trace, debug) << "trace message with level 'debug' should still be printed.";
    cout << "Trace:     " << trace_output.str() << endl;
    trace_output.str( "");
 
    // operation log message, called by name, should still be written with macro
    // LOG_LEVEL
-   LOG_LEVEL( std::string( "operation"), llWarning) << "operation by name with level 'warning' should still be printed.";
+   LOG_LEVEL( std::string( "operation"), warning) << "operation by name with level 'warning' should still be printed.";
    cout << "Operation: " << operation_output.str() << endl;
    operation_output.str( "");
 
    // trace log message, called by name, should still be written with macro
    // LOG_LEVEL
-   LOG_LEVEL( std::string( "trace"), llDebug) << "trace by name with level 'debug' should still be printed.";
+   LOG_LEVEL( std::string( "trace"), debug) << "trace by name with level 'debug' should still be printed.";
    cout << "Trace:     " << trace_output.str() << endl;
    trace_output.str( "");
 
    // operation log message should now be suppressed
-   LOG( log_operation) << celma::log::llInfo << "operation message with level 'info' should be suppressed.";
+   LOG( log_operation) << LogLevel::info << "operation message with level 'info' should be suppressed.";
    cout << "Operation: " << operation_output.str() << endl;
    operation_output.str( "");
 
    // trace log message should now be suppressed
-   LOG( log_trace) << celma::log::llFullDebug << "trace message with level 'full debug' should be suppressed.";
+   LOG( log_trace) << LogLevel::fullDebug << "trace message with level 'full debug' should be suppressed.";
    cout << "Trace:     " << trace_output.str() << endl;
    trace_output.str( "");
 
    // use LOG_LEVEL macro to prevent creating the unused operation log message
-   LOG_LEVEL( log_operation, llInfo) << "operation message with level 'info' should still be suppressed.";
+   LOG_LEVEL( log_operation, info) << "operation message with level 'info' should still be suppressed.";
    cout << "Operation: " << operation_output.str() << endl;
    operation_output.str( "");
 
    // use LOG_LEVEL macro to prevent creating the unused trace log message
-   LOG_LEVEL( log_trace, llFullDebug) << "trace message with level 'full debug' should still be suppressed.";
+   LOG_LEVEL( log_trace, fullDebug) << "trace message with level 'full debug' should still be suppressed.";
    cout << "Trace:     " << trace_output.str() << endl;
    trace_output.str( "");
 

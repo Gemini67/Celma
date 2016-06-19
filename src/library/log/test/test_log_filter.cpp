@@ -34,6 +34,7 @@
 
 
 using celma::log::detail::LogFilter;
+using celma::log::LogLevel;
 
 
 
@@ -45,8 +46,8 @@ BOOST_AUTO_TEST_CASE( empty)
    LogFilter  filters;
 
 
-   BOOST_REQUIRE( filters.processLevel( celma::log::llFatal));
-   BOOST_REQUIRE( filters.processLevel( celma::log::llFullDebug));
+   BOOST_REQUIRE( filters.processLevel( LogLevel::fatal));
+   BOOST_REQUIRE( filters.processLevel( LogLevel::fullDebug));
 
 } // end empty
 
@@ -60,19 +61,19 @@ BOOST_AUTO_TEST_CASE( max_level)
    LogFilter  filters;
 
 
-   filters.maxLevel( celma::log::llWarning);
+   filters.maxLevel( LogLevel::warning);
 
-   BOOST_REQUIRE( filters.processLevel( celma::log::llError));
-   BOOST_REQUIRE( filters.processLevel( celma::log::llWarning));
-   BOOST_REQUIRE( !filters.processLevel( celma::log::llInfo));
+   BOOST_REQUIRE( filters.processLevel( LogLevel::error));
+   BOOST_REQUIRE( filters.processLevel( LogLevel::warning));
+   BOOST_REQUIRE( !filters.processLevel( LogLevel::info));
 
    // try to change the max_level, policy ignore: no change
-   filters.maxLevel( celma::log::llError);
+   filters.maxLevel( LogLevel::error);
 
    // expect same result as before
-   BOOST_REQUIRE( filters.processLevel( celma::log::llError));
-   BOOST_REQUIRE( filters.processLevel( celma::log::llWarning));
-   BOOST_REQUIRE( !filters.processLevel( celma::log::llInfo));
+   BOOST_REQUIRE( filters.processLevel( LogLevel::error));
+   BOOST_REQUIRE( filters.processLevel( LogLevel::warning));
+   BOOST_REQUIRE( !filters.processLevel( LogLevel::info));
 
 } // end max_level
 
