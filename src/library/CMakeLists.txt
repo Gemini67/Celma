@@ -19,6 +19,11 @@ get_directory_property( format_sources DIRECTORY ./format
    DEFINITION format_sources
 )
 
+add_subdirectory( log )
+get_directory_property( log_sources DIRECTORY ./log
+   DEFINITION log_sources
+)
+
 add_subdirectory( prog_args )
 get_directory_property( prog_args_sources DIRECTORY ./prog_args
    DEFINITION prog_args_sources
@@ -27,6 +32,7 @@ get_directory_property( prog_args_sources DIRECTORY ./prog_args
 set( celma_lib_sources
    ${common_sources}
    ${format_sources}
+   ${log_sources}
    ${prog_args_sources}
 )
 
