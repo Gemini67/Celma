@@ -1,0 +1,87 @@
+
+/*!
+   \mainpage  CELMA v0.0.4
+
+   \tableofcontents
+
+   \section  intro  Introduction
+
+   CELMA stands for 'C++ Extension Library Modules for Application". It is a
+   collection of modules, classes and functions that are often used in C++
+   projects on *UX.<br>
+   The most prominent member being the 'argument handler' library, a replacement
+   for getopt()/Boost.Program Options.
+
+   \subsection  build  Build Information
+
+   In order to build the library, the following environment is required:
+   \li g++, using C++ 17 standard features
+   \li Boost library
+   \li CMake
+
+
+   <hr>
+
+   \section  contents  Contents
+
+   These are the main modules of CELMA:
+
+   Module Name       | Description
+   ----------------  | ----------------
+   Argument handling | Contains the class celma::prog_args::Handler which provides easy and feature-rich argument handling.
+   Reflection        | Create a structure and a class that provides reflection-like access to the members of the structure. Starting point is celma::reflection::REFLECT.
+   Singleton         | Singleton pattern implementation with policies for static or dynamic object creation. See celma::common::Singleton.
+
+
+   <hr>
+
+   \section  version  Versions
+
+   \subsection  version_history  Version History
+
+   The following version(s) of CELMA were built/distributed:
+
+   Version | Publish Date      | Description
+   ------: | ----------------: | -----------
+     0.0.5 | under development | Logging, improvements on argument handler library, ...
+     0.0.4 | 2016-07-03        | Added sub-library 'reflection'.
+     0.0.3 | 2016-04-10        | Argument handler library completed.
+
+
+   \subsection  version_number  Version Number
+
+   The CELMA version number will use the following format after the first
+   1.0.0 release:<br>
+   \c  \<major\>.\<minor\>.\<patch\>
+
+   The handling of the version is like this:
+   \li  The major number is changed if the interface of one or several classes
+        have changed, and modifications to the project source code are necessary
+        in order to use the new version.
+   \li  The minor number is increased when new features are added to the library.
+   \li  The patch number is increased when a bug fix was implemented on a
+        production release.
+
+   \subsection  git  git
+
+   As mentioned before, the source code of CELMA is managed with git and
+   available at https://www.github.com/Gemini67/Celma.
+
+   There are two main branches in the git repository:
+   \li master<br>
+       Contains the current, tested, stable version of CELMA.
+   \li develop<br>
+       This is the default branch in the git repository to create a new version
+       (branch) from.<br>
+       Every time a new feature is developed or other major changes are
+       necessary, a new branch is split from \c develop, the work done and
+       tested and afterwards the changes are merged back unto \c develop.<br>
+       Only stable, bug-free versions may be copied from develop to \c master.
+
+
+   <hr>
+
+   <b>\ref todo</b>
+
+*/
+

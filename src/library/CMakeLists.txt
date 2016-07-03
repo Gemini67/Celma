@@ -50,3 +50,5 @@ install( TARGETS celma celma-static
    ARCHIVE DESTINATION lib64
    COMPONENT LIBRARIES
 )
+
+add_subdirectory( reflection)
