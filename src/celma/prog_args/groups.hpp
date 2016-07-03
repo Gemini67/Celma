@@ -40,6 +40,7 @@ class Handler;
 /// and both add their argument handlers to the argument groups instance.<br>
 /// Afterwards, evalArguments() of the Groups object must be called.
 /// @since  0.2, 10.04.2016
+/// @todo  Add method evalArgumentsErrorExit() like in Handler class.
 class Groups: public common::Singleton< Groups>
 {
 
