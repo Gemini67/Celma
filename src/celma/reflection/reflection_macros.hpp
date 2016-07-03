@@ -10,26 +10,27 @@
 --*/
 
 
-/// @file
-/// Macro definitions for generating a reflection-like field access.<br>
-/// First you have to define the list of fields and their types that you want to
-/// be handled.<br>
-/// Example:
-/// <pre>
-/// \#define  ADDRESS_RECORD_FIELDS(FIELD) \
-///    FIELD( std::string, Name) \
-///    FIELD( std::string, FirstName) \
-///    FIELD( int,         PostalCode)
-/// </pre>
-/// Important is the structure of the definition, the names
-/// (here \c ADDRESS_RECORD_FIELDS and \c FIELD) you can choose yourself.<br>
-/// Afterwards, you call the REFLECT() macro with the name of the structure to
-/// create and your list definition. This will generate you
-/// - A structure with the specified name and the member variables as specified
-///   in the list.
-/// - A class named \c Reflected<structname> which will provide getter and
-///   setter methods to access the members of a structure object by name or by
-///   id.
+/** @file
+    Macro definitions for generating a reflection-like field access.<br>
+    First you have to define the list of fields and their types that you want to
+    be handled.<br>
+    Example:
+    <pre>
+    \#define  ADDRESS_RECORD_FIELDS(FIELD) \
+       FIELD( std::string, Name) \
+       FIELD( std::string, FirstName) \
+       FIELD( int,         PostalCode)
+    </pre>
+    Important is the structure of the definition, the names
+    (here \c ADDRESS_RECORD_FIELDS and \c FIELD) you can choose yourself.<br>
+    Afterwards, you call the REFLECT() macro with the name of the structure to
+    create and your list definition. This will generate you
+    - A structure with the specified name and the member variables as specified
+      in the list.
+    - A class named \c Reflected<structname> which will provide getter and
+      setter methods to access the members of a structure object by name or by
+      id.
+*/
 
 
 #ifndef CELMA_REFLECTION_REFLECTION_MACROS_HPP
