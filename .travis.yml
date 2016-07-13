@@ -2,7 +2,7 @@
 addons:
    apt:
       packages:
-      - boost-build
+      - libboost1.48-dev
 
 language: cpp
 compiler:
