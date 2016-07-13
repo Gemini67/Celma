@@ -1,4 +1,9 @@
 
+addons:
+   apt:
+      packages:
+      - boost-build
+
 language: cpp
 compiler:
    - g++
