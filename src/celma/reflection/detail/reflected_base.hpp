@@ -18,6 +18,7 @@
 #define CELMA_REFLECTION_DETAIL_REFLECTED_BASE_HPP
 
 
+#include <iosfwd>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -100,6 +101,14 @@ public:
    /// @return  The number of fields stored by this reflection container.
    /// @since  0.4, 02.07.2016
    uint16_t size() const noexcept( true);
+
+   /// Insertion operator to print the contents of an object using a base class
+   /// object pointer.
+   /// @param[out]  os   The stream to insert into.
+   /// @param[in]   obj  The pointer to the object to print the contents of.
+   /// @return  The stream as passed in.
+   /// @since  0.4, 13.07.2016
+   friend std::ostream& operator <<( std::ostream& os, const ReflectedBase* obj);
 
 protected:
    /// Constructor.
@@ -193,44 +202,10 @@ template< typename T> const T& ReflectedBase::get( const std::string& name) cons
 } // end ReflectedBase::get
 
 
-const std::string& ReflectedBase::getFieldNameReflected( uint16_t id) const
-                                                       noexcept( false)
-{
-   if (id >= mId2Field.size())
-      throw std::runtime_error( "invalid field id");
-   return mId2Field[ id]->fieldName();
-} // end ReflectedBase::getFieldNameReflected
-
-
-const std::string ReflectedBase::getFieldValueString( uint16_t id) const
-                                                    noexcept( false)
-{
-   if (id >= mId2Field.size())
-      throw std::runtime_error( "invalid field id");
-   return mId2Field[ id]->str();
-} // end ReflectedBase::getFieldValueString
-
-
-const std::string& ReflectedBase::getFieldTypeString( uint16_t id) const
-                                                    noexcept( false)
-{
-   if (id >= mId2Field.size())
-      throw std::runtime_error( "invalid field id");
-   return mId2Field[ id]->typeName();
-} // end ReflectedBase::getFieldTypeString
-
-
-uint16_t ReflectedBase::size() const noexcept( true)
+inline uint16_t ReflectedBase::size() const noexcept( true)
 {
    return static_cast< uint16_t>( mId2Field.size());
 } // end ReflectedBase::size
-
-
-ReflectedBase::ReflectedBase():
-   mId2Field(),
-   mName2Field()
-{
-} // end ReflectedBase::ReflectedBase
 
 
 template< typename T>

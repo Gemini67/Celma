@@ -24,10 +24,16 @@ get_directory_property( prog_args_sources DIRECTORY ./prog_args
    DEFINITION prog_args_sources
 )
 
+add_subdirectory( reflection )
+get_directory_property( reflection_sources DIRECTORY ./reflection
+   DEFINITION reflection_sources
+)
+
 set( celma_lib_sources
    ${common_sources}
    ${format_sources}
    ${prog_args_sources}
+   ${reflection_sources}
 )
 
 add_library( celma SHARED
@@ -51,4 +57,3 @@ install( TARGETS celma celma-static
    COMPONENT LIBRARIES
 )
 
-add_subdirectory( reflection)
