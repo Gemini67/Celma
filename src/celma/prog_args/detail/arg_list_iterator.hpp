@@ -23,6 +23,7 @@
 #include <string>
 #include <iterator>
 #include <stdexcept>
+#include "celma/common/pre_postfix.hpp"
 #include "celma/common/reset_at_exit.hpp"
 
 
@@ -78,12 +79,12 @@ public:
    /// Prefix increment operator.
    /// @return  This object.
    /// @since  0.2, 09.04.2016
-   ArgListIterator& operator ++();
+   ArgListIterator& operator ++( std::prefix);
 
    /// Postfix increment operator.
    /// @return  Object that points the previous element.
    /// @since  0.2, 09.04.2016
-   ArgListIterator operator ++( int);
+   ArgListIterator operator ++( std::postfix);
 
    /// Dereference operator.
    /// @return  Pointer to the data element.
@@ -206,7 +207,7 @@ template< typename T, typename E> void ArgListIterator< T, E>::remArgStrAsVal()
 
 
 template< typename T, typename E>
-   ArgListIterator< T, E>& ArgListIterator< T, E>::operator ++()
+   ArgListIterator< T, E>& ArgListIterator< T, E>::operator ++( std::prefix)
 {
    const common::ResetAtExit< bool>  rae( mRemainingArgumentStringAsValue, false);
 
@@ -257,7 +258,7 @@ template< typename T, typename E>
 
 
 template< typename T, typename E>
-   ArgListIterator< T, E> ArgListIterator< T, E>::operator ++( int)
+   ArgListIterator< T, E> ArgListIterator< T, E>::operator ++( std::postfix)
 {
    ArgListIterator  prev( *this);
    operator ++();
@@ -296,8 +297,8 @@ template< typename T, typename E>
       } // end if
 
       // two dashes followed by long name
-      std::string             argName( &mpArgV[ mArgIndex][ mArgCharPos + 1]);
-      std::string::size_type  equalPos = argName.find_first_of( '=');
+      std::string  argName( &mpArgV[ mArgIndex][ mArgCharPos + 1]);
+      const auto   equalPos = argName.find_first_of( '=');
       if (equalPos == std::string::npos)
       {
          mCurrElement.setArgString( mArgIndex, argName);
@@ -349,5 +350,5 @@ template< typename T, typename E>
 #endif   // CELMA_PROG_ARGS_DETAIL_ARG_LIST_ITERATOR_HPP
 
 
-// =========================  END OF arg_list_iterator.hpp  =========================
+// ======================  END OF arg_list_iterator.hpp  ======================
 
