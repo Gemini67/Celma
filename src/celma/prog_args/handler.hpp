@@ -258,12 +258,14 @@ public:
    }; // HandleFlags
 
    /// List of possible positions for the additional output 
-   enum UsagePos
+   enum class UsagePos
    {
-      upUnused,       //!< Initialization value.
-      upBeforeArgs,   //!< Position before the list of arguments.
-      upAfterArgs     //!< Position after the list of arguments.
+      unused,       //!< Initialization value.
+      beforeArgs,   //!< Position before the list of arguments.
+      afterArgs     //!< Position after the list of arguments.
    }; // UsagePos
+
+   typedef detail::TypedArgBase::ValueMode  ValueMode;
 
    /// Set of all help arguments.
    static const int  AllHelp = hfHelpShort | hfHelpLong;
@@ -614,7 +616,7 @@ protected:
    ///                            be increased if this class contains longer
    ///                            arguments.
    /// @since  0.2, 10.04.2016
-   void checkMaxArgLen( size_t& maxArgLen);
+   void checkMaxArgLen( size_t& maxArgLen) const;
 
    /// Checks if the specified argument is already used.
    /// @param[in]  argChar  The argument character to check.

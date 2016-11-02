@@ -23,9 +23,6 @@
 #include "celma/prog_args/handler.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
@@ -35,13 +32,13 @@ namespace celma { namespace prog_args { namespace detail {
 ///                       or long argument.
 /// @param[in]  ah_obj    The argument handler object.
 /// @since  0.2, 10.04.2016
-TypedArgSubGroup::TypedArgSubGroup( const string& arg_spec,
+TypedArgSubGroup::TypedArgSubGroup( const std::string& arg_spec,
                                     Handler* ah_obj):
-   TypedArgBase( arg_spec, "sub-group", vmNone, false),
+   TypedArgBase( arg_spec, "sub-group", ValueMode::none, false),
    mpArgHandler( ah_obj),
    mWasCalled( false)
 {
-} // end TypedArgSubGroup::TypedArgSubGroup
+} // TypedArgSubGroup::TypedArgSubGroup
 
 
 
@@ -52,7 +49,7 @@ void TypedArgSubGroup::assign( const std::string& /* value */)
 
    mWasCalled = true;
 
-} // end TypedArgSubGroup::assign
+} // TypedArgSubGroup::assign
 
 
 
@@ -61,5 +58,5 @@ void TypedArgSubGroup::assign( const std::string& /* value */)
 } // namespace celma
 
 
-// =========================  END OF typed_arg_sub_group.cpp  =========================
+// ======================  END OF typed_arg_sub_group.cpp  ======================
 

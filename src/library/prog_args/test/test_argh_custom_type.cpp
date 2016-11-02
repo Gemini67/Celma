@@ -10,7 +10,7 @@
 **
 **  Description:
 **    Test program for the feature "custom argument type" in the module
-**    prog_args::Handler, using the Boost.Test module.
+**    celma::prog_args::Handler, using the Boost.Test module.
 **
 --*/
 
@@ -96,7 +96,7 @@ private:
 
 TypedArgBitset::TypedArgBitset( const string& arg_spec, type& dest,
                                 const string& vname):
-   prog_args::detail::TypedArgBase( arg_spec, vname, vmRequired, false),
+   prog_args::detail::TypedArgBase( arg_spec, vname, ValueMode::required, false),
    mDestVar( dest),
    mListSep( ',')
 {
@@ -167,5 +167,5 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
 
 
 
-// =========================  END OF test_argh_custom_type.cpp  =========================
+// ====================  END OF test_argh_custom_type.cpp  ====================
 

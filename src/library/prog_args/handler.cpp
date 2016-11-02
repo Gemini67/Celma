@@ -63,7 +63,7 @@ using std::underflow_error;
 Handler::Handler( int flagSet, IUsageText* txt1, IUsageText* txt2):
    Handler( std::cout, std::cerr, flagSet, txt1, txt2)
 {
-} // end Handler::Handler
+} // Handler::Handler
 
 
 
@@ -120,7 +120,7 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    if (flag_set & hfEndValues)
       addArgumentEndValues( "endvalues");
 
-} // end Handler::Handler
+} // Handler::Handler
 
 
 
@@ -131,7 +131,7 @@ Handler::~Handler()
 
    common::Vector::clear( mGlobalConstraints);
 
-} // end Handler::~Handler
+} // Handler::~Handler
 
 
 
@@ -154,7 +154,7 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
    return internAddArgument( arg_hdl, arg_spec,
                              "Specifies the (path and) file name of the "
                              "file with the program arguments to read.");
-} // end Handler::addArgumentFile
+} // Handler::addArgumentFile
 
 
 
@@ -172,7 +172,7 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 
    return internAddArgument( arg_hdl, arg_spec,
                              "Also print hidden arguments in the usage.");
-} // end Handler::addArgumentPrintHidden
+} // Handler::addArgumentPrintHidden
 
 
 
@@ -195,7 +195,7 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
    return internAddArgument( arg_hdl, arg_spec,
                              "Prints the list of arguments and their destination "
                              "variables.");
-} // end Handler::addArgumentListArgVars
+} // Handler::addArgumentListArgVars
 
 
 
@@ -215,7 +215,7 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
    arg_hdl->setCardinality();
    return internAddArgument( arg_hdl, arg_spec,
                              "Marks the end of a multiple, separate value list.");
-} // end Handler::addArgumentEndValues
+} // Handler::addArgumentEndValues
 
 
 
@@ -239,7 +239,7 @@ void Handler::addControlHandler( char ctrlChar, HandlerFunc hf)
                            + "' specified!");
    } // end switch
 
-} // end Handler::addControlHandler
+} // Handler::addControlHandler
 
 
 
@@ -263,7 +263,7 @@ void Handler::addConstraint( detail::IConstraint* ic)
 
    mGlobalConstraints.push_back( ic);
 
-} // end Handler::addConstraint
+} // Handler::addConstraint
 
 
 
@@ -309,7 +309,7 @@ void Handler::evalArguments( int argc, char* argv[])
       checkGlobalConstraints();
    } // end if
 
-} // end Handler::evalArguments
+} // Handler::evalArguments
 
 
 
@@ -360,7 +360,7 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
    } // end try
 
    exit( EXIT_FAILURE);
-} // end Handler::evalArgumentsErrorExit
+} // Handler::evalArgumentsErrorExit
 
 
 
@@ -398,7 +398,7 @@ void Handler::crossCheckArguments( const string ownName,
                            otherName + "' is already used by '" + ownName +
                            "'");
 
-} // end Handler::crossCheckArguments
+} // Handler::crossCheckArguments
 
 
 
@@ -452,10 +452,10 @@ template< typename T>
       return arUnknown;
 
    // an argument that we know
-   if (hdl->valueMode() == detail::TypedArgBase::vmUnknown)
+   if (hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
       throw runtime_error( "Value mode not set for argument '" + argString + "'");
 
-   if (hdl->valueMode() == detail::TypedArgBase::vmNone)
+   if (hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
    {
       // no value needed
       handleIdentifiedArg( hdl, argString);
@@ -467,12 +467,12 @@ template< typename T>
    ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((hdl->valueMode() == detail::TypedArgBase::vmRequired) &&
+   if ((hdl->valueMode() == detail::TypedArgBase::ValueMode::required) &&
        ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)))
       throw invalid_argument( "Argument '" + argString + "' requires value(s)");
 
    if (((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)) &&
-       (hdl->valueMode() == detail::TypedArgBase::vmUnknown))
+       (hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown))
    {
       handleIdentifiedArg( hdl, argString);
    } else if ((ait2 != end) && (ait2->mElementType == detail::ArgListElement::etValue))
@@ -488,7 +488,7 @@ template< typename T>
    } // end if
 
    return arConsumed;
-} // end Handler::processArg
+} // Handler::processArg
 
 
 
@@ -557,7 +557,7 @@ Handler::ArgResult
    } // end switch
 
    return arUnknown;
-} // end Handler::evalSingleArgument
+} // Handler::evalSingleArgument
 
 
 
@@ -570,7 +570,7 @@ void Handler::checkMissingMandatoryCardinality() const
    mArguments.checkMandatoryCardinality();
    mSubGroupArgs.checkMandatoryCardinality();
 
-} // end Handler::checkMissingMandatoryCardinality
+} // Handler::checkMissingMandatoryCardinality
 
 
 
@@ -579,7 +579,7 @@ void Handler::checkMissingMandatoryCardinality() const
 ///                            be increased if this class contains longer
 ///                            arguments.
 /// @since  0.2, 10.04.2016
-void Handler::checkMaxArgLen( size_t& maxArgLen)
+void Handler::checkMaxArgLen( size_t& maxArgLen) const
 {
 
    size_t  myArgLength = 0;
@@ -588,7 +588,7 @@ void Handler::checkMaxArgLen( size_t& maxArgLen)
    myArgLength = std::max( myArgLength, mDescription.maxArgLen());
    maxArgLen   = std::max( myArgLength, maxArgLen);
 
-} // end Handler::checkMaxArgLen
+} // Handler::checkMaxArgLen
 
 
 
@@ -600,7 +600,7 @@ bool Handler::argumentExists( char argChar) const
 {
 
    return mArguments.findArg( argChar) != nullptr;
-} // end Handler::argumentExists
+} // Handler::argumentExists
 
 
 
@@ -612,7 +612,7 @@ bool Handler::argumentExists( const string& argString) const
 {
 
    return mArguments.findArg( argString) != nullptr;
-} // end Handler::argumentExists
+} // Handler::argumentExists
 
 
 
@@ -636,7 +636,7 @@ void Handler::readEvalFileArguments( const char* arg0)
 
    readArgumentFile( absPath, false);
 
-} // end Handler::readEvalFileArguments
+} // Handler::readEvalFileArguments
 
 
 
@@ -676,7 +676,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
 
    progArgs.close();
 
-} // end Handler::readArgumentFile
+} // Handler::readArgumentFile
 
 
 
@@ -690,7 +690,7 @@ void Handler::listArgVars()
    if (!mSubGroupArgs.empty())
       mOutput << mSubGroupArgs << endl;
 
-} // end Handler::listArgVars
+} // Handler::listArgVars
 
 
 
@@ -701,7 +701,7 @@ void Handler::endValueList()
 
    mpLastArg = nullptr;
 
-} // end Handler::endValueList
+} // Handler::endValueList
 
 
 
@@ -732,7 +732,7 @@ void Handler::iterateArguments( detail::ArgListParser& alp)
       } // end if
    } // end for
 
-} // end Handler::iterateArguments
+} // Handler::iterateArguments
 
 
 
@@ -767,7 +767,7 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
    assert( (txt1 == nullptr) || (txt2 == nullptr) ||
            (txt1->usagePos() != txt2->usagePos()));
 
-   if ((txt1 != nullptr) && (txt1->usagePos() == upBeforeArgs))
+   if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
 
    size_t  stdArgLength = 0;
@@ -779,9 +779,9 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
    mDescription.setPrintHidden( mPrintHidden);
    mOutput << mDescription << endl;
 
-   if ((txt1 != nullptr) && (txt1->usagePos() == upAfterArgs))
+   if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::afterArgs))
       mOutput << txt1 << endl << endl;
-   else if ((txt2 != nullptr) && (txt2->usagePos() == upAfterArgs))
+   else if ((txt2 != nullptr) && (txt2->usagePos() == UsagePos::afterArgs))
       mOutput << txt2 << endl << endl;
 
    if (!mUsageContinues)
@@ -789,7 +789,7 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 
    mUsagePrinted = true;
 
-} // end Handler::usage
+} // Handler::usage
 
 
 
@@ -808,7 +808,7 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
    mDescription.addArgument( arg_spec, desc, ah_obj);
 
    return ah_obj;
-} // end Handler::internAddArgument
+} // Handler::internAddArgument
 
 
 
@@ -890,7 +890,7 @@ bool Handler::validArguments( string& constraint_arg_list) const
    constraint_arg_list = new_constraint_arg_list;
 
    return true;
-} // end Handler::validArguments
+} // Handler::validArguments
 
 
 
@@ -906,7 +906,7 @@ void Handler::executeGlobalConstraints( const string& arg_spec)
       cit->executeConstraint( arg_spec);
    } // end for
 
-} // end Handler::executeGlobalConstraints
+} // Handler::executeGlobalConstraints
 
 
 
@@ -921,7 +921,7 @@ void Handler::checkGlobalConstraints() const
       cit->checkEndCondition();
    } // end for
 
-} // end Handler::checkGlobalConstraints
+} // Handler::checkGlobalConstraints
 
 
 
@@ -954,7 +954,7 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
 
    hdl->calledAssign( mReadingArgumentFile, value);
 
-} // end Handler::handleIdentifiedArg
+} // Handler::handleIdentifiedArg
 
 
 
@@ -962,5 +962,5 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
 } // namespace celma
 
 
-// =========================  END OF handler.cpp  =========================
+// ===========================  END OF handler.cpp  ===========================
 
