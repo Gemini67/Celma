@@ -9,12 +9,7 @@
 
 cmake_minimum_required( VERSION 2.8 )
 
-# list of files to add to the library
-# use GLOB (instead of GLOB_RECURSE) so we can exclude the test directory
-file( GLOB reflection_sources
-      "*.cpp"
-      "detail/*.cpp"
-)
+add_definitions( -DBOOST_TEST_DYN_LINK)
 
-add_subdirectory( test )
+celma_add_celma_boost_testprogram( test_indirect_access )
 

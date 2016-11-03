@@ -10,17 +10,16 @@
 --*/
 
 
-/** @file
-    Internal macro definitions for generating a reflection-like field access.
-*/
+/// @file
+/// Internal macro definitions for generating indirect field access.
 
 
-#ifndef CELMA_REFLECTION_DETAIL_REFLECTION_MACROS_HPP
-#define CELMA_REFLECTION_DETAIL_REFLECTION_MACROS_HPP
+#ifndef CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_MACROS_HPP
+#define CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_MACROS_HPP
 
 
 #include <iosfwd>
-#include "celma/reflection/detail/reflected_base.hpp"
+#include "celma/indirect_access/detail/indirect_access_base.hpp"
 
 
 /// One field == member variable of the 'normal' structure.
@@ -73,16 +72,16 @@
    addField( #n , mDestination.m ## n);
 
 
-/// Creates the class that provides reflection-like access to the variables in
-/// the 'normal' structure.
+/// Creates the class that provides indirect access to the variables in the
+/// 'normal' structure.
 /// @param  n  The name of the class to create.
 /// @param  l  The list of fields/variables and their types.
-#define REFLECTED( n, l) \
-   class Reflected ## n : public celma::reflection::detail::ReflectedBase \
+#define INDIRECT( n, l) \
+   class IndirectAccess_ ## n : public celma::indirect_access::detail::IndirectAccessBase \
    { \
    public: \
-      Reflected ## n( n& dest): \
-         ReflectedBase(), \
+      IndirectAccess_ ## n( n& dest): \
+         IndirectAccessBase(), \
          mDestination( dest) \
       { \
          l(ADD_MEMBER)\
@@ -101,7 +100,8 @@
    }
 
 
-#endif   // CELMA_REFLECTION_DETAIL_REFLECTION_MACROS_HPP
+#endif   // CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_MACROS_HPP
 
 
-// ======================  END OF reflection_macros.hpp  ======================
+// ====================  END OF indirect_access_macros.hpp  ====================
+
