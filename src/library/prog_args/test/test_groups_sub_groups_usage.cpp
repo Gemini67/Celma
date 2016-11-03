@@ -9,8 +9,8 @@
 **
 **
 **  Description:
-**    Test program for the output of the usage of prog_args::Groups combined
-**    with sub-arguments.
+**    Test program for the output of the usage of celma::prog_args::Groups
+**    combined with sub-arguments.
 **    Must be started manually and checked for correctness visually.
 **    Run with -h or --help.
 **
@@ -20,15 +20,16 @@
 #include "celma/prog_args/groups.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::prog_args::Groups;
+using celma::prog_args::Handler;
+using std::string;
 
 
 int main( int argc, char* argv[])
 {
 
-   prog_args::Groups::SharedArgHndl  ah1( new prog_args::Handler( 0));
-   prog_args::Groups::SharedArgHndl  ah2( new prog_args::Handler( prog_args::Handler::AllHelp));
+   Groups::SharedArgHndl  ah1( new Handler( 0));
+   Groups::SharedArgHndl  ah2( new Handler( Handler::AllHelp));
 
    bool  quietFlag;
    bool  debugMode;
@@ -44,13 +45,13 @@ int main( int argc, char* argv[])
    ah2->addArgument( "version", DEST_VAR( printVersion), "prints version information");
    ah2->addArgument( "modlist", DEST_VAR( printModList), "prints module list");
 
-   prog_args::Groups::instance().addArgHandler( "Program Arguments:", ah1);
-   prog_args::Groups::instance().addArgHandler( "Standard Arguments:", ah2);
+   Groups::instance().addArgHandler( "Program Arguments:", ah1);
+   Groups::instance().addArgHandler( "Standard Arguments:", ah2);
 
    string  inputName;
    int     inputMode = 0;
 
-   prog_args::Handler  subInput( prog_args::Handler::hfHelpShort | prog_args::Handler::hfHelpLong);
+   Handler  subInput( Handler::hfHelpShort | Handler::hfHelpLong);
    subInput.addArgument( "f", DEST_VAR( inputName), DEST_VAR( inputMode), 1,
                          "specifies to read from a file");
    subInput.addArgument( "q", DEST_VAR( inputName), DEST_VAR( inputMode), 2,
@@ -60,18 +61,18 @@ int main( int argc, char* argv[])
    string  outputName;
    int     outputMode = 0;
 
-   prog_args::Handler  subOutput( prog_args::Handler::hfHelpShort | prog_args::Handler::hfHelpLong);
+   Handler  subOutput( Handler::hfHelpShort | Handler::hfHelpLong);
    subOutput.addArgument( "f", DEST_VAR( outputName), DEST_VAR( outputMode), 1,
                           "specifies to write into a file");
    subOutput.addArgument( "q", DEST_VAR( outputName), DEST_VAR( outputMode), 2,
                           "specifies to write into a queue");
    ah1->addArgument( "o", &subOutput, "output arguments");
 
-   prog_args::Groups::instance().evalArguments( argc, argv);
+   Groups::instance().evalArguments( argc, argv);
 
    return EXIT_SUCCESS;
-} // end main
+} // main
 
 
 
-// =========================  END OF test_groups_sub_groups_usage.cpp  =========================
+// =================  END OF test_groups_sub_groups_usage.cpp  =================

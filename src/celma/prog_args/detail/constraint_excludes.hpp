@@ -41,7 +41,7 @@ public:
    /// Adds the 'exludes' constraint to the current argument handler.
    /// @param[in]  sourceArg  The argument that sets this constraint.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg);
+   virtual void executeConstraint( const std::string& sourceArg) override;
 
 private:
    /// The argument specification of the other, forbidden argument(s).
@@ -76,5 +76,5 @@ inline detail::IConstraint* excludes( const std::string& argSpec)
 #endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_EXCLUDES_HPP
 
 
-// =========================  END OF constraint_excludes.hpp  =========================
+// =====================  END OF constraint_excludes.hpp  =====================
 

@@ -112,5 +112,5 @@ void ExceptionBase::buildMsg()
 } // namespace celma
 
 
-// =========================  END OF exception_base.cpp  =========================
+// ========================  END OF exception_base.cpp  ========================
 

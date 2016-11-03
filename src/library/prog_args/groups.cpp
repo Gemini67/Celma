@@ -28,11 +28,14 @@
 #include "celma/prog_args/i_usage_text.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args {
 
+
+using std::cout;
+using std::endl;
+using std::invalid_argument;
+using std::runtime_error;
+using std::string;
 
 
 /// Adds an argument handler to the internal list.<br>
@@ -42,7 +45,7 @@ namespace celma { namespace prog_args {
 ///                      identification and printing the usage.
 /// @param[in]  ah       The argument handler to add.
 /// @since  0.2, 10.04.2016
-void Groups::addArgHandler( const string& grpName, SharedArgHndl ah)
+void Groups::addArgHandler( const string& grpName, SharedArgHndl ah) noexcept( false)
 {
 
    if (ah.get() == nullptr)
@@ -51,23 +54,23 @@ void Groups::addArgHandler( const string& grpName, SharedArgHndl ah)
    } // end if
 
    /// check that this symbolic name is not used already
-   for (size_t i = 0; i < mArgGroups.size(); ++i)
+   for (auto const& stored_group : mArgGroups)
    {
-      if (mArgGroups[ i].mName == grpName)
+      if (stored_group.mName == grpName)
          throw runtime_error( "Group name '" + grpName + "' is already in use!");
    } // end for
 
    /// Make sure that the new group does not contain any argument(s) that are
    /// already used by an existing group
-   for (size_t i = 0; i < mArgGroups.size(); ++i)
+   for (auto const& stored_group : mArgGroups)
    {
-      mArgGroups[ i].mpArgHandler->crossCheckArguments( mArgGroups[ i].mName,
-                                                        grpName, *ah);
+      stored_group.mpArgHandler->crossCheckArguments( stored_group.mName,
+                                                      grpName, *ah);
    } // end for
 
    mArgGroups.push_back( Storage( grpName, ah));
 
-} // end Groups::addArgHandler
+} // Groups::addArgHandler
 
 
 
@@ -79,10 +82,10 @@ void Groups::addArgHandler( const string& grpName, SharedArgHndl ah)
 Groups::SharedArgHndl Groups::getHandler( const string& grpName) const
 {
 
-   for (size_t i = 0; i < mArgGroups.size(); ++i)
+   for (auto const& stored_group : mArgGroups)
    {
-      if (mArgGroups[ i].mName == grpName)
-         return mArgGroups[ i].mpArgHandler;
+      if (stored_group.mName == grpName)
+         return stored_group.mpArgHandler;
    } // end for
 
    return SharedArgHndl();
@@ -97,7 +100,7 @@ Groups::SharedArgHndl Groups::getHandler( const string& grpName) const
  /// @param[in]  argc    Number of arguments passed to the process.
  /// @param[in]  argv[]  List of argument strings.
  /// @since  0.2, 10.04.2016
-void Groups::evalArguments( int argc, char* argv[])
+void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
 {
 
    detail::ArgListParser  alp( argc, argv);
@@ -111,9 +114,9 @@ void Groups::evalArguments( int argc, char* argv[])
    for (auto ai = alp.begin(); ai != alp.end(); ++ai)
    {
       auto  result = Handler::arUnknown;
-      for (size_t i = 0; i < mArgGroups.size(); ++i)
+      for (auto & stored_group : mArgGroups)
       {
-         result = mArgGroups[ i].mpArgHandler->evalSingleArgument( ai, alp.end());
+         result = stored_group.mpArgHandler->evalSingleArgument( ai, alp.end());
          if (result != Handler::arUnknown)
             break;   // for
       } // end for
@@ -130,12 +133,12 @@ void Groups::evalArguments( int argc, char* argv[])
       } // end if
    } // end for
 
-   for (size_t i = 0; i < mArgGroups.size(); ++i)
+   for (auto const& stored_group : mArgGroups)
    {
-      mArgGroups[ i].mpArgHandler->checkMissingMandatoryCardinality();
+      stored_group.mpArgHandler->checkMissingMandatoryCardinality();
    } // end for
 
-} // end Groups::evalArguments
+} // Groups::evalArguments
 
 
 
@@ -155,7 +158,7 @@ void Groups::removeArgHandler( const string& grpName)
       } // end if
    } // end for
 
-} // end Groups::removeArgHandler
+} // Groups::removeArgHandler
 
 
 
@@ -167,14 +170,14 @@ void Groups::removeArgHandler( const string& grpName)
 bool Groups::argumentExists( char argChar) const
 {
 
-   for (size_t i = 0; i < mArgGroups.size(); ++i)
+   for (auto const& stored_group : mArgGroups)
    {
-      if (mArgGroups[ i].mpArgHandler->argumentExists( argChar))
+      if (stored_group.mpArgHandler->argumentExists( argChar))
          return true;
    } // end for
 
    return false;
-} // end Groups::argumentExists
+} // Groups::argumentExists
 
 
 
@@ -186,14 +189,14 @@ bool Groups::argumentExists( char argChar) const
 bool Groups::argumentExists( const string& argString) const
 {
 
-   for (size_t i = 0; i < mArgGroups.size(); ++i)
+   for (auto const& stored_group : mArgGroups)
    {
-      if (mArgGroups[ i].mpArgHandler->argumentExists( argString))
+      if (stored_group.mpArgHandler->argumentExists( argString))
          return true;
    } // end for
 
    return false;
-} // end Groups::argumentExists
+} // Groups::argumentExists
 
 
 
@@ -204,7 +207,7 @@ Groups::Groups():
    mEvaluating( false),
    mUsageLineLength( detail::ArgumentDesc::DefaultLineLength)
 {
-} // end Groups::Groups
+} // Groups::Groups
 
 
 
@@ -220,36 +223,36 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
    size_t  maxArgLen = 0;
 
 
-   for (size_t i = 0; i < mArgGroups.size(); ++i)
+   for (auto const& stored_group : mArgGroups)
    {
-      mArgGroups[ i].mpArgHandler->checkMaxArgLen( maxArgLen);
+      stored_group.mpArgHandler->checkMaxArgLen( maxArgLen);
    } // end for
 
-   if ((txt1 != nullptr) && (txt1->usagePos() == Handler::upBeforeArgs))
+   if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::beforeArgs))
       cout << txt1 << endl << endl;
 
    cout << "Usage:" << endl << endl;
 
-   for (size_t i = 0; i < mArgGroups.size(); ++i)
+   for (auto & stored_group : mArgGroups)
    {
-      mArgGroups[ i].mpArgHandler->mDescription.setMinArgLen( maxArgLen);
-      mArgGroups[ i].mpArgHandler->mDescription.setLineLength( mUsageLineLength);
-      mArgGroups[ i].mpArgHandler->mDescription.setCaption( "Mandatory:",
+      stored_group.mpArgHandler->mDescription.setMinArgLen( maxArgLen);
+      stored_group.mpArgHandler->mDescription.setLineLength( mUsageLineLength);
+      stored_group.mpArgHandler->mDescription.setCaption( "Mandatory:",
                                                             "Optional:");
 
-      cout << mArgGroups[ i].mName << endl
-           << *(mArgGroups[ i].mpArgHandler) << endl
+      cout << stored_group.mName << endl
+           << *(stored_group.mpArgHandler) << endl
            << endl;
    } // end for
 
-   if ((txt1 != nullptr) && (txt1->usagePos() == Handler::upAfterArgs))
+   if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::afterArgs))
       cout << txt1 << endl << endl;
-   else if ((txt2 != nullptr) && (txt2->usagePos() == Handler::upAfterArgs))
+   else if ((txt2 != nullptr) && (txt2->usagePos() == Handler::UsagePos::afterArgs))
       cout << txt2 << endl << endl;
 
    exit( EXIT_SUCCESS);
 
-} // end Groups::displayUsage
+} // Groups::displayUsage
 
 
 
@@ -257,5 +260,5 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 } // namespace celma
 
 
-// =========================  END OF groups.cpp  =========================
+// ============================  END OF groups.cpp  ============================
 

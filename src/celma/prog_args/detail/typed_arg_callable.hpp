@@ -46,24 +46,24 @@ public:
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const;
+   virtual void dump( std::ostream& os) const override;
 
 private:
    /// Executes the specified function.
    /// @param[in]  value  Ignored.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value);
+   virtual void assign( const std::string& value) override;
 
    /// Reference of the destination variable to store the value in.
    ArgHandlerCallable  mFun;
    /// Flag set when the function is called.
-   bool            mWasCalled;
+   bool                mWasCalled;
 
 }; // TypedArgCallable
 
@@ -75,31 +75,31 @@ private:
 inline TypedArgCallable::TypedArgCallable( const std::string& arg_spec,
                                            ArgHandlerCallable fun,
                                            const std::string& fname):
-   TypedArgBase( arg_spec, fname, vmNone, false),
+   TypedArgBase( arg_spec, fname, ValueMode::none, false),
    mFun( fun),
    mWasCalled( false)
 {
-} // end TypedArgCallable::TypedArgCallable
+} // TypedArgCallable::TypedArgCallable
 
 
 inline bool TypedArgCallable::hasValue() const
 {
    return mWasCalled;
-} // end TypedArgCallable::hasValue
+} // TypedArgCallable::hasValue
 
 
 inline void TypedArgCallable::dump( std::ostream& os) const
 {
    os << "calls function/method '" << mVarName << "'." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArgCallable::dump
+} // TypedArgCallable::dump
 
 
 inline void TypedArgCallable::assign( const std::string&)
 {
    mFun();
    mWasCalled = true;
-} // end TypedArgCallable::assign
+} // TypedArgCallable::assign
 
 
 } // namespace detail
@@ -110,5 +110,5 @@ inline void TypedArgCallable::assign( const std::string&)
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_CALLABLE_HPP
 
 
-// =========================  END OF typed_arg_callable.hpp  =========================
+// ======================  END OF typed_arg_callable.hpp  ======================
 

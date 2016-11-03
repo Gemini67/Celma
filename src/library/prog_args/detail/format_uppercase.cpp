@@ -23,9 +23,6 @@
 #include <boost/algorithm/string.hpp>
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
@@ -33,12 +30,12 @@ namespace celma { namespace prog_args { namespace detail {
 /// Converts the text in \a val to uppercase.
 /// @param[in,out]  val  The text to convert to uppercase.
 /// @since  0.2, 10.04.2016
-void FormatUppercase::formatValue( string& val) const
+void FormatUppercase::formatValue( std::string& val) const
 {
 
    boost::to_upper( val);
 
-} // end FormatUppercase::formatValue
+} // FormatUppercase::formatValue
 
 
 
@@ -47,5 +44,5 @@ void FormatUppercase::formatValue( string& val) const
 } // namespace celma
 
 
-// =========================  END OF format_uppercase.cpp  =========================
+// =======================  END OF format_uppercase.cpp  =======================
 

@@ -47,12 +47,12 @@ public:
 
    /// Required by framework, does nothing except setting the #mWasCalled flag.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */);
+   virtual void assign( const std::string& /* value */) override;
 
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
    /// Returns the argument handler object.
    /// @return  The object stored internally.
@@ -92,5 +92,5 @@ inline Handler* TypedArgSubGroup::obj() const
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_SUB_GROUP_HPP
 
 
-// =========================  END OF typed_arg_sub_group.hpp  =========================
+// =====================  END OF typed_arg_sub_group.hpp  =====================
 

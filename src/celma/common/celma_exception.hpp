@@ -88,7 +88,7 @@ public:
    /// @return  The error information in the format
    ///          '\<funcname\>\@\<filename<>[\<linenbr<>]: \<text\>'.
    /// @since  0.2, 07.04.2016
-   virtual const char* what() const noexcept;
+   virtual const char* what() const noexcept override;
 
 private:
    /// If called with a parent, contains a copy-created object with the data of
@@ -193,5 +193,5 @@ typedef CelmaException< std::runtime_error>  CelmaRuntimeError;
 #endif   // CELMA_COMMON_CELMA_EXCEPTION_HPP
 
 
-// =========================  END OF celma_exception.hpp  =========================
+// =======================  END OF celma_exception.hpp  =======================
 
