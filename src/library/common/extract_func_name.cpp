@@ -19,7 +19,7 @@
 #include "celma/common/extract_func_name.hpp"
 
 
-using namespace std;
+using std::string;
 
 
 namespace celma { namespace common {
@@ -35,7 +35,7 @@ void extractFuncName( std::string& funcNameStripped,
                       const std::string& prettyFuncName)
 {
 
-   string::size_type  openingBracket = prettyFuncName.find_first_of( '(');
+   auto  openingBracket = prettyFuncName.find_first_of( '(');
 
 
    if ((prettyFuncName[ openingBracket + 1] == ')') &&
@@ -44,8 +44,8 @@ void extractFuncName( std::string& funcNameStripped,
       openingBracket += 2;
    } // end if
 
-   const string             beforeBracket( prettyFuncName.substr( 0, openingBracket));
-   const string::size_type  lastSpace = beforeBracket.rfind( " ") + 1;
+   const string  beforeBracket( prettyFuncName.substr( 0, openingBracket));
+   const auto    lastSpace = beforeBracket.rfind( " ") + 1;
 
    if (lastSpace == string::npos)
    {
@@ -54,7 +54,7 @@ void extractFuncName( std::string& funcNameStripped,
    } else
    {
       // operators ?
-      const string::size_type  colonColon = beforeBracket.rfind( "::");
+      const auto  colonColon = beforeBracket.rfind( "::");
       if (colonColon == string::npos)
       {
          funcNameStripped = beforeBracket.substr( lastSpace, string::npos);
@@ -63,15 +63,15 @@ void extractFuncName( std::string& funcNameStripped,
          // handle unnamed namespaces
          if (((colonColon > 9) &&
               (beforeBracket.substr( colonColon - 9, 9) == "<unnamed>")) ||
-             ((colonColon > 11) &&
-              (beforeBracket.substr( colonColon - 11, 11) == "{anonymous}")))
+             ((colonColon > 21) &&
+              (beforeBracket.substr( colonColon - 22, 22) == "(anonymous namespace)")))
          {
             funcNameStripped = beforeBracket.substr( colonColon + 2, string::npos);
          } else if (beforeBracket.substr( colonColon + 2, 8) == "operator")
          {
             // <return-type> <classname>::operator<op>()   or
             // <classname>::operator<op>()
-            const string::size_type first_space = beforeBracket.find_first_of( ' ');
+            const auto  first_space = beforeBracket.find_first_of( ' ');
             if (first_space < colonColon)
                funcNameStripped = beforeBracket.substr( first_space + 1, string::npos);
             else
@@ -94,5 +94,5 @@ void extractFuncName( std::string& funcNameStripped,
 } // namespace celma
 
 
-// =========================  END OF extract_func_name.cpp  =========================
+// ======================  END OF extract_func_name.cpp  ======================
 
