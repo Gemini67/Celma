@@ -226,7 +226,7 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 /// @param[in]  hf        The handler to call when the control character is
 ///                       detected on the argument list.
 /// @since  0.2, 10.04.2016
-void Handler::addControlHandler( char ctrlChar, HandlerFunc hf)
+void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
 {
 
    switch (ctrlChar)
@@ -248,7 +248,7 @@ void Handler::addControlHandler( char ctrlChar, HandlerFunc hf)
 /// The arguments specified in the constraint must already be defined.
 /// @param[in]  ic  Pointer to the object that handles the constraint.
 /// @since  0.2, 10.04.2016
-void Handler::addConstraint( detail::IConstraint* ic)
+void Handler::addConstraint( detail::IConstraint* ic) noexcept( false)
 {
 
    if (ic->argumentList().empty())
@@ -276,7 +276,7 @@ void Handler::addConstraint( detail::IConstraint* ic)
 /// @param[in]  argc    Number of arguments passed to the process.
 /// @param[in]  argv[]  List of argument strings.
 /// @since  0.2, 10.04.2016
-void Handler::evalArguments( int argc, char* argv[])
+void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
 {
 
    // first (try to) read the arguments from the file
@@ -708,7 +708,7 @@ void Handler::endValueList()
 /// Iterates over the arguments and evaluates them.
 /// @param[in]  alp  The parser object used to access the arguments.
 /// @since  0.2, 10.04.2016
-void Handler::iterateArguments( detail::ArgListParser& alp)
+void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 {
 
    /// make me the current argument handler
@@ -828,8 +828,8 @@ bool Handler::validArguments( string& constraint_arg_list) const
 
    for (auto const& it : tok)
    {
-      const string::size_type  comma_pos = it.find( ',');
-      string                   current_arg;
+      const auto  comma_pos = it.find( ',');
+      string      current_arg;
       if (comma_pos == string::npos)
       {
          detail::TypedArgBase*  arg = nullptr;

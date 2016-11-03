@@ -100,7 +100,7 @@ TypedArgBitset::TypedArgBitset( const string& arg_spec, type& dest,
    mDestVar( dest),
    mListSep( ',')
 {
-} // end TypedArgBitset::TypedArgBitset
+} // TypedArgBitset::TypedArgBitset
 
 
 void TypedArgBitset::assign( const string& value)
@@ -123,7 +123,7 @@ void TypedArgBitset::assign( const string& value)
          mDestVar.set( boost::lexical_cast< int>( it));
       } // end if
    } // end for
-} // end TypedArgBitset::assign
+} // TypedArgBitset::assign
 
 
 bool TypedArgBitset::hasValue() const
@@ -136,7 +136,7 @@ prog_args::detail::TypedArgBase* TypedArgBitset::setListSep( char sep)
 {
    mListSep = sep;
    return this;
-} // end TypedArgBitset::setListSep
+} // TypedArgBitset::setListSep
 
 
 
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
    BOOST_REQUIRE( kilobits[  7]);
    BOOST_REQUIRE( kilobits[ 11]);
 
-} // end custom_bitset
+} // custom_bitset
 
 
 

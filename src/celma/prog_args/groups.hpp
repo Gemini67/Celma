@@ -184,5 +184,5 @@ inline void Groups::setUsageLineLength( int useLen)
 #endif   // CELMA_PROG_ARGS_GROUPS_HPP
 
 
-// =========================  END OF groups.hpp  =========================
+// ============================  END OF groups.hpp  ============================
 

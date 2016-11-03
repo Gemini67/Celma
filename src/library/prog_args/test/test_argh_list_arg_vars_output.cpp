@@ -138,7 +138,7 @@ int main( int /* argc */, char* argv[])
    } // end scope
 
    return EXIT_SUCCESS;
-} // end main
+} // main
 
 
 

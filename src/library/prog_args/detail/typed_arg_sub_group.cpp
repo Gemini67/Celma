@@ -58,5 +58,5 @@ void TypedArgSubGroup::assign( const std::string& /* value */)
 } // namespace celma
 
 
-// ======================  END OF typed_arg_sub_group.cpp  ======================
+// =====================  END OF typed_arg_sub_group.cpp  =====================
 

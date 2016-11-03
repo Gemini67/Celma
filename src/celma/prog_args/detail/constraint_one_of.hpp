@@ -41,23 +41,23 @@ public:
    /// is used, i.e. #mUsedArgument is empty.
    /// @param[in]  sourceArg  The argument that was used/identified.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg);
+   virtual void executeConstraint( const std::string& sourceArg) override;
 
    /// Required for global constraints to make sure that the argument list
    /// contains both the short and long argument.
    /// @return  The list of argument as passed in the constructor.
    /// @since  0.2, 10.04.2016
-   virtual std::string& argumentList();
+   virtual std::string& argumentList() override;
 
    /// Called after the argument list was validated.
    /// @since  0.2, 10.04.2016
-   virtual void validated();
+   virtual void validated() override;
 
    /// Called after all arguments were evaluated. Checks that one of the
    /// specified arguments was actually used, i.e. #mUsedArgument may not be
    /// empty.
    /// @since  0.2, 10.04.2016
-   virtual void checkEndCondition() const;
+   virtual void checkEndCondition() const override;
 
 private:
    /// The argument specifications of the arguments.<br>
@@ -97,5 +97,5 @@ inline detail::IConstraint* one_of( const std::string& argSpec)
 #endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ONE_OF_HPP
 
 
-// =========================  END OF constraint_one_of.hpp  =========================
+// ======================  END OF constraint_one_of.hpp  ======================
 

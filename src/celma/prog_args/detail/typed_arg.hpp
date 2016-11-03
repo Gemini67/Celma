@@ -167,7 +167,7 @@ public:
       mValue2Set( true)
    {
       mpCardinality.reset( new CardinalityMax( 1));
-   } // end TypedArg< bool>::TypedArg
+   } // TypedArg< bool>::TypedArg
 
    /// Returns if the destination has a value set.
    /// @return  \c true if the destination variable contains a value,
@@ -176,7 +176,7 @@ public:
    virtual bool hasValue() const override
    {
       return mHasValueSet;
-   } // end TypedArg< bool>::hasValue
+   } // TypedArg< bool>::hasValue
 
    /// Would specify that the argument is mandatory (required). This does not
    /// make sense for a flag/boolean value: Throw exception.
@@ -186,7 +186,7 @@ public:
    {
       throw std::logic_error( "Cannot make boolean argument for variable '" +
                               mVarName + "' mandatory");
-   } // end TypedArg< bool>::setIsMandatory
+   } // TypedArg< bool>::setIsMandatory
 
    /// Unset the flag (set to \c false) when the argument is detected, instead
    /// of setting it (the default).
@@ -196,7 +196,7 @@ public:
    {
       mValue2Set = false;
       return this;
-   } // end TypedArg< bool>::unsetFlag
+   } // TypedArg< bool>::unsetFlag
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -207,7 +207,7 @@ protected:
       os << "boolean flag, destination '" << mVarName << "', "
          << (mHasValueSet ? "not set." : "set.") << std::endl
          << "   " << static_cast< const TypedArgBase&>( *this);
-   } // end TypedArg< bool>::dump
+   } // TypedArg< bool>::dump
 
 private:
    /// Stores the value in the destination variable.
@@ -216,7 +216,7 @@ private:
    {
       mDestVar     = mValue2Set;
       mHasValueSet = true;
-   } // end TypedArg< bool>::assign
+   } // TypedArg< bool>::assign
 
    /// Reference of the destination variable to store the value in.
    bool&  mDestVar;
@@ -284,13 +284,13 @@ template< typename T>
       TypedArgBase( arg_spec, vname, ValueMode::required, false),
       mDestVar( dest)
 {
-} // end TypedArg< common::CheckAssign< T>>::TypedArg
+} // TypedArg< common::CheckAssign< T>>::TypedArg
 
 
 template< typename T> bool TypedArg< common::CheckAssign< T>>::hasValue() const
 {
    return mDestVar.hasValue();
-} // end TypedArg< common::CheckAssign< T>>::hasValue
+} // TypedArg< common::CheckAssign< T>>::hasValue
 
 
 template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostream& os) const
@@ -302,7 +302,7 @@ template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostrea
    else
       os << "not set." << std::endl;
    os << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArg< common::CheckAssign< T>>::dump
+} // TypedArg< common::CheckAssign< T>>::dump
 
 
 template< typename T>
@@ -318,7 +318,7 @@ template< typename T>
    {
       mDestVar = boost::lexical_cast< T>( value);
    } // end if
-} // end TypedArg< CheckAssign< T> >::assign
+} // TypedArg< CheckAssign< T> >::assign
 
 
 // Template TypedArg< common::CheckAssign< bool>>
@@ -343,7 +343,7 @@ public:
       mDestVar( dest),
       mValue2Set( true)
    {
-   } // end TypedArg< common::CheckAssign< bool>>::TypedArg
+   } // TypedArg< common::CheckAssign< bool>>::TypedArg
 
    /// Returns if the destination has a value set.
    /// @return  \c true if the destination variable contains a value,
@@ -352,7 +352,7 @@ public:
    virtual bool hasValue() const override
    {
       return mDestVar.hasValue();
-   } // end TypedArg< common::CheckAssign< bool>>::hasValue
+   } // TypedArg< common::CheckAssign< bool>>::hasValue
 
    /// Would specify that the argument is mandatory (required). This does not
    /// make sense for a flag/boolean value: Throw exception.
@@ -362,7 +362,7 @@ public:
    {
       throw std::logic_error( "Cannot make boolean argument for variable '" +
                               mVarName + "' mandatory");
-   } // end TypedArg< common::CheckAssign< bool>>::setIsMandatory
+   } // TypedArg< common::CheckAssign< bool>>::setIsMandatory
 
    /// Unset the flag (set to \c false) when the argument is detected, instead
    /// of setting it (the default).
@@ -372,7 +372,7 @@ public:
    {
       mValue2Set = false;
       return this;
-   } // end TypedArg< common::CheckAssign< bool>>::unsetFlag
+   } // TypedArg< common::CheckAssign< bool>>::unsetFlag
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -382,7 +382,7 @@ protected:
    {
       os << "sets boolean flag on 'CheckAssign< " << mVarName << ">'." << std::endl
          << "   " << static_cast< const TypedArgBase&>( *this);
-   } // end TypedArg< common::CheckAssign< bool>>::dump
+   } // TypedArg< common::CheckAssign< bool>>::dump
 
 private:
    /// Stores the value in the destination variable.
@@ -390,7 +390,7 @@ private:
    virtual void assign( const std::string& /* value */) override
    {
       mDestVar = mValue2Set;
-   } // end TypedArg< common::CheckAssign< bool>>::assign
+   } // TypedArg< common::CheckAssign< bool>>::assign
 
    /// Reference of the destination variable to store the value in.
    common::CheckAssign< bool>&  mDestVar;
@@ -475,27 +475,27 @@ template< typename T>
       mListSep( ',')
 {
    mpCardinality.reset();
-} // end TypedArg< std::vector< T>>::TypedArg
+} // TypedArg< std::vector< T>>::TypedArg
 
 
 template< typename T> bool TypedArg< std::vector< T>>::hasValue() const
 {
    return !mDestVar.empty();
-} // end TypedArg< std::vector< T>>::hasValue
+} // TypedArg< std::vector< T>>::hasValue
 
 
 template< typename T> TypedArgBase* TypedArg< std::vector< T>>::setTakesMultiValue()
 {
    mTakeMultipleValues = true;
    return this;
-} // end TypedArg< std::vector< T>>::setTakesMultiValue
+} // TypedArg< std::vector< T>>::setTakesMultiValue
 
 
 template< typename T> TypedArgBase* TypedArg< std::vector< T>>::setListSep( char sep)
 {
    mListSep = sep;
    return this;
-} // end TypedArg< std::vector< T>>::setListSep
+} // TypedArg< std::vector< T>>::setListSep
 
 
 template< typename T> void TypedArg< std::vector< T>>::dump( std::ostream& os) const
@@ -505,7 +505,7 @@ template< typename T> void TypedArg< std::vector< T>>::dump( std::ostream& os) c
       << (mDestVar.empty() ? "no" : boost::lexical_cast< std::string>( mDestVar.size()))
       << " values." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArg< std::vector< T>>::dump
+} // TypedArg< std::vector< T>>::dump
 
 
 template< typename T>
@@ -531,7 +531,7 @@ template< typename T>
          mDestVar.push_back( boost::lexical_cast< T>( listVal));
       } // end if
    } // end for
-} // end TypedArg< std::vector< T>>::assign
+} // TypedArg< std::vector< T>>::assign
 
 
 } // namespace detail

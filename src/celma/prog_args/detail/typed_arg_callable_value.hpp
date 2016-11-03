@@ -85,34 +85,34 @@ inline TypedArgCallableValue::TypedArgCallableValue( const std::string& arg_spec
    mFun( fun),
    mWasCalled( false)
 {
-} // end TypedArgCallableValue::TypedArgCallableValue
+} // TypedArgCallableValue::TypedArgCallableValue
 
 
 inline bool TypedArgCallableValue::hasValue() const
 {
    return mWasCalled;
-} // end TypedArgCallableValue::hasValue
+} // TypedArgCallableValue::hasValue
 
 
 inline TypedArgBase* TypedArgCallableValue::setTakesMultiValue()
 {
    mTakeMultipleValues = true;
    return this;
-} // end TypedArgCallableValue::setTakesMultiValue
+} // TypedArgCallableValue::setTakesMultiValue
 
 
 inline void TypedArgCallableValue::dump( std::ostream& os) const
 {
    os << "calls function/method '" << mVarName << "'." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArgCallableValue::dump
+} // TypedArgCallableValue::dump
 
 
 inline void TypedArgCallableValue::assign( const std::string& value)
 {
    mFun( value);
    mWasCalled = true;
-} // end TypedArgCallableValue::assign
+} // TypedArgCallableValue::assign
 
 
 } // namespace detail
