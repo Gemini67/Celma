@@ -11,33 +11,34 @@
 
 
 /// @file
-/// See description of class celma::reflection::detail::ReflectedField.
+/// See description of class celma::indirect_access::detail::IndirectAccessField.
 
 
-#ifndef CELMA_REFLECTION_RELFECTED_FIELD_HPP
-#define CELMA_REFLECTION_RELFECTED_FIELD_HPP
+#ifndef CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_FIELD_HPP
+#define CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_FIELD_HPP
 
 
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include "celma/common/type_name.hpp"
-#include "celma/reflection/detail/i_reflected_field.hpp"
+#include "celma/indirect_access/detail/i_indirect_access_field.hpp"
 
 
-namespace celma { namespace reflection { namespace detail {
+namespace celma { namespace indirect_access { namespace detail {
 
 
-/// This class actually handles the access to a reflected field.
+/// This class actually handles the access indirect to a field.
 /// @tparam  T  The type of the field/variable.
+/// @since  0.5, 03.11.2016  (renamed to 'indirect access')
 /// @since  0.4, 02.05.2016
-template< typename T> class ReflectedField: public IReflectedField
+template< typename T> class IndirectAccessField: public IIndirectAccess
 {
 public:
    /// Constructor.
    /// @param[in]  name       The name of the field/variable.
    /// @param[in]  value_ref  The variable.
    /// @since  0.4, 02.05.2016
-   ReflectedField( const std::string& name, T& value_ref);
+   IndirectAccessField( const std::string& name, T& value_ref);
 
    /// Sets a new value.
    /// @param[in]  new_value  The new value to set.
@@ -52,13 +53,13 @@ public:
    /// Returns the value of the variable as string.
    /// @return  The current value as string.
    /// @since  0.4, 02.07.2016
-   virtual const std::string str() const  noexcept( false) override;
+   virtual const std::string str() const noexcept( false) override;
 
 protected:
    /// The variable.
    T&  mValueRef;
 
-}; // ReflectedField
+}; // IndirectAccessField
 
 
 // inlined methods
@@ -66,40 +67,41 @@ protected:
 
 
 template< typename T>
-   ReflectedField< T>::ReflectedField( const std::string& name, T& value_ref):
-   IReflectedField( name, type< T>::name()),
+   IndirectAccessField< T>::IndirectAccessField( const std::string& name, T& value_ref):
+   IIndirectAccess( name, type< T>::name()),
    mValueRef( value_ref)
 {
-} // end ReflectedField< T>::ReflectedField
+} // end IndirectAccessField< T>::IndirectAccessField
 
 
 template< typename T>
-   void ReflectedField< T>::set( const T& new_value) noexcept( true)
+   void IndirectAccessField< T>::set( const T& new_value) noexcept( true)
 {
    mValueRef = new_value;
-} // end ReflectedField< T>::set
-
-
-template< typename T> const T& ReflectedField< T>::get() const noexcept( true)
-{
-   return mValueRef;
-} // end ReflectedField< T>::get
+} // end IndirectAccessField< T>::set
 
 
 template< typename T>
-   const std::string ReflectedField< T>::str() const noexcept( false)
+   const T& IndirectAccessField< T>::get() const noexcept( true)
+{
+   return mValueRef;
+} // end IndirectAccessField< T>::get
+
+
+template< typename T>
+   const std::string IndirectAccessField< T>::str() const noexcept( false)
 {
    return boost::lexical_cast< std::string>( mValueRef);
-} // end ReflectedField< T>::str
+} // end IndirectAccessField< T>::str
 
 
 } // namespace detail
-} // namespace reflection
+} // namespace indirect_access
 } // namespace celma
 
 
-#endif   // CELMA_REFLECTION_RELFECTED_FIELD_HPP
+#endif   // CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_FIELD_HPP
 
 
-// =======================  END OF reflected_field.hpp  =======================
+// ====================  END OF indirect_access_field.hpp  ====================
 

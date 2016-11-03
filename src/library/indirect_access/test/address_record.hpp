@@ -4,7 +4,7 @@
 
 
 #include <string>
-#include "celma/reflection/reflection_macros.hpp"
+#include "celma/indirect_access/indirect_access_macros.hpp"
 
 
 #define  ADDRESS_RECORD_FIELDS(FIELD) \
@@ -13,7 +13,7 @@
    FIELD( int,         PostalCode)
 
 
-REFLECT( AddressRecord, ADDRESS_RECORD_FIELDS);
+INDIRECT_ACCESS( AddressRecord, ADDRESS_RECORD_FIELDS);
 
 
 #endif   // ADDRESS_RECORD_HPP

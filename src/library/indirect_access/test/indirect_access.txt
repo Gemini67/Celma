@@ -47,7 +47,7 @@ struct AdressRecord
 
 /// This class is used when access to a member by name or by id should be
 /// possible
-class ReflectedAddressRecord: public ReflectedBase
+class ReflectedAddressRecord: public IndirectAccessBase
 {
 public:
    AddressRecord()
@@ -102,10 +102,10 @@ protected:
 // template specialization for the structure to handle
 
 
-class ReflectedBase
+class IndirectAccessBase
 {
 public:
-   ReflectedBase():
+   IndirectAccessBase():
       mId2Field(),
       mName2Field()
    {
@@ -113,7 +113,7 @@ public:
 
    template< typename T> void addField( const std::string& name, T& value)
    {
-      field_ptr       new_field( new ReflectedField< T>( name));
+      field_ptr       new_field( new IndirectAccessField< T>( name));
       const uint16_t  field_id = static_cast< uint16_t>( mId2Field.size());
 
       mId2Field.push_back( new_field);
@@ -151,7 +151,7 @@ public:
    }
 
 private:
-   typedef std::shared_ptr< IReflectedField>       field_ptr;
+   typedef std::shared_ptr< IIndirectAccess>       field_ptr;
    typedef std::vector< uint16_t, field_ptr>       id_cont_t;
    typedef std::hash_map< std::string, field_ptr>  name_cont_t;
 
@@ -162,15 +162,15 @@ private:
 
 
 
-class IReflectedField
+class IIndirectAccess
 {
 public:
-   IReflectedField( const std::string& name):
+   IIndirectAccess( const std::string& name):
       mName( name)
    {
    }
 
-   virtual ~IReflectedField() { }
+   virtual ~IIndirectAccess() { }
 
 protected:
    std::string  mName;
@@ -179,11 +179,11 @@ protected:
 
 
 
-template< typename T> class ReflectedField: public IReflectedField
+template< typename T> class IndirectAccessField: public IIndirectAccess
 {
 public:
-   ReflectedField( const std::string& name, T& value_ref):
-      IReflectedField( name),
+   IndirectAccessField( const std::string& name, T& value_ref):
+      IIndirectAccess( name),
       mValueRef( value_ref)
    {
    }
