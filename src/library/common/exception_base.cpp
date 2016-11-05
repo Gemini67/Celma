@@ -24,7 +24,7 @@
 
 
 // project includes
-#include "celma/common/extract_func_name.hpp"
+#include "celma/common/extract_funcname.hpp"
 
 
 using namespace std;
@@ -81,12 +81,7 @@ const string ExceptionBase::sourceFilename() const
 const string ExceptionBase::functionName() const
 {
 
-   string  justName;
-
-
-   common::extractFuncName( justName, mFunctionName);
-
-   return justName;
+   return extractFuncname( mFunctionName);
 } // end ExceptionBase::functionName
 
 
