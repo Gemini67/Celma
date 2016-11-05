@@ -19,6 +19,9 @@
 #define CELMA_COMMON_COUNTING_ITERATOR_HPP
 
 
+#include "celma/common/pre_postfix.hpp"
+
+
 namespace celma { namespace common {
 
 
@@ -78,12 +81,12 @@ public:
    /// Prefix increment operator.
    /// @return  The incremented iterator.
    /// @since  0.2, 04.04.2016
-   CountingIterator& operator ++();
+   CountingIterator& operator ++( std::prefix);
 
    /// Postfix increment operator.
    /// @return  An iterator object with the previous value.
    /// @since  0.2, 04.04.2016
-   CountingIterator operator ++( int);
+   CountingIterator operator ++( std::postfix);
 
    /// Assignment operator
    /// @param[in]  other  The other object to copy the data from.
@@ -139,7 +142,7 @@ template< class BaseType>
 
 
 template< class BaseType>
-   CountingIterator< BaseType>& CountingIterator< BaseType>::operator ++()
+   CountingIterator< BaseType>& CountingIterator< BaseType>::operator ++( std::prefix)
 {
    ++mIterCounter;
    BaseType::operator ++();
@@ -148,7 +151,7 @@ template< class BaseType>
 
 
 template< class BaseType>
-   CountingIterator< BaseType> CountingIterator< BaseType>::operator ++( int)
+   CountingIterator< BaseType> CountingIterator< BaseType>::operator ++( std::postfix)
 {
    CountingIterator  result( *this);
 
@@ -185,5 +188,5 @@ template< class BaseType> int CountingIterator< BaseType>::currentNum() const
 #endif   // CELMA_COMMON_COUNTING_ITERATOR_HPP
 
 
-// =========================  END OF counting_iterator.hpp  =========================
+// ======================  END OF counting_iterator.hpp  ======================
 

@@ -2605,5 +2605,5 @@ BOOST_AUTO_TEST_CASE( control_args)
 
 
 
-// =========================  END OF test_argument_handler.cpp  =========================
+// ====================  END OF test_argument_handler.cpp  ====================
 

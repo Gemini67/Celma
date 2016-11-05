@@ -87,6 +87,7 @@ private:
 // inlined methods
 // ===============
 
+
 template< typename S, typename F, typename H>
    StreamLineIterator< S, F, H>::StreamLineIterator( S& source, bool atEnd):
          F(),

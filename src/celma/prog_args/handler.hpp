@@ -19,6 +19,7 @@
 #define CELMA_PROG_ARGS_HANDLER_HPP
 
 
+#include <ostream>
 #include <string>
 #include <vector>
 #include <boost/noncopyable.hpp>
@@ -257,12 +258,14 @@ public:
    }; // HandleFlags
 
    /// List of possible positions for the additional output 
-   enum UsagePos
+   enum class UsagePos
    {
-      upUnused,       //!< Initialization value.
-      upBeforeArgs,   //!< Position before the list of arguments.
-      upAfterArgs     //!< Position after the list of arguments.
+      unused,       //!< Initialization value.
+      beforeArgs,   //!< Position before the list of arguments.
+      afterArgs     //!< Position after the list of arguments.
    }; // UsagePos
+
+   typedef detail::TypedArgBase::ValueMode  ValueMode;
 
    /// Set of all help arguments.
    static const int  AllHelp = hfHelpShort | hfHelpLong;
@@ -282,10 +285,28 @@ public:
    ///                      text for the usage.
    /// @param[in]  txt2     Optional pointer to the object to provide additional
    ///                      text for the usage.
+   /// @since  0.3, 04.06.2016  (same interface, now implemented as delegating
+   ///                           constructor)
    /// @since  0.2, 10.04.2016
    explicit Handler( int flagSet = hfHelpShort | hfHelpLong,
                      IUsageText* txt1 = nullptr,
                      IUsageText* txt2 = nullptr);
+
+   /// Constructor that allows to specify the output streams to write to.
+   /// @param[in]  os        The stream to write normal out to.
+   /// @param[in]  error_os  The stream to write error output to.
+   /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
+   ///                       of possible values.
+   /// @param[in]  txt1      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @param[in]  txt2      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @since  0.3, 04.06.2016  (added parameters for output streams)
+   /// @since  0.2, 10.04.2016
+   Handler( std::ostream& os, std::ostream& error_os,
+            int flag_set = hfHelpShort | hfHelpLong,
+            IUsageText* txt1 = nullptr,
+            IUsageText* txt2 = nullptr);
 
    /// Destructor, deletes dynamically allocated objects.
    /// @since  0.2, 10.04.2016
@@ -502,7 +523,7 @@ public:
    /// @param[in]  hf        The handler to call when the control character is
    ///                       detected on the argument list.
    /// @since  0.2, 10.04.2016
-   void addControlHandler( char ctrlChar, HandlerFunc hf);
+   void addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false);
 
    /// Specifies the line length to use when printing the usage.
    /// @param[in]  useLen  The new line length to use.<br>
@@ -515,7 +536,7 @@ public:
    /// The arguments specified in the constraint must already be defined.
    /// @param[in]  ic  Pointer to the object that handles the constraint.
    /// @since  0.2, 10.04.2016
-   void addConstraint( detail::IConstraint* ic);
+   void addConstraint( detail::IConstraint* ic) noexcept( false);
 
    /// Iterates over the list of arguments and their values and stores the
    /// values in the corresponding destination variables.<br>
@@ -527,7 +548,7 @@ public:
    /// @param[in]  argv[]  List of argument strings.
    /// @throw  Exception as described above.
    /// @since  0.2, 10.04.2016
-   void evalArguments( int argc, char* argv[]);
+   void evalArguments( int argc, char* argv[]) noexcept( false);
 
    /// Same as evalArguments(). Difference is that this method catches
    /// exceptions, reports them on stderr and then exits the program.<br>
@@ -595,7 +616,7 @@ protected:
    ///                            be increased if this class contains longer
    ///                            arguments.
    /// @since  0.2, 10.04.2016
-   void checkMaxArgLen( size_t& maxArgLen);
+   void checkMaxArgLen( size_t& maxArgLen) const;
 
    /// Checks if the specified argument is already used.
    /// @param[in]  argChar  The argument character to check.
@@ -676,7 +697,7 @@ private:
    /// Iterates over the arguments and evaluates them.
    /// @param[in]  alp  The parser object used to access the arguments.
    /// @since  0.2, 10.04.2016
-   void iterateArguments( detail::ArgListParser& alp);
+   void iterateArguments( detail::ArgListParser& alp) noexcept( false);
 
    /// Standard procedure for adding an argument handling object.
    /// @param[in]  ah_obj    Pointer to the object that handles the argument.
@@ -723,6 +744,10 @@ private:
                              const std::string& arg_spec,
                              const std::string& value = "");
 
+   /// Stream to write output to.
+   std::ostream&                mOutput;
+   /// Stream to write error output to.
+   std::ostream&                mErrorOutput;
    /// Set when the flag #hfReadProgArg was passed to the constructor. Then the
    /// default program arguments file is read before the command line arguments
    /// are evaluated.
@@ -736,6 +761,10 @@ private:
    /// Set when the flag #hfUsageCont was passed to the constructor. Specifies
    /// that the program flow should continue after printing the usage.
    const bool                   mUsageContinues;
+   /// Set when the usage was printed.<br>
+   /// Needed together with the flag #mUsageContinues to bypass end-of-arguments
+   /// checks so that evalArgument() can return.
+   bool                         mUsagePrinted;
    /// The (top-level) arguments known by this class.
    detail::ArgumentContainer    mArguments;
    /// Argument sub-groups.
@@ -832,7 +861,7 @@ template< typename T>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( arg_spec, dest, vname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename T1, typename T2>
@@ -849,7 +878,7 @@ template< typename T1, typename T2>
       new detail::TypedArgPair< T1, T2>( arg_spec, dest1, vname1, dest2, vname2,
                                          value2);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename T>
@@ -859,7 +888,7 @@ template< typename T>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( "-", dest, vname);
    return internAddArgument( arg_hdl, "", desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename T, typename C>
@@ -871,7 +900,7 @@ template< typename T, typename C>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgRange< T, C>( arg_spec, dest, vname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename T, typename C>
@@ -882,7 +911,7 @@ template< typename T, typename C>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgRange< T, C>( "-", dest, vname);
    return internAddArgument( arg_hdl, "", desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 inline detail::TypedArgBase*
@@ -893,7 +922,7 @@ inline detail::TypedArgBase*
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallable( arg_spec, fun, fname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 inline detail::TypedArgBase*
@@ -905,7 +934,7 @@ inline detail::TypedArgBase*
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallableValue( arg_spec, fun, fname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 inline detail::TypedArgBase*
@@ -919,7 +948,7 @@ inline detail::TypedArgBase*
    mSubGroupArgs.addArgument( arg_hdl, arg_spec);
    mDescription.addArgument( arg_spec, desc, arg_hdl);
    return arg_hdl;
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename C, typename T>
@@ -931,20 +960,20 @@ template< typename C, typename T>
 {
    detail::TypedArgBase*  arg_hdl = new C( arg_spec, dest, vname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addCustomArgument
+} // Handler::addCustomArgument
 
 
 inline void Handler::setUsageLineLength( int useLen)
 {
    mDescription.setLineLength( useLen);
    mSubGroupArgs.setUsageLineLength( useLen);
-} // end Handler::setUsageLineLength
+} // Handler::setUsageLineLength
 
 
 inline void Handler::setIsSubGroupHandler()
 {
    mIsSubGroupHandler = true;
-} // end Handler::setIsSubGroupHandler
+} // Handler::setIsSubGroupHandler
 
 
 } // namespace prog_args
@@ -954,5 +983,5 @@ inline void Handler::setIsSubGroupHandler()
 #endif   // CELMA_PROG_ARGS_HANDLER_HPP
 
 
-// =========================  END OF handler.hpp  =========================
+// ===========================  END OF handler.hpp  ===========================
 

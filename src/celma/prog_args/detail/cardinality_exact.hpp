@@ -48,12 +48,12 @@ public:
    /// line (actually may be without a value).
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue();
+   virtual void gotValue() override;
 
    /// Called by the framework at the end of the command line processing.
    /// @throw  if not all execpted values were passed.
    /// @since  0.2, 10.04.2016
-   virtual void check();
+   virtual void check() override;
 
 private:
    /// Number of calls/values expected for the corresponding argument.
@@ -88,5 +88,5 @@ inline detail::ICardinality* cardinality_exact( int num_values)
 #endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
 
 
-// =========================  END OF cardinality_exact.hpp  =========================
+// ======================  END OF cardinality_exact.hpp  ======================
 

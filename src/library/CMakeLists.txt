@@ -24,10 +24,16 @@ get_directory_property( prog_args_sources DIRECTORY ./prog_args
    DEFINITION prog_args_sources
 )
 
+add_subdirectory( indirect_access )
+get_directory_property( indirect_access_sources DIRECTORY ./indirect_access
+   DEFINITION indirect_access_sources
+)
+
 set( celma_lib_sources
    ${common_sources}
    ${format_sources}
    ${prog_args_sources}
+   ${indirect_access_sources}
 )
 
 add_library( celma SHARED
@@ -50,3 +56,4 @@ install( TARGETS celma celma-static
    ARCHIVE DESTINATION lib64
    COMPONENT LIBRARIES
 )
+
