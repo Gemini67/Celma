@@ -19,7 +19,7 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE common::ArgString2ArrayTest
+#define BOOST_TEST_MODULE ArgString2ArrayTest
 #include <boost/test/unit_test.hpp>
 #include <utility>
 
