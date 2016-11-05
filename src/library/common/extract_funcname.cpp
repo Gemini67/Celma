@@ -19,6 +19,10 @@
 #include "celma/common/extract_funcname.hpp"
 
 
+// project includes
+#include "celma/common/find_sequence.hpp"
+
+
 using std::string;
 
 
@@ -71,19 +75,9 @@ string extractFuncname( const string& pretty_funcname)
    // template class
    if (pretty_funcname[ first_space] == '>')
    {
-      size_t  num_greater = 1;
-      auto first_less = first_space;
-      while (--first_less > 0)
-      {
-         if (pretty_funcname[ first_less] == '<')
-         {
-            if (--num_greater == 0)
-               break;   // while
-         } else if (pretty_funcname[ first_less] == '>')
-         {
-            ++num_greater;
-         } // end if
-      } // end while
+      auto  first_less_iter = find_sequence_start( std::begin( pretty_funcname) + first_space,
+                                                   std::begin( pretty_funcname), '<');
+      auto  first_less = first_less_iter - std::begin( pretty_funcname);
 
       first_space = (first_less > 0) ? pretty_funcname.rfind( ' ', first_less) : first_less;
       if (first_space == string::npos)
