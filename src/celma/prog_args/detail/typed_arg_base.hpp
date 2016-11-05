@@ -82,18 +82,18 @@ class TypedArgBase
 {
 public:
    /// List of possible settings if a value is needed for an argument:
-   enum ValueMode
+   enum class ValueMode
    {
-      vmNone,       //!< The argument does not accept a value.<br>
-                    //!< This is the default for boolean arguments.
-      vmOptional,   //!< The value is optional.
-      vmRequired,   //!< The argument must have a value.<br>
-                    //!< This is the default for all other arguments.
-      vmUnknown     //!< We don't know if the argument actually needs a value
-                    //!< or not (used for arguments that result in a function
-                    //!< call). But this is only used as an initialisation
-                    //!< value, once the arguments are evaluated each argument
-                    //!< must have a defined value mode.
+      none,       //!< The argument does not accept a value.<br>
+                  //!< This is the default for boolean arguments.
+      optional,   //!< The value is optional.
+      required,   //!< The argument must have a value.<br>
+                  //!< This is the default for all other arguments.
+      unknown     //!< We don't know if the argument actually needs a value or
+                  //!< not (used for arguments that result in a function call).
+                  //!< But this is only used as an initialisation value, once
+                  //!< the arguments are evaluated each argument must have a
+                  //!< defined value mode.
    }; // ValueMode
 
    /// Constructor.
@@ -136,7 +136,7 @@ public:
    /// specialisation for type \c bool.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* unsetFlag();
+   virtual TypedArgBase* unsetFlag() noexcept( false);
 
    /// Specifies that the argument is mandatory (required). By default, all
    /// arguments are optional.<br>
@@ -180,7 +180,7 @@ public:
    /// @param[in]  vm  The new value mode.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setValueMode( ValueMode vm);
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false);
 
    /// Returns the value mode of this argument.
    /// @return  The value mode of this argument.
@@ -202,7 +202,7 @@ public:
    /// @throws  runtime_error when called on a type that cannot handle multiple
    ///          values.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setTakesMultiValue();
+   virtual TypedArgBase* setTakesMultiValue() noexcept( false);
 
    /// Returns if this arguments should accept multiple, separate values on the
    /// command line.
@@ -216,7 +216,7 @@ public:
    /// @param[in]  f  Pointer to the formatter to add.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* addFormat( IFormat* f);
+   virtual TypedArgBase* addFormat( IFormat* f) noexcept( false);
 
    /// Calls all formatter methods defined for this argument. The formatter
    /// methods should throw an exception when a formatting failed.
@@ -236,7 +236,7 @@ public:
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setListSep( char sep);
+   virtual TypedArgBase* setListSep( char sep) noexcept( false);
 
    /// Calls all check methods defined for this argument. The check methods
    /// throw an exception when a check failed, so: No exception, value can be
@@ -290,7 +290,7 @@ public:
    /// Throws an exception when called for the base class.
    /// @param[in]  dest  The string to append the default value to.
    /// @since  0.2, 10.04.2016
-   virtual void defaultValue( std::string& dest) const;
+   virtual void defaultValue( std::string& dest) const noexcept( false);
 
    /// Adds a constraint to this argument. The constraint is only evaluated when
    /// the argument is actually used.
@@ -377,102 +377,102 @@ std::ostream& operator <<( std::ostream& os, TypedArgBase::ValueMode vm);
 inline const std::string& TypedArgBase::argSpec() const
 {
    return mArgSpec;
-} // end TypedArgBase::argSpec
+} // TypedArgBase::argSpec
 
 
 inline TypedArgBase* TypedArgBase::setIsMandatory()
 {
    mIsMandatory = true;
    return this;
-} // end TypedArgBase::setIsMandatory
+} // TypedArgBase::setIsMandatory
 
 
-inline TypedArgBase* TypedArgBase::unsetFlag()
+inline TypedArgBase* TypedArgBase::unsetFlag() noexcept( false)
 {
    throw std::logic_error( "calling unsetFlag() not allowed for variable '" +
                            mVarName + "'");
-} // end TypedArgBase::unsetFlag
+} // TypedArgBase::unsetFlag
 
 
 inline TypedArgBase* TypedArgBase::setPrintDefault( bool doPrint)
 {
    mPrintDefault = doPrint;
    return this;
-} // end TypedArgBase::setPrintDefault
+} // TypedArgBase::setPrintDefault
 
 
 inline bool TypedArgBase::isMandatory() const
 {
    return mIsMandatory;
-} // end TypedArgBase::isMandatory
+} // TypedArgBase::isMandatory
 
 
 inline bool TypedArgBase::printDefault() const
 {
    return mPrintDefault;
-} // end TypedArgBase::printDefault
+} // TypedArgBase::printDefault
 
 
 inline TypedArgBase* TypedArgBase::setIsHidden()
 {
    mIsHidden = true;
    return this;
-} // end TypedArgBase::setIsHidden
+} // TypedArgBase::setIsHidden
 
 
 inline bool TypedArgBase::isHidden() const
 {
    return mIsHidden;
-} // end TypedArgBase::isHidden
+} // TypedArgBase::isHidden
 
 
-inline TypedArgBase* TypedArgBase::setValueMode( ValueMode vm)
+inline TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
 {
-   if (vm == vmNone)
+   if (vm == ValueMode::none)
       throw std::invalid_argument( "may not set value mode 'none' on variable '" +
                                    mVarName + "'");
    mValueMode = vm;
    return this;
-} // end TypedArgBase::setValueMode
+} // TypedArgBase::setValueMode
 
 
 inline TypedArgBase::ValueMode TypedArgBase::valueMode() const
 {
    return mValueMode;
-} // end TypedArgBase::valueMode
+} // TypedArgBase::valueMode
 
 
-inline TypedArgBase* TypedArgBase::setTakesMultiValue()
+inline TypedArgBase* TypedArgBase::setTakesMultiValue() noexcept( false)
 {
    throw std::runtime_error( "setting 'take multiple values' not allowed for variable '" +
                              mVarName + "'");
-} // end TypedArgBase::setTakesMultiValue
+} // TypedArgBase::setTakesMultiValue
 
 
 inline bool TypedArgBase::takesMultiValue() const
 {
    return mTakeMultipleValues;
-} // end TypedArgBase::takesMultiValue
+} // TypedArgBase::takesMultiValue
 
 
-inline TypedArgBase* TypedArgBase::setListSep( char /* sep */)
+inline TypedArgBase* TypedArgBase::setListSep( char /* sep */) noexcept( false)
 {
    throw std::runtime_error( "setting list separator not allowed for variable '" +
                              mVarName + "'");
-} // end TypedArgBase::setListSep
+} // TypedArgBase::setListSep
 
 
 inline const std::string& TypedArgBase::varName() const
 {
    return mVarName;
-} // end TypedArgBase::varName
+} // TypedArgBase::varName
 
 
-inline void TypedArgBase::defaultValue( std::string& /* dest */) const
+inline void TypedArgBase::defaultValue( std::string& /* dest */) const noexcept( false)
 {
    throw std::runtime_error( "default value not available from base class for "
                              "variable '" + mVarName + "'");
-} // end TypedArgBase::defaultValue
+} // TypedArgBase::defaultValue
 
 
 } // namespace detail
@@ -483,5 +483,5 @@ inline void TypedArgBase::defaultValue( std::string& /* dest */) const
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_BASE_HPP
 
 
-// =========================  END OF typed_arg_base.hpp  =========================
+// ========================  END OF typed_arg_base.hpp  ========================
 

@@ -21,6 +21,7 @@
 
 #include <set>
 #include <stdexcept>
+#include "celma/common/pre_postfix.hpp"
 
 
 namespace celma { namespace common {
@@ -113,7 +114,7 @@ public:
    /// @return  This object.
    /// @throw  Exception when the end of the range was already reched.
    /// @since  0.2, 07.04.2016
-   RangeGenerator& operator ++()
+   RangeGenerator& operator ++( std::prefix)
    {
       if (mStartValue == iterEndValue)
          throw std::runtime_error( "attempt to increment after iterator-end");
@@ -144,10 +145,10 @@ public:
    /// Postfix increment.
    /// @return  This object.
    /// @since  0.2, 07.04.2016
-   RangeGenerator operator ++( int)
+   RangeGenerator operator ++( std::postfix)
    {
       const RangeGenerator  copy( *this);
-      this->operator ++;
+      ++(*this);
       return copy;
    } // end RangeGenerator< T, iterEndValue>::operator ++
 
@@ -182,5 +183,5 @@ private:
 #endif   // CELMA_COMMON_RANGE_GENERATOR_HPP
 
 
-// =========================  END OF range_generator.hpp  =========================
+// =======================  END OF range_generator.hpp  =======================
 

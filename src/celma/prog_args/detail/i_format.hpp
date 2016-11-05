@@ -51,5 +51,5 @@ public:
 #endif   // CELMA_PROG_ARGS_DETAIL_IFORMAT_HPP
 
 
-// =========================  END OF i_format.hpp  =========================
+// ===========================  END OF i_format.hpp  ===========================
 

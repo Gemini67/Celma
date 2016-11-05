@@ -22,6 +22,7 @@
 #include <iterator>
 #include <memory>
 #include <stdexcept>
+#include "celma/common/pre_postfix.hpp"
 #include "celma/common/range_expression.hpp"
 #include "celma/common/range_generator.hpp"
 
@@ -56,12 +57,12 @@ public:
    /// Prefix increment operator.
    /// @return  The incremented iterator.
    /// @since  0.2, 07.04.2016
-   RangeStringIterator& operator ++();
+   RangeStringIterator& operator ++( std::prefix);
 
    /// Postfix increment operator.
    /// @return  An iterator object with the previous value.
    /// @since  0.2, 07.04.2016
-   RangeStringIterator operator ++( int);
+   RangeStringIterator operator ++( std::postfix);
 
    /// Returns if the two iterators point to the same position.<br>
    /// Not a really foolproof check for equality, since the position is
@@ -156,7 +157,7 @@ template< typename T, typename TF>
 
 
 template< typename T, typename TF>
-   RangeStringIterator< T, TF>& RangeStringIterator< T, TF>::operator ++()
+   RangeStringIterator< T, TF>& RangeStringIterator< T, TF>::operator ++( std::prefix)
 {
    if (mPos == std::string::npos)
       throw std::runtime_error( "attempt to increment after end-of-range");
@@ -192,7 +193,7 @@ template< typename T, typename TF>
 
 
 template< typename T, typename TF>
-   RangeStringIterator< T, TF> RangeStringIterator< T, TF>::operator ++( int)
+   RangeStringIterator< T, TF> RangeStringIterator< T, TF>::operator ++( std::postfix)
 {
    RangeStringIterator  result( *this);
 
@@ -269,5 +270,5 @@ template< typename T, typename TF>
 #endif   // CELMA_COMMON_RANGE_STRING_ITERATOR_HPP
 
 
-// =========================  END OF range_string_iterator.hpp  =========================
+// ====================  END OF range_string_iterator.hpp  ====================
 

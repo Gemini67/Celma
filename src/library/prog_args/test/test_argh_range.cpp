@@ -341,5 +341,5 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
 
 
 
-// =========================  END OF test_argh_range.cpp  =========================
+// =======================  END OF test_argh_range.cpp  =======================
 

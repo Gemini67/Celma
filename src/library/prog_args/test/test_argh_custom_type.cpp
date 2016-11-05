@@ -10,7 +10,7 @@
 **
 **  Description:
 **    Test program for the feature "custom argument type" in the module
-**    prog_args::Handler, using the Boost.Test module.
+**    celma::prog_args::Handler, using the Boost.Test module.
 **
 --*/
 
@@ -96,11 +96,11 @@ private:
 
 TypedArgBitset::TypedArgBitset( const string& arg_spec, type& dest,
                                 const string& vname):
-   prog_args::detail::TypedArgBase( arg_spec, vname, vmRequired, false),
+   prog_args::detail::TypedArgBase( arg_spec, vname, ValueMode::required, false),
    mDestVar( dest),
    mListSep( ',')
 {
-} // end TypedArgBitset::TypedArgBitset
+} // TypedArgBitset::TypedArgBitset
 
 
 void TypedArgBitset::assign( const string& value)
@@ -123,7 +123,7 @@ void TypedArgBitset::assign( const string& value)
          mDestVar.set( boost::lexical_cast< int>( it));
       } // end if
    } // end for
-} // end TypedArgBitset::assign
+} // TypedArgBitset::assign
 
 
 bool TypedArgBitset::hasValue() const
@@ -136,7 +136,7 @@ prog_args::detail::TypedArgBase* TypedArgBitset::setListSep( char sep)
 {
    mListSep = sep;
    return this;
-} // end TypedArgBitset::setListSep
+} // TypedArgBitset::setListSep
 
 
 
@@ -163,9 +163,9 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
    BOOST_REQUIRE( kilobits[  7]);
    BOOST_REQUIRE( kilobits[ 11]);
 
-} // end custom_bitset
+} // custom_bitset
 
 
 
-// =========================  END OF test_argh_custom_type.cpp  =========================
+// ====================  END OF test_argh_custom_type.cpp  ====================
 

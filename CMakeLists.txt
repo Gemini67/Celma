@@ -13,7 +13,7 @@ project( Celma )
 
 set( MAJORVERSION    0 )
 set( MINORVERSION    0 )
-set( RELEASE_VERSION 3 )
+set( RELEASE_VERSION 5 )
 set( PATCHLEVEL      0 )
 
 enable_testing()

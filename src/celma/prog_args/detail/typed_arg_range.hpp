@@ -54,25 +54,25 @@ public:
    /// @return  \c true if the destination variable contains (at least) one
    ///          value, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
    /// Throws.
    /// @return  Nothing, always throws.
    /// @throw  logic_error.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* addCheck( ICheck* /* c */);
+   virtual TypedArgBase* addCheck( ICheck* /* c */) noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const;
+   virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value);
+   virtual void assign( const std::string& value) override;
 
    /// Actually evaluates the range string.
    /// @param[in]  value  The value string to evaluate.
@@ -94,23 +94,23 @@ template< typename T, typename C>
    TypedArgRange< T, C>::TypedArgRange( const std::string& arg_spec,
                                         const dest_type& dest,
                                         const std::string& vname):
-      TypedArgBase( arg_spec, vname, vmRequired, false),
+      TypedArgBase( arg_spec, vname, ValueMode::required, false),
       mDestVar( dest)
 {
-} // end TypedArgRange< T, C>::TypedArgRange
+} // TypedArgRange< T, C>::TypedArgRange
 
 
 template< typename T, typename C> bool TypedArgRange< T, C>::hasValue() const
 {
    return !mDestVar.empty();
-} // end TypedArgRange< T, C>::hasValue
+} // TypedArgRange< T, C>::hasValue
 
 
 template< typename T, typename C> TypedArgBase*
-   TypedArgRange< T, C>::addCheck( ICheck*)
+   TypedArgRange< T, C>::addCheck( ICheck*) noexcept( false)
 {
    throw std::logic_error( "cannot add value-check to destination type 'range'");
-} // end TypedArgRange< T, C>::addCheck
+} // TypedArgRange< T, C>::addCheck
 
 
 template< typename T, typename C>
@@ -119,7 +119,7 @@ template< typename T, typename C>
    os << "stores value(s) with type '" << type< T>::name()
       << "' in range-container '" << mVarName << "'." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArgRange< T, C>::dump
+} // TypedArgRange< T, C>::dump
 
 
 template< typename T, typename C>
@@ -134,7 +134,7 @@ template< typename T, typename C>
    {
       evalRange( value);
    } // end if
-} // end TypedArgRange< T, C>::assign
+} // TypedArgRange< T, C>::assign
 
 
 template< typename T, typename C>
@@ -147,7 +147,7 @@ template< typename T, typename C>
       mDestVar.set( boost::lexical_cast< T>( cit));
    } // end for
 
-} // end TypedArgRange< T, C>::evalRange
+} // TypedArgRange< T, C>::evalRange
 
 
 } // namespace detail
@@ -158,5 +158,5 @@ template< typename T, typename C>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_RANGE_HPP
 
 
-// =========================  END OF typed_arg_range.hpp  =========================
+// =======================  END OF typed_arg_range.hpp  =======================
 
