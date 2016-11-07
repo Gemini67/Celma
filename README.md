@@ -13,6 +13,9 @@ The main modules are:
 - Indirect access
 
   Create a data structure and an object that allows to access members of the structure by name or id.
+- Formatting
+
+  Various functions and modules for formatting purposes, e.g. text-block formatting, fast integer to string conversion etc.
 
 Requirements:
 - Boost library
