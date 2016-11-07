@@ -24,9 +24,8 @@
 #include "celma/test/check_return.hpp"
 
 
-using namespace std;
-using namespace celma;
-
+using celma::prog_args::detail::ArgumentKey;
+using std::invalid_argument;
 
 
 namespace {
@@ -39,8 +38,7 @@ namespace {
 /// @param[in]  right  The other object to use.
 /// @return  \c true if the two argument specification strings are equa.
 /// @since  0.2, 06.04.2016
-bool string_equal( const prog_args::detail::ArgumentKey& left,
-                   const prog_args::detail::ArgumentKey& right)
+bool string_equal( const ArgumentKey& left, const ArgumentKey& right)
 {
 
    CHECK_EQUAL_RETURN( left.str(), right.str());
@@ -61,77 +59,77 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
    // empty string
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( ""), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( ""), invalid_argument);
    } // end scope
 
    // comma == separator character only
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( ","), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( ","), invalid_argument);
    } // end scope
 
    // short and comma == separator character only, no long value
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "i,"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "i,"), invalid_argument);
    } // end scope
 
    // comma == separator character and short only, no long value
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( ",i"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( ",i"), invalid_argument);
    } // end scope
 
    // long and comma == separator character only, no long value
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "index,"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "index,"), invalid_argument);
    } // end scope
 
    // comma == separator character and long only, no long value
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( ",index"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( ",index"), invalid_argument);
    } // end scope
 
    // two identical short argument keys
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "i,i"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "i,i"), invalid_argument);
    } // end scope
 
    // two identical long argument keys
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "name,name"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "name,name"), invalid_argument);
    } // end scope
 
    // two short argument keys
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "i,l"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "i,l"), invalid_argument);
    } // end scope
 
    // two long argument keys
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "index,name"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "index,name"), invalid_argument);
    } // end scope
 
    // three values
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "a,b,c"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "a,b,c"), invalid_argument);
    } // end scope
 
    // contains a space
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "a b"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "a b"), invalid_argument);
    } // end scope
 
    // contains too many leading dashes
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "---a"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "---a"), invalid_argument);
    } // end scope
 
    // contains too many leading dashes
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "l,---long"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "l,---long"), invalid_argument);
    } // end scope
 
    // contains too many leading dashes
    {
-      BOOST_REQUIRE_THROW( prog_args::detail::ArgumentKey  ak( "--long,---l"), invalid_argument);
+      BOOST_REQUIRE_THROW( ArgumentKey  ak( "--long,---l"), invalid_argument);
    } // end scope
 
 } // end test_errors
@@ -144,27 +142,27 @@ BOOST_AUTO_TEST_CASE( test_remove_leading_dashes)
 {
 
    {
-      prog_args::detail::ArgumentKey  short1( "-l");
+      ArgumentKey  short1( "-l");
       BOOST_REQUIRE_EQUAL( short1.str(), "l");
    } // end scope
 
    {
-      prog_args::detail::ArgumentKey  long1( "--long");
+      ArgumentKey  long1( "--long");
       BOOST_REQUIRE_EQUAL( long1.str(), "long");
    } // end scope
 
    {
-      prog_args::detail::ArgumentKey  both( "-l,long");
+      ArgumentKey  both( "-l,long");
       BOOST_REQUIRE_EQUAL( both.str(), "l,long");
    } // end scope
 
    {
-      prog_args::detail::ArgumentKey  both( "l,--long");
+      ArgumentKey  both( "l,--long");
       BOOST_REQUIRE_EQUAL( both.str(), "l,long");
    } // end scope
 
    {
-      prog_args::detail::ArgumentKey  both( "-l,--long");
+      ArgumentKey  both( "-l,--long");
       BOOST_REQUIRE_EQUAL( both.str(), "l,long");
    } // end scope
 
@@ -179,8 +177,8 @@ BOOST_AUTO_TEST_CASE( test_comparison)
 
    // two identical short
    {
-      prog_args::detail::ArgumentKey  short1( "l");
-      prog_args::detail::ArgumentKey  short2( "l");
+      ArgumentKey  short1( "l");
+      ArgumentKey  short2( "l");
 
       BOOST_REQUIRE_EQUAL( short1, short2);
       BOOST_REQUIRE( !short1.mismatch( short2));
@@ -190,8 +188,8 @@ BOOST_AUTO_TEST_CASE( test_comparison)
 
    // two identical long
    {
-      prog_args::detail::ArgumentKey  long1( "long");
-      prog_args::detail::ArgumentKey  long2( "long");
+      ArgumentKey  long1( "long");
+      ArgumentKey  long2( "long");
 
       BOOST_REQUIRE_EQUAL( long1, long2);
       BOOST_REQUIRE( !long1.mismatch( long2));
@@ -201,8 +199,8 @@ BOOST_AUTO_TEST_CASE( test_comparison)
 
    // both with short and long
    {
-      prog_args::detail::ArgumentKey  both1( "l,long");
-      prog_args::detail::ArgumentKey  both2( "long,l");
+      ArgumentKey  both1( "l,long");
+      ArgumentKey  both2( "long,l");
 
       BOOST_REQUIRE_EQUAL( both1, both2);
       BOOST_REQUIRE_EQUAL( both2, both1);
@@ -214,8 +212,8 @@ BOOST_AUTO_TEST_CASE( test_comparison)
 
    // one with both short and long, the other with short only
    {
-      prog_args::detail::ArgumentKey  both1( "l,long");
-      prog_args::detail::ArgumentKey  short2( "l");
+      ArgumentKey  both1( "l,long");
+      ArgumentKey  short2( "l");
 
       BOOST_REQUIRE_EQUAL( both1, short2);
       BOOST_REQUIRE_EQUAL( short2, both1);
@@ -225,8 +223,8 @@ BOOST_AUTO_TEST_CASE( test_comparison)
 
    // one with both short and long, the other with short only
    {
-      prog_args::detail::ArgumentKey  short1( "l");
-      prog_args::detail::ArgumentKey  both2( "long,l");
+      ArgumentKey  short1( "l");
+      ArgumentKey  both2( "long,l");
 
       BOOST_REQUIRE_EQUAL( short1, both2);
       BOOST_REQUIRE_EQUAL( both2, short1);
@@ -236,8 +234,8 @@ BOOST_AUTO_TEST_CASE( test_comparison)
 
    // one with both short and long, the other with long only
    {
-      prog_args::detail::ArgumentKey  both1( "l,long");
-      prog_args::detail::ArgumentKey  long2( "long");
+      ArgumentKey  both1( "l,long");
+      ArgumentKey  long2( "long");
 
       BOOST_REQUIRE_EQUAL( both1, long2);
       BOOST_REQUIRE_EQUAL( long2, both1);
@@ -247,8 +245,8 @@ BOOST_AUTO_TEST_CASE( test_comparison)
 
    // one with both short and long, the other with short only
    {
-      prog_args::detail::ArgumentKey  long1( "long");
-      prog_args::detail::ArgumentKey  both2( "long,l");
+      ArgumentKey  long1( "long");
+      ArgumentKey  both2( "long,l");
 
       BOOST_REQUIRE_EQUAL( long1, both2);
       BOOST_REQUIRE_EQUAL( both2, long1);
@@ -267,8 +265,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // two different short
    {
-      prog_args::detail::ArgumentKey  short1( "l");
-      prog_args::detail::ArgumentKey  short2( "s");
+      ArgumentKey  short1( "l");
+      ArgumentKey  short2( "s");
 
       BOOST_REQUIRE_NE( short1, short2);
       BOOST_REQUIRE( !short1.mismatch( short2));
@@ -276,8 +274,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // two different long
    {
-      prog_args::detail::ArgumentKey  long1( "long");
-      prog_args::detail::ArgumentKey  long2( "short");
+      ArgumentKey  long1( "long");
+      ArgumentKey  long2( "short");
 
       BOOST_REQUIRE_NE( long1, long2);
       BOOST_REQUIRE( !long1.mismatch( long2));
@@ -285,8 +283,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // short and long
    {
-      prog_args::detail::ArgumentKey  short1( "l");
-      prog_args::detail::ArgumentKey  long2( "long");
+      ArgumentKey  short1( "l");
+      ArgumentKey  long2( "long");
 
       BOOST_REQUIRE_NE( short1, long2);
       BOOST_REQUIRE( !short1.mismatch( long2));
@@ -294,8 +292,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // short and long
    {
-      prog_args::detail::ArgumentKey  long1( "long");
-      prog_args::detail::ArgumentKey  short2( "l");
+      ArgumentKey  long1( "long");
+      ArgumentKey  short2( "l");
 
       BOOST_REQUIRE_NE( long1, short2);
       BOOST_REQUIRE( !long1.mismatch( short2));
@@ -303,8 +301,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // both short and long
    {
-      prog_args::detail::ArgumentKey  both1( "s,short");
-      prog_args::detail::ArgumentKey  both2( "l,long");
+      ArgumentKey  both1( "s,short");
+      ArgumentKey  both2( "l,long");
 
       BOOST_REQUIRE_NE( both1, both2);
       BOOST_REQUIRE( !both1.mismatch( both2));
@@ -312,8 +310,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // short and both
    {
-      prog_args::detail::ArgumentKey  short1( "s");
-      prog_args::detail::ArgumentKey  both2( "l,long");
+      ArgumentKey  short1( "s");
+      ArgumentKey  both2( "l,long");
 
       BOOST_REQUIRE_NE( short1, both2);
       BOOST_REQUIRE( !short1.mismatch( both2));
@@ -321,8 +319,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // long and both
    {
-      prog_args::detail::ArgumentKey  long1( "short");
-      prog_args::detail::ArgumentKey  both2( "l,long");
+      ArgumentKey  long1( "short");
+      ArgumentKey  both2( "l,long");
 
       BOOST_REQUIRE_NE( long1, both2);
       BOOST_REQUIRE( !long1.mismatch( both2));
@@ -330,8 +328,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // both and short
    {
-      prog_args::detail::ArgumentKey  both1( "l,long");
-      prog_args::detail::ArgumentKey  short2( "s");
+      ArgumentKey  both1( "l,long");
+      ArgumentKey  short2( "s");
 
       BOOST_REQUIRE_NE( both1, short2);
       BOOST_REQUIRE( !both1.mismatch( short2));
@@ -339,8 +337,8 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
 
    // both and long
    {
-      prog_args::detail::ArgumentKey  both1( "s,short");
-      prog_args::detail::ArgumentKey  long2( "long");
+      ArgumentKey  both1( "s,short");
+      ArgumentKey  long2( "long");
 
       BOOST_REQUIRE_NE( both1, long2);
       BOOST_REQUIRE( !both1.mismatch( long2));
@@ -357,8 +355,8 @@ BOOST_AUTO_TEST_CASE( test_mismatch)
 
    // two different short
    {
-      prog_args::detail::ArgumentKey  both1( "s,short");
-      prog_args::detail::ArgumentKey  both2( "y,short");
+      ArgumentKey  both1( "s,short");
+      ArgumentKey  both2( "y,short");
 
       BOOST_REQUIRE_NE( both1, both2);
       BOOST_REQUIRE( both1.mismatch( both2));
@@ -366,8 +364,8 @@ BOOST_AUTO_TEST_CASE( test_mismatch)
 
    // two different long
    {
-      prog_args::detail::ArgumentKey  both1( "s,short");
-      prog_args::detail::ArgumentKey  both2( "s,symbol");
+      ArgumentKey  both1( "s,short");
+      ArgumentKey  both2( "s,symbol");
 
       BOOST_REQUIRE_EQUAL( both1, both2);
       BOOST_REQUIRE( both1.mismatch( both2));
@@ -384,8 +382,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // copy of key with only short argument
    {
-      prog_args::detail::ArgumentKey  short1( "s");
-      prog_args::detail::ArgumentKey  copy1( short1);
+      ArgumentKey  short1( "s");
+      ArgumentKey  copy1( short1);
 
       BOOST_REQUIRE_EQUAL( short1, copy1);
       BOOST_REQUIRE( !short1.mismatch( copy1));
@@ -395,8 +393,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // copy of key with only long argument
    {
-      prog_args::detail::ArgumentKey  long1( "long");
-      prog_args::detail::ArgumentKey  copy1( long1);
+      ArgumentKey  long1( "long");
+      ArgumentKey  copy1( long1);
 
       BOOST_REQUIRE_EQUAL( long1, copy1);
       BOOST_REQUIRE( !long1.mismatch( copy1));
@@ -406,8 +404,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // copy of key with both short and long argument
    {
-      prog_args::detail::ArgumentKey  both1( "s,symbol");
-      prog_args::detail::ArgumentKey  copy1( both1);
+      ArgumentKey  both1( "s,symbol");
+      ArgumentKey  copy1( both1);
 
       BOOST_REQUIRE_EQUAL( both1, copy1);
       BOOST_REQUIRE( !both1.mismatch( copy1));
@@ -417,8 +415,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // assign/overwrite long with short
    {
-      prog_args::detail::ArgumentKey  short1( "s");
-      prog_args::detail::ArgumentKey  copy1( "long");
+      ArgumentKey  short1( "s");
+      ArgumentKey  copy1( "long");
 
       copy1 = short1;
 
@@ -430,8 +428,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // assign/overwrite short with long
    {
-      prog_args::detail::ArgumentKey  long1( "long");
-      prog_args::detail::ArgumentKey  copy1( "s");
+      ArgumentKey  long1( "long");
+      ArgumentKey  copy1( "s");
 
       copy1 = long1;
 
@@ -443,8 +441,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // assign/overwrite both with short
    {
-      prog_args::detail::ArgumentKey  short1( "s");
-      prog_args::detail::ArgumentKey  copy1( "l,long");
+      ArgumentKey  short1( "s");
+      ArgumentKey  copy1( "l,long");
 
       copy1 = short1;
 
@@ -456,8 +454,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // assign/overwrite both with long
    {
-      prog_args::detail::ArgumentKey  long1( "long");
-      prog_args::detail::ArgumentKey  copy1( "s,symbol");
+      ArgumentKey  long1( "long");
+      ArgumentKey  copy1( "s,symbol");
 
       copy1 = long1;
 
@@ -469,8 +467,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // assign/overwrite short with both
    {
-      prog_args::detail::ArgumentKey  both1( "s,symbol");
-      prog_args::detail::ArgumentKey  copy1( "l");
+      ArgumentKey  both1( "s,symbol");
+      ArgumentKey  copy1( "l");
 
       copy1 = both1;
 
@@ -482,8 +480,8 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // assign/overwrite long with both
    {
-      prog_args::detail::ArgumentKey  both1( "l,long");
-      prog_args::detail::ArgumentKey  copy1( "symbol");
+      ArgumentKey  both1( "l,long");
+      ArgumentKey  copy1( "symbol");
 
       copy1 = both1;
 
@@ -495,10 +493,10 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
    // assign/overwrite long with both
    {
-      prog_args::detail::ArgumentKey  both1( "l,long");
-      prog_args::detail::ArgumentKey  long1( "symbol");
+      ArgumentKey  both1( "l,long");
+      ArgumentKey  long1( "symbol");
 
-      both1 = prog_args::detail::ArgumentKey( "symbol");
+      both1 = ArgumentKey( "symbol");
 
       BOOST_REQUIRE_EQUAL( both1, long1);
       BOOST_REQUIRE( !both1.mismatch( long1));
@@ -510,5 +508,5 @@ BOOST_AUTO_TEST_CASE( test_copies)
 
 
 
-// =========================  END OF test_argument_key.cpp  =========================
+// ======================  END OF test_argument_key.cpp  ======================
 

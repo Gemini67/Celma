@@ -11,14 +11,14 @@
 
 
 /// @file
-/// See documentation of class celma::reflection::detail::ReflectedBase.
+/// See documentation of class celma::indirect_access::detail::IndirectAccessBase.
 
 
 // module header file include
-#include "celma/reflection/detail/reflected_base.hpp"
+#include "celma/indirect_access/detail/indirect_access_base.hpp"
 
 
-namespace celma { namespace reflection { namespace detail {
+namespace celma { namespace indirect_access { namespace detail {
 
 
 
@@ -26,13 +26,13 @@ namespace celma { namespace reflection { namespace detail {
 /// @param[in]  id  The id of the field to return the name of.
 /// @return  The name of the field with the given id.
 /// @since  0.4, 02.05.2016
-const std::string& ReflectedBase::getFieldNameReflected( uint16_t id) const
+const std::string& IndirectAccessBase::getFieldName( uint16_t id) const
                                                        noexcept( false)
 {
    if (id >= mId2Field.size())
       throw std::runtime_error( "invalid field id");
    return mId2Field[ id]->fieldName();
-} // end ReflectedBase::getFieldNameReflected
+} // end IndirectAccessBase::getFieldName
 
 
 
@@ -40,13 +40,13 @@ const std::string& ReflectedBase::getFieldNameReflected( uint16_t id) const
 /// @param[in]  id  The id of the field to return the value of.
 /// @return  The current value of the variable as string.
 /// @since  0.4, 02.07.2016
-const std::string ReflectedBase::getFieldValueString( uint16_t id) const
+const std::string IndirectAccessBase::getFieldValueString( uint16_t id) const
                                                     noexcept( false)
 {
    if (id >= mId2Field.size())
       throw std::runtime_error( "invalid field id");
    return mId2Field[ id]->str();
-} // end ReflectedBase::getFieldValueString
+} // end IndirectAccessBase::getFieldValueString
 
 
 
@@ -54,13 +54,13 @@ const std::string ReflectedBase::getFieldValueString( uint16_t id) const
 /// @param[in]  id  The id of the field to return the value of.
 /// @return  The type of the value as string.
 /// @since  0.4, 02.07.2016
-const std::string& ReflectedBase::getFieldTypeString( uint16_t id) const
+const std::string& IndirectAccessBase::getFieldTypeString( uint16_t id) const
                                                     noexcept( false)
 {
    if (id >= mId2Field.size())
       throw std::runtime_error( "invalid field id");
    return mId2Field[ id]->typeName();
-} // end ReflectedBase::getFieldTypeString
+} // end IndirectAccessBase::getFieldTypeString
 
 
 
@@ -70,7 +70,7 @@ const std::string& ReflectedBase::getFieldTypeString( uint16_t id) const
 /// @param[in]   obj  The pointer to the object to print the contents of.
 /// @return  The stream as passed in.
 /// @since  0.4, 13.07.2016
-std::ostream& operator <<( std::ostream& os, const ReflectedBase* obj)
+std::ostream& operator <<( std::ostream& os, const IndirectAccessBase* obj)
 {
 
    for (size_t i = 0; i < obj->mId2Field.size(); ++i)
@@ -90,18 +90,18 @@ std::ostream& operator <<( std::ostream& os, const ReflectedBase* obj)
 
 /// Constructor.
 /// @since  0.4, 02.05.2016
-ReflectedBase::ReflectedBase():
+IndirectAccessBase::IndirectAccessBase():
    mId2Field(),
    mName2Field()
 {
-} // end ReflectedBase::ReflectedBase
+} // end IndirectAccessBase::IndirectAccessBase
 
 
 
 } // namespace detail
-} // namespace reflection
+} // namespace indirect_access
 } // namespace celma
 
 
-// ========================  END OF reflected_base.cpp  ========================
+// =====================  END OF indirect_access_base.cpp  =====================
 

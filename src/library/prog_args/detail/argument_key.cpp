@@ -25,10 +25,11 @@
 #include <stdexcept>
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
+
+
+using std::invalid_argument;
+using std::string;
 
 
 namespace {
@@ -39,7 +40,7 @@ namespace {
 /// @param[in]  arg_spec  The string with a single argument specification.
 /// @return  The string without leading dashes.
 /// @since  0.2, 06.04.2016
-string remove_dashes( string arg_spec)
+string remove_dashes( string arg_spec) noexcept( false)
 {
 
    if (arg_spec[ 0] == '-')
@@ -64,7 +65,7 @@ string remove_dashes( string arg_spec)
 /// Dashes are silently ignored.
 /// @param[in]  arg_spec  The string with the argument specifiers.
 /// @since  0.2, 06.04.2016
-ArgumentKey::ArgumentKey( const std::string& arg_spec):
+ArgumentKey::ArgumentKey( const string& arg_spec) noexcept( false):
    mChar( '\0'),
    mWord()
 {
@@ -76,7 +77,7 @@ ArgumentKey::ArgumentKey( const std::string& arg_spec):
    if (arg_spec.find( ' ') != string::npos)
       throw invalid_argument( "argument specification may not contain space(s)");
 
-   const string::size_type  comma_pos = arg_spec.find( ',');
+   const auto  comma_pos = arg_spec.find( ',');
 
    if (comma_pos == string::npos)
    {
@@ -120,7 +121,7 @@ ArgumentKey::ArgumentKey( const std::string& arg_spec):
       } // end if
    } // end if
 
-} // end ArgumentKey::ArgumentKey
+} // ArgumentKey::ArgumentKey
 
 
 
@@ -140,7 +141,7 @@ bool ArgumentKey::operator ==( const ArgumentKey& other) const
 
    // actually we could not really veryify if it is the same argument ...
    return false;
-} // end ArgumentKey::operator ==
+} // ArgumentKey::operator ==
 
 
 
@@ -159,12 +160,11 @@ bool ArgumentKey::mismatch( const ArgumentKey& other) const
    if ((mChar != '\0') && (other.mChar != '\0') &&
        !mWord.empty() && !other.mWord.empty())
    {
-      return ((mChar == other.mChar) && (mWord != other.mWord)) ||
-             ((mWord == other.mWord) && (mChar != other.mChar));
+      return (mChar == other.mChar) != (mWord == other.mWord);
    } // end if
 
    return false;
-} // end ArgumentKey::mismatch
+} // ArgumentKey::mismatch
 
 
 
@@ -174,12 +174,12 @@ bool ArgumentKey::mismatch( const ArgumentKey& other) const
 string ArgumentKey::str() const
 {
 
-   ostringstream  oss;
+   std::ostringstream  oss;
 
 
    oss << *this;
    return oss.str();
-} // end ArgumentKey::str
+} // ArgumentKey::str
 
 
 
@@ -190,7 +190,7 @@ string ArgumentKey::str() const
 /// @param[in]   ak  The key object to print the data of.
 /// @return  The stream as passed in.
 /// @since  1.1, 09.03.2016
-ostream& operator <<( ostream& os, const ArgumentKey& ak)
+std::ostream& operator <<( std::ostream& os, const ArgumentKey& ak)
 {
 
    if (ak.mChar != '\0')

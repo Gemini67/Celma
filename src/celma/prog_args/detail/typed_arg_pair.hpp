@@ -60,19 +60,19 @@ public:
    /// @return  \c true if the destination variable contains a value,
    ///          \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const;
+   virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value);
+   virtual void assign( const std::string& value) override;
 
    /// Reference of the destination variable to store the value in.
    T1&                mDestVar1;
@@ -99,20 +99,20 @@ template< typename T1, typename T2>
                                         T1& dest1, const std::string& vname1,
                                         T2& dest2, const std::string& vname2,
                                         const T2& value2):
-      TypedArgBase( arg_spec, vname1, vmRequired, false),
+      TypedArgBase( arg_spec, vname1, ValueMode::required, false),
       mDestVar1( dest1),
       mDestVar2( dest2),
       mVarName2( vname2),
       mValue2( value2),
       mValueSet( false)
 {
-} // end TypedArgPair< T1, T2>::TypedArgPair
+} // TypedArgPair< T1, T2>::TypedArgPair
 
 
 template< typename T1, typename T2> bool TypedArgPair< T1, T2>::hasValue() const
 {
    return mValueSet;
-} // end TypedArgPair< T1, T2>::hasValue
+} // TypedArgPair< T1, T2>::hasValue
 
 
 template< typename T1, typename T2>
@@ -122,7 +122,7 @@ template< typename T1, typename T2>
       << mVarName << "', second value with type '" << type< T2>::name()
       << "' in '" << mVarName2  << "'." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArgPair< T1, T2>::dump
+} // TypedArgPair< T1, T2>::dump
 
 
 template< typename T1, typename T2>
@@ -140,7 +140,7 @@ template< typename T1, typename T2>
    } // end if
    mDestVar2 = mValue2;
    mValueSet = true;
-} // end TypedArgPair< T1, T2>::assign
+} // TypedArgPair< T1, T2>::assign
 
 
 } // namespace detail
@@ -151,5 +151,5 @@ template< typename T1, typename T2>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_PAIR_HPP
 
 
-// =========================  END OF typed_arg_pair.hpp  =========================
+// ========================  END OF typed_arg_pair.hpp  ========================
 

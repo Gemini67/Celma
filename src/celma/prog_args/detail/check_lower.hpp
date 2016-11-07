@@ -42,7 +42,7 @@ public:
    /// limit.
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
-   virtual void checkValue( const std::string& val) const;
+   virtual void checkValue( const std::string& val) const override;
 
 private:
    /// The lower limit to check against.

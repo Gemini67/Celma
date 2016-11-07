@@ -2217,7 +2217,7 @@ public:
    /// Checks if the value in \a val equals one of the three check values.
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
-   virtual void checkValue( const string& val) const
+   virtual void checkValue( const string& val) const noexcept( false) override
    {
       int  checkVal = boost::lexical_cast< int>( val);
       if ((checkVal != m1) && (checkVal != m2) && (checkVal != m3))
@@ -2637,5 +2637,5 @@ BOOST_AUTO_TEST_CASE( control_args)
 
 
 
-// =========================  END OF test_argument_handler.cpp  =========================
+// ====================  END OF test_argument_handler.cpp  ====================
 

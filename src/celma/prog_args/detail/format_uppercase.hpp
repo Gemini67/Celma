@@ -33,7 +33,7 @@ public:
    /// Converts the text in \a val to uppercase.
    /// @param[in,out]  val  The text to convert to uppercase.
    /// @since  0.2, 10.04.2016
-   virtual void formatValue( std::string& val) const;
+   virtual void formatValue( std::string& val) const override;
 
 }; // FormatUppercase
 
@@ -62,5 +62,5 @@ inline detail::IFormat* uppercase()
 #endif   // CELMA_PROG_ARGS_DETAIL_FORMAT_UPPERCASE_HPP
 
 
-// =========================  END OF check_upper.hpp  =========================
+// =======================  END OF format_uppercase.hpp  =======================
 

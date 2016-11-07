@@ -47,12 +47,12 @@ public:
    /// line (actually may be without a value).
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue();
+   virtual void gotValue() override;
 
    /// Called by the framework at the end of the command line processing.
    /// @throw  never.
    /// @since  0.2, 10.04.2016
-   virtual void check();
+   virtual void check() override;
 
 private:
    /// Maximum number of calls/values accepted for the corresponding argument.
@@ -87,5 +87,5 @@ inline detail::ICardinality* cardinality_max( int max_calls)
 #endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_MAX_HPP
 
 
-// =========================  END OF cardinality_max.hpp  =========================
+// =======================  END OF cardinality_max.hpp  =======================
 
