@@ -12,6 +12,7 @@ cmake_minimum_required( VERSION 2.8 )
 add_definitions( -DBOOST_TEST_DYN_LINK)
 
 celma_add_boost_testprogram( test_clear_container )
+celma_add_boost_testprogram( test_enum_flags )
 celma_add_boost_testprogram( test_find_sequence )
 celma_add_boost_testprogram( test_first_pass )
 celma_add_boost_testprogram( test_reset_at_exit )
