@@ -13,7 +13,7 @@ project( Celma )
 
 set( MAJORVERSION    0 )
 set( MINORVERSION    0 )
-set( RELEASE_VERSION 5 )
+set( RELEASE_VERSION 7 )
 set( PATCHLEVEL      0 )
 
 enable_testing()
@@ -62,7 +62,7 @@ set( CELMA_INCLUDE_DIRS
 
 include_directories(
    ${CELMA_INCLUDE_DIRS}
-   ${Boost_INCLUDE_DIRS}
+   SYSTEM ${Boost_INCLUDE_DIRS}
 )
 
 # suppress warnings for external libraries
