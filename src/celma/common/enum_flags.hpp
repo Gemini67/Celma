@@ -20,6 +20,8 @@
 
 
 #include <initializer_list>
+#include <iomanip>
+#include <ostream>
 #include <type_traits>
 
 
@@ -197,6 +199,22 @@ public:
    /// @since  0.8, 13.11.2016
    void reset() noexcept;
 
+   /// Clears the specified bit/flag, if it is set.
+   /// @param[in]  clear_value  The bit/flag to clear.
+   /// @since  0.8, 14.11.2016
+   void clear( E clear_value) noexcept;
+
+   /// Clears all the bits/flags from the list which are set.
+   /// @param[in]  clear_set  The list of bits/flags to clear.
+   /// @since  0.8, 14.11.2016
+   void clear( std::initializer_list< E> clear_set) noexcept;
+
+   /// Clears all the bits/flags that are set in the other object.
+   /// @param[in]  clear_flags  The other object which contains the bits/flags
+   ///                          to clear.
+   /// @since  0.8, 14.11.2016
+   void clear( const EnumFlags& clear_flags) noexcept;
+
    // checks
    // ------
 
@@ -205,6 +223,36 @@ public:
    /// @return  \c true if the specified bit/flag is set.
    /// @since  0.8, 11.11.2016
    bool operator &( E and_value) const noexcept;
+
+   /// Insertion operator for EnumFlags.<br>
+   /// Prints a string in the form '<set-hex-value> = <enum-name1> (enum-value), ...<br>
+   /// Requires an insertion operator on the enum that prints the name.
+   /// @param[in]  os  The stream to print to.
+   /// @param[in]  ef  The object to dump the bit-set of.
+   /// @return  The stream as passed in.
+   /// @since  0.8, 14.11.2016
+   friend std::ostream& operator <<( std::ostream& os, const EnumFlags& ef) noexcept
+   {
+      bool  first = true;
+      os << "0x" << std::hex << ef.mSetValue << std::dec;
+      for (T bit = 0; bit < static_cast< T>( sizeof( T)) * 8; ++bit)
+      {
+         if (ef.mSetValue & bitval( static_cast< E>( bit)))
+         {
+            if (first)
+            {
+               os << " = ";
+               first = false;
+            } else
+            {
+               os << ", ";
+            } // end if
+
+            os << static_cast< E>( bit) << " (" << bit << ")";
+         } // end if
+      } // end for
+      return os;
+   } // operator <<
 
 private:
    /// Computes the bit-mask value for an enum value.
@@ -390,6 +438,34 @@ template< typename E, typename T>
    mSetValue ^= enum_flags.mSetValue;
    return *this;
 } // EnumFlags< E, T>::operator ^=
+
+
+template< typename E, typename T>
+   void EnumFlags< E, T>::clear( E clear_value) noexcept
+{
+   const T  clear_bit = bitval( clear_value);
+   if (mSetValue & clear_bit)
+      mSetValue -= clear_bit;
+} // EnumFlags< E, T>::clear
+
+
+template< typename E, typename T>
+   void EnumFlags< E, T>::clear( std::initializer_list< E> clear_set) noexcept
+{
+   for (auto flag : clear_set)
+   {
+      const T  clear_bit = bitval( flag);
+      if (mSetValue & clear_bit)
+         mSetValue -= clear_bit;
+   } // end for
+} // EnumFlags< E, T>::clear
+
+
+template< typename E, typename T>
+   void EnumFlags< E, T>::clear( const EnumFlags& clear_flags) noexcept
+{
+   mSetValue &= ~clear_flags.mSetValue;
+} // EnumFlags< E, T>::clear
 
 
 template< typename E, typename T> void EnumFlags< E, T>::reset() noexcept
