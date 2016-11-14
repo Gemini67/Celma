@@ -19,6 +19,10 @@
 #define CELMA_FORMAT_AUTO_SPRINTF_HPP
 
 
+#include <cstdarg>
+#include <string>
+
+
 namespace celma { namespace format {
 
 
@@ -34,6 +38,15 @@ public:
    /// @throw  CelmaRuntimeError when the string formatting failed.
    /// @since  0.2, 08.04.2016
    AutoSprintf( const char* format, ...);
+
+   /// Constructor for passing a pre-processed argument list.<br>
+   /// Make sure that the format string is a std::string object to make sure
+   /// this constructor is called.
+   /// @param[in]  format  The format string as std::string object.
+   /// @param[in]  ap      Additional parameters for the string formatting.
+   /// @throw  SixRuntimeError when the string formatting failed.
+   /// @since  0.7, 08.11.2016
+   AutoSprintf( const std::string& format, va_list ap);
 
    /// Destructor, ensures that the buffer is free'd again.
    /// @since  0.2, 08.04.2016
@@ -83,25 +96,25 @@ private:
 inline AutoSprintf::operator const char*() const
 {
    return mpString;
-} // end AutoSprintf::operator const char*
+} // AutoSprintf::operator const char*
 
 
 inline const char* AutoSprintf::c_str() const
 {
    return mpString;
-} // end AutoSprintf::c_str
+} // AutoSprintf::c_str
 
 
 inline AutoSprintf::operator int() const
 {
    return mLength;
-} // end AutoSprintf::operator int
+} // AutoSprintf::operator int
 
 
 inline int AutoSprintf::length() const
 {
    return mLength;
-} // end AutoSprintf::length
+} // AutoSprintf::length
 
 
 } // namespace format
