@@ -15,6 +15,10 @@
 #include "celma/common/enum_flags.hpp"
 
 
+// C++ Standard Library includes
+#include <sstream>
+
+
 // Boost includes
 #define BOOST_TEST_MODULE EnumFlagsTest
 #include <boost/test/unit_test.hpp>
@@ -348,6 +352,66 @@ BOOST_AUTO_TEST_CASE( test_clear)
    } // end scope
 
 } // test_clear
+
+
+
+/// Enum for insertion operator tests.
+enum class PrintableEnum
+{
+   red,
+   blue,
+   green,
+   cyan
+};
+
+
+
+/// The insertion operator that prints the symbolic name of an enum value.
+std::ostream& operator <<( std::ostream& os, PrintableEnum pe)
+{
+   switch (pe)
+   {
+   case PrintableEnum::red:   return os << "red";
+   case PrintableEnum::blue:  return os << "blue";
+   case PrintableEnum::green: return os << "green";
+   case PrintableEnum::cyan:  return os << "cyan";
+   default:                   return os << "invalid";
+   } // end switch
+} // operator <<
+
+
+
+/// Test printing the contents of an EnumFlags object using the insertion
+/// operator.
+/// @since  0.8, 14.11.2016
+BOOST_AUTO_TEST_CASE( test_insertion_operator)
+{
+
+   {
+      EnumFlags< PrintableEnum>  my_set;
+      std::ostringstream         oss;
+
+      oss << my_set;
+      BOOST_REQUIRE_EQUAL( oss.str(), "0x0");
+   } // end scope
+
+   {
+      EnumFlags< PrintableEnum>  my_set( PrintableEnum::green);
+      std::ostringstream         oss;
+
+      oss << my_set;
+      BOOST_REQUIRE_EQUAL( oss.str(), "0x4 = green (2)");
+   } // end scope
+
+   {
+      EnumFlags< PrintableEnum>  my_set{ PrintableEnum::red, PrintableEnum::cyan};
+      std::ostringstream         oss;
+
+      oss << my_set;
+      BOOST_REQUIRE_EQUAL( oss.str(), "0x9 = red (0), cyan (3)");
+   } // end scope
+
+} // test_insertion_operator
 
 
 // =======================  END OF test_enum_flags.cpp  =======================

@@ -20,6 +20,8 @@
 
 
 #include <initializer_list>
+#include <iomanip>
+#include <ostream>
 #include <type_traits>
 
 
@@ -221,6 +223,36 @@ public:
    /// @return  \c true if the specified bit/flag is set.
    /// @since  0.8, 11.11.2016
    bool operator &( E and_value) const noexcept;
+
+   /// Insertion operator for EnumFlags.<br>
+   /// Prints a string in the form '<set-hex-value> = <enum-name1> (enum-value), ...<br>
+   /// Requires an insertion operator on the enum that prints the name.
+   /// @param[in]  os  The stream to print to.
+   /// @param[in]  ef  The object to dump the bit-set of.
+   /// @return  The stream as passed in.
+   /// @since  0.8, 14.11.2016
+   friend std::ostream& operator <<( std::ostream& os, const EnumFlags& ef) noexcept
+   {
+      bool  first = true;
+      os << "0x" << std::hex << ef.mSetValue << std::dec;
+      for (T bit = 0; bit < static_cast< T>( sizeof( T)) * 8; ++bit)
+      {
+         if (ef.mSetValue & bitval( static_cast< E>( bit)))
+         {
+            if (first)
+            {
+               os << " = ";
+               first = false;
+            } else
+            {
+               os << ", ";
+            } // end if
+
+            os << static_cast< E>( bit) << " (" << bit << ")";
+         } // end if
+      } // end for
+      return os;
+   } // operator <<
 
 private:
    /// Computes the bit-mask value for an enum value.
