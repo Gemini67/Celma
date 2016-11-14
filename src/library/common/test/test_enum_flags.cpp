@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE( test_constructor)
    } // end scope
 
    {
-      EnumFlags< MyEnum>  my_set( { MyEnum::one } );
+      EnumFlags< MyEnum>  my_set{ MyEnum::one };
       BOOST_REQUIRE(   my_set & MyEnum::one);
       BOOST_REQUIRE( !(my_set & MyEnum::two));
       BOOST_REQUIRE( !(my_set & MyEnum::three));
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( test_constructor)
    } // end scope
 
    {
-      EnumFlags< MyEnum>  my_set( { MyEnum::one, MyEnum::two} );
+      EnumFlags< MyEnum>  my_set{ MyEnum::one, MyEnum::two};
       BOOST_REQUIRE(   my_set & MyEnum::one);
       BOOST_REQUIRE(   my_set & MyEnum::two);
       BOOST_REQUIRE( !(my_set & MyEnum::three));
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE( test_constructor)
    } // end scope
 
    {
-      EnumFlags< MyEnum>  my_set( { MyEnum::one, MyEnum::four} );
+      EnumFlags< MyEnum>  my_set{ MyEnum::one, MyEnum::four};
       BOOST_REQUIRE(   my_set & MyEnum::one);
       BOOST_REQUIRE( !(my_set & MyEnum::two));
       BOOST_REQUIRE( !(my_set & MyEnum::three));
@@ -137,14 +137,14 @@ BOOST_AUTO_TEST_CASE( test_assignment)
 
    {
       EnumFlags< MyEnum>  my_set;
-      my_set = { MyEnum::one, MyEnum::three };
+      my_set = { MyEnum::one, MyEnum::three};
 
       BOOST_REQUIRE(   my_set & MyEnum::one);
       BOOST_REQUIRE( !(my_set & MyEnum::two));
       BOOST_REQUIRE(   my_set & MyEnum::three);
       BOOST_REQUIRE( !(my_set & MyEnum::four));
 
-      my_set = EnumFlags< MyEnum>( { MyEnum::two, MyEnum::four });
+      my_set = EnumFlags< MyEnum>{ MyEnum::two, MyEnum::four};
 
       BOOST_REQUIRE( !(my_set & MyEnum::one));
       BOOST_REQUIRE(   my_set & MyEnum::two);
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE( test_comparison)
    } // end scope
 
    {
-      EnumFlags< MyEnum>  my_set( { MyEnum::one, MyEnum::three } );
+      EnumFlags< MyEnum>  my_set{ MyEnum::one, MyEnum::three };
 
       BOOST_REQUIRE( my_set != MyEnum::one);
       BOOST_REQUIRE( my_set != MyEnum::two);
@@ -243,8 +243,8 @@ BOOST_AUTO_TEST_CASE( test_modifiers)
    } // end scope
 
    {
-      EnumFlags< MyEnum>  my_set( { MyEnum::one, MyEnum::two, MyEnum::three,
-                                    MyEnum::four } );
+      EnumFlags< MyEnum>  my_set{ MyEnum::one, MyEnum::two, MyEnum::three,
+                                  MyEnum::four };
 
       my_set &= MyEnum::three;
 
@@ -255,8 +255,8 @@ BOOST_AUTO_TEST_CASE( test_modifiers)
    } // end scope
 
    {
-      EnumFlags< MyEnum>  my_set( { MyEnum::one, MyEnum::two, MyEnum::three,
-                                    MyEnum::four } );
+      EnumFlags< MyEnum>  my_set{ MyEnum::one, MyEnum::two, MyEnum::three,
+                                  MyEnum::four };
 
       my_set &= { MyEnum::two, MyEnum::three };
 
@@ -278,8 +278,8 @@ BOOST_AUTO_TEST_CASE( test_modifiers)
    } // end scope
 
    {
-      EnumFlags< MyEnum>  my_set( { MyEnum::one, MyEnum::two, MyEnum::three,
-                                    MyEnum::four } );
+      EnumFlags< MyEnum>  my_set{ MyEnum::one, MyEnum::two, MyEnum::three,
+                                  MyEnum::four };
 
       my_set ^= { MyEnum::two, MyEnum::three };
 
@@ -290,6 +290,64 @@ BOOST_AUTO_TEST_CASE( test_modifiers)
    } // end scope
 
 } // test_modifiers
+
+
+
+/// Test modifiers.
+/// @since  0.8, 14.11.2016
+BOOST_AUTO_TEST_CASE( test_clear)
+{
+
+   enum class MyEnum
+   {
+      one,
+      two,
+      three,
+      four
+   };
+   
+   {
+      EnumFlags< MyEnum>  my_set( MyEnum::one);
+
+      my_set.clear( MyEnum::two);
+
+      BOOST_REQUIRE(   my_set & MyEnum::one);
+      BOOST_REQUIRE( !(my_set & MyEnum::two));
+      BOOST_REQUIRE( !(my_set & MyEnum::three));
+      BOOST_REQUIRE( !(my_set & MyEnum::four));
+
+      my_set.clear( MyEnum::one);
+
+      BOOST_REQUIRE( !(my_set & MyEnum::one));
+      BOOST_REQUIRE( !(my_set & MyEnum::two));
+      BOOST_REQUIRE( !(my_set & MyEnum::three));
+      BOOST_REQUIRE( !(my_set & MyEnum::four));
+   } // end scope
+
+   {
+      EnumFlags< MyEnum>  my_set{ MyEnum::two, MyEnum::three};
+
+      my_set.clear( { MyEnum::one, MyEnum::two});
+
+      BOOST_REQUIRE( !(my_set & MyEnum::one));
+      BOOST_REQUIRE( !(my_set & MyEnum::two));
+      BOOST_REQUIRE(   my_set & MyEnum::three);
+      BOOST_REQUIRE( !(my_set & MyEnum::four));
+   } // end scope
+
+   {
+      EnumFlags< MyEnum>  my_set{ MyEnum::two, MyEnum::three};
+      EnumFlags< MyEnum>  clear_set{ MyEnum::one, MyEnum::two, MyEnum::four};
+
+      my_set.clear( clear_set);
+
+      BOOST_REQUIRE( !(my_set & MyEnum::one));
+      BOOST_REQUIRE( !(my_set & MyEnum::two));
+      BOOST_REQUIRE(   my_set & MyEnum::three);
+      BOOST_REQUIRE( !(my_set & MyEnum::four));
+   } // end scope
+
+} // test_clear
 
 
 // =======================  END OF test_enum_flags.cpp  =======================

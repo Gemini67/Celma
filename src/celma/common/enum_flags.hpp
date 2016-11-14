@@ -197,6 +197,22 @@ public:
    /// @since  0.8, 13.11.2016
    void reset() noexcept;
 
+   /// Clears the specified bit/flag, if it is set.
+   /// @param[in]  clear_value  The bit/flag to clear.
+   /// @since  0.8, 14.11.2016
+   void clear( E clear_value) noexcept;
+
+   /// Clears all the bits/flags from the list which are set.
+   /// @param[in]  clear_set  The list of bits/flags to clear.
+   /// @since  0.8, 14.11.2016
+   void clear( std::initializer_list< E> clear_set) noexcept;
+
+   /// Clears all the bits/flags that are set in the other object.
+   /// @param[in]  clear_flags  The other object which contains the bits/flags
+   ///                          to clear.
+   /// @since  0.8, 14.11.2016
+   void clear( const EnumFlags& clear_flags) noexcept;
+
    // checks
    // ------
 
@@ -390,6 +406,34 @@ template< typename E, typename T>
    mSetValue ^= enum_flags.mSetValue;
    return *this;
 } // EnumFlags< E, T>::operator ^=
+
+
+template< typename E, typename T>
+   void EnumFlags< E, T>::clear( E clear_value) noexcept
+{
+   const T  clear_bit = bitval( clear_value);
+   if (mSetValue & clear_bit)
+      mSetValue -= clear_bit;
+} // EnumFlags< E, T>::clear
+
+
+template< typename E, typename T>
+   void EnumFlags< E, T>::clear( std::initializer_list< E> clear_set) noexcept
+{
+   for (auto flag : clear_set)
+   {
+      const T  clear_bit = bitval( flag);
+      if (mSetValue & clear_bit)
+         mSetValue -= clear_bit;
+   } // end for
+} // EnumFlags< E, T>::clear
+
+
+template< typename E, typename T>
+   void EnumFlags< E, T>::clear( const EnumFlags& clear_flags) noexcept
+{
+   mSetValue &= ~clear_flags.mSetValue;
+} // EnumFlags< E, T>::clear
 
 
 template< typename E, typename T> void EnumFlags< E, T>::reset() noexcept
