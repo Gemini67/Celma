@@ -236,10 +236,7 @@ private:
    void copySeparator( const char*& pnext)
    {
 
-      /// @todo  there should be an easier way to do this
-      ///        but (*pnext == ' ') did not work ...
-      while ((*pnext != '\0') && (*pnext != '-') && !std::isalnum( *pnext) &&
-             (*pnext != '#'))
+      while ((*pnext == ' ') or (*pnext == '\n'))
       {
          mSeparator.append( 1, *pnext);
          ++pnext;
@@ -373,7 +370,10 @@ AsciiTable::AsciiTable( char dash_char, const char* table_spec_format, ...):
 
 
 
-/// Allows to append more columns to the table.
+/// Allows to append more columns to the table.<br>
+/// If a newline character should be appended in order to get the created
+/// lines with newline character at the end, call this funtion with just the
+/// newline character as string contents.
 /// @param[in]  table_spec  The string that specifies the additional columns,
 ///                         widths, formats etc. as described in the class
 ///                         header.
