@@ -99,7 +99,10 @@ public:
    // Default destructor is just fine.
    ~AsciiTable() = default;
 
-   /// Allows to append more columns to the table.
+   /// Allows to append more columns to the table.<br>
+   /// If a newline character should be appended in order to get the created
+   /// lines with newline character at the end, call this funtion with just the
+   /// newline character as string contents.
    /// @param[in]  table_spec  The string that specifies the additional columns,
    ///                         widths, formats etc. as described in the class
    ///                         header.
