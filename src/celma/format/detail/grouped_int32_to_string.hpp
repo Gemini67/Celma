@@ -22,8 +22,8 @@
 
 
 
-#ifndef CELMA_FORMAT_GROUPED_INT2STR_HPP
-#define CELMA_FORMAT_GROUPED_INT2STR_HPP
+#ifndef CELMA_FORMAT_DETAIL_GROUPED_INT32_TO_STRING_HPP
+#define CELMA_FORMAT_DETAIL_GROUPED_INT32_TO_STRING_HPP
 
 
 #include <cstdint>
@@ -31,7 +31,7 @@
 #include <string>
 
 
-namespace celma { namespace format {
+namespace celma { namespace format { namespace detail {
 
 
 /// Fast method to convert an integer to string format with grouping:
@@ -46,8 +46,8 @@ namespace celma { namespace format {
 ///                         string format.
 /// @param[in]  group_char  The character to use to separate a group of digits.
 /// @return  The value as string.
-/// @since  0.6, 05.11.2016
-std::string grouped_uint2str( uint64_t value, char group_char = '\'');
+/// @since  0.9, 28.11.2016
+std::string groupedUint32toString( uint32_t value, char group_char = '\'');
 
 
 /// Fast method to convert a signed, negative integer to string format with
@@ -63,8 +63,8 @@ std::string grouped_uint2str( uint64_t value, char group_char = '\'');
 ///                         format.
 /// @param[in]  group_char  The character to use to separate a group of digits.
 /// @return  The value as string.
-/// @since  0.6, 05.11.2016
-std::string grouped_int2str_neg( int64_t value, char group_char = '\'');
+/// @since  0.9, 28.11.2016
+std::string groupedInt32negToString( int32_t value, char group_char = '\'');
 
 
 /// Converts an integer value, signed, positive or negative, into string format
@@ -72,15 +72,15 @@ std::string grouped_int2str_neg( int64_t value, char group_char = '\'');
 /// @param[in]  value       The value to convert.
 /// @param[in]  group_char  The character to use to separate a group of digits.
 /// @return  The string with the value.
-/// @since  0.6, 05.11.2016
-inline std::string grouped_int2str( int64_t value, char group_char = '\'')
+/// @since  0.9, 28.11.2016
+inline std::string groupedInt32toString( int32_t value, char group_char = '\'')
 {
    if (value < 0L)
-      return grouped_int2str_neg( value, group_char);
+      return groupedInt32negToString( value, group_char);
    if (value == 0L)
       return std::string( "0");
-   return grouped_uint2str( value, group_char);
-} // grouped_int2str
+   return groupedUint32toString( value, group_char);
+} // groupedInt32toString
 
 
 /// Fast unsigned integer to string conversion with grouping into a caller-
@@ -92,8 +92,8 @@ inline std::string grouped_int2str( int64_t value, char group_char = '\'')
 /// @param[in]   value       The value to convert.
 /// @param[in]   group_char  The character to use to separate a group of digits.
 /// @return  Number of characters written into the destination buffer.
-/// @since  0.6, 05.11.2016
-int grouped_uint2str( char* buffer, uint64_t value, char group_char = '\'');
+/// @since  0.9, 28.11.2016
+int groupedUint32toString( char* buffer, uint32_t value, char group_char = '\'');
 
 
 /// Fast integer to string conversion with grouping into a caller-supplied
@@ -105,8 +105,8 @@ int grouped_uint2str( char* buffer, uint64_t value, char group_char = '\'');
 /// @param[in]   value       The value to convert.
 /// @param[in]   group_char  The character to use to separate a group of digits.
 /// @return  Number of characters written into the destination buffer.
-/// @since  0.6, 05.11.2016
-int grouped_int2str_neg( char* buffer, int64_t value, char group_char = '\'');
+/// @since  0.9, 28.11.2016
+int groupedInt32negToString( char* buffer, int32_t value, char group_char = '\'');
 
 
 /// Same conversion methods as above, but this time the functions take a
@@ -119,11 +119,11 @@ int grouped_int2str_neg( char* buffer, int64_t value, char group_char = '\'');
 /// @param[in]   value       The value to convert.
 /// @param[in]   group_char  The character to use to separate a group of digits.
 /// @return  Number of characters written into the destination buffer.
-/// @since  0.6, 05.11.2016
-inline int grouped_int2str( char* buffer, int64_t value, char group_char = '\'')
+/// @since  0.9, 28.11.2016
+inline int groupedInt32toString( char* buffer, int32_t value, char group_char = '\'')
 {
    if (value < 0L)
-      return grouped_int2str_neg( buffer, value, group_char);
+      return groupedInt32negToString( buffer, value, group_char);
 
    if (value == 0L)
    {
@@ -131,16 +131,17 @@ inline int grouped_int2str( char* buffer, int64_t value, char group_char = '\'')
       return 1;
    } // end if
 
-   return grouped_uint2str( buffer, value, group_char);
-} // grouped_int2str
+   return groupedUint32toString( buffer, value, group_char);
+} // groupedInt32toString
 
 
+} // namespace detail
 } // namespace format
 } // namespace celma
 
 
-#endif   // CELMA_FORMAT_GROUPED_INT2STR_HPP
+#endif   // CELMA_FORMAT_DETAIL_GROUPED_INT32_TO_STRING_HPP
 
 
-// =======================  END OF grouped_int2str.hpp  =======================
+// ===================  END OF grouped_int32_to_string.hpp  ===================
 

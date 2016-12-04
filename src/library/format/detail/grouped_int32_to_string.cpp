@@ -22,7 +22,7 @@
 
 
 // module header file include
-#include "celma/format/grouped_int2str.hpp"
+#include "celma/format/detail/grouped_int32_to_string.hpp"
 
 
 // C/OS library includes
@@ -30,10 +30,10 @@
 
 
 // project includes
-#include "celma/format/detail/int_str_length.hpp"
+#include "celma/format/detail/int32_str_length.hpp"
 
 
-namespace celma { namespace format {
+namespace celma { namespace format { namespace detail {
 
 
 namespace {
@@ -45,7 +45,7 @@ namespace {
 /// @param[in,out]  num_digits  Number of digits counter, is always incremented,
 ///                             set to 1 if a group character was written.
 /// @param[in]      group_char  The group character to write.
-/// @since  0.6, 05.11.2016
+/// @since  0.9, 28.11.2016
 void checkAddGroupChar( char*& buffer, uint8_t& num_digits, char group_char)
 {
 
@@ -66,8 +66,8 @@ void checkAddGroupChar( char*& buffer, uint8_t& num_digits, char group_char)
 /// @param[in]   value       The value to convert into the buffer.
 /// @param[in]   result_len  Pre-determined length of the resulting string.
 /// @param[in]   group_char  The character to use to separate a group of digits.
-/// @since  0.6, 05.11.2016
-inline void convert( char* buffer, uint64_t value, uint8_t result_len,
+/// @since  0.9, 28.11.2016
+inline void convert( char* buffer, uint32_t value, uint8_t result_len,
                      char group_char)
 {
 
@@ -79,32 +79,12 @@ inline void convert( char* buffer, uint64_t value, uint8_t result_len,
 
    switch (result_len)
    {
-   case 20:  *buffer-- = '0' + (value % 10);  value /= 10;
+   case 10:  *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
-   case 19:  *buffer-- = '0' + (value % 10);  value /= 10;
+   case  9:  *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
-   case 18:  *buffer-- = '0' + (value % 10);  value /= 10;
+   case  8:  *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
-   case 17:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case 16:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case 15:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case 14:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case 13:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case 12:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case 11:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case 10:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case  9:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
-   case  8:  checkAddGroupChar( buffer, num_digits, group_char);
-             *buffer-- = '0' + (value % 10);  value /= 10;
    case  7:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
    case  6:  checkAddGroupChar( buffer, num_digits, group_char);
@@ -139,19 +119,19 @@ inline void convert( char* buffer, uint64_t value, uint8_t result_len,
 ///                         string format.
 /// @param[in]  group_char  The character to use to separate a group of digits.
 /// @return  The value as string.
-/// @since  0.6, 05.11.2016
-std::string grouped_uint2str( uint64_t value, char group_char)
+/// @since  0.9, 28.11.2016
+std::string groupedUint32toString( uint32_t value, char group_char)
 {
 
-   const uint8_t  result_len = detail::int_str_length( value);
+   const auto     result_len = int32_str_length( value);
    const uint8_t  grouped_result_len = result_len + (result_len - 1) / 3;
    std::string    result( grouped_result_len, '0');
-   char*          buffer_end = const_cast< char*>( result.c_str()) + grouped_result_len - 1;
+   auto           buffer_end = const_cast< char*>( result.c_str()) + grouped_result_len - 1;
 
    convert( buffer_end, value, result_len, group_char);
 
    return result;
-} // grouped_uint2str
+} // groupedUint32toString
 
 
 
@@ -168,30 +148,30 @@ std::string grouped_uint2str( uint64_t value, char group_char)
 ///                         format.
 /// @param[in]  group_char  The character to use to separate a group of digits.
 /// @return  The value as string.
-/// @since  0.6, 05.11.2016
-std::string grouped_int2str_neg( int64_t value, char group_char)
+/// @since  0.9, 28.11.2016
+std::string groupedInt32negToString( int32_t value, char group_char)
 {
 
    // convert into a positive value
-   const uint64_t  abs_value = -value;
+   const uint32_t  abs_value = -value;
 
    // actually we create a string with result_len + 1
    // but then we would have to sub 1 again two times (so 1 add, 2 subs), so
    // this solution (1 add only) is a bit faster
-   const uint8_t  result_len = detail::int_str_length( abs_value);
+   const auto     result_len = int32_str_length( abs_value);
    const uint8_t  grouped_result_len = result_len + (result_len - 1) / 3;
 
    // fill the string with dashes, so we already have the remaining 1 dash at
    // the beginning of the string when we're finished
    std::string    result( grouped_result_len + 1, '-');
-   char*          buffer_end = const_cast< char*>( result.c_str()) + grouped_result_len;
+   auto           buffer_end = const_cast< char*>( result.c_str()) + grouped_result_len;
 
    // value is positive now, can safely pass it to the function expecting
    // an unsigned value
    convert( buffer_end, abs_value, result_len, group_char);
 
    return result;
-} // grouped_int2str_neg
+} // groupedInt32negToString
 
 
 
@@ -204,11 +184,11 @@ std::string grouped_int2str_neg( int64_t value, char group_char)
 /// @param[in]   value       The value to convert.
 /// @param[in]   group_char  The character to use to separate a group of digits.
 /// @return  Number of characters written into the destination buffer.
-/// @since  0.6, 05.11.2016
-int grouped_uint2str( char* buffer, uint64_t value, char group_char)
+/// @since  0.9, 28.11.2016
+int groupedUint32toString( char* buffer, uint32_t value, char group_char)
 {
 
-   const uint8_t  result_len = detail::int_str_length( value);
+   const auto     result_len = int32_str_length( value);
    const uint8_t  grouped_result_len = result_len + (result_len - 1) / 3;
    char*          buffer_end = buffer + grouped_result_len - 1;
 
@@ -219,7 +199,7 @@ int grouped_uint2str( char* buffer, uint64_t value, char group_char)
    convert( buffer_end, value, result_len, group_char);
 
    return grouped_result_len;
-} // grouped_uint2str
+} // groupedUint32toString
 
 
 
@@ -232,17 +212,17 @@ int grouped_uint2str( char* buffer, uint64_t value, char group_char)
 /// @param[in]   value       The value to convert.
 /// @param[in]   group_char  The character to use to separate a group of digits.
 /// @return  Number of characters written into the destination buffer.
-/// @since  0.6, 05.11.2016
-int grouped_int2str_neg( char* buffer, int64_t value, char group_char)
+/// @since  0.9, 28.11.2016
+int groupedInt32negToString( char* buffer, int32_t value, char group_char)
 {
 
    // convert into a positive value
-   const uint64_t  abs_value = -value;
+   const uint32_t  abs_value = -value;
 
    // actually we create a string with result_len + 1
    // but then we would have to sub 1 again two times (so 1 add, 2 subs), so
    // this solution (1 add only) is a bit faster
-   const uint8_t  result_len = detail::int_str_length( abs_value);
+   const auto     result_len = int32_str_length( abs_value);
    const uint8_t  grouped_result_len = result_len + (result_len - 1) / 3;
    char*          buffer_end = buffer + grouped_result_len;
 
@@ -256,13 +236,14 @@ int grouped_int2str_neg( char* buffer, int64_t value, char group_char)
    convert( buffer_end, abs_value, result_len, group_char);
 
    return grouped_result_len + 1;
-} // grouped_int2str_neg
+} // groupedInt32negToString
 
 
 
+} // namespace detail
 } // namespace format
 } // namespace celma
 
 
-// =======================  END OF grouped_int2str.cpp  =======================
+// ===================  END OF grouped_int32_to_string.cpp  ===================
 
