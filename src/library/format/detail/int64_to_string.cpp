@@ -13,14 +13,14 @@
 
 /// @file
 /// Provides fast functions to convert an integer value into string format.<br>
-/// For unsigned integers or positive values, use uint2str().<br>
-/// For signed and negative values, use int2str_neg().<br>
-/// For signed values that may be positive or negative, use int2str().<br>
-/// For the same functions but with grouping, see grouped_int2str() etc.
+/// For unsigned integers or positive values, use uint64toString().<br>
+/// For signed and negative values, use int64negToString().<br>
+/// For signed values that may be positive or negative, use int64toString().<br>
+/// For the same functions but with grouping, see grouped_int64toString() etc.
 
 
 // module header file include
-#include "celma/format/int2str.hpp"
+#include "celma/format/detail/int64_to_string.hpp"
 
 
 // C/OS library includes
@@ -28,10 +28,10 @@
 
 
 // project includes
-#include "celma/format/detail/int_str_length.hpp"
+#include "celma/format/detail/int64_str_length.hpp"
 
 
-namespace celma { namespace format {
+namespace celma { namespace format { namespace detail {
 
 
 namespace {
@@ -92,19 +92,20 @@ inline void convert( char* buffer, uint64_t value, uint8_t result_len)
 /// @param[in]  value  The unsigned long integer value to convert into string
 ///                    format.
 /// @return  The value as string.
+/// @since  0.9, 22.11.2016  (renamed from uint2str)
 /// @since  0.6, 05.11.2016
-std::string uint2str( uint64_t value)
+std::string uint64toString( uint64_t value)
 {
 
-   const uint8_t  result_len = detail::int_str_length( value);
-   std::string    result( result_len, '0');
-   char*          buffer_end = const_cast< char*>( result.c_str()) + result_len - 1;
+   const auto   result_len = int64_str_length( value);
+   std::string  result( result_len, '0');
+   auto         buffer_end = const_cast< char*>( result.c_str()) + result_len - 1;
 
 
    convert( buffer_end, value, result_len);
 
    return result;
-} // uint2str
+} // uint64toString
 
 
 
@@ -119,8 +120,9 @@ std::string uint2str( uint64_t value)
 /// @param[in]  value  The signed long integer value to convert into string
 ///                    format.
 /// @return  The value as string.
+/// @since  0.9, 22.11.2016  (renamed from int2str_neg)
 /// @since  0.6, 05.11.2016
-std::string int2str_neg( int64_t value)
+std::string int64negToString( int64_t value)
 {
 
    // convert into a positive value
@@ -129,19 +131,19 @@ std::string int2str_neg( int64_t value)
    // actually we create a string with result_len + 1
    // but then we would have to sub 1 again two times (so 1 add, 2 subs), so
    // this solution (1 add only) is a bit faster
-   const uint8_t  result_len = detail::int_str_length( abs_value);
+   const auto  result_len = int64_str_length( abs_value);
 
    // fill the string with dashes, so we already have the remaining 1 dash at
    // the beginning of the string when we're finished
-   std::string    result( result_len + 1, '-');
-   char*          buffer_end = const_cast< char*>( result.c_str()) + result_len;
+   std::string  result( result_len + 1, '-');
+   auto         buffer_end = const_cast< char*>( result.c_str()) + result_len;
 
    // value is positive now, can safely pass it to the function expecting
    // an unsigned value
    convert( buffer_end, abs_value, result_len);
 
    return result;
-} // int2str_neg
+} // int64negToString
 
 
 
@@ -153,12 +155,13 @@ std::string int2str_neg( int64_t value)
 ///                     form of the value in.
 /// @param[in]  value   The value to convert.
 /// @return  Number of characters written into the destination buffer.
+/// @since  0.9, 22.11.2016  (renamed from uint2str)
 /// @since  0.6, 05.11.2016
-int uint2str( char* buffer, uint64_t value)
+int uint64toString( char* buffer, uint64_t value)
 {
 
-   const uint8_t  result_len = detail::int_str_length( value);
-   char*          buffer_end = buffer + result_len - 1;
+   const auto  result_len = int64_str_length( value);
+   char*       buffer_end = buffer + result_len - 1;
 
 
    ::memset( buffer, '0', result_len);
@@ -167,7 +170,7 @@ int uint2str( char* buffer, uint64_t value)
    convert( buffer_end, value, result_len);
 
    return result_len;
-} // uint2str
+} // uint64toString
 
 
 
@@ -179,8 +182,9 @@ int uint2str( char* buffer, uint64_t value)
 ///                     form of the value in.
 /// @param[in]  value   The value to convert.
 /// @return  Number of characters written into the destination buffer.
+/// @since  0.9, 22.11.2016  (renamed from int2str_neg)
 /// @since  0.6, 05.11.2016
-int int2str_neg( char* buffer, int64_t value)
+int int64negToString( char* buffer, int64_t value)
 {
 
    // convert into a positive value
@@ -189,8 +193,8 @@ int int2str_neg( char* buffer, int64_t value)
    // actually we create a string with result_len + 1
    // but then we would have to sub 1 again two times (so 1 add, 2 subs), so
    // this solution (1 add only) is a bit faster
-   const uint8_t  result_len = detail::int_str_length( abs_value);
-   char*          buffer_end = buffer + result_len;
+   const auto  result_len = int64_str_length( abs_value);
+   char*       buffer_end = buffer + result_len;
 
    // fill the string with dashes, so we already have the remaining 1 dash at
    // the beginning of the string when we're finished
@@ -202,13 +206,14 @@ int int2str_neg( char* buffer, int64_t value)
    convert( buffer_end, abs_value, result_len);
 
    return result_len + 1;
-} // int2str_neg
+} // int64negToString
 
 
 
+} // namespace detail
 } // namespace format
 } // namespace celma
 
 
-// ===========================  END OF int2str.cpp  ===========================
+// =======================  END OF int64_to_string.cpp  =======================
 
