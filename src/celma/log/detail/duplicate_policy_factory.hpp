@@ -38,7 +38,7 @@ public:
    /// @param[in]  policy  The policy to create the object for.
    /// @return  Pointer to the newly created object.
    /// @since  0.3, 19.06.2016
-   static IDuplicatePolicy* createPolicy( DuplicatePolicy policy);
+   static IDuplicatePolicy* createPolicy( DuplicatePolicy policy) noexcept( false);
 
 private:
    /// Don't need to create object(s) of this class.

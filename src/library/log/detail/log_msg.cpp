@@ -25,7 +25,7 @@
 
 
 // project includes
-#include "celma/common/extract_func_name.hpp"
+#include "celma/common/extract_funcname.hpp"
 #include "celma/common/string_util.hpp"
 
 
@@ -44,7 +44,7 @@ LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_
    mTimestamp( ::time( nullptr)),
    mProcessId( ::getpid()),
    mFileName( file_name),
-   mFunctionName(),
+   mFunctionName( common::extractFuncname( pretty_function_name)),
    mLineNbr( line_nbr),
    mClass( LogClass::undefined),
    mLevel( LogLevel::undefined),
@@ -52,7 +52,6 @@ LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_
    mText()
 {
 
-   common::extractFuncName( mFunctionName, pretty_function_name);
    common::remove_to_if_last_incl( mFileName, '/');
 
 } // end LogMsg::LogMsg

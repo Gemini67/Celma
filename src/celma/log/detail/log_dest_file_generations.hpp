@@ -51,20 +51,24 @@ public:
    ///                        NULL pointer is passed, the previous formatter is
    ///                        replaced by the default stream formatter.
    /// @since  0.3, 19.06.2016
-   virtual void setFormatter( IFormatBase* formatter = nullptr);
+   virtual void setFormatter( IFormatBase* formatter = nullptr) override;
 
 private:
    /// Called through the base class. Writes a log message to the specified log
    /// file.
    /// @param[in]  msg  The message to write.
    /// @since  0.3, 19.06.2016
-   virtual void message( const LogMsg& msg);
+   virtual void message( const LogMsg& msg) override;
 
    /// The object used for formatting stream output.
-   std::auto_ptr< IFormatStream>  mpFormatter;
-   std::ofstream  mDest;
+   std::unique_ptr< IFormatStream>  mpFormatter;
+   std::ofstream                    mDest;
 
 }; // LogDestFileGenerations< P>
+
+
+// inlined methods
+// ===============
 
 
 template< typename P>

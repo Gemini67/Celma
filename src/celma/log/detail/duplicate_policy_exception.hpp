@@ -12,11 +12,11 @@
 
 
 /// @file
-/// See documentation of class celma::log::detail::DuplicatePolicyThrow.
+/// See documentation of class celma::log::detail::DuplicatePolicyException.
 
 
-#ifndef CELMA_LOG_DETAIL_DUPLICATE_POLICY_THROW_HPP
-#define CELMA_LOG_DETAIL_DUPLICATE_POLICY_THROW_HPP
+#ifndef CELMA_LOG_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
+#define CELMA_LOG_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
 
 
 #include <stdexcept>
@@ -27,33 +27,35 @@
 namespace celma { namespace log { namespace detail {
 
 
-/// Implementation of the duplicate handler policy 'throw': Throw an exception.
+/// Implementation of the duplicate handler policy 'exception': Throw an
+/// exception.
+/// @since  0.11, 06.12.2016  (renamed from DuplicatePolicyThrow)
 /// @since  0.3, 19.06.2016
-class DuplicatePolicyThrow: public IDuplicatePolicy
+class DuplicatePolicyException: public IDuplicatePolicy
 {
 public:
    /// Virtual, empty destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~DuplicatePolicyThrow() { }
+   virtual ~DuplicatePolicyException() { }
 
    /// Returns the policy type.
    /// @return  Policy \a dpThrow.
    /// @since  0.3, 19.06.2016
-   virtual DuplicatePolicy policy() const
+   virtual DuplicatePolicy policy() const override
    {
-      return dpThrow;
-   } // end DuplicatePolicyThrow::policy
+      return DuplicatePolicy::exception;
+   } // end DuplicatePolicyException::policy
 
    /// Policy: Always throws.
    /// @return  Nothing, actually.
    /// @throw  Always CELMA_RuntimeError.
    /// @since  0.3, 19.06.2016
-   virtual bool acceptNew() const noexcept( false)
+   virtual bool acceptNew() const noexcept( false) override
    {
       throw CELMA_RuntimeError( "filter already defined");
-   } // endDuplicatePolicyThrow::acceptNew
+   } // endDuplicatePolicyException::acceptNew
 
-}; // DuplicatePolicyThrow
+}; // DuplicatePolicyException
 
 
 } // namespace detail
@@ -61,8 +63,8 @@ public:
 } // namespace celma
 
 
-#endif   // CELMA_LOG_DETAIL_DUPLICATE_POLICY_THROW_HPP
+#endif   // CELMA_LOG_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
 
 
-// ====================  END OF duplicate_policy_throw.hpp  ====================
+// ==================  END OF duplicate_policy_exception.hpp  ==================
 

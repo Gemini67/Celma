@@ -74,11 +74,11 @@ ILogDest* Log::addDestination( const std::string& name, ILogDest* ldo)
 /// @return  Pointer to the log destination object.
 /// @throw  Runtime error if a log destination with this name was not found.
 /// @since  0.3, 19.06.2016
-ILogDest* Log::getDestination( const std::string& name)
+ILogDest* Log::getDestination( const std::string& name) noexcept( false)
 {
 
    /// @todo  find_if
-   for (auto it : mLoggers)
+   for (auto & it : mLoggers)
    {
       if (it.mName == name)
       {
@@ -119,7 +119,7 @@ void Log::message( const LogMsg& msg) const
 
    if (pass( msg))
    {
-      for (auto it : mLoggers)
+      for (auto & it : mLoggers)
       {
          it.mpLogger->handleMessage( msg);
       } // end for
@@ -137,7 +137,7 @@ void Log::message( const LogMsg& msg) const
 std::ostream& operator <<( std::ostream& os, const Log& l)
 {
 
-   for (auto it : l.mLoggers)
+   for (auto & it : l.mLoggers)
    {
       os << it << std::endl;
    } // end for

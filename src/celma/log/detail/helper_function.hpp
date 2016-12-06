@@ -36,7 +36,7 @@ namespace celma { namespace log { namespace detail {
 /// @since  0.3, 19.06.2016
 template< typename T> bool discard_by_level( const T& log_spec, LogLevel ll)
 {
-   const Log*  my_log = Logging::instance().getLog( log_spec);
+   const auto  my_log = Logging::instance().getLog( log_spec);
    return (my_log == nullptr) || !my_log->processLevel( ll);
 } // end discard_by_level
 

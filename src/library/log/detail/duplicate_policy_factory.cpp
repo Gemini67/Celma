@@ -22,7 +22,7 @@
 #include "celma/common/celma_exception.hpp"
 #include "celma/log/detail/duplicate_policy_ignore.hpp"
 #include "celma/log/detail/duplicate_policy_replace.hpp"
-#include "celma/log/detail/duplicate_policy_throw.hpp"
+#include "celma/log/detail/duplicate_policy_exception.hpp"
 
 
 namespace celma { namespace log { namespace detail {
@@ -38,10 +38,11 @@ IDuplicatePolicy* DuplicatePolicyFactory::createPolicy( DuplicatePolicy policy)
 
    switch (policy)
    {
-   case dpIgnore:   return new DuplicatePolicyIgnore;
-   case dpThrow:    return new DuplicatePolicyThrow;
-   case dpReplace:  return new DuplicatePolicyReplace;
-   default:         throw CELMA_RuntimeError( "invalid value for duplicate policy");
+   case DuplicatePolicy::ignore:     return new DuplicatePolicyIgnore;
+   case DuplicatePolicy::exception:  return new DuplicatePolicyException;
+   case DuplicatePolicy::replace:    return new DuplicatePolicyReplace;
+   default:
+      throw CELMA_RuntimeError( "invalid value for duplicate policy");
    } // end switch
 } // end DuplicatePolicyFactory::createPolicy
 

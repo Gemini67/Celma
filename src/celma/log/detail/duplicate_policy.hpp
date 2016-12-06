@@ -26,11 +26,11 @@ namespace celma { namespace log { namespace detail {
 /// This could also be implemented using a policy, but then this class would
 /// become a template, and the classes derived from it would become templates
 /// too, so we stick to the enum.
-enum DuplicatePolicy
+enum class DuplicatePolicy
 {
-   dpIgnore,   //!< Ignore new filter settings when such a filter already exists.
-   dpThrow,    //!< Throw an exception if such a filter already exists.
-   dpReplace   //!< Replace already existing filter.
+   ignore,      //!< Ignore new filter settings when such a filter already exists.
+   exception,   //!< Throw an exception if such a filter already exists.
+   replace      //!< Replace already existing filter.
 };
 
 

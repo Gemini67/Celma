@@ -38,15 +38,15 @@ public:
    /// Returns the policy type.
    /// @return  Policy \a dpIgnore.
    /// @since  0.3, 19.06.2016
-   virtual DuplicatePolicy policy() const
+   virtual DuplicatePolicy policy() const override
    {
-      return dpIgnore;
+      return DuplicatePolicy::ignore;
    } // end DuplicatePolicyIgnore::policy
 
    /// Policy: Always return \c false.
    /// @return  \c false.
    /// @since  0.3, 19.06.2016
-   virtual bool acceptNew() const
+   virtual bool acceptNew() const override
    {
       return false;
    } // end DuplicatePolicyIgnore::acceptNew

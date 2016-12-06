@@ -32,20 +32,20 @@ namespace celma { namespace log { namespace detail {
 /// @param[in]  class_list  The list of log class names to filter for.
 /// @since  0.3, 19.06.2016
 LogFilterClasses::LogFilterClasses( const std::string& class_list):
-   ILogFilter( ftClasses),
+   ILogFilter( FilterTypes::classes),
    mClassSelection()
 {
 
    common::Tokenizer  token( class_list, ',');
 
 
-   for (auto it : token)
+   for (auto & it : token)
    {
-      const LogClass  lc = text2logClass( it.c_str());
-      if (lc == LogClass::undefined)
+      auto const  log_class = text2logClass( it.c_str());
+      if (log_class == LogClass::undefined)
          throw CELMA_RuntimeError( std::string( "log class '").append( it).append( "' invalid"));
 
-      mClassSelection.set( static_cast< size_t>( lc));
+      mClassSelection.set( static_cast< size_t>( log_class));
    } // end for
 
    if (mClassSelection.none())

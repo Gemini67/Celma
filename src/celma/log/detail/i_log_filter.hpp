@@ -31,15 +31,15 @@ class ILogFilter
 {
 public:
    /// List of filter types:
-   enum FilterTypes
+   enum class FilterTypes
    {
-      ftMaxLevel,      //!< Filter by maximum log level.
-      ftMinLevel,      //!< Filter by minimum log level.
-      ftLevel,         //!< Filter for a log level.
-      ftClasses,       //!< Filter by log classes.
-      ftProcessName,   //!< Filter by process name.
-      ftUserDefined,   //!< User defined filter.
-      ftInvalid        //!< Initialisation value.
+      maxLevel,      //!< Filter by maximum log level.
+      minLevel,      //!< Filter by minimum log level.
+      level,         //!< Filter for a log level.
+      classes,       //!< Filter by log classes.
+      processName,   //!< Filter by process name.
+      userDefined,   //!< User defined filter.
+      invalid        //!< Initialisation value.
    };
 
    /// Returns if a filter type filters on log levels.
@@ -91,7 +91,8 @@ private:
 
 inline bool ILogFilter::isLevelFilter( FilterTypes ft)
 {
-  return (ft == ftMaxLevel) || (ft == ftMinLevel) || (ft == ftLevel);
+  return (ft == FilterTypes::maxLevel) || (ft == FilterTypes::minLevel) ||
+         (ft == FilterTypes::level);
 } // end ILogFilter::isLevelFilter
 
 

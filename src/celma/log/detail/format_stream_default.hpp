@@ -38,7 +38,7 @@ private:
    /// @param[out]  out  The stream to write the log entry into.
    /// @param[in]   msg  The log message object with the data to log.
    /// @since  0.3, 19.06.2016
-   virtual void format( std::ostream& out, const LogMsg& msg) const;
+   virtual void format( std::ostream& out, const LogMsg& msg) const override;
 
 }; // FormatStreamDefault
 

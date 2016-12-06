@@ -68,7 +68,7 @@ void addLogStandardArgs( const char* std_grp_name)
 static void log2stdout( const std::string& log_name)
 {
 
-   if (Log* log_obj = Logging::instance().getLog( log_name))
+   if (auto log_obj = Logging::instance().getLog( log_name))
    {
       log_obj->addDestination( "stdout", new LogDestStream( std::cout));
    } else

@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE( policy_throw)
 
    lf.maxLevel( LogLevel::error);
 
-   LogFilter::setDuplicatePolicy( celma::log::detail::dpThrow);
+   LogFilter::setDuplicatePolicy( celma::log::detail::DuplicatePolicy::exception);
 
    // now we try to set another max level which should result in an exception
    // being thrown
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE( policy_replace)
 
    lf.maxLevel( LogLevel::error);
 
-   LogFilter::setDuplicatePolicy( celma::log::detail::dpReplace);
+   LogFilter::setDuplicatePolicy( celma::log::detail::DuplicatePolicy::replace);
 
    // now we try to set another max level that should be used afterwards
    BOOST_REQUIRE_NO_THROW( lf.maxLevel( LogLevel::debug));

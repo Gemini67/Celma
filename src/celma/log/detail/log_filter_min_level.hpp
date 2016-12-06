@@ -48,7 +48,7 @@ private:
    /// @param[in]  msg  The message to check the log level of.
    /// @return  \c true if the log level of the message is accepted.
    /// @since  0.3, 19.06.2016
-   virtual bool pass( const LogMsg& msg) const;
+   virtual bool pass( const LogMsg& msg) const override;
 
    /// The minimum log level.
    const LogLevel  mMinLevel;
@@ -61,7 +61,7 @@ private:
 
 
 inline LogFilterMinLevel::LogFilterMinLevel( LogLevel min_level):
-   ILogFilter( ILogFilter::ftMinLevel),
+   ILogFilter( FilterTypes::minLevel),
    mMinLevel( min_level)
 {
 } // end LogFilterMinLevel::LogFilterMinLevel

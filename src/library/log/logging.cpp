@@ -41,7 +41,7 @@ namespace celma { namespace log {
 id_t Logging::findCreateLog( const std::string& name)
 {
 
-   for (auto it : mLogs)
+   for (auto const& it : mLogs)
    {
       if (name == it.mName)
          return it.mLogId;
@@ -70,7 +70,7 @@ detail::Log* Logging::getLog( id_t log_id)
 {
 
    /// @todo: find_if
-   for (auto it : mLogs)
+   for (auto & it : mLogs)
    {
       if (log_id == it.mLogId)
       {
@@ -93,7 +93,7 @@ detail::Log* Logging::getLog( const std::string& log_name)
 {
 
    /// @todo: find_if
-   for (auto it : mLogs)
+   for (auto const& it : mLogs)
    {
       if (log_name == it.mName)
          return it.mpLog;
@@ -134,7 +134,7 @@ void Logging::log( id_t logs, const detail::LogMsg& msg)
 void Logging::log( const std::string& log_name, const detail::LogMsg& msg)
 {
 
-   for (auto it : mLogs)
+   for (auto & it : mLogs)
    {
       if (log_name == it.mName)
       {
@@ -157,7 +157,7 @@ std::ostream& operator <<( std::ostream& os, const Logging& lg)
 
    os << "next log id: " << std::hex << lg.mNextLogId << std::endl;
 
-   for (auto it : lg.mLogs)
+   for (auto const& it : lg.mLogs)
    {
       os << it;
    } // end for

@@ -25,6 +25,7 @@
 
 // project includes
 #include "celma/common/celma_exception.hpp"
+#include "celma/format/auto_sprintf.hpp"
 
 
 namespace celma { namespace log { namespace detail {
@@ -41,22 +42,15 @@ namespace celma { namespace log { namespace detail {
 /// @param[in]   ap      Additional parameters.
 /// @since  0.3, 19.06.2016
 void vprintf( LogMsg& myMsg, LogLevel ll, LogClass lc, const char* format,
-              va_list ap)
+              va_list ap) noexcept( false)
 {
 
-   char*  text = nullptr;
+   const format::AutoSprintf  as( std::string( format), ap);
 
-
-   if (::vasprintf( &text, format, ap) == -1)
-   {
-      throw CELMA_RuntimeError( "could not format text");
-   } // end if
 
    myMsg.setLevel( ll);
    myMsg.setClass( lc);
-   myMsg.setText( text);
-
-   delete [] text;
+   myMsg.setText( as.c_str());
 
 } // end vprintf
 

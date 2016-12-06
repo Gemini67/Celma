@@ -30,7 +30,7 @@ namespace celma { namespace log { namespace detail {
 
 
 extern void vprintf( LogMsg& myMsg, LogLevel ll, LogClass lc,
-                     const char* format, va_list ap);
+                     const char* format, va_list ap) noexcept( false);
 
 
 /// Template function to create a log message with a printf()-like syntax.<br>
@@ -47,7 +47,7 @@ extern void vprintf( LogMsg& myMsg, LogLevel ll, LogClass lc,
 template< typename T>
    void printf( const std::string& file_name, const char* const function_name,
                 int line_nbr, const T& log_spec, LogLevel ll, LogClass lc,
-                const char* format, ...)
+                const char* format, ...) noexcept( false)
 {
 
    LogMsg  myMsg( file_name, function_name, line_nbr);

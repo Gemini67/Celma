@@ -113,7 +113,7 @@ LogFilter::LogFilter():
    mpLevelFilter( nullptr)
 {
 
-   setDuplicatePolicy( dpIgnore);
+   setDuplicatePolicy( DuplicatePolicy::ignore);
 
 } // end LogFilter::LogFilter
 
@@ -138,7 +138,7 @@ void LogFilter::maxLevel( LogLevel max_log_level)
 {
 
    checkSetFilter< detail::LogFilterMaxLevel, LogLevel>
-                 ( detail::ILogFilter::ftMaxLevel, max_log_level);
+                 ( detail::ILogFilter::FilterTypes::maxLevel, max_log_level);
 
 } // end LogFilter::maxLevel
 
@@ -151,7 +151,7 @@ void LogFilter::minLevel( LogLevel min_log_level)
 {
 
    checkSetFilter< detail::LogFilterMinLevel, LogLevel>
-                 ( detail::ILogFilter::ftMinLevel, min_log_level);
+                 ( detail::ILogFilter::FilterTypes::minLevel, min_log_level);
 
 } // end LogFilter::minLevel
 
@@ -164,7 +164,7 @@ void LogFilter::level( LogLevel selected_log_level)
 {
 
    checkSetFilter< detail::LogFilterLevel, LogLevel>
-                 ( detail::ILogFilter::ftLevel, selected_log_level);
+                 ( detail::ILogFilter::FilterTypes::level, selected_log_level);
 
 } // end LogFilter::level
 
@@ -177,7 +177,7 @@ void LogFilter::classes( const std::string& class_list)
 {
 
    checkSetFilter< detail::LogFilterClasses, std::string>
-                 ( detail::ILogFilter::ftClasses, class_list);
+                 ( detail::ILogFilter::FilterTypes::classes, class_list);
 
 } // end LogFilter::classes
 
@@ -191,7 +191,7 @@ void LogFilter::classes( const std::string& class_list)
 bool LogFilter::pass( const LogMsg& msg) const
 {
 
-   for (auto it : mFilters)
+   for (auto & it : mFilters)
    {
       if (!it->passFilter( msg))
          return false;
@@ -214,7 +214,7 @@ bool LogFilter::processLevel( LogLevel l) const
    if (mpLevelFilter == nullptr)
       return true;
 
-   if (mpLevelFilter->filterType() == detail::ILogFilter::ftMaxLevel)
+   if (mpLevelFilter->filterType() == detail::ILogFilter::FilterTypes::maxLevel)
       return static_cast< detail::LogFilterMaxLevel*>( mpLevelFilter)->processLevel( l);
 
    // only two types of level filter exist, so ...

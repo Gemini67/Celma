@@ -36,7 +36,7 @@ public:
    /// Constructor, initialises the set of log classes to accept.
    /// @param[in]  class_list  The list of log class names to filter for.
    /// @since  0.3, 19.06.2016
-   LogFilterClasses( const std::string& class_list);
+   LogFilterClasses( const std::string& class_list) noexcept( false);
 
 private:
    /// Called to check if a message matches the filter criteria, i.e. if the
@@ -44,7 +44,7 @@ private:
    /// @param[in]  msg  The message to check.
    /// @return  \c true if the log class of the message is selected.
    /// @since  0.3, 19.06.2016
-   virtual bool pass( const LogMsg& msg) const;
+   virtual bool pass( const LogMsg& msg) const override;
 
    /// Set of log classes to accept.
    std::bitset< static_cast< size_t>( LogClass::operatorAction)>  mClassSelection;

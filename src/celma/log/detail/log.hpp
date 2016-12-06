@@ -58,7 +58,7 @@ public:
    /// @return  Pointer to the log destination object.
    /// @throw  Runtime error if a log destination with this name was not found.
    /// @since  0.3, 19.06.2016
-   ILogDest* getDestination( const std::string& name);
+   ILogDest* getDestination( const std::string& name) noexcept( false);
 
    /// Removes a destination.
    /// @param[in]  name  The name of the destination to remove.

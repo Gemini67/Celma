@@ -61,14 +61,14 @@ public:
    /// @param[in]  name  The name of the log to search for.
    /// @return  The id of the already existing or newly created log.
    /// @since  0.3, 19.06.2016
-   id_t findCreateLog( const std::string& name);
+   id_t findCreateLog( const std::string& name) noexcept( false);
 
    /// Returns the log with the specified id.
    /// @param[in]  log_id  The id of the log.
    /// @return  Pointer to the internal log object, NULL if not found.
    /// @throw  CelmaRuntimeError if \a log_id contains more than one log id.
    /// @since  0.3, 19.06.2016
-   detail::Log* getLog( id_t log_id);
+   detail::Log* getLog( id_t log_id) noexcept( false);
 
    /// Returns the log with the specified name.
    /// @param[in]  log_name  The name of the log.
