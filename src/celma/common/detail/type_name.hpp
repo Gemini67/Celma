@@ -22,11 +22,7 @@ namespace celma {
 
 
 /// Base template for getting the name of a type. Partial template specialisation
-/// is used to provide the name of a type.<br>
-/// The design with the static \b method was chosen because the solution with a
-/// static member variable led to 'multiple instance' error messages. Maybe this
-/// would not happen with C++11x 'constexpr'.<br>
-/// The template was added to the 'std' namespace on purpose.
+/// is used to provide the name of a type.
 /// @tparam  T  The type to provide the name of.
 /// @since  0.1, 15.03.2016
 template< typename T> class type

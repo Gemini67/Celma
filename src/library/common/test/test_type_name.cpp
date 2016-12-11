@@ -245,6 +245,5 @@ BOOST_AUTO_TEST_CASE( user_defined_enum)
 
 
 
-// =========================  END OF test_type_name.cpp  =========================
-
+// ========================  END OF test_type_name.cpp  ========================
 

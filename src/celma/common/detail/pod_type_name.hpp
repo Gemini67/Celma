@@ -27,7 +27,7 @@ namespace celma {
 /// Macro to create the template specialisation for a POD type.
 /// @param  t  The type to create the partial template specialisation of type<>
 ///            for.
-/// @since  0.1, 15.03..2016  (macro-isation of multiple template specialisations).
+/// @since  0.1, 15.03.2016  (macro-isation of multiple template specialisations).
 #define  PROVIDE_SIMPLE_TYPE_NAME( t) \
    template<> class type< t> \
    { \
