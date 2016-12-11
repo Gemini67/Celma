@@ -44,7 +44,7 @@ class Handler;
 class Groups: public common::Singleton< Groups>
 {
 
-   friend class common::detail::StaticSingletonCreator< Groups>;
+   friend class common::Singleton< Groups>;
 
 public:
    /// The type used to store an argument handler object.
