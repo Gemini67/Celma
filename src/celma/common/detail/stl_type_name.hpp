@@ -29,7 +29,7 @@
 #include <stack>
 #include <string>
 #include <vector>
-#include "celma/detail/type_name.hpp"
+#include "celma/common/detail/type_name.hpp"
 
 
 namespace celma {
@@ -151,5 +151,5 @@ PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::pair);
 #endif   // CELMA_STL_TYPE_NAME_HPP
 
 
-// =========================  END OF stl_type_name.hpp  =========================
+// ========================  END OF stl_type_name.hpp  ========================
 
