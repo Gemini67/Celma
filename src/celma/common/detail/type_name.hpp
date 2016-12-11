@@ -49,4 +49,4 @@ public:
 #endif   // CELMA_TYPE_NAME_HPP
 
 
-// =========================  END OF type_name.hpp  =========================
+// ==========================  END OF type_name.hpp  ==========================

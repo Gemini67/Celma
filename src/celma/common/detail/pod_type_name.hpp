@@ -18,7 +18,7 @@
 #define CELMA_POD_TYPE_NAME_HPP
 
 
-#include "celma/detail/type_name.hpp"
+#include "celma/common/detail/type_name.hpp"
 
 
 namespace celma {
@@ -69,5 +69,5 @@ PROVIDE_SIMPLE_TYPE_NAME( double);
 #endif   // CELMA_POD_TYPE_NAME_HPP
 
 
-// =========================  END OF pod_type_name.hpp  =========================
+// ========================  END OF pod_type_name.hpp  ========================
 
