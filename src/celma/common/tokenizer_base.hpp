@@ -92,7 +92,7 @@ private:
    /// Sets the number of tokens found.
    /// @param[in]  theCount  The number of tokens that were found.
    /// @since  0.2, 04.04.2016
-   virtual void setCount( int theCount);
+   virtual void setCount( int theCount) override;
 
    /// Copy of the string needed to make sure that the string persists until
    /// the tokenisation process is finished, even when a a char array is
@@ -165,5 +165,5 @@ template< typename T> void TokenizerBase< T>::setCount( int theCount)
 #endif   // CELMA_COMMON_TOKENIZER_BASE_HPP
 
 
-// =========================  END OF tokenizer_base.hpp  =========================
+// ========================  END OF tokenizer_base.hpp  ========================
 

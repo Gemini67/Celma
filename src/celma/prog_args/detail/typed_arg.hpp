@@ -61,24 +61,24 @@ public:
    /// @return  \c true if the destination variable contains a value,
    ///          \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
    /// Adds the value of the destination variable to the string.
    /// @param[in]  dest  The string to append the default value to.
    /// @since  0.2, 10.04.2016
-   virtual void defaultValue( std::string& dest) const;
+   virtual void defaultValue( std::string& dest) const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const;
+   virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value);
+   virtual void assign( const std::string& value) override;
 
    /// Reference of the destination variable to store the value in.
    T&    mDestVar;
@@ -95,24 +95,24 @@ private:
 template< typename T>
    TypedArg< T>::TypedArg( const std::string& arg_spec, T& dest,
                            const std::string& vname):
-      TypedArgBase( arg_spec, vname, vmRequired, true),
+      TypedArgBase( arg_spec, vname, ValueMode::required, true),
       mDestVar( dest),
       mHasValueSet( false)
 {
    mpCardinality.reset( new CardinalityMax( 1));
-} // end TypedArg< T>::TypedArg
+} // TypedArg< T>::TypedArg
 
 
 template< typename T> bool TypedArg< T>::hasValue() const
 {
    return mHasValueSet;
-} // end TypedArg< T>::hasValue
+} // TypedArg< T>::hasValue
 
 
 template< typename T> void TypedArg< T>::defaultValue( std::string& dest) const
 {
    dest.append( boost::lexical_cast< std::string>( mDestVar));
-} // end TypedArg< T>::defaultValue
+} // TypedArg< T>::defaultValue
 
 
 template< typename T> void TypedArg< T>::dump( std::ostream& os) const
@@ -124,7 +124,7 @@ template< typename T> void TypedArg< T>::dump( std::ostream& os) const
    else 
       os << "value not set." << std::endl;
    os << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArg< T>::dump
+} // TypedArg< T>::dump
 
 
 template< typename T>
@@ -141,7 +141,7 @@ template< typename T>
       mDestVar = boost::lexical_cast< T>( value);
    } // end if
    mHasValueSet = true;
-} // end TypedArg< T>::assign
+} // TypedArg< T>::assign
 
 
 // Template TypedArg< bool>
@@ -161,62 +161,62 @@ public:
    ///                       value in.
    /// @since  0.2, 10.04.2016
    TypedArg( const std::string& arg_spec, bool& dest, const std::string& vname):
-      TypedArgBase( arg_spec, vname, vmNone, false),
+      TypedArgBase( arg_spec, vname, ValueMode::none, false),
       mDestVar( dest),
       mHasValueSet( false),
       mValue2Set( true)
    {
       mpCardinality.reset( new CardinalityMax( 1));
-   } // end TypedArg< bool>::TypedArg
+   } // TypedArg< bool>::TypedArg
 
    /// Returns if the destination has a value set.
    /// @return  \c true if the destination variable contains a value,
    ///          \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const
+   virtual bool hasValue() const override
    {
       return mHasValueSet;
-   } // end TypedArg< bool>::hasValue
+   } // TypedArg< bool>::hasValue
 
    /// Would specify that the argument is mandatory (required). This does not
    /// make sense for a flag/boolean value: Throw exception.
    /// @return  Nothing, always throws.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setIsMandatory()
+   virtual TypedArgBase* setIsMandatory() noexcept( false) override
    {
       throw std::logic_error( "Cannot make boolean argument for variable '" +
                               mVarName + "' mandatory");
-   } // end TypedArg< bool>::setIsMandatory
+   } // TypedArg< bool>::setIsMandatory
 
    /// Unset the flag (set to \c false) when the argument is detected, instead
    /// of setting it (the default).
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* unsetFlag()
+   virtual TypedArgBase* unsetFlag() override
    {
       mValue2Set = false;
       return this;
-   } // end TypedArg< bool>::unsetFlag
+   } // TypedArg< bool>::unsetFlag
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   void dump( std::ostream& os) const
+   virtual void dump( std::ostream& os) const override
    {
       os << "boolean flag, destination '" << mVarName << "', "
          << (mHasValueSet ? "not set." : "set.") << std::endl
          << "   " << static_cast< const TypedArgBase&>( *this);
-   } // end TypedArg< bool>::dump
+   } // TypedArg< bool>::dump
 
 private:
    /// Stores the value in the destination variable.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */)
+   virtual void assign( const std::string& /* value */) override
    {
       mDestVar     = mValue2Set;
       mHasValueSet = true;
-   } // end TypedArg< bool>::assign
+   } // TypedArg< bool>::assign
 
    /// Reference of the destination variable to store the value in.
    bool&  mDestVar;
@@ -253,19 +253,19 @@ public:
    /// @return  \c true if the destination variable contains a value,
    ///          \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const;
+   virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value);
+   virtual void assign( const std::string& value) override;
 
    /// Reference of the destination variable to store the value in.
    common::CheckAssign< T>&  mDestVar;
@@ -281,16 +281,16 @@ template< typename T>
    TypedArg< common::CheckAssign< T>>::TypedArg( const std::string& arg_spec,
                                                  common::CheckAssign< T>& dest,
                                                  const std::string& vname):
-      TypedArgBase( arg_spec, vname, vmRequired, false),
+      TypedArgBase( arg_spec, vname, ValueMode::required, false),
       mDestVar( dest)
 {
-} // end TypedArg< common::CheckAssign< T>>::TypedArg
+} // TypedArg< common::CheckAssign< T>>::TypedArg
 
 
 template< typename T> bool TypedArg< common::CheckAssign< T>>::hasValue() const
 {
    return mDestVar.hasValue();
-} // end TypedArg< common::CheckAssign< T>>::hasValue
+} // TypedArg< common::CheckAssign< T>>::hasValue
 
 
 template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostream& os) const
@@ -302,7 +302,7 @@ template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostrea
    else
       os << "not set." << std::endl;
    os << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArg< common::CheckAssign< T>>::dump
+} // TypedArg< common::CheckAssign< T>>::dump
 
 
 template< typename T>
@@ -318,7 +318,7 @@ template< typename T>
    {
       mDestVar = boost::lexical_cast< T>( value);
    } // end if
-} // end TypedArg< CheckAssign< T> >::assign
+} // TypedArg< CheckAssign< T> >::assign
 
 
 // Template TypedArg< common::CheckAssign< bool>>
@@ -339,58 +339,58 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArg( const std::string& arg_spec, common::CheckAssign< bool>& dest,
              const std::string& vname):
-      TypedArgBase( arg_spec, vname, vmNone, false),
+      TypedArgBase( arg_spec, vname, ValueMode::none, false),
       mDestVar( dest),
       mValue2Set( true)
    {
-   } // end TypedArg< common::CheckAssign< bool>>::TypedArg
+   } // TypedArg< common::CheckAssign< bool>>::TypedArg
 
    /// Returns if the destination has a value set.
    /// @return  \c true if the destination variable contains a value,
    ///          \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const
+   virtual bool hasValue() const override
    {
       return mDestVar.hasValue();
-   } // end TypedArg< common::CheckAssign< bool>>::hasValue
+   } // TypedArg< common::CheckAssign< bool>>::hasValue
 
    /// Would specify that the argument is mandatory (required). This does not
    /// make sense for a flag/boolean value: Throw exception.
    /// @return  Nothing, always throws.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setIsMandatory()
+   virtual TypedArgBase* setIsMandatory() noexcept( false) override
    {
       throw std::logic_error( "Cannot make boolean argument for variable '" +
                               mVarName + "' mandatory");
-   } // end TypedArg< common::CheckAssign< bool>>::setIsMandatory
+   } // TypedArg< common::CheckAssign< bool>>::setIsMandatory
 
    /// Unset the flag (set to \c false) when the argument is detected, instead
    /// of setting it (the default).
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* unsetFlag()
+   virtual TypedArgBase* unsetFlag() override
    {
       mValue2Set = false;
       return this;
-   } // end TypedArg< common::CheckAssign< bool>>::unsetFlag
+   } // TypedArg< common::CheckAssign< bool>>::unsetFlag
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   void dump( std::ostream& os) const
+   void dump( std::ostream& os) const override
    {
       os << "sets boolean flag on 'CheckAssign< " << mVarName << ">'." << std::endl
          << "   " << static_cast< const TypedArgBase&>( *this);
-   } // end TypedArg< common::CheckAssign< bool>>::dump
+   } // TypedArg< common::CheckAssign< bool>>::dump
 
 private:
    /// Stores the value in the destination variable.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */)
+   virtual void assign( const std::string& /* value */) override
    {
       mDestVar = mValue2Set;
-   } // end TypedArg< common::CheckAssign< bool>>::assign
+   } // TypedArg< common::CheckAssign< bool>>::assign
 
    /// Reference of the destination variable to store the value in.
    common::CheckAssign< bool>&  mDestVar;
@@ -427,32 +427,32 @@ public:
    /// @return  \c true if the destination variable contains (at least) one
    ///          value, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().<br>
    /// For vectors it is possible/allowed to activate this feature.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setTakesMultiValue();
+   virtual TypedArgBase* setTakesMultiValue() override;
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setListSep( char sep);
+   virtual TypedArgBase* setListSep( char sep) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const;
+   virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value);
+   virtual void assign( const std::string& value) override;
 
    /// Reference of the destination variable to store the value(s) in.
    vector_type&  mDestVar;
@@ -470,32 +470,32 @@ template< typename T>
    TypedArg< std::vector< T>>::TypedArg( const std::string& arg_spec,
                                           vector_type& dest,
                                           const std::string& vname):
-      TypedArgBase( arg_spec, vname, vmRequired, false),
+      TypedArgBase( arg_spec, vname, ValueMode::required, false),
       mDestVar( dest),
       mListSep( ',')
 {
    mpCardinality.reset();
-} // end TypedArg< std::vector< T>>::TypedArg
+} // TypedArg< std::vector< T>>::TypedArg
 
 
 template< typename T> bool TypedArg< std::vector< T>>::hasValue() const
 {
    return !mDestVar.empty();
-} // end TypedArg< std::vector< T>>::hasValue
+} // TypedArg< std::vector< T>>::hasValue
 
 
 template< typename T> TypedArgBase* TypedArg< std::vector< T>>::setTakesMultiValue()
 {
    mTakeMultipleValues = true;
    return this;
-} // end TypedArg< std::vector< T>>::setTakesMultiValue
+} // TypedArg< std::vector< T>>::setTakesMultiValue
 
 
 template< typename T> TypedArgBase* TypedArg< std::vector< T>>::setListSep( char sep)
 {
    mListSep = sep;
    return this;
-} // end TypedArg< std::vector< T>>::setListSep
+} // TypedArg< std::vector< T>>::setListSep
 
 
 template< typename T> void TypedArg< std::vector< T>>::dump( std::ostream& os) const
@@ -505,7 +505,7 @@ template< typename T> void TypedArg< std::vector< T>>::dump( std::ostream& os) c
       << (mDestVar.empty() ? "no" : boost::lexical_cast< std::string>( mDestVar.size()))
       << " values." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArg< std::vector< T>>::dump
+} // TypedArg< std::vector< T>>::dump
 
 
 template< typename T>
@@ -531,7 +531,7 @@ template< typename T>
          mDestVar.push_back( boost::lexical_cast< T>( listVal));
       } // end if
    } // end for
-} // end TypedArg< std::vector< T>>::assign
+} // TypedArg< std::vector< T>>::assign
 
 
 } // namespace detail
@@ -542,5 +542,5 @@ template< typename T>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
 
 
-// =========================  END OF typed_arg.hpp  =========================
+// ==========================  END OF typed_arg.hpp  ==========================
 

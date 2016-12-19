@@ -19,8 +19,13 @@
 #include "celma/prog_args.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::common::ArgString2Array;
+using celma::common::CheckAssign;
+using celma::prog_args::Handler;
+using std::cerr;
+using std::endl;
+using std::exception;
+using std::string;
 
 
 static void callable_function();
@@ -35,16 +40,16 @@ int main( int /* argc */, char* argv[])
 {
 
    {
-      prog_args::Handler       ah( 0);
-      const string             args( "--list-arg-vars");
-      common::ArgString2Array  as2a( args, argv[ 0]);
+      Handler          ah( 0);
+      const string     args( "--list-arg-vars");
+      ArgString2Array  as2a( args, argv[ 0]);
 
       try
       {
          ah.evalArguments( as2a.mArgc, as2a.mpArgv);
          cerr << "*** ERROR: Expected exception for 'unknown argument!" << endl;
          return EXIT_FAILURE;
-      } catch (const invalid_argument& e)
+      } catch (const std::invalid_argument& e)
       {
          if (strcmp( e.what(), "Unknown argument 'list-arg-vars'") != 0)
          {
@@ -66,12 +71,12 @@ int main( int /* argc */, char* argv[])
    } // end scope
 
    {
-      prog_args::Handler       ah( prog_args::Handler::hfListArgVar);
-      const string             args( "--list-arg-vars --integer 42");
-      common::ArgString2Array  as2a( args, argv[ 0]);
-      bool                     my_flag = false;
-      int                      my_int;
-      string                   my_string;
+      Handler          ah( Handler::hfListArgVar);
+      const string     args( "--list-arg-vars --integer 42");
+      ArgString2Array  as2a( args, argv[ 0]);
+      bool             my_flag = false;
+      int              my_int;
+      string           my_string;
 
       try
       {
@@ -91,21 +96,21 @@ int main( int /* argc */, char* argv[])
       } // end try
    } // end scope
 
-   cout << string( 80, '-') << endl << endl;
+   std::cout << string( 80, '-') << endl << endl;
 
    {
-      prog_args::Handler  ah( 0);
+      Handler  ah( 0);
       ah.addArgumentListArgVars( "V");
 
-      const string                  args( "-V --integer 42 --sl schubidu -V");
-      common::ArgString2Array       as2a( args, argv[ 0]);
-      bool                          my_flag = false;
-      int                           my_int;
-      long                          my_long;
-      uint64_t                      my_ulong;
-      string                        my_string;
-      common::CheckAssign< string>  my_ca_string;
-      vector< string>               my_string_list;
+      const string          args( "-V --integer 42 --sl schubidu -V");
+      ArgString2Array       as2a( args, argv[ 0]);
+      bool                  my_flag = false;
+      int                   my_int;
+      long                  my_long;
+      uint64_t              my_ulong;
+      string                my_string;
+      CheckAssign< string>  my_ca_string;
+      std::vector< string>  my_string_list;
 
       try
       {
@@ -114,7 +119,7 @@ int main( int /* argc */, char* argv[])
          ah.addArgument( "s,string", DEST_VAR( my_string),  "My string.")->setPrintDefault( false);
          ah.addArgument( "long",     DEST_VAR( my_long),    "My hidden long integer.")->setIsHidden();
          ah.addArgument( "ulong",    DEST_VAR( my_ulong),   "My unsigned long integer.")
-                       ->setValueMode( prog_args::detail::TypedArgBase::vmOptional);
+                       ->setValueMode( Handler::ValueMode::optional);
          ah.addArgument( "call",     DEST_FUNCTION( callable_function),
                          "My function.");
          ah.addArgument( "cas",      DEST_VAR( my_ca_string), "My CheckAssign string");
@@ -133,7 +138,7 @@ int main( int /* argc */, char* argv[])
    } // end scope
 
    return EXIT_SUCCESS;
-} // end main
+} // main
 
 
 
@@ -142,5 +147,5 @@ static void callable_function()
 }
 
 
-// =========================  END OF test_argh_list_arg_vars_output.cpp  =========================
+// ================  END OF test_argh_list_arg_vars_output.cpp  ================
 

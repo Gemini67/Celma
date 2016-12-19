@@ -23,9 +23,6 @@
 #include <boost/algorithm/string.hpp>
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
@@ -33,12 +30,12 @@ namespace celma { namespace prog_args { namespace detail {
 /// Converts the text in \a val to lowercase.
 /// @param[in,out]  val  The text to convert to lowercase.
 /// @since  0.2, 10.04.2016
-void FormatLowercase::formatValue( string& val) const
+void FormatLowercase::formatValue( std::string& val) const
 {
 
    boost::to_lower( val);
 
-} // end FormatLowercase::formatValue
+} // FormatLowercase::formatValue
 
 
 
@@ -47,5 +44,5 @@ void FormatLowercase::formatValue( string& val) const
 } // namespace celma
 
 
-// =========================  END OF format_lowercase.cpp  =========================
+// =======================  END OF format_lowercase.cpp  =======================
 

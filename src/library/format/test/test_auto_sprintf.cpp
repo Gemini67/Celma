@@ -15,31 +15,34 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-
-
-// C++ Standard Library includes
-#include <iostream>
-#include <bitset>
-#include <list>
-#include <set>
-#include <vector>
-
-
-// Boost includes
-#define BOOST_TEST_MODULE AutoSprintfDest
-#include <boost/test/unit_test.hpp>
-
-
-// project includes
+// module to test header file include
 #include "celma/format/auto_sprintf.hpp"
 
 
-using namespace std;
-using namespace celma;
+// C/OS library includes
+#include <cstring>
 
+
+// C++ Standard Library includes
+#include <memory>
+
+
+// Boost includes
+#define BOOST_TEST_MODULE AutoSprintfTest
+#include <boost/test/unit_test.hpp>
+
+
+using std::unique_ptr;
+using celma::format::AutoSprintf;
+
+
+namespace {
+
+
+unique_ptr< AutoSprintf> call_arglist( const char* formatstring, ...);
+
+
+} // namespace
 
 
 /// Test AutoSprintf without parameters, i.e. a constant string.
@@ -47,18 +50,32 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( test_no_param)
 {
 
-   const char* const    text = "actually mis-use AutoSprintf for a string-copy";
-   format::AutoSprintf  as( text);
+   const char* const  text = "actually mis-use AutoSprintf for a string-copy";
 
+   {
+      AutoSprintf        as( text);
 
-   BOOST_REQUIRE( strcmp( as.c_str(), text) == 0);
-   BOOST_REQUIRE( strcmp( static_cast< const char*>( as), text) == 0);
+      BOOST_REQUIRE( ::strcmp( as.c_str(), text) == 0);
+      BOOST_REQUIRE( ::strcmp( static_cast< const char*>( as), text) == 0);
 
-   BOOST_REQUIRE_EQUAL( strlen( as.c_str()), as.length());
-   BOOST_REQUIRE_EQUAL( strlen( static_cast< const char*>( as)),
-                        static_cast< int>( as));
+      BOOST_REQUIRE_EQUAL( ::strlen( as.c_str()), as.length());
+      BOOST_REQUIRE_EQUAL( ::strlen( static_cast< const char*>( as)),
+                           static_cast< int>( as));
+   } // end scope
 
-} // end test_no_param
+   // same test case but using the argument-list constructor
+   {
+      unique_ptr< AutoSprintf>  as_with_arglist( call_arglist( text));
+
+      BOOST_REQUIRE( ::strcmp( as_with_arglist->c_str(), text) == 0);
+      BOOST_REQUIRE( ::strcmp( static_cast< const char*>( *as_with_arglist), text) == 0);
+
+      BOOST_REQUIRE_EQUAL( ::strlen( as_with_arglist->c_str()), as_with_arglist->length());
+      BOOST_REQUIRE_EQUAL( ::strlen( static_cast< const char*>( *as_with_arglist)),
+                           static_cast< int>( *as_with_arglist));
+   } // end scope
+
+} // test_no_param
 
 
 
@@ -67,20 +84,35 @@ BOOST_AUTO_TEST_CASE( test_no_param)
 BOOST_AUTO_TEST_CASE( test_one_param)
 {
 
-   const char* const    text = "this is more a test of sprintf() and %-formatting "
-                               "than of AutoSprintf, but tell me, how do you test "
-                               "that memory was really free'd using free()?";
-   format::AutoSprintf  as( "%s", text);
+   const char* const  text = "this is more a test of sprintf() and %-formatting "
+                             "than of AutoSprintf, but tell me, how do you test "
+                             "that memory was really free'd using free()?";
 
 
-   BOOST_REQUIRE( strcmp( as.c_str(), text) == 0);
-   BOOST_REQUIRE( strcmp( static_cast< const char*>( as), text) == 0);
+   {
+      AutoSprintf        as( "%s", text);
 
-   BOOST_REQUIRE_EQUAL( strlen( as.c_str()), as.length());
-   BOOST_REQUIRE_EQUAL( strlen( static_cast< const char*>( as)),
-                        static_cast< int>( as));
+      BOOST_REQUIRE( ::strcmp( as.c_str(), text) == 0);
+      BOOST_REQUIRE( ::strcmp( static_cast< const char*>( as), text) == 0);
 
-} // end test_one_param
+      BOOST_REQUIRE_EQUAL( ::strlen( as.c_str()), as.length());
+      BOOST_REQUIRE_EQUAL( ::strlen( static_cast< const char*>( as)),
+                           static_cast< int>( as));
+   } // end scope
+
+   // same test case but using the argument-list constructor
+   {
+      unique_ptr< AutoSprintf>  as_with_arglist( call_arglist( "%s", text));
+
+      BOOST_REQUIRE( ::strcmp( as_with_arglist->c_str(), text) == 0);
+      BOOST_REQUIRE( ::strcmp( static_cast< const char*>( *as_with_arglist), text) == 0);
+
+      BOOST_REQUIRE_EQUAL( ::strlen( as_with_arglist->c_str()), as_with_arglist->length());
+      BOOST_REQUIRE_EQUAL( ::strlen( static_cast< const char*>( *as_with_arglist)),
+                           static_cast< int>( *as_with_arglist));
+   } // end scope
+
+} // test_one_param
 
 
 
@@ -89,22 +121,67 @@ BOOST_AUTO_TEST_CASE( test_one_param)
 BOOST_AUTO_TEST_CASE( test_format)
 {
 
-   const char* const    format = "format int %d, float %6.4f and a string '%s'.";
-   const char* const    text   = "format int 42, float 3.1415 and a string "
-                                 "'hello world'.";
-   format::AutoSprintf  as( format, 42, 3.1415, "hello world");
+   const char* const  format = "format int %d, float %6.4f and a string '%s'.";
+   const char* const  text   = "format int 42, float 3.1415 and a string "
+                               "'hello world'.";
 
 
-   BOOST_REQUIRE( strcmp( as.c_str(), text) == 0);
-   BOOST_REQUIRE( strcmp( static_cast< const char*>( as), text) == 0);
+   {
+      AutoSprintf        as( format, 42, 3.1415, "hello world");
 
-   BOOST_REQUIRE_EQUAL( strlen( as.c_str()), as.length());
-   BOOST_REQUIRE_EQUAL( strlen( static_cast< const char*>( as)),
-                        static_cast< int>( as));
+      BOOST_REQUIRE( ::strcmp( as.c_str(), text) == 0);
+      BOOST_REQUIRE( ::strcmp( static_cast< const char*>( as), text) == 0);
 
-} // end test_format
+      BOOST_REQUIRE_EQUAL( ::strlen( as.c_str()), as.length());
+      BOOST_REQUIRE_EQUAL( ::strlen( static_cast< const char*>( as)),
+                           static_cast< int>( as));
+   } // end scope
+
+   // same test case but using the argument-list constructor
+   {
+      unique_ptr< AutoSprintf>  as_with_arglist( call_arglist( format, 42, 3.1415, "hello world"));
+
+      BOOST_REQUIRE( ::strcmp( as_with_arglist->c_str(), text) == 0);
+      BOOST_REQUIRE( ::strcmp( static_cast< const char*>( *as_with_arglist), text) == 0);
+
+      BOOST_REQUIRE_EQUAL( ::strlen( as_with_arglist->c_str()), as_with_arglist->length());
+      BOOST_REQUIRE_EQUAL( ::strlen( static_cast< const char*>( *as_with_arglist)),
+                           static_cast< int>( *as_with_arglist));
+   } // end scope
+
+} // test_format
 
 
 
-// =========================  END OF test_auto_sprintf.cpp  =========================
+namespace {
+
+
+
+/// Helper functions. Creates a AutoSprintf object using the argument list
+/// constructor.
+/// @param[in]  formatstring  The format string to pass.
+/// @param[in]  ...           Additional argument for formatting.
+/// @return  The newly created AutoSprintf object.
+/// @since  0.7, 08.11.2016
+unique_ptr< AutoSprintf> call_arglist( const char* formatstring, ...)
+{
+
+   va_list  ap;
+
+
+   ::va_start( ap, formatstring);
+
+   unique_ptr< AutoSprintf>  dest( new AutoSprintf( std::string( formatstring), ap));
+
+   ::va_end( ap);
+
+   return dest;
+} // call_arglist
+
+
+
+} // namespace
+
+
+// ======================  END OF test_auto_sprintf.cpp  ======================
 

@@ -44,21 +44,21 @@ public:
    ///
    /// @param[in]  sourceArg  The current argument that was identified.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg);
+   virtual void executeConstraint( const std::string& sourceArg) override;
 
    /// Returns the list of arguments that must be used.
    /// @return  The list of arguments as passed to the constructor.
    /// @since  0.2, 10.04.2016
-   virtual std::string& argumentList();
+   virtual std::string& argumentList() override;
 
    /// Called after the argument list was validated.
    /// @since  0.2, 10.04.2016
-   virtual void validated();
+   virtual void validated() override;
 
    /// Checks if all of the specified arguments were used, i.e.: if the string
    /// \a #mRemainingArguments is empty.
    /// @since  0.2, 10.04.2016
-   virtual void checkEndCondition() const;
+   virtual void checkEndCondition() const override;
 
 private:
    /// The argument specifications of the arguments.<br>
@@ -98,5 +98,5 @@ inline detail::IConstraint* all_of( const std::string& argSpec)
 #endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ALL_OF_HPP
 
 
-// =========================  END OF constraint_all_of.hpp  =========================
+// ======================  END OF constraint_all_of.hpp  ======================
 

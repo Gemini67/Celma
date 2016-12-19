@@ -1,0 +1,194 @@
+
+Goal:
+
+
+REFLECT( AddressRecord)
+{
+   STRING  Name;
+   STRING  FirstName;
+   DATE    Birthday;
+   STRING  Street;
+   STRING  HouseNbr;
+   INT16   PostalCode;
+};
+
+
+
+or
+
+
+REFLECT( AddressRecord)
+{
+   FIELD( std::string, Name);
+   FIELD( std::string, FirstName);
+   FIELD( time_t,      Birthday);
+   FIELD( std::string, Street);
+
+   etc.
+};
+
+
+
+creates 2 (!!) structs/classes:
+
+
+// question here:
+// - Structure?
+// - class?
+// - if class, which kind of member access should be provided?
+struct AdressRecord
+{
+   std::string  mName;
+   std::string  mFirstName;
+   time_t       mBirthday;
+   std::string  mStreet;
+};
+
+
+/// This class is used when access to a member by name or by id should be
+/// possible
+class ReflectedAddressRecord: public IndirectAccessBase
+{
+public:
+   AddressRecord()
+   {
+      addField( "Name", mData.mName);
+      addField( "FirstName", mData.mFirstName);
+      addField( "Birthday", mData.mBirthday);
+      addField( "Street", mData.mStreet);
+   }
+
+   void setName( const std::string& newName)
+   {
+      mName = newName;
+   }
+
+   const std::string& getName() const
+   {
+      return mName;
+   }
+
+   void setFirstName( const std::string& newFirstName)
+   {
+      mFirstName = newFirstName;
+   }
+
+   const std::string& getFirstName() const
+   {
+      return mFirstName;
+   }
+
+   AdressRecord& data();
+   const AdressRecord& data() const;
+
+   etc.
+
+protected:
+   // either a member like this, or a smart pointer that can distinguish between
+   // an object that was created by the library itself( and is deleted when the
+   // object/smart ptr is deleted), or one that was passed from externally and
+   // should remain untouched once the object/smart ptr is deleted.
+   AdressRecord  mData;
+
+};
+
+
+
+// the idea is that an application uses the first structure
+// library stuff like Persistence, DB-Access etc. use the second
+//
+// maybe for that the second class should be template, with the class name as
+// template parameter, and then actually create (through the macros) a partial
+// template specialization for the structure to handle
+
+
+class IndirectAccessBase
+{
+public:
+   IndirectAccessBase():
+      mId2Field(),
+      mName2Field()
+   {
+   }
+
+   template< typename T> void addField( const std::string& name, T& value)
+   {
+      field_ptr       new_field( new IndirectAccessField< T>( name));
+      const uint16_t  field_id = static_cast< uint16_t>( mId2Field.size());
+
+      mId2Field.push_back( new_field);
+      mName2Field.insert( name_cont_t::value_type( field_id, new_field));
+   }
+
+   template< typename T> void set( uint16_t id, const T& newValue)
+   {
+      if (id >= mId2Field.size())
+         throw;
+      mId2Field[ id]->set( newValue);
+   }
+
+   template< typename T> const T& get( uint16_t id) const
+   {
+      if (id >= mId2Field.size())
+         throw;
+      return mId2Field[ id]->get< T>();
+   }
+
+   template< typename T> void set( const std::string& name, const T& newValue)
+   {
+      name_cont_t::iterator  it = mName2Field.find( name);
+      if (it == name_cont_t::end())
+         throw;
+      it->second->set( newValue);
+   }
+
+   template< typename T> const T& get( const std::string& name) const
+   {
+      name_cont_t::const_iterator  it = mName2Field.find( name);
+      if (it == name_cont_t::end())
+         throw;
+      return it->second->get< T>();
+   }
+
+private:
+   typedef std::shared_ptr< IIndirectAccess>       field_ptr;
+   typedef std::vector< uint16_t, field_ptr>       id_cont_t;
+   typedef std::hash_map< std::string, field_ptr>  name_cont_t;
+
+   id_cont_t    mId2Field;
+   name_cont_t  mName2Field;
+
+};
+
+
+
+class IIndirectAccess
+{
+public:
+   IIndirectAccess( const std::string& name):
+      mName( name)
+   {
+   }
+
+   virtual ~IIndirectAccess() { }
+
+protected:
+   std::string  mName;
+
+};
+
+
+
+template< typename T> class IndirectAccessField: public IIndirectAccess
+{
+public:
+   IndirectAccessField( const std::string& name, T& value_ref):
+      IIndirectAccess( name),
+      mValueRef( value_ref)
+   {
+   }
+
+private:
+   T&  mValueRef;
+
+};

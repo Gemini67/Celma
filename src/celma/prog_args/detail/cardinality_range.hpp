@@ -49,12 +49,12 @@ public:
    /// line (actually may be without a value).
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue();
+   virtual void gotValue() override;
 
    /// Called by the framework at the end of the command line processing.
    /// @throw  if the minimum of calls/values was not reached.
    /// @since  0.2, 10.04.2016
-   virtual void check();
+   virtual void check() override;
 
 private:
    /// Minimum number of calls/values for the corresponding argument.
@@ -94,5 +94,5 @@ inline detail::ICardinality* cardinality_range( int min_num_values,
 #endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_RANGE_HPP
 
 
-// =========================  END OF cardinality_range.hpp  =========================
+// ======================  END OF cardinality_range.hpp  ======================
 

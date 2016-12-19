@@ -59,7 +59,29 @@ AutoSprintf::AutoSprintf( const char* format, ...):
 
    ::va_end( ap);
 
-} // end AutoSprintf::AutoSprintf
+} // AutoSprintf::AutoSprintf
+
+
+
+/// Constructor for passing a pre-processed argument list.<br>
+/// Make sure that the format string is a std::string object to make sure
+/// this constructor is called.
+/// @param[in]  format  The format string as std::string object.
+/// @param[in]  ap      Additional parameters for the string formatting.
+/// @throw  SixRuntimeError when the string formatting failed.
+/// @since  0.7, 08.11.2016
+AutoSprintf::AutoSprintf( const std::string& format, va_list ap):
+   mpString( nullptr),
+   mLength( 0)
+{
+
+   if ((mLength = ::vasprintf( &mpString, format.c_str(), ap)) == -1)
+   {
+      mpString = nullptr;
+      throw CELMA_RuntimeError( "could not format text");
+   } // end if
+
+} // AutoSprintf::AutoSprintf
 
 
 
@@ -68,9 +90,9 @@ AutoSprintf::AutoSprintf( const char* format, ...):
 AutoSprintf::~AutoSprintf()
 {
 
-   free( mpString);
+   ::free( mpString);
 
-} // end AutoSprintf::~AutoSprintf
+} // AutoSprintf::~AutoSprintf
 
 
 
