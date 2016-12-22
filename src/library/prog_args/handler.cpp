@@ -135,6 +135,36 @@ Handler::~Handler()
 
 
 
+/// Adds an argument that behaves like the -h/--help arguments. Use this if
+/// the help argument should e.g. be in another language.<br>
+/// The standard help arguments may still be set in the constructor, then
+/// both arguments can be used to get the usage displayed.
+/// @param[in]  arg_spec  The arguments on the command line for the help
+///                       feature.
+/// @param[in]  desc      The description of this argument.
+/// @param[in]  txt1      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @param[in]  txt2      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @return  The object managing the argument, may be used to apply further
+///          settings (normally not necessary).
+/// @since  0.10, 22.12.2016
+detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
+                                                const string& desc,
+                                                IUsageText* txt1,
+                                                IUsageText* txt2)
+{
+
+   return addArgument( arg_spec,
+                       detail::ArgHandlerCallable(
+                          boost::bind( &Handler::usage, this, txt1, txt2)
+                       ),
+                       "Handler::usage",
+                       desc);
+} // Handler::addHelpArgument
+
+
+
 /// Adds an argument that takes the path/filename of an argument file as
 /// parameter.
 /// @param[in]  arg_spec  The arguments on the command line for specifying the
