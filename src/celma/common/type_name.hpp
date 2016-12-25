@@ -15,6 +15,9 @@
 #include "celma/common/detail/type_name.hpp"
 #include "celma/common/detail/pod_type_name.hpp"
 #include "celma/common/detail/stl_type_name.hpp"
+#include "celma/common/detail/iostream_type_name.hpp"
+#include "celma/common/detail/smart_ptr_type_name.hpp"
+#include "celma/common/detail/tuple_type_name.hpp"
 
 
 // ==========================  END OF type_name.hpp  ==========================

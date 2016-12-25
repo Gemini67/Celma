@@ -18,25 +18,11 @@
 #define CELMA_POD_TYPE_NAME_HPP
 
 
+#include "celma/common/detail/provide_simple_type_name.hpp"
 #include "celma/common/detail/type_name.hpp"
 
 
 namespace celma {
-
-
-/// Macro to create the template specialisation for a POD type.
-/// @param  t  The type to create the partial template specialisation of type<>
-///            for.
-/// @since  0.1, 15.03.2016  (macro-isation of multiple template specialisations).
-#define  PROVIDE_SIMPLE_TYPE_NAME( t) \
-   template<> class type< t> \
-   { \
-   public: \
-      static constexpr const char* name() \
-      { \
-         return #t ; \
-      } \
-   }
 
 
 /// Provides the name of the type 'bool'.
@@ -61,6 +47,13 @@ PROVIDE_SIMPLE_TYPE_NAME( unsigned long);
 PROVIDE_SIMPLE_TYPE_NAME( float);
 /// Provides the name of the type 'double'.
 PROVIDE_SIMPLE_TYPE_NAME( double);
+
+/// Provides the name of the type 'char16_t'.
+PROVIDE_SIMPLE_TYPE_NAME( char16_t);
+/// Provides the name of the type 'char32_t'.
+PROVIDE_SIMPLE_TYPE_NAME( char32_t);
+/// Provides the name of the type 'wchar_t'.
+PROVIDE_SIMPLE_TYPE_NAME( wchar_t);
 
 
 } // namespace celma
