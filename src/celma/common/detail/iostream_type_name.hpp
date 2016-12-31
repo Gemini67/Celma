@@ -19,11 +19,7 @@
 #define CELMA_IOSTREAM_TYPE_NAME_HPP
 
 
-#include <cstring>
-#include <boost/lexical_cast.hpp>
-#include <iostream>
 #include "celma/common/detail/provide_simple_type_name.hpp"
-#include "celma/common/detail/type_name.hpp"
 
 
 namespace celma {

@@ -19,7 +19,6 @@
 
 
 #include <cstring>
-#include <boost/lexical_cast.hpp>
 #include <array>
 #include <bitset>
 #include <deque>
@@ -33,6 +32,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include "celma/common/constexpr_string_from.hpp"
 #include "celma/common/detail/provide_simple_type_name.hpp"
 #include "celma/common/detail/provide_template_type_name.hpp"
 #include "celma/common/detail/type_name.hpp"
@@ -104,7 +104,7 @@ public:
          ::memcpy( mName, "std::array<", 11);
          ::strcat( &mName[ 11], type< T>::name());
          ::strcat( mName, ",");
-         ::strcat( mName, boost::lexical_cast< std::string>( N).c_str());
+         ::strcat( mName, common::string_from< std::size_t, N>::value);
          ::strcat( mName, ">");
       } // end if
       return mName;
@@ -133,7 +133,7 @@ public:
       if (mName[ 0] == 0)
       {
          ::memcpy( mName, "std::bitset<", 12);
-         ::strcpy( &mName[ 12], boost::lexical_cast< std::string>( N).c_str());
+         ::strcpy( &mName[ 12], common::string_from< std::size_t, N>::value);
          ::strcat( mName, ">");
       } // end if
       return mName;

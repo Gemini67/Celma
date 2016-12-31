@@ -21,7 +21,6 @@
 
 #include <memory>
 #include "celma/common/detail/provide_template_type_name.hpp"
-#include "celma/common/detail/type_name.hpp"
 
 
 namespace celma {

@@ -189,7 +189,6 @@ BOOST_AUTO_TEST_CASE( stl_types_key_value)
                             "std::pair<std::string,std::string>");
 
    typedef std::tuple< int, std::string>  int_string_tuple;
-std::cout << "tuple type = " << celma::type< int_string_tuple>::name() << std::endl;
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_tuple>::name(),
                             "std::tuple<int,std::string>");
 
