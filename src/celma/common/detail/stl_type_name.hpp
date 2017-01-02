@@ -38,16 +38,6 @@
 #include "celma/common/detail/type_name.hpp"
 
 #ifdef __has_include
-#   if __has_include(<optional>)
-#      include <optional>
-#      define have_optional 1
-#   elif __has_include(<experimental/optional>)
-#      include <experimental/optional>
-#      define have_optional 1
-#      define experimental_optional
-#   else
-#      define have_optional 0
-#   endif
 /*
 #   if __has_include(<any>)
 #      include <any>
@@ -60,10 +50,41 @@
 #      define have_any 0
 #   endif
 */
-#endif
+#   if __has_include(<optional>)
+#      include <optional>
+#      define have_optional 1
+#   elif __has_include(<experimental/optional>)
+#      include <experimental/optional>
+#      define have_optional 1
+#      define experimental_optional
+#   else
+#      define have_optional 0
+#   endif
+#   if __has_include(<string_view>)
+#      include <string_view>
+#      define have_string_view 1
+#   elif __has_include(<experimental/string_view>)
+#      include <experimental/string_view>
+#      define have_string_view 1
+#      define experimental_string_view
+#   else
+#      define have_string_view 0
+#   endif
+#endif   // has_include
 
 
 namespace celma {
+
+
+/*
+#if have_any
+#   ifdef experimental_any
+PROVIDE_SIMPLE_TYPE_NAME( std::experimental::any);
+#   else
+PROVIDE_SIMPLE_TYPE_NAME( std::any);
+#   endif
+#endif
+*/
 
 
 /// Specialisation for type 'std::string'.
@@ -76,15 +97,19 @@ PROVIDE_SIMPLE_TYPE_NAME( std::u32string);
 PROVIDE_SIMPLE_TYPE_NAME( std::wstring);
 
 
-/*
-#if have_any
-#   ifdef experimental_any
-PROVIDE_SIMPLE_TYPE_NAME( std::experimental::any);
+#if have_string_view == 1
+#   ifdef experimental_string_view
+PROVIDE_SIMPLE_TYPE_NAME( std::experimental::string_view);
+PROVIDE_SIMPLE_TYPE_NAME( std::experimental::u16string_view);
+PROVIDE_SIMPLE_TYPE_NAME( std::experimental::u32string_view);
+PROVIDE_SIMPLE_TYPE_NAME( std::experimental::wstring_view);
 #   else
-PROVIDE_SIMPLE_TYPE_NAME( std::any);
+PROVIDE_SIMPLE_TYPE_NAME( std::string_view);
+PROVIDE_SIMPLE_TYPE_NAME( std::u16string_view);
+PROVIDE_SIMPLE_TYPE_NAME( std::u32string_view);
+PROVIDE_SIMPLE_TYPE_NAME( std::wstring_view);
 #   endif
 #endif
-*/
 
 
 /// Specialisation for type 'std::array<>'.
@@ -162,7 +187,7 @@ PROVIDE_TEMPLATE_TYPE_NAME( std::valarray);
 PROVIDE_TEMPLATE_TYPE_NAME( std::vector);
 
 
-#if have_optional
+#if have_optional == 1
 #   ifdef experimental_optional
 PROVIDE_TEMPLATE_TYPE_NAME( std::experimental::optional);
 #   else

@@ -100,23 +100,7 @@ BOOST_AUTO_TEST_CASE( stl_types)
 {
 
 /*
-   static_assert( celma::type< std::bitset< 128>>::name()[0] == 'b');
-   static_assert( celma::type< std::bitset< 128>>::name()[12] == '1');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::bitset< 128>>::name(),
-                          "std::bitset<128>");
-*/
-
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::string>::name(),
-                          "std::string");
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::u16string>::name(),
-                          "std::u16string");
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::u32string>::name(),
-                          "std::u32string");
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::wstring>::name(),
-                          "std::wstring");
-
-/*
-#if have_any
+#if have_any == 1
 #   ifdef experimental_any
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::any>::name(),
                           "std::experimental::any");
@@ -125,6 +109,72 @@ BOOST_AUTO_TEST_CASE( stl_types)
 #   endif
 #endif
 */
+
+/*
+   static_assert( celma::type< std::bitset< 128>>::name()[0] == 'b');
+   static_assert( celma::type< std::bitset< 128>>::name()[12] == '1');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::bitset< 128>>::name(),
+                          "std::bitset<128>");
+*/
+
+
+   static_assert( celma::type< std::string>::name()[5] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::string>::name(),
+                          "std::string");
+
+   static_assert( celma::type< std::u16string>::name()[5] == 'u');
+   static_assert( celma::type< std::u16string>::name()[6] == '1');
+   static_assert( celma::type< std::u16string>::name()[8] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::u16string>::name(),
+                          "std::u16string");
+
+   static_assert( celma::type< std::u32string>::name()[5] == 'u');
+   static_assert( celma::type< std::u32string>::name()[6] == '3');
+   static_assert( celma::type< std::u32string>::name()[8] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::u32string>::name(),
+                          "std::u32string");
+
+   static_assert( celma::type< std::wstring>::name()[5] == 'w');
+   static_assert( celma::type< std::wstring>::name()[6] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::wstring>::name(),
+                          "std::wstring");
+
+
+#if have_string_view == 1
+#   ifdef experimental_string_view
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::string_view>::name(),
+                            "std::experimental::string_view");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::u16string_view>::name(),
+                            "std::experimental::u16string_view");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::u32string_view>::name(),
+                            "std::experimental::u32string_view");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::wstring_view>::name(),
+                            "std::experimental::wstring_view");
+#   else
+   static_assert( celma::type< std::string_view>::name()[5] == 's');
+   static_assert( celma::type< std::string_view>::name()[12] == 'v');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::string_view>::name(),
+                            "std::string_view");
+
+   static_assert( celma::type< std::u16string_view>::name()[5] == 'u');
+   static_assert( celma::type< std::u16string_view>::name()[6] == '1');
+   static_assert( celma::type< std::u16string_view>::name()[15] == 'v');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::u16string_view>::name(),
+                            "std::u16string_view");
+
+   static_assert( celma::type< std::u32string_view>::name()[5] == 'u');
+   static_assert( celma::type< std::u32string_view>::name()[6] == '3');
+   static_assert( celma::type< std::u32string_view>::name()[15] == 'v');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::u32string_view>::name(),
+                            "std::u32string_view");
+
+   static_assert( celma::type< std::wstring_view>::name()[5] == 'w');
+   static_assert( celma::type< std::wstring_view>::name()[13] == 'v');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::wstring_view>::name(),
+                            "std::wstring_view");
+#   endif
+#endif
+
 
    typedef std::array< int, 10>          int_array;
    typedef std::array< std::string, 15>  string_array;
