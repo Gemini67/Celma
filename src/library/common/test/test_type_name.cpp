@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,24 +41,53 @@
 BOOST_AUTO_TEST_CASE( pod_types)
 {
 
+   static_assert( celma::type< bool>::name()[0] == 'b');
    BOOST_REQUIRE_EQUAL_STR( celma::type< bool>::name(),   "bool");
+
+   static_assert( celma::type< char>::name()[0] == 'c');
    BOOST_REQUIRE_EQUAL_STR( celma::type< char>::name(),   "char");
+
+   static_assert( celma::type< double>::name()[0] == 'd');
    BOOST_REQUIRE_EQUAL_STR( celma::type< double>::name(), "double");
+
+   static_assert( celma::type< float>::name()[0] == 'f');
    BOOST_REQUIRE_EQUAL_STR( celma::type< float>::name(),  "float");
+
+   static_assert( celma::type< int>::name()[0] == 'i');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int>::name(),    "int");
+
+   static_assert( celma::type< long>::name()[0] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< long>::name(),   "long");
+
+   static_assert( celma::type< short>::name()[0] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< short>::name(),  "short");
 
+   static_assert( celma::type< unsigned char>::name()[0] == 'u');
+   static_assert( celma::type< unsigned char>::name()[9] == 'c');
    BOOST_REQUIRE_EQUAL_STR( celma::type< unsigned char>::name(),  "unsigned char");
+
+   static_assert( celma::type< unsigned long>::name()[0] == 'u');
+   static_assert( celma::type< unsigned long>::name()[9] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< unsigned long>::name(),  "unsigned long");
+
+   static_assert( celma::type< unsigned short>::name()[0] == 'u');
+   static_assert( celma::type< unsigned short>::name()[9] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< unsigned short>::name(), "unsigned short");
 
    // just to make sure: works also with typedefs
    typedef bool  my_bool;
+   static_assert( celma::type< my_bool>::name()[0] == 'b');
    BOOST_REQUIRE_EQUAL_STR( celma::type< my_bool>::name(), "bool");
 
+   static_assert( celma::type< char16_t>::name()[0] == 'c');
+   static_assert( celma::type< char16_t>::name()[4] == '1');
    BOOST_REQUIRE_EQUAL_STR( celma::type< char16_t>::name(), "char16_t");
+
+   static_assert( celma::type< char32_t>::name()[0] == 'c');
+   static_assert( celma::type< char32_t>::name()[4] == '3');
    BOOST_REQUIRE_EQUAL_STR( celma::type< char32_t>::name(), "char32_t");
+
+   static_assert( celma::type< wchar_t>::name()[0] == 'w');
    BOOST_REQUIRE_EQUAL_STR( celma::type< wchar_t>::name(),  "wchar_t");
 
 } // pod_types
@@ -70,8 +99,13 @@ BOOST_AUTO_TEST_CASE( pod_types)
 BOOST_AUTO_TEST_CASE( stl_types)
 {
 
+/*
+   static_assert( celma::type< std::bitset< 128>>::name()[0] == 'b');
+   static_assert( celma::type< std::bitset< 128>>::name()[12] == '1');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::bitset< 128>>::name(),
                           "std::bitset<128>");
+*/
+
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::string>::name(),
                           "std::string");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::u16string>::name(),
