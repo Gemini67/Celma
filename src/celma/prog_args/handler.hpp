@@ -458,6 +458,25 @@ public:
                                       Handler* subGroup,
                                       const std::string& desc);
 
+   /// Adds an argument that behaves like the -h/--help arguments. Use this if
+   /// the help argument should e.g. be in another language.<br>
+   /// The standard help arguments may still be set in the constructor, then
+   /// both arguments can be used to get the usage displayed.
+   /// @param[in]  arg_spec  The arguments on the command line for the help
+   ///                       feature.
+   /// @param[in]  desc      The description of this argument.
+   /// @param[in]  txt1      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @param[in]  txt2      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @return  The object managing the argument, may be used to apply further
+   ///          settings (normally not necessary).
+   /// @since  0.10, 22.12.2016
+   detail::TypedArgBase* addHelpArgument( const std::string& arg_spec,
+                                          const std::string& desc,
+                                          IUsageText* txt1 = nullptr,
+                                          IUsageText* txt2 = nullptr);
+
    /// Adds an argument that takes the path/filename of an argument file as
    /// parameter.
    /// @param[in]  arg_spec  The arguments on the command line for specifying the
@@ -811,6 +830,9 @@ private:
 /// @param  n  The destination variable.
 /// @param  t  The value type of the destination variable.
 /// @param  c  The type of the container/the destination variable.
+/// @todo  Try to change this (and the class RangeDest?) so that the type of
+///        the destination variable (container type) does not need to be
+///        set separately.
 /// @since  0.2, 10.04.2016
 #define DEST_RANGE( n, t, c)  celma::common::RangeDest< t, c < t > >( n), #n
 
