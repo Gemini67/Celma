@@ -32,10 +32,10 @@ namespace celma { namespace common {
 /// @tparam  Tp  Template parameter pack, not really used here.
 /// @param[in]  The tuple object, not used here.
 /// @return  The number of elements in the tuple.
-/// @since  0.5, 27.09.2016
+/// @since  0.10, 27.09.2016
 template< std::size_t I = 0, typename... Tp>
    inline typename std::enable_if< I == sizeof...( Tp), std::size_t>::type
-      tuple_length( std::tuple< Tp...>&)
+      tuple_length( const std::tuple< Tp...>&)
 {
    return I;
 } // tuple_length
@@ -47,10 +47,10 @@ template< std::size_t I = 0, typename... Tp>
 /// @tparam  Tp  Template parameter pack, not really used here.
 /// @param[in]  The tuple object to determine the length of.
 /// @return  The number of elements in the tuple.
-/// @since  0.5, 27.09.2016
+/// @since  0.10, 27.09.2016
 template< std::size_t I = 0, typename... Tp>
    inline typename std::enable_if< I < sizeof...( Tp), std::size_t>::type
-      tuple_length( std::tuple< Tp...>& t)
+      tuple_length( const std::tuple< Tp...>& t)
 {
    return tuple_length< I + 1, Tp...>( t);
 } // tuple_length
