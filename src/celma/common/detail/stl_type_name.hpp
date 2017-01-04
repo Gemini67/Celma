@@ -32,6 +32,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include "celma/common/constexpr_string_concat.hpp"
 #include "celma/common/constexpr_string_from.hpp"
 #include "celma/common/detail/provide_simple_type_name.hpp"
 #include "celma/common/detail/provide_template_type_name.hpp"
@@ -144,6 +145,9 @@ private:
 template< typename T, std::size_t N> char  type< std::array< T, N>>::mName[ 128] = { 0 };
 
 
+#if 1
+
+
 /// Specialisation for type 'std::bitset<>'.
 /// @tparam  N  The number of values stored in the bitset.
 /// @since  0.1, 15.03.2016
@@ -171,6 +175,38 @@ private:
 }; // type< std::bitset< T>>
 
 template< std::size_t N> char  type< std::bitset< N>>::mName[ 128] = { 0 };
+
+
+#else
+
+
+/// Specialisation for type 'std::bitset<>'.
+/// @tparam  N  The number of values stored in the bitset.
+/// @since  0.1, 15.03.2016
+template< std::size_t N> class type< std::bitset< N>>
+{
+public:
+   /// Returns the name of the type.
+   /// @return  'std::bitset<n>'.
+   /// @since  0.1, 15.03.2016
+   static constexpr const char* name()
+   {
+      return &mName[ 0];
+   } // end type< std::bitset< T>>::name
+
+private:
+   /// Used to store the name of the type persistently.
+   static constexpr auto const  mName =
+      common::string_concat( "std::bitset<",
+                             common::string_from< std::size_t, N>::value, ">");
+
+}; // type< std::bitset< T>>
+
+
+template< std::size_t N> constexpr auto const  type< std::bitset< N>>::mName;
+
+
+#endif
 
 
 PROVIDE_TEMPLATE_TYPE_NAME( std::deque);
