@@ -47,24 +47,24 @@ public:
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
    /// Callables with values may also accept multiple, separate values.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setTakesMultiValue();
+   virtual TypedArgBase* setTakesMultiValue() override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const;
+   virtual void dump( std::ostream& os) const override;
 
 private:
    /// Executes the specified function.
    /// @param[in]  value  The value to pass to the function.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value);
+   virtual void assign( const std::string& value) override;
 
    /// Reference of the destination variable to store the value in.
    ArgHandlerCallableValue  mFun;
@@ -81,38 +81,38 @@ private:
 inline TypedArgCallableValue::TypedArgCallableValue( const std::string& arg_spec,
                                                      ArgHandlerCallableValue fun,
                                                      const std::string& fname):
-   TypedArgBase( arg_spec, fname, vmRequired, false),
+   TypedArgBase( arg_spec, fname, ValueMode::required, false),
    mFun( fun),
    mWasCalled( false)
 {
-} // end TypedArgCallableValue::TypedArgCallableValue
+} // TypedArgCallableValue::TypedArgCallableValue
 
 
 inline bool TypedArgCallableValue::hasValue() const
 {
    return mWasCalled;
-} // end TypedArgCallableValue::hasValue
+} // TypedArgCallableValue::hasValue
 
 
 inline TypedArgBase* TypedArgCallableValue::setTakesMultiValue()
 {
    mTakeMultipleValues = true;
    return this;
-} // end TypedArgCallableValue::setTakesMultiValue
+} // TypedArgCallableValue::setTakesMultiValue
 
 
 inline void TypedArgCallableValue::dump( std::ostream& os) const
 {
    os << "calls function/method '" << mVarName << "'." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
-} // end TypedArgCallableValue::dump
+} // TypedArgCallableValue::dump
 
 
 inline void TypedArgCallableValue::assign( const std::string& value)
 {
    mFun( value);
    mWasCalled = true;
-} // end TypedArgCallableValue::assign
+} // TypedArgCallableValue::assign
 
 
 } // namespace detail
@@ -123,5 +123,5 @@ inline void TypedArgCallableValue::assign( const std::string& value)
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_CALLABLE_VALUE_HPP
 
 
-// =========================  END OF typed_arg_callable.hpp  =========================
+// ======================  END OF typed_arg_callable.hpp  ======================
 

@@ -54,6 +54,28 @@ BOOST_AUTO_TEST_CASE( help_usage)
 
 
 
+/// Empty usage except for custom help arguments.
+/// @since  0.10, 22.12.2016
+BOOST_AUTO_TEST_CASE( custom_help_usage)
+{
+
+   std::ostringstream   std_out;
+   std::ostringstream   err_out;
+   Handler              ah( std_out, err_out, Handler::hfUsageCont);
+
+
+   ah.addHelpArgument( "u,usage", "Custom arguments for help");
+
+   ArgString2Array  as2a( "-u", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_EQUAL( std_out.str(), "Usage:\nOptional arguments:\n   -u,--usage   Custom arguments for help\n\n");
+   BOOST_REQUIRE( err_out.str().empty());
+
+} // end custom_help_usage
+
+
+
 /// Two arguments, one optional, one mandatory.
 /// @since  0.3, 04.06.2016
 BOOST_AUTO_TEST_CASE( argument_output)
@@ -83,7 +105,43 @@ BOOST_AUTO_TEST_CASE( argument_output)
                         "\n");
    BOOST_REQUIRE( err_out.str().empty());
 
-} // end argument_output
+} // argument_output
+
+
+
+/// Two arguments, one optional, one mandatory, plus custom help arguments.
+/// @since  0.10, 22.12.2016
+BOOST_AUTO_TEST_CASE( argument_output_custom_help)
+{
+
+   std::ostringstream   std_out;
+   std::ostringstream   err_out;
+   Handler              ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
+   std::string          string_arg;
+   int                  opt_int_arg = 42;
+
+
+   ah.addHelpArgument( "u,usage", "Custom arguments for help");
+
+   ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")->setIsMandatory();
+   ah.addArgument( "i,index", DEST_VAR( opt_int_arg), "Integer argument");
+
+   ArgString2Array  as2a( "--usage", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_EQUAL( std_out.str(),
+                        "Usage:\nMandatory arguments:\n"
+                        "   -s           String argument\n"
+                        "\n"
+                        "Optional arguments:\n"
+                        "   -h,--help    Prints the program usage\n"
+                        "   -u,--usage   Custom arguments for help\n"
+                        "   -i,--index   Integer argument\n"
+                        "                Default value: 42\n"
+                        "\n");
+   BOOST_REQUIRE( err_out.str().empty());
+
+} // argument_output_custom_help
 
 
 
@@ -129,7 +187,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
                         "opt_int_arg: value '4711' is assigned\n");
    BOOST_REQUIRE( err_out.str().empty());
 
-} // end argument_verbose_assignment
+} // argument_verbose_assignment
 
 
 

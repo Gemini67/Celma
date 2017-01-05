@@ -44,7 +44,7 @@ class Handler;
 class Groups: public common::Singleton< Groups>
 {
 
-   friend class common::detail::StaticSingletonCreator< Groups>;
+   friend class common::Singleton< Groups>;
 
 public:
    /// The type used to store an argument handler object.
@@ -57,7 +57,7 @@ public:
    ///                      identification and printing the usage.
    /// @param[in]  ah       The argument handler to add.
    /// @since  0.2, 10.04.2016
-   void addArgHandler( const std::string& grpName, SharedArgHndl ah);
+   void addArgHandler( const std::string& grpName, SharedArgHndl ah) noexcept( false);
 
    /// Returns the handler stored with the given symbolic name.
    /// @param[in]  grpName  The name of the handler.
@@ -73,7 +73,7 @@ public:
    /// @param[in]  argc    Number of arguments passed to the process.
    /// @param[in]  argv[]  List of argument strings.
    /// @since  0.2, 10.04.2016
-   void evalArguments( int argc, char* argv[]);
+   void evalArguments( int argc, char* argv[]) noexcept( false);
 
    /// Needed for testing purposes, but may be used in 'normal' programs too:
    /// Removes a previously added argument handler object.
@@ -168,13 +168,13 @@ private:
 inline bool Groups::evaluatedByArgGroups() const
 {
    return mEvaluating;
-} // end Groups::evaluatedByArgGroups
+} // Groups::evaluatedByArgGroups
 
 
 inline void Groups::setUsageLineLength( int useLen)
 {
    mUsageLineLength = useLen;
-} // end Groups::setUsageLineLength
+} // Groups::setUsageLineLength
 
 
 } // namespace prog_args
@@ -184,5 +184,5 @@ inline void Groups::setUsageLineLength( int useLen)
 #endif   // CELMA_PROG_ARGS_GROUPS_HPP
 
 
-// =========================  END OF groups.hpp  =========================
+// ============================  END OF groups.hpp  ============================
 

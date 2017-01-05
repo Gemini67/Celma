@@ -165,4 +165,4 @@ BOOST_AUTO_TEST_CASE( test_clear_map)
 
 
 
-// =========================  END OF test_clear_container.cpp  =========================
+// =====================  END OF test_clear_container.cpp  =====================

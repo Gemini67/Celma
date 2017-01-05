@@ -39,6 +39,7 @@
 #include "celma/prog_args/detail/typed_arg_pair.hpp"
 #include "celma/prog_args/detail/typed_arg_range.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
+#include "celma/prog_args/detail/typed_arg_tuple.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -258,12 +259,14 @@ public:
    }; // HandleFlags
 
    /// List of possible positions for the additional output 
-   enum UsagePos
+   enum class UsagePos
    {
-      upUnused,       //!< Initialization value.
-      upBeforeArgs,   //!< Position before the list of arguments.
-      upAfterArgs     //!< Position after the list of arguments.
+      unused,       //!< Initialization value.
+      beforeArgs,   //!< Position before the list of arguments.
+      afterArgs     //!< Position after the list of arguments.
    }; // UsagePos
+
+   typedef detail::TypedArgBase::ValueMode  ValueMode;
 
    /// Set of all help arguments.
    static const int  AllHelp = hfHelpShort | hfHelpLong;
@@ -397,6 +400,22 @@ public:
                                          const std::string vname,
                                          const std::string& desc);
 
+   /// Adds a multi-value argument that stores the values in a tuple.
+   /// @tparam  T  The native types of the elements in the tuple.
+   /// @param[in]  arg_spec  The arguments on the command line for this argument.
+   /// @param[in]  dest      The tuple variable to store the value(s) in.
+   /// @param[in]  vname     The name of the variable to store the value in.<br>
+   ///                       Used for error reporting.
+   /// @param[in]  desc      The description of this argument.
+   /// @return  The object managing this argument, may be used to apply further
+   ///          settings.
+   /// @since  0.11, 19.12.2016
+   template< typename... T>
+      detail::TypedArgBase* addArgument( const std::string& arg_spec,
+                                         std::tuple< T...>& dest,
+                                         const std::string vname,
+                                         const std::string& desc);
+
    /// Adds an argument handler function that is called when an argument that
    /// does not accept any value is set.
    /// @param[in]  arg_spec  The arguments on the command line for this argument.
@@ -455,6 +474,25 @@ public:
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
                                       Handler* subGroup,
                                       const std::string& desc);
+
+   /// Adds an argument that behaves like the -h/--help arguments. Use this if
+   /// the help argument should e.g. be in another language.<br>
+   /// The standard help arguments may still be set in the constructor, then
+   /// both arguments can be used to get the usage displayed.
+   /// @param[in]  arg_spec  The arguments on the command line for the help
+   ///                       feature.
+   /// @param[in]  desc      The description of this argument.
+   /// @param[in]  txt1      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @param[in]  txt2      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @return  The object managing the argument, may be used to apply further
+   ///          settings (normally not necessary).
+   /// @since  0.10, 22.12.2016
+   detail::TypedArgBase* addHelpArgument( const std::string& arg_spec,
+                                          const std::string& desc,
+                                          IUsageText* txt1 = nullptr,
+                                          IUsageText* txt2 = nullptr);
 
    /// Adds an argument that takes the path/filename of an argument file as
    /// parameter.
@@ -521,7 +559,7 @@ public:
    /// @param[in]  hf        The handler to call when the control character is
    ///                       detected on the argument list.
    /// @since  0.2, 10.04.2016
-   void addControlHandler( char ctrlChar, HandlerFunc hf);
+   void addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false);
 
    /// Specifies the line length to use when printing the usage.
    /// @param[in]  useLen  The new line length to use.<br>
@@ -534,7 +572,7 @@ public:
    /// The arguments specified in the constraint must already be defined.
    /// @param[in]  ic  Pointer to the object that handles the constraint.
    /// @since  0.2, 10.04.2016
-   void addConstraint( detail::IConstraint* ic);
+   void addConstraint( detail::IConstraint* ic) noexcept( false);
 
    /// Iterates over the list of arguments and their values and stores the
    /// values in the corresponding destination variables.<br>
@@ -546,7 +584,7 @@ public:
    /// @param[in]  argv[]  List of argument strings.
    /// @throw  Exception as described above.
    /// @since  0.2, 10.04.2016
-   void evalArguments( int argc, char* argv[]);
+   void evalArguments( int argc, char* argv[]) noexcept( false);
 
    /// Same as evalArguments(). Difference is that this method catches
    /// exceptions, reports them on stderr and then exits the program.<br>
@@ -614,7 +652,7 @@ protected:
    ///                            be increased if this class contains longer
    ///                            arguments.
    /// @since  0.2, 10.04.2016
-   void checkMaxArgLen( size_t& maxArgLen);
+   void checkMaxArgLen( size_t& maxArgLen) const;
 
    /// Checks if the specified argument is already used.
    /// @param[in]  argChar  The argument character to check.
@@ -695,7 +733,7 @@ private:
    /// Iterates over the arguments and evaluates them.
    /// @param[in]  alp  The parser object used to access the arguments.
    /// @since  0.2, 10.04.2016
-   void iterateArguments( detail::ArgListParser& alp);
+   void iterateArguments( detail::ArgListParser& alp) noexcept( false);
 
    /// Standard procedure for adding an argument handling object.
    /// @param[in]  ah_obj    Pointer to the object that handles the argument.
@@ -809,6 +847,9 @@ private:
 /// @param  n  The destination variable.
 /// @param  t  The value type of the destination variable.
 /// @param  c  The type of the container/the destination variable.
+/// @todo  Try to change this (and the class RangeDest?) so that the type of
+///        the destination variable (container type) does not need to be
+///        set separately.
 /// @since  0.2, 10.04.2016
 #define DEST_RANGE( n, t, c)  celma::common::RangeDest< t, c < t > >( n), #n
 
@@ -859,7 +900,7 @@ template< typename T>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( arg_spec, dest, vname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename T1, typename T2>
@@ -876,7 +917,7 @@ template< typename T1, typename T2>
       new detail::TypedArgPair< T1, T2>( arg_spec, dest1, vname1, dest2, vname2,
                                          value2);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename T>
@@ -886,7 +927,7 @@ template< typename T>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( "-", dest, vname);
    return internAddArgument( arg_hdl, "", desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename T, typename C>
@@ -898,7 +939,7 @@ template< typename T, typename C>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgRange< T, C>( arg_spec, dest, vname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename T, typename C>
@@ -909,7 +950,19 @@ template< typename T, typename C>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgRange< T, C>( "-", dest, vname);
    return internAddArgument( arg_hdl, "", desc);
-} // end Handler::addArgument
+} // Handler::addArgument
+
+
+template< typename... T>
+   detail::TypedArgBase* Handler::addArgument( const std::string& arg_spec,
+                                               std::tuple< T...>& dest,
+                                               const std::string vname,
+                                               const std::string& desc)
+{
+   detail::TypedArgBase*  arg_hdl =
+      new detail::TypedArgTuple< T...>( arg_spec, dest, vname);
+   return internAddArgument( arg_hdl, arg_spec, desc);
+} // Handler::addArgument
 
 
 inline detail::TypedArgBase*
@@ -920,7 +973,7 @@ inline detail::TypedArgBase*
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallable( arg_spec, fun, fname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 inline detail::TypedArgBase*
@@ -932,7 +985,7 @@ inline detail::TypedArgBase*
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallableValue( arg_spec, fun, fname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 inline detail::TypedArgBase*
@@ -946,7 +999,7 @@ inline detail::TypedArgBase*
    mSubGroupArgs.addArgument( arg_hdl, arg_spec);
    mDescription.addArgument( arg_spec, desc, arg_hdl);
    return arg_hdl;
-} // end Handler::addArgument
+} // Handler::addArgument
 
 
 template< typename C, typename T>
@@ -958,20 +1011,20 @@ template< typename C, typename T>
 {
    detail::TypedArgBase*  arg_hdl = new C( arg_spec, dest, vname);
    return internAddArgument( arg_hdl, arg_spec, desc);
-} // end Handler::addCustomArgument
+} // Handler::addCustomArgument
 
 
 inline void Handler::setUsageLineLength( int useLen)
 {
    mDescription.setLineLength( useLen);
    mSubGroupArgs.setUsageLineLength( useLen);
-} // end Handler::setUsageLineLength
+} // Handler::setUsageLineLength
 
 
 inline void Handler::setIsSubGroupHandler()
 {
    mIsSubGroupHandler = true;
-} // end Handler::setIsSubGroupHandler
+} // Handler::setIsSubGroupHandler
 
 
 } // namespace prog_args
@@ -981,5 +1034,5 @@ inline void Handler::setIsSubGroupHandler()
 #endif   // CELMA_PROG_ARGS_HANDLER_HPP
 
 
-// =========================  END OF handler.hpp  =========================
+// ===========================  END OF handler.hpp  ===========================
 

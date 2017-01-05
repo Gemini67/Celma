@@ -144,5 +144,5 @@ inline int ExceptionBase::lineNbr() const
 #endif   // CELMA_COMMON_EXCEPTION_BASE_HPP
 
 
-// =========================  END OF exception_base.hpp  =========================
+// ========================  END OF exception_base.hpp  ========================
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,23 +28,14 @@
 #include "celma/common/tokenizer.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
+
+
+using std::string;
 
 
 // module definitions
 ConstraintContainer*  ConstraintContainer::mpCurrentConstraints = nullptr;
-
-
-
-/// Constructor.
-/// @since  0.2, 10.04.2016
-ConstraintContainer::ConstraintContainer():
-   mConstraints()
-{
-} // end ConstraintContainer::ConstraintContainer
 
 
 
@@ -59,23 +50,24 @@ void ConstraintContainer::addConstraint( Constraint constraint_type,
                                          const string& created_by)
 {
 
-   common::Tokenizer  tok( arg_spec, ';');
+   common::Tokenizer  tokenizer( arg_spec, ';');
 
 
-   for (auto it : tok)
+   for (auto const& token : tokenizer)
    {
       // don't add the same constraint twice
-      const Data                      search( it);
-      const DataCont::const_iterator  dataIt = find( mConstraints.begin(),
-                                                     mConstraints.end(),
-                                                     search);
-      if ((dataIt == mConstraints.end()) || (dataIt->mConstraint != constraint_type))
+      const Data                      search( token);
+      const DataCont::const_iterator  dataIt = std::find( mConstraints.begin(),
+                                                          mConstraints.end(),
+                                                          search);
+      if ((dataIt == mConstraints.end()) ||
+          (dataIt->mConstraint != constraint_type))
       {
-         mConstraints.push_back( Data( it, constraint_type, created_by));
+         mConstraints.push_back( Data( token, constraint_type, created_by));
       } // end if
    } // end for
 
-} // end ConstraintContainer::addConstraint
+} // ConstraintContainer::addConstraint
 
 
 
@@ -94,19 +86,19 @@ void ConstraintContainer::argumentIdentified( const string& argSpec)
    const Data  search( argSpec);
    auto        it = mConstraints.begin();
 
-   while ((it = find( it, mConstraints.end(), search)) != mConstraints.end())
+   while ((it = std::find( it, mConstraints.end(), search)) != mConstraints.end())
    {
       if (it->mConstraint == cRequired)
       {
          it = mConstraints.erase( it);
       } else if (it->mConstraint == cExcluded)
       {
-         throw runtime_error( "Argument '" + it->spec() + "' is excluded by '" +
-                              it->mOrigin + "'");
+         throw std::runtime_error( "Argument '" + it->spec() +
+                                   "' is excluded by '" + it->mOrigin + "'");
       } // end if
    } // end while
 
-} // end ConstraintContainer::argumentIdentified
+} // ConstraintContainer::argumentIdentified
 
 
 
@@ -115,20 +107,20 @@ void ConstraintContainer::argumentIdentified( const string& argSpec)
 void ConstraintContainer::checkRequired()
 {
 
-   for (size_t i = 0; i < mConstraints.size(); ++i)
+   for (auto const& current_constraint : mConstraints)
    {
-      const Data&  currentConstraint = mConstraints[ i];
-      if (currentConstraint.mConstraint == cRequired)
+      if (current_constraint.mConstraint == cRequired)
       {
          
-         throw runtime_error( string( "Argument '").append( currentConstraint.spec()).
-                              append( "' required by '").
-                              append( currentConstraint.mOrigin).
-                              append( "' is missing"));
+         throw std::runtime_error( string( "Argument '").
+                                   append( current_constraint.spec()).
+                                   append( "' required by '").
+                                   append( current_constraint.mOrigin).
+                                   append( "' is missing"));
       } // end if
    } // end for
 
-} // end ConstraintContainer::checkRequired
+} // ConstraintContainer::checkRequired
 
 
 
@@ -144,7 +136,7 @@ ConstraintContainer::Data::Data( const string& arg_spec, Constraint c,
    mConstraint( c),
    mOrigin( origin)
 {
-} // end ConstraintContainer::Data::Data
+} // ConstraintContainer::Data::Data
 
 
 
@@ -156,7 +148,7 @@ bool ConstraintContainer::Data::operator ==( const ConstraintContainer::Data& ot
 {
 
    return mArgKeys == other.mArgKeys;
-} // end ConstraintContainer::Data::operator ==
+} // ConstraintContainer::Data::operator ==
 
 
 
@@ -168,7 +160,7 @@ string ConstraintContainer::Data::spec() const
 {
 
    return mArgKeys.str();
-} // end ConstraintContainer::Data::spec
+} // ConstraintContainer::Data::spec
 
 
 
@@ -177,5 +169,5 @@ string ConstraintContainer::Data::spec() const
 } // namespace celma
 
 
-// =========================  END OF constraint_container.cpp  =========================
+// =====================  END OF constraint_container.cpp  =====================
 

@@ -77,5 +77,5 @@ inline ICardinality::ICardinality():
 #endif   // CELMA_PROG_ARGS_DETAIL_I_CARDINALITY_HPP
 
 
-// =========================  END OF i_cardinality.hpp  =========================
+// ========================  END OF i_cardinality.hpp  ========================
 

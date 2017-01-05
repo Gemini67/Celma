@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -17,16 +17,17 @@ celma_add_celma_boost_testprogram( test_argh_checks )
 celma_add_celma_boost_testprogram( test_argh_constraints )
 celma_add_celma_boost_testprogram( test_argh_custom_convert )
 celma_add_celma_boost_testprogram( test_argh_custom_type )
+celma_add_celma_boost_testprogram( test_argh_dest_tuple )
 celma_add_celma_boost_testprogram( test_argh_longarg_abbr )
 celma_add_celma_boost_testprogram( test_argh_output_streams)
 celma_add_celma_boost_testprogram( test_argh_range )
 celma_add_celma_boost_testprogram( test_argh_separate_values )
 celma_add_celma_boost_testprogram( test_arg_list_parser )
 celma_add_celma_boost_testprogram( test_argument_groups )
-celma_add_celma_boost_testprogram( test_argument_handler )
 celma_add_celma_boost_testprogram( test_argument_key )
 celma_add_celma_boost_testprogram( test_argument_sub_groups )
 celma_add_celma_boost_testprogram( test_constraint_container )
+celma_add_celma_boost_testprogram( test_handler )
 
 # test-programs for output
 add_executable( test_arg_groups_usage           test_arg_groups_usage.cpp )

@@ -39,7 +39,7 @@ public:
    /// Dashes are silently ignored.
    /// @param[in]  arg_spec  The string with the argument specifiers.
    /// @since  0.2, 06.04.2016
-   explicit ArgumentKey( const std::string& arg_spec);
+   explicit ArgumentKey( const std::string& arg_spec) noexcept( false);
 
    /// Default copy constructor is just fine.
    /// @since  0.2, 06.04.2016

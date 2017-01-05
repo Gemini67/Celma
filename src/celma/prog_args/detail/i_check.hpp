@@ -52,5 +52,5 @@ public:
 #endif   // CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP
 
 
-// =========================  END OF i_check.hpp  =========================
+// ===========================  END OF i_check.hpp  ===========================
 

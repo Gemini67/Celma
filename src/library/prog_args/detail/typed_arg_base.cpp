@@ -31,11 +31,12 @@
 #include "celma/common/clear_container.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
+
+using std::logic_error;
+using std::ostream;
+using std::string;
 
 
 /// Constructor.
@@ -47,7 +48,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  printDef  Specifies if the default value of the destination
 ///                       variable should be printed in the usage or not.
 /// @since  0.2, 10.04.2016
-TypedArgBase::TypedArgBase( const std::string& arg_spec, const string& vname,
+TypedArgBase::TypedArgBase( const string& arg_spec, const string& vname,
                             ValueMode vm, bool printDef):
    mArgSpec( arg_spec),
    mVarName( vname),
@@ -61,7 +62,7 @@ TypedArgBase::TypedArgBase( const std::string& arg_spec, const string& vname,
    mpCardinality( new CardinalityMax( 1)),
    mConstraints()
 {
-} // end TypedArgBase::TypedArgBase
+} // TypedArgBase::TypedArgBase
 
 
 
@@ -74,7 +75,7 @@ TypedArgBase::~TypedArgBase()
    common::Vector::clear( mFormats);
    common::Vector::clear( mConstraints);
 
-} // end TypedArgBase::~TypedArgBase
+} // TypedArgBase::~TypedArgBase
 
 
 
@@ -92,7 +93,7 @@ void TypedArgBase::calledAssign( bool ignore_cardinality, const string& value)
    assign( value);
    activateConstraints();
 
-} // end TypedArgBase::calledAssign
+} // TypedArgBase::calledAssign
 
 
 
@@ -101,10 +102,10 @@ void TypedArgBase::calledAssign( bool ignore_cardinality, const string& value)
 /// @param[in]  f  Pointer to the formatter to add.
 /// @return  Pointer to this object.
 /// @since  0.2, 10.04.2016
-TypedArgBase* TypedArgBase::addFormat( IFormat* f)
+TypedArgBase* TypedArgBase::addFormat( IFormat* f) noexcept( false)
 {
 
-   if (mValueMode == vmNone)
+   if (mValueMode == ValueMode::none)
       throw logic_error( "calling addFormat() not allowed for variable '" +
                            mVarName + "' (because it doesn't accept values)");
 
@@ -126,12 +127,12 @@ TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 void TypedArgBase::format( string& val) const
 {
 
-   for (size_t i = 0; i < mFormats.size(); ++i)
+   for (auto const& stored_format : mFormats)
    {
-      mFormats[ i]->formatValue( val);
+      stored_format->formatValue( val);
    } // end for
 
-} // end TypedArgBase::format
+} // TypedArgBase::format
 
 
 
@@ -142,7 +143,7 @@ void TypedArgBase::format( string& val) const
 TypedArgBase* TypedArgBase::addCheck( ICheck* c)
 {
 
-   if (mValueMode == vmNone)
+   if (mValueMode == ValueMode::none)
       throw logic_error( "calling addCheck() not allowed for variable '" +
                          mVarName + "' (because it doesn't accept values)");
 
@@ -165,12 +166,12 @@ TypedArgBase* TypedArgBase::addCheck( ICheck* c)
 void TypedArgBase::check( const string& val) const
 {
 
-   for (size_t i = 0; i < mChecks.size(); ++i)
+   for (auto const& stored_checks : mChecks)
    {
-      mChecks[ i]->checkValue( val);
+      stored_checks->checkValue( val);
    } // end for
 
-} // end TypedArgBase::check
+} // TypedArgBase::check
 
 
 
@@ -185,7 +186,7 @@ TypedArgBase* TypedArgBase::addConstraint( IConstraint* ic)
    mConstraints.push_back( ic);
 
    return this;
-} // end TypedArgBase::addConstraint
+} // TypedArgBase::addConstraint
 
 
 
@@ -208,7 +209,7 @@ TypedArgBase* TypedArgBase::setCardinality( ICardinality* c)
    mpCardinality.reset( c);
 
    return this;
-} // end TypedArgBase::setCardinality
+} // TypedArgBase::setCardinality
 
 
 
@@ -221,7 +222,7 @@ void TypedArgBase::checkCardinality()
    if (mpCardinality.get() != nullptr)
       mpCardinality->check();
 
-} // end TypedArgBase::checkCardinality
+} // TypedArgBase::checkCardinality
 
 
 
@@ -234,7 +235,7 @@ void TypedArgBase::dump( std::ostream& os) const
 
    os << "sets value on '" << mVarName << "'.";
 
-} // end TypedArgBase::dump
+} // TypedArgBase::dump
 
 
 
@@ -244,12 +245,12 @@ void TypedArgBase::dump( std::ostream& os) const
 void TypedArgBase::activateConstraints()
 {
 
-   for (size_t i = 0; i < mConstraints.size(); ++i)
+   for (auto & curr_constraint : mConstraints)
    {
-      mConstraints[ i]->executeConstraint( mArgSpec);
+      curr_constraint->executeConstraint( mArgSpec);
    } // end for
 
-} // end TypedArgBase::activateConstraints
+} // TypedArgBase::activateConstraints
 
 
 /// Called for printing an argument and its destination variable.<br>
@@ -264,7 +265,7 @@ ostream& operator <<( ostream& os, const TypedArgBase* tab)
    tab->dump( os);
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
@@ -288,7 +289,7 @@ ostream& operator <<( ostream& os, const TypedArgBase& tab)
       << " formats";
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
@@ -302,16 +303,16 @@ ostream& operator <<( ostream& os, TypedArgBase::ValueMode vm)
 
    switch (vm)
    {
-   case TypedArgBase::vmNone:      os << "'no value'";  break;
-   case TypedArgBase::vmOptional:  os << "'optional'";  break;
-   case TypedArgBase::vmRequired:  os << "'required'";  break;
-   default:                        os << "'unknown'";   break;
+   case TypedArgBase::ValueMode::none:      os << "'no value'";  break;
+   case TypedArgBase::ValueMode::optional:  os << "'optional'";  break;
+   case TypedArgBase::ValueMode::required:  os << "'required'";  break;
+   default:                                 os << "'unknown'";   break;
    } // end switch
 
    os << " (" << static_cast< int>( vm) << ")";
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
@@ -320,5 +321,5 @@ ostream& operator <<( ostream& os, TypedArgBase::ValueMode vm)
 } // namespace celma
 
 
-// =========================  END OF typed_arg_base.cpp  =========================
+// ========================  END OF typed_arg_base.cpp  ========================
 
