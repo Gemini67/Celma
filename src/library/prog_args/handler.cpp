@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -931,9 +931,9 @@ bool Handler::validArguments( string& constraint_arg_list) const
 void Handler::executeGlobalConstraints( const string& arg_spec)
 {
 
-   for (auto cit : mGlobalConstraints)
+   for (auto & current_constraint : mGlobalConstraints)
    {
-      cit->executeConstraint( arg_spec);
+      current_constraint->executeConstraint( arg_spec);
    } // end for
 
 } // Handler::executeGlobalConstraints

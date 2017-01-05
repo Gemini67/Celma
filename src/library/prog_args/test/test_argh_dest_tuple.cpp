@@ -16,7 +16,7 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE prog_args::HandlerTest
+#define BOOST_TEST_MODULE ArgHandlerDestTupleTest
 #include <boost/test/unit_test.hpp>
 
 
@@ -26,6 +26,54 @@
 
 
 using celma::prog_args::Handler;
+
+
+
+/// Test error case that can occur with a tuple.
+/// @since  0.11, 05.01.2017
+BOOST_AUTO_TEST_CASE( test_tuple_errors)
+{
+
+   // not enough values for the tuple
+   {
+      Handler                ah( 0);
+      std::tuple< int, int>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+                                              "Key and value"));
+
+      celma::common::ArgString2Array  as2a( "-p 3", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           std::runtime_error);
+   } // end scope
+
+   // too many values for the tuple
+   {
+      Handler                ah( 0);
+      std::tuple< int, int>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+                                              "Key and value"));
+
+      celma::common::ArgString2Array  as2a( "-p 3,4,5", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           std::runtime_error);
+   } // end scope
+
+   // conversion error on a value
+   {
+      Handler                ah( 0);
+      std::tuple< int, int>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+                                              "Key and value"));
+
+      celma::common::ArgString2Array  as2a( "-p 3,hello", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           std::bad_cast);
+   } // end scope
+
+} // test_tuple_errors
 
 
 

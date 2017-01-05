@@ -166,7 +166,7 @@ TypedArgBase* TypedArgBase::addCheck( ICheck* c)
 void TypedArgBase::check( const string& val) const
 {
 
-   for (auto const& stored_checks :mChecks)
+   for (auto const& stored_checks : mChecks)
    {
       stored_checks->checkValue( val);
    } // end for

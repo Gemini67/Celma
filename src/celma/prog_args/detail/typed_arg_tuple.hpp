@@ -25,7 +25,7 @@
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/tuple_at_index.hpp"
 #include "celma/common/tuple_length.hpp"
-#include "celma/prog_args/detail/cardinality_max.hpp"
+#include "celma/prog_args/detail/cardinality_exact.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
@@ -69,8 +69,9 @@ private:
 // ======================
 
 
-/// Helper class to store a destination variable with its native type.
-/// @tparam  T  The type of the value.
+/// Helper class to store a destination variable of type tuple with its native
+/// element types.
+/// @tparam  T  The types of the values.
 /// @since  0.11, 19.12.2016
 template< typename... T> class TypedArgTuple: public TypedArgBase
 {
@@ -145,7 +146,7 @@ template< typename... T>
       mDestVar( dest),
       mTupleLength( common::tuple_length( dest))
 {
-   mpCardinality.reset( new CardinalityMax( mTupleLength));
+   mpCardinality.reset( new CardinalityExact( mTupleLength));
 } // TypedArgTuple< T...>::TypedArgTuple
 
 
