@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,7 +30,6 @@
 #include "celma/common/check_assign.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
-#include "celma/common/var_type_name.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 

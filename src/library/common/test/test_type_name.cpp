@@ -15,10 +15,11 @@
 --*/
 
 
+// module to test header file include
+#include "celma/common/type_name.hpp"
+
+
 // OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
 #include <cstring>
 
 
@@ -26,10 +27,6 @@
 #define BOOST_TEST_MODULE TypeNameTest
 #include <boost/test/unit_test.hpp>
 #include <utility>
-
-
-// project includes
-#include "celma/common/type_name.hpp"
 
 
 #define  BOOST_REQUIRE_EQUAL_STR( a, b) \
@@ -674,6 +671,27 @@ BOOST_AUTO_TEST_CASE( user_defined_enum)
                             "std::set<EnumType>");
 
 } // user_defined_enum
+
+
+
+/// Test printing the type name of variable.
+/// @since  0.11, 07.01.2017
+BOOST_AUTO_TEST_CASE( test_type_from_variable)
+{
+
+   std::string  my_string;
+
+   static_assert( celma::type< decltype( my_string)>::name()[5] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< decltype( my_string)>::name(),
+                            "std::string");
+
+
+   std::map< int, std::string>  my_map;
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< decltype( my_map)>::name(),
+                            "std::map<int,std::string>");
+
+} // test_type_from_variable
 
 
 
