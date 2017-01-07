@@ -39,7 +39,7 @@
 #include "celma/prog_args/detail/typed_arg_pair.hpp"
 #include "celma/prog_args/detail/typed_arg_range.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
-#include "celma/prog_args/detail/typed_arg_tuple.hpp"
+//#include "celma/prog_args/detail/typed_arg_tuple.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -397,22 +397,6 @@ public:
    /// @since  0.2, 10.04.2016
    template< typename T, typename C>
       detail::TypedArgBase* addArgument( const common::RangeDest< T, C>& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds a multi-value argument that stores the values in a tuple.
-   /// @tparam  T  The native types of the elements in the tuple.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The tuple variable to store the value(s) in.
-   /// @param[in]  vname     The name of the variable to store the value in.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.11, 19.12.2016
-   template< typename... T>
-      detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                         std::tuple< T...>& dest,
                                          const std::string vname,
                                          const std::string& desc);
 
@@ -950,18 +934,6 @@ template< typename T, typename C>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgRange< T, C>( "-", dest, vname);
    return internAddArgument( arg_hdl, "", desc);
-} // Handler::addArgument
-
-
-template< typename... T>
-   detail::TypedArgBase* Handler::addArgument( const std::string& arg_spec,
-                                               std::tuple< T...>& dest,
-                                               const std::string vname,
-                                               const std::string& desc)
-{
-   detail::TypedArgBase*  arg_hdl =
-      new detail::TypedArgTuple< T...>( arg_spec, dest, vname);
-   return internAddArgument( arg_hdl, arg_spec, desc);
 } // Handler::addArgument
 
 
