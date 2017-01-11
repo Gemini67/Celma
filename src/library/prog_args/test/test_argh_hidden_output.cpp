@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -13,7 +13,7 @@
 
 #include <iostream>
 #include <vector>
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
 
 
@@ -42,7 +42,7 @@ int main( int argc, char* argv[])
 
    cout << endl << string( 80, '-') << endl << endl;
 
-   common::ArgString2Array  as2a( "--print-hidden -h", argv[ 0]);
+   appl::ArgString2Array  as2a( "--print-hidden -h", argv[ 0]);
    printUsage( prog_args::Handler::hfHelpShort | prog_args::Handler::hfUsageCont | prog_args::Handler::hfArgHidden,
                as2a.mArgc, as2a.mpArgv);
 
@@ -95,5 +95,5 @@ static void printUsage( int flags, int argc, char* argv[])
 
 
 
-// =========================  END OF test_argh_hidden_output.cpp  =========================
+// ===================  END OF test_argh_hidden_output.cpp  ===================
 

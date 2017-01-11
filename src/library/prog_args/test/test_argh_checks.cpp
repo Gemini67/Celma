@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,7 +38,7 @@
 
 // project includes
 #include "celma/prog_args.hpp"
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
 using namespace std;
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.hasValue());
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "-i 5", nullptr);
+      appl::ArgString2Array  as2a( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), underflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "-i 10", nullptr);
+      appl::ArgString2Array  as2a( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "-i 10000", nullptr);
+      appl::ArgString2Array  as2a( "-i 10000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.empty());
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "-i 5", nullptr);
+      appl::ArgString2Array  as2a( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), underflow_error);
       BOOST_REQUIRE( iVal.empty());
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "-i 10", nullptr);
+      appl::ArgString2Array  as2a( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "-i 10000", nullptr);
+      appl::ArgString2Array  as2a( "-i 10000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10));
 
-      common::ArgString2Array  as2a( "-i 10,5,10000", nullptr);
+      appl::ArgString2Array  as2a( "-i 10,5,10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), underflow_error);
       BOOST_REQUIRE( !iVal.empty());
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.hasValue());
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 500", nullptr);
+      appl::ArgString2Array  as2a( "-i 500", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -217,7 +217,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 100", nullptr);
+      appl::ArgString2Array  as2a( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 99", nullptr);
+      appl::ArgString2Array  as2a( "-i 99", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 1", nullptr);
+      appl::ArgString2Array  as2a( "-i 1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -264,7 +264,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.empty());
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 500", nullptr);
+      appl::ArgString2Array  as2a( "-i 500", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( iVal.empty());
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 100", nullptr);
+      appl::ArgString2Array  as2a( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( iVal.empty());
@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 99", nullptr);
+      appl::ArgString2Array  as2a( "-i 99", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 1", nullptr);
+      appl::ArgString2Array  as2a( "-i 1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -328,7 +328,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 50,100", nullptr);
+      appl::ArgString2Array  as2a( "-i 50,100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( !iVal.empty());
@@ -352,7 +352,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.hasValue());
@@ -365,7 +365,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 5", nullptr);
+      appl::ArgString2Array  as2a( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), underflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 10", nullptr);
+      appl::ArgString2Array  as2a( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -392,7 +392,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 99", nullptr);
+      appl::ArgString2Array  as2a( "-i 99", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -406,7 +406,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 100", nullptr);
+      appl::ArgString2Array  as2a( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -419,7 +419,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 10000", nullptr);
+      appl::ArgString2Array  as2a( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -442,7 +442,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.empty());
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 5", nullptr);
+      appl::ArgString2Array  as2a( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), underflow_error);
       BOOST_REQUIRE( iVal.empty());
@@ -468,7 +468,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 10", nullptr);
+      appl::ArgString2Array  as2a( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -483,7 +483,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 99", nullptr);
+      appl::ArgString2Array  as2a( "-i 99", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -498,7 +498,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 100", nullptr);
+      appl::ArgString2Array  as2a( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( iVal.empty());
@@ -511,7 +511,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 10000", nullptr);
+      appl::ArgString2Array  as2a( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( iVal.empty());
@@ -524,7 +524,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 10,200", nullptr);
+      appl::ArgString2Array  as2a( "-i 10,200", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), overflow_error);
       BOOST_REQUIRE( !iVal.empty());
@@ -539,7 +539,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::lower( 10))
                     ->addCheck( prog_args::upper( 100));
 
-      common::ArgString2Array  as2a( "-i 20,5", nullptr);
+      appl::ArgString2Array  as2a( "-i 20,5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), underflow_error);
       BOOST_REQUIRE( !iVal.empty());
@@ -562,7 +562,7 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.hasValue());
@@ -574,7 +574,7 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 5", nullptr);
+      appl::ArgString2Array  as2a( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -586,7 +586,7 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 10", nullptr);
+      appl::ArgString2Array  as2a( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -599,7 +599,7 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 99", nullptr);
+      appl::ArgString2Array  as2a( "-i 99", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -612,7 +612,7 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 100", nullptr);
+      appl::ArgString2Array  as2a( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -624,7 +624,7 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 10000", nullptr);
+      appl::ArgString2Array  as2a( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -645,7 +645,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.empty());
@@ -657,7 +657,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 5", nullptr);
+      appl::ArgString2Array  as2a( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( iVal.empty());
@@ -669,7 +669,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 10", nullptr);
+      appl::ArgString2Array  as2a( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -683,7 +683,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 99", nullptr);
+      appl::ArgString2Array  as2a( "-i 99", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -697,7 +697,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 100", nullptr);
+      appl::ArgString2Array  as2a( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( iVal.empty());
@@ -709,7 +709,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 10000", nullptr);
+      appl::ArgString2Array  as2a( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( iVal.empty());
@@ -721,7 +721,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 10,200", nullptr);
+      appl::ArgString2Array  as2a( "-i 10,200", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !iVal.empty());
@@ -735,7 +735,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( prog_args::range( 10, 100));
 
-      common::ArgString2Array  as2a( "-i 20,5", nullptr);
+      appl::ArgString2Array  as2a( "-i 20,5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !iVal.empty());
@@ -759,7 +759,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( prog_args::values( "Peter,Paul,Mary"));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !name.hasValue());
@@ -772,7 +772,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( prog_args::values( "Peter,Paul,Mary"));
 
-      common::ArgString2Array  as2a( "-n peter", nullptr);
+      appl::ArgString2Array  as2a( "-n peter", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !name.hasValue());
@@ -785,7 +785,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( prog_args::values( "Peter,Paul,Mary"));
 
-      common::ArgString2Array  as2a( "-n Paule", nullptr);
+      appl::ArgString2Array  as2a( "-n Paule", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !name.hasValue());
@@ -798,7 +798,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( prog_args::values( "Peter,Paul,Mary"));
 
-      common::ArgString2Array  as2a( "-n Pete", nullptr);
+      appl::ArgString2Array  as2a( "-n Pete", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !name.hasValue());
@@ -811,7 +811,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( prog_args::values( "Peter,Paul,Mary"));
 
-      common::ArgString2Array  as2a( "-n Peter", nullptr);
+      appl::ArgString2Array  as2a( "-n Peter", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -825,7 +825,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( prog_args::values( "Peter,Paul,Mary"));
 
-      common::ArgString2Array  as2a( "-n Paul", nullptr);
+      appl::ArgString2Array  as2a( "-n Paul", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -839,7 +839,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( prog_args::values( "Peter,Paul,Mary"));
 
-      common::ArgString2Array  as2a( "-n Mary", nullptr);
+      appl::ArgString2Array  as2a( "-n Mary", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -863,7 +863,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.hasValue());
@@ -877,7 +877,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 1", nullptr);
+      appl::ArgString2Array  as2a( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -891,7 +891,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 110", nullptr);
+      appl::ArgString2Array  as2a( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !iVal.hasValue());
@@ -905,7 +905,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 11", nullptr);
+      appl::ArgString2Array  as2a( "-i 11", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -920,7 +920,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 111", nullptr);
+      appl::ArgString2Array  as2a( "-i 111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -935,7 +935,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 1111", nullptr);
+      appl::ArgString2Array  as2a( "-i 1111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -959,7 +959,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.empty());
@@ -973,7 +973,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 1", nullptr);
+      appl::ArgString2Array  as2a( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( iVal.empty());
@@ -987,7 +987,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 110", nullptr);
+      appl::ArgString2Array  as2a( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( iVal.empty());
@@ -1001,7 +1001,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 11", nullptr);
+      appl::ArgString2Array  as2a( "-i 11", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -1017,7 +1017,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 111", nullptr);
+      appl::ArgString2Array  as2a( "-i 111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -1033,7 +1033,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 1111", nullptr);
+      appl::ArgString2Array  as2a( "-i 1111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.empty());
@@ -1049,7 +1049,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( prog_args::values( "11,111,1111"));
 
-      common::ArgString2Array  as2a( "-i 11,1", nullptr);
+      appl::ArgString2Array  as2a( "-i 11,1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), range_error);
       BOOST_REQUIRE( !iVal.empty());
@@ -1061,5 +1061,5 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
 
 
 
-// =========================  END OF test_argh_checks.cpp  =========================
+// =======================  END OF test_argh_checks.cpp  =======================
 

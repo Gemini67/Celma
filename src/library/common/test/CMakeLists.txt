@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -19,13 +19,13 @@ celma_add_boost_testprogram( test_find_sequence )
 celma_add_boost_testprogram( test_first_pass )
 celma_add_boost_testprogram( test_merge_sorted_cont )
 celma_add_boost_testprogram( test_reset_at_exit )
+celma_add_boost_testprogram( test_string_util )
 celma_add_boost_testprogram( test_tokenizer )
 celma_add_boost_testprogram( test_tokenizer_base )
 celma_add_boost_testprogram( test_transform_call )
 celma_add_boost_testprogram( test_type_name )
 celma_add_boost_testprogram( test_value_result )
 
-celma_add_celma_boost_testprogram( test_arg_string_2_array )
 celma_add_celma_boost_testprogram( test_exception )
 celma_add_celma_boost_testprogram( test_extract_funcname )
 celma_add_celma_boost_testprogram( test_range_dest )

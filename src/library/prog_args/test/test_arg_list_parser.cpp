@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,7 +33,7 @@
 
 // project includes
 #include "celma/prog_args/detail/arg_list_parser.hpp"
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
 using namespace std;
@@ -50,7 +50,7 @@ typedef std::vector< std::string>  StringVec;
 BOOST_AUTO_TEST_CASE( single_char)
 {
 
-   common::ArgString2Array           as2a( "-v", nullptr);
+   appl::ArgString2Array             as2a( "-v", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE( single_char)
 BOOST_AUTO_TEST_CASE( two_single_char)
 {
 
-   common::ArgString2Array           as2a( "-lv", nullptr);
+   appl::ArgString2Array             as2a( "-lv", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( two_single_char)
 BOOST_AUTO_TEST_CASE( two_single_char_sep)
 {
 
-   common::ArgString2Array           as2a( "-l -v", nullptr);
+   appl::ArgString2Array             as2a( "-l -v", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( two_single_char_sep)
 BOOST_AUTO_TEST_CASE( three_single_char)
 {
 
-   common::ArgString2Array           as2a( "-lva", nullptr);
+   appl::ArgString2Array             as2a( "-lva", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE( three_single_char)
 BOOST_AUTO_TEST_CASE( three_single_char_sep)
 {
 
-   common::ArgString2Array           as2a( "-l -v -a", nullptr);
+   appl::ArgString2Array             as2a( "-l -v -a", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE( three_single_char_sep)
 BOOST_AUTO_TEST_CASE( three_single_char_mixed1)
 {
 
-   common::ArgString2Array           as2a( "-lv -a", nullptr);
+   appl::ArgString2Array             as2a( "-lv -a", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -218,7 +218,7 @@ BOOST_AUTO_TEST_CASE( three_single_char_mixed1)
 BOOST_AUTO_TEST_CASE( three_single_char_mixed2)
 {
 
-   common::ArgString2Array           as2a( "-l -va", nullptr);
+   appl::ArgString2Array             as2a( "-l -va", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE( three_single_char_mixed2)
 BOOST_AUTO_TEST_CASE( single_long)
 {
 
-   common::ArgString2Array           as2a( "--verbose", nullptr);
+   appl::ArgString2Array             as2a( "--verbose", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -270,7 +270,7 @@ BOOST_AUTO_TEST_CASE( single_long)
 BOOST_AUTO_TEST_CASE( two_long)
 {
 
-   common::ArgString2Array           as2a( "--verbose --careful", nullptr);
+   appl::ArgString2Array             as2a( "--verbose --careful", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -296,7 +296,7 @@ BOOST_AUTO_TEST_CASE( two_long)
 BOOST_AUTO_TEST_CASE( short_long)
 {
 
-   common::ArgString2Array           as2a( "-v --verbose -s0l --careful -x", nullptr);
+   appl::ArgString2Array             as2a( "-v --verbose -s0l --careful -x", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -352,7 +352,7 @@ BOOST_AUTO_TEST_CASE( short_long)
 BOOST_AUTO_TEST_CASE( short_value)
 {
 
-   common::ArgString2Array           as2a( "-f filename", nullptr);
+   appl::ArgString2Array             as2a( "-f filename", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE( short_value)
 BOOST_AUTO_TEST_CASE( long_value)
 {
 
-   common::ArgString2Array           as2a( "--inputfile filename", nullptr);
+   appl::ArgString2Array             as2a( "--inputfile filename", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -404,7 +404,7 @@ BOOST_AUTO_TEST_CASE( long_value)
 BOOST_AUTO_TEST_CASE( two_long_value)
 {
 
-   common::ArgString2Array           as2a( "--verboselevel 8 --inputfile=filename", nullptr);
+   appl::ArgString2Array             as2a( "--verboselevel 8 --inputfile=filename", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -442,7 +442,7 @@ BOOST_AUTO_TEST_CASE( two_long_value)
 BOOST_AUTO_TEST_CASE( three_long_value)
 {
 
-   common::ArgString2Array           as2a( "--verboselevel 8 --inputfile=filename --another=attempt", nullptr);
+   appl::ArgString2Array             as2a( "--verboselevel 8 --inputfile=filename --another=attempt", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -492,7 +492,7 @@ BOOST_AUTO_TEST_CASE( three_long_value)
 BOOST_AUTO_TEST_CASE( short_long_long_short)
 {
 
-   common::ArgString2Array           as2a( "-i input --outputfile filename --filter=everything -q always", nullptr);
+   appl::ArgString2Array             as2a( "-i input --outputfile filename --filter=everything -q always", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -554,7 +554,7 @@ BOOST_AUTO_TEST_CASE( short_long_long_short)
 BOOST_AUTO_TEST_CASE( single_value)
 {
 
-   common::ArgString2Array           as2a( "my_value", nullptr);
+   appl::ArgString2Array             as2a( "my_value", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -574,7 +574,7 @@ BOOST_AUTO_TEST_CASE( single_value)
 BOOST_AUTO_TEST_CASE( short_value_value)
 {
 
-   common::ArgString2Array           as2a( "-f value my_value", nullptr);
+   appl::ArgString2Array             as2a( "-f value my_value", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -607,7 +607,7 @@ BOOST_AUTO_TEST_CASE( short_value_value)
 BOOST_AUTO_TEST_CASE( long_eq_value_value)
 {
 
-   common::ArgString2Array           as2a( "--longarg=value my_value", nullptr);
+   appl::ArgString2Array             as2a( "--longarg=value my_value", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -639,7 +639,7 @@ BOOST_AUTO_TEST_CASE( long_eq_value_value)
 BOOST_AUTO_TEST_CASE( multiple_pos_values)
 {
 
-   common::ArgString2Array           as2a( "my_value other_value", nullptr);
+   appl::ArgString2Array             as2a( "my_value other_value", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -665,7 +665,7 @@ BOOST_AUTO_TEST_CASE( multiple_pos_values)
 BOOST_AUTO_TEST_CASE( multiple_pos_values_numbers)
 {
 
-   common::ArgString2Array           as2a( "42 4711 90125", nullptr);
+   appl::ArgString2Array             as2a( "42 4711 90125", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -696,7 +696,7 @@ BOOST_AUTO_TEST_CASE( multiple_pos_values_numbers)
 BOOST_AUTO_TEST_CASE( short_dashed_value)
 {
 
-   common::ArgString2Array           as2a( "-f -- -minusfile", nullptr);
+   appl::ArgString2Array             as2a( "-f -- -minusfile", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -722,7 +722,7 @@ BOOST_AUTO_TEST_CASE( short_dashed_value)
 BOOST_AUTO_TEST_CASE( long_dashed_value)
 {
 
-   common::ArgString2Array           as2a( "--filename -- -minusfile", nullptr);
+   appl::ArgString2Array             as2a( "--filename -- -minusfile", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -749,7 +749,7 @@ BOOST_AUTO_TEST_CASE( long_dashed_value)
 BOOST_AUTO_TEST_CASE( long_equal_dashed_value)
 {
 
-   common::ArgString2Array           as2a( "--filename=-minusfile", nullptr);
+   appl::ArgString2Array             as2a( "--filename=-minusfile", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -775,7 +775,7 @@ BOOST_AUTO_TEST_CASE( long_equal_dashed_value)
 BOOST_AUTO_TEST_CASE( control)
 {
 
-   common::ArgString2Array           as2a( "--filter plus ( ! --filter minus )", nullptr);
+   appl::ArgString2Array             as2a( "--filter plus ( ! --filter minus )", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 
@@ -832,7 +832,7 @@ BOOST_AUTO_TEST_CASE( control)
 BOOST_AUTO_TEST_CASE( multiple_iterators)
 {
 
-   common::ArgString2Array           as2a( "-a --long1 -b value --long2=value -c -def value --extra value value", nullptr);
+   appl::ArgString2Array             as2a( "-a --long1 -b value --long2=value -c -def value --extra value value", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    int                               numArgs = 0;
 
@@ -867,7 +867,7 @@ BOOST_AUTO_TEST_CASE( multiple_iterators)
 BOOST_AUTO_TEST_CASE( value_after_arg)
 {
 
-   common::ArgString2Array           as2a( "-ffilename -f filename -f --nofile -affilename", nullptr);
+   appl::ArgString2Array             as2a( "-ffilename -f filename -f --nofile -affilename", nullptr);
    prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
    auto                              it = alp.cbegin();
 

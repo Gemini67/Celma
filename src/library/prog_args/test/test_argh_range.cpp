@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,7 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
 
 
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer")
                                             ->setIsMandatory());
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
                            invalid_argument);
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
 
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( myVec.empty());
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
 
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
 
-      common::ArgString2Array  as2a( "-v 10,20,40", nullptr);
+      appl::ArgString2Array  as2a( "-v 10,20,40", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !myVec.empty());
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
 
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
 
-      common::ArgString2Array  as2a( "-v 3-9", nullptr);
+      appl::ArgString2Array  as2a( "-v 3-9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !myVec.empty());
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
 
       ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( myVec.empty());
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
 
       ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
 
-      common::ArgString2Array  as2a( "10,20,40", nullptr);
+      appl::ArgString2Array  as2a( "10,20,40", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !myVec.empty());
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
 
       ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
 
-      common::ArgString2Array  as2a( "3-9", nullptr);
+      appl::ArgString2Array  as2a( "3-9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !myVec.empty());
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
 
       ah.addArgument( "v", DEST_BITSET( myBitset, 1024), "Integer");
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( myBitset.none());
@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
 
       ah.addArgument( "v", DEST_BITSET( myBitset, 1024), "Integer");
 
-      common::ArgString2Array  as2a( "-v 10,20,40", nullptr);
+      appl::ArgString2Array  as2a( "-v 10,20,40", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !myBitset.none());
@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
 
       ah.addArgument( "v", DEST_BITSET( myBitset, 1024), "Integer");
 
-      common::ArgString2Array  as2a( "-v 3-9", nullptr);
+      appl::ArgString2Array  as2a( "-v 3-9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !myBitset.none());
@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      common::ArgString2Array  as2a( "", nullptr);
+      appl::ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( myVec.empty());
@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      common::ArgString2Array  as2a( "-v 10,20", nullptr);
+      appl::ArgString2Array  as2a( "-v 10,20", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !myVec.empty());
@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      common::ArgString2Array  as2a( "-v all", nullptr);
+      appl::ArgString2Array  as2a( "-v all", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !myVec.empty());

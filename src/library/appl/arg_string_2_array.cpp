@@ -12,11 +12,11 @@
 
 
 /// @file
-/// See documentation of class celma::common::ArgString2Array.
+/// See documentation of class celma::appl::ArgString2Array.
 
 
 // module header file include
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
 // UNIX/C lib includes
@@ -32,7 +32,7 @@
 using namespace std;
 
 
-namespace celma { namespace common {
+namespace celma { namespace appl {
 
 
 namespace {
@@ -217,9 +217,9 @@ void copyArguments( int& argc, char* argv[], const StringVec& arguments)
 } // namespace
 
 
-} // namespace common
+} // namespace appl
 } // namespace celma
 
 
-// =========================  END OF arg_string_2_array.cpp  =========================
+// ======================  END OF arg_string_2_array.cpp  ======================
 

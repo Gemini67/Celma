@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,7 +32,7 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args/groups.hpp"
 
 
@@ -264,7 +264,7 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE( prog_args::Groups::instance().argumentExists( 'f'));
       BOOST_REQUIRE( prog_args::Groups::instance().argumentExists( 's'));
 
-      common::ArgString2Array  as2a( "-f", nullptr);
+      appl::ArgString2Array  as2a( "-f", nullptr);
 
       firstFlag  = false;
       secondFlag = false;
@@ -297,7 +297,7 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE( prog_args::Groups::instance().argumentExists( "first"));
       BOOST_REQUIRE( prog_args::Groups::instance().argumentExists( "second"));
 
-      common::ArgString2Array  as2a( "--second", nullptr);
+      appl::ArgString2Array  as2a( "--second", nullptr);
 
       firstFlag  = false;
       secondFlag = false;
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-      common::ArgString2Array  as2a( "-f -s", nullptr);
+      appl::ArgString2Array  as2a( "-f -s", nullptr);
 
       firstFlag  = false;
       secondFlag = false;
@@ -349,7 +349,7 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-      common::ArgString2Array  as2a( "-sf", nullptr);
+      appl::ArgString2Array  as2a( "-sf", nullptr);
 
       firstFlag  = false;
       secondFlag = false;
@@ -375,7 +375,7 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-      common::ArgString2Array  as2a( "-a", nullptr);
+      appl::ArgString2Array  as2a( "-a", nullptr);
 
       BOOST_REQUIRE_THROW( prog_args::Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv),
                            invalid_argument);
@@ -398,7 +398,7 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-      common::ArgString2Array  as2a( "--long_argument", nullptr);
+      appl::ArgString2Array  as2a( "--long_argument", nullptr);
 
       BOOST_REQUIRE_THROW( prog_args::Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv),
                            invalid_argument);
@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-      common::ArgString2Array  as2a( "-f", nullptr);
+      appl::ArgString2Array  as2a( "-f", nullptr);
 
       firstFlag = false;
       secondArg = -1;
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-      common::ArgString2Array  as2a( "-s 5", nullptr);
+      appl::ArgString2Array  as2a( "-s 5", nullptr);
 
       firstFlag = false;
       secondArg = -1;
@@ -481,7 +481,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-      common::ArgString2Array  as2a( "-f -s 17", nullptr);
+      appl::ArgString2Array  as2a( "-f -s 17", nullptr);
 
       firstFlag = false;
       secondArg = -1;
@@ -507,7 +507,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
       BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-      common::ArgString2Array  as2a( "-fs 55", nullptr);
+      appl::ArgString2Array  as2a( "-fs 55", nullptr);
 
       firstFlag = false;
       secondArg = -1;
@@ -595,7 +595,7 @@ BOOST_AUTO_TEST_CASE( control_characters)
    BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "first",  firstAH));
    BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().addArgHandler( "second", secondAH));
 
-   common::ArgString2Array  as2a( "-f ( ! -s )", nullptr);
+   appl::ArgString2Array  as2a( "-f ( ! -s )", nullptr);
 
    BOOST_REQUIRE_NO_THROW( prog_args::Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( firstFlag);
@@ -640,4 +640,4 @@ BOOST_AUTO_TEST_CASE( add_arg_handler_nullptr)
 
 
 
-// =========================  END OF test_argument_groups.cpp  =========================
+// =====================  END OF test_argument_groups.cpp  =====================

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,7 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/prog_args.hpp"
 
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
    BOOST_REQUIRE_NO_THROW( ah.addCustomArgument< TypedArgBitset>( "b,bitset", DEST_VAR( kilobits), "bitset")
                                                                 ->setIsMandatory());
 
-   common::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
+   appl::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE_EQUAL( kilobits.count(), 6);

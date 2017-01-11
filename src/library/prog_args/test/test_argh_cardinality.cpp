@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,7 +32,7 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
 
 
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE( boolean_used_twice)
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
 
-   common::ArgString2Array  as2a( "-f -f", nullptr);
+   appl::ArgString2Array  as2a( "-f -f", nullptr);
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
 
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( int_set_twice)
 
    ah.addArgument( "v", DEST_VAR( value), "integer value");
 
-   common::ArgString2Array  as2a( "-v 1 -v 2", nullptr);
+   appl::ArgString2Array  as2a( "-v 1 -v 2", nullptr);
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
 
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( prog_args::cardinality_max( 2));
 
-      common::ArgString2Array  as2a( "-v 1", nullptr);
+      appl::ArgString2Array  as2a( "-v 1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    } // end scope
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( prog_args::cardinality_max( 2));
 
-      common::ArgString2Array  as2a( "-v 1 -v 2", nullptr);
+      appl::ArgString2Array  as2a( "-v 1 -v 2", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    } // end scope
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( prog_args::cardinality_max( 2));
 
-      common::ArgString2Array  as2a( "-v 1 -v 2 -v 3", nullptr);
+      appl::ArgString2Array  as2a( "-v 1 -v 2 -v 3", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
    } // end scope
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE( vector_multiple)
 
    ah.addArgument( "v", DEST_VAR( values), "integer values");
 
-   common::ArgString2Array  as2a( "-v 1 -v 2,3,4 -v 5", nullptr);
+   appl::ArgString2Array  as2a( "-v 1 -v 2,3,4 -v 5", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
 
@@ -171,11 +171,11 @@ BOOST_AUTO_TEST_CASE( vector_max_3)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      prog_args::Handler       ah;
+      prog_args::Handler     ah;
       /// Destination variable.
-      vector< int>             values;
+      vector< int>           values;
       /// Argument string split into argc, argv.
-      common::ArgString2Array  as2a;
+      appl::ArgString2Array  as2a;
 
    }; // TestData
 
@@ -231,11 +231,11 @@ BOOST_AUTO_TEST_CASE( vector_exact_3)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      prog_args::Handler       ah;
+      prog_args::Handler     ah;
       /// Destination variable.
-      vector< int>             values;
+      vector< int>           values;
       /// Argument string split into argc, argv.
-      common::ArgString2Array  as2a;
+      appl::ArgString2Array  as2a;
 
    }; // TestData
 
@@ -284,11 +284,11 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      prog_args::Handler       ah;
+      prog_args::Handler     ah;
       /// Destination variable.
-      vector< int>             values;
+      vector< int>           values;
       /// Argument string split into argc, argv.
-      common::ArgString2Array  as2a;
+      appl::ArgString2Array  as2a;
 
    }; // TestData
 
@@ -328,4 +328,4 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
 
 
 
-// =========================  END OF test_argh_cardinality.cpp  =========================
+// ====================  END OF test_argh_cardinality.cpp  ====================
