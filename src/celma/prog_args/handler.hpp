@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,7 +37,6 @@
 #include "celma/prog_args/detail/typed_arg_pair.hpp"
 #include "celma/prog_args/detail/typed_arg_range.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
-//#include "celma/prog_args/detail/typed_arg_tuple.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -264,6 +263,7 @@ public:
       afterArgs     //!< Position after the list of arguments.
    }; // UsagePos
 
+   /// Make the type 'ValueMode' available through this class too.
    typedef detail::TypedArgBase::ValueMode  ValueMode;
 
    /// Set of all help arguments.

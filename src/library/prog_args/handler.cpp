@@ -775,7 +775,7 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 std::ostream& operator <<( std::ostream& os, const Handler& ah)
 {
    return os << ah.mDescription;
-} // end operator <<
+} // operator <<
 
 
 
