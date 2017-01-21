@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -24,6 +24,8 @@ celma_add_boost_testprogram( test_tokenizer_base )
 celma_add_boost_testprogram( test_transform_call )
 celma_add_boost_testprogram( test_type_name )
 celma_add_boost_testprogram( test_value_result )
+
+celma_add_boost_mt_testprogram( test_managed_thread )
 
 celma_add_celma_boost_testprogram( test_arg_string_2_array )
 celma_add_celma_boost_testprogram( test_exception )
