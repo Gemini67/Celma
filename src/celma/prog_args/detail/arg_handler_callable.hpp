@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,7 +19,8 @@
 #define CELMA_PROG_ARGS_DETAIL_ARG_HANDLER_CALLABLE_HPP
 
 
-#include <boost/function.hpp>
+#include <functional>
+#include <string>
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -27,12 +28,12 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Type of the callables (functions, methods) that can be defined as argument
 /// handlers for arguments without values.
-typedef boost::function< void( void)>  ArgHandlerCallable;
+typedef std::function< void( void)>  ArgHandlerCallable;
 
 
 /// Type of the callables (functions, methods) that can be defined as argument
 /// handlers for arguments with values.
-typedef boost::function< void( const std::string&)>  ArgHandlerCallableValue;
+typedef std::function< void( const std::string&)>  ArgHandlerCallableValue;
 
 
 } // namespace detail
@@ -43,5 +44,5 @@ typedef boost::function< void( const std::string&)>  ArgHandlerCallableValue;
 #endif   // CELMA_PROG_ARGS_DETAIL_ARG_HANDLER_CALLABLE_HPP
 
 
-// =========================  END OF arg_handler_callable.hpp  =========================
+// =====================  END OF arg_handler_callable.hpp  =====================
 
