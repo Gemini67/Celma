@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -113,15 +113,15 @@ void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
 
    for (auto ai = alp.begin(); ai != alp.end(); ++ai)
    {
-      auto  result = Handler::arUnknown;
+      auto  result = Handler::ArgResult::unknown;
       for (auto & stored_group : mArgGroups)
       {
          result = stored_group.mpArgHandler->evalSingleArgument( ai, alp.end());
-         if (result != Handler::arUnknown)
+         if (result != Handler::ArgResult::unknown)
             break;   // for
       } // end for
 
-      if (result == Handler::arUnknown)
+      if (result == Handler::ArgResult::unknown)
       {
          if (ai->mElementType == detail::ArgListElement::etValue)
             throw invalid_argument( "Unknown argument '" + ai->mValue + "'");

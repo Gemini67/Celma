@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -80,6 +80,11 @@ public:
    /// @since  0.2, 07.04.2016
    template< typename U> CelmaException( const CelmaException< U>& other);
 
+   /// Copy-constructor.
+   /// @param[in]  other  The other exception to copy the data from.
+   /// @since  0.11, 16.01.2017
+   CelmaException( const CelmaException& other);
+
    /// Empty, virtual destructor.
    /// @since  0.2, 07.04.2016
    virtual ~CelmaException() noexcept;
@@ -93,7 +98,7 @@ public:
 private:
    /// If called with a parent, contains a copy-created object with the data of
    /// the parent exception.
-   std::auto_ptr< ExceptionBase>  mpParent;
+   std::unique_ptr< ExceptionBase>  mpParent;
 
 }; // CelmaException< BE>
 
@@ -109,7 +114,7 @@ template< typename BE>
       ExceptionBase( filename, funcName, line_nbr, etext),
       mpParent()
 {
-} // end CelmaException< BE>::CelmaException
+} // CelmaException< BE>::CelmaException
 
 
 template< typename BE>
@@ -128,7 +133,7 @@ template< typename BE>
 
    mExceptionText = etext;
    buildMsg();
-} // end CelmaException< BE>::CelmaException
+} // CelmaException< BE>::CelmaException
 
 
 template< typename BE>
@@ -140,7 +145,7 @@ template< typename BE>
 {
    mExceptionText.assign( "\n   previous exception: ").append( parent.message());
    buildMsg();
-} // end CelmaException< BE>::CelmaException
+} // CelmaException< BE>::CelmaException
 
 
 template< typename BE>
@@ -151,18 +156,29 @@ template< typename BE>
 {
    if (other.mpParent.get() != nullptr)
       mpParent.reset( new ExceptionBase( *other.mpParent.get()));
-} // end CelmaException< BE>::CelmaException
+} // CelmaException< BE>::CelmaException
+
+
+template< typename BE>
+   CelmaException< BE>::CelmaException( const CelmaException& other):
+      BE( ""),
+      ExceptionBase( other),
+      mpParent()
+{
+   if (other.mpParent.get() != nullptr)
+      mpParent.reset( new ExceptionBase( *other.mpParent.get()));
+} // CelmaException< BE>::CelmaException
 
 
 template< typename BE> CelmaException< BE>::~CelmaException() noexcept
 {
-} // end CelmaException< BE>::~CelmaException
+} // CelmaException< BE>::~CelmaException
 
 
 template< typename BE> const char* CelmaException< BE>::what() const noexcept
 {
    return mExceptionMsg.c_str();
-} // end CelmaException< BE>::what
+} // CelmaException< BE>::what
 
 
 /// Convenience: Typedef for the 'Celma logic error'.
