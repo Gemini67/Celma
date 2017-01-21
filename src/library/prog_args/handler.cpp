@@ -107,7 +107,7 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
       args = "help";
 
    if (!args.empty())
-      addArgument( args, detail::ArgHandlerCallable( boost::bind( &Handler::usage, this, txt1, txt2)),
+      addArgument( args, detail::ArgHandlerCallable( std::bind( &Handler::usage, this, txt1, txt2)),
                    "Handler::usage",
                    "Prints the program usage");
 
@@ -157,7 +157,7 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 
    return addArgument( arg_spec,
                        detail::ArgHandlerCallable(
-                          boost::bind( &Handler::usage, this, txt1, txt2)
+                          std::bind( &Handler::usage, this, txt1, txt2)
                        ),
                        "Handler::usage",
                        desc);
@@ -176,8 +176,8 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 {
 
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
-                                                                       boost::bind( &Handler::readArgumentFile,
-                                                                                    this, _1, true),
+                                                                       std::bind( &Handler::readArgumentFile,
+                                                                                  this, std::placeholders::_1, true),
                                                                        "Handler::readArgumentFile");
 
 
@@ -415,15 +415,15 @@ void Handler::crossCheckArguments( const string ownName,
 
    // finally, check that there are no control character handlers set in both
    // argument handlers
-   if (!mpOpeningBracketHdlr.empty() && !otherAH.mpOpeningBracketHdlr.empty())
+   if (mpOpeningBracketHdlr && otherAH.mpOpeningBracketHdlr)
       throw runtime_error( "Control argument handler for '(' from group '" +
                            otherName + "' is already used by '" + ownName +
                            "'");
-   if (!mpClosingBracketHdlr.empty() && !otherAH.mpClosingBracketHdlr.empty())
+   if (mpClosingBracketHdlr && otherAH.mpClosingBracketHdlr)
       throw runtime_error( "Control argument handler for ')' from group '" +
                            otherName + "' is already used by '" + ownName +
                            "'");
-   if (!mpExclamationMarkHdlr.empty() && !otherAH.mpExclamationMarkHdlr.empty())
+   if (mpExclamationMarkHdlr && otherAH.mpExclamationMarkHdlr)
       throw runtime_error( "Control argument handler for '!' from group '" +
                            otherName + "' is already used by '" + ownName +
                            "'");
@@ -454,42 +454,43 @@ template< typename T>
                                            const detail::ArgListParser::const_iterator& end)
 {
 
-   detail::TypedArgBase*  hdl = mSubGroupArgs.findArg( arg);
+   auto  p_arg_hdl = mSubGroupArgs.findArg( arg);
 
 
-   if (hdl != nullptr)
+   if (p_arg_hdl != nullptr)
    {
-      handleIdentifiedArg( hdl, argString);
+      handleIdentifiedArg( p_arg_hdl, argString);
 
-      Handler*  subArgHandler = static_cast< detail::TypedArgSubGroup*>( hdl)->obj();
+      auto  subArgHandler = static_cast< detail::TypedArgSubGroup*>( p_arg_hdl)->obj();
       ++ai;
 
       // we may only advance the main iterator if the argument is (still)
       // handled by the sub-argument
       detail::ArgListParser::const_iterator  subAI( ai);
-      while ((subAI != end) && subArgHandler->evalSingleArgument( subAI, end))
+      while ((subAI != end) &&
+             (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
       {
          ai = subAI;
          ++subAI;
       } // end while
 
       mpLastArg = nullptr;
-      return arConsumed;
+      return ArgResult::consumed;
    } // end if
 
-   mpLastArg = hdl = mArguments.findArg( arg);
-   if (hdl == nullptr)
-      return arUnknown;
+   mpLastArg = p_arg_hdl = mArguments.findArg( arg);
+   if (p_arg_hdl == nullptr)
+      return ArgResult::unknown;
 
    // an argument that we know
-   if (hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
+   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
       throw runtime_error( "Value mode not set for argument '" + argString + "'");
 
-   if (hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
+   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
    {
       // no value needed
-      handleIdentifiedArg( hdl, argString);
-      return arConsumed;
+      handleIdentifiedArg( p_arg_hdl, argString);
+      return ArgResult::consumed;
    } // end if
 
    // check if the next element in the list is a value
@@ -497,27 +498,27 @@ template< typename T>
    ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((hdl->valueMode() == detail::TypedArgBase::ValueMode::required) &&
+   if ((p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::required) &&
        ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)))
       throw invalid_argument( "Argument '" + argString + "' requires value(s)");
 
    if (((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)) &&
-       (hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown))
+       (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown))
    {
-      handleIdentifiedArg( hdl, argString);
+      handleIdentifiedArg( p_arg_hdl, argString);
    } else if ((ait2 != end) && (ait2->mElementType == detail::ArgListElement::etValue))
    {
       // first process the argument, *then* assign ait2 to ai
       // reason: arg and argString are references of ai->, so if we change ai
       // the references are still on the old value(s)
-      handleIdentifiedArg( hdl, argString, ait2->mValue);
+      handleIdentifiedArg( p_arg_hdl, argString, ait2->mValue);
       ai = ait2;
    } else
    {
-      handleIdentifiedArg( hdl, argString);
+      handleIdentifiedArg( p_arg_hdl, argString);
    } // end if
 
-   return arConsumed;
+   return ArgResult::consumed;
 } // Handler::processArg
 
 
@@ -526,8 +527,8 @@ template< typename T>
 /// Since this function is called from multiple sources, it must not throw an
 /// exception when e.g. an unknown argument is found. Exceptions may only be
 /// thrown if e.g. a known argument misses its value. Otherwise, in most
-/// cases \a arUnknown should be returned and the error handling left to the
-/// calling function.
+/// cases \a ArgResult::unknown should be returned and the error handling
+/// left to the calling function.
 /// @param[in]  ai   Iterator that points to the argument to handle.<br>
 ///                  If the argument requires a value, the iterator is
 ///                  incremented, so it will point to the next argument when
@@ -547,11 +548,11 @@ Handler::ArgResult
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
          mpLastArg->calledAssign( mReadingArgumentFile, ai->mValue);
-         return arConsumed;
+         return ArgResult::consumed;
       } else if (detail::TypedArgBase* hdl = mArguments.findArg( '-'))
       {
          handleIdentifiedArg( hdl, string( "-"), ai->mValue);
-         return arConsumed;
+         return ArgResult::consumed;
       } // end if
       break;
 
@@ -564,29 +565,29 @@ Handler::ArgResult
    case detail::ArgListElement::etControl:
       if (ai->mArgChar == '(')
       {
-         if (mpOpeningBracketHdlr.empty())
-            return arUnknown;
+         if (!mpOpeningBracketHdlr)
+            return ArgResult::unknown;
          mpOpeningBracketHdlr();
       } else if (ai->mArgChar == ')')
       {
-         if (mpClosingBracketHdlr.empty())
-            return arUnknown;
+         if (!mpClosingBracketHdlr)
+            return ArgResult::unknown;
          mpClosingBracketHdlr();
       } else
       {
-         if (mpExclamationMarkHdlr.empty())
-            return arUnknown;
+         if (!mpExclamationMarkHdlr)
+            return ArgResult::unknown;
          mpExclamationMarkHdlr();
       } // end if
 
-      return arConsumed;
+      return ArgResult::consumed;
 
    default:
       throw invalid_argument( "Got invalid element in argument list");
 
    } // end switch
 
-   return arUnknown;
+   return ArgResult::unknown;
 } // Handler::evalSingleArgument
 
 
@@ -749,8 +750,8 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 
    for (auto ai = alp.begin(); ai != alp.end(); ++ai)
    {
-      auto  result = evalSingleArgument( ai, alp.end());
-      if (result == arUnknown)
+      auto const  result = evalSingleArgument( ai, alp.end());
+      if (result == ArgResult::unknown)
       {
          if (ai->mElementType == detail::ArgListElement::etValue)
             throw invalid_argument( "Unknown argument '" + ai->mValue + "'");
@@ -774,7 +775,7 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 std::ostream& operator <<( std::ostream& os, const Handler& ah)
 {
    return os << ah.mDescription;
-} // end operator <<
+} // operator <<
 
 
 
