@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -23,6 +23,14 @@ endmacro( celma_add_testprogram )
 macro( celma_add_boost_testprogram  filename )
    add_executable(        ${filename}  ${filename}.cpp )
    target_link_libraries( ${filename}  ${Boost_Test_Link_Libs} )
+   add_test(              ${filename}  ${CMAKE_CURRENT_BINARY_DIR}/${filename} )
+endmacro( celma_add_boost_testprogram )
+
+
+# define a test program that uses Boost.Test
+macro( celma_add_boost_mt_testprogram  filename )
+   add_executable(        ${filename}  ${filename}.cpp )
+   target_link_libraries( ${filename}  ${Boost_Test_Link_Libs} -lpthread )
    add_test(              ${filename}  ${CMAKE_CURRENT_BINARY_DIR}/${filename} )
 endmacro( celma_add_boost_testprogram )
 
