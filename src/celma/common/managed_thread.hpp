@@ -31,7 +31,7 @@ namespace celma { namespace common {
 /// active or if it finished its work.<br>
 /// When this object is destroyed, it calls \c join(), so the calling
 /// application does not need to do that.
-/// @since  0.13, 19.01.2017
+/// @since  012, 19.01.2017
 class ManagedThread: public std::thread
 {
 public:
@@ -41,18 +41,18 @@ public:
    ///                    function.
    /// @param[in]  f     The function to execute in the thread.
    /// @param[in]  args  The parameters for the thread function.
-   /// @since  0.13, 19.01.2017
+   /// @since  012, 19.01.2017
    template< class Function, class... Args>
       explicit ManagedThread( Function&& f, Args&&... args);
 
    /// Destructor, calls std::thread::join(), i.e. would block if the thread is
    /// still running.
-   /// @since  0.13, 19.01.2017
+   /// @since  012, 19.01.2017
    ~ManagedThread();
 
    /// Returns if the thread function is still active.
    /// @return  \c true if the thread function is still active.
-   /// @since  0.13, 19.01.2017
+   /// @since  012, 19.01.2017
    bool isActive() const noexcept;
 
 private:

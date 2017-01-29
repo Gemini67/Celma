@@ -39,7 +39,7 @@ void func( int param)
 
 
 /// Test with one simple thread.
-/// @since  0.13, 19.01.2017
+/// @since  012, 19.01.2017
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE( test_one)
 
 
 /// Test with two threads.
-/// @since  0.13, 21.01.2017
+/// @since  012, 21.01.2017
 BOOST_AUTO_TEST_CASE( test_two)
 {
 
