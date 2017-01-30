@@ -26,6 +26,8 @@ celma_add_boost_testprogram( test_transform_call )
 celma_add_boost_testprogram( test_type_name )
 celma_add_boost_testprogram( test_value_result )
 
+celma_add_boost_mt_testprogram( test_managed_thread )
+
 celma_add_celma_boost_testprogram( test_exception )
 celma_add_celma_boost_testprogram( test_extract_funcname )
 celma_add_celma_boost_testprogram( test_range_dest )
@@ -36,3 +38,4 @@ celma_add_celma_boost_testprogram( test_singleton )
 celma_add_celma_boost_testprogram( test_tuple_at_index )
 celma_add_celma_boost_testprogram( test_tuple_length )
 celma_add_celma_boost_testprogram( test_version_info )
+
