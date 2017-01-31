@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE( test_dashes_length)
       BOOST_REQUIRE_EQUAL( at.formatString(), std::string( "%20s  %s"));
    } // end scope
 
-} // end test_dashes_length
+} // test_dashes_length
 
 
 
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE( test_quoting)
       BOOST_REQUIRE_EQUAL( at.formatString(), std::string( "%13.3f"));
    } // end scope
 
-} // end test_quoting
+} // test_quoting
 
 
 
@@ -371,6 +371,32 @@ BOOST_AUTO_TEST_CASE( test_generate_spec)
 
 } // test_generate_spec
 
+
+
+/// Test that an absolute format specification is used correctly.
+/// @since  0.12.1, 31.01.2017
+BOOST_AUTO_TEST_CASE( test_absolute_format)
+{
+
+  {
+    const AsciiTable  at("Hex[8,=0x%08x]");
+
+    BOOST_REQUIRE_EQUAL(at.titleLine(), std::string("     Hex"));
+    BOOST_REQUIRE_EQUAL(at.dashesLine(), std::string("--------"));
+    BOOST_REQUIRE_EQUAL(at.formatString(), std::string("0x%08x"));
+  } // end scope
+
+  {
+    AsciiTable  at("Value[10,d]");
+
+    at.append(" -Hex[8,=0x%08x]");
+
+    BOOST_REQUIRE_EQUAL(at.titleLine(), std::string("     Value Hex     "));
+    BOOST_REQUIRE_EQUAL(at.dashesLine(), std::string("---------- --------"));
+    BOOST_REQUIRE_EQUAL(at.formatString(), std::string("%10d 0x%08x"));
+  } // end scope
+
+} // test_absolute_format
 
 
 // =======================  END OF test_ascii_table.cpp  =======================
