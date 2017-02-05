@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -72,14 +72,14 @@ void ArgumentContainer::checkMandatoryCardinality() const
    for (CharArgCont::const_iterator caci = mCharArgs.begin(); caci != mCharArgs.end(); ++caci)
    {
       if (caci->second->isMandatory() && !caci->second->hasValue())
-         throw invalid_argument( "Mandatory argument '" + string( 1, caci->first) + "' was not set");
+         throw runtime_error( "Mandatory argument '" + string( 1, caci->first) + "' was not set");
       caci->second->checkCardinality();
    } // end for
 
    for (LongArgCont::const_iterator laci = mLongArgs.begin(); laci != mLongArgs.end(); ++laci)
    {
       if (laci->second->isMandatory() && !laci->second->hasValue())
-         throw invalid_argument( "Mandatory argument '" + laci->first + "' was not set");
+         throw runtime_error( "Mandatory argument '" + laci->first + "' was not set");
       laci->second->checkCardinality();
    } // end for
 
@@ -102,18 +102,18 @@ void ArgumentContainer::checkArgMix( const string& ownName,
         caci != otherAH.mCharArgs.end(); ++caci)
    {
       if (mCharArgs.find( caci->first) != mCharArgs.end())
-         throw runtime_error( "Argument '-" + string( 1, caci->first)
-                              + " from group '" + otherName
-                              + "' is already used by '" + ownName + "'");
+         throw invalid_argument( "Argument '-" + string( 1, caci->first)
+                                 + " from group '" + otherName
+                                 + "' is already used by '" + ownName + "'");
    } // end for
 
    for (LongArgCont::const_iterator laci = otherAH.mLongArgs.begin();
         laci != otherAH.mLongArgs.end(); ++laci)
    {
       if (mLongArgs.find( laci->first) != mLongArgs.end())
-         throw runtime_error( "Argument '--" + laci->first + " from group '"
-                              + otherName + "' is already used by '"
-                              + ownName + "'");
+         throw invalid_argument( "Argument '--" + laci->first + " from group '"
+                                 + otherName + "' is already used by '"
+                                 + ownName + "'");
    } // end for
 
 } // end ArgumentContainer::checkArgMix
@@ -161,8 +161,8 @@ TypedArgBase* ArgumentContainer::findArg( const string& longArg) const
             if (laci == mLongArgs.end())
                laci = laci2;
             else
-               throw invalid_argument( "Long argument abbreviation '" + longArg +
-                                       "' matches more than one argument");
+               throw runtime_error( "Long argument abbreviation '" + longArg +
+                                    "' matches more than one argument");
          } else if (compRes > 0)
          {
             break;   // while
@@ -304,5 +304,5 @@ std::ostream& operator <<( std::ostream& os, const ArgumentContainer& ac)
 } // namespace celma
 
 
-// =========================  END OF argument_container.cpp  =========================
+// ======================  END OF argument_container.cpp  ======================
 

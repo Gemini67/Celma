@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -13,7 +13,7 @@ project( Celma )
 
 set( MAJORVERSION    0 )
 set( MINORVERSION    0 )
-set( RELEASE_VERSION 11 )
+set( RELEASE_VERSION 13 )
 set( PATCHLEVEL      0 )
 
 enable_testing()

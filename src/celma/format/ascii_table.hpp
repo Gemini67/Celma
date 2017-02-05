@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,7 +29,7 @@ namespace celma { namespace format {
 /// the format  string used to print ASCII tables.<br>
 /// The string passed to the constructor defines the table layout. The format of
 /// the contents of this string:<br>
-/// <pre>{['-']<title>'['['d']['-']<len>[','<formatchar>']'<sep>}</pre><br>
+/// <pre>{['-']<title>'['(['d']['-']<len>[','<formatchar>')|(=<format>)]'<sep>}</pre><br>
 /// which means:
 /// - Multiple repetitions of the following definition block.
 /// - If the block starts with a '-', the title is left aligned, otherwise it is
@@ -49,6 +49,9 @@ namespace celma { namespace format {
 ///   the last type character) can be specified here.
 /// - The second value in the format block is the format character to use, if not
 ///   set, 's' for string is used.
+/// - Alternatively the full format string can be specified explicitly.<br>
+///   After the comma, =\<format\> can be any string, including of course the
+///   format specifier, and will be used exactly like this in the format string.
 /// - Finally, all characters after the closing ']' and the beginning of the
 ///   next title (a dash or an alphanumeric character) is used as separator.<br>
 ///   It is possible to specify a newline character here, after the last title,
@@ -61,6 +64,7 @@ namespace celma { namespace format {
 /// in the parameter list of the constructor.
 /// @todo  Enhance it so that format strings like '... (%d) ...' or
 ///        '... [%d] ...' are possible.
+/// @since  0.12.1, 31.01.2017  (added feature =format)
 /// @since  0.7, 07.11.2016
 class AsciiTable
 {
@@ -103,8 +107,8 @@ public:
 
    /// Allows to append more columns to the table.<br>
    /// If a newline character should be appended in order to get the created
-   /// lines with newline character at the end, call this funtion with just the
-   /// newline character as string contents.
+   /// lines with newline character at the end, call this function with just
+   /// the newline character as string contents.
    /// @param[in]  table_spec  The string that specifies the additional columns,
    ///                         widths, formats etc. as described in the class
    ///                         header.

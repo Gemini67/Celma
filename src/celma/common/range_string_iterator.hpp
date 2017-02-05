@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -49,7 +49,7 @@ public:
    /// @since  0.2, 07.04.2016
    explicit RangeStringIterator( const T& src);
 
-   /// Copy constructor. Needed because of internal \c auto_ptr.
+   /// Copy constructor. Needed because of internal \c unique_ptr.
    /// @param[in]  other  The other object to copy the data from.
    /// @since  0.2, 07.04.2016
    RangeStringIterator( const RangeStringIterator& other);
@@ -98,16 +98,16 @@ private:
    Ranger* createRanger( const RangeExpression& re);
 
    /// The string to parse.
-   const T                 mSource;
+   const T                   mSource;
    /// Start position of the current expression in the string, set to
    /// \c std::string::npos when the complete expression was handled.
-   std::string::size_type  mPos;
+   std::string::size_type    mPos;
    /// The current expression.
-   RangeExpression         mMainExpression;
+   RangeExpression           mMainExpression;
    /// Value generator for the current range.
-   std::auto_ptr< Ranger>  mpRanger;
+   std::unique_ptr< Ranger>  mpRanger;
    /// The current value created by the range (value) generator.
-   TF                      mCurrentValue;
+   TF                        mCurrentValue;
 
 }; // RangeStringIterator< T, TF>
 
@@ -124,7 +124,7 @@ template< typename T, typename TF>
       mpRanger(),
       mCurrentValue()
 {
-} // end RangeStringIterator< T, TF>::RangeStringIterator
+} // RangeStringIterator< T, TF>::RangeStringIterator
 
 
 template< typename T, typename TF>
@@ -140,7 +140,7 @@ template< typename T, typename TF>
       throw std::runtime_error( "no valid expression found in string");
    mpRanger.reset( createRanger( mMainExpression));
    mCurrentValue = static_cast< TF>( *mpRanger);
-} // end RangeStringIterator< T, TF>::RangeStringIterator
+} // RangeStringIterator< T, TF>::RangeStringIterator
 
 
 template< typename T, typename TF>
@@ -153,7 +153,7 @@ template< typename T, typename TF>
 {
    if (other.mpRanger.get() != nullptr)
       mpRanger.reset( new Ranger( *other.mpRanger.get()));
-} // end RangeStringIterator< T, TF>::RangeStringIterator
+} // RangeStringIterator< T, TF>::RangeStringIterator
 
 
 template< typename T, typename TF>
@@ -189,7 +189,7 @@ template< typename T, typename TF>
 
    mCurrentValue = static_cast< TF>( *mpRanger);
    return *this;
-} // end RangeStringIterator< T, TF>::operator ++
+} // RangeStringIterator< T, TF>::operator ++
 
 
 template< typename T, typename TF>
@@ -200,28 +200,28 @@ template< typename T, typename TF>
    operator ++();
 
    return *this;
-} // end RangeStringIterator< T, TF>::operator ++
+} // RangeStringIterator< T, TF>::operator ++
 
 
 template< typename T, typename TF>
    bool RangeStringIterator< T, TF>::operator ==( const RangeStringIterator& other) const
 {
    return mPos == other.mPos;
-} // end RangeStringIterator< T, TF>::operator ==
+} // RangeStringIterator< T, TF>::operator ==
 
 
 template< typename T, typename TF>
    bool RangeStringIterator< T, TF>::operator !=( const RangeStringIterator& other) const
 {
    return mPos != other.mPos;
-} // end RangeStringIterator< T, TF>::operator !=
+} // RangeStringIterator< T, TF>::operator !=
 
 
 template< typename T, typename TF>
    RangeStringIterator< T, TF>::operator TF() const
 {
    return mCurrentValue;
-} // end RangeStringIterator< T, TF>::operator TF
+} // RangeStringIterator< T, TF>::operator TF
 
 
 template< typename T, typename TF>
@@ -260,7 +260,7 @@ template< typename T, typename TF>
    } // end if
 
    return newRanger;
-} // end RangeStringIterator< T, TF>::createRanger
+} // RangeStringIterator< T, TF>::createRanger
 
 
 } // namespace common

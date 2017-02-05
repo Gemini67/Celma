@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,12 +19,10 @@
 #define CELMA_PROG_ARGS_HANDLER_HPP
 
 
+#include <functional>
 #include <ostream>
 #include <string>
 #include <vector>
-#include <boost/noncopyable.hpp>
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
 
 #include "celma/common/check_assign.hpp"
 #include "celma/common/range_dest.hpp"
@@ -39,7 +37,6 @@
 #include "celma/prog_args/detail/typed_arg_pair.hpp"
 #include "celma/prog_args/detail/typed_arg_range.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
-#include "celma/prog_args/detail/typed_arg_tuple.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -218,12 +215,12 @@ class Groups;
 ///        used in a group?
 ///
 /// @since  0.2, 10.04.2016
-class Handler: private boost::noncopyable
+class Handler
 {
 public:
    /// Type of the (storage handler of the) functions to call for control
    /// characters.
-   typedef boost::function< void()>  HandlerFunc;
+   typedef std::function< void()>  HandlerFunc;
 
    /// List of flags to control the behaviour of this class:
    enum HandleFlags
@@ -253,9 +250,12 @@ public:
       hfUsageCont   = hfListArgVar << 1,   //!< Special flag originally for
                                            //!< testing: Don't exit after
                                            //!< printing the usage.
-      hfEndValues   = hfUsageCont << 1     //!< Activates the argument '--endvalues'
+      hfEndValues   = hfUsageCont << 1,    //!< Activates the argument '--endvalues'
                                            //!< that is used to signal the end of
                                            //!< a separate value list.
+      hfInGroup     = hfEndValues << 1     //!< This flag is set by the Groups
+                                           //!< class when it creates a Handler
+                                           //!< object. Don't use otherwise!
    }; // HandleFlags
 
    /// List of possible positions for the additional output 
@@ -266,6 +266,7 @@ public:
       afterArgs     //!< Position after the list of arguments.
    }; // UsagePos
 
+   /// Make the type 'ValueMode' available through this class too.
    typedef detail::TypedArgBase::ValueMode  ValueMode;
 
    /// Set of all help arguments.
@@ -294,7 +295,7 @@ public:
                      IUsageText* txt2 = nullptr);
 
    /// Constructor that allows to specify the output streams to write to.
-   /// @param[in]  os        The stream to write normal out to.
+   /// @param[in]  os        The stream to write normal output to.
    /// @param[in]  error_os  The stream to write error output to.
    /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
    ///                       of possible values.
@@ -397,22 +398,6 @@ public:
    /// @since  0.2, 10.04.2016
    template< typename T, typename C>
       detail::TypedArgBase* addArgument( const common::RangeDest< T, C>& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds a multi-value argument that stores the values in a tuple.
-   /// @tparam  T  The native types of the elements in the tuple.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The tuple variable to store the value(s) in.
-   /// @param[in]  vname     The name of the variable to store the value in.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.11, 19.12.2016
-   template< typename... T>
-      detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                         std::tuple< T...>& dest,
                                          const std::string vname,
                                          const std::string& desc);
 
@@ -604,11 +589,11 @@ protected:
    friend class Groups;
 
    /// Function call result for evalSingleArgument():
-   enum ArgResult
+   enum class ArgResult
    {
-      arUnknown,   //!< Unknown argument for this instance (try with next).
-      arConsumed   //!< Argument handled by this instance, proceed with next
-                   //!< argument.
+      unknown,   //!< Unknown argument for this instance (try with next).
+      consumed   //!< Argument handled by this instance, proceed with next
+                 //!< argument.
    };
 
    // functions needed by the Groups class
@@ -623,14 +608,14 @@ protected:
    /// @since  0.2, 10.04.2016
    void crossCheckArguments( const std::string ownName,
                              const std::string& otherName,
-                             const Handler& otherAH) const;
+                             const Handler& otherAH) const noexcept( false);
 
    /// Handles one argument.<br>
    /// Since this function is called from multiple sources, it must not throw an
    /// exception when e.g. an unknown argument is found. Exceptions may only be
    /// thrown if e.g. a known argument misses its value. Otherwise, in most
-   /// cases \a arUnknown should be returned and the error handling left to the
-   /// calling function.
+   /// cases \a ArgResult::unknown should be returned and the error handling
+   /// left to the calling function.
    /// @param[in]  ai   Iterator that points to the argument to handle.<br>
    ///                  If the argument requires a value, the iterator is
    ///                  incremented, so it will point to the next argument when
@@ -677,6 +662,11 @@ private:
    /// Type of the container to store the global constrainst in.
    typedef std::vector< detail::IConstraint*>  ConstraintCont;
 
+   /// Don't allow copying.
+   Handler( const Handler&) = delete;
+   /// Don't allow assignments.
+   Handler& operator =( const Handler&) = delete;
+
    /// Function to print the usage of a program (when requested through the
    /// arguments). The additional parameters allow to print additional
    /// information.
@@ -707,7 +697,8 @@ private:
    template< typename T>
       ArgResult processArg( const T& arg, const std::string& argString,
                             detail::ArgListParser::const_iterator& ai,
-                            const detail::ArgListParser::const_iterator& end);
+                            const detail::ArgListParser::const_iterator& end)
+                          noexcept( false);
 
    /// Tries to open the file with the program's name and read the arguments
    /// from this file.
@@ -800,7 +791,7 @@ private:
    /// Set when the usage was printed.<br>
    /// Needed together with the flag #mUsageContinues to bypass end-of-arguments
    /// checks so that evalArgument() can return.
-   bool                         mUsagePrinted;
+   bool                         mUsagePrinted = false;
    /// The (top-level) arguments known by this class.
    detail::ArgumentContainer    mArguments;
    /// Argument sub-groups.
@@ -814,7 +805,7 @@ private:
    /// Function called for an exclamation mark '!'.
    HandlerFunc                  mpExclamationMarkHdlr;
    /// Set when this object is used as argument handler for a sub-group.
-   bool                         mIsSubGroupHandler;
+   bool                         mIsSubGroupHandler = false;
    /// The current constraints, dynamically created through the arguments that
    /// were processed so far.
    detail::ConstraintContainer  mConstraints;
@@ -824,11 +815,14 @@ private:
 
    /// Pointer to the last argument handler that was used. Needed for
    /// processing multiple, separate values.
-   detail::TypedArgBase*        mpLastArg;
+   detail::TypedArgBase*        mpLastArg = nullptr;
    /// Reading arguments from a file should not influence the cardinality
    /// checks, i.e. it should be possible to overwrite a value from a file
    /// without triggering a 'too many values' exception.
-   bool                         mReadingArgumentFile;
+   bool                         mReadingArgumentFile = false;
+   /// Flag, set when this argument handler object was created by a Groups
+   /// object.
+   bool                         mUsedByGroup;
 
 }; // Handler
 
@@ -863,12 +857,12 @@ private:
 /// Use this define to pass a function that takes no value as argument handler.
 /// @param[in]  f  The name of the function.
 /// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION( f)  boost::bind( &f), #f
+#define  DEST_FUNCTION( f)  std::bind( &f), #f
 
 /// Use this define to pass a function that accepts a value as argument handler.
 /// @param[in]  f  The name of the function.
 /// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION_VALUE( f)  boost::bind( &f, _1), #f, true
+#define  DEST_FUNCTION_VALUE( f)  std::bind( &f, std::placeholders::_1), #f, true
 
 /// Use this define to pass a method (class member function) that takes no value
 /// as argument handler.
@@ -876,7 +870,7 @@ private:
 /// @param[in]  m  The name of the method.
 /// @param[in]  o  The object to call the method for.
 /// @since  0.2, 10.04.2016
-#define  DEST_METHOD( c, m, o)  boost::bind( & c :: m, &o), #c "::" #m
+#define  DEST_METHOD( c, m, o)  std::bind( & c :: m, &o), #c "::" #m
 
 /// Use this define to pass a method (class member function) that accepts a
 /// value as argument handler.
@@ -884,7 +878,7 @@ private:
 /// @param[in]  m  The name of the method.
 /// @param[in]  o  The object to call the method for.
 /// @since  0.2, 10.04.2016
-#define  DEST_METHOD_VALUE( c, m, o)  boost::bind( & c :: m, &o, _1), #c "::" #m, true
+#define  DEST_METHOD_VALUE( c, m, o)  std::bind( & c :: m, &o, std::placeholders::_1), #c "::" #m, true
 
 
 // inlined methods
@@ -950,18 +944,6 @@ template< typename T, typename C>
 {
    detail::TypedArgBase*  arg_hdl = new detail::TypedArgRange< T, C>( "-", dest, vname);
    return internAddArgument( arg_hdl, "", desc);
-} // Handler::addArgument
-
-
-template< typename... T>
-   detail::TypedArgBase* Handler::addArgument( const std::string& arg_spec,
-                                               std::tuple< T...>& dest,
-                                               const std::string vname,
-                                               const std::string& desc)
-{
-   detail::TypedArgBase*  arg_hdl =
-      new detail::TypedArgTuple< T...>( arg_spec, dest, vname);
-   return internAddArgument( arg_hdl, arg_spec, desc);
 } // Handler::addArgument
 
 

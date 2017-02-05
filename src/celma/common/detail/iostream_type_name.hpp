@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,7 @@
 #define CELMA_IOSTREAM_TYPE_NAME_HPP
 
 
+#include <iosfwd>
 #include "celma/common/detail/provide_simple_type_name.hpp"
 
 
