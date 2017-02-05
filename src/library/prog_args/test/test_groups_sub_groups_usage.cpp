@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,15 +28,15 @@ using std::string;
 int main( int argc, char* argv[])
 {
 
-   Groups::SharedArgHndl  ah1( new Handler( 0));
-   Groups::SharedArgHndl  ah2( new Handler( Handler::AllHelp));
+   auto  ah1 = Groups::instance().getArgHandler( "Program Arguments:");
+   auto  ah2 = Groups::instance().getArgHandler( "Standard Arguments:", Handler::AllHelp);
+
 
    bool  quietFlag;
    bool  debugMode;
    int   manInt1;
    bool  printVersion;
    bool  printModList;
-
 
    ah1->addArgument( "q",             DEST_VAR( quietFlag), "be quiet");
    ah1->addArgument( "debug_mode",    DEST_VAR( debugMode), "set to activate the debug mode");
@@ -45,8 +45,6 @@ int main( int argc, char* argv[])
    ah2->addArgument( "version", DEST_VAR( printVersion), "prints version information");
    ah2->addArgument( "modlist", DEST_VAR( printModList), "prints module list");
 
-   Groups::instance().addArgHandler( "Program Arguments:", ah1);
-   Groups::instance().addArgHandler( "Standard Arguments:", ah2);
 
    string  inputName;
    int     inputMode = 0;

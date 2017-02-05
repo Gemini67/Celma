@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test, header file include
 #include "celma/prog_args/handler.hpp"
 
 
@@ -39,6 +39,7 @@ using celma::prog_args::Handler;
 using std::bad_cast;
 using std::invalid_argument;
 using std::logic_error;
+using std::runtime_error;
 using std::string;
 using std::vector;
 
@@ -56,25 +57,29 @@ BOOST_AUTO_TEST_CASE( std_args_not_used)
    {
       ArgString2Array  as2a( "-v", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    {
       ArgString2Array  as2a( "--verbose", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    {
       ArgString2Array  as2a( "-h", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    {
       ArgString2Array  as2a( "--help", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
 } // end std_args_not_used
@@ -250,7 +255,7 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
       ArgString2Array  as2a( "--help", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
@@ -258,7 +263,7 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
       ArgString2Array  as2a( "-h", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
 } // end std_args_not_matching
@@ -307,7 +312,7 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
       ArgString2Array  as2a( "-i 17", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // unknown argument
@@ -322,7 +327,7 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
       ArgString2Array  as2a( "-h -c 5", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // unknown long argument
@@ -337,7 +342,7 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
       ArgString2Array  as2a( "-c 85 --history", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // Argument with required value without a value (at beginning, i.e. followed
@@ -353,7 +358,7 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
       ArgString2Array  as2a( "-i -c 9", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // Argument with required value without a value (at end)
@@ -368,7 +373,7 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
       ArgString2Array  as2a( "-c 8 -i", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
 } // end parameter_string_errors
@@ -386,7 +391,7 @@ BOOST_AUTO_TEST_CASE( unexpected_free_value)
       ArgString2Array  as2a( "free_value", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // unexpected free value after argument
@@ -398,7 +403,7 @@ BOOST_AUTO_TEST_CASE( unexpected_free_value)
       ah.addArgument( "i", DEST_VAR( int_val), "integer");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
 } // end unexpected_free_value
@@ -426,7 +431,7 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
 
       ArgString2Array  as2a( "-i 17", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // mandatory free value missing
@@ -1964,7 +1969,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "-n -hyphenName");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !td.name.hasValue());
       BOOST_REQUIRE( !td.minVal.hasValue());
    } // end scope
@@ -1973,7 +1978,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "--name -hyphenName");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !td.name.hasValue());
       BOOST_REQUIRE( !td.minVal.hasValue());
    } // end scope
@@ -1982,7 +1987,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "-m -25");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !td.minVal.hasValue());
    } // end scope
 
@@ -1990,7 +1995,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "--min -25");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !td.minVal.hasValue());
    } // end scope
 
@@ -2081,14 +2086,14 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       TestData  td( "");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
       TestData  td( "-n PROCESS1");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
@@ -2127,21 +2132,21 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       TestData2  td( "-f");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
       TestData2  td( "-c 5");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
       TestData2  td( "-n");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
@@ -2221,7 +2226,7 @@ public:
    {
       int  checkVal = boost::lexical_cast< int>( val);
       if ((checkVal != m1) && (checkVal != m2) && (checkVal != m3))
-         throw invalid_argument( "not in tripple");
+         throw runtime_error( "not in tripple");
    }
 
 private:
@@ -2276,7 +2281,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       ArgString2Array  as2a( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -2291,7 +2296,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       ArgString2Array  as2a( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -2359,7 +2364,7 @@ BOOST_AUTO_TEST_CASE( control_check)
    {
       ArgString2Array  as2a( "-v 45 ! -v 47", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
    } // end scope
 
@@ -2378,7 +2383,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( intArg), "integer argument")
                                          ->setListSep( ';'),
-                           std::runtime_error);
+                           invalid_argument);
    } // end scope
 
    {
@@ -2387,7 +2392,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( stringArg), "string argument")
                                          ->setListSep( ';'),
-                           std::runtime_error);
+                           invalid_argument);
    } // end scope
 
    {
@@ -2399,7 +2404,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       ArgString2Array  as2a( "-i", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
@@ -2611,7 +2616,7 @@ BOOST_AUTO_TEST_CASE( control_args)
    BOOST_REQUIRE_NO_THROW( ah.addControlHandler( ')', std::bind( &TestControlArgs::close, &tca)));
    BOOST_REQUIRE_NO_THROW( ah.addControlHandler( '!', std::bind( &TestControlArgs::exclamation, &tca)));
    BOOST_REQUIRE_THROW(    ah.addControlHandler( '#', std::bind( &TestControlArgs::open, &tca)),
-                           std::runtime_error);
+                           invalid_argument);
 
    ArgString2Array  as2a( "-i 11 ( ! -j 13 )", nullptr);
 
