@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -444,8 +444,8 @@ inline TypedArgBase::ValueMode TypedArgBase::valueMode() const
 
 inline TypedArgBase* TypedArgBase::setTakesMultiValue() noexcept( false)
 {
-   throw std::runtime_error( "setting 'take multiple values' not allowed for variable '" +
-                             mVarName + "'");
+   throw std::invalid_argument( "setting 'take multiple values' not allowed for variable '" +
+                                mVarName + "'");
 } // TypedArgBase::setTakesMultiValue
 
 
@@ -457,8 +457,8 @@ inline bool TypedArgBase::takesMultiValue() const
 
 inline TypedArgBase* TypedArgBase::setListSep( char /* sep */) noexcept( false)
 {
-   throw std::runtime_error( "setting list separator not allowed for variable '" +
-                             mVarName + "'");
+   throw std::invalid_argument( "setting list separator not allowed for variable '" +
+                                mVarName + "'");
 } // TypedArgBase::setListSep
 
 

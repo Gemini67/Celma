@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,11 @@ namespace celma { namespace prog_args { namespace detail {
 ///   - When argument 'a' is used, add constraint to the list.
 ///   - When argument 'b' is used, remove it from the list.
 ///   - After evaluation arguments, check that the list is empty.
-///
+/// .
+/// @todo  Using a global variable to provide access to the current object of
+///        this class is of course not thread-safe. Need to find a better
+///        solution.
+/// @todo  Enum class.
 /// @since  0.2, 10.04.2016
 class ConstraintContainer
 {
@@ -55,9 +59,10 @@ public:
    /// classes/methods. This member variable points to it.
    static ConstraintContainer*  mpCurrentConstraints;
 
-   /// Constructor.
-   /// @since  0.2, 10.04.2016
-   ConstraintContainer();
+   /// Default constructor is just fine.
+   ConstraintContainer() = default;
+   /// Default destructor is just fine.
+   ~ConstraintContainer() = default;
 
    /// Adds an argument specific constraint.
    /// @param[in]  constraint_type  The type of the constraint to add.
@@ -143,5 +148,5 @@ private:
 #endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_CONTAINER_HPP
 
 
-// =========================  END OF constraint_container.hpp  =========================
+// =====================  END OF constraint_container.hpp  =====================
 
