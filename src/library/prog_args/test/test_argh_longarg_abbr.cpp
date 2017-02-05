@@ -15,11 +15,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test, header file include
+#include "celma/prog_args.hpp"
 
 
 // Boost includes
@@ -29,11 +26,11 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/prog_args.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::appl::ArgString2Array;
+using celma::common::CheckAssign;
+using celma::prog_args::Handler;
 
 
 // module definitions
@@ -44,10 +41,10 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( long_arg_abbr)
 {
 
-   prog_args::Handler         ah( 0);
-   common::CheckAssign< int>  inputVal;
-   common::CheckAssign< int>  inplaceVal;
-   common::CheckAssign< int>  outputVal;
+   Handler            ah( 0);
+   CheckAssign< int>  inputVal;
+   CheckAssign< int>  inplaceVal;
+   CheckAssign< int>  outputVal;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "input",   DEST_VAR( inputVal),
@@ -58,21 +55,21 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
                                            "Integer"));
 
    {
-      appl::ArgString2Array  as2a( "--in 5", nullptr);
+      ArgString2Array  as2a( "--in 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           std::runtime_error);
    } // end scope
 
    {
-      appl::ArgString2Array  as2a( "--inp 5", nullptr);
+      ArgString2Array  as2a( "--inp 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           std::runtime_error);
    } // end scope
 
    {
-      appl::ArgString2Array  as2a( "--inpu 5", nullptr);
+      ArgString2Array  as2a( "--inpu 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( inputVal.hasValue());
@@ -87,7 +84,7 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    outputVal.reset();
 
    {
-      appl::ArgString2Array  as2a( "--inpl 5", nullptr);
+      ArgString2Array  as2a( "--inpl 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( inplaceVal.hasValue());
@@ -102,7 +99,7 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    outputVal.reset();
 
    {
-      appl::ArgString2Array  as2a( "--o 5", nullptr);
+      ArgString2Array  as2a( "--o 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( outputVal.hasValue());
@@ -112,7 +109,7 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
       BOOST_REQUIRE( !inplaceVal.hasValue());
    } // end scope
 
-} // end long_arg_abbr
+} // long_arg_abbr
 
 
 

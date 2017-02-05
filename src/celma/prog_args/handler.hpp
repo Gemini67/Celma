@@ -250,9 +250,12 @@ public:
       hfUsageCont   = hfListArgVar << 1,   //!< Special flag originally for
                                            //!< testing: Don't exit after
                                            //!< printing the usage.
-      hfEndValues   = hfUsageCont << 1     //!< Activates the argument '--endvalues'
+      hfEndValues   = hfUsageCont << 1,    //!< Activates the argument '--endvalues'
                                            //!< that is used to signal the end of
                                            //!< a separate value list.
+      hfInGroup     = hfEndValues << 1     //!< This flag is set by the Groups
+                                           //!< class when it creates a Handler
+                                           //!< object. Don't use otherwise!
    }; // HandleFlags
 
    /// List of possible positions for the additional output 
@@ -292,7 +295,7 @@ public:
                      IUsageText* txt2 = nullptr);
 
    /// Constructor that allows to specify the output streams to write to.
-   /// @param[in]  os        The stream to write normal out to.
+   /// @param[in]  os        The stream to write normal output to.
    /// @param[in]  error_os  The stream to write error output to.
    /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
    ///                       of possible values.
@@ -788,7 +791,7 @@ private:
    /// Set when the usage was printed.<br>
    /// Needed together with the flag #mUsageContinues to bypass end-of-arguments
    /// checks so that evalArgument() can return.
-   bool                         mUsagePrinted;
+   bool                         mUsagePrinted = false;
    /// The (top-level) arguments known by this class.
    detail::ArgumentContainer    mArguments;
    /// Argument sub-groups.
@@ -802,7 +805,7 @@ private:
    /// Function called for an exclamation mark '!'.
    HandlerFunc                  mpExclamationMarkHdlr;
    /// Set when this object is used as argument handler for a sub-group.
-   bool                         mIsSubGroupHandler;
+   bool                         mIsSubGroupHandler = false;
    /// The current constraints, dynamically created through the arguments that
    /// were processed so far.
    detail::ConstraintContainer  mConstraints;
@@ -812,11 +815,14 @@ private:
 
    /// Pointer to the last argument handler that was used. Needed for
    /// processing multiple, separate values.
-   detail::TypedArgBase*        mpLastArg;
+   detail::TypedArgBase*        mpLastArg = nullptr;
    /// Reading arguments from a file should not influence the cardinality
    /// checks, i.e. it should be possible to overwrite a value from a file
    /// without triggering a 'too many values' exception.
-   bool                         mReadingArgumentFile;
+   bool                         mReadingArgumentFile = false;
+   /// Flag, set when this argument handler object was created by a Groups
+   /// object.
+   bool                         mUsedByGroup;
 
 }; // Handler
 

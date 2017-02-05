@@ -86,14 +86,12 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mVerbose( (flag_set & hfVerboseArgs) != 0),
    mPrintHidden( (flag_set & hfUsageHidden) != 0),
    mUsageContinues( (flag_set & hfUsageCont) != 0),
-   mUsagePrinted( false),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
    mpExclamationMarkHdlr(),
-   mIsSubGroupHandler( false),
    mConstraints(),
-   mpLastArg( nullptr),
-   mReadingArgumentFile( false)
+   mGlobalConstraints(),
+   mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
    string  args;
@@ -265,8 +263,8 @@ void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
    case ')':  mpClosingBracketHdlr  = hf;  break;
    case '!':  mpExclamationMarkHdlr = hf;  break;
    default:
-      throw runtime_error( "Invalid control character '" + string( 1, ctrlChar)
-                           + "' specified!");
+      throw invalid_argument( "Invalid control character '" + string( 1, ctrlChar)
+                              + "' specified!");
    } // end switch
 
 } // Handler::addControlHandler
@@ -416,17 +414,17 @@ void Handler::crossCheckArguments( const string ownName,
    // finally, check that there are no control character handlers set in both
    // argument handlers
    if (mpOpeningBracketHdlr && otherAH.mpOpeningBracketHdlr)
-      throw runtime_error( "Control argument handler for '(' from group '" +
-                           otherName + "' is already used by '" + ownName +
-                           "'");
+      throw invalid_argument( "Control argument handler for '(' from group '" +
+                              otherName + "' is already used by '" + ownName +
+                              "'");
    if (mpClosingBracketHdlr && otherAH.mpClosingBracketHdlr)
-      throw runtime_error( "Control argument handler for ')' from group '" +
-                           otherName + "' is already used by '" + ownName +
-                           "'");
+      throw invalid_argument( "Control argument handler for ')' from group '" +
+                              otherName + "' is already used by '" + ownName +
+                              "'");
    if (mpExclamationMarkHdlr && otherAH.mpExclamationMarkHdlr)
-      throw runtime_error( "Control argument handler for '!' from group '" +
-                           otherName + "' is already used by '" + ownName +
-                           "'");
+      throw invalid_argument( "Control argument handler for '!' from group '" +
+                              otherName + "' is already used by '" + ownName +
+                              "'");
 
 } // Handler::crossCheckArguments
 
@@ -500,7 +498,7 @@ template< typename T>
 
    if ((p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::required) &&
        ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)))
-      throw invalid_argument( "Argument '" + argString + "' requires value(s)");
+      throw runtime_error( "Argument '" + argString + "' requires value(s)");
 
    if (((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)) &&
        (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown))
@@ -583,7 +581,7 @@ Handler::ArgResult
       return ArgResult::consumed;
 
    default:
-      throw invalid_argument( "Got invalid element in argument list");
+      throw runtime_error( "Got invalid element in argument list");
 
    } // end switch
 
@@ -754,12 +752,12 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
       if (result == ArgResult::unknown)
       {
          if (ai->mElementType == detail::ArgListElement::etValue)
-            throw invalid_argument( "Unknown argument '" + ai->mValue + "'");
+            throw runtime_error( "Unknown argument '" + ai->mValue + "'");
          if ((ai->mElementType == detail::ArgListElement::etSingleCharArg) ||
              (ai->mElementType == detail::ArgListElement::etControl))
-            throw invalid_argument( "Unknown argument '" + string( 1, ai->mArgChar)
+            throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
-         throw invalid_argument( "Unknown argument '" + ai->mArgString + "'");
+         throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
       } // end if
    } // end for
 
@@ -837,6 +835,9 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
 
    mArguments.addArgument( ah_obj, arg_spec);
    mDescription.addArgument( arg_spec, desc, ah_obj);
+
+   if (mUsedByGroup)
+      Groups::instance().crossCheckArguments( this);
 
    return ah_obj;
 } // Handler::internAddArgument

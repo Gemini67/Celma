@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,7 @@
 #define CELMA_PROG_ARGS_GROUPS_HPP
 
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
@@ -34,11 +35,20 @@ class Handler;
 
 /// Allows to combine multiple argument groups.<br>
 /// A possible use case could be when a program uses a library that takes some
-/// parameters from the command line. Then the program would initialise its
-/// argument handler and add its program specific arguments, the library would
-/// create its own argument handler and add its (library specific) arguments,
-/// and both add their argument handlers to the argument groups instance.<br>
-/// Afterwards, evalArguments() of the Groups object must be called.
+/// parameters from the command line. Then the program's main function would get
+/// its argument handler from the prog_args::Groups, and add its program
+/// specific arguments there. Afterwards the library module would get its own
+/// argument handler, and add its (library specific) arguments there.<br>
+/// Afterwards, evalArguments() of the Groups object must be called.<br>
+/// Of course, all arguments could be added to added to the same group, but if
+/// multiple programs use the same library module, it may be better to have the
+/// library module parameters shown in a separate block than have them mixed
+/// with the program arguments.<br>
+/// If special flags or other output channels for verbose and error output
+/// should be passed to all handler objects, make sure the group singleton is
+/// created first with these special parameters (by calling the instance()
+/// method).
+/// @since  0.13.0, 05.02.2017  (redesign to handle special parameters)
 /// @since  0.2, 10.04.2016
 /// @todo  Add method evalArgumentsErrorExit() like in Handler class.
 class Groups: public common::Singleton< Groups>
@@ -50,21 +60,28 @@ public:
    /// The type used to store an argument handler object.
    typedef std::shared_ptr< Handler>  SharedArgHndl;
 
-   /// Adds an argument handler to the internal list.<br>
-   /// All arguments that this handler supports should already be set, so the
-   /// class can check that there are no duplicates.
-   /// @param[in]  grpName  The symbolic name of this handler, used for
-   ///                      identification and printing the usage.
-   /// @param[in]  ah       The argument handler to add.
+   /// Returns the argument handler for the specified group name.<br>
+   /// If the argument handler does not exist yet, a new handler object will be
+   /// created. The output streams will be passed as specified when calling
+   /// instance() for this group object, and the flags parameter will be a
+   /// combination of this object's flag and the flags passed in
+   /// \a this_handler_flags.
+   /// @param[in]  grpName             The symbolic name of this handler, used
+   ///                                 for identification and printing the
+   ///                                 usage.
+   /// @param[in]  this_handler_flags  Set of flags to pass to the constructor
+   ///                                 of the handler object if a new one is
+   ///                                 created.
+   /// @param[in]  txt1                Optional pointer to the object to provide
+   ///                                 additional text for the usage.
+   /// @param[in]  txt2                Optional pointer to the object to provide
+   ///                                 additional text for the usage.
+   /// @since  0.13.0, 05.02.2017  (renamed/merged, added parameters)
    /// @since  0.2, 10.04.2016
-   void addArgHandler( const std::string& grpName, SharedArgHndl ah) noexcept( false);
-
-   /// Returns the handler stored with the given symbolic name.
-   /// @param[in]  grpName  The name of the handler.
-   /// @return  Pointer to the handler object, NULL if no object with this name
-   ///          was found.
-   /// @since  0.2, 10.04.2016
-   SharedArgHndl getHandler( const std::string& grpName) const;
+   SharedArgHndl getArgHandler( const std::string& grpName, 
+                                int this_handler_flags = 0,
+                                IUsageText* txt1 = nullptr,
+                                IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Iterates over the list of arguments and passes the elemnts to the
    /// internally stored argument handlers.<br>
@@ -80,6 +97,11 @@ public:
    /// @param[in]  grpName  The symbolic name of the argument handler to remove.
    /// @since  0.2, 10.04.2016
    void removeArgHandler( const std::string& grpName);
+
+   /// Needed for testing purposes, but may be used in 'normal' programs too:
+   /// Removes all previously added argument handler objects.
+   /// @since  0.13.0, 05.02.2017
+   void removeAllArgHandler();
 
    /// Checks if the specified argument is already used by one of the argument
    /// handlers.
@@ -116,10 +138,17 @@ public:
    /// @since  0.2, 10.04.2016
    void displayUsage( IUsageText* txt1, IUsageText* txt2) const;
 
+   void crossCheckArguments( Handler* mod_handler) const noexcept( false);
+
 protected:
    /// Constructor.
+   /// @param[in]  os        The stream to write normal output to.
+   /// @param[in]  error_os  The stream to write error output to.
+   /// @param[in]  flag_set  Set of the flags to pass to all handler objects.
+   /// @since  0.13.0, 05.02.2017  (added parameters)
    /// @since  0.2, 10.04.2016
-   Groups();
+   Groups( std::ostream& os = std::cout, std::ostream& error_os = std::cerr,
+           int flag_set = 0);
 
 private:
    /// Internal class used to store an argument handler with its symbolic name.
@@ -138,8 +167,10 @@ private:
       } // end Groups::Storage::Storage
 
       Storage( const Storage&) = default;
+      Storage( Storage&&) = default;
       ~Storage() = default;
       Storage& operator =( const Storage&) = default;
+      Storage& operator =( Storage&&) = default;
 
       /// The symbolic name of the argument handler.
       std::string    mName;
@@ -151,6 +182,12 @@ private:
    /// Container to store the argument handlers.
    typedef std::vector< Storage>  ArgHandlerCont;
 
+   /// Stream to write output to.
+   std::ostream&   mOutput;
+   /// Stream to write error output to.
+   std::ostream&   mErrorOutput;
+   /// The set of flags to pass on to all handler objects that are created.
+   const int       mHandlerFlags;
    /// The argument handlers.
    ArgHandlerCont  mArgGroups;
    /// Set to \c true when the method evalArguments() of this class is used.
