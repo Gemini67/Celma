@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,16 +14,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
-
-// STL includes
-#include <string>
-#include <iostream>
+// object to test, header file include
+#include "celma/common/singleton.hpp"
 
 
 // Boost includes
@@ -32,39 +24,56 @@
 
 
 // project includes
-#include "celma/common/singleton.hpp"
 #include "celma/common/object_enumerator.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::common::Singleton;
 
 
 // module definitions
 
 /// Defines a singleton.
 /// @since  0.2, 10.04.2016
-class TestSingleton: public common::Singleton< TestSingleton>,
-                        public common::ObjectEnumerator< TestSingleton>
+class TestSingleton: public Singleton< TestSingleton>,
+                     public celma::common::ObjectEnumerator< TestSingleton>
 {
 
-   friend class common::Singleton< TestSingleton>;
+   friend class Singleton< TestSingleton>;
 
 public:
    /// Some dummy function.
    /// @since  0.2, 10.04.2016
    void func()
    {
-   } // end TestSingleton::func
+   } // TestSingleton::func
 
+   /// Returns the value stored in the singleton object.
+   /// @return  The value stored internally.
+   /// @since  0.12.2, 05.02.2017
+   int value() const
+   {
+      return mValue;
+   } // TestSingleton::value
+   
 protected:
    /// Constructor. Should be called only exactly once.
    /// @since  0.2, 10.04.2016
    TestSingleton():
-      common::Singleton< TestSingleton>(),
-      common::ObjectEnumerator< TestSingleton>()
+      Singleton< TestSingleton>(),
+      celma::common::ObjectEnumerator< TestSingleton>()
    {
-   } // end TestSingleton::TestSingleton
+   } // TestSingleton::TestSingleton
+
+   /// Constructor. Should be called only exactly once.
+   /// @since  0.2, 10.04.2016
+   TestSingleton( int new_value):
+      Singleton< TestSingleton>(),
+      celma::common::ObjectEnumerator< TestSingleton>(),
+      mValue( new_value)
+   {
+   } // TestSingleton::TestSingleton
+
+   int  mValue = -1;
 
 }; // TestSingleton
 
@@ -77,6 +86,7 @@ BOOST_AUTO_TEST_CASE( test_singleton)
 
    BOOST_REQUIRE_NO_THROW( TestSingleton::instance().func());
    BOOST_REQUIRE_EQUAL( TestSingleton::instance().objectNbr(), 0);
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().value(), -1);
 
 } // test_singleton
 
@@ -89,8 +99,29 @@ BOOST_AUTO_TEST_CASE( test_singleton_again)
 
    BOOST_REQUIRE_NO_THROW( TestSingleton::instance().func());
    BOOST_REQUIRE_EQUAL( TestSingleton::instance().objectNbr(), 0);
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().value(), -1);
+
+   // test that parameters passed to instance are simply ignored now
+   BOOST_REQUIRE_NO_THROW( TestSingleton::instance( 13).func());
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().objectNbr(), 0);
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().value(), -1);
 
 } // test_singleton_again
+
+
+
+/// Test that we get a new object after calling reset().
+/// @since  0.12.2, 05.02.2017
+BOOST_AUTO_TEST_CASE( test_reset)
+{
+
+   TestSingleton::reset();
+
+   BOOST_REQUIRE_NO_THROW( TestSingleton::instance( 42).func());
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().objectNbr(), 1);
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().value(), 42);
+
+} // test_reset
 
 
 

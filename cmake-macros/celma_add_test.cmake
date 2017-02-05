@@ -32,7 +32,7 @@ macro( celma_add_boost_mt_testprogram  filename )
    add_executable(        ${filename}  ${filename}.cpp )
    target_link_libraries( ${filename}  ${Boost_Test_Link_Libs} -lpthread )
    add_test(              ${filename}  ${CMAKE_CURRENT_BINARY_DIR}/${filename} )
-endmacro( celma_add_boost_testprogram )
+endmacro( celma_add_boost_mt_testprogram )
 
 
 # define a test program that needs to link the foundation library
