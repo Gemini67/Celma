@@ -57,28 +57,22 @@ BOOST_AUTO_TEST_CASE( no_argument_handlers)
 BOOST_AUTO_TEST_CASE( duplicate_name)
 {
 
-   Groups::SharedArgHndl  firstAH( new Handler( 0));
-   Groups::SharedArgHndl  secondAH( new Handler( 0));
+   Groups::SharedArgHndl  firstAH;
 
 
-   BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-   BOOST_REQUIRE_THROW(    Groups::instance().addArgHandler( "first", secondAH),
-                           runtime_error);
+   BOOST_REQUIRE_NO_THROW( firstAH = Groups::instance().getArgHandler( "first"));
+   BOOST_REQUIRE( firstAH.get() != nullptr);
 
-   {
-      Groups::SharedArgHndl  unknownAH( Groups::instance().getHandler( "no-such-handler"));
-      BOOST_REQUIRE( unknownAH.get() == nullptr);
-   } // end scope
+   Groups::SharedArgHndl  secondAH;
 
-   {
-      Groups::SharedArgHndl  findFirstAH( Groups::instance().getHandler( "first"));
-      BOOST_REQUIRE( findFirstAH.get() != nullptr);
-   } // end scope
+   BOOST_REQUIRE_NO_THROW( secondAH = Groups::instance().getArgHandler( "first"));
+   BOOST_REQUIRE( secondAH.get() != nullptr);
+   BOOST_REQUIRE_EQUAL( firstAH, secondAH);
 
    // singleton Groups: have to clean up
-   Groups::instance().removeArgHandler( "first");
+   Groups::instance().removeAllArgHandler();
 
-} // end duplicate_name
+} // duplicate_name
 
 
 
@@ -89,48 +83,49 @@ BOOST_AUTO_TEST_CASE( duplicate_standard_arg)
 {
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( Handler::hfHelpShort));
-      Groups::SharedArgHndl  secondAH( new Handler( Handler::hfHelpShort));
+      auto                   firstAH = Groups::instance().getArgHandler( "first",
+                                                                         Handler::hfHelpShort);
+      Groups::SharedArgHndl  secondAH;
 
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-      BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "second", secondAH),
-                           runtime_error);
+      BOOST_REQUIRE_THROW( secondAH = Groups::instance().getArgHandler( "second",
+                                                                        Handler::hfHelpShort),
+                           invalid_argument);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( Handler::hfHelpLong));
-      Groups::SharedArgHndl  secondAH( new Handler( Handler::hfHelpLong));
+      auto                   firstAH = Groups::instance().getArgHandler( "first",
+                                                                         Handler::hfHelpLong);
+      Groups::SharedArgHndl  secondAH;
 
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-      BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "second", secondAH),
-                           runtime_error);
+      BOOST_REQUIRE_THROW( secondAH = Groups::instance().getArgHandler( "second",
+                                                                        Handler::hfHelpLong),
+                           invalid_argument);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      std::string            firstFree;
-      std::string            secondFree;
+      auto         firstAH = Groups::instance().getArgHandler( "first");
+      auto         secondAH = Groups::instance().getArgHandler( "second");
+      std::string  firstFree;
+      std::string  secondFree;
 
-      firstAH->addArgument( DEST_VAR( firstFree), "first free argument");
-      secondAH->addArgument( DEST_VAR( secondFree), "second free argument");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-      BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "second", secondAH),
-                           runtime_error);
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( DEST_VAR( firstFree),
+                                                    "first free argument"));
+      BOOST_REQUIRE_THROW( secondAH->addArgument( DEST_VAR( secondFree),
+                                                  "second free argument"),
+                                                  invalid_argument);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
-} // end duplicate_standard_arg
+} // duplicate_standard_arg
 
 
 
@@ -140,54 +135,45 @@ BOOST_AUTO_TEST_CASE( duplicate_application_arg)
 {
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   quiet;
-
-      firstAH->addArgument(  "q", DEST_VAR( quiet), "be quiet");
-      secondAH->addArgument( "q", DEST_VAR( quiet), "be quiet");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-      BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "second", secondAH),
-                           runtime_error);
-
-      // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-   } // end scope
-
-   {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
+      auto  firstAH = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
       bool  quiet;
 
-      firstAH->addArgument(  "quiet", DEST_VAR( quiet), "be quiet");
-      secondAH->addArgument( "quiet", DEST_VAR( quiet), "be quiet");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-      BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "second", secondAH),
-                           runtime_error);
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "q", DEST_VAR( quiet), "be quiet"));
+      BOOST_REQUIRE_THROW( secondAH->addArgument( "q", DEST_VAR( quiet), "be quiet"),
+                           invalid_argument);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   quiet;
+      auto  firstAH = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  quiet;
 
-      firstAH->addArgument(  "q,quiet", DEST_VAR( quiet), "be quiet");
-      secondAH->addArgument( "quiet",   DEST_VAR( quiet), "be quiet");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-      BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "second", secondAH),
-                           runtime_error);
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "quiet", DEST_VAR( quiet), "be quiet"));
+      BOOST_REQUIRE_THROW( secondAH->addArgument( "quiet", DEST_VAR( quiet), "be quiet"),
+                           invalid_argument);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
-} // end duplicate_application_arg
+   {
+      auto  firstAH = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  quiet;
+
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "q,quiet", DEST_VAR( quiet), "be quiet"));
+      BOOST_REQUIRE_THROW( secondAH->addArgument( "quiet",   DEST_VAR( quiet), "be quiet"),
+                           invalid_argument);
+
+      // singleton Groups: have to clean up
+      Groups::instance().removeAllArgHandler();
+   } // end scope
+
+} // duplicate_application_arg
 
 
 
@@ -200,37 +186,38 @@ BOOST_AUTO_TEST_CASE( mix_std_appl_args)
 
    // first standard argument, second application argument
    {
-      Groups::SharedArgHndl  firstAH( new Handler( Handler::hfHelpShort));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   quiet;
+      auto  firstAH  = Groups::instance().getArgHandler( "first", Handler::hfHelpShort);
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  quiet;
 
-      secondAH->addArgument( "h", DEST_VAR( quiet), "be quiet");
 
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-      BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "second", secondAH),
-                           runtime_error);
+      BOOST_REQUIRE_THROW( secondAH->addArgument( "h", DEST_VAR( quiet), "be quiet"),
+                           invalid_argument);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    // first application argument, second standard argument
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( Handler::hfHelpShort));
-      bool                   quiet;
+      auto  firstAH = Groups::instance().getArgHandler( "first");
+      bool  quiet;
 
-      firstAH->addArgument( "h", DEST_VAR( quiet), "be quiet");
 
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first", firstAH));
-      BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "second", secondAH),
-                           runtime_error);
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "h", DEST_VAR( quiet),
+                                                    "be quiet"));
+
+      Groups::SharedArgHndl  secondAH;
+
+      BOOST_REQUIRE_THROW( secondAH = Groups::instance().getArgHandler( "second",
+                                                                        Handler::hfHelpShort),
+                           invalid_argument);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
-} // end mix_std_appl_args
+} // mix_std_appl_args
 
 
 
@@ -241,17 +228,14 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
 {
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      bool                   secondFlag = false;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      bool  secondFlag = false;
 
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
 
       // first check that it does not crash, then check if the arguments are
       // really found
@@ -269,22 +253,18 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE( !secondFlag);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      bool                   secondFlag = false;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      bool  secondFlag = false;
 
 
-      firstAH->addArgument(  "first", DEST_VAR( firstFlag),  "first flag");
-      secondAH->addArgument( "second", DEST_VAR( secondFlag), "second flag");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "first", DEST_VAR( firstFlag),  "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "second", DEST_VAR( secondFlag), "second flag"));
 
       // first check that it does not crash, then check if the arguments are
       // really found
@@ -302,22 +282,18 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE( secondFlag);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      bool                   secondFlag = false;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      bool  secondFlag = false;
 
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
 
       ArgString2Array  as2a( "-f -s", nullptr);
 
@@ -328,22 +304,18 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE( secondFlag);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      bool                   secondFlag = false;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      bool  secondFlag = false;
 
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
 
       ArgString2Array  as2a( "-sf", nullptr);
 
@@ -354,57 +326,48 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE( secondFlag);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      bool                   secondFlag = false;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      bool  secondFlag = false;
 
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
 
       ArgString2Array  as2a( "-a", nullptr);
 
       BOOST_REQUIRE_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      bool                   secondFlag = false;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      bool  secondFlag = false;
 
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag");
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
 
       ArgString2Array  as2a( "--long_argument", nullptr);
 
       BOOST_REQUIRE_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
-} // end handle_arguments
+} // handle_arguments
 
 
 
@@ -414,42 +377,35 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
 {
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false; 
-      int                    secondArg = -1;    
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      int   secondArg = -1;
 
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag), "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondArg), "second arg")->setIsMandatory();
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag), "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondArg), "second arg")->setIsMandatory());
 
       ArgString2Array  as2a( "-f", nullptr);
 
       firstFlag = false;
       secondArg = -1;
       BOOST_REQUIRE_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      int                    secondArg = -1;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      int   secondArg = -1;
 
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag), "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondArg), "second arg")->setIsMandatory();
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag), "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondArg), "second arg")->setIsMandatory());
 
       ArgString2Array  as2a( "-s 5", nullptr);
 
@@ -460,22 +416,18 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_EQUAL( secondArg, 5);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      int                    secondArg = -1;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      int   secondArg = -1;
 
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag), "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondArg), "second arg")->setIsMandatory();
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag), "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondArg), "second arg")->setIsMandatory());
 
       ArgString2Array  as2a( "-f -s 17", nullptr);
 
@@ -486,21 +438,17 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_EQUAL( secondArg, 17);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
    {
-      Groups::SharedArgHndl  firstAH( new Handler( 0));
-      Groups::SharedArgHndl  secondAH( new Handler( 0));
-      bool                   firstFlag = false;
-      int                    secondArg = -1;
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      int   secondArg = -1;
 
-      firstAH->addArgument(  "f", DEST_VAR( firstFlag), "first flag");
-      secondAH->addArgument( "s", DEST_VAR( secondArg), "second arg")->setIsMandatory();
-
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-      BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag), "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondArg), "second arg")->setIsMandatory());
 
       ArgString2Array  as2a( "-fs 55", nullptr);
 
@@ -511,11 +459,47 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_EQUAL( secondArg, 55);
 
       // singleton Groups: have to clean up
-      Groups::instance().removeArgHandler( "first");
-      Groups::instance().removeArgHandler( "second");
+      Groups::instance().removeAllArgHandler();
    } // end scope
 
-} // end missing_mandatory
+} // missing_mandatory
+
+
+
+/// Test the special features of the argument group: Pass parameters on to each
+/// handler object.
+/// @since  0.13.0, 05.02.2017
+BOOST_AUTO_TEST_CASE( group_features)
+{
+
+   Groups::reset();
+
+   std::ostringstream  normal_out;
+   std::ostringstream  error_out;
+
+   Groups::instance( normal_out, error_out, Handler::hfVerboseArgs);
+
+   auto  ah1 = Groups::instance().getArgHandler( "Handler 1");
+   auto  ah2 = Groups::instance().getArgHandler( "Handler 2", Handler::AllHelp);
+   bool  quiet = false;
+   int   number = -1;
+
+   ah1->addArgument( "q,quiet", DEST_VAR( quiet), "Be quiet");
+   ah2->addArgument( "n,number", DEST_VAR( number), "Number")->setIsMandatory();
+
+   ArgString2Array  as2a( "-q -n 42", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv));
+
+   BOOST_REQUIRE_EQUAL( normal_out.str(),
+                        "quiet: is set\n"
+                        "number: value '42' is assigned\n");
+   BOOST_REQUIRE( error_out.str().empty());
+
+   Groups::instance().removeAllArgHandler();
+   Groups::reset();
+
+} // group_features
 
 
 
@@ -527,7 +511,7 @@ public:
       mClose( 0),
       mNot( 0)
    {
-   } // end TestControlArgs::TestControlArgs
+   } // TestControlArgs::TestControlArgs
 
    void open()
    {
@@ -571,24 +555,21 @@ private:
 BOOST_AUTO_TEST_CASE( control_characters)
 {
 
-   Groups::SharedArgHndl  firstAH( new Handler( 0));
-   Groups::SharedArgHndl  secondAH( new Handler( 0));
-   bool                   firstFlag = false;
-   bool                   secondFlag = false;
-   TestControlArgs        tca;
+   auto             firstAH  = Groups::instance().getArgHandler( "first");
+   auto             secondAH = Groups::instance().getArgHandler( "second");
+   bool             firstFlag = false;
+   bool             secondFlag = false;
+   TestControlArgs  tca;
 
 
-   firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag");
-   secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag");
+   BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+   BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
 
    BOOST_REQUIRE_NO_THROW( secondAH->addControlHandler( '(', std::bind( &TestControlArgs::open, &tca)));
    BOOST_REQUIRE_NO_THROW( secondAH->addControlHandler( ')', std::bind( &TestControlArgs::close, &tca)));
    BOOST_REQUIRE_NO_THROW( secondAH->addControlHandler( '!', std::bind( &TestControlArgs::exclamation, &tca)));
    BOOST_REQUIRE_THROW(    secondAH->addControlHandler( '#', std::bind( &TestControlArgs::open, &tca)),
-                           runtime_error);
-
-   BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "first",  firstAH));
-   BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "second", secondAH));
+                           invalid_argument);
 
    ArgString2Array  as2a( "-f ( ! -s )", nullptr);
 
@@ -599,7 +580,10 @@ BOOST_AUTO_TEST_CASE( control_characters)
    BOOST_REQUIRE_EQUAL( tca.getClose(), 1);
    BOOST_REQUIRE_EQUAL( tca.getExclamation(), 1);
 
-} // end control_characters
+   // singleton Groups: have to clean up
+   Groups::instance().removeAllArgHandler();
+
+} // control_characters
 
 
 
@@ -608,30 +592,30 @@ BOOST_AUTO_TEST_CASE( control_characters)
 BOOST_AUTO_TEST_CASE( argument_exists)
 {
 
-   Groups::SharedArgHndl  firstAH( new Handler( 0));
-   bool                   firstFlag = false;
+   auto  firstAH  = Groups::instance().getArgHandler( "exists_test");
+   bool  firstFlag = false;
 
 
-   firstAH->addArgument( "e", DEST_VAR( firstFlag), "exists");
-   BOOST_REQUIRE_NO_THROW( Groups::instance().addArgHandler( "exists_test",  firstAH));
-   BOOST_REQUIRE( Groups::instance().argumentExists('f'));
-   BOOST_REQUIRE( !Groups::instance().argumentExists('c'));
+   BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "e", DEST_VAR( firstFlag), "exists"));
+   BOOST_REQUIRE( Groups::instance().argumentExists( 'e'));
+   BOOST_REQUIRE( !Groups::instance().argumentExists( 'c'));
 
-} // end argument_exists
-
+} // argument_exists
 
 
-/// Test if addArgHandler throws exception when nullptr is passed.
+
+/// Test if addArgHandler throws exception when an empty name is passed.
+/// @since  0.13.0, 05.02.2017  (changed from nullptr test)
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( add_arg_handler_nullptr)
+BOOST_AUTO_TEST_CASE( add_group_empty_name)
 {
 
    Groups::SharedArgHndl  argGroup;
 
 
-   BOOST_REQUIRE_THROW( Groups::instance().addArgHandler( "nullptr", argGroup), std::exception);
+   BOOST_REQUIRE_THROW( Groups::instance().getArgHandler( ""), std::exception);
 
-} // end add_arg_handler_nullptr
+} // add_group_empty_name
 
 
 

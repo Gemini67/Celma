@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <mutex>
+#include <utility>
 
 
 namespace celma { namespace common {
@@ -39,14 +40,24 @@ template< class T> class Singleton
 {
 public:
    /// Returns the singleton instance.<br>
+   /// If no singleton object exists yet, a new one is created with the
+   /// specified parameters. If a singletob object exists already, the
+   /// parameters are ignored.<br>
    /// Uses the double checking locking pattern to prevent multiple threads
    /// from creating the same object multiple times.
+   /// @tparam  Args  The types of the parameters to pass to the object's
+   ///                constructor.
+   /// @param[in]  args  The parameters to pass to the constructor of the
+   ///                   singleton object.
    /// @return  The singleton object of the template class.
+   /// @since  0.12.2, 05.02.2017  (enhanced with perfect forwarding parameters)
    /// @since  0.2, 10.04.2016
-   static T& instance();
+   template< class... Args> static T& instance( Args&&... args);
 
-   /// Use default destructor.
-   ~Singleton() = default;
+   /// Deletes an existing singleton object. Upon a subsequent call to
+   /// instance(), a new singleton object will be created.
+   /// @since  0.12.2, 05.02.2017
+   static void reset();
 
 protected:
    /// Empty constructor.
@@ -62,12 +73,17 @@ private:
    /// @since  0.2, 10.04.2016
    Singleton& operator =( const Singleton&) = delete;
 
-   /// The singleton object, created when instance() is called for the first time.
+   /// Mutex object used to make the creation/resetting of the singleton object
+   /// thread-safe.
+   static std::mutex           mMutex;
+   /// The singleton object, created when instance() is called for the first
+   /// time.
    static std::unique_ptr< T>  mpObject;
 
 }; // Singleton< T>
 
 
+template< class T> std::mutex           Singleton< T>::mMutex;
 template< class T> std::unique_ptr< T>  Singleton< T>::mpObject;
 
 
@@ -75,22 +91,30 @@ template< class T> std::unique_ptr< T>  Singleton< T>::mpObject;
 // ===============
 
 
-template< class T> T& Singleton< T>::instance()
+template< class T> template< class... Args>
+   T& Singleton< T>::instance( Args&&... args)
 {
-
-   static std::mutex  mtx;
 
    if (mpObject.get() == nullptr)
    {
-      const std::lock_guard< std::mutex>  lg( mtx);
+      const std::lock_guard< std::mutex>  lg( mMutex);
       if (mpObject.get() == nullptr)
       {
-         mpObject.reset( new T());
+         mpObject.reset( new T( std::forward< Args>( args)...));
       } // end if
    } // end if
 
    return *mpObject;
-} // end Singleton< T>::instance
+} // Singleton< T>::instance
+
+
+template< class T> void Singleton< T>::reset()
+{
+
+   const std::lock_guard< std::mutex>  lg( mMutex);
+   mpObject.reset();
+   
+} // Singleton< T>::reset
 
 
 } // namespace common
