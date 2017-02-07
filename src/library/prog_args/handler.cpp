@@ -115,6 +115,9 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    if (flag_set & hfListArgVar)
       addArgumentListArgVars( "list-arg-vars");
 
+   if (flag_set & hfListArgGroups)
+      addArgumentListArgGroups( "list-arg-groups");
+
    if (flag_set & hfEndValues)
       addArgumentEndValues( "endvalues");
 
@@ -173,10 +176,10 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
-                                                                       std::bind( &Handler::readArgumentFile,
-                                                                                  this, std::placeholders::_1, true),
-                                                                       "Handler::readArgumentFile");
+   auto  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
+                                                      std::bind( &Handler::readArgumentFile,
+                                                                 this, std::placeholders::_1, true),
+                                                                 "Handler::readArgumentFile");
 
 
    return internAddArgument( arg_hdl, arg_spec,
@@ -195,7 +198,8 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArg< bool>( arg_spec, DEST_VAR( mPrintHidden));
+   auto  arg_hdl = new detail::TypedArg< bool>( arg_spec,
+                                                DEST_VAR( mPrintHidden));
 
 
    return internAddArgument( arg_hdl, arg_spec,
@@ -216,7 +220,9 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallable( arg_spec, DEST_METHOD( Handler, listArgVars, *this));
+   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
+                                                 DEST_MEMBER_METHOD( Handler,
+                                                                     listArgVars));
 
 
    arg_hdl->setCardinality();
@@ -224,6 +230,33 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
                              "Prints the list of arguments and their destination "
                              "variables.");
 } // Handler::addArgumentListArgVars
+
+
+
+/// Adds an argument that prints the list of argument groups.<br>
+/// Same as setting the flag #hfListArgGroups, but allows to specify the
+/// argument.
+/// @param[in]  arg_spec  The argument(s) on the command line for printing the
+///                       argument groups.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  0.13.1, 07.02.2017
+detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
+{
+
+   if (!mUsedByGroup)
+      throw invalid_argument( "Standard argument 'list argument groups' can"
+                              " only be set when argument groups are used!"); 
+
+   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
+                                                 DEST_MEMBER_METHOD( Handler,
+                                                                     listArgGroups));
+
+
+   arg_hdl->setCardinality();
+   return internAddArgument( arg_hdl, arg_spec,
+                             "Prints the list of argument groups.");
+} // Handler::addArgumentListArgGroups
 
 
 
@@ -720,6 +753,17 @@ void Handler::listArgVars()
       mOutput << mSubGroupArgs << endl;
 
 } // Handler::listArgVars
+
+
+
+/// Prints the list of argument groups.
+/// @since  0.13.1, 07.02.2017
+void Handler::listArgGroups()
+{
+
+   Groups::instance().listArgGroups();
+
+} // Handler::listArgGroups
 
 
 

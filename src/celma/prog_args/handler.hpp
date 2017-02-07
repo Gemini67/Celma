@@ -143,7 +143,7 @@ class Groups;
 ///        Handler  ah;<br>
 ///        ah << Argument( ...)->setIsMandatory()-> ...<br>
 ///           << Argument( ...)-> ...
-/// @todo  Argument constraints: Relations.
+/// @todo  Argument constraints: Value relations.
 ///        Support constraints like 'value of argument x must be less than value
 ///        of argument y', e.g. start time < end time.
 /// @todo  Change the logic of addCheck(): If multiple checks are added, a value
@@ -208,11 +208,9 @@ class Groups;
 /// @todo  Add test-feature: Process all arguments, print all errors.
 /// @todo  Use different exit codes from evalArgumentErrorExit(), depending on
 ///        the type of the exception that was called.
-/// @todo  When multiple argument handlers are used with an argument group:<br>
-///        Optional parameter for the help argument, which allows to specify the
-///        (single) argument handler to display the help of.
 /// @todo  Add pre- and post-argument list help texts also to argument handlers
 ///        used in a group?
+/// @todo  Path created from parameter and ProjectPath as destination variable?
 ///
 /// @since  0.2, 10.04.2016
 class Handler
@@ -225,37 +223,39 @@ public:
    /// List of flags to control the behaviour of this class:
    enum HandleFlags
    {
-      hfHelpShort   = 0x01,                //!< Allows the argument '-h' to print
-                                           //!< the usage of the program.
-      hfHelpLong    = hfHelpShort << 1,    //!< Allows the argument '--help' to
-                                           //!< print the usage of the program.
-      hfReadProgArg = hfHelpLong  << 1,    //!< Specifies to read arguments from
-                                           //!< the optional program arguments
-                                           //!< file before parsing the command
-                                           //!< line arguments.<br>
-                                           //!< File: $HOME/.progargs/\<progfilename\>.pa
-      hfVerboseArgs = hfReadProgArg << 1,  //!< Produces verbose output when a
-                                           //!< value is assigned to a variable.
-      hfUsageHidden = hfVerboseArgs << 1,  //!< Specifies that hidden arguments
-                                           //!< should be printed too in the
-                                           //!< usage.
-      hfArgHidden   = hfUsageHidden << 1,  //!< Allows the argument
-                                           //!< '--print-hidden' to print the
-                                           //!< hidden arguments in the usage.
-      hfListArgVar  = hfArgHidden << 1,    //!< Adds the argument '--list-arg-vars'
-                                           //!< which, when used, prints the list
-                                           //!< of arguments and the names of the
-                                           //!< destination variables and their
-                                           //!< values.
-      hfUsageCont   = hfListArgVar << 1,   //!< Special flag originally for
-                                           //!< testing: Don't exit after
-                                           //!< printing the usage.
-      hfEndValues   = hfUsageCont << 1,    //!< Activates the argument '--endvalues'
-                                           //!< that is used to signal the end of
-                                           //!< a separate value list.
-      hfInGroup     = hfEndValues << 1     //!< This flag is set by the Groups
-                                           //!< class when it creates a Handler
-                                           //!< object. Don't use otherwise!
+      /// Allows the argument '-h' to print the usage of the program.
+      hfHelpShort     = 0x01,
+      /// Allows the argument '--help' to print the usage of the program.
+      hfHelpLong      = hfHelpShort << 1,
+      /// Specifies to read arguments from the optional program arguments file
+      /// before parsing the command line arguments.<br>
+      /// File: $HOME/.progargs/\<progfilename\>.pa
+      hfReadProgArg   = hfHelpLong  << 1,
+      /// Produces verbose output when a value is assigned to a variable.
+      hfVerboseArgs   = hfReadProgArg << 1,
+      /// Specifies that hidden arguments should be printed too in the usage.
+      hfUsageHidden   = hfVerboseArgs << 1,
+      /// Allows the argument '--print-hidden' to print the hidden arguments in
+      /// the usage.
+      hfArgHidden     = hfUsageHidden << 1,
+      /// Adds the argument '--list-arg-vars' which, when used, prints the list
+      /// of arguments and the names of the destination variables and their
+      /// values.
+      hfListArgVar    = hfArgHidden << 1,
+      /// Special flag originally for testing: Don't exit after printing the
+      /// usage.
+      hfUsageCont     = hfListArgVar << 1,
+      /// Activates the argument '--endvalues' that is used to signal the end of
+      /// a separate value list.
+      hfEndValues     = hfUsageCont << 1,
+      /// Activates the argument '--list-arg-groups' which lists the names of
+      /// all known argument groups.<br>
+      /// If argument groups are used, set this argument when creating the
+      /// Groups singleton object.
+      hfListArgGroups = hfEndValues << 1,
+      /// This flag is set by the Groups class when it creates a Handler object.
+      /// Don't use otherwise!
+      hfInGroup       = hfListArgGroups << 1
    }; // HandleFlags
 
    /// List of possible positions for the additional output 
@@ -509,6 +509,16 @@ public:
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentListArgVars( const std::string& arg_spec);
 
+   /// Adds an argument that prints the list of argument groups.<br>
+   /// Same as setting the flag #hfListArgGroups, but allows to specify the
+   /// argument.
+   /// @param[in]  arg_spec  The argument(s) on the command line for printing the
+   ///                       argument groups.
+   /// @return  The object managing this argument, may be used to apply further
+   ///          settings.
+   /// @since  0.13.1, 07.02.2017
+   detail::TypedArgBase* addArgumentListArgGroups( const std::string& arg_spec);
+
    /// Adds an argument that can be used to mark the end of multiple, separate
    /// value list.
    /// @param[in]  arg_spec  The argument(s) on the command line for marking the
@@ -717,6 +727,10 @@ private:
    /// @since  0.2, 10.04.2016
    void listArgVars();
 
+   /// Prints the list of argument groups.
+   /// @since  0.13.1, 07.02.2017
+   void listArgGroups();
+
    /// Called to mark the end of a value list: Sets mpLastArg to NULL.
    /// @since  0.2, 10.04.2016
    void endValueList();
@@ -864,6 +878,13 @@ private:
 /// @since  0.2, 10.04.2016
 #define  DEST_FUNCTION_VALUE( f)  std::bind( &f, std::placeholders::_1), #f, true
 
+/// Use this define to pass a method (class member function) of the current
+/// object, that takes no value, as argument handler.
+/// @param[in]  c  The name of the class.
+/// @param[in]  m  The name of the method.
+/// @since  0.13.1, 07.02.2017
+#define  DEST_MEMBER_METHOD( c, m)  std::bind( & c :: m, this), #c "::" #m
+
 /// Use this define to pass a method (class member function) that takes no value
 /// as argument handler.
 /// @param[in]  c  The name of the class.
@@ -871,6 +892,14 @@ private:
 /// @param[in]  o  The object to call the method for.
 /// @since  0.2, 10.04.2016
 #define  DEST_METHOD( c, m, o)  std::bind( & c :: m, &o), #c "::" #m
+
+/// Use this define to pass a method (class member function) of the current
+/// object, that accepts a value, as argument handler.
+/// @param[in]  c  The name of the class.
+/// @param[in]  m  The name of the method.
+/// @since  0.13.1, 07.02.2017
+#define  DEST_MEMBER_METHOD_VALUE( c, m)  std::bind( & c :: m, this, std::placeholders::_1), #c "::" #m, true
+
 
 /// Use this define to pass a method (class member function) that accepts a
 /// value as argument handler.

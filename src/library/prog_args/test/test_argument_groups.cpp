@@ -503,6 +503,38 @@ BOOST_AUTO_TEST_CASE( group_features)
 
 
 
+/// Test listing the argument groups.
+/// @since  0.13.1, 07.02.2017
+BOOST_AUTO_TEST_CASE( list_groups)
+{
+
+   Groups::reset();
+
+   std::ostringstream  normal_out;
+   std::ostringstream  error_out;
+
+   Groups::instance( normal_out, error_out, Handler::hfListArgGroups);
+
+   auto  ah1 = Groups::instance().getArgHandler( "Handler 1");
+   auto  ah2 = Groups::instance().getArgHandler( "Handler 2", Handler::AllHelp);
+
+   ArgString2Array  as2a( "--list-arg-groups", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv));
+
+   BOOST_REQUIRE_EQUAL( normal_out.str(),
+                        "list of known argument groups:\n"
+                        "- Handler 1\n"
+                        "- Handler 2\n");
+   BOOST_REQUIRE( error_out.str().empty());
+
+   Groups::instance().removeAllArgHandler();
+   Groups::reset();
+
+} // list_groups
+
+
+
 class TestControlArgs
 {
 public:
