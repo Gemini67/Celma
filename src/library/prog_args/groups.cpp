@@ -27,7 +27,6 @@
 namespace celma { namespace prog_args {
 
 
-using std::cout;
 using std::endl;
 using std::runtime_error;
 using std::string;
@@ -55,9 +54,7 @@ Groups::SharedArgHndl Groups::getArgHandler( const string& grpName,
 {
 
    if (grpName.empty())
-   {
       throw runtime_error( "Empty named not allowed for an argument group!");
-   } // end if
 
    /// check that this symbolic group name is used already
    for (auto const& stored_group : mArgGroups)
@@ -71,6 +68,10 @@ Groups::SharedArgHndl Groups::getArgHandler( const string& grpName,
                                                   txt1, txt2);
 
    mArgGroups.push_back( Storage( grpName, new_handler));
+
+   // pass the argument 'list argument groups' only to the first Handler object
+   if (mHandlerFlags & Handler::hfListArgGroups)
+      mHandlerFlags -= Handler::hfListArgGroups;
 
    return new_handler;
 } // Groups::getArgHandler
@@ -214,9 +215,9 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
    } // end for
 
    if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::beforeArgs))
-      cout << txt1 << endl << endl;
+      mOutput << txt1 << endl << endl;
 
-   cout << "Usage:" << endl << endl;
+   mOutput << "Usage:" << endl << endl;
 
    for (auto & stored_group : mArgGroups)
    {
@@ -225,15 +226,15 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
       stored_group.mpArgHandler->mDescription.setCaption( "Mandatory:",
                                                             "Optional:");
 
-      cout << stored_group.mName << endl
-           << *(stored_group.mpArgHandler) << endl
-           << endl;
+      mOutput << stored_group.mName << endl
+              << *(stored_group.mpArgHandler) << endl
+              << endl;
    } // end for
 
    if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::afterArgs))
-      cout << txt1 << endl << endl;
+      mOutput << txt1 << endl << endl;
    else if ((txt2 != nullptr) && (txt2->usagePos() == Handler::UsagePos::afterArgs))
-      cout << txt2 << endl << endl;
+      mOutput << txt2 << endl << endl;
 
    exit( EXIT_SUCCESS);
 
@@ -241,6 +242,20 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 
 
 
+/// When argument groups are used, it is necessary to check that the same
+/// argument is only used in one of the handlers.<br>
+/// This is achieved by stting the Handler::hfInGroup flag for each handler
+/// that is created. Then, when an argument is added to the handler, it calls
+/// this method.<br>
+/// Here, since we don't know which argument was the new one, compare each
+/// argument of the handler with all arguments of all the other handlers.<br>
+/// One special point is to mention: When a new Handler object is created,
+/// and a standard argument is set by this handler, this will call this
+/// method, but then the new Handler object is not yet in the internal object
+/// list.
+/// @param[in]  mod_handler  The argument Handler object to which a new
+///                          argument was added.
+/// @since  0.13.0, 05.02.2017
 void Groups::crossCheckArguments( Handler* mod_handler) const
 {
 
@@ -273,6 +288,22 @@ void Groups::crossCheckArguments( Handler* mod_handler) const
 
 
 
+/// Lists the names of the argument groups.
+/// @since  013.1, 07.02.2017
+void Groups::listArgGroups()
+{
+
+   mOutput << "list of known argument groups:" << endl;
+
+   for (auto const& stored_group : mArgGroups)
+   {
+      mOutput << "- " << stored_group.mName << endl;
+   } // end for
+
+} // Groups::listArgGroups
+
+
+
 /// Constructor.
 /// @param[in]  os        The stream to write normal output to.
 /// @param[in]  error_os  The stream to write error output to.
@@ -282,7 +313,7 @@ void Groups::crossCheckArguments( Handler* mod_handler) const
 Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
    mOutput( os),
    mErrorOutput( error_os),
-   mHandlerFlags( flag_set | Handler::hfInGroup),
+   mHandlerFlags( (flag_set & Groups2HandlerFlags) | Handler::hfInGroup),
    mArgGroups(),
    mEvaluating( false),
    mUsageLineLength( detail::ArgumentDesc::DefaultLineLength)

@@ -44,6 +44,7 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Logging, improvements on argument handler library, ...
+     0.13.1 | 2017-02-07        | Some minor improvements for argument groups.
      0.13.0 | 2017-02-05        | Redesign of prog_args::Groups class in order to pass special parameters on to all argument handler objects correctly.
      0.12.2 | 2017-02-05        | Added perfect forwarding to singleton instance().
      0.0.4  | 2016-07-03        | Added sub-library 'reflection'.

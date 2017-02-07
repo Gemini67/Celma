@@ -47,7 +47,12 @@ class Handler;
 /// If special flags or other output channels for verbose and error output
 /// should be passed to all handler objects, make sure the group singleton is
 /// created first with these special parameters (by calling the instance()
-/// method).
+/// method).<br>
+/// Last but not least: When using argument groups, be aware that the evaluation
+/// of the command line arguments may happen at a later time and/or in another
+/// context. That means that the destination variables that are passed to the
+/// argument Handler objects may not go out of scope, must be members of an
+/// object whose lifetimes lasts at least until evalArguments() was called!
 /// @since  0.13.0, 05.02.2017  (redesign to handle special parameters)
 /// @since  0.2, 10.04.2016
 /// @todo  Add method evalArgumentsErrorExit() like in Handler class.
@@ -59,6 +64,15 @@ class Groups: public common::Singleton< Groups>
 public:
    /// The type used to store an argument handler object.
    typedef std::shared_ptr< Handler>  SharedArgHndl;
+
+   /// Set of the flags that may be set on the argument groups object, which
+   /// will be passed on to each Handler object that is created afterwards.
+   static const int Groups2HandlerFlags = Handler::hfVerboseArgs   |
+                                          Handler::hfUsageHidden   |
+                                          Handler::hfArgHidden     |
+                                          Handler::hfListArgVar    |
+                                          Handler::hfEndValues     |
+                                          Handler::hfListArgGroups;
 
    /// Returns the argument handler for the specified group name.<br>
    /// If the argument handler does not exist yet, a new handler object will be
@@ -138,7 +152,25 @@ public:
    /// @since  0.2, 10.04.2016
    void displayUsage( IUsageText* txt1, IUsageText* txt2) const;
 
+   /// When argument groups are used, it is necessary to check that the same
+   /// argument is only used in one of the handlers.<br>
+   /// This is achieved by stting the Handler::hfInGroup flag for each handler
+   /// that is created. Then, when an argument is added to the handler, it calls
+   /// this method.<br>
+   /// Here, since we don't know which argument was the new one, compare each
+   /// argument of the handler with all arguments of all the other handlers.<br>
+   /// One special point is to mention: When a new Handler object is created,
+   /// and a standard argument is set by this handler, this will call this
+   /// method, but then the new Handler object is not yet in the internal object
+   /// list.
+   /// @param[in]  mod_handler  The argument Handler object to which a new
+   ///                          argument was added.
+   /// @since  0.13.0, 05.02.2017
    void crossCheckArguments( Handler* mod_handler) const noexcept( false);
+
+   /// Lists the names of the argument groups.
+   /// @since  013.1, 07.02.2017
+   void listArgGroups();
 
 protected:
    /// Constructor.
@@ -187,7 +219,7 @@ private:
    /// Stream to write error output to.
    std::ostream&   mErrorOutput;
    /// The set of flags to pass on to all handler objects that are created.
-   const int       mHandlerFlags;
+   int             mHandlerFlags;
    /// The argument handlers.
    ArgHandlerCont  mArgGroups;
    /// Set to \c true when the method evalArguments() of this class is used.
