@@ -49,7 +49,7 @@ namespace celma { namespace common {
 /// Base class for all, needs only the base class as template parameter, so the
 /// methods of this class can be accessed even while the value type is unknown.
 /// @tparam  B  The type of the base class.
-/// @since x.y.z, 15.02.2017
+/// @since  0.13.3, 15.02.2017
 template< typename B> class TypeNameBase: public B
 {
 public:
@@ -57,7 +57,7 @@ public:
 
    /// Returns the stored type name.
    /// @return  The type name stored internally.
-   /// @since x.y.z, 15.02.2017
+   /// @since  0.13.3, 15.02.2017
    const std::string& getTypeName() const
    {
       return mTypeName;
@@ -66,7 +66,7 @@ public:
 protected:
    /// Constructor, stores the specified type name.
    /// @param[in]  type_name  The type name to store.
-   /// @since x.y.z, 15.02.2017
+   /// @since  0.13.3, 15.02.2017
    TypeNameBase( const std::string& type_name):
       mTypeName( type_name)
    {
@@ -87,7 +87,7 @@ private:
 /// as template parameter.
 /// @tparam  T  The type to store the name of.
 /// @tparam  B  The type of the base class.
-/// @since x.y.z, 13.02.2017
+/// @since  0.13.3, 13.02.2017
 template< typename T, typename B> class TypeName: public TypeNameBase< B>
 {
 public:
@@ -95,7 +95,7 @@ public:
 
 protected:
    /// Constructor.
-   /// @since x.y.z, 13.02.2017
+   /// @since  0.13.3, 13.02.2017
    TypeName():
       TypeNameBase< B>( type< T>::name())
    {
@@ -113,13 +113,13 @@ protected:
 /// @tparam  T  The type of the variable to store the reference (and type name)
 ///             of.
 /// @tparam  B  The type of the base class.
-/// @since x.y.z, 13.02.2017
+/// @since  0.13.3, 13.02.2017
 template< typename T, typename B> class Reference: public TypeName< T, B>
 {
 public:
    /// Constructor.
    /// @param[in]  dest  The variable to store the reference to.
-   /// @since x.y.z, 13.02.2017
+   /// @since  0.13.3, 13.02.2017
    Reference( T& dest):
       TypeName< T, B>(),
       mDestination( dest)
@@ -143,13 +143,13 @@ protected:
 /// specified type.
 /// @tparam  T  The type of the variable to create internally.
 /// @tparam  B  The type of the base class.
-/// @since x.y.z, 13.02.2017
+/// @since  0.13.3, 13.02.2017
 template< typename T, typename B> class Value: public TypeName< T, B>
 {
 public:
    /// Constructor.
    /// @param[in]  init_val  Initial value to set on the internal variable.
-   /// @since x.y.z, 13.02.2017
+   /// @since  0.13.3, 13.02.2017
    Value( const T& init_val = T()):
       TypeName< T, B>(),
       mValue( init_val)
@@ -173,14 +173,14 @@ protected:
 /// variable.
 /// @tparam  T  The type of the variable.
 /// @tparam  B  The type of the base class.
-/// @since x.y.z, 13.02.2017
+/// @since  0.13.3, 13.02.2017
 template< typename T, typename B> class VarName: public Reference< T, B>
 {
 public:
    /// Constructor.
    /// @param[in]  dest      The variable to store the reference to.
    /// @param[in]  var_name  The name of the original variable.
-   /// @since x.y.z, 13.02.2017
+   /// @since  0.13.3, 13.02.2017
    VarName( T& dest, const std::string& var_name):
       Reference< T, B>( dest),
       mVarName( var_name)
@@ -192,7 +192,7 @@ public:
    /// Returns the name of the original variable.
    /// @return  The name of the original variable as specified in the
    ///          constructor.
-   /// @since x.y.z, 16.02.2017
+   /// @since  0.13.3, 16.02.2017
    const std::string& getVarName() const
    {
       return mVarName;

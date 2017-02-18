@@ -28,6 +28,7 @@ using celma::common::Value;
 using celma::common::VarName;
 
 
+/// Helper base class, pure minimum.
 class SimpleBase
 {
 public:
@@ -36,6 +37,8 @@ public:
 }; // SimpleBase
 
 
+/// Helper super class, needed to test those base classes with a protected
+/// constructor.
 template< typename T> class TestTypeName: public TypeName< T, SimpleBase>
 {
 public:
@@ -44,21 +47,22 @@ public:
    {
    }
    
-};
+}; // TestTypeName< T>
 
 
+/// Used to test move-constructor.
 template< typename T> TestTypeName< T> getTestTypeName()
 {
 
    TestTypeName< T>  my_local_var;
 
    return my_local_var;
-} // 
+} // getTestTypeName
 
 
 
 /// Test class TypeName: Stores the name of the type.
-/// @since  x.y.z, 13.02.2017
+/// @since  0.13.3, 13.02.2017
 BOOST_AUTO_TEST_CASE( test_type_name)
 {
 
@@ -93,7 +97,7 @@ BOOST_AUTO_TEST_CASE( test_type_name)
 
 
 /// Test class Reference: Stores a variable reference plus the name of the type.
-/// @since  x.y.z, 16.02.2017
+/// @since  0.13.3, 16.02.2017
 BOOST_AUTO_TEST_CASE( test_reference)
 {
 
@@ -132,7 +136,7 @@ BOOST_AUTO_TEST_CASE( test_reference)
 
 
 /// Test class Value: Stores a value plus the name of the type.
-/// @since  x.y.z, 16.02.2017
+/// @since  0.13.3, 16.02.2017
 BOOST_AUTO_TEST_CASE( test_value)
 {
 
@@ -167,7 +171,7 @@ BOOST_AUTO_TEST_CASE( test_value)
 
 
 /// Test class Reference: Stores a variable reference plus the name of the type.
-/// @since  x.y.z, 16.02.2017
+/// @since  0.13.3, 16.02.2017
 BOOST_AUTO_TEST_CASE( test_var_name)
 {
 
@@ -210,7 +214,7 @@ BOOST_AUTO_TEST_CASE( test_var_name)
 
 
 /// Test copying and moving the helper classes.
-/// @since  x.y.z, 16.02.2017
+/// @since  0.13.3, 16.02.2017
 BOOST_AUTO_TEST_CASE( test_copy_move)
 {
 
