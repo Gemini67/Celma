@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,13 +41,11 @@ public:
    /// @since  0.2, 06.04.2016
    explicit ArgumentKey( const std::string& arg_spec) noexcept( false);
 
-   /// Default copy constructor is just fine.
-   /// @since  0.2, 06.04.2016
    ArgumentKey( const ArgumentKey&) = default;
+   ArgumentKey( ArgumentKey&&) = default;
 
-   /// Default assignment operator is just fine.
-   /// @since  0.2, 06.04.2016
    ArgumentKey& operator =( const ArgumentKey&) = default;
+   ArgumentKey& operator =( ArgumentKey&&) = default;
 
    /// Compares two argument keys if the short or long specifier are the same.
    /// Mismatches are not detected by this function.
@@ -55,6 +53,13 @@ public:
    /// @return  \c true if the short or the long specifier are identical.
    /// @since  0.2, 06.04.2016
    bool operator ==( const ArgumentKey& other) const;
+
+   /// Less comparison operator, needed in order to use an argument key object
+   /// as key in a sorted STL container.
+   /// @param[in]  other  The other key object to compare against.
+   /// @return  \c true if this is less than \a other.
+   /// @since  x.y.z, 09.02.2017
+   bool operator <( const ArgumentKey& other) const;
 
    /// Checks if there is a mismatch: Short specifier matches but long don't or
    /// vice versa.
