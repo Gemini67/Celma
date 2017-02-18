@@ -694,14 +694,14 @@ private:
    /// So, this template handles both types of arguments. Needed only in the
    /// implementation, so the template definition is in the source file too.
    /// @tparam  T  The type of the argument (character or string).
-   /// @param[in]      arg        The argument (character/short or long).
-   /// @param[in]      argString  The argument character or string always in
-   ///                            string format.
-   /// @param[in,out]  ai         The iterator pointing to the current argument.
-   ///                            May be increased here (for values or argument
-   ///                            groups).
-   /// @param[in]      end        Iterator pointing to the end of the argument
-   ///                            list.
+   /// @param[in]      arg         The argument (character/short or long).
+   /// @param[in]      arg_string  The argument character or string always in
+   ///                             string format.
+   /// @param[in,out]  ai          The iterator pointing to the current argument.
+   ///                             May be increased here (for values or argument
+   ///                             groups).
+   /// @param[in]      end         Iterator pointing to the end of the argument
+   ///                             list.
    /// @return  Result of handling the current argument.
    /// @since  0.2, 10.04.2016
    template< typename T>

@@ -11,6 +11,7 @@ cmake_minimum_required( VERSION 2.8 )
 
 add_definitions( -DBOOST_TEST_DYN_LINK)
 
+celma_add_boost_testprogram( test_any_type_base )
 celma_add_boost_testprogram( test_clear_container )
 celma_add_boost_testprogram( test_constexpr_string_concat )
 celma_add_boost_testprogram( test_constexpr_string_from )
