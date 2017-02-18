@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -49,6 +49,13 @@ public:
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
+   /// Allows to set the value mode to 'optional' (or required, but that is
+   /// already the default).
+   /// @param[in]  vm  The new value mode to set.
+   /// @return  Pointer to this object.
+   /// @since  0.13.2, 18.02.2017
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
+
    /// Callables with values may also accept multiple, separate values.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
@@ -92,6 +99,17 @@ inline bool TypedArgCallableValue::hasValue() const
 {
    return mWasCalled;
 } // TypedArgCallableValue::hasValue
+
+
+inline TypedArgBase* TypedArgCallableValue::setValueMode( ValueMode vm) noexcept( false)
+{
+   if ((vm == ValueMode::none) || (vm == ValueMode::unknown))
+      throw std::invalid_argument( std::string( "may not set value mode '") +
+                                   valueMode2str( vm) + "' on variable '" +
+                                   mVarName + "'");
+   mValueMode = vm;
+   return this;
+} // TypedArgCallableValue::setValueMode
 
 
 inline TypedArgBase* TypedArgCallableValue::setTakesMultiValue()
