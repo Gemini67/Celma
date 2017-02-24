@@ -115,6 +115,9 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    if (flag_set & hfListArgVar)
       addArgumentListArgVars( "list-arg-vars");
 
+   if (flag_set & hfListArgGroups)
+      addArgumentListArgGroups( "list-arg-groups");
+
    if (flag_set & hfEndValues)
       addArgumentEndValues( "endvalues");
 
@@ -173,10 +176,10 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
-                                                                       std::bind( &Handler::readArgumentFile,
-                                                                                  this, std::placeholders::_1, true),
-                                                                       "Handler::readArgumentFile");
+   auto  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
+                                                      std::bind( &Handler::readArgumentFile,
+                                                                 this, std::placeholders::_1, true),
+                                                                 "Handler::readArgumentFile");
 
 
    return internAddArgument( arg_hdl, arg_spec,
@@ -195,7 +198,8 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArg< bool>( arg_spec, DEST_VAR( mPrintHidden));
+   auto  arg_hdl = new detail::TypedArg< bool>( arg_spec,
+                                                DEST_VAR( mPrintHidden));
 
 
    return internAddArgument( arg_hdl, arg_spec,
@@ -216,7 +220,9 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallable( arg_spec, DEST_METHOD( Handler, listArgVars, *this));
+   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
+                                                 DEST_MEMBER_METHOD( Handler,
+                                                                     listArgVars));
 
 
    arg_hdl->setCardinality();
@@ -224,6 +230,33 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
                              "Prints the list of arguments and their destination "
                              "variables.");
 } // Handler::addArgumentListArgVars
+
+
+
+/// Adds an argument that prints the list of argument groups.<br>
+/// Same as setting the flag #hfListArgGroups, but allows to specify the
+/// argument.
+/// @param[in]  arg_spec  The argument(s) on the command line for printing the
+///                       argument groups.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  0.13.1, 07.02.2017
+detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
+{
+
+   if (!mUsedByGroup)
+      throw invalid_argument( "Standard argument 'list argument groups' can"
+                              " only be set when argument groups are used!"); 
+
+   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
+                                                 DEST_MEMBER_METHOD( Handler,
+                                                                     listArgGroups));
+
+
+   arg_hdl->setCardinality();
+   return internAddArgument( arg_hdl, arg_spec,
+                             "Prints the list of argument groups.");
+} // Handler::addArgumentListArgGroups
 
 
 
@@ -435,19 +468,19 @@ void Handler::crossCheckArguments( const string ownName,
 /// So, this template handles both types of arguments. Needed only in the
 /// implementation, so the template definition is in the source file too.
 /// @tparam  T  The type of the argument (character or string).
-/// @param[in]      arg        The argument (character/short or long).
-/// @param[in]      argString  The argument character or string always in
-///                            string format.
-/// @param[in,out]  ai         The iterator pointing to the current argument.
-///                            May be increased here (for values or argument
-///                            groups).
-/// @param[in]      end        Iterator pointing to the end of the argument
-///                            list.
+/// @param[in]      arg         The argument (character/short or long).
+/// @param[in]      arg_string  The argument character or string always in
+///                             string format.
+/// @param[in,out]  ai          The iterator pointing to the current argument.
+///                             May be increased here (for values or argument
+///                             groups).
+/// @param[in]      end         Iterator pointing to the end of the argument
+///                             list.
 /// @return  Result of handling the current argument.
 /// @since  0.2, 10.04.2016
 template< typename T>
    Handler::ArgResult Handler::processArg( const T& arg,
-                                           const string& argString,
+                                           const string& arg_string,
                                            detail::ArgListParser::const_iterator& ai,
                                            const detail::ArgListParser::const_iterator& end)
 {
@@ -457,14 +490,14 @@ template< typename T>
 
    if (p_arg_hdl != nullptr)
    {
-      handleIdentifiedArg( p_arg_hdl, argString);
+      handleIdentifiedArg( p_arg_hdl, arg_string);
 
       auto  subArgHandler = static_cast< detail::TypedArgSubGroup*>( p_arg_hdl)->obj();
       ++ai;
 
       // we may only advance the main iterator if the argument is (still)
       // handled by the sub-argument
-      detail::ArgListParser::const_iterator  subAI( ai);
+      auto  subAI( ai);
       while ((subAI != end) &&
              (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
       {
@@ -482,38 +515,35 @@ template< typename T>
 
    // an argument that we know
    if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
-      throw runtime_error( "Value mode not set for argument '" + argString + "'");
+      throw runtime_error( "Value mode not set for argument '" + arg_string + "'");
 
    if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
    {
       // no value needed
-      handleIdentifiedArg( p_arg_hdl, argString);
+      handleIdentifiedArg( p_arg_hdl, arg_string);
       return ArgResult::consumed;
    } // end if
 
    // check if the next element in the list is a value
-   detail::ArgListParser::const_iterator  ait2( ai);
+   auto  ait2( ai);
    ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::required) &&
-       ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)))
-      throw runtime_error( "Argument '" + argString + "' requires value(s)");
-
-   if (((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)) &&
-       (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown))
+   if ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue))
    {
-      handleIdentifiedArg( p_arg_hdl, argString);
-   } else if ((ait2 != end) && (ait2->mElementType == detail::ArgListElement::etValue))
-   {
-      // first process the argument, *then* assign ait2 to ai
-      // reason: arg and argString are references of ai->, so if we change ai
-      // the references are still on the old value(s)
-      handleIdentifiedArg( p_arg_hdl, argString, ait2->mValue);
-      ai = ait2;
+      // no next value
+      if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::optional)
+         handleIdentifiedArg( p_arg_hdl, arg_string);
+      else
+         throw runtime_error( "Argument '" + arg_string + "' requires value(s)");
    } else
    {
-      handleIdentifiedArg( p_arg_hdl, argString);
+      // have a next value, and value mode can only be 'optional' or 'required'
+      // first process the argument, *then* assign ait2 to ai
+      // reason: arg and arg_string are references of ai->, so if we change ai
+      // the references are still on the old value(s)
+      handleIdentifiedArg( p_arg_hdl, arg_string, ait2->mValue);
+      ai = ait2;
    } // end if
 
    return ArgResult::consumed;
@@ -720,6 +750,17 @@ void Handler::listArgVars()
       mOutput << mSubGroupArgs << endl;
 
 } // Handler::listArgVars
+
+
+
+/// Prints the list of argument groups.
+/// @since  0.13.1, 07.02.2017
+void Handler::listArgGroups()
+{
+
+   Groups::instance().listArgGroups();
+
+} // Handler::listArgGroups
 
 
 

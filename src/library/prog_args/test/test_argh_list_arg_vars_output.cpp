@@ -81,7 +81,8 @@ int main( int /* argc */, char* argv[])
       try
       {
          ah.addArgument( "f",        DEST_VAR( my_flag),    "My flag.");
-         ah.addArgument( "integer",  DEST_VAR( my_int),     "My integer.")->setIsMandatory();
+         ah.addArgument( "integer",  DEST_VAR( my_int),     "My integer.")
+                       ->setIsMandatory();
          ah.addArgument( "s,string", DEST_VAR( my_string),  "My string.");
 
          ah.evalArguments( as2a.mArgc, as2a.mpArgv);
@@ -115,11 +116,12 @@ int main( int /* argc */, char* argv[])
       try
       {
          ah.addArgument( "f",        DEST_VAR( my_flag),    "My flag.");
-         ah.addArgument( "integer",  DEST_VAR( my_int),     "My integer.")->setIsMandatory();
-         ah.addArgument( "s,string", DEST_VAR( my_string),  "My string.")->setPrintDefault( false);
+         ah.addArgument( "integer",  DEST_VAR( my_int),     "My integer.")
+                       ->setIsMandatory();
+         ah.addArgument( "s,string", DEST_VAR( my_string),  "My string.")
+                       ->setPrintDefault( false);
          ah.addArgument( "long",     DEST_VAR( my_long),    "My hidden long integer.")->setIsHidden();
-         ah.addArgument( "ulong",    DEST_VAR( my_ulong),   "My unsigned long integer.")
-                       ->setValueMode( Handler::ValueMode::optional);
+         ah.addArgument( "ulong",    DEST_VAR( my_ulong),   "My unsigned long integer.");
          ah.addArgument( "call",     DEST_FUNCTION( callable_function),
                          "My function.");
          ah.addArgument( "cas",      DEST_VAR( my_ca_string), "My CheckAssign string");

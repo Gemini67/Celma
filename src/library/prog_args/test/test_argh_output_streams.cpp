@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( help_usage)
    BOOST_REQUIRE_EQUAL( std_out.str(), "Usage:\nOptional arguments:\n   -h,--help   Prints the program usage\n\n");
    BOOST_REQUIRE( err_out.str().empty());
 
-} // end help_usage
+} // help_usage
 
 
 
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE( custom_help_usage)
    BOOST_REQUIRE_EQUAL( std_out.str(), "Usage:\nOptional arguments:\n   -u,--usage   Custom arguments for help\n\n");
    BOOST_REQUIRE( err_out.str().empty());
 
-} // end custom_help_usage
+} // custom_help_usage
 
 
 
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
                         "Handler::listArgVars: is set\n"
                         "Short (character) arguments:\n"
                         "'-h' calls function/method 'Handler::usage'.\n"
-                        "   value 'no value' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+                        "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
                         "'-i' value type 'int', destination 'opt_int_arg', value not set.\n"
                         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
                         "'-s' value type 'std::string', destination 'string_arg', value = text.\n"
@@ -178,11 +178,11 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
                         "\n"
                         "Long (string) arguments:\n"
                         "'--help' calls function/method 'Handler::usage'.\n"
-                        "   value 'no value' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+                        "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
                         "'--index' value type 'int', destination 'opt_int_arg', value not set.\n"
                         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
                         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-                        "   value 'no value' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+                        "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
                         "\n"
                         "opt_int_arg: value '4711' is assigned\n");
    BOOST_REQUIRE( err_out.str().empty());
