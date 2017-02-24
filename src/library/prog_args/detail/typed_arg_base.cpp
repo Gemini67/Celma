@@ -301,15 +301,8 @@ ostream& operator <<( ostream& os, const TypedArgBase& tab)
 ostream& operator <<( ostream& os, TypedArgBase::ValueMode vm)
 {
 
-   switch (vm)
-   {
-   case TypedArgBase::ValueMode::none:      os << "'no value'";  break;
-   case TypedArgBase::ValueMode::optional:  os << "'optional'";  break;
-   case TypedArgBase::ValueMode::required:  os << "'required'";  break;
-   default:                                 os << "'unknown'";   break;
-   } // end switch
-
-   os << " (" << static_cast< int>( vm) << ")";
+   os << "'" << TypedArgBase::valueMode2str( vm)
+      << "' (" << static_cast< int>( vm) << ")";
 
    return os;
 } // operator <<

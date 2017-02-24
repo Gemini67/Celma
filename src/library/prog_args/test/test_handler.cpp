@@ -31,11 +31,13 @@
 
 // project includes
 #include "celma/common/arg_string_2_array.hpp"
+#include "celma/prog_args/triple_logic.hpp"
 
 
 using celma::common::ArgString2Array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
+using celma::prog_args::TripleLogic;
 using std::bad_cast;
 using std::invalid_argument;
 using std::logic_error;
@@ -82,7 +84,7 @@ BOOST_AUTO_TEST_CASE( std_args_not_used)
                            runtime_error);
    } // end scope
 
-} // end std_args_not_used
+} // std_args_not_used
 
 
 
@@ -241,7 +243,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
                            logic_error);
    } // end scope
 
-} // end argument_setup_errors
+} // argument_setup_errors
 
 
 
@@ -266,7 +268,7 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
                            runtime_error);
    } // end scope
 
-} // end std_args_not_matching
+} // std_args_not_matching
 
 
 
@@ -286,7 +288,7 @@ BOOST_AUTO_TEST_CASE( no_argument)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( !flag.hasValue());
 
-} // end no_argument
+} // no_argument
 
 
 
@@ -376,7 +378,7 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
                            runtime_error);
    } // end scope
 
-} // end parameter_string_errors
+} // parameter_string_errors
 
 
 
@@ -406,7 +408,7 @@ BOOST_AUTO_TEST_CASE( unexpected_free_value)
                            runtime_error);
    } // end scope
 
-} // end unexpected_free_value
+} // unexpected_free_value
 
 
 
@@ -452,7 +454,7 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
-} // end free_value_handling
+} // free_value_handling
 
 
 
@@ -471,7 +473,7 @@ BOOST_AUTO_TEST_CASE( one_free_value)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( DEST_VAR( v1), "one"));
    BOOST_REQUIRE_THROW( ah.addArgument( DEST_VAR( v2), "two"), invalid_argument);
 
-} // end one_free_value
+} // one_free_value
 
 
 
@@ -492,7 +494,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag)
    BOOST_REQUIRE( flag.hasValue());
    BOOST_REQUIRE( flag.value());
 
-} // end one_short_flag
+} // one_short_flag
 
 
 
@@ -514,7 +516,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag_unset)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( !flag);
 
-} // end one_short_flag_unset
+} // one_short_flag_unset
 
 
 
@@ -537,7 +539,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
    BOOST_REQUIRE( flag.hasValue());
    BOOST_REQUIRE( !flag.value());
 
-} // end one_short_flag_checked_unset
+} // one_short_flag_checked_unset
 
 
 
@@ -558,7 +560,7 @@ BOOST_AUTO_TEST_CASE( one_long_flag)
    BOOST_REQUIRE( flag.hasValue());
    BOOST_REQUIRE( flag.value());
 
-} // end one_long_flag
+} // one_long_flag
 
 
 
@@ -593,7 +595,7 @@ BOOST_AUTO_TEST_CASE( one_flag_both)
       BOOST_REQUIRE( flag.value());
    } // end scope
 
-} // end one_flag_both
+} // one_flag_both
 
 
 
@@ -628,7 +630,7 @@ BOOST_AUTO_TEST_CASE( one_short_int)
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
 
-} // end one_short_int
+} // one_short_int
 
 
 
@@ -676,7 +678,7 @@ BOOST_AUTO_TEST_CASE( one_long_int)
       BOOST_REQUIRE_EQUAL( maxValue.value(), -81);
    } // end scope
 
-} // end one_long_int
+} // one_long_int
 
 
 
@@ -697,7 +699,7 @@ BOOST_AUTO_TEST_CASE( one_free_int)
    BOOST_REQUIRE( repetitions.hasValue());
    BOOST_REQUIRE_EQUAL( repetitions.value(), 123);
 
-} // end one_free_int
+} // one_free_int
 
 
 
@@ -771,7 +773,7 @@ BOOST_AUTO_TEST_CASE( one_int_both)
       BOOST_REQUIRE_EQUAL( maxValue.value(), -135);
    } // end scope
 
-} // end one_int_both
+} // one_int_both
 
 
 
@@ -806,7 +808,7 @@ BOOST_AUTO_TEST_CASE( one_short_double)
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
 
-} // end one_short_double
+} // one_short_double
 
 
 
@@ -854,7 +856,7 @@ BOOST_AUTO_TEST_CASE( one_long_double)
       BOOST_REQUIRE_EQUAL( factor.value(), -125.75);
    } // end scope
 
-} // end one_long_double
+} // one_long_double
 
 
 
@@ -875,7 +877,7 @@ BOOST_AUTO_TEST_CASE( one_free_double)
    BOOST_REQUIRE( factor.hasValue());
    BOOST_REQUIRE_EQUAL( factor.value(), 99.98);
 
-} // end one_free_double
+} // one_free_double
 
 
 
@@ -936,7 +938,7 @@ BOOST_AUTO_TEST_CASE( one_double_both)
       BOOST_REQUIRE_EQUAL( factor.value(), 58.9653);
    } // end scope
 
-} // end one_double_both
+} // one_double_both
 
 
 
@@ -971,7 +973,7 @@ BOOST_AUTO_TEST_CASE( one_short_string)
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
-} // end one_short_string
+} // one_short_string
 
 
 
@@ -1006,7 +1008,7 @@ BOOST_AUTO_TEST_CASE( one_long_string)
       BOOST_REQUIRE_EQUAL( name.value(), "OTHER_PROCESS");
    } // end scope
 
-} // end one_long_string
+} // one_long_string
 
 
 
@@ -1027,7 +1029,7 @@ BOOST_AUTO_TEST_CASE( one_free_string)
    BOOST_REQUIRE( name.hasValue());
    BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
 
-} // end one_free_string
+} // one_free_string
 
 
 
@@ -1088,7 +1090,7 @@ BOOST_AUTO_TEST_CASE( one_string_both)
       BOOST_REQUIRE_EQUAL( name.value(), "OTHER_PROCESS");
    } // end scope
 
-} // end one_string_both
+} // one_string_both
 
 
 
@@ -1107,7 +1109,7 @@ BOOST_AUTO_TEST_CASE( two_flags)
       /// @param[in]  argstring  The argument string to pass to
       ///                        \c ArgString2Array.
       /// @since  0.2, 10.04.2016
-      TestData( const std::string& argstring):
+      TestData( const string& argstring):
          ah( 0),
          as2a( argstring, nullptr)
       {
@@ -1221,7 +1223,7 @@ BOOST_AUTO_TEST_CASE( two_flags)
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
-} // end two_flags
+} // two_flags
 
 
 
@@ -1357,7 +1359,7 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
-} // end flag_and_string
+} // flag_and_string
 
 
 
@@ -1635,7 +1637,7 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       BOOST_REQUIRE_EQUAL( td.name.value(), "OTHER_PROCESS");
    } // end scope
 
-} // end int_and_string
+} // int_and_string
 
 
 
@@ -1777,7 +1779,7 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
-} // end int_and_free_string
+} // int_and_free_string
 
 
 
@@ -1828,7 +1830,7 @@ BOOST_AUTO_TEST_CASE( application_uses_std_arg)
       BOOST_REQUIRE( doVerbose.value());
    } // end scope
 
-} // end application_uses_std_arg
+} // application_uses_std_arg
 
 
 
@@ -1927,7 +1929,110 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), bad_cast);
    } // end scope
 
-} // end type_mismatch
+} // type_mismatch
+
+
+
+/// Test the handling of optional values.
+/// @since  0.13.2, 17.02.2017
+BOOST_AUTO_TEST_CASE( test_value_mode)
+{
+
+   typedef TripleLogic< int>  callable_int_t;
+
+   // optional int value, argument not used at all
+   {
+      Handler         ah( 0);
+      int             value = -1;
+      callable_int_t  callable( value, 0);
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_int_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, -1);
+   } // end scope
+
+   // optional int value, argument used without value
+   {
+      Handler            ah( 0);
+      int                value = -1;
+      TripleLogic< int>  callable( value, 0);
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_int_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "-v", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, 0);
+   } // end scope
+
+   // optional int value, argument used with value
+   {
+      Handler            ah( 0);
+      int                value = -1;
+      TripleLogic< int>  callable( value, 0);
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_int_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "-v 42", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, 42);
+   } // end scope
+
+   typedef TripleLogic< string>  callable_string_t;
+
+   // optional string value, argument not used at all
+   {
+      Handler  ah( 0);
+      string   value( "hello world");
+      callable_string_t  callable( value, "me, myself and I");
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_string_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, "hello world");
+   } // end scope
+
+   // optional string value, argument used without value
+   {
+      Handler  ah( 0);
+      string   value( "hello world");
+      callable_string_t  callable( value, "me, myself and I");
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_string_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "-v", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, "me, myself and I");
+   } // end scope
+
+   // optional string value, argument used with value
+   {
+      Handler  ah( 0);
+      string   value( "hello world");
+      callable_string_t  callable( value, "me, myself and I");
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_string_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "-v wonderworld", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, "wonderworld");
+   } // end scope
+
+} // test_value_mode
 
 
 
@@ -2044,7 +2149,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       BOOST_REQUIRE_EQUAL( td.minVal.value(), -70);
    } // end scope
 
-} // end hyphen
+} // hyphen
 
 
 
@@ -2161,7 +2266,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
    } // end scope
 
-} // end missing_mandatory
+} // missing_mandatory
 
 
 
@@ -2197,14 +2302,14 @@ BOOST_AUTO_TEST_CASE( format_check)
       BOOST_REQUIRE_EQUAL( name.value(), "process1");
    } // end scope
 
-} // end format_check
+} // format_check
 
 
 
 /// Helper class to check the implementation and usage of application specific
 /// check classes.
 /// @since  0.2, 10.04.2016
-class ApplCheckTripple: public celma::prog_args::detail::ICheck
+class ApplCheckTriple: public celma::prog_args::detail::ICheck
 {
 public:
    /// Constructor.
@@ -2212,7 +2317,7 @@ public:
    /// @param[in]  second  The second value to accept.
    /// @param[in]  third   The third value to accept.
    /// @since  0.2, 10.04.2016
-   ApplCheckTripple( int first, int second, int third):
+   ApplCheckTriple( int first, int second, int third):
       m1( first),
       m2( second),
       m3( third)
@@ -2233,7 +2338,7 @@ private:
    int  m1;
    int  m2;
    int  m3;
-}; // ApplCheckTripple
+}; // ApplCheckTriple
 
 
 
@@ -2246,8 +2351,8 @@ private:
 /// @since  0.2, 10.04.2016
 static celma::prog_args::detail::ICheck* tripple( int first, int second, int third)
 {
-   return new ApplCheckTripple( first, second, third);
-} // end tripple
+   return new ApplCheckTriple( first, second, third);
+} // tripple
 
 
 
@@ -2345,7 +2450,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       BOOST_REQUIRE_EQUAL( iVal.value(), 1111);
    } // end scope
 
-} // end application_check
+} // application_check
 
 
 
@@ -2368,7 +2473,7 @@ BOOST_AUTO_TEST_CASE( control_check)
       BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
    } // end scope
 
-} // end control_check
+} // control_check
 
 
 
@@ -2548,7 +2653,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
       BOOST_REQUIRE_EQUAL( stringVec[ 2], "world");
    } // end scope
 
-} // end vector_argument
+} // vector_argument
 
 
 
@@ -2625,9 +2730,9 @@ BOOST_AUTO_TEST_CASE( control_args)
    BOOST_REQUIRE_EQUAL( tca.getClose(), 1);
    BOOST_REQUIRE_EQUAL( tca.getExclamation(), 1);
 
-} // end control_args
+} // control_args
 
 
 
-// ====================  END OF test_argument_handler.cpp  ====================
+// =========================  END OF test_handler.cpp  =========================
 
