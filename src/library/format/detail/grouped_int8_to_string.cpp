@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -155,7 +155,6 @@ int groupedUint8toString( char* buffer, uint8_t value, char)
    char*          buffer_end = buffer + grouped_result_len - 1;
 
 
-   ::memset( buffer, '0', grouped_result_len);
    buffer[ grouped_result_len] = '\0';
 
    convert( buffer_end, value, result_len);
@@ -188,14 +187,13 @@ int groupedInt8negToString( char* buffer, int8_t value, char)
    const uint8_t  grouped_result_len = result_len + (result_len - 1) / 3;
    char*          buffer_end = buffer + grouped_result_len;
 
-   // fill the string with dashes, so we already have the remaining 1 dash at
-   // the beginning of the string when we're finished
-   ::memset( buffer, '-', grouped_result_len + 1);
    buffer[ grouped_result_len + 1] = '\0';
 
    // value is positive now, can safely pass it to the function expecting
    // an unsigned value
    convert( buffer_end, abs_value, result_len);
+
+   buffer[ 0] = '-';
 
    return grouped_result_len + 1;
 } // groupedInt8negToString
