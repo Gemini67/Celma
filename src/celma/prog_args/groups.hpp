@@ -25,6 +25,7 @@
 #include <memory>
 #include "celma/common/singleton.hpp"
 #include "celma/prog_args/handler.hpp"
+#include "celma/prog_args/value_handler.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -76,10 +77,11 @@ public:
 
    /// Returns the argument handler for the specified group name.<br>
    /// If the argument handler does not exist yet, a new handler object will be
-   /// created. The output streams will be passed as specified when calling
-   /// instance() for this group object, and the flags parameter will be a
-   /// combination of this object's flag and the flags passed in
-   /// \a this_handler_flags.
+   /// created. If the handler object exists already, it must a 'plain' handler
+   /// object, not a value handler.<br>
+   /// The output streams will be passed as specified when calling instance()
+   /// for this group object, and the flags parameter will be a combination of
+   /// this object's flag and the flags passed in \a this_handler_flags.
    /// @param[in]  grpName             The symbolic name of this handler, used
    ///                                 for identification and printing the
    ///                                 usage.
@@ -96,6 +98,30 @@ public:
                                 int this_handler_flags = 0,
                                 IUsageText* txt1 = nullptr,
                                 IUsageText* txt2 = nullptr) noexcept( false);
+
+   /// Returns the argument value handler for the specified group name.<br>
+   /// If the argument handler does not exist yet, a new value handler object
+   /// will be created. If the handler object exists already, it must a value
+   /// handler object, not a 'plain' handler.<br>
+   /// The output streams will be passed as specified when calling instance()
+   /// for this group object, and the flags parameter will be a combination of
+   /// this object's flag and the flags passed in \a this_handler_flags.
+   /// @param[in]  grpName             The symbolic name of this value handler,
+   ///                                 used for identification and printing the
+   ///                                 usage.
+   /// @param[in]  this_handler_flags  Set of flags to pass to the constructor
+   ///                                 of the value handler object if a new one
+   ///                                 is created.
+   /// @param[in]  txt1                Optional pointer to the object to provide
+   ///                                 additional text for the usage.
+   /// @param[in]  txt2                Optional pointer to the object to provide
+   ///                                 additional text for the usage.
+   /// @since  0.14.0, 09.02.2017
+   SharedArgHndl getArgValueHandler( const std::string& grpName, 
+                                     int this_handler_flags = 0,
+                                     IUsageText* txt1 = nullptr,
+                                     IUsageText* txt2 = nullptr)
+                                   noexcept( false);
 
    /// Iterates over the list of arguments and passes the elemnts to the
    /// internally stored argument handlers.<br>

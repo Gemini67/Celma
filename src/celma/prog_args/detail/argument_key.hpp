@@ -30,6 +30,8 @@ namespace celma { namespace prog_args { namespace detail {
 /// argument.<br>
 /// This class does not provide an assignment operator to assign a new argument
 /// specification string. If this is needed, assign a temporary object.
+/// @since  0.14.0, 16.03.2017  (added methods to check/return the character and
+///                             string argument)
 /// @since  0.2, 06.04.2016
 class ArgumentKey
 {
@@ -58,7 +60,7 @@ public:
    /// as key in a sorted STL container.
    /// @param[in]  other  The other key object to compare against.
    /// @return  \c true if this is less than \a other.
-   /// @since  x.y.z, 09.02.2017
+   /// @since  0.14.0, 09.02.2017
    bool operator <( const ArgumentKey& other) const;
 
    /// Checks if there is a mismatch: Short specifier matches but long don't or
@@ -72,6 +74,26 @@ public:
    /// @return  The key of this object in string format.
    /// @since  0.2, 06.04.2016
    std::string str() const;
+
+   /// Returns if the character argument is set.
+   /// @return \c true if the character argument is set.
+   /// @since  0.14.0, 16.03.2017
+   bool hasCharArg() const;
+
+   /// Returns if the string argument is set.
+   /// @return \c true if the string argument is set.
+   /// @since  0.14.0, 16.03.2017
+   bool hasStringArg() const;
+
+   /// Returns the character argument.
+   /// @return  The value of the character argument key.
+   /// @since  0.14.0, 16.03.2017
+   char argChar() const;
+
+   /// Returns the string argument.
+   /// @return  The value of the string argument key.
+   /// @since  0.14.0, 16.03.2017
+   const std::string& argString() const;
 
    /// Prints the short and/or the long specifier of the key.<br>
    /// The string is created from the data extracted in the constructor, i.e. it
@@ -89,6 +111,34 @@ private:
    std::string  mWord;
 
 }; // ArgumentKey
+
+
+// inlined methods
+// ===============
+
+
+inline bool ArgumentKey::hasCharArg() const
+{
+   return mChar != '\0';
+} // ArgumentKey::hasCharArg
+
+
+inline bool ArgumentKey::hasStringArg() const
+{
+   return !mWord.empty();
+} // ArgumentKey::hasStringArg
+
+
+inline char ArgumentKey::argChar() const
+{
+   return mChar;
+} // ArgumentKey::argChar
+
+
+inline const std::string& ArgumentKey::argString() const
+{
+   return mWord;
+} // ArgumentKey::argString
 
 
 } // namespace detail

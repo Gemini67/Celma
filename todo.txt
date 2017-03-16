@@ -19,19 +19,6 @@ Handler:
 - Generell: 'Manual' Pages in Markdown?
 
 
-Handler:
-
-- Wenn Flag 'is value handler' gesetzt ist, keine addArgument() Methoden mehr 
-  zulassen (Exception)
-
-
-Testfall:
-
-- Mit Gruppe: Handler erzeugen, getValueHandler() schmeisst Exception
-- Mit Gruppe: ValueHandler erzeugen, getValueHandler() okay
-- Mit Gruppe: ValueHandler erzeugen, Handler::addArgument() schmeisst Exception
-
-
 Es gibt Tools, die folgende Logik verwenden:
 
 -v: Verbose

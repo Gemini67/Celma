@@ -20,7 +20,6 @@
 
 
 // project includes
-#include "celma/prog_args/handler.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
 
 
@@ -35,17 +34,22 @@ using std::string;
 
 /// Returns the argument handler for the specified group name.<br>
 /// If the argument handler does not exist yet, a new handler object will be
-/// created. The output streams will be passed as specified when calling
-/// instance() for this group object, and the flags parameter will be a
-/// combination of this object's flag and the flags passed in
-/// \a this_handler_flags.
+/// created. If the handler object exists already, it must a 'plain' handler
+/// object, not a value handler.<br>
+/// The output streams will be passed as specified when calling instance()
+/// for this group object, and the flags parameter will be a combination of
+/// this object's flag and the flags passed in \a this_handler_flags.
 /// @param[in]  grpName             The symbolic name of this handler, used
 ///                                 for identification and printing the
 ///                                 usage.
 /// @param[in]  this_handler_flags  Set of flags to pass to the constructor
 ///                                 of the handler object if a new one is
 ///                                 created.
-/// @param[in]  ah       The argument handler to add.
+/// @param[in]  txt1                Optional pointer to the object to provide
+///                                 additional text for the usage.
+/// @param[in]  txt2                Optional pointer to the object to provide
+///                                 additional text for the usage.
+/// @since  0.13.0, 05.02.2017  (renamed/merged, added parameters)
 /// @since  0.2, 10.04.2016
 Groups::SharedArgHndl Groups::getArgHandler( const string& grpName,
                                              int this_handler_flags,
@@ -60,7 +64,11 @@ Groups::SharedArgHndl Groups::getArgHandler( const string& grpName,
    for (auto const& stored_group : mArgGroups)
    {
       if (stored_group.mName == grpName)
+      {
+         if (stored_group.mpArgHandler->isValueHandler())
+            throw runtime_error( "Handler named '" + grpName + "' is a value handler!");
          return stored_group.mpArgHandler;
+      } // end if
    } // end for
 
    auto new_handler = std::make_shared< Handler>( mOutput, mErrorOutput,
@@ -75,6 +83,59 @@ Groups::SharedArgHndl Groups::getArgHandler( const string& grpName,
 
    return new_handler;
 } // Groups::getArgHandler
+
+
+
+/// Returns the argument value handler for the specified group name.<br>
+/// If the argument handler does not exist yet, a new value handler object
+/// will be created. If the handler object exists already, it must a value
+/// handler object, not a 'plain' handler.<br>
+/// The output streams will be passed as specified when calling instance()
+/// for this group object, and the flags parameter will be a combination of
+/// this object's flag and the flags passed in \a this_handler_flags.
+/// @param[in]  grpName             The symbolic name of this value handler,
+///                                 used for identification and printing the
+///                                 usage.
+/// @param[in]  this_handler_flags  Set of flags to pass to the constructor
+///                                 of the value handler object if a new one
+///                                 is created.
+/// @param[in]  txt1                Optional pointer to the object to provide
+///                                 additional text for the usage.
+/// @param[in]  txt2                Optional pointer to the object to provide
+///                                 additional text for the usage.
+/// @since  0.14.0, 09.02.2017
+Groups::SharedArgHndl Groups::getArgValueHandler( const string& grpName,
+                                                  int this_handler_flags,
+                                                  IUsageText* txt1,
+                                                  IUsageText* txt2)
+{
+
+   if (grpName.empty())
+      throw runtime_error( "Empty named not allowed for an argument group!");
+
+   /// check that this symbolic group name is used already
+   for (auto & stored_group : mArgGroups)
+   {
+      if (stored_group.mName == grpName)
+      {
+         if (!stored_group.mpArgHandler->isValueHandler())
+            throw runtime_error( "Handler named '" + grpName + "' is not a value handler!");
+         return stored_group.mpArgHandler;
+      } // end if
+   } // end for
+
+   auto new_handler = std::make_shared< ValueHandler>( mOutput, mErrorOutput,
+                                                       mHandlerFlags | this_handler_flags,
+                                                       txt1, txt2);
+
+   mArgGroups.push_back( Storage( grpName, new_handler));
+
+   // pass the argument 'list argument groups' only to the first Handler object
+   if (mHandlerFlags & Handler::hfListArgGroups)
+      mHandlerFlags -= Handler::hfListArgGroups;
+
+   return new_handler;
+} // Groups::getArgValueHandler
 
 
 

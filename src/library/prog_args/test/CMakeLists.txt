@@ -28,7 +28,7 @@ celma_add_celma_boost_testprogram( test_argument_key )
 celma_add_celma_boost_testprogram( test_argument_sub_groups )
 celma_add_celma_boost_testprogram( test_constraint_container )
 celma_add_celma_boost_testprogram( test_handler )
-celma_add_celma_boost_testprogram( test_handler_values )
+celma_add_celma_boost_testprogram( test_value_handler )
 
 # test-programs for output
 add_executable( test_arg_groups_usage           test_arg_groups_usage.cpp )

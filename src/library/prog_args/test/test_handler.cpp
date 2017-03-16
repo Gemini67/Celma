@@ -31,13 +31,13 @@
 
 // project includes
 #include "celma/common/arg_string_2_array.hpp"
-#include "celma/prog_args/triple_logic.hpp"
+#include "celma/prog_args/helpers/triple_logic.hpp"
 
 
 using celma::common::ArgString2Array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
-using celma::prog_args::TripleLogic;
+using celma::prog_args::helpers::TripleLogic;
 using std::bad_cast;
 using std::invalid_argument;
 using std::logic_error;
