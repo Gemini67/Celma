@@ -163,3 +163,32 @@ Principles:
 - No error when used without initialization (log message silently discarded)
 - Log string not built when not used
 - Macro to send log message to all log destinations (all bits set)
+
+
+Loesung fuer das 'lokale log Properties' Problem:
+
+Klasse LogPrefix
+
+Wird verwendet um einen Prefix-String zu definieren, der bei jeder Log Meldung
+vor den Text eingefuegt werden soll.
+Dann kann z.B. eine Member-Variable von diesem Typ definiert werden, welche den
+Namen der Klasse enthaelt.
+Anschliessend wird dieses Objekt verwendet, um Log-Meldungen zu erzeugen,
+entweder mit print() oder Stream-Operatoren.
+
+Konstruktoren:
+- LogPrefix( const std::string& str);
+- LogPrefix( const char* format, …);
+- LogPrefix( const LogPrefix& base_prefix, const std::string& str);
+- LogPrefix( const LogPrefix& base_prefix, const char* format, …);
+
+Diese Klasse koennte auch verwendet werden um Properties zu speichern. Dann
+muesste aber ein anderer Name gesucht werden.
+
+Und/Oder es gibt 3 Klassen:
+- Eine nur fuer Prefixes.
+- Eine nur fuer Properties.
+- Eine fuer beides.
+
+Jede dieser Klassen muesste natuerlich das gleiche Interface haben um Log
+Meldungen zu erzeugen.
