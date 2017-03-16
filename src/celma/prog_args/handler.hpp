@@ -44,6 +44,7 @@ namespace celma { namespace prog_args {
 
 class IUsageText;
 class Groups;
+class ValueHandler;
 
 
 /// Class to store all command line argument descriptions as well as the
@@ -594,6 +595,26 @@ public:
    void evalArgumentsErrorExit( int argc, char* argv[],
                                 const std::string& prefix);
 
+   /// Helps to determine if an object is a 'plain' Handler object or a
+   /// ValueHandler object.
+   /// @return  Always \c false for objects of this class.
+   /// @since  0.14.0, 21.02.2017
+   virtual bool isValueHandler() const;
+
+   /// Returns this object if it is a ValueHandler object, otherwise throws.
+   /// @return  \c this object if it is a ValueHandler object, for objects of
+   ///          the base class Handler throws.
+   /// @since  0.14.0, 15.03.2017
+   virtual ValueHandler* getValueHandlerObj() noexcept( false);
+
+   /// Returns pointer to the base type of the object that handles the specified
+   /// argument.
+   /// @param[in]  arg_spec  The short and/or long arguments keys.
+   /// @return  Pointer to the object handling the specified argument.
+   /// @since  0.14.0, 16.03.2017
+   detail::TypedArgBase* getArgHandler( const std::string& arg_spec)
+                                      noexcept( false);
+
 protected:
 	/// Class needs access to internals.
    friend class Groups;
@@ -694,14 +715,14 @@ private:
    /// So, this template handles both types of arguments. Needed only in the
    /// implementation, so the template definition is in the source file too.
    /// @tparam  T  The type of the argument (character or string).
-   /// @param[in]      arg        The argument (character/short or long).
-   /// @param[in]      argString  The argument character or string always in
-   ///                            string format.
-   /// @param[in,out]  ai         The iterator pointing to the current argument.
-   ///                            May be increased here (for values or argument
-   ///                            groups).
-   /// @param[in]      end        Iterator pointing to the end of the argument
-   ///                            list.
+   /// @param[in]      arg         The argument (character/short or long).
+   /// @param[in]      arg_string  The argument character or string always in
+   ///                             string format.
+   /// @param[in,out]  ai          The iterator pointing to the current argument.
+   ///                             May be increased here (for values or argument
+   ///                             groups).
+   /// @param[in]      end         Iterator pointing to the end of the argument
+   ///                             list.
    /// @return  Result of handling the current argument.
    /// @since  0.2, 10.04.2016
    template< typename T>

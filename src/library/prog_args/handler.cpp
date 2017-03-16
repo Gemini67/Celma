@@ -425,6 +425,48 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
 
 
 
+/// Helps to determine if an object is a 'plain' Handler object or a
+/// ValueHandler object.
+/// @return  Always \c false for objects of this class.
+/// @since  0.14.0, 21.02.2017
+bool Handler::isValueHandler() const
+{
+   return false;
+} // Handler::isValueHandler
+
+
+
+/// Returns this object if it is a ValueHandler object, otherwise throws.
+/// @return  \c this object if it is a ValueHandler object, for objects of
+///          the base class Handler throws.
+/// @since  0.14.0, 15.03.2017
+ValueHandler* Handler::getValueHandlerObj()
+{
+   throw runtime_error( "this is a plain handler, not a handler value");
+} // Handler::getValueHandlerObj
+
+
+
+/// Returns pointer to the base type of the object that handles the specified
+/// argument.
+/// @param[in]  arg_spec  The short and/or long arguments keys.
+/// @return  Pointer to the object handling the specified argument.
+/// @since  0.14.0, 16.03.2017
+detail::TypedArgBase* Handler::getArgHandler( const string& arg_spec)
+                                            noexcept( false)
+{
+
+   const detail::ArgumentKey  arg_key( arg_spec);
+
+
+   if (arg_key.hasCharArg())
+      return mArguments.findArg( arg_key.argChar());
+
+   return mArguments.findArg( arg_key.argString());
+} // Handler::getArgHandler
+
+
+
 /// Compares the arguments defined in this object with those in \a otherAH
 /// and throws an exception if duplicates are detected.
 /// @param[in]  ownName    The symbolic name of this objects arguments.
@@ -468,19 +510,19 @@ void Handler::crossCheckArguments( const string ownName,
 /// So, this template handles both types of arguments. Needed only in the
 /// implementation, so the template definition is in the source file too.
 /// @tparam  T  The type of the argument (character or string).
-/// @param[in]      arg        The argument (character/short or long).
-/// @param[in]      argString  The argument character or string always in
-///                            string format.
-/// @param[in,out]  ai         The iterator pointing to the current argument.
-///                            May be increased here (for values or argument
-///                            groups).
-/// @param[in]      end        Iterator pointing to the end of the argument
-///                            list.
+/// @param[in]      arg         The argument (character/short or long).
+/// @param[in]      arg_string  The argument character or string always in
+///                             string format.
+/// @param[in,out]  ai          The iterator pointing to the current argument.
+///                             May be increased here (for values or argument
+///                             groups).
+/// @param[in]      end         Iterator pointing to the end of the argument
+///                             list.
 /// @return  Result of handling the current argument.
 /// @since  0.2, 10.04.2016
 template< typename T>
    Handler::ArgResult Handler::processArg( const T& arg,
-                                           const string& argString,
+                                           const string& arg_string,
                                            detail::ArgListParser::const_iterator& ai,
                                            const detail::ArgListParser::const_iterator& end)
 {
@@ -490,14 +532,14 @@ template< typename T>
 
    if (p_arg_hdl != nullptr)
    {
-      handleIdentifiedArg( p_arg_hdl, argString);
+      handleIdentifiedArg( p_arg_hdl, arg_string);
 
       auto  subArgHandler = static_cast< detail::TypedArgSubGroup*>( p_arg_hdl)->obj();
       ++ai;
 
       // we may only advance the main iterator if the argument is (still)
       // handled by the sub-argument
-      detail::ArgListParser::const_iterator  subAI( ai);
+      auto  subAI( ai);
       while ((subAI != end) &&
              (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
       {
@@ -515,38 +557,35 @@ template< typename T>
 
    // an argument that we know
    if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
-      throw runtime_error( "Value mode not set for argument '" + argString + "'");
+      throw runtime_error( "Value mode not set for argument '" + arg_string + "'");
 
    if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
    {
       // no value needed
-      handleIdentifiedArg( p_arg_hdl, argString);
+      handleIdentifiedArg( p_arg_hdl, arg_string);
       return ArgResult::consumed;
    } // end if
 
    // check if the next element in the list is a value
-   detail::ArgListParser::const_iterator  ait2( ai);
+   auto  ait2( ai);
    ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::required) &&
-       ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)))
-      throw runtime_error( "Argument '" + argString + "' requires value(s)");
-
-   if (((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)) &&
-       (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown))
+   if ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue))
    {
-      handleIdentifiedArg( p_arg_hdl, argString);
-   } else if ((ait2 != end) && (ait2->mElementType == detail::ArgListElement::etValue))
-   {
-      // first process the argument, *then* assign ait2 to ai
-      // reason: arg and argString are references of ai->, so if we change ai
-      // the references are still on the old value(s)
-      handleIdentifiedArg( p_arg_hdl, argString, ait2->mValue);
-      ai = ait2;
+      // no next value
+      if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::optional)
+         handleIdentifiedArg( p_arg_hdl, arg_string);
+      else
+         throw runtime_error( "Argument '" + arg_string + "' requires value(s)");
    } else
    {
-      handleIdentifiedArg( p_arg_hdl, argString);
+      // have a next value, and value mode can only be 'optional' or 'required'
+      // first process the argument, *then* assign ait2 to ai
+      // reason: arg and arg_string are references of ai->, so if we change ai
+      // the references are still on the old value(s)
+      handleIdentifiedArg( p_arg_hdl, arg_string, ait2->mValue);
+      ai = ait2;
    } // end if
 
    return ArgResult::consumed;
