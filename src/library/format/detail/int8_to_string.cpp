@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -144,7 +144,6 @@ int uint8toString( char* buffer, uint8_t value)
    char*       buffer_end = buffer + result_len - 1;
 
 
-   ::memset( buffer, '0', result_len);
    buffer[ result_len] = '\0';
 
    convert( buffer_end, value, result_len);
@@ -175,14 +174,13 @@ int int8negToString( char* buffer, int8_t value)
    const auto  result_len = int8_str_length( abs_value);
    char*       buffer_end = buffer + result_len;
 
-   // fill the string with dashes, so we already have the remaining 1 dash at
-   // the beginning of the string when we're finished
-   ::memset( buffer, '-', result_len + 1);
    buffer[ result_len + 1] = '\0';
 
    // value is positive now, can safely pass it to the function expecting
    // an unsigned value
    convert( buffer_end, abs_value, result_len);
+
+   buffer[ 0] = '-';
 
    return result_len + 1;
 } // int8negToString

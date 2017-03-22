@@ -425,6 +425,48 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
 
 
 
+/// Helps to determine if an object is a 'plain' Handler object or a
+/// ValueHandler object.
+/// @return  Always \c false for objects of this class.
+/// @since  0.14.0, 21.02.2017
+bool Handler::isValueHandler() const
+{
+   return false;
+} // Handler::isValueHandler
+
+
+
+/// Returns this object if it is a ValueHandler object, otherwise throws.
+/// @return  \c this object if it is a ValueHandler object, for objects of
+///          the base class Handler throws.
+/// @since  0.14.0, 15.03.2017
+ValueHandler* Handler::getValueHandlerObj()
+{
+   throw runtime_error( "this is a plain handler, not a handler value");
+} // Handler::getValueHandlerObj
+
+
+
+/// Returns pointer to the base type of the object that handles the specified
+/// argument.
+/// @param[in]  arg_spec  The short and/or long arguments keys.
+/// @return  Pointer to the object handling the specified argument.
+/// @since  0.14.0, 16.03.2017
+detail::TypedArgBase* Handler::getArgHandler( const string& arg_spec)
+                                            noexcept( false)
+{
+
+   const detail::ArgumentKey  arg_key( arg_spec);
+
+
+   if (arg_key.hasCharArg())
+      return mArguments.findArg( arg_key.argChar());
+
+   return mArguments.findArg( arg_key.argString());
+} // Handler::getArgHandler
+
+
+
 /// Compares the arguments defined in this object with those in \a otherAH
 /// and throws an exception if duplicates are detected.
 /// @param[in]  ownName    The symbolic name of this objects arguments.

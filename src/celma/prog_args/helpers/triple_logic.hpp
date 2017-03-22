@@ -12,22 +12,23 @@
 
 
 /// @file
-/// See documentation of class celma::prog_args::TripleLogic.
+/// See documentation of class celma::prog_args::helpers::TripleLogic.
 
 
-#ifndef CELMA_PROG_ARGS_TRIPLE_LOGIC_HPP
-#define CELMA_PROG_ARGS_TRIPLE_LOGIC_HPP
+#ifndef CELMA_PROG_ARGS_HELPERS_TRIPLE_LOGIC_HPP
+#define CELMA_PROG_ARGS_HELPERS_TRIPLE_LOGIC_HPP
 
 
-namespace celma { namespace prog_args {
+namespace celma { namespace prog_args { namespace helpers {
 
 
-/// Use for handling arguments that support 3 triple value logic:
+/// Use for handling arguments that support triple value logic:
 /// - Argument not used, initial value remains unchanged.
 /// - Argument used without value, the 'no value' value is set.
 /// - Argument is used with value.
 /// .
 /// @tparam  T  The type of the destination variable/value to set.
+/// @since  0.14.0, 23.02.2017  (moved to namespace helpers)
 /// @since  0.13.2, 17.02.2017
 template< typename T> class TripleLogic
 {
@@ -65,11 +66,12 @@ private:
 }; // TripleLogic< T>
 
 
+} // namespace helpers
 } // namespace prog_args
 } // namespace celma
 
 
-#endif   // CELMA_PROG_ARGS_TRIPLE_LOGIC_HPP
+#endif   // CELMA_PROG_ARGS_HELPERS_TRIPLE_LOGIC_HPP
 
 
 // =========================  END OF triple_logic.hpp  =========================

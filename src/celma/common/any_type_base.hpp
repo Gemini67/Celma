@@ -42,6 +42,35 @@
 namespace celma { namespace common {
 
 
+// forward declaration
+template< typename B> class TypeNameBase;
+
+
+// AnyBase
+// =======
+
+
+/// If no special base class with virtual methods, members or anything the like
+/// is needed, this base class can be used as the (final) base for this class
+/// hierarchy.
+/// @since  0.14.0, 18.02.2017
+class AnyBase
+{
+public:
+   ~AnyBase() = default;
+
+   const TypeNameBase< AnyBase>* getTypeNameBase() const;
+
+private:
+   friend class TypeNameBase< AnyBase>;
+
+   /// Private constructor to make sure that objects of this class can only be
+   /// created from TypeNameBase.
+   AnyBase() = default;
+
+}; // AnyBase
+
+
 // TypeNameBase
 // ============
 
@@ -206,6 +235,12 @@ protected:
 
 
 #define VAR_NAME( n)  n, #n
+
+
+inline const TypeNameBase< AnyBase>* AnyBase::getTypeNameBase() const
+{
+   return static_cast< const TypeNameBase< AnyBase>*>( this);
+} // AnyBase::getTypeNameBase
 
 
 } // namespace common
