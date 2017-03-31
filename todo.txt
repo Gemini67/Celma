@@ -192,3 +192,9 @@ Und/Oder es gibt 3 Klassen:
 
 Jede dieser Klassen muesste natuerlich das gleiche Interface haben um Log
 Meldungen zu erzeugen.
+
+
+Container:
+
+- Rene Tree
+- B-Tree
