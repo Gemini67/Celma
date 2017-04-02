@@ -20,6 +20,7 @@
 
 
 #include <iterator>
+#include <memory>
 #include <utility>
 #include "celma/containers/detail/binary_tree_node.hpp"
 #include "celma/containers/detail/tree_iterator.hpp"
@@ -36,8 +37,8 @@ public:
    using iterator = detail::TreeIterator< node_t>;
    using const_iterator = detail::ConstTreeIterator< node_t>;
 
-   using reverse_iterator = std::reverse_iterator< iterator>;
-   using const_reverse_iterator = std::reverse_iterator< const_iterator>;
+   using reverse_iterator = detail::ReverseTreeIterator< node_t>;
+   using const_reverse_iterator = detail::ConstReverseTreeIterator< node_t>;
 
    BinaryTree();
    BinaryTree( const BinaryTree& other);
@@ -56,23 +57,28 @@ public:
    std::size_t size() const;
 
    iterator begin();
-//   const_iterator cbegin() const;
+   const_iterator cbegin() const;
    iterator end();
-//   const_iterator cend() const;
-   iterator rbegin();
-//   const_iterator crbegin() const;
-   iterator rend();
-//   const_iterator crend() const;
+   const_iterator cend() const;
+   /// @since  x.y.z, 31.03.2017
+   reverse_iterator rbegin();
+   /// @since  x.y.z, 31.03.2017
+   const_reverse_iterator crbegin() const;
+   /// @since  x.y.z, 31.03.2017
+   reverse_iterator rend();
+   /// @since  x.y.z, 31.03.2017
+   const_reverse_iterator crend() const;
 
    /// @since  x.y.z, 31.03.2017
    BinaryTree& operator =( const BinaryTree& other);
 
 protected:
-   node_t*  mpRoot;
+   std::unique_ptr< node_t>  mpRoot;
 
 private:
-   void recursiveDelete( node_t* current_node);
    auto recursiveInsert( node_t* parent_node, const T& new_value);
+   node_t* first() const;
+   node_t* last() const;
    template< typename F> void recursiveVisit( node_t* current_node, F fun) const;
  
 }; // BinaryTree< T>
@@ -83,13 +89,13 @@ private:
 
 
 template< typename T> BinaryTree< T>::BinaryTree():
-   mpRoot( nullptr)
+   mpRoot()
 {
 } // BinaryTree< T>::BinaryTree
 
 
 template< typename T> BinaryTree< T>::BinaryTree( const BinaryTree& other):
-   mpRoot( nullptr)
+   mpRoot()
 {
    assign( other);
 } // BinaryTree< T>::BinaryTree
@@ -98,7 +104,6 @@ template< typename T> BinaryTree< T>::BinaryTree( const BinaryTree& other):
 template< typename T> BinaryTree< T>::BinaryTree( BinaryTree&& other):
    mpRoot( other.mpRoot)
 {
-   other.mpRoot = nullptr;
 } // BinaryTree< T>::BinaryTree
 
 
@@ -117,57 +122,96 @@ template< typename T> void BinaryTree< T>::assign( const BinaryTree& other)
 
 template< typename T> auto BinaryTree< T>::insert( const T& value)
 {
-   if (mpRoot == nullptr)
+   if (!mpRoot)
    {
-      mpRoot = new node_t( value);
+      mpRoot = std::make_unique< node_t>( value);
       return std::pair< iterator, bool>( begin(), true);
    } // end if
 
-   return recursiveInsert( mpRoot, value);
+   return recursiveInsert( mpRoot.get(), value);
 } // BinaryTree< T>::BinaryTree
 
 
 template< typename T> void BinaryTree< T>::clear()
 {
-   if (mpRoot != nullptr)
-   {
-      recursiveDelete( mpRoot);
-      mpRoot = nullptr;
-   } // end if
+   mpRoot.reset();
 } // BinaryTree< T>::clear
 
 
 template< typename T> bool BinaryTree< T>::empty() const
 {
-   return mpRoot == nullptr;
+   return !mpRoot;
 } // BinaryTree< T>::empty
 
 
 template< typename T> std::size_t BinaryTree< T>::size() const
 {
    std::size_t  count = 0;
-   recursiveVisit( mpRoot, [&count]( auto const&) { ++count; });
+   recursiveVisit( mpRoot.get(), [&count]( auto const&) { ++count; });
    return count;
 } // BinaryTree< T>::size
 
 
 template< typename T> typename BinaryTree< T>::iterator BinaryTree< T>::begin()
 {
-   if (mpRoot == nullptr)
+   if (!mpRoot)
       return iterator();
-
-   node_t*  first = mpRoot;
-   while (first->left != nullptr)
-      first = first->left;
-
-   return iterator( first);
+   return iterator( first());
 } // BinaryTree< T>::begin
+
+
+template< typename T>
+   typename BinaryTree< T>::const_iterator BinaryTree< T>::cbegin() const
+{
+   if (!mpRoot)
+      return const_iterator();
+   return const_iterator( first());
+} // BinaryTree< T>::cbegin
 
 
 template< typename T> typename BinaryTree< T>::iterator BinaryTree< T>::end()
 {
    return iterator();
 } // BinaryTree< T>::end
+
+
+template< typename T>
+   typename BinaryTree< T>::const_iterator BinaryTree< T>::cend() const
+{
+   return const_iterator();
+} // BinaryTree< T>::cend
+
+
+template< typename T>
+   typename BinaryTree< T>::reverse_iterator BinaryTree< T>::rbegin()
+{
+   if (!mpRoot)
+      return reverse_iterator();
+   return reverse_iterator( last());
+} // BinaryTree< T>::rbegin
+
+
+template< typename T>
+   typename BinaryTree< T>::const_reverse_iterator BinaryTree< T>::crbegin() const
+{
+   if (!mpRoot)
+      return const_reverse_iterator();
+   return const_reverse_iterator( last());
+} // BinaryTree< T>::crbegin
+
+
+template< typename T>
+   typename BinaryTree< T>::reverse_iterator BinaryTree< T>::rend()
+{
+   return reverse_iterator();
+} // BinaryTree< T>::rend
+
+
+template< typename T>
+   typename BinaryTree< T>::const_reverse_iterator BinaryTree< T>::crend() const
+{
+   return const_reverse_iterator();
+} // BinaryTree< T>::crend
 
 
 template< typename T>
@@ -179,46 +223,52 @@ template< typename T>
 } // BinaryTree< T>::operator =
 
 
-template< typename T>
-   void BinaryTree< T>::recursiveDelete( node_t* current_node)
-{
-
-   if (current_node->left != nullptr)
-      recursiveDelete( current_node->left);
-   if (current_node->right != nullptr)
-      recursiveDelete( current_node->right);
-
-   delete current_node;
-
-} // BinaryTree< T>::recursiveDelete
-
-
 template< typename T> auto BinaryTree< T>::recursiveInsert( node_t* parent_node,
                                                             const T& new_value)
 {
    if (new_value < parent_node->value)
    {
-      if (parent_node->left == nullptr)
+      if (!parent_node->left)
       {
-         parent_node->left = new node_t( new_value, parent_node);
-         return std::pair< iterator, bool>( iterator( parent_node->left), true);
+         parent_node->left = std::make_unique< node_t>( new_value, parent_node);
+         return std::pair< iterator, bool>( iterator( parent_node->left.get()), true);
       } // end if
-      return recursiveInsert( parent_node->left, new_value);
+      return recursiveInsert( parent_node->left.get(), new_value);
    } // end if
    
    if (parent_node->value < new_value)
    {
-      if (parent_node->right == nullptr)
+      if (!parent_node->right)
       {
-         parent_node->right = new node_t( new_value, parent_node);
-         return std::pair< iterator, bool>( iterator( parent_node->right), true);   // @@@
+         parent_node->right = std::make_unique< node_t>( new_value, parent_node);
+         return std::pair< iterator, bool>( iterator( parent_node->right.get()), true);   // @@@
       } // end if
-      return recursiveInsert( parent_node->right, new_value);
+      return recursiveInsert( parent_node->right.get(), new_value);
    } // end if
 
    // values are equal, something we don't support:
    return std::pair< iterator, bool>( end(), false);
 } // BinaryTree< T>::recursiveInsert
+
+
+template< typename T>
+   typename BinaryTree< T>::node_t* BinaryTree< T>::first() const
+{
+   auto  p_first = mpRoot.get();
+   while (p_first->left)
+      p_first = p_first->left.get();
+   return p_first;
+} // 
+
+
+template< typename T>
+   typename BinaryTree< T>::node_t* BinaryTree< T>::last() const
+{
+   auto  p_last = mpRoot.get();
+   while (p_last->right)
+      p_last = p_last->right.get();
+   return p_last;
+} // 
 
 
 template< typename T> template< typename F>
@@ -228,11 +278,11 @@ template< typename T> template< typename F>
    if (current_node == nullptr)
       return;
 
-   recursiveVisit( current_node->left, fun);
+   recursiveVisit( current_node->left.get(), fun);
 
    fun( current_node);
 
-   recursiveVisit( current_node->right, fun);
+   recursiveVisit( current_node->right.get(), fun);
 
 } // BinaryTree< T>::recursiveVisit
 

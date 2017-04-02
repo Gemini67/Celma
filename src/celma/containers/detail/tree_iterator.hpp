@@ -135,7 +135,7 @@ public:
 
    ConstTreeIterator& operator --( std::prefix)
    {
-      mpNode = mpNode->derement();
+      mpNode = mpNode->decrement();
       return *this;
    }
 
@@ -157,9 +157,145 @@ public:
    }
 
 private:
-   N* const  mpNode;
+   N*  mpNode;
 
 }; // ConstTreeIterator< N>
+
+
+/// @since x.y.z, 02.04.2017
+template< typename N> class ReverseTreeIterator
+{
+public:
+   using iterator_category = std::bidirectional_iterator_tag;
+
+   ReverseTreeIterator():
+      mpNode( nullptr)
+   {
+   } // ReverseTreeIterator< N>::ReverseTreeIterator
+
+   ReverseTreeIterator( N* node):
+      mpNode( node)
+   {
+   } // ReverseTreeIterator< N>::ReverseTreeIterator
+
+   typename N::value_type& operator *() const
+   {
+      return *mpNode->getValue();
+   }
+
+   typename N::value_type* operator ->() const
+   {
+      return mpNode->getValue();
+   }
+
+   ReverseTreeIterator& operator ++( std::prefix)
+   {
+      mpNode = mpNode->decrement();
+      return *this;
+   }
+
+   ReverseTreeIterator& operator ++( std::postfix)
+   {
+      auto  copy( *this);
+      mpNode = mpNode->decrement();
+      return *this;
+   }
+
+   ReverseTreeIterator& operator --( std::prefix)
+   {
+      mpNode = mpNode->increment();
+      return *this;
+   }
+
+   ReverseTreeIterator& operator --( std::postfix)
+   {
+      auto  copy( *this);
+      mpNode = mpNode->increment();
+      return *this;
+   }
+
+   bool operator ==( const ReverseTreeIterator& other) const
+   {
+      return mpNode == other.mpNode;
+   }
+
+   bool operator !=( const ReverseTreeIterator& other) const
+   {
+      return mpNode != other.mpNode;
+   }
+
+private:
+   N*  mpNode;
+
+}; // ReverseTreeIterator< N>
+
+
+/// @since x.y.z, 02.04.2017
+template< typename N> class ConstReverseTreeIterator
+{
+public:
+   using iterator_category = std::bidirectional_iterator_tag;
+
+   ConstReverseTreeIterator():
+      mpNode( nullptr)
+   {
+   } // ConstReverseTreeIterator< N>::ConstReverseTreeIterator
+
+   ConstReverseTreeIterator( N* node):
+      mpNode( node)
+   {
+   } // ConstReverseTreeIterator< N>::ConstReverseTreeIterator
+
+   const typename N::value_type& operator *() const
+   {
+      return *mpNode->getValue();
+   }
+
+   const typename N::value_type* operator ->() const
+   {
+      return mpNode->getValue();
+   }
+
+   ConstReverseTreeIterator& operator ++( std::prefix)
+   {
+      mpNode = mpNode->decrement();
+      return *this;
+   }
+
+   ConstReverseTreeIterator& operator ++( std::postfix)
+   {
+      auto  copy( *this);
+      mpNode = mpNode->decrement();
+      return *this;
+   }
+
+   ConstReverseTreeIterator& operator --( std::prefix)
+   {
+      mpNode = mpNode->increment();
+      return *this;
+   }
+
+   ConstReverseTreeIterator& operator --( std::postfix)
+   {
+      auto  copy( *this);
+      mpNode = mpNode->increment();
+      return *this;
+   }
+
+   bool operator ==( const ConstReverseTreeIterator& other) const
+   {
+      return mpNode == other.mpNode;
+   }
+
+   bool operator !=( const ConstReverseTreeIterator& other) const
+   {
+      return mpNode != other.mpNode;
+   }
+
+private:
+   N*  mpNode;
+
+}; // ConstReverseTreeIterator< N>
 
 
 } // namespace detail
