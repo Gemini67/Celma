@@ -21,6 +21,7 @@
 
 #include <memory>
 
+
 namespace celma { namespace containers { namespace detail {
 
 
@@ -30,7 +31,16 @@ template< typename T> class BinaryTreeNode
 public:
    using value_type = T;
 
-   /// @since  x.y,y 24.03.2017
+   /// @since  x.y,y, 03.04.2017
+   BinaryTreeNode( BinaryTreeNode* parent_node):
+      parent( parent_node),
+      left(),
+      right(),
+      value()
+   {
+   } // BinaryTreeNode< T>::BinaryTreeNode
+
+   /// @since  x.y,y, 24.03.2017
    BinaryTreeNode( const T& new_value, BinaryTreeNode* parent_node = nullptr):
       parent( parent_node),
       left(),
@@ -60,14 +70,6 @@ public:
             next = next->left.get();
          return next;
       } // end if
-
-      // do we have a parent node, or are we the root?
-      if (parent == nullptr)
-         return nullptr;
-
-      // am I the left node of my parent? then my parent is the next node
-      if (parent->left.get() == this)
-         return parent;
 
       // find next parent node, where we come from the left sub-tree
       auto  next( parent);
@@ -100,14 +102,6 @@ public:
          return previous;
       } // end if
 
-      // do we have a parent node, or are we the root?
-      if (parent == nullptr)
-         return nullptr;
-
-      // am I the right node of my parent? then my parent is the previous node
-      if (parent->right.get() == this)
-         return parent;
-
       // find previous parent node, where we come from the right sub-tree
       auto  previous( parent);
       auto  coming_from( this);
@@ -124,6 +118,48 @@ public:
    {
       return &value;
    }
+
+   /// 
+   /// @param[in]  old_child  .
+   /// @param[in]  new_child  .
+   /// @since  x.y.z, 24.04.2017
+   void replaceChild( BinaryTreeNode* old_child, BinaryTreeNode* new_child)
+   {
+      // no right sub-tree: left moves up
+      if (left == old_child)
+         left.reset( new_child);
+      else
+         right.reset( new_child);
+   } // 
+
+   /// 
+   /// @param[in]  old_child  .
+   /// @param[in]  new_child  .
+   /// @since  x.y.z, 24.04.2017
+   void releaseReplaceChild( BinaryTreeNode* old_child, BinaryTreeNode* new_child)
+   {
+      // no right sub-tree: left moves up
+      if (left == old_child)
+      {
+         left.release();
+         left.reset( new_child);
+      } else
+      {
+         right.release();
+         right.reset( new_child);
+      } // end if
+   } // 
+
+   /// 
+   /// @param[in]  child_node  .
+   /// @since  x.y.z, 24.04.2017
+   void releaseChild( BinaryTreeNode* child_node)
+   {
+      if (left == child_node)
+         left.release();
+      else
+         right.release();
+   } // 
 
    /// Pointer to the parent node.
    BinaryTreeNode*                   parent;

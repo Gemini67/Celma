@@ -62,7 +62,7 @@ public:
    {
       auto  copy( *this);
       mpNode = mpNode->increment();
-      return *this;
+      return copy;
    }
 
    TreeIterator& operator --( std::prefix)
@@ -75,7 +75,7 @@ public:
    {
       auto  copy( *this);
       mpNode = mpNode->decrement();
-      return *this;
+      return copy;
    }
 
    bool operator ==( const TreeIterator& other) const
@@ -130,7 +130,7 @@ public:
    {
       auto  copy( *this);
       mpNode = mpNode->increment();
-      return *this;
+      return copy;
    }
 
    ConstTreeIterator& operator --( std::prefix)
@@ -143,7 +143,7 @@ public:
    {
       auto  copy( *this);
       mpNode = mpNode->decrement();
-      return *this;
+      return copy;
    }
 
    bool operator ==( const ConstTreeIterator& other) const
@@ -156,6 +156,14 @@ public:
       return mpNode != other.mpNode;
    }
 
+   /// 
+   /// @return  .
+   /// @since  x.y.z, 24.04.2017
+   operator N*()
+   {
+      return mpNode;
+   } // 
+   
 private:
    N*  mpNode;
 
