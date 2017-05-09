@@ -568,7 +568,11 @@ template< typename T>
 
    // check if the next element in the list is a value
    auto  ait2( ai);
-   ait2.remArgStrAsVal();
+   // if the value mode of this argument is optional, we don't allow values to
+   // directly follow the argument, because then we cannot distinguish if it's
+   // a value or the next argument
+   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::required)
+      ait2.remArgStrAsVal();
    ++ait2;
 
    if ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue))
