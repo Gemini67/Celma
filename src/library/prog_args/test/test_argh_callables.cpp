@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,16 +18,12 @@
 /// @todo: Mandatory free values
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test, header file include
+#include "celma/prog_args/handler.hpp"
 
 
 // STL includes
 #include <string>
-#include <iostream>
 
 
 // Boost includes
@@ -38,12 +34,11 @@
 // project includes
 #include "celma/common/arg_string_2_array.hpp"
 #include "celma/common/multi_setter.hpp"
-#include "celma/prog_args/handler.hpp"
 
 
 using celma::common::ArgString2Array;
 using celma::prog_args::Handler;
-using std::invalid_argument;
+using std::runtime_error;
 using std::string;
 
 
@@ -75,7 +70,7 @@ static void handlerFunValue( const string& v)
 {
 
    if (v.empty())
-      throw invalid_argument( "handlerFun() always expects a value!");
+      throw runtime_error( "handlerFun() always expects a value!");
 
    gotVal = v;
 
@@ -106,7 +101,8 @@ BOOST_AUTO_TEST_CASE( function_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION( handlerFun), "Function"));
 
       ArgString2Array  as2a( "-f hello", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    gotCalled = false;
@@ -117,7 +113,8 @@ BOOST_AUTO_TEST_CASE( function_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function"));
 
       ArgString2Array  as2a( "-f", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    // function that does expect a value
@@ -137,7 +134,8 @@ BOOST_AUTO_TEST_CASE( function_check)
                                             ->setValueMode( Handler::ValueMode::optional));
 
       ArgString2Array  as2a( "-f", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    gotVal.clear();
@@ -149,19 +147,6 @@ BOOST_AUTO_TEST_CASE( function_check)
                                             ->setValueMode( Handler::ValueMode::optional));
 
       ArgString2Array  as2a( "-f v1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
-      BOOST_REQUIRE_EQUAL( gotVal, "v1");
-   } // end scope
-
-   gotVal.clear();
-
-   // function with value mode optional, actually expects a value (with value)
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional));
-
-      ArgString2Array  as2a( "-fv1", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( gotVal, "v1");
    } // end scope
@@ -186,7 +171,8 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
 
       ArgString2Array  as2a( "", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    gotVal.clear();
@@ -200,7 +186,8 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
 
       ArgString2Array  as2a( "-f", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    gotVal.clear();
@@ -229,7 +216,8 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
 
       ArgString2Array  as2a( "--fun", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    gotVal.clear();
@@ -279,7 +267,7 @@ public:
    void handlerFunc( const string& s)
    {
       if (s.empty())
-         throw invalid_argument( "TestArgFunc::handlerFunc() always expects a value!");
+         throw runtime_error( "TestArgFunc::handlerFunc() always expects a value!");
 
       mValue = s;
    } // TestArgFunc::handlerFunc
@@ -298,7 +286,7 @@ public:
    void boolFunc( const string& optValue)
    {
       if (!optValue.empty())
-         throw invalid_argument( "TestArgFunc::boolFunc() must not be called with a value!");
+         throw runtime_error( "TestArgFunc::boolFunc() must not be called with a value!");
 
       mBoolValue = true;
    } // TestArgFunc::boolFunc
@@ -341,7 +329,8 @@ BOOST_AUTO_TEST_CASE( value_method_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method"));
 
       ArgString2Array  as2a( "-m", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -353,7 +342,8 @@ BOOST_AUTO_TEST_CASE( value_method_check)
                                             ->setValueMode( Handler::ValueMode::optional));
 
       ArgString2Array  as2a( "-m", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -371,26 +361,14 @@ BOOST_AUTO_TEST_CASE( value_method_check)
 
    myTestObj.resetValue();
 
-   // value mode optional, value
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
-
-      ArgString2Array  as2a( "-mv1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
-      BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
-   } // end scope
-
-   myTestObj.resetValue();
-
    // value mode unknown
    {
       Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method"));
 
       ArgString2Array  as2a( "--method", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -402,7 +380,8 @@ BOOST_AUTO_TEST_CASE( value_method_check)
                                             ->setValueMode( Handler::ValueMode::optional));
 
       ArgString2Array  as2a( "--method", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -462,7 +441,8 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
                                             ->setValueMode( Handler::ValueMode::optional));
 
       ArgString2Array  as2a( "-m true", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    {
@@ -487,7 +467,8 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
 
       ArgString2Array  as2a( "--bool true", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    {
@@ -499,7 +480,8 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
 
       ArgString2Array  as2a( "--bool=true", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
 } // bool_method_check

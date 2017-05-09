@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -86,14 +86,12 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mVerbose( (flag_set & hfVerboseArgs) != 0),
    mPrintHidden( (flag_set & hfUsageHidden) != 0),
    mUsageContinues( (flag_set & hfUsageCont) != 0),
-   mUsagePrinted( false),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
    mpExclamationMarkHdlr(),
-   mIsSubGroupHandler( false),
    mConstraints(),
-   mpLastArg( nullptr),
-   mReadingArgumentFile( false)
+   mGlobalConstraints(),
+   mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
    string  args;
@@ -107,7 +105,7 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
       args = "help";
 
    if (!args.empty())
-      addArgument( args, detail::ArgHandlerCallable( boost::bind( &Handler::usage, this, txt1, txt2)),
+      addArgument( args, detail::ArgHandlerCallable( std::bind( &Handler::usage, this, txt1, txt2)),
                    "Handler::usage",
                    "Prints the program usage");
 
@@ -116,6 +114,9 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
 
    if (flag_set & hfListArgVar)
       addArgumentListArgVars( "list-arg-vars");
+
+   if (flag_set & hfListArgGroups)
+      addArgumentListArgGroups( "list-arg-groups");
 
    if (flag_set & hfEndValues)
       addArgumentEndValues( "endvalues");
@@ -135,6 +136,36 @@ Handler::~Handler()
 
 
 
+/// Adds an argument that behaves like the -h/--help arguments. Use this if
+/// the help argument should e.g. be in another language.<br>
+/// The standard help arguments may still be set in the constructor, then
+/// both arguments can be used to get the usage displayed.
+/// @param[in]  arg_spec  The arguments on the command line for the help
+///                       feature.
+/// @param[in]  desc      The description of this argument.
+/// @param[in]  txt1      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @param[in]  txt2      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @return  The object managing the argument, may be used to apply further
+///          settings (normally not necessary).
+/// @since  0.10, 22.12.2016
+detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
+                                                const string& desc,
+                                                IUsageText* txt1,
+                                                IUsageText* txt2)
+{
+
+   return addArgument( arg_spec,
+                       detail::ArgHandlerCallable(
+                          std::bind( &Handler::usage, this, txt1, txt2)
+                       ),
+                       "Handler::usage",
+                       desc);
+} // Handler::addHelpArgument
+
+
+
 /// Adds an argument that takes the path/filename of an argument file as
 /// parameter.
 /// @param[in]  arg_spec  The arguments on the command line for specifying the
@@ -145,10 +176,10 @@ Handler::~Handler()
 detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
-                                                                       boost::bind( &Handler::readArgumentFile,
-                                                                                    this, _1, true),
-                                                                       "Handler::readArgumentFile");
+   auto  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
+                                                      std::bind( &Handler::readArgumentFile,
+                                                                 this, std::placeholders::_1, true),
+                                                                 "Handler::readArgumentFile");
 
 
    return internAddArgument( arg_hdl, arg_spec,
@@ -167,7 +198,8 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArg< bool>( arg_spec, DEST_VAR( mPrintHidden));
+   auto  arg_hdl = new detail::TypedArg< bool>( arg_spec,
+                                                DEST_VAR( mPrintHidden));
 
 
    return internAddArgument( arg_hdl, arg_spec,
@@ -188,7 +220,9 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallable( arg_spec, DEST_METHOD( Handler, listArgVars, *this));
+   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
+                                                 DEST_MEMBER_METHOD( Handler,
+                                                                     listArgVars));
 
 
    arg_hdl->setCardinality();
@@ -196,6 +230,33 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
                              "Prints the list of arguments and their destination "
                              "variables.");
 } // Handler::addArgumentListArgVars
+
+
+
+/// Adds an argument that prints the list of argument groups.<br>
+/// Same as setting the flag #hfListArgGroups, but allows to specify the
+/// argument.
+/// @param[in]  arg_spec  The argument(s) on the command line for printing the
+///                       argument groups.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  0.13.1, 07.02.2017
+detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
+{
+
+   if (!mUsedByGroup)
+      throw invalid_argument( "Standard argument 'list argument groups' can"
+                              " only be set when argument groups are used!"); 
+
+   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
+                                                 DEST_MEMBER_METHOD( Handler,
+                                                                     listArgGroups));
+
+
+   arg_hdl->setCardinality();
+   return internAddArgument( arg_hdl, arg_spec,
+                             "Prints the list of argument groups.");
+} // Handler::addArgumentListArgGroups
 
 
 
@@ -235,8 +296,8 @@ void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
    case ')':  mpClosingBracketHdlr  = hf;  break;
    case '!':  mpExclamationMarkHdlr = hf;  break;
    default:
-      throw runtime_error( "Invalid control character '" + string( 1, ctrlChar)
-                           + "' specified!");
+      throw invalid_argument( "Invalid control character '" + string( 1, ctrlChar)
+                              + "' specified!");
    } // end switch
 
 } // Handler::addControlHandler
@@ -364,6 +425,48 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
 
 
 
+/// Helps to determine if an object is a 'plain' Handler object or a
+/// ValueHandler object.
+/// @return  Always \c false for objects of this class.
+/// @since  0.14.0, 21.02.2017
+bool Handler::isValueHandler() const
+{
+   return false;
+} // Handler::isValueHandler
+
+
+
+/// Returns this object if it is a ValueHandler object, otherwise throws.
+/// @return  \c this object if it is a ValueHandler object, for objects of
+///          the base class Handler throws.
+/// @since  0.14.0, 15.03.2017
+ValueHandler* Handler::getValueHandlerObj()
+{
+   throw runtime_error( "this is a plain handler, not a handler value");
+} // Handler::getValueHandlerObj
+
+
+
+/// Returns pointer to the base type of the object that handles the specified
+/// argument.
+/// @param[in]  arg_spec  The short and/or long arguments keys.
+/// @return  Pointer to the object handling the specified argument.
+/// @since  0.14.0, 16.03.2017
+detail::TypedArgBase* Handler::getArgHandler( const string& arg_spec)
+                                            noexcept( false)
+{
+
+   const detail::ArgumentKey  arg_key( arg_spec);
+
+
+   if (arg_key.hasCharArg())
+      return mArguments.findArg( arg_key.argChar());
+
+   return mArguments.findArg( arg_key.argString());
+} // Handler::getArgHandler
+
+
+
 /// Compares the arguments defined in this object with those in \a otherAH
 /// and throws an exception if duplicates are detected.
 /// @param[in]  ownName    The symbolic name of this objects arguments.
@@ -385,18 +488,18 @@ void Handler::crossCheckArguments( const string ownName,
 
    // finally, check that there are no control character handlers set in both
    // argument handlers
-   if (!mpOpeningBracketHdlr.empty() && !otherAH.mpOpeningBracketHdlr.empty())
-      throw runtime_error( "Control argument handler for '(' from group '" +
-                           otherName + "' is already used by '" + ownName +
-                           "'");
-   if (!mpClosingBracketHdlr.empty() && !otherAH.mpClosingBracketHdlr.empty())
-      throw runtime_error( "Control argument handler for ')' from group '" +
-                           otherName + "' is already used by '" + ownName +
-                           "'");
-   if (!mpExclamationMarkHdlr.empty() && !otherAH.mpExclamationMarkHdlr.empty())
-      throw runtime_error( "Control argument handler for '!' from group '" +
-                           otherName + "' is already used by '" + ownName +
-                           "'");
+   if (mpOpeningBracketHdlr && otherAH.mpOpeningBracketHdlr)
+      throw invalid_argument( "Control argument handler for '(' from group '" +
+                              otherName + "' is already used by '" + ownName +
+                              "'");
+   if (mpClosingBracketHdlr && otherAH.mpClosingBracketHdlr)
+      throw invalid_argument( "Control argument handler for ')' from group '" +
+                              otherName + "' is already used by '" + ownName +
+                              "'");
+   if (mpExclamationMarkHdlr && otherAH.mpExclamationMarkHdlr)
+      throw invalid_argument( "Control argument handler for '!' from group '" +
+                              otherName + "' is already used by '" + ownName +
+                              "'");
 
 } // Handler::crossCheckArguments
 
@@ -407,87 +510,89 @@ void Handler::crossCheckArguments( const string ownName,
 /// So, this template handles both types of arguments. Needed only in the
 /// implementation, so the template definition is in the source file too.
 /// @tparam  T  The type of the argument (character or string).
-/// @param[in]      arg        The argument (character/short or long).
-/// @param[in]      argString  The argument character or string always in
-///                            string format.
-/// @param[in,out]  ai         The iterator pointing to the current argument.
-///                            May be increased here (for values or argument
-///                            groups).
-/// @param[in]      end        Iterator pointing to the end of the argument
-///                            list.
+/// @param[in]      arg         The argument (character/short or long).
+/// @param[in]      arg_string  The argument character or string always in
+///                             string format.
+/// @param[in,out]  ai          The iterator pointing to the current argument.
+///                             May be increased here (for values or argument
+///                             groups).
+/// @param[in]      end         Iterator pointing to the end of the argument
+///                             list.
 /// @return  Result of handling the current argument.
 /// @since  0.2, 10.04.2016
 template< typename T>
    Handler::ArgResult Handler::processArg( const T& arg,
-                                           const string& argString,
+                                           const string& arg_string,
                                            detail::ArgListParser::const_iterator& ai,
                                            const detail::ArgListParser::const_iterator& end)
 {
 
-   detail::TypedArgBase*  hdl = mSubGroupArgs.findArg( arg);
+   auto  p_arg_hdl = mSubGroupArgs.findArg( arg);
 
 
-   if (hdl != nullptr)
+   if (p_arg_hdl != nullptr)
    {
-      handleIdentifiedArg( hdl, argString);
+      handleIdentifiedArg( p_arg_hdl, arg_string);
 
-      Handler*  subArgHandler = static_cast< detail::TypedArgSubGroup*>( hdl)->obj();
+      auto  subArgHandler = static_cast< detail::TypedArgSubGroup*>( p_arg_hdl)->obj();
       ++ai;
 
       // we may only advance the main iterator if the argument is (still)
       // handled by the sub-argument
-      detail::ArgListParser::const_iterator  subAI( ai);
-      while ((subAI != end) && subArgHandler->evalSingleArgument( subAI, end))
+      auto  subAI( ai);
+      while ((subAI != end) &&
+             (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
       {
          ai = subAI;
          ++subAI;
       } // end while
 
       mpLastArg = nullptr;
-      return arConsumed;
+      return ArgResult::consumed;
    } // end if
 
-   mpLastArg = hdl = mArguments.findArg( arg);
-   if (hdl == nullptr)
-      return arUnknown;
+   mpLastArg = p_arg_hdl = mArguments.findArg( arg);
+   if (p_arg_hdl == nullptr)
+      return ArgResult::unknown;
 
    // an argument that we know
-   if (hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
-      throw runtime_error( "Value mode not set for argument '" + argString + "'");
+   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
+      throw runtime_error( "Value mode not set for argument '" + arg_string + "'");
 
-   if (hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
+   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
    {
       // no value needed
-      handleIdentifiedArg( hdl, argString);
-      return arConsumed;
+      handleIdentifiedArg( p_arg_hdl, arg_string);
+      return ArgResult::consumed;
    } // end if
 
    // check if the next element in the list is a value
-   detail::ArgListParser::const_iterator  ait2( ai);
-   ait2.remArgStrAsVal();
+   auto  ait2( ai);
+   // if the value mode of this argument is optional, we don't allow values to
+   // directly follow the argument, because then we cannot distinguish if it's
+   // a value or the next argument
+   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::required)
+      ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((hdl->valueMode() == detail::TypedArgBase::ValueMode::required) &&
-       ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)))
-      throw invalid_argument( "Argument '" + argString + "' requires value(s)");
-
-   if (((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue)) &&
-       (hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown))
+   if ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue))
    {
-      handleIdentifiedArg( hdl, argString);
-   } else if ((ait2 != end) && (ait2->mElementType == detail::ArgListElement::etValue))
-   {
-      // first process the argument, *then* assign ait2 to ai
-      // reason: arg and argString are references of ai->, so if we change ai
-      // the references are still on the old value(s)
-      handleIdentifiedArg( hdl, argString, ait2->mValue);
-      ai = ait2;
+      // no next value
+      if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::optional)
+         handleIdentifiedArg( p_arg_hdl, arg_string);
+      else
+         throw runtime_error( "Argument '" + arg_string + "' requires value(s)");
    } else
    {
-      handleIdentifiedArg( hdl, argString);
+      // have a next value, and value mode can only be 'optional' or 'required'
+      // first process the argument, *then* assign ait2 to ai
+      // reason: arg and arg_string are references of ai->, so if we change ai
+      // the references are still on the old value(s)
+      handleIdentifiedArg( p_arg_hdl, arg_string, ait2->mValue);
+      ai = ait2;
    } // end if
 
-   return arConsumed;
+   return ArgResult::consumed;
 } // Handler::processArg
 
 
@@ -496,8 +601,8 @@ template< typename T>
 /// Since this function is called from multiple sources, it must not throw an
 /// exception when e.g. an unknown argument is found. Exceptions may only be
 /// thrown if e.g. a known argument misses its value. Otherwise, in most
-/// cases \a arUnknown should be returned and the error handling left to the
-/// calling function.
+/// cases \a ArgResult::unknown should be returned and the error handling
+/// left to the calling function.
 /// @param[in]  ai   Iterator that points to the argument to handle.<br>
 ///                  If the argument requires a value, the iterator is
 ///                  incremented, so it will point to the next argument when
@@ -517,11 +622,11 @@ Handler::ArgResult
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
          mpLastArg->calledAssign( mReadingArgumentFile, ai->mValue);
-         return arConsumed;
+         return ArgResult::consumed;
       } else if (detail::TypedArgBase* hdl = mArguments.findArg( '-'))
       {
          handleIdentifiedArg( hdl, string( "-"), ai->mValue);
-         return arConsumed;
+         return ArgResult::consumed;
       } // end if
       break;
 
@@ -534,29 +639,29 @@ Handler::ArgResult
    case detail::ArgListElement::etControl:
       if (ai->mArgChar == '(')
       {
-         if (mpOpeningBracketHdlr.empty())
-            return arUnknown;
+         if (!mpOpeningBracketHdlr)
+            return ArgResult::unknown;
          mpOpeningBracketHdlr();
       } else if (ai->mArgChar == ')')
       {
-         if (mpClosingBracketHdlr.empty())
-            return arUnknown;
+         if (!mpClosingBracketHdlr)
+            return ArgResult::unknown;
          mpClosingBracketHdlr();
       } else
       {
-         if (mpExclamationMarkHdlr.empty())
-            return arUnknown;
+         if (!mpExclamationMarkHdlr)
+            return ArgResult::unknown;
          mpExclamationMarkHdlr();
       } // end if
 
-      return arConsumed;
+      return ArgResult::consumed;
 
    default:
-      throw invalid_argument( "Got invalid element in argument list");
+      throw runtime_error( "Got invalid element in argument list");
 
    } // end switch
 
-   return arUnknown;
+   return ArgResult::unknown;
 } // Handler::evalSingleArgument
 
 
@@ -694,6 +799,17 @@ void Handler::listArgVars()
 
 
 
+/// Prints the list of argument groups.
+/// @since  0.13.1, 07.02.2017
+void Handler::listArgGroups()
+{
+
+   Groups::instance().listArgGroups();
+
+} // Handler::listArgGroups
+
+
+
 /// Called to mark the end of a value list: Sets mpLastArg to NULL.
 /// @since  0.2, 10.04.2016
 void Handler::endValueList()
@@ -719,16 +835,16 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 
    for (auto ai = alp.begin(); ai != alp.end(); ++ai)
    {
-      auto  result = evalSingleArgument( ai, alp.end());
-      if (result == arUnknown)
+      auto const  result = evalSingleArgument( ai, alp.end());
+      if (result == ArgResult::unknown)
       {
          if (ai->mElementType == detail::ArgListElement::etValue)
-            throw invalid_argument( "Unknown argument '" + ai->mValue + "'");
+            throw runtime_error( "Unknown argument '" + ai->mValue + "'");
          if ((ai->mElementType == detail::ArgListElement::etSingleCharArg) ||
              (ai->mElementType == detail::ArgListElement::etControl))
-            throw invalid_argument( "Unknown argument '" + string( 1, ai->mArgChar)
+            throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
-         throw invalid_argument( "Unknown argument '" + ai->mArgString + "'");
+         throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
       } // end if
    } // end for
 
@@ -744,7 +860,7 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 std::ostream& operator <<( std::ostream& os, const Handler& ah)
 {
    return os << ah.mDescription;
-} // end operator <<
+} // operator <<
 
 
 
@@ -806,6 +922,9 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
 
    mArguments.addArgument( ah_obj, arg_spec);
    mDescription.addArgument( arg_spec, desc, ah_obj);
+
+   if (mUsedByGroup)
+      Groups::instance().crossCheckArguments( this);
 
    return ah_obj;
 } // Handler::internAddArgument
@@ -901,9 +1020,9 @@ bool Handler::validArguments( string& constraint_arg_list) const
 void Handler::executeGlobalConstraints( const string& arg_spec)
 {
 
-   for (auto cit : mGlobalConstraints)
+   for (auto & current_constraint : mGlobalConstraints)
    {
-      cit->executeConstraint( arg_spec);
+      current_constraint->executeConstraint( arg_spec);
    } // end for
 
 } // Handler::executeGlobalConstraints

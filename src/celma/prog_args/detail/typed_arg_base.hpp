@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -96,6 +96,12 @@ public:
                   //!< defined value mode.
    }; // ValueMode
 
+   /// 
+   /// @param[in]  vm  .
+   /// @return  .
+   /// @since  6.0, 18.02.2017
+   static constexpr const char* valueMode2str( ValueMode vm);
+
    /// Constructor.
    /// @param[in]  arg_spec  The complete argument specification with short and/
    ///                       or long argument.
@@ -176,7 +182,9 @@ public:
    bool isHidden() const;
 
    /// Overwrites the 'value mode' which specifies if a value is needed for this
-   /// argument or not.
+   /// argument or not.<br>
+   /// Here in the base class, the only value mode that can be set is
+   /// 'required'.
    /// @param[in]  vm  The new value mode.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
@@ -374,6 +382,18 @@ std::ostream& operator <<( std::ostream& os, TypedArgBase::ValueMode vm);
 // ===============
 
 
+constexpr const char* TypedArgBase::valueMode2str( ValueMode vm)
+{
+   switch (vm)
+   {
+   case ValueMode::none:      return "none";
+   case ValueMode::optional:  return "optional";
+   case ValueMode::required:  return "required";
+   default:                   return "unknown";
+   } // end switch
+} // TypedArgBase::valueMode2str
+
+
 inline const std::string& TypedArgBase::argSpec() const
 {
    return mArgSpec;
@@ -428,8 +448,9 @@ inline bool TypedArgBase::isHidden() const
 
 inline TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
 {
-   if (vm == ValueMode::none)
-      throw std::invalid_argument( "may not set value mode 'none' on variable '" +
+   if (vm != ValueMode::required)
+      throw std::invalid_argument( std::string( "may not set value mode '") +
+                                   valueMode2str( vm) + "' on variable '" +
                                    mVarName + "'");
    mValueMode = vm;
    return this;
@@ -444,8 +465,8 @@ inline TypedArgBase::ValueMode TypedArgBase::valueMode() const
 
 inline TypedArgBase* TypedArgBase::setTakesMultiValue() noexcept( false)
 {
-   throw std::runtime_error( "setting 'take multiple values' not allowed for variable '" +
-                             mVarName + "'");
+   throw std::invalid_argument( "setting 'take multiple values' not allowed for variable '" +
+                                mVarName + "'");
 } // TypedArgBase::setTakesMultiValue
 
 
@@ -457,8 +478,8 @@ inline bool TypedArgBase::takesMultiValue() const
 
 inline TypedArgBase* TypedArgBase::setListSep( char /* sep */) noexcept( false)
 {
-   throw std::runtime_error( "setting list separator not allowed for variable '" +
-                             mVarName + "'");
+   throw std::invalid_argument( "setting list separator not allowed for variable '" +
+                                mVarName + "'");
 } // TypedArgBase::setListSep
 
 

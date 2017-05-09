@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -13,8 +13,8 @@ project( Celma )
 
 set( MAJORVERSION    0 )
 set( MINORVERSION    0 )
-set( RELEASE_VERSION 7 )
-set( PATCHLEVEL      0 )
+set( RELEASE_VERSION 14 )
+set( PATCHLEVEL      1 )
 
 enable_testing()
 include( CTest)
@@ -24,7 +24,7 @@ set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-macros" )
 include( celma_add_test )
 include( celma_add_test_output_check )
 
-add_definitions( --std=c++1y
+add_definitions( --std=c++1z
                  -Wall -W -Wshadow -Wunused-variable -Wunused-parameter
                  -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated
                  -Woverloaded-virtual -Wwrite-strings -Wextra -pedantic

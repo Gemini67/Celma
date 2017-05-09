@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -76,23 +76,31 @@ public:
       string  length_string;
       string  format_type( "s");
       bool    length_dashes_only = false;
+      bool    absolute_format = false;
 
       ++pnext;
       if (*pnext != ']')
-         readFormat( pnext, length_dashes_only, length_string, format_type);
+         readFormat( pnext, length_dashes_only, absolute_format, length_string,
+                     format_type);
  
       // was length set by format string?
       if (length_string.empty())
          setLengthString( length_string);
  
-      if (!length_dashes_only)
+      if (absolute_format)
       {
-         // format string already contains '%', now append the length
-         mFormatString.append( length_string);
-      }  // end if
+         mFormatString = format_type;
+      } else
+      {
+         if (!length_dashes_only)
+         {
+            // format string already contains '%', now append the length
+            mFormatString.append( length_string);
+         } // end if
 
-      // and the format type
-      mFormatString.append( format_type);
+         // and the format type
+         mFormatString.append( format_type);
+      } // end if
 
       // now we have to read the separator
       ++pnext;
@@ -161,9 +169,9 @@ private:
         {
           mTitle.append( 1, *pnext);
           quoted = false;
-        }  // end if
+        } // end if
         ++pnext;
-      }  // end while
+      } // end while
 
       mLength = static_cast< int>( mTitle.length());
 
@@ -176,40 +184,52 @@ private:
    /// @param[out]     length_dashes_only  Returns \c true if the length
    ///                                     specification should be applied to
    ///                                     the dashes line only.
+   /// @param[out]     absolute_format     Returns \c true if the format
+   ///                                     specification found in the string is
+   ///                                     'absolute', meaning it is complete
+   ///                                     and should be used as-is.
    /// @param[out]     length_string       Returns the length string as
    ///                                     specified in the format string.
    /// @param[out]     format_string       Returns the format specification set
    ///                                     in the format string.
    /// @since  0.7, 07.11.2016
    void readFormat( const char*& pnext, bool& length_dashes_only,
-                    string& length_string, string& format_string)
+                    bool& absolute_format, std::string& length_string,
+                    std::string& format_string)
    {
 
       if (*pnext == 'd')
       {
-        length_dashes_only = true;
-        ++pnext;
-      }  // end if
+         length_dashes_only = true;
+         ++pnext;
+      } // end if
 
       // have formatting options to evaluate
       mLength = ::abs( ::atoi( pnext));
 
       while ((*pnext != '\0') && (*pnext != ',') && (*pnext != ']'))
       {
-        length_string.append( 1, *pnext);
-        ++pnext;
-      }  // end while
+         length_string.append( 1, *pnext);
+         ++pnext;
+      } // end while
 
       if (*pnext == ',')
       {
-        format_string.clear();
-        ++pnext;
-        while ((*pnext != '\0') && (*pnext != ']'))
-        {
-          format_string.append( 1, *pnext);
-          ++pnext;
-        }  // end while
-      }  // end if
+         format_string.clear();
+         ++pnext;
+
+         if (*pnext == '=')
+         {
+            absolute_format = true;
+            ++pnext;
+         } // end if
+
+         while ((*pnext != '\0') && (*pnext != ']'))
+         {
+            format_string.append( 1, *pnext);
+            ++pnext;
+         } // end while
+      } // end if
 
    } // EvalColumn::readFormat
 
@@ -236,14 +256,11 @@ private:
    void copySeparator( const char*& pnext)
    {
 
-      /// @todo  there should be an easier way to do this
-      ///        but (*pnext == ' ') did not work ...
-      while ((*pnext != '\0') && (*pnext != '-') && !std::isalnum( *pnext) &&
-             (*pnext != '#'))
+      while ((*pnext == ' ') or (*pnext == '\n'))
       {
          mSeparator.append( 1, *pnext);
          ++pnext;
-      }  // end while
+      } // end while
 
    } // EvalColumn::copySeparator
 
@@ -260,13 +277,13 @@ private:
       char  title_format[ 32];
       ::strcpy( title_format, "%");
 
-      char*  append_pos = &title_format[ 1];
+      auto  append_pos = &title_format[ 1];
 
       if (title_align_left)
       {
         ::strcat( title_format, "-");
         ++append_pos;
-      }  // end if
+      } // end if
 
       ::sprintf( append_pos, "%ds", mLength);
 
@@ -373,7 +390,10 @@ AsciiTable::AsciiTable( char dash_char, const char* table_spec_format, ...):
 
 
 
-/// Allows to append more columns to the table.
+/// Allows to append more columns to the table.<br>
+/// If a newline character should be appended in order to get the created
+/// lines with newline character at the end, call this funtion with just the
+/// newline character as string contents.
 /// @param[in]  table_spec  The string that specifies the additional columns,
 ///                         widths, formats etc. as described in the class
 ///                         header.
@@ -388,23 +408,23 @@ void AsciiTable::append( const string& table_spec)
       mDashesLine.append( table_spec);
       mFormatString.append( table_spec);
       return;
-   }  // end if
+   } // end if
 
    string       separator;
    const char*  pnext = table_spec.c_str();
 
    while (*pnext == ' ')
    {
-     separator.append( 1, ' ');
-     ++pnext;
-   }  // end while
+      separator.append( 1, ' ');
+      ++pnext;
+   } // end while
 
    if (!separator.empty())
    {
       mTitleLine.append( separator);
       mDashesLine.append( separator);
       mFormatString.append( separator);
-   }  // end if
+   } // end if
 
    processSpec( pnext);
 
@@ -428,7 +448,7 @@ void AsciiTable::processSpec( const char* pnext)
       mDashesLine.append( string( next_col.width(), mCurrentDashChar)).
                   append( next_col.separator());
       mFormatString.append( next_col.formatString()).append( next_col.separator());
-   }  // end while
+   } // end while
 
 } // AsciiTable::processSpec
 

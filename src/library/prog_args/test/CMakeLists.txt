@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -17,16 +17,18 @@ celma_add_celma_boost_testprogram( test_argh_checks )
 celma_add_celma_boost_testprogram( test_argh_constraints )
 celma_add_celma_boost_testprogram( test_argh_custom_convert )
 celma_add_celma_boost_testprogram( test_argh_custom_type )
+celma_add_celma_boost_testprogram( test_argh_dest_tuple )
 celma_add_celma_boost_testprogram( test_argh_longarg_abbr )
 celma_add_celma_boost_testprogram( test_argh_output_streams)
 celma_add_celma_boost_testprogram( test_argh_range )
 celma_add_celma_boost_testprogram( test_argh_separate_values )
 celma_add_celma_boost_testprogram( test_arg_list_parser )
 celma_add_celma_boost_testprogram( test_argument_groups )
-celma_add_celma_boost_testprogram( test_argument_handler )
 celma_add_celma_boost_testprogram( test_argument_key )
 celma_add_celma_boost_testprogram( test_argument_sub_groups )
 celma_add_celma_boost_testprogram( test_constraint_container )
+celma_add_celma_boost_testprogram( test_handler )
+celma_add_celma_boost_testprogram( test_value_handler )
 
 # test-programs for output
 add_executable( test_arg_groups_usage           test_arg_groups_usage.cpp )
@@ -403,7 +405,7 @@ celma_add_test_output_check( test_argh_hidden_output  test_argh_hidden_output_re
 set( test_argh_list_arg_vars_output_result
    "^Short \\(character\\) arguments:\n"
    "'-f' boolean flag, destination 'my_flag', set.\n"
-   "   value 'no value' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'-s' value type 'std::string', destination 'my_string', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
    "\n"
@@ -411,7 +413,7 @@ set( test_argh_list_arg_vars_output_result
    "'--integer' value type 'int', destination 'my_int', value not set.\n"
    "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
    "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-   "   value 'no value' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'--string' value type 'std::string', destination 'my_string', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
    "\n"
@@ -419,15 +421,15 @@ set( test_argh_list_arg_vars_output_result
    "\n"
    "Short \\(character\\) arguments:\n"
    "'-V' calls function/method 'Handler::listArgVars'.\n"
-   "   value 'no value' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'-f' boolean flag, destination 'my_flag', set.\n"
-   "   value 'no value' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'-s' value type 'std::string', destination 'my_string', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "\n"
    "Long \\(string\\) arguments:\n"
    "'--call' calls function/method 'callable_function'.\n"
-   "   value 'no value' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'--cas' value type 'std::string', destination 'CheckAssign< my_ca_string>', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'--integer' value type 'int', destination 'my_int', value not set.\n"
@@ -439,19 +441,19 @@ set( test_argh_list_arg_vars_output_result
    "'--string' value type 'std::string', destination 'my_string', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'--ulong' value type 'unsigned long', destination 'my_ulong', value not set.\n"
-   "   value 'optional' \\(1\\), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
    "\n"
    "Short \\(character\\) arguments:\n"
    "'-V' calls function/method 'Handler::listArgVars'.\n"
-   "   value 'no value' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'-f' boolean flag, destination 'my_flag', set.\n"
-   "   value 'no value' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'-s' value type 'std::string', destination 'my_string', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "\n"
    "Long \\(string\\) arguments:\n"
    "'--call' calls function/method 'callable_function'.\n"
-   "   value 'no value' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'--cas' value type 'std::string', destination 'CheckAssign< my_ca_string>', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'--integer' value type 'int', destination 'my_int', value = 42.\n"
@@ -463,7 +465,7 @@ set( test_argh_list_arg_vars_output_result
    "'--string' value type 'std::string', destination 'my_string', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
    "'--ulong' value type 'unsigned long', destination 'my_ulong', value not set.\n"
-   "   value 'optional' \\(1\\), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
    "\n$"
 )
 

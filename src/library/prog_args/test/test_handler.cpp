@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,33 +15,36 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test, header file include
+#include "celma/prog_args/handler.hpp"
 
 
 // STL includes
 #include <string>
-#include <iostream>
 
 
 // Boost includes
-#define BOOST_TEST_MODULE prog_args::HandlerTest
+#define BOOST_TEST_MODULE ArgumentHandlerTest
 #include <boost/test/unit_test.hpp>
+#include <boost/lexical_cast.hpp>
 
 
 // project includes
-#include "celma/prog_args/handler.hpp"
 #include "celma/common/arg_string_2_array.hpp"
+#include "celma/prog_args/helpers/triple_logic.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::common::ArgString2Array;
+using celma::common::CheckAssign;
+using celma::prog_args::Handler;
+using celma::prog_args::helpers::TripleLogic;
+using std::bad_cast;
+using std::invalid_argument;
+using std::logic_error;
+using std::runtime_error;
+using std::string;
+using std::vector;
 
-
-// module definitions
 
 
 /// Test that the standard handling for standard arguments is not invoked when
@@ -50,34 +53,38 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( std_args_not_used)
 {
 
-   prog_args::Handler  ah( 0);
+   Handler  ah( 0);
 
 
    {
-      common::ArgString2Array  as2a( "-v", nullptr);
+      ArgString2Array  as2a( "-v", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "--verbose", nullptr);
+      ArgString2Array  as2a( "--verbose", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-h", nullptr);
+      ArgString2Array  as2a( "-h", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "--help", nullptr);
+      ArgString2Array  as2a( "--help", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
    } // end scope
 
-} // end std_args_not_used
+} // std_args_not_used
 
 
 
@@ -86,12 +93,12 @@ BOOST_AUTO_TEST_CASE( std_args_not_used)
 BOOST_AUTO_TEST_CASE( argument_setup_errors)
 {
 
-   common::CheckAssign< int>  iVal;
+   CheckAssign< int>  iVal;
 
 
    // specify the same short argument twice
    {
-      prog_args::Handler  ah( 0);
+      Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer"));
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer"),
                            invalid_argument);
@@ -99,7 +106,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
 
    // specify the same long argument twice
    {
-      prog_args::Handler  ah( 0);
+      Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "int", DEST_VAR( iVal), "Integer"));
       BOOST_REQUIRE_THROW( ah.addArgument( "int", DEST_VAR( iVal), "Integer"),
                            invalid_argument);
@@ -107,7 +114,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
 
    // specify the same short argument twice (together with different long arguments)
    {
-      prog_args::Handler  ah( 0);
+      Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int", DEST_VAR( iVal), "Integer"));
       BOOST_REQUIRE_THROW( ah.addArgument( "i,max", DEST_VAR( iVal), "Integer"),
                            invalid_argument);
@@ -115,7 +122,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
 
    // specify the same long argument twice (together with different short arguments)
    {
-      prog_args::Handler  ah( 0);
+      Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int", DEST_VAR( iVal), "Integer"));
       BOOST_REQUIRE_THROW( ah.addArgument( "m,int", DEST_VAR( iVal), "Integer"),
                            invalid_argument);
@@ -123,32 +130,32 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
 
    // specify an invalid range
    {
-      prog_args::Handler  ah( 0);
+      Handler  ah( 0);
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
-                                         ->addCheck( prog_args::range( 5, 5)),
+                                         ->addCheck( celma::prog_args::range( 5, 5)),
                            invalid_argument);
    } // end scope
 
    // specify another invalid range
    {
-      prog_args::Handler  ah( 0);
+      Handler  ah( 0);
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
-                                         ->addCheck( prog_args::range( 5, 2)),
+                                         ->addCheck( celma::prog_args::range( 5, 2)),
                            invalid_argument);
    } // end scope
 
    // specify an empty list of values
    {
-      prog_args::Handler  ah( 0);
+      Handler  ah( 0);
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
-                                         ->addCheck( prog_args::values( "")),
+                                         ->addCheck( celma::prog_args::values( "")),
                            invalid_argument);
    } // end scope
 
    // specify to use standard short help argument and then specify an application
    // argument
    {
-      prog_args::Handler  ah( prog_args::Handler::hfHelpShort);
+      Handler  ah( Handler::hfHelpShort);
       BOOST_REQUIRE_THROW( ah.addArgument( "h", DEST_VAR( iVal), "Integer"),
                            invalid_argument);
    } // end scope
@@ -156,15 +163,15 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    // specify to use standard long help argument and then specify an application
    // argument
    {
-      prog_args::Handler  ah( prog_args::Handler::hfHelpLong);
+      Handler  ah( Handler::hfHelpLong);
       BOOST_REQUIRE_THROW( ah.addArgument( "help", DEST_VAR( iVal), "Integer"),
                            invalid_argument);
    } // end scope
 
    // Ensure that calling unsetFlag() on a wrong type throws.
    {
-      prog_args::Handler  ah( 0);
-      int                 i = -1;
+      Handler  ah( 0);
+      int      i = -1;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i), "int")
                                          ->unsetFlag(),
@@ -172,8 +179,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  i;
+      Handler            ah( 0);
+      CheckAssign< int>  i;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i), "int")
                                          ->unsetFlag(),
@@ -181,8 +188,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    } // end scope
 
    {
-      prog_args::Handler  ah( 0);
-      string              s;
+      Handler  ah( 0);
+      string   s;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( s), "string")
                                          ->unsetFlag(),
@@ -190,8 +197,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  s;
+      Handler               ah( 0);
+      CheckAssign< string>  s;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( s), "string")
                                          ->unsetFlag(),
@@ -199,8 +206,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    } // end scope
 
    {
-      prog_args::Handler  ah( 0);
-      vector< int>        vi;
+      Handler       ah( 0);
+      vector< int>  vi;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_VAR( vi), "int vector")
                                          ->unsetFlag(),
@@ -209,8 +216,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
 
    // flags == boolean arguments cannot be defined mandatory
    {
-      prog_args::Handler  ah( 0);
-      bool                flag = false;
+      Handler  ah( 0);
+      bool     flag = false;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
                                          ->setIsMandatory(),
@@ -218,8 +225,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    } // end scope
 
    {
-      prog_args::Handler          ah( 0);
-      common::CheckAssign< bool>  flag;
+      Handler             ah( 0);
+      CheckAssign< bool>  flag;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "int")
                                          ->setIsMandatory(),
@@ -228,15 +235,15 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
 
    // Ensure that calling addFormat() on a wrong type throws.
    {
-      prog_args::Handler  ah( 0);
-      bool                dummy;
+      Handler  ah( 0);
+      bool     dummy;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( dummy), "flag")
-                                         ->addFormat( prog_args::uppercase()),
+                                         ->addFormat( celma::prog_args::uppercase()),
                            logic_error);
    } // end scope
 
-} // end argument_setup_errors
+} // argument_setup_errors
 
 
 
@@ -246,22 +253,22 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
 {
 
    {
-      prog_args::Handler       ah( prog_args::Handler::hfHelpShort);
-      common::ArgString2Array  as2a( "--help", nullptr);
+      Handler          ah( Handler::hfHelpShort);
+      ArgString2Array  as2a( "--help", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
-      prog_args::Handler       ah( prog_args::Handler::hfHelpLong);
-      common::ArgString2Array  as2a( "-h", nullptr);
+      Handler          ah( Handler::hfHelpLong);
+      ArgString2Array  as2a( "-h", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
-} // end std_args_not_matching
+} // std_args_not_matching
 
 
 
@@ -270,18 +277,18 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
 BOOST_AUTO_TEST_CASE( no_argument)
 {
 
-   prog_args::Handler          ah( 0);
-   common::CheckAssign< bool>  flag;
+   Handler             ah( 0);
+   CheckAssign< bool>  flag;
 
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
 
-   common::ArgString2Array  as2a( "", nullptr);
+   ArgString2Array  as2a( "", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( !flag.hasValue());
 
-} // end no_argument
+} // no_argument
 
 
 
@@ -297,81 +304,81 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
    // mandatory argument missing
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal1;
-      common::CheckAssign< int>  iVal2;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal1;
+      CheckAssign< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
 
-      common::ArgString2Array  as2a( "-i 17", nullptr);
+      ArgString2Array  as2a( "-i 17", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // unknown argument
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal1;
-      common::CheckAssign< int>  iVal2;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal1;
+      CheckAssign< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
 
-      common::ArgString2Array  as2a( "-h -c 5", nullptr);
+      ArgString2Array  as2a( "-h -c 5", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // unknown long argument
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal1;
-      common::CheckAssign< int>  iVal2;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal1;
+      CheckAssign< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
 
-      common::ArgString2Array  as2a( "-c 85 --history", nullptr);
+      ArgString2Array  as2a( "-c 85 --history", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // Argument with required value without a value (at beginning, i.e. followed
    // by another argument)
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal1;
-      common::CheckAssign< int>  iVal2;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal1;
+      CheckAssign< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
 
-      common::ArgString2Array  as2a( "-i -c 9", nullptr);
+      ArgString2Array  as2a( "-i -c 9", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // Argument with required value without a value (at end)
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal1;
-      common::CheckAssign< int>  iVal2;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal1;
+      CheckAssign< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
 
-      common::ArgString2Array  as2a( "-c 8 -i", nullptr);
+      ArgString2Array  as2a( "-c 8 -i", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
-} // end parameter_string_errors
+} // parameter_string_errors
 
 
 
@@ -382,26 +389,26 @@ BOOST_AUTO_TEST_CASE( unexpected_free_value)
 
    // single, unexpected free value
    {
-      prog_args::Handler       ah( 0);
-      common::ArgString2Array  as2a( "free_value", nullptr);
+      Handler          ah( 0);
+      ArgString2Array  as2a( "free_value", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // unexpected free value after argument
    {
-      prog_args::Handler       ah( 0);
-      common::ArgString2Array  as2a( "-i 56 free_value", nullptr);
+      Handler          ah( 0);
+      ArgString2Array  as2a( "-i 56 free_value", nullptr);
       int                      int_val;
 
       ah.addArgument( "i", DEST_VAR( int_val), "integer");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
-} // end unexpected_free_value
+} // unexpected_free_value
 
 
 
@@ -414,40 +421,40 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
 
    // mandatory free value missing
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< bool>    flag;
-      common::CheckAssign< int>     iVal;
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< bool>    flag;
+      CheckAssign< int>     iVal;
+      CheckAssign< string>  name;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,flag", DEST_VAR( flag), "Flag"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",  DEST_VAR( iVal), "Flag"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument(           DEST_VAR( name), "Name")
                                             ->setIsMandatory());
 
-      common::ArgString2Array  as2a( "-i 17", nullptr);
+      ArgString2Array  as2a( "-i 17", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    // mandatory free value missing
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< bool>    flag;
-      common::CheckAssign< int>     iVal;
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< bool>    flag;
+      CheckAssign< int>     iVal;
+      CheckAssign< string>  name;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,flag", DEST_VAR( flag), "Flag"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",  DEST_VAR( iVal), "Flag"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument(           DEST_VAR( name), "Name")
                                             ->setIsMandatory());
 
-      common::ArgString2Array  as2a( "-f PROCESS1", nullptr);
+      ArgString2Array  as2a( "-f PROCESS1", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
-} // end free_value_handling
+} // free_value_handling
 
 
 
@@ -458,15 +465,15 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
 BOOST_AUTO_TEST_CASE( one_free_value)
 {
 
-   prog_args::Handler  ah( 0);
-   int                 v1;
-   int                 v2;
+   Handler  ah( 0);
+   int      v1;
+   int      v2;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( DEST_VAR( v1), "one"));
    BOOST_REQUIRE_THROW( ah.addArgument( DEST_VAR( v2), "two"), invalid_argument);
 
-} // end one_free_value
+} // one_free_value
 
 
 
@@ -475,19 +482,19 @@ BOOST_AUTO_TEST_CASE( one_free_value)
 BOOST_AUTO_TEST_CASE( one_short_flag)
 {
 
-   prog_args::Handler          ah( 0);
-   common::CheckAssign< bool>  flag;
+   Handler             ah( 0);
+   CheckAssign< bool>  flag;
 
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
 
-   common::ArgString2Array  as2a( "-f", nullptr);
+   ArgString2Array  as2a( "-f", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( flag.hasValue());
    BOOST_REQUIRE( flag.value());
 
-} // end one_short_flag
+} // one_short_flag
 
 
 
@@ -497,19 +504,19 @@ BOOST_AUTO_TEST_CASE( one_short_flag)
 BOOST_AUTO_TEST_CASE( one_short_flag_unset)
 {
 
-   prog_args::Handler  ah( 0);
-   bool                flag = true;
+   Handler  ah( 0);
+   bool     flag = true;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag")
                                          ->unsetFlag());
 
-   common::ArgString2Array  as2a( "-f", nullptr);
+   ArgString2Array  as2a( "-f", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( !flag);
 
-} // end one_short_flag_unset
+} // one_short_flag_unset
 
 
 
@@ -519,20 +526,20 @@ BOOST_AUTO_TEST_CASE( one_short_flag_unset)
 BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
 {
 
-   prog_args::Handler          ah( 0);
-   common::CheckAssign< bool>  flag( true);
+   Handler             ah( 0);
+   CheckAssign< bool>  flag( true);
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag")
                                          ->unsetFlag());
 
-   common::ArgString2Array  as2a( "-f", nullptr);
+   ArgString2Array  as2a( "-f", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( flag.hasValue());
    BOOST_REQUIRE( !flag.value());
 
-} // end one_short_flag_checked_unset
+} // one_short_flag_checked_unset
 
 
 
@@ -541,19 +548,19 @@ BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
 BOOST_AUTO_TEST_CASE( one_long_flag)
 {
 
-   prog_args::Handler          ah( 0);
-   common::CheckAssign< bool>  flag;
+   Handler             ah( 0);
+   CheckAssign< bool>  flag;
 
 
    ah.addArgument( "flag", DEST_VAR( flag), "Boolean flag");
 
-   common::ArgString2Array  as2a( "--flag", nullptr);
+   ArgString2Array  as2a( "--flag", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( flag.hasValue());
    BOOST_REQUIRE( flag.value());
 
-} // end one_long_flag
+} // one_long_flag
 
 
 
@@ -563,12 +570,12 @@ BOOST_AUTO_TEST_CASE( one_flag_both)
 {
 
    {
-      prog_args::Handler          ah( 0);
-      common::CheckAssign< bool>  flag;
+      Handler             ah( 0);
+      CheckAssign< bool>  flag;
 
       ah.addArgument( "f,flag", DEST_VAR( flag), "Boolean flag");
 
-      common::ArgString2Array  as2a( "-f", nullptr);
+      ArgString2Array  as2a( "-f", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( flag.hasValue());
@@ -576,19 +583,19 @@ BOOST_AUTO_TEST_CASE( one_flag_both)
    } // end scope
 
    {
-      prog_args::Handler          ah( 0);
-      common::CheckAssign< bool>  flag;
+      Handler             ah( 0);
+      CheckAssign< bool>  flag;
 
       ah.addArgument( "f,flag", DEST_VAR( flag), "Boolean flag");
 
-      common::ArgString2Array  as2a( "--flag", nullptr);
+      ArgString2Array  as2a( "--flag", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( flag.hasValue());
       BOOST_REQUIRE( flag.value());
    } // end scope
 
-} // end one_flag_both
+} // one_flag_both
 
 
 
@@ -598,12 +605,12 @@ BOOST_AUTO_TEST_CASE( one_short_int)
 {
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "m", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "-m 500", nullptr);
+      ArgString2Array  as2a( "-m 500", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
@@ -611,19 +618,19 @@ BOOST_AUTO_TEST_CASE( one_short_int)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "m", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "-m500", nullptr);
+      ArgString2Array  as2a( "-m500", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
 
-} // end one_short_int
+} // one_short_int
 
 
 
@@ -633,12 +640,12 @@ BOOST_AUTO_TEST_CASE( one_long_int)
 {
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "--max_value 2000", nullptr);
+      ArgString2Array  as2a( "--max_value 2000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
@@ -646,12 +653,12 @@ BOOST_AUTO_TEST_CASE( one_long_int)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "--max_value=7000", nullptr);
+      ArgString2Array  as2a( "--max_value=7000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
@@ -659,19 +666,19 @@ BOOST_AUTO_TEST_CASE( one_long_int)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "--max_value=-81", nullptr);
+      ArgString2Array  as2a( "--max_value=-81", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
       BOOST_REQUIRE_EQUAL( maxValue.value(), -81);
    } // end scope
 
-} // end one_long_int
+} // one_long_int
 
 
 
@@ -680,19 +687,19 @@ BOOST_AUTO_TEST_CASE( one_long_int)
 BOOST_AUTO_TEST_CASE( one_free_int)
 {
 
-   prog_args::Handler         ah( 0);
-   common::CheckAssign< int>  repetitions;
+   Handler            ah( 0);
+   CheckAssign< int>  repetitions;
 
 
    ah.addArgument( DEST_VAR( repetitions), "Number of repetitions");
 
-   common::ArgString2Array  as2a( "123", nullptr);
+   ArgString2Array  as2a( "123", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( repetitions.hasValue());
    BOOST_REQUIRE_EQUAL( repetitions.value(), 123);
 
-} // end one_free_int
+} // one_free_int
 
 
 
@@ -702,12 +709,12 @@ BOOST_AUTO_TEST_CASE( one_int_both)
 {
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "-m 500", nullptr);
+      ArgString2Array  as2a( "-m 500", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
@@ -715,12 +722,12 @@ BOOST_AUTO_TEST_CASE( one_int_both)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "-m500", nullptr);
+      ArgString2Array  as2a( "-m500", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
@@ -728,12 +735,12 @@ BOOST_AUTO_TEST_CASE( one_int_both)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "--max_value 2000", nullptr);
+      ArgString2Array  as2a( "--max_value 2000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
@@ -741,12 +748,12 @@ BOOST_AUTO_TEST_CASE( one_int_both)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "--max_value=7000", nullptr);
+      ArgString2Array  as2a( "--max_value=7000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
@@ -754,19 +761,19 @@ BOOST_AUTO_TEST_CASE( one_int_both)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  maxValue;
+      Handler            ah( 0);
+      CheckAssign< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      common::ArgString2Array  as2a( "--max_value=-135", nullptr);
+      ArgString2Array  as2a( "--max_value=-135", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( maxValue.hasValue());
       BOOST_REQUIRE_EQUAL( maxValue.value(), -135);
    } // end scope
 
-} // end one_int_both
+} // one_int_both
 
 
 
@@ -776,12 +783,12 @@ BOOST_AUTO_TEST_CASE( one_short_double)
 {
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "f", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "-f 7.5", nullptr);
+      ArgString2Array  as2a( "-f 7.5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
@@ -789,19 +796,19 @@ BOOST_AUTO_TEST_CASE( one_short_double)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "f", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "-f7.5", nullptr);
+      ArgString2Array  as2a( "-f7.5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
 
-} // end one_short_double
+} // one_short_double
 
 
 
@@ -811,12 +818,12 @@ BOOST_AUTO_TEST_CASE( one_long_double)
 {
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "--factor 0.9", nullptr);
+      ArgString2Array  as2a( "--factor 0.9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
@@ -824,12 +831,12 @@ BOOST_AUTO_TEST_CASE( one_long_double)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "--factor=1.3", nullptr);
+      ArgString2Array  as2a( "--factor=1.3", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
@@ -837,19 +844,19 @@ BOOST_AUTO_TEST_CASE( one_long_double)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "--factor=-125.75", nullptr);
+      ArgString2Array  as2a( "--factor=-125.75", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
       BOOST_REQUIRE_EQUAL( factor.value(), -125.75);
    } // end scope
 
-} // end one_long_double
+} // one_long_double
 
 
 
@@ -858,19 +865,19 @@ BOOST_AUTO_TEST_CASE( one_long_double)
 BOOST_AUTO_TEST_CASE( one_free_double)
 {
 
-   prog_args::Handler            ah( 0);
-   common::CheckAssign< double>  factor;
+   Handler               ah( 0);
+   CheckAssign< double>  factor;
 
 
    ah.addArgument( DEST_VAR( factor), "Factor");
 
-   common::ArgString2Array  as2a( "99.98", nullptr);
+   ArgString2Array  as2a( "99.98", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( factor.hasValue());
    BOOST_REQUIRE_EQUAL( factor.value(), 99.98);
 
-} // end one_free_double
+} // one_free_double
 
 
 
@@ -880,12 +887,12 @@ BOOST_AUTO_TEST_CASE( one_double_both)
 {
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "-f 7.5", nullptr);
+      ArgString2Array  as2a( "-f 7.5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
@@ -893,12 +900,12 @@ BOOST_AUTO_TEST_CASE( one_double_both)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "-f7.5", nullptr);
+      ArgString2Array  as2a( "-f7.5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
@@ -906,12 +913,12 @@ BOOST_AUTO_TEST_CASE( one_double_both)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "--factor 0.9", nullptr);
+      ArgString2Array  as2a( "--factor 0.9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
@@ -919,19 +926,19 @@ BOOST_AUTO_TEST_CASE( one_double_both)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< double>  factor;
+      Handler               ah( 0);
+      CheckAssign< double>  factor;
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
-      common::ArgString2Array  as2a( "--factor=58.9653", nullptr);
+      ArgString2Array  as2a( "--factor=58.9653", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( factor.hasValue());
       BOOST_REQUIRE_EQUAL( factor.value(), 58.9653);
    } // end scope
 
-} // end one_double_both
+} // one_double_both
 
 
 
@@ -941,12 +948,12 @@ BOOST_AUTO_TEST_CASE( one_short_string)
 {
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name");
 
-      common::ArgString2Array  as2a( "-n PROCESS1", nullptr);
+      ArgString2Array  as2a( "-n PROCESS1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -954,19 +961,19 @@ BOOST_AUTO_TEST_CASE( one_short_string)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name");
 
-      common::ArgString2Array  as2a( "-nPROCESS1", nullptr);
+      ArgString2Array  as2a( "-nPROCESS1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
-} // end one_short_string
+} // one_short_string
 
 
 
@@ -976,12 +983,12 @@ BOOST_AUTO_TEST_CASE( one_long_string)
 {
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< string>  name;
 
       ah.addArgument( "name", DEST_VAR( name), "Name");
 
-      common::ArgString2Array  as2a( "--name MY_PROCESS", nullptr);
+      ArgString2Array  as2a( "--name MY_PROCESS", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -989,19 +996,19 @@ BOOST_AUTO_TEST_CASE( one_long_string)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< string>  name;
 
       ah.addArgument( "name", DEST_VAR( name), "Name");
 
-      common::ArgString2Array  as2a( "--name=OTHER_PROCESS", nullptr);
+      ArgString2Array  as2a( "--name=OTHER_PROCESS", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
       BOOST_REQUIRE_EQUAL( name.value(), "OTHER_PROCESS");
    } // end scope
 
-} // end one_long_string
+} // one_long_string
 
 
 
@@ -1010,19 +1017,19 @@ BOOST_AUTO_TEST_CASE( one_long_string)
 BOOST_AUTO_TEST_CASE( one_free_string)
 {
 
-   prog_args::Handler            ah( 0);
-   common::CheckAssign< string>  name;
+   Handler               ah( 0);
+   CheckAssign< string>  name;
 
 
    ah.addArgument( DEST_VAR( name), "Name");
 
-   common::ArgString2Array  as2a( "PROCESS1", nullptr);
+   ArgString2Array  as2a( "PROCESS1", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( name.hasValue());
    BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
 
-} // end one_free_string
+} // one_free_string
 
 
 
@@ -1032,12 +1039,12 @@ BOOST_AUTO_TEST_CASE( one_string_both)
 {
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< string>  name;
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
-      common::ArgString2Array  as2a( "-n PROCESS1", nullptr);
+      ArgString2Array  as2a( "-n PROCESS1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -1045,12 +1052,12 @@ BOOST_AUTO_TEST_CASE( one_string_both)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< string>  name;
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
-      common::ArgString2Array  as2a( "-nPROCESS1", nullptr);
+      ArgString2Array  as2a( "-nPROCESS1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -1058,12 +1065,12 @@ BOOST_AUTO_TEST_CASE( one_string_both)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< string>  name;
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
-      common::ArgString2Array  as2a( "--name MY_PROCESS", nullptr);
+      ArgString2Array  as2a( "--name MY_PROCESS", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -1071,19 +1078,19 @@ BOOST_AUTO_TEST_CASE( one_string_both)
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< string>  name;
+      Handler               ah( 0);
+      CheckAssign< string>  name;
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
-      common::ArgString2Array  as2a( "--name OTHER_PROCESS", nullptr);
+      ArgString2Array  as2a( "--name OTHER_PROCESS", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
       BOOST_REQUIRE_EQUAL( name.value(), "OTHER_PROCESS");
    } // end scope
 
-} // end one_string_both
+} // one_string_both
 
 
 
@@ -1092,17 +1099,17 @@ BOOST_AUTO_TEST_CASE( one_string_both)
 BOOST_AUTO_TEST_CASE( two_flags)
 {
 
-   /// Helper class used to provide a fresh set of the prog_args::Handler object
+   /// Helper class used to provide a fresh set of the Handler object
    /// and the test variables.
    /// @since  0.2, 10.04.2016
    class TestData
    {
    public:
-      /// Constructor, initialises the prog_args::Handler.
+      /// Constructor, initialises the Handler.
       /// @param[in]  argstring  The argument string to pass to
-      ///                        \c common::ArgString2Array.
+      ///                        \c ArgString2Array.
       /// @since  0.2, 10.04.2016
-      TestData( const std::string& argstring):
+      TestData( const string& argstring):
          ah( 0),
          as2a( argstring, nullptr)
       {
@@ -1111,13 +1118,13 @@ BOOST_AUTO_TEST_CASE( two_flags)
       } // end TestData::TestData
 
       /// The argument handler.
-      prog_args::Handler          ah;
+      Handler          ah;
       /// First checked boolean parameter.
-      common::CheckAssign< bool>  faster;
+      CheckAssign< bool>  faster;
       /// Second checked boolean parameter.
-      common::CheckAssign< bool>  slower;
+      CheckAssign< bool>  slower;
       /// Argument string split to argc, argv.
-      common::ArgString2Array     as2a;
+      ArgString2Array     as2a;
    }; // TestData
 
    {
@@ -1216,7 +1223,7 @@ BOOST_AUTO_TEST_CASE( two_flags)
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
-} // end two_flags
+} // two_flags
 
 
 
@@ -1225,14 +1232,14 @@ BOOST_AUTO_TEST_CASE( two_flags)
 BOOST_AUTO_TEST_CASE( flag_and_string)
 {
 
-   /// Helper class used to provide a fresh set of the prog_args::Handler object
+   /// Helper class used to provide a fresh set of the Handler object
    /// and the test variables.
    /// @since  0.2, 10.04.2016
    struct TestData
    {
-      /// Constructor, initialises the prog_args::Handler.
+      /// Constructor, initialises the Handler.
       /// @param[in]  argstring  The argument string to pass to
-      ///                        \c common::ArgString2Array.
+      ///                        \c ArgString2Array.
       /// @since  0.2, 10.04.2016
       TestData( const string& argstring):
          ah( 0),
@@ -1243,13 +1250,13 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       } // end TestData::TestData
 
       /// The argument handler.
-      prog_args::Handler       ah;
+      Handler       ah;
       /// First checked parameter, boolean.
-      common::CheckAssign< bool>    flag;
+      CheckAssign< bool>    flag;
       /// Second checked parameter, string.
-      common::CheckAssign< string>  name;
+      CheckAssign< string>  name;
       /// Argument string split to argc, argv.
-      common::ArgString2Array       as2a;
+      ArgString2Array       as2a;
    }; // TestData
 
    {
@@ -1352,7 +1359,7 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
-} // end flag_and_string
+} // flag_and_string
 
 
 
@@ -1380,13 +1387,13 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      prog_args::Handler            ah;
+      Handler            ah;
       /// Destination variable.
-      common::CheckAssign< int>     maxValue;
+      CheckAssign< int>     maxValue;
       /// Destination variable.
-      common::CheckAssign< string>  name;
+      CheckAssign< string>  name;
       /// Argument string split into argc, argv.
-      common::ArgString2Array       as2a;
+      ArgString2Array       as2a;
 
    }; // TestData
 
@@ -1630,7 +1637,7 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       BOOST_REQUIRE_EQUAL( td.name.value(), "OTHER_PROCESS");
    } // end scope
 
-} // end int_and_string
+} // int_and_string
 
 
 
@@ -1658,13 +1665,13 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      prog_args::Handler            ah;
+      Handler            ah;
       /// Destination variable.
-      common::CheckAssign< int>     maxValue;
+      CheckAssign< int>     maxValue;
       /// Destination variable.
-      common::CheckAssign< string>  name;
+      CheckAssign< string>  name;
       /// Argument string split into argc, argv.
-      common::ArgString2Array       as2a;
+      ArgString2Array       as2a;
 
    }; // TestData
 
@@ -1772,7 +1779,7 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
-} // end int_and_free_string
+} // int_and_free_string
 
 
 
@@ -1782,13 +1789,13 @@ BOOST_AUTO_TEST_CASE( application_uses_std_arg)
 {
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  valor;
+      Handler            ah( 0);
+      CheckAssign< int>  valor;
 
 
       ah.addArgument( "v", DEST_VAR( valor), "Valor number");
 
-      common::ArgString2Array  as2a( "-v 25", nullptr);
+      ArgString2Array  as2a( "-v 25", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( valor.hasValue());
@@ -1796,13 +1803,13 @@ BOOST_AUTO_TEST_CASE( application_uses_std_arg)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  valor;
+      Handler            ah( 0);
+      CheckAssign< int>  valor;
 
 
       ah.addArgument( "v", DEST_VAR( valor), "Valor number");
 
-      common::ArgString2Array  as2a( "-v25", nullptr);
+      ArgString2Array  as2a( "-v25", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( valor.hasValue());
@@ -1810,20 +1817,20 @@ BOOST_AUTO_TEST_CASE( application_uses_std_arg)
    } // end scope
 
    {
-      prog_args::Handler          ah( 0);
-      common::CheckAssign< bool>  doVerbose;
+      Handler             ah( 0);
+      CheckAssign< bool>  doVerbose;
 
 
       ah.addArgument( "verbose", DEST_VAR( doVerbose), "Set verbose on");
 
-      common::ArgString2Array  as2a( "--verbose", nullptr);
+      ArgString2Array  as2a( "--verbose", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( doVerbose.hasValue());
       BOOST_REQUIRE( doVerbose.value());
    } // end scope
 
-} // end application_uses_std_arg
+} // application_uses_std_arg
 
 
 
@@ -1833,96 +1840,199 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
 {
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< int>     iVal;
-      common::CheckAssign< double>  fVal;
-      common::CheckAssign< string>  sVal;
+      Handler               ah( 0);
+      CheckAssign< int>     iVal;
+      CheckAssign< double>  fVal;
+      CheckAssign< string>  sVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      common::ArgString2Array  as2a( "-i 3.5", nullptr);
+      ArgString2Array  as2a( "-i 3.5", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), bad_cast);
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< int>     iVal;
-      common::CheckAssign< double>  fVal;
-      common::CheckAssign< string>  sVal;
+      Handler               ah( 0);
+      CheckAssign< int>     iVal;
+      CheckAssign< double>  fVal;
+      CheckAssign< string>  sVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      common::ArgString2Array  as2a( "-i3.5", nullptr);
+      ArgString2Array  as2a( "-i3.5", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), bad_cast);
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< int>     iVal;
-      common::CheckAssign< double>  fVal;
-      common::CheckAssign< string>  sVal;
+      Handler               ah( 0);
+      CheckAssign< int>     iVal;
+      CheckAssign< double>  fVal;
+      CheckAssign< string>  sVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      common::ArgString2Array  as2a( "-i myName", nullptr);
+      ArgString2Array  as2a( "-i myName", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), bad_cast);
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< int>     iVal;
-      common::CheckAssign< double>  fVal;
-      common::CheckAssign< string>  sVal;
+      Handler               ah( 0);
+      CheckAssign< int>     iVal;
+      CheckAssign< double>  fVal;
+      CheckAssign< string>  sVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      common::ArgString2Array  as2a( "-imyName", nullptr);
+      ArgString2Array  as2a( "-imyName", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), bad_cast);
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< int>     iVal;
-      common::CheckAssign< double>  fVal;
-      common::CheckAssign< string>  sVal;
+      Handler               ah( 0);
+      CheckAssign< int>     iVal;
+      CheckAssign< double>  fVal;
+      CheckAssign< string>  sVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      common::ArgString2Array  as2a( "-f myName", nullptr);
+      ArgString2Array  as2a( "-f myName", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), bad_cast);
    } // end scope
 
    {
-      prog_args::Handler            ah( 0);
-      common::CheckAssign< int>     iVal;
-      common::CheckAssign< double>  fVal;
-      common::CheckAssign< string>  sVal;
+      Handler               ah( 0);
+      CheckAssign< int>     iVal;
+      CheckAssign< double>  fVal;
+      CheckAssign< string>  sVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      common::ArgString2Array  as2a( "-fmyName", nullptr);
+      ArgString2Array  as2a( "-fmyName", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), bad_cast);
    } // end scope
 
-} // end type_mismatch
+} // type_mismatch
+
+
+
+/// Test the handling of optional values.
+/// @since  0.13.2, 17.02.2017
+BOOST_AUTO_TEST_CASE( test_value_mode)
+{
+
+   typedef TripleLogic< int>  callable_int_t;
+
+   // optional int value, argument not used at all
+   {
+      Handler         ah( 0);
+      int             value = -1;
+      callable_int_t  callable( value, 0);
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_int_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, -1);
+   } // end scope
+
+   // optional int value, argument used without value
+   {
+      Handler            ah( 0);
+      int                value = -1;
+      TripleLogic< int>  callable( value, 0);
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_int_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "-v", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, 0);
+   } // end scope
+
+   // optional int value, argument used with value
+   {
+      Handler            ah( 0);
+      int                value = -1;
+      TripleLogic< int>  callable( value, 0);
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_int_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "-v 42", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, 42);
+   } // end scope
+
+   typedef TripleLogic< string>  callable_string_t;
+
+   // optional string value, argument not used at all
+   {
+      Handler  ah( 0);
+      string   value( "hello world");
+      callable_string_t  callable( value, "me, myself and I");
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_string_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, "hello world");
+   } // end scope
+
+   // optional string value, argument used without value
+   {
+      Handler  ah( 0);
+      string   value( "hello world");
+      callable_string_t  callable( value, "me, myself and I");
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_string_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "-v", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, "me, myself and I");
+   } // end scope
+
+   // optional string value, argument used with value
+   {
+      Handler  ah( 0);
+      string   value( "hello world");
+      callable_string_t  callable( value, "me, myself and I");
+
+      ah.addArgument( "v", DEST_METHOD_VALUE( callable_string_t, assign, callable),
+                      "A value")
+                    ->setValueMode( Handler::ValueMode::optional);
+
+      ArgString2Array  as2a( "-v wonderworld", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( value, "wonderworld");
+   } // end scope
+
+} // test_value_mode
 
 
 
@@ -1950,13 +2060,13 @@ BOOST_AUTO_TEST_CASE( hyphen)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-     prog_args::Handler             ah;
+     Handler             ah;
       /// Destination variable.
-      common::CheckAssign< string>  name;
+      CheckAssign< string>  name;
       /// Destination variable.
-      common::CheckAssign< int>     minVal;
+      CheckAssign< int>     minVal;
       /// Argument string split into argc, argv.
-      common::ArgString2Array       as2a;
+      ArgString2Array       as2a;
 
    }; // TestData
 
@@ -1964,7 +2074,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "-n -hyphenName");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !td.name.hasValue());
       BOOST_REQUIRE( !td.minVal.hasValue());
    } // end scope
@@ -1973,7 +2083,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "--name -hyphenName");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !td.name.hasValue());
       BOOST_REQUIRE( !td.minVal.hasValue());
    } // end scope
@@ -1982,7 +2092,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "-m -25");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !td.minVal.hasValue());
    } // end scope
 
@@ -1990,7 +2100,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "--min -25");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !td.minVal.hasValue());
    } // end scope
 
@@ -2039,7 +2149,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       BOOST_REQUIRE_EQUAL( td.minVal.value(), -70);
    } // end scope
 
-} // end hyphen
+} // hyphen
 
 
 
@@ -2067,13 +2177,13 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-     prog_args::Handler             ah;
+     Handler             ah;
       /// Destination variable.
-      common::CheckAssign< int>     iarg;
+      CheckAssign< int>     iarg;
       /// Destination variable.
-      common::CheckAssign< string>  name;
+      CheckAssign< string>  name;
       /// Argument string split into argc, argv.
-      common::ArgString2Array       as2a;
+      ArgString2Array       as2a;
 
    }; // TestData
 
@@ -2081,14 +2191,14 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       TestData  td( "");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
       TestData  td( "-n PROCESS1");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
@@ -2119,7 +2229,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       } // end TestData2::TestData2
 
       /// Additional destination variable.
-      common::CheckAssign< int>  iarg2;
+      CheckAssign< int>  iarg2;
 
    }; // TestData2
 
@@ -2127,21 +2237,21 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       TestData2  td( "-f");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
       TestData2  td( "-c 5");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
       TestData2  td( "-n");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
    } // end scope
 
    {
@@ -2156,7 +2266,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
    } // end scope
 
-} // end missing_mandatory
+} // missing_mandatory
 
 
 
@@ -2165,14 +2275,14 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
 BOOST_AUTO_TEST_CASE( format_check)
 {
 
-   common::CheckAssign< string>  name;
+   CheckAssign< string>  name;
 
 
    {
-      prog_args::Handler       ah( 0);
-      common::ArgString2Array  as2a( "-n process1", nullptr);
+      Handler       ah( 0);
+      ArgString2Array  as2a( "-n process1", nullptr);
 
-      ah.addArgument( "n", DEST_VAR( name), "Name")->addFormat( prog_args::uppercase());
+      ah.addArgument( "n", DEST_VAR( name), "Name")->addFormat( celma::prog_args::uppercase());
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
@@ -2182,24 +2292,24 @@ BOOST_AUTO_TEST_CASE( format_check)
    name.reset();
 
    {
-      prog_args::Handler       ah( 0);
-      common::ArgString2Array  as2a( "-n PROceSS1", nullptr);
+      Handler       ah( 0);
+      ArgString2Array  as2a( "-n PROceSS1", nullptr);
 
-      ah.addArgument( "n", DEST_VAR( name), "Name")->addFormat( prog_args::lowercase());
+      ah.addArgument( "n", DEST_VAR( name), "Name")->addFormat( celma::prog_args::lowercase());
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( name.hasValue());
       BOOST_REQUIRE_EQUAL( name.value(), "process1");
    } // end scope
 
-} // end format_check
+} // format_check
 
 
 
 /// Helper class to check the implementation and usage of application specific
 /// check classes.
 /// @since  0.2, 10.04.2016
-class ApplCheckTripple: public prog_args::detail::ICheck
+class ApplCheckTriple: public celma::prog_args::detail::ICheck
 {
 public:
    /// Constructor.
@@ -2207,7 +2317,7 @@ public:
    /// @param[in]  second  The second value to accept.
    /// @param[in]  third   The third value to accept.
    /// @since  0.2, 10.04.2016
-   ApplCheckTripple( int first, int second, int third):
+   ApplCheckTriple( int first, int second, int third):
       m1( first),
       m2( second),
       m3( third)
@@ -2221,14 +2331,14 @@ public:
    {
       int  checkVal = boost::lexical_cast< int>( val);
       if ((checkVal != m1) && (checkVal != m2) && (checkVal != m3))
-         throw invalid_argument( "not in tripple");
+         throw runtime_error( "not in tripple");
    }
 
 private:
    int  m1;
    int  m2;
    int  m3;
-}; // ApplCheckTripple
+}; // ApplCheckTriple
 
 
 
@@ -2239,10 +2349,10 @@ private:
 /// @param[in]  third   The third allowed value.
 /// @return  Pointer to the newly created check object.
 /// @since  0.2, 10.04.2016
-static prog_args::detail::ICheck* tripple( int first, int second, int third)
+static celma::prog_args::detail::ICheck* tripple( int first, int second, int third)
 {
-   return new ApplCheckTripple( first, second, third);
-} // end tripple
+   return new ApplCheckTriple( first, second, third);
+} // tripple
 
 
 
@@ -2252,58 +2362,58 @@ BOOST_AUTO_TEST_CASE( application_check)
 {
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
 
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      common::ArgString2Array  as2a( "", nullptr);
+      ArgString2Array  as2a( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
 
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      common::ArgString2Array  as2a( "-i 1", nullptr);
+      ArgString2Array  as2a( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
 
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      common::ArgString2Array  as2a( "-i 110", nullptr);
+      ArgString2Array  as2a( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
 
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      common::ArgString2Array  as2a( "-i 11", nullptr);
+      ArgString2Array  as2a( "-i 11", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -2311,14 +2421,14 @@ BOOST_AUTO_TEST_CASE( application_check)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
 
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      common::ArgString2Array  as2a( "-i 111", nullptr);
+      ArgString2Array  as2a( "-i 111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
@@ -2326,21 +2436,21 @@ BOOST_AUTO_TEST_CASE( application_check)
    } // end scope
 
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  iVal;
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
 
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      common::ArgString2Array  as2a( "-i 1111", nullptr);
+      ArgString2Array  as2a( "-i 1111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( iVal.hasValue());
       BOOST_REQUIRE_EQUAL( iVal.value(), 1111);
    } // end scope
 
-} // end application_check
+} // application_check
 
 
 
@@ -2350,20 +2460,20 @@ BOOST_AUTO_TEST_CASE( control_check)
 {
 
 
-   prog_args::Handler  ah( 0);
-   int                 value = -1;
+   Handler  ah( 0);
+   int      value = -1;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( value), "some value"));
 
    {
-      common::ArgString2Array  as2a( "-v 45 ! -v 47", nullptr);
+      ArgString2Array  as2a( "-v 45 ! -v 47", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
-                           invalid_argument);
+                           runtime_error);
       BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
    } // end scope
 
-} // end control_check
+} // control_check
 
 
 
@@ -2373,60 +2483,55 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 {
 
    {
-      prog_args::Handler   ah( 0);
-      int                  intArg;
-
+      Handler   ah( 0);
+      int       intArg;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( intArg), "integer argument")
                                          ->setListSep( ';'),
-                           runtime_error);
-   } // end scope
-
-   {
-      prog_args::Handler   ah( 0);
-      string               stringArg;
-
-
-      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( stringArg), "string argument")
-                                         ->setListSep( ';'),
-                           runtime_error);
-   } // end scope
-
-   {
-      prog_args::Handler   ah( 0);
-      vector< int>         intVec;
-
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument")
-                                            ->setListSep( ';'));
-
-      common::ArgString2Array  as2a( "-i", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
                            invalid_argument);
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< int>         intVec;
+      Handler   ah( 0);
+      string    stringArg;
 
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( stringArg), "string argument")
+                                         ->setListSep( ';'),
+                           invalid_argument);
+   } // end scope
+
+   {
+      Handler       ah( 0);
+      vector< int>  intVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument")
                                             ->setListSep( ';'));
 
-      common::ArgString2Array  as2a( "-i 17", nullptr);
+      ArgString2Array  as2a( "-i", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           runtime_error);
+   } // end scope
+
+   {
+      Handler       ah( 0);
+      vector< int>  intVec;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument")
+                                            ->setListSep( ';'));
+
+      ArgString2Array  as2a( "-i 17", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( intVec.size(), 1);
       BOOST_REQUIRE_EQUAL( intVec[ 0], 17);
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< int>         intVec;
-
+      Handler       ah( 0);
+      vector< int>  intVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument"));
 
-      common::ArgString2Array  as2a( "-i 17,99", nullptr);
+      ArgString2Array  as2a( "-i 17,99", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( intVec.size(), 2);
       BOOST_REQUIRE_EQUAL( intVec[ 0], 17);
@@ -2434,14 +2539,13 @@ BOOST_AUTO_TEST_CASE( vector_argument)
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< int>         intVec;
-
+      Handler       ah( 0);
+      vector< int>  intVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument")
                                             ->setListSep( ';'));
 
-      common::ArgString2Array  as2a( "-i 17;99", nullptr);
+      ArgString2Array  as2a( "-i 17;99", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( intVec.size(), 2);
       BOOST_REQUIRE_EQUAL( intVec[ 0], 17);
@@ -2449,13 +2553,12 @@ BOOST_AUTO_TEST_CASE( vector_argument)
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< int>         intVec;
-
+      Handler       ah( 0);
+      vector< int>  intVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument"));
 
-      common::ArgString2Array  as2a( "-i 17 -i 88", nullptr);
+      ArgString2Array  as2a( "-i 17 -i 88", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( intVec.size(), 2);
       BOOST_REQUIRE_EQUAL( intVec[ 0], 17);
@@ -2463,26 +2566,24 @@ BOOST_AUTO_TEST_CASE( vector_argument)
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< string>      stringVec;
-
+      Handler          ah( 0);
+      vector< string>  stringVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument"));
 
-      common::ArgString2Array  as2a( "-s hello", nullptr);
+      ArgString2Array  as2a( "-s hello", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 1);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< string>      stringVec;
-
+      Handler          ah( 0);
+      vector< string>  stringVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument"));
 
-      common::ArgString2Array  as2a( "-s hello,world", nullptr);
+      ArgString2Array  as2a( "-s hello,world", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 2);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
@@ -2490,13 +2591,12 @@ BOOST_AUTO_TEST_CASE( vector_argument)
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< string>      stringVec;
-
+      Handler          ah( 0);
+      vector< string>  stringVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument"));
 
-      common::ArgString2Array  as2a( "-s hello -s world", nullptr);
+      ArgString2Array  as2a( "-s hello -s world", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 2);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
@@ -2504,28 +2604,26 @@ BOOST_AUTO_TEST_CASE( vector_argument)
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< string>      stringVec;
-
+      Handler          ah( 0);
+      vector< string>  stringVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument")
                                             ->setListSep( '-'));
 
-      common::ArgString2Array  as2a( "-s hello", nullptr);
+      ArgString2Array  as2a( "-s hello", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 1);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< string>      stringVec;
-
+      Handler          ah( 0);
+      vector< string>  stringVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument")
                                             ->setListSep( '-'));
 
-      common::ArgString2Array  as2a( "-s hello-world", nullptr);
+      ArgString2Array  as2a( "-s hello-world", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 2);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
@@ -2533,15 +2631,14 @@ BOOST_AUTO_TEST_CASE( vector_argument)
    } // end scope
 
    {
-      prog_args::Handler   ah( 0);
-      vector< int>         intVec;
-      vector< string>      stringVec;
-
+      Handler          ah( 0);
+      vector< int>     intVec;
+      vector< string>  stringVec;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument"));
 
-      common::ArgString2Array  as2a( "-i 3 -s hello -i 89 -s my,world -i 77,57", nullptr);
+      ArgString2Array  as2a( "-i 3 -s hello -i 89 -s my,world -i 77,57", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( intVec.size(), 4);
@@ -2556,7 +2653,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
       BOOST_REQUIRE_EQUAL( stringVec[ 2], "world");
    } // end scope
 
-} // end vector_argument
+} // vector_argument
 
 
 
@@ -2612,30 +2709,30 @@ private:
 BOOST_AUTO_TEST_CASE( control_args)
 {
 
-   prog_args::Handler  ah( 0);
-   int                 intArg1;
-   int                 intArg2;
-   TestControlArgs     tca;
+   Handler          ah( 0);
+   int              intArg1;
+   int              intArg2;
+   TestControlArgs  tca;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intArg1), "Integer argument 1"));
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "j", DEST_VAR( intArg2), "Integer argument 2"));
-   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( '(', boost::bind( &TestControlArgs::open, &tca)));
-   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( ')', boost::bind( &TestControlArgs::close, &tca)));
-   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( '!', boost::bind( &TestControlArgs::exclamation, &tca)));
-   BOOST_REQUIRE_THROW(    ah.addControlHandler( '#', boost::bind( &TestControlArgs::open, &tca)),
-                           runtime_error);
+   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( '(', std::bind( &TestControlArgs::open, &tca)));
+   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( ')', std::bind( &TestControlArgs::close, &tca)));
+   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( '!', std::bind( &TestControlArgs::exclamation, &tca)));
+   BOOST_REQUIRE_THROW(    ah.addControlHandler( '#', std::bind( &TestControlArgs::open, &tca)),
+                           invalid_argument);
 
-   common::ArgString2Array  as2a( "-i 11 ( ! -j 13 )", nullptr);
+   ArgString2Array  as2a( "-i 11 ( ! -j 13 )", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE_EQUAL( tca.getOpen(), 1);
    BOOST_REQUIRE_EQUAL( tca.getClose(), 1);
    BOOST_REQUIRE_EQUAL( tca.getExclamation(), 1);
 
-} // end control_args
+} // control_args
 
 
 
-// ====================  END OF test_argument_handler.cpp  ====================
+// =========================  END OF test_handler.cpp  =========================
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,87 +19,133 @@
 #include "celma/prog_args/groups.hpp"
 
 
-// C++ Standard Library includes
-#include <iostream>
-
-
 // project includes
-#include "celma/prog_args/handler.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
 
 
 namespace celma { namespace prog_args {
 
 
-using std::cout;
 using std::endl;
-using std::invalid_argument;
 using std::runtime_error;
 using std::string;
 
 
-/// Adds an argument handler to the internal list.<br>
-/// All arguments that this handler supports should already be set, so the
-/// class can check that there are no duplicates.
-/// @param[in]  grpName  The symbolic name of this handler, used for
-///                      identification and printing the usage.
-/// @param[in]  ah       The argument handler to add.
+
+/// Returns the argument handler for the specified group name.<br>
+/// If the argument handler does not exist yet, a new handler object will be
+/// created. If the handler object exists already, it must a 'plain' handler
+/// object, not a value handler.<br>
+/// The output streams will be passed as specified when calling instance()
+/// for this group object, and the flags parameter will be a combination of
+/// this object's flag and the flags passed in \a this_handler_flags.
+/// @param[in]  grpName             The symbolic name of this handler, used
+///                                 for identification and printing the
+///                                 usage.
+/// @param[in]  this_handler_flags  Set of flags to pass to the constructor
+///                                 of the handler object if a new one is
+///                                 created.
+/// @param[in]  txt1                Optional pointer to the object to provide
+///                                 additional text for the usage.
+/// @param[in]  txt2                Optional pointer to the object to provide
+///                                 additional text for the usage.
+/// @since  0.13.0, 05.02.2017  (renamed/merged, added parameters)
 /// @since  0.2, 10.04.2016
-void Groups::addArgHandler( const string& grpName, SharedArgHndl ah) noexcept( false)
+Groups::SharedArgHndl Groups::getArgHandler( const string& grpName,
+                                             int this_handler_flags,
+                                             IUsageText* txt1,
+                                             IUsageText* txt2)
 {
 
-   if (ah.get() == nullptr)
-   {
-      throw runtime_error( "Handler for name '" + grpName + "' is NULL");
-   } // end if
+   if (grpName.empty())
+      throw runtime_error( "Empty named not allowed for an argument group!");
 
-   /// check that this symbolic name is not used already
+   /// check that this symbolic group name is used already
    for (auto const& stored_group : mArgGroups)
    {
       if (stored_group.mName == grpName)
-         throw runtime_error( "Group name '" + grpName + "' is already in use!");
-   } // end for
-
-   /// Make sure that the new group does not contain any argument(s) that are
-   /// already used by an existing group
-   for (auto const& stored_group : mArgGroups)
-   {
-      stored_group.mpArgHandler->crossCheckArguments( stored_group.mName,
-                                                      grpName, *ah);
-   } // end for
-
-   mArgGroups.push_back( Storage( grpName, ah));
-
-} // Groups::addArgHandler
-
-
-
-/// Returns the handler stored with the given symbolic name.
-/// @param[in]  grpName  The name of the handler.
-/// @return  Pointer to the handler object, NULL if no object with this name
-///          was found.
-/// @since  0.2, 10.04.2016
-Groups::SharedArgHndl Groups::getHandler( const string& grpName) const
-{
-
-   for (auto const& stored_group : mArgGroups)
-   {
-      if (stored_group.mName == grpName)
+      {
+         if (stored_group.mpArgHandler->isValueHandler())
+            throw runtime_error( "Handler named '" + grpName + "' is a value handler!");
          return stored_group.mpArgHandler;
+      } // end if
    } // end for
 
-   return SharedArgHndl();
-} // Groups::getHandler
+   auto new_handler = std::make_shared< Handler>( mOutput, mErrorOutput,
+                                                  mHandlerFlags | this_handler_flags,
+                                                  txt1, txt2);
+
+   mArgGroups.push_back( Storage( grpName, new_handler));
+
+   // pass the argument 'list argument groups' only to the first Handler object
+   if (mHandlerFlags & Handler::hfListArgGroups)
+      mHandlerFlags -= Handler::hfListArgGroups;
+
+   return new_handler;
+} // Groups::getArgHandler
 
 
 
- /// Iterates over the list of arguments and passes the elemnts to the
- /// internally stored argument handlers.<br>
- /// After all arguments were processed successfully, the function checks for
- /// missing, mandatory arguments.
- /// @param[in]  argc    Number of arguments passed to the process.
- /// @param[in]  argv[]  List of argument strings.
- /// @since  0.2, 10.04.2016
+/// Returns the argument value handler for the specified group name.<br>
+/// If the argument handler does not exist yet, a new value handler object
+/// will be created. If the handler object exists already, it must a value
+/// handler object, not a 'plain' handler.<br>
+/// The output streams will be passed as specified when calling instance()
+/// for this group object, and the flags parameter will be a combination of
+/// this object's flag and the flags passed in \a this_handler_flags.
+/// @param[in]  grpName             The symbolic name of this value handler,
+///                                 used for identification and printing the
+///                                 usage.
+/// @param[in]  this_handler_flags  Set of flags to pass to the constructor
+///                                 of the value handler object if a new one
+///                                 is created.
+/// @param[in]  txt1                Optional pointer to the object to provide
+///                                 additional text for the usage.
+/// @param[in]  txt2                Optional pointer to the object to provide
+///                                 additional text for the usage.
+/// @since  0.14.0, 09.02.2017
+Groups::SharedArgHndl Groups::getArgValueHandler( const string& grpName,
+                                                  int this_handler_flags,
+                                                  IUsageText* txt1,
+                                                  IUsageText* txt2)
+{
+
+   if (grpName.empty())
+      throw runtime_error( "Empty named not allowed for an argument group!");
+
+   /// check that this symbolic group name is used already
+   for (auto & stored_group : mArgGroups)
+   {
+      if (stored_group.mName == grpName)
+      {
+         if (!stored_group.mpArgHandler->isValueHandler())
+            throw runtime_error( "Handler named '" + grpName + "' is not a value handler!");
+         return stored_group.mpArgHandler;
+      } // end if
+   } // end for
+
+   auto new_handler = std::make_shared< ValueHandler>( mOutput, mErrorOutput,
+                                                       mHandlerFlags | this_handler_flags,
+                                                       txt1, txt2);
+
+   mArgGroups.push_back( Storage( grpName, new_handler));
+
+   // pass the argument 'list argument groups' only to the first Handler object
+   if (mHandlerFlags & Handler::hfListArgGroups)
+      mHandlerFlags -= Handler::hfListArgGroups;
+
+   return new_handler;
+} // Groups::getArgValueHandler
+
+
+
+/// Iterates over the list of arguments and passes the elemnts to the
+/// internally stored argument handlers.<br>
+/// After all arguments were processed successfully, the function checks for
+/// missing, mandatory arguments.
+/// @param[in]  argc    Number of arguments passed to the process.
+/// @param[in]  argv[]  List of argument strings.
+/// @since  0.2, 10.04.2016
 void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
 {
 
@@ -113,23 +159,23 @@ void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
 
    for (auto ai = alp.begin(); ai != alp.end(); ++ai)
    {
-      auto  result = Handler::arUnknown;
+      auto  result = Handler::ArgResult::unknown;
       for (auto & stored_group : mArgGroups)
       {
          result = stored_group.mpArgHandler->evalSingleArgument( ai, alp.end());
-         if (result != Handler::arUnknown)
+         if (result != Handler::ArgResult::unknown)
             break;   // for
       } // end for
 
-      if (result == Handler::arUnknown)
+      if (result == Handler::ArgResult::unknown)
       {
          if (ai->mElementType == detail::ArgListElement::etValue)
-            throw invalid_argument( "Unknown argument '" + ai->mValue + "'");
+            throw runtime_error( "Unknown argument '" + ai->mValue + "'");
          if ((ai->mElementType == detail::ArgListElement::etSingleCharArg) ||
              (ai->mElementType == detail::ArgListElement::etControl))
-            throw invalid_argument( "Unknown argument '" + string( 1, ai->mArgChar)
+            throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
-         throw invalid_argument( "Unknown argument '" + ai->mArgString + "'");
+         throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
       } // end if
    } // end for
 
@@ -159,6 +205,18 @@ void Groups::removeArgHandler( const string& grpName)
    } // end for
 
 } // Groups::removeArgHandler
+
+
+
+/// Needed for testing purposes, but may be used in 'normal' programs too:
+/// Removes all previously added argument handler objects.
+/// @since  0.13.0, 05.02.2017
+void Groups::removeAllArgHandler()
+{
+
+   mArgGroups.clear();
+
+} // Groups::removeAllArgHandler
 
 
 
@@ -200,17 +258,6 @@ bool Groups::argumentExists( const string& argString) const
 
 
 
-/// Constructor.
-/// @since  0.2, 10.04.2016
-Groups::Groups():
-   mArgGroups(),
-   mEvaluating( false),
-   mUsageLineLength( detail::ArgumentDesc::DefaultLineLength)
-{
-} // Groups::Groups
-
-
-
 /// Displays the usage combined from all argument handlers.
 /// @param[in]  txt1  Pointer to the text to display before or after the
 ///                   list of arguments.
@@ -229,9 +276,9 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
    } // end for
 
    if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::beforeArgs))
-      cout << txt1 << endl << endl;
+      mOutput << txt1 << endl << endl;
 
-   cout << "Usage:" << endl << endl;
+   mOutput << "Usage:" << endl << endl;
 
    for (auto & stored_group : mArgGroups)
    {
@@ -240,19 +287,99 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
       stored_group.mpArgHandler->mDescription.setCaption( "Mandatory:",
                                                             "Optional:");
 
-      cout << stored_group.mName << endl
-           << *(stored_group.mpArgHandler) << endl
-           << endl;
+      mOutput << stored_group.mName << endl
+              << *(stored_group.mpArgHandler) << endl
+              << endl;
    } // end for
 
    if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::afterArgs))
-      cout << txt1 << endl << endl;
+      mOutput << txt1 << endl << endl;
    else if ((txt2 != nullptr) && (txt2->usagePos() == Handler::UsagePos::afterArgs))
-      cout << txt2 << endl << endl;
+      mOutput << txt2 << endl << endl;
 
    exit( EXIT_SUCCESS);
 
 } // Groups::displayUsage
+
+
+
+/// When argument groups are used, it is necessary to check that the same
+/// argument is only used in one of the handlers.<br>
+/// This is achieved by stting the Handler::hfInGroup flag for each handler
+/// that is created. Then, when an argument is added to the handler, it calls
+/// this method.<br>
+/// Here, since we don't know which argument was the new one, compare each
+/// argument of the handler with all arguments of all the other handlers.<br>
+/// One special point is to mention: When a new Handler object is created,
+/// and a standard argument is set by this handler, this will call this
+/// method, but then the new Handler object is not yet in the internal object
+/// list.
+/// @param[in]  mod_handler  The argument Handler object to which a new
+///                          argument was added.
+/// @since  0.13.0, 05.02.2017
+void Groups::crossCheckArguments( Handler* mod_handler) const
+{
+
+   string  own_name;
+
+
+   for (auto const& stored_group : mArgGroups)
+   {
+      if (stored_group.mpArgHandler.get() == mod_handler)
+      {
+         own_name = stored_group.mName;
+         break;   // for
+      } // end if
+   } // end for
+
+   if (own_name.empty())
+      own_name = "<current handler>";
+
+   for (auto & stored_group : mArgGroups)
+   {
+      // don't have the handler compare against itself
+      if (stored_group.mpArgHandler.get() == mod_handler)
+         continue; // for
+
+      mod_handler->crossCheckArguments( own_name, stored_group.mName,
+                                        *stored_group.mpArgHandler);
+   } // end for
+
+} // Groups::crossCheckArguments
+
+
+
+/// Lists the names of the argument groups.
+/// @since  013.1, 07.02.2017
+void Groups::listArgGroups()
+{
+
+   mOutput << "list of known argument groups:" << endl;
+
+   for (auto const& stored_group : mArgGroups)
+   {
+      mOutput << "- " << stored_group.mName << endl;
+   } // end for
+
+} // Groups::listArgGroups
+
+
+
+/// Constructor.
+/// @param[in]  os        The stream to write normal output to.
+/// @param[in]  error_os  The stream to write error output to.
+/// @param[in]  flag_set  Set of the flags to pass to all handler objects.
+/// @since  0.13.0, 05.02.2017  (added parameters)
+/// @since  0.2, 10.04.2016
+Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
+   mOutput( os),
+   mErrorOutput( error_os),
+   mHandlerFlags( (flag_set & Groups2HandlerFlags) | Handler::hfInGroup),
+   mArgGroups(),
+   mEvaluating( false),
+   mUsageLineLength( detail::ArgumentDesc::DefaultLineLength)
+{
+} // Groups::Groups
 
 
 

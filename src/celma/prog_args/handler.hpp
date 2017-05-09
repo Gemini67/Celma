@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,12 +19,10 @@
 #define CELMA_PROG_ARGS_HANDLER_HPP
 
 
+#include <functional>
 #include <ostream>
 #include <string>
 #include <vector>
-#include <boost/noncopyable.hpp>
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
 
 #include "celma/common/check_assign.hpp"
 #include "celma/common/range_dest.hpp"
@@ -46,6 +44,7 @@ namespace celma { namespace prog_args {
 
 class IUsageText;
 class Groups;
+class ValueHandler;
 
 
 /// Class to store all command line argument descriptions as well as the
@@ -145,7 +144,7 @@ class Groups;
 ///        Handler  ah;<br>
 ///        ah << Argument( ...)->setIsMandatory()-> ...<br>
 ///           << Argument( ...)-> ...
-/// @todo  Argument constraints: Relations.
+/// @todo  Argument constraints: Value relations.
 ///        Support constraints like 'value of argument x must be less than value
 ///        of argument y', e.g. start time < end time.
 /// @todo  Change the logic of addCheck(): If multiple checks are added, a value
@@ -210,51 +209,54 @@ class Groups;
 /// @todo  Add test-feature: Process all arguments, print all errors.
 /// @todo  Use different exit codes from evalArgumentErrorExit(), depending on
 ///        the type of the exception that was called.
-/// @todo  When multiple argument handlers are used with an argument group:<br>
-///        Optional parameter for the help argument, which allows to specify the
-///        (single) argument handler to display the help of.
 /// @todo  Add pre- and post-argument list help texts also to argument handlers
 ///        used in a group?
+/// @todo  Path created from parameter and ProjectPath as destination variable?
 ///
 /// @since  0.2, 10.04.2016
-class Handler: private boost::noncopyable
+class Handler
 {
 public:
    /// Type of the (storage handler of the) functions to call for control
    /// characters.
-   typedef boost::function< void()>  HandlerFunc;
+   typedef std::function< void()>  HandlerFunc;
 
    /// List of flags to control the behaviour of this class:
    enum HandleFlags
    {
-      hfHelpShort   = 0x01,                //!< Allows the argument '-h' to print
-                                           //!< the usage of the program.
-      hfHelpLong    = hfHelpShort << 1,    //!< Allows the argument '--help' to
-                                           //!< print the usage of the program.
-      hfReadProgArg = hfHelpLong  << 1,    //!< Specifies to read arguments from
-                                           //!< the optional program arguments
-                                           //!< file before parsing the command
-                                           //!< line arguments.<br>
-                                           //!< File: $HOME/.progargs/\<progfilename\>.pa
-      hfVerboseArgs = hfReadProgArg << 1,  //!< Produces verbose output when a
-                                           //!< value is assigned to a variable.
-      hfUsageHidden = hfVerboseArgs << 1,  //!< Specifies that hidden arguments
-                                           //!< should be printed too in the
-                                           //!< usage.
-      hfArgHidden   = hfUsageHidden << 1,  //!< Allows the argument
-                                           //!< '--print-hidden' to print the
-                                           //!< hidden arguments in the usage.
-      hfListArgVar  = hfArgHidden << 1,    //!< Adds the argument '--list-arg-vars'
-                                           //!< which, when used, prints the list
-                                           //!< of arguments and the names of the
-                                           //!< destination variables and their
-                                           //!< values.
-      hfUsageCont   = hfListArgVar << 1,   //!< Special flag originally for
-                                           //!< testing: Don't exit after
-                                           //!< printing the usage.
-      hfEndValues   = hfUsageCont << 1     //!< Activates the argument '--endvalues'
-                                           //!< that is used to signal the end of
-                                           //!< a separate value list.
+      /// Allows the argument '-h' to print the usage of the program.
+      hfHelpShort     = 0x01,
+      /// Allows the argument '--help' to print the usage of the program.
+      hfHelpLong      = hfHelpShort << 1,
+      /// Specifies to read arguments from the optional program arguments file
+      /// before parsing the command line arguments.<br>
+      /// File: $HOME/.progargs/\<progfilename\>.pa
+      hfReadProgArg   = hfHelpLong  << 1,
+      /// Produces verbose output when a value is assigned to a variable.
+      hfVerboseArgs   = hfReadProgArg << 1,
+      /// Specifies that hidden arguments should be printed too in the usage.
+      hfUsageHidden   = hfVerboseArgs << 1,
+      /// Allows the argument '--print-hidden' to print the hidden arguments in
+      /// the usage.
+      hfArgHidden     = hfUsageHidden << 1,
+      /// Adds the argument '--list-arg-vars' which, when used, prints the list
+      /// of arguments and the names of the destination variables and their
+      /// values.
+      hfListArgVar    = hfArgHidden << 1,
+      /// Special flag originally for testing: Don't exit after printing the
+      /// usage.
+      hfUsageCont     = hfListArgVar << 1,
+      /// Activates the argument '--endvalues' that is used to signal the end of
+      /// a separate value list.
+      hfEndValues     = hfUsageCont << 1,
+      /// Activates the argument '--list-arg-groups' which lists the names of
+      /// all known argument groups.<br>
+      /// If argument groups are used, set this argument when creating the
+      /// Groups singleton object.
+      hfListArgGroups = hfEndValues << 1,
+      /// This flag is set by the Groups class when it creates a Handler object.
+      /// Don't use otherwise!
+      hfInGroup       = hfListArgGroups << 1
    }; // HandleFlags
 
    /// List of possible positions for the additional output 
@@ -265,6 +267,7 @@ public:
       afterArgs     //!< Position after the list of arguments.
    }; // UsagePos
 
+   /// Make the type 'ValueMode' available through this class too.
    typedef detail::TypedArgBase::ValueMode  ValueMode;
 
    /// Set of all help arguments.
@@ -293,7 +296,7 @@ public:
                      IUsageText* txt2 = nullptr);
 
    /// Constructor that allows to specify the output streams to write to.
-   /// @param[in]  os        The stream to write normal out to.
+   /// @param[in]  os        The stream to write normal output to.
    /// @param[in]  error_os  The stream to write error output to.
    /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
    ///                       of possible values.
@@ -458,6 +461,25 @@ public:
                                       Handler* subGroup,
                                       const std::string& desc);
 
+   /// Adds an argument that behaves like the -h/--help arguments. Use this if
+   /// the help argument should e.g. be in another language.<br>
+   /// The standard help arguments may still be set in the constructor, then
+   /// both arguments can be used to get the usage displayed.
+   /// @param[in]  arg_spec  The arguments on the command line for the help
+   ///                       feature.
+   /// @param[in]  desc      The description of this argument.
+   /// @param[in]  txt1      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @param[in]  txt2      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @return  The object managing the argument, may be used to apply further
+   ///          settings (normally not necessary).
+   /// @since  0.10, 22.12.2016
+   detail::TypedArgBase* addHelpArgument( const std::string& arg_spec,
+                                          const std::string& desc,
+                                          IUsageText* txt1 = nullptr,
+                                          IUsageText* txt2 = nullptr);
+
    /// Adds an argument that takes the path/filename of an argument file as
    /// parameter.
    /// @param[in]  arg_spec  The arguments on the command line for specifying the
@@ -487,6 +509,16 @@ public:
    ///          settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentListArgVars( const std::string& arg_spec);
+
+   /// Adds an argument that prints the list of argument groups.<br>
+   /// Same as setting the flag #hfListArgGroups, but allows to specify the
+   /// argument.
+   /// @param[in]  arg_spec  The argument(s) on the command line for printing the
+   ///                       argument groups.
+   /// @return  The object managing this argument, may be used to apply further
+   ///          settings.
+   /// @since  0.13.1, 07.02.2017
+   detail::TypedArgBase* addArgumentListArgGroups( const std::string& arg_spec);
 
    /// Adds an argument that can be used to mark the end of multiple, separate
    /// value list.
@@ -563,16 +595,36 @@ public:
    void evalArgumentsErrorExit( int argc, char* argv[],
                                 const std::string& prefix);
 
+   /// Helps to determine if an object is a 'plain' Handler object or a
+   /// ValueHandler object.
+   /// @return  Always \c false for objects of this class.
+   /// @since  0.14.0, 21.02.2017
+   virtual bool isValueHandler() const;
+
+   /// Returns this object if it is a ValueHandler object, otherwise throws.
+   /// @return  \c this object if it is a ValueHandler object, for objects of
+   ///          the base class Handler throws.
+   /// @since  0.14.0, 15.03.2017
+   virtual ValueHandler* getValueHandlerObj() noexcept( false);
+
+   /// Returns pointer to the base type of the object that handles the specified
+   /// argument.
+   /// @param[in]  arg_spec  The short and/or long arguments keys.
+   /// @return  Pointer to the object handling the specified argument.
+   /// @since  0.14.0, 16.03.2017
+   detail::TypedArgBase* getArgHandler( const std::string& arg_spec)
+                                      noexcept( false);
+
 protected:
 	/// Class needs access to internals.
    friend class Groups;
 
    /// Function call result for evalSingleArgument():
-   enum ArgResult
+   enum class ArgResult
    {
-      arUnknown,   //!< Unknown argument for this instance (try with next).
-      arConsumed   //!< Argument handled by this instance, proceed with next
-                   //!< argument.
+      unknown,   //!< Unknown argument for this instance (try with next).
+      consumed   //!< Argument handled by this instance, proceed with next
+                 //!< argument.
    };
 
    // functions needed by the Groups class
@@ -587,14 +639,14 @@ protected:
    /// @since  0.2, 10.04.2016
    void crossCheckArguments( const std::string ownName,
                              const std::string& otherName,
-                             const Handler& otherAH) const;
+                             const Handler& otherAH) const noexcept( false);
 
    /// Handles one argument.<br>
    /// Since this function is called from multiple sources, it must not throw an
    /// exception when e.g. an unknown argument is found. Exceptions may only be
    /// thrown if e.g. a known argument misses its value. Otherwise, in most
-   /// cases \a arUnknown should be returned and the error handling left to the
-   /// calling function.
+   /// cases \a ArgResult::unknown should be returned and the error handling
+   /// left to the calling function.
    /// @param[in]  ai   Iterator that points to the argument to handle.<br>
    ///                  If the argument requires a value, the iterator is
    ///                  incremented, so it will point to the next argument when
@@ -641,6 +693,11 @@ private:
    /// Type of the container to store the global constrainst in.
    typedef std::vector< detail::IConstraint*>  ConstraintCont;
 
+   /// Don't allow copying.
+   Handler( const Handler&) = delete;
+   /// Don't allow assignments.
+   Handler& operator =( const Handler&) = delete;
+
    /// Function to print the usage of a program (when requested through the
    /// arguments). The additional parameters allow to print additional
    /// information.
@@ -658,20 +715,21 @@ private:
    /// So, this template handles both types of arguments. Needed only in the
    /// implementation, so the template definition is in the source file too.
    /// @tparam  T  The type of the argument (character or string).
-   /// @param[in]      arg        The argument (character/short or long).
-   /// @param[in]      argString  The argument character or string always in
-   ///                            string format.
-   /// @param[in,out]  ai         The iterator pointing to the current argument.
-   ///                            May be increased here (for values or argument
-   ///                            groups).
-   /// @param[in]      end        Iterator pointing to the end of the argument
-   ///                            list.
+   /// @param[in]      arg         The argument (character/short or long).
+   /// @param[in]      arg_string  The argument character or string always in
+   ///                             string format.
+   /// @param[in,out]  ai          The iterator pointing to the current argument.
+   ///                             May be increased here (for values or argument
+   ///                             groups).
+   /// @param[in]      end         Iterator pointing to the end of the argument
+   ///                             list.
    /// @return  Result of handling the current argument.
    /// @since  0.2, 10.04.2016
    template< typename T>
       ArgResult processArg( const T& arg, const std::string& argString,
                             detail::ArgListParser::const_iterator& ai,
-                            const detail::ArgListParser::const_iterator& end);
+                            const detail::ArgListParser::const_iterator& end)
+                          noexcept( false);
 
    /// Tries to open the file with the program's name and read the arguments
    /// from this file.
@@ -689,6 +747,10 @@ private:
    /// Prints the list of arguments and their destination variables.
    /// @since  0.2, 10.04.2016
    void listArgVars();
+
+   /// Prints the list of argument groups.
+   /// @since  0.13.1, 07.02.2017
+   void listArgGroups();
 
    /// Called to mark the end of a value list: Sets mpLastArg to NULL.
    /// @since  0.2, 10.04.2016
@@ -764,7 +826,7 @@ private:
    /// Set when the usage was printed.<br>
    /// Needed together with the flag #mUsageContinues to bypass end-of-arguments
    /// checks so that evalArgument() can return.
-   bool                         mUsagePrinted;
+   bool                         mUsagePrinted = false;
    /// The (top-level) arguments known by this class.
    detail::ArgumentContainer    mArguments;
    /// Argument sub-groups.
@@ -778,7 +840,7 @@ private:
    /// Function called for an exclamation mark '!'.
    HandlerFunc                  mpExclamationMarkHdlr;
    /// Set when this object is used as argument handler for a sub-group.
-   bool                         mIsSubGroupHandler;
+   bool                         mIsSubGroupHandler = false;
    /// The current constraints, dynamically created through the arguments that
    /// were processed so far.
    detail::ConstraintContainer  mConstraints;
@@ -788,11 +850,14 @@ private:
 
    /// Pointer to the last argument handler that was used. Needed for
    /// processing multiple, separate values.
-   detail::TypedArgBase*        mpLastArg;
+   detail::TypedArgBase*        mpLastArg = nullptr;
    /// Reading arguments from a file should not influence the cardinality
    /// checks, i.e. it should be possible to overwrite a value from a file
    /// without triggering a 'too many values' exception.
-   bool                         mReadingArgumentFile;
+   bool                         mReadingArgumentFile = false;
+   /// Flag, set when this argument handler object was created by a Groups
+   /// object.
+   bool                         mUsedByGroup;
 
 }; // Handler
 
@@ -811,6 +876,9 @@ private:
 /// @param  n  The destination variable.
 /// @param  t  The value type of the destination variable.
 /// @param  c  The type of the container/the destination variable.
+/// @todo  Try to change this (and the class RangeDest?) so that the type of
+///        the destination variable (container type) does not need to be
+///        set separately.
 /// @since  0.2, 10.04.2016
 #define DEST_RANGE( n, t, c)  celma::common::RangeDest< t, c < t > >( n), #n
 
@@ -824,12 +892,19 @@ private:
 /// Use this define to pass a function that takes no value as argument handler.
 /// @param[in]  f  The name of the function.
 /// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION( f)  boost::bind( &f), #f
+#define  DEST_FUNCTION( f)  std::bind( &f), #f
 
 /// Use this define to pass a function that accepts a value as argument handler.
 /// @param[in]  f  The name of the function.
 /// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION_VALUE( f)  boost::bind( &f, _1), #f, true
+#define  DEST_FUNCTION_VALUE( f)  std::bind( &f, std::placeholders::_1), #f, true
+
+/// Use this define to pass a method (class member function) of the current
+/// object, that takes no value, as argument handler.
+/// @param[in]  c  The name of the class.
+/// @param[in]  m  The name of the method.
+/// @since  0.13.1, 07.02.2017
+#define  DEST_MEMBER_METHOD( c, m)  std::bind( & c :: m, this), #c "::" #m
 
 /// Use this define to pass a method (class member function) that takes no value
 /// as argument handler.
@@ -837,7 +912,15 @@ private:
 /// @param[in]  m  The name of the method.
 /// @param[in]  o  The object to call the method for.
 /// @since  0.2, 10.04.2016
-#define  DEST_METHOD( c, m, o)  boost::bind( & c :: m, &o), #c "::" #m
+#define  DEST_METHOD( c, m, o)  std::bind( & c :: m, &o), #c "::" #m
+
+/// Use this define to pass a method (class member function) of the current
+/// object, that accepts a value, as argument handler.
+/// @param[in]  c  The name of the class.
+/// @param[in]  m  The name of the method.
+/// @since  0.13.1, 07.02.2017
+#define  DEST_MEMBER_METHOD_VALUE( c, m)  std::bind( & c :: m, this, std::placeholders::_1), #c "::" #m, true
+
 
 /// Use this define to pass a method (class member function) that accepts a
 /// value as argument handler.
@@ -845,7 +928,7 @@ private:
 /// @param[in]  m  The name of the method.
 /// @param[in]  o  The object to call the method for.
 /// @since  0.2, 10.04.2016
-#define  DEST_METHOD_VALUE( c, m, o)  boost::bind( & c :: m, &o, _1), #c "::" #m, true
+#define  DEST_METHOD_VALUE( c, m, o)  std::bind( & c :: m, &o, std::placeholders::_1), #c "::" #m, true
 
 
 // inlined methods

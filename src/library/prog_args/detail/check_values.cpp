@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,9 +23,6 @@
 #include "celma/common/tokenizer.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
@@ -33,35 +30,35 @@ namespace celma { namespace prog_args { namespace detail {
 /// Constructor.
 /// @param[in]  valueList  The list of allowed values in string format.
 /// @since  0.2, 10.04.2016
-CheckValues::CheckValues( const string& valueList):
+CheckValues::CheckValues( const std::string& valueList):
    mValues()
 {
 
-   common::Tokenizer  tok( valueList, ',');
+   common::Tokenizer  tokenizer( valueList, ',');
 
 
-   for (auto ti : tok)
+   for (auto const& token : tokenizer)
    {
-      mValues.insert( ti);
+      mValues.insert( token);
    } // end for
 
    if (mValues.empty())
-      throw invalid_argument( "No values found in value list");
+      throw std::invalid_argument( "No values found in value list");
 
-} // end CheckValues::CheckValues
+} // CheckValues::CheckValues
 
 
 
 /// Checks if the value in \a val exists in the set of allowed values.
 /// @param[in]  val  The value to check in string format.
 /// @since  0.2, 10.04.2016
-void CheckValues::checkValue( const string& val) const
+void CheckValues::checkValue( const std::string& val) const
 {
 
    if (mValues.find( val)== mValues.end())
-      throw range_error( "Value '" + val + "' is not in the list of allowed values");
+      throw std::range_error( "Value '" + val + "' is not in the list of allowed values");
 
-} // end CheckValues<T>::checkValue
+} // CheckValues<T>::checkValue
 
 
 

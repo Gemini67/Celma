@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,12 +35,12 @@ public:
    /// Constructor.
    /// @param[in]  valueList  The list of allowed values in string format.
    /// @since  0.2, 10.04.2016
-   CheckValues( const std::string& valueList);
+   CheckValues( const std::string& valueList) noexcept( false);
 
    /// Checks if the value in \a val exists in the set of allowed values.
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
-   virtual void checkValue( const std::string& val) const override;
+   virtual void checkValue( const std::string& val) const noexcept( false) override;
 
 private:
    /// Storage type for the values.

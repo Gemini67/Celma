@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,7 +29,7 @@ namespace celma { namespace format {
 /// the format  string used to print ASCII tables.<br>
 /// The string passed to the constructor defines the table layout. The format of
 /// the contents of this string:<br>
-/// <pre>{['-']<title>'['['d']['-']<len>[','<formatchar>']'<sep>}</pre><br>
+/// <pre>{['-']<title>'['(['d']['-']<len>[','<formatchar>')|(=<format>)]'<sep>}</pre><br>
 /// which means:
 /// - Multiple repetitions of the following definition block.
 /// - If the block starts with a '-', the title is left aligned, otherwise it is
@@ -39,26 +39,32 @@ namespace celma { namespace format {
 ///   mandatory.<br>
 ///   If the title contains [], use a backslash to quote the [.
 /// - If the first character of the format string is a 'd', then the following
-///   length will only be applied to the dashes. the title and the value format
+///   length will only be applied to the dashes. The title and the value format
 ///   will not contain any length information.
 /// - The first value in the format block is the width of the column, if not set
 ///   the length of the title is used.
 /// - If the values should be left aligned, specify a negative length.
 /// - Actually, the length format is used as string directly for creating the
-///   format string, meaning '%24.24s' or %8.3f' (without the % sign and the
-///   last type character) can be specified here.
+///   format string, meaning '%05d', '%24.24s' or %8.3f' (without the % sign and
+///   the last type character) can be specified here.
 /// - The second value in the format block is the format character to use, if not
 ///   set, 's' for string is used.
+/// - Alternatively the full format string can be specified explicitly.<br>
+///   After the comma, =\<format\> can be any string, including of course the
+///   format specifier, and will be used exactly like this in the format string.
 /// - Finally, all characters after the closing ']' and the beginning of the
 ///   next title (a dash or an alphanumeric character) is used as separator.<br>
-///   It is possible to specify an newline character here, after the last title, to
-///   get newline characters automatically in all lines.
+///   It is possible to specify a newline character here, after the last title,
+///   to get newline characters automatically in all lines.
 ///
 /// By default, a dash character '-' is used to create the dash lines.<br>
 /// If another character should be used by default, it can be set using the
 /// setDashChar() method.<br>
 /// If another character should be used by one object only, it can be specified
 /// in the parameter list of the constructor.
+/// @todo  Enhance it so that format strings like '... (%d) ...' or
+///        '... [%d] ...' are possible.
+/// @since  0.12.1, 31.01.2017  (added feature =format)
 /// @since  0.7, 07.11.2016
 class AsciiTable
 {
@@ -99,7 +105,10 @@ public:
    // Default destructor is just fine.
    ~AsciiTable() = default;
 
-   /// Allows to append more columns to the table.
+   /// Allows to append more columns to the table.<br>
+   /// If a newline character should be appended in order to get the created
+   /// lines with newline character at the end, call this function with just
+   /// the newline character as string contents.
    /// @param[in]  table_spec  The string that specifies the additional columns,
    ///                         widths, formats etc. as described in the class
    ///                         header.
@@ -120,6 +129,12 @@ public:
    /// @return  The complete format string.
    /// @since  0.7, 07.11.2016
    const std::string& formatString() const;
+
+   /// Returns the format string as char* that can be used directly in a
+   /// printf() call to print the values.
+   /// @return  The complete format string.
+   /// @since  0.10, 22.12.2016
+   const char* format() const;
 
 private:
    /// Default dash character to use.
@@ -151,19 +166,25 @@ private:
 inline const std::string& AsciiTable::titleLine() const
 {
    return mTitleLine;
-}  // end AsciiTable::titleLine
+} // AsciiTable::titleLine
 
 
 inline const std::string& AsciiTable::dashesLine() const
 {
    return mDashesLine;
-}  // end AsciiTable::dashesLine
+} // AsciiTable::dashesLine
 
 
 inline const std::string& AsciiTable::formatString() const
 {
    return mFormatString;
-}  // end AsciiTable::formatString
+} // AsciiTable::formatString
+
+
+inline const char* AsciiTable::format() const
+{
+   return mFormatString.c_str();
+} // AsciiTable::format
 
 
 } // namespace format

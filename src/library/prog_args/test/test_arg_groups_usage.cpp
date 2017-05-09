@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,16 +19,15 @@
 #include "celma/prog_args/groups.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::prog_args::Groups;
+using celma::prog_args::Handler;
 
 
 int main( int argc, char* argv[])
 {
 
-   prog_args::Groups::SharedArgHndl  ah1( new prog_args::Handler( 0));
-   prog_args::Groups::SharedArgHndl  ah2( new prog_args::Handler( prog_args::Handler::AllHelp));
-
+   auto  ah1( Groups::instance().getArgHandler( "Program Arguments:"));
+   auto  ah2( Groups::instance().getArgHandler( "Standard Arguments:", Handler::AllHelp));
    bool  quietFlag;
    bool  debugMode;
    int   manInt1;
@@ -43,14 +42,11 @@ int main( int argc, char* argv[])
    ah2->addArgument( "version", DEST_VAR( printVersion), "prints version information");
    ah2->addArgument( "modlist", DEST_VAR( printModList), "prints module list");
 
-   prog_args::Groups::instance().addArgHandler( "Program Arguments:", ah1);
-   prog_args::Groups::instance().addArgHandler( "Standard Arguments:", ah2);
-
-   prog_args::Groups::instance().evalArguments( argc, argv);
+   Groups::instance().evalArguments( argc, argv);
 
    return EXIT_SUCCESS;
 } // end main
 
 
 
-// =========================  END OF test_arg_groups_usage.cpp  =========================
+// ====================  END OF test_arg_groups_usage.cpp  ====================

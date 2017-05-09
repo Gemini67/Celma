@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,16 +14,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
-
-// STL includes
-#include <string>
-#include <iostream>
+// object to test, header file include
+#include "celma/common/singleton.hpp"
 
 
 // Boost includes
@@ -32,143 +24,105 @@
 
 
 // project includes
-#include "celma/common/singleton.hpp"
 #include "celma/common/object_enumerator.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::common::Singleton;
 
 
 // module definitions
 
-/// Defines a singleton using the default policy (static).
+/// Defines a singleton.
 /// @since  0.2, 10.04.2016
-class DefaultSingleton: public common::Singleton< DefaultSingleton>,
-                        public common::ObjectEnumerator< DefaultSingleton>
+class TestSingleton: public Singleton< TestSingleton>,
+                     public celma::common::ObjectEnumerator< TestSingleton>
 {
 
-   friend class common::detail::StaticSingletonCreator< DefaultSingleton>;
+   friend class Singleton< TestSingleton>;
 
 public:
    /// Some dummy function.
    /// @since  0.2, 10.04.2016
    void func()
    {
-   } // end DefaultSingleton::func
+   } // TestSingleton::func
 
+   /// Returns the value stored in the singleton object.
+   /// @return  The value stored internally.
+   /// @since  0.12.2, 05.02.2017
+   int value() const
+   {
+      return mValue;
+   } // TestSingleton::value
+   
 protected:
    /// Constructor. Should be called only exactly once.
    /// @since  0.2, 10.04.2016
-   DefaultSingleton():
-      common::Singleton< DefaultSingleton>(),
-      common::ObjectEnumerator< DefaultSingleton>()
+   TestSingleton():
+      Singleton< TestSingleton>(),
+      celma::common::ObjectEnumerator< TestSingleton>()
    {
-   } // end DefaultSingleton::DefaultSingleton
+   } // TestSingleton::TestSingleton
 
-}; // DefaultSingleton
-
-
-/// Defines a singleton explicitly using the 'static' policy.
-/// @since  0.2, 10.04.2016
-class StaticSingleton:
-   public common::Singleton< StaticSingleton, common::detail::StaticSingletonCreator>,
-   public common::ObjectEnumerator< StaticSingleton>
-{
-
-   friend class common::detail::StaticSingletonCreator< StaticSingleton>;
-
-public:
-   /// Some dummy function.
-   /// @since  0.2, 10.04.2016
-   void func()
-   {
-   } // end StaticSingleton::func
-
-protected:
    /// Constructor. Should be called only exactly once.
    /// @since  0.2, 10.04.2016
-   StaticSingleton():
-      common::Singleton< StaticSingleton, common::detail::StaticSingletonCreator>(),
-      ObjectEnumerator< StaticSingleton>()
+   TestSingleton( int new_value):
+      Singleton< TestSingleton>(),
+      celma::common::ObjectEnumerator< TestSingleton>(),
+      mValue( new_value)
    {
-   } // end StaticSingleton::StaticSingleton
+   } // TestSingleton::TestSingleton
 
-}; // StaticSingleton
+   int  mValue = -1;
+
+}; // TestSingleton
 
 
-/// Defines a singleton explicitly using the 'dynamic' policy.
+
+/// Test access of a Singleton object.
 /// @since  0.2, 10.04.2016
-class DynamicSingleton:
-   public common::Singleton< DynamicSingleton, common::detail::DynamicSingletonCreator>,
-   public common::ObjectEnumerator< DynamicSingleton>
+BOOST_AUTO_TEST_CASE( test_singleton)
 {
 
-   friend class common::detail::DynamicSingletonCreator< DynamicSingleton>;
+   BOOST_REQUIRE_NO_THROW( TestSingleton::instance().func());
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().objectNbr(), 0);
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().value(), -1);
 
-public:
-   /// Some dummy function.
-   /// @since  0.2, 10.04.2016
-   void func()
-   {
-   } // end DynamicSingleton::func
-
-protected:
-   /// Constructor. May be called several times.
-   /// @since  0.2, 10.04.2016
-   DynamicSingleton():
-      common::Singleton< DynamicSingleton, common::detail::DynamicSingletonCreator>(),
-      ObjectEnumerator< DynamicSingleton>()
-   {
-   } // end DynamicSingleton::DynamicSingleton
-
-}; // DynamicSingleton
+} // test_singleton
 
 
 
-/// Test access of a Singleton object with the default policies.
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( default_policy)
+/// Test second access of a Singleton object.
+/// @since  0.10, 11.12.2016
+BOOST_AUTO_TEST_CASE( test_singleton_again)
 {
 
-   BOOST_REQUIRE_NO_THROW( DefaultSingleton::instance().func());
-   BOOST_REQUIRE_EQUAL( DefaultSingleton::instance().objectNbr(), 0);
+   BOOST_REQUIRE_NO_THROW( TestSingleton::instance().func());
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().objectNbr(), 0);
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().value(), -1);
 
-   BOOST_REQUIRE_THROW( DefaultSingleton::instance().destroy(), runtime_error);
-   BOOST_REQUIRE_EQUAL( DefaultSingleton::instance().objectNbr(), 0);
+   // test that parameters passed to instance are simply ignored now
+   BOOST_REQUIRE_NO_THROW( TestSingleton::instance( 13).func());
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().objectNbr(), 0);
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().value(), -1);
 
-} // end default_policy
+} // test_singleton_again
 
 
 
-/// Test access of a Singleton object with static creation policy.
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( explicit_static_policy)
+/// Test that we get a new object after calling reset().
+/// @since  0.12.2, 05.02.2017
+BOOST_AUTO_TEST_CASE( test_reset)
 {
 
-   BOOST_REQUIRE_NO_THROW( StaticSingleton::instance().func());
-   BOOST_REQUIRE_EQUAL( StaticSingleton::instance().objectNbr(), 0);
+   TestSingleton::reset();
 
-   BOOST_REQUIRE_THROW( StaticSingleton::instance().destroy(), runtime_error);
-   BOOST_REQUIRE_EQUAL( StaticSingleton::instance().objectNbr(), 0);
+   BOOST_REQUIRE_NO_THROW( TestSingleton::instance( 42).func());
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().objectNbr(), 1);
+   BOOST_REQUIRE_EQUAL( TestSingleton::instance().value(), 42);
 
-} // end explicit_static_policy
-
-
-
-/// Test access of a Singleton object with dynamic creation policy.
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( explicit_dynamic_policy)
-{
-
-   BOOST_REQUIRE_NO_THROW( DynamicSingleton::instance().func());
-   BOOST_REQUIRE_EQUAL( DynamicSingleton::instance().objectNbr(), 0);
-
-   BOOST_REQUIRE_NO_THROW( DynamicSingleton::instance().destroy());
-   BOOST_REQUIRE_EQUAL( DynamicSingleton::instance().objectNbr(), 1);
-
-} // end explicit_dynamic_policy
+} // test_reset
 
 
 
-// =========================  END OF test_singleton.cpp  =========================
+// ========================  END OF test_singleton.cpp  ========================
