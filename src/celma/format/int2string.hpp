@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,7 +20,7 @@
 /// Implemented are two 'families' of functions, each using the feature called
 /// 'tag dispatch' to call the corresponding function depending on the size and
 /// the sign of the value type.<br>
-/// Using the functions is simply: Just call int2string().
+/// Using the functions is simple: Just call int2string().
 
 
 #ifndef CELMA_FORMAT_INT2STRING_HPP

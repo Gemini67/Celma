@@ -153,19 +153,6 @@ BOOST_AUTO_TEST_CASE( function_check)
 
    gotVal.clear();
 
-   // function with value mode optional, actually expects a value (with value)
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional));
-
-      ArgString2Array  as2a( "-fv1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
-      BOOST_REQUIRE_EQUAL( gotVal, "v1");
-   } // end scope
-
-   gotVal.clear();
-
 } // function_check
 
 
@@ -368,19 +355,6 @@ BOOST_AUTO_TEST_CASE( value_method_check)
                                             ->setValueMode( Handler::ValueMode::optional));
 
       ArgString2Array  as2a( "-m v1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
-      BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
-   } // end scope
-
-   myTestObj.resetValue();
-
-   // value mode optional, value
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
-
-      ArgString2Array  as2a( "-mv1", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
    } // end scope

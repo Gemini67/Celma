@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -145,6 +145,26 @@ bool ArgumentKey::operator ==( const ArgumentKey& other) const
 
 
 
+/// Less comparison operator, needed in order to use an argument key object
+/// as key in a sorted STL container.
+/// @param[in]  other  The other key object to compare against.
+/// @return  \c true if this is less than \a other.
+/// @since  x.y.z, 09.02.2017
+bool ArgumentKey::operator <( const ArgumentKey& other) const
+{
+
+   if ((mChar != '\0') && (other.mChar != '\0'))
+      return mChar < other.mChar;
+
+   if (!mWord.empty() && !other.mWord.empty())
+      return mWord < other.mWord;
+
+   // actually we could not really veryify if it is the same argument ...
+   return false;
+} // ArgumentKey::operator <
+
+
+
 /// Checks if there is a mismatch: Short specifier matches but long don't or
 /// vice versa.
 /// @param[in]  other  The other key object to compare against.
@@ -204,7 +224,7 @@ std::ostream& operator <<( std::ostream& os, const ArgumentKey& ak)
    } // end if
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 

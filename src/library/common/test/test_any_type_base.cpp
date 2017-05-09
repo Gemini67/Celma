@@ -21,6 +21,7 @@
 #include <utility>
 
 
+using celma::common::AnyBase;
 using celma::common::Reference;
 using celma::common::TypeName;
 using celma::common::TypeNameBase;
@@ -28,22 +29,13 @@ using celma::common::Value;
 using celma::common::VarName;
 
 
-/// Helper base class, pure minimum.
-class SimpleBase
-{
-public:
-   ~SimpleBase() = default;
-
-}; // SimpleBase
-
-
 /// Helper super class, needed to test those base classes with a protected
 /// constructor.
-template< typename T> class TestTypeName: public TypeName< T, SimpleBase>
+template< typename T> class TestTypeName: public TypeName< T, AnyBase>
 {
 public:
    TestTypeName():
-      TypeName< T, SimpleBase>()
+      TypeName< T, AnyBase>()
    {
    }
    
@@ -79,17 +71,30 @@ BOOST_AUTO_TEST_CASE( test_type_name)
    } // end scope
 
    {
-      std::unique_ptr< SimpleBase>  name_int( new TestTypeName< int>());
-      auto                          name_int_base = static_cast< TypeNameBase< SimpleBase>*>( name_int.get());
+      std::unique_ptr< AnyBase>  name_int( new TestTypeName< int>());
+      auto                       name_int_base = static_cast< TypeNameBase< AnyBase>*>( name_int.get());
 
       BOOST_REQUIRE_EQUAL( name_int_base->getTypeName(), "int");
    } // end scope
 
    {
-      std::unique_ptr< SimpleBase>  name_string( new TestTypeName< std::string>());
-      auto                          name_string_base = static_cast< TypeNameBase< SimpleBase>*>( name_string.get());
+      std::unique_ptr< AnyBase>  name_string( new TestTypeName< std::string>());
+      auto                       name_string_base = static_cast< TypeNameBase< AnyBase>*>( name_string.get());
 
       BOOST_REQUIRE_EQUAL( name_string_base->getTypeName(), "std::string");
+   } // end scope
+
+   {
+      std::unique_ptr< AnyBase>  name_int( new TestTypeName< int>());
+
+      BOOST_REQUIRE_EQUAL( name_int->getTypeNameBase()->getTypeName(), "int");
+   } // end scope
+
+   {
+      std::unique_ptr< AnyBase>  name_string( new TestTypeName< std::string>());
+
+      BOOST_REQUIRE_EQUAL( name_string->getTypeNameBase()->getTypeName(),
+                           "std::string");
    } // end scope
 
 } // test_type_name
@@ -102,33 +107,49 @@ BOOST_AUTO_TEST_CASE( test_reference)
 {
 
    {
-      int                          i = 0;
-      Reference< int, SimpleBase>  reference_int( i);
+      int                       i = 0;
+      Reference< int, AnyBase>  reference_int( i);
 
       BOOST_REQUIRE_EQUAL( reference_int.getTypeName(), "int");
    } // end scope
 
    {
-      std::string                          s;
-      Reference< std::string, SimpleBase>  reference_string( s);
+      std::string                       s;
+      Reference< std::string, AnyBase>  reference_string( s);
 
       BOOST_REQUIRE_EQUAL( reference_string.getTypeName(), "std::string");
    } // end scope
 
    {
-      int                           i = 0;
-      std::unique_ptr< SimpleBase>  reference_int( new Reference< int, SimpleBase>( i));
-      auto                          reference_int_base = static_cast< Reference< int, SimpleBase>*>( reference_int.get());
+      int                        i = 0;
+      std::unique_ptr< AnyBase>  reference_int( new Reference< int, AnyBase>( i));
+      auto                       reference_int_base = static_cast< Reference< int, AnyBase>*>( reference_int.get());
 
       BOOST_REQUIRE_EQUAL( reference_int_base->getTypeName(), "int");
    } // end scope
 
    {
-      std::string                   s;
-      std::unique_ptr< SimpleBase>  reference_string( new Reference< std::string, SimpleBase>( s));
-      auto                          reference_string_base = static_cast< Reference< std::string, SimpleBase>*>( reference_string.get());
+      std::string                s;
+      std::unique_ptr< AnyBase>  reference_string( new Reference< std::string, AnyBase>( s));
+      auto                       reference_string_base = static_cast< Reference< std::string, AnyBase>*>( reference_string.get());
 
       BOOST_REQUIRE_EQUAL( reference_string_base->getTypeName(), "std::string");
+   } // end scope
+
+   {
+      int                        i = 0;
+      std::unique_ptr< AnyBase>  reference_int( new Reference< int, AnyBase>( i));
+
+      BOOST_REQUIRE_EQUAL( reference_int->getTypeNameBase()->getTypeName(),
+                           "int");
+   } // end scope
+
+   {
+      std::string                s;
+      std::unique_ptr< AnyBase>  reference_string( new Reference< std::string, AnyBase>( s));
+
+      BOOST_REQUIRE_EQUAL( reference_string->getTypeNameBase()->getTypeName(),
+                           "std::string");
    } // end scope
 
 } // test_reference
@@ -141,29 +162,42 @@ BOOST_AUTO_TEST_CASE( test_value)
 {
 
    {
-      Value< int, SimpleBase>  value_int;
+      Value< int, AnyBase>  value_int;
 
       BOOST_REQUIRE_EQUAL( value_int.getTypeName(), "int");
    } // end scope
 
    {
-      Value< std::string, SimpleBase>  value_string;
+      Value< std::string, AnyBase>  value_string;
 
       BOOST_REQUIRE_EQUAL( value_string.getTypeName(), "std::string");
    } // end scope
 
    {
-      std::unique_ptr< SimpleBase>  value_int( new Value< int, SimpleBase>());
-      auto                          value_int_base = static_cast< Value< int, SimpleBase>*>( value_int.get());
+      std::unique_ptr< AnyBase>  value_int( new Value< int, AnyBase>());
+      auto                       value_int_base = static_cast< Value< int, AnyBase>*>( value_int.get());
 
       BOOST_REQUIRE_EQUAL( value_int_base->getTypeName(), "int");
    } // end scope
 
    {
-      std::unique_ptr< SimpleBase>  value_string( new Value< std::string, SimpleBase>());
-      auto                          value_string_base = static_cast< Value< std::string, SimpleBase>*>( value_string.get());
+      std::unique_ptr< AnyBase>  value_string( new Value< std::string, AnyBase>());
+      auto                       value_string_base = static_cast< Value< std::string, AnyBase>*>( value_string.get());
 
       BOOST_REQUIRE_EQUAL( value_string_base->getTypeName(), "std::string");
+   } // end scope
+
+   {
+      std::unique_ptr< AnyBase>  value_int( new Value< int, AnyBase>());
+
+      BOOST_REQUIRE_EQUAL( value_int->getTypeNameBase()->getTypeName(), "int");
+   } // end scope
+
+   {
+      std::unique_ptr< AnyBase>  value_string( new Value< std::string, AnyBase>());
+
+      BOOST_REQUIRE_EQUAL( value_string->getTypeNameBase()->getTypeName(),
+                           "std::string");
    } // end scope
 
 } // test_value
@@ -176,37 +210,52 @@ BOOST_AUTO_TEST_CASE( test_var_name)
 {
 
    {
-      int                        i = 0;
-      VarName< int, SimpleBase>  var_name_int( VAR_NAME( i));
+      int                     i = 0;
+      VarName< int, AnyBase>  var_name_int( VAR_NAME( i));
 
       BOOST_REQUIRE_EQUAL( var_name_int.getTypeName(), "int");
       BOOST_REQUIRE_EQUAL( var_name_int.getVarName(), "i");
    } // end scope
 
    {
-      std::string                        s;
-      VarName< std::string, SimpleBase>  var_name_string( VAR_NAME( s));
+      std::string                     s;
+      VarName< std::string, AnyBase>  var_name_string( VAR_NAME( s));
 
       BOOST_REQUIRE_EQUAL( var_name_string.getTypeName(), "std::string");
       BOOST_REQUIRE_EQUAL( var_name_string.getVarName(), "s");
    } // end scope
 
    {
-      int                           i = 0;
-      std::unique_ptr< SimpleBase>  var_name_int( new VarName< int, SimpleBase>( VAR_NAME( i)));
-      auto                          var_name_int_base = static_cast< VarName< int, SimpleBase>*>( var_name_int.get());
+      int                        i = 0;
+      std::unique_ptr< AnyBase>  var_name_int( new VarName< int, AnyBase>( VAR_NAME( i)));
+      auto                       var_name_int_base = static_cast< VarName< int, AnyBase>*>( var_name_int.get());
 
       BOOST_REQUIRE_EQUAL( var_name_int_base->getTypeName(), "int");
       BOOST_REQUIRE_EQUAL( var_name_int_base->getVarName(), "i");
    } // end scope
 
    {
-      std::string                   s;
-      std::unique_ptr< SimpleBase>  var_name_string( new VarName< std::string, SimpleBase>( VAR_NAME( s)));
-      auto                          var_name_string_base = static_cast< VarName< std::string, SimpleBase>*>( var_name_string.get());
+      std::string                s;
+      std::unique_ptr< AnyBase>  var_name_string( new VarName< std::string, AnyBase>( VAR_NAME( s)));
+      auto                       var_name_string_base = static_cast< VarName< std::string, AnyBase>*>( var_name_string.get());
 
       BOOST_REQUIRE_EQUAL( var_name_string_base->getTypeName(), "std::string");
       BOOST_REQUIRE_EQUAL( var_name_string_base->getVarName(), "s");
+   } // end scope
+
+   {
+      int                        i = 0;
+      std::unique_ptr< AnyBase>  var_name_int( new VarName< int, AnyBase>( VAR_NAME( i)));
+
+      BOOST_REQUIRE_EQUAL( var_name_int->getTypeNameBase()->getTypeName(), "int");
+   } // end scope
+
+   {
+      std::string                s;
+      std::unique_ptr< AnyBase>  var_name_string( new VarName< std::string, AnyBase>( VAR_NAME( s)));
+
+      BOOST_REQUIRE_EQUAL( var_name_string->getTypeNameBase()->getTypeName(),
+                           "std::string");
    } // end scope
 
 } // test_var_name
