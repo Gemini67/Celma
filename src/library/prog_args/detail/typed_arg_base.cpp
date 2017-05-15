@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -76,6 +76,27 @@ TypedArgBase::~TypedArgBase()
    common::Vector::clear( mConstraints);
 
 } // TypedArgBase::~TypedArgBase
+
+
+
+/// Overwrites the 'value mode' which specifies if a value is needed for this
+/// argument or not.<br>
+/// Here in the base class, the only value mode that can be set is
+/// 'required'.
+/// @param[in]  vm  The new value mode.
+/// @return  Pointer to this object.
+/// @since  0.2, 10.04.2016
+TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
+{
+
+   if (vm != ValueMode::required)
+      throw std::invalid_argument( std::string( "may not set value mode '") +
+                                   valueMode2str( vm) + "' on variable '" +
+                                   mVarName + "'");
+
+   mValueMode = vm;
+   return this;
+} // TypedArgBase::setValueMode
 
 
 

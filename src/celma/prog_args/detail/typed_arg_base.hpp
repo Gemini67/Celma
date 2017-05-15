@@ -89,6 +89,11 @@ public:
       optional,   //!< The value is optional.
       required,   //!< The argument must have a value.<br>
                   //!< This is the default for all other arguments.
+      command,    //!< An argumewnt with this value mode signals that this and
+                  //!< all the following arguments and values are not anymore
+                  //!< relevant for this object, but should be assigned as
+                  //!< complete argument string to the value of the argument and
+                  //!< will then be handled by another tool/command.
       unknown     //!< We don't know if the argument actually needs a value or
                   //!< not (used for arguments that result in a function call).
                   //!< But this is only used as an initialisation value, once
@@ -96,10 +101,10 @@ public:
                   //!< defined value mode.
    }; // ValueMode
 
-   /// 
-   /// @param[in]  vm  .
-   /// @return  .
-   /// @since  6.0, 18.02.2017
+   /// Returns the text for the enum.
+   /// @param[in]  vm  The value to return the text for.
+   /// @return  The text for the value mode.
+   /// @since  0.13.2, 18.02.2017
    static constexpr const char* valueMode2str( ValueMode vm);
 
    /// Constructor.
@@ -389,6 +394,7 @@ constexpr const char* TypedArgBase::valueMode2str( ValueMode vm)
    case ValueMode::none:      return "none";
    case ValueMode::optional:  return "optional";
    case ValueMode::required:  return "required";
+   case ValueMode::command:   return "command";
    default:                   return "unknown";
    } // end switch
 } // TypedArgBase::valueMode2str
@@ -444,17 +450,6 @@ inline bool TypedArgBase::isHidden() const
 {
    return mIsHidden;
 } // TypedArgBase::isHidden
-
-
-inline TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
-{
-   if (vm != ValueMode::required)
-      throw std::invalid_argument( std::string( "may not set value mode '") +
-                                   valueMode2str( vm) + "' on variable '" +
-                                   mVarName + "'");
-   mValueMode = vm;
-   return this;
-} // TypedArgBase::setValueMode
 
 
 inline TypedArgBase::ValueMode TypedArgBase::valueMode() const
