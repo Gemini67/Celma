@@ -622,9 +622,10 @@ protected:
    /// Function call result for evalSingleArgument():
    enum class ArgResult
    {
-      unknown,   //!< Unknown argument for this instance (try with next).
-      consumed   //!< Argument handled by this instance, proceed with next
-                 //!< argument.
+      unknown,    //!< Unknown argument for this instance (try with next).
+      consumed,   //!< Argument handled by this instance, proceed with next
+                  //!< argument.
+      last        //!< Found an argument with value mode "command".
    };
 
    // functions needed by the Groups class

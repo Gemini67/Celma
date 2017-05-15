@@ -169,10 +169,10 @@ void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
 
       if (result == Handler::ArgResult::unknown)
       {
-         if (ai->mElementType == detail::ArgListElement::etValue)
+         if (ai->mElementType == detail::ArgListElement::ElementType::value)
             throw runtime_error( "Unknown argument '" + ai->mValue + "'");
-         if ((ai->mElementType == detail::ArgListElement::etSingleCharArg) ||
-             (ai->mElementType == detail::ArgListElement::etControl))
+         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg) ||
+             (ai->mElementType == detail::ArgListElement::ElementType::control))
             throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
          throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
