@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -43,13 +43,13 @@ class ArgListElement
 {
 public:
    /// Element types to be found/identified in an argument list:
-   enum ElementType
+   enum class ElementType
    {
-     etSingleCharArg,   //!< Single character argument.
-     etStringArg,       //!< String/long argument.
-     etValue,           //!< Value (after argument or positional).
-     etControl,         //!< Control character.
-     etInvalid          //!< Initialisation value.
+     singleCharArg,   //!< Single character argument.
+     stringArg,       //!< String/long argument.
+     value,           //!< Value (after argument or positional).
+     control,         //!< Control character.
+     invalid          //!< Initialisation value.
    }; // ElementType
 
    /// Constructor.
@@ -122,5 +122,5 @@ public:
 #endif   // CELMA_PROG_ARGS_DETAIL_ARG_LIST_ELEMENT_HPP
 
 
-// =========================  END OF arg_list_element.hpp  =========================
+// =======================  END OF arg_list_element.hpp  =======================
 
