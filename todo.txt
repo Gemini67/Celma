@@ -57,29 +57,12 @@ Console:
 
 
 Handler:
-- In Klasse Groups eine Konstante mit dem Set der Flags, die an alle
-  prog_args::Handler uebergeben werden duerfen.
-- Wenn Argument Gruppen verwendet werden, duerfen die Destination-Variablen
-  nicht 'out of scope' gehen.
-  Idee: Klasse implementieren, die eine Variable vom entsprechenden Typ
-        speichern kann, dann dieses Object (bzw. dessen Wert) als Ziel-Variable
-        an den Gruppen-Argument-Handler uebergeben. Dann braucht es natuerlich
-        eine Klasse, die alle diese Werte-Halter speichert
-  Idee: Klasse Groups bekommt eine Methode getValueHandler()
-        (statt getArgHandler()), diese liefert ein Objekt zurueck mit
-        addArgument() Methoden, die eben keine Ziel-Variable benoetigen. Name
-        der Neuen Klasse: HandlerValues. Diese ist abgeleitet von Handler, kann
-        also von Groups gespeichert und verwendet werden. Zusaetzlich braucht
-        die Klasse auch Methoden um die Werte zu den Argumenten zurueck zu
-        geben.
-
-
-Handler:
 - Statt explizit einen Vektor fuer mehrfache Werte zu handeln, entweder den Typ
   als nicht-template Typ, aber Container, speichern, oder einen back_inserter
   als Parameter angeben
 - Bei Typen mit mehreren Werten: Test dass der gleiche Wert nicht mehrfach
   vorkommt.
+  Parameter um zu definieren dass Wiederholungen erlaubt sind?
 - In der Basisklasse TypeBase muessen alle Features, die von den verschiedenen
   Typen verwendet werden koennen, entweder als rein virtuelle Methode oder als
   virtuelle Methode die eine Exception schmeisst, vorhanden sein. Schoener waere
@@ -87,24 +70,6 @@ Handler:
   die es fuer einen bestimmten Typ nicht gibt, wuerde es im besten Fall
   Compiler-Fehlermeldungen geben.
 - Werte von Programm-Argumenten via Reflection in einer Struktur speichern?
-
-
-Um Tools wie z.B. das cmd Tool unterstuetzen zu koennen:
-
-Syntax:
-   cmd [options] servername [command and options]
-
-Alles nach Servername sollte fuer das Argument-Handling von 'cmd' selber
-ignoriert werden.
-
-Loesung:
-- Bei einem Argument kann 'ignore trailing arguments' gesetzt werden. Wenn
-  dieses Argument dann verwendet wird, wird der Rest der Argument-Zeile in einem
-  String gespeichert und die Iteration abgebrochen.
-- Der Argument-List-Iterator braucht eine zusaetzliche Methode: Remaining
-  Arguments, die eben die restlichen Argumente ab der Iterator-Position als
-  String zurueck gibt. Dieser String muss im geeigneten Moment abgefragt werden
-  und im Argument-Handler gespeichert werden.
 
 
 MultiValueAssign als variadic template

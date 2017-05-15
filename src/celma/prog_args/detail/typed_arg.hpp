@@ -25,6 +25,7 @@
 #define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
 
 
+#include <cstring>
 #include <iostream>
 #include <tuple>
 #include <vector>
@@ -63,6 +64,15 @@ public:
    ///          \c false otherwise.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
+
+   /// Checks that the value mode 'command' is only set for destination types
+   /// "std::string".<br>
+   /// For all other value modes and types, the metzhod of the base clase is
+   /// called.
+   /// @param[in]  vm  The value mode to set.
+   /// @return  Pointer to this object.
+   /// @since  0.14.2, 12.05.2017
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Adds the value of the destination variable to the string.
    /// @param[in]  dest  The string to append the default value to.
@@ -108,6 +118,24 @@ template< typename T> bool TypedArg< T>::hasValue() const
 {
    return mHasValueSet;
 } // TypedArg< T>::hasValue
+
+
+template< typename T>
+   TypedArgBase* TypedArg< T>::setValueMode( ValueMode vm) noexcept( false)
+{
+   if (vm == ValueMode::command)
+   {
+      if (::strcmp( type< T>::name(), "std::string") != 0)
+         throw std::invalid_argument( std::string( "may not set value mode '") +
+                                      valueMode2str( vm) + "' on variable '" +
+                                      mVarName + "'");
+      // cannot call method of base class (would throw), have to handle it myself
+      mValueMode = vm;
+      return this;
+   } // end if
+
+   return TypedArgBase::setValueMode( vm);
+} // TypedArg< T>::setValueMode
 
 
 template< typename T> void TypedArg< T>::defaultValue( std::string& dest) const
