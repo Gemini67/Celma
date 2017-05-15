@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -50,7 +50,7 @@ public:
    /// @param[in]  asEnd  Set this flag when this iterator object should
    ///                    reference the end element.
    /// @since  0.2, 09.04.2016
-   ArgListIterator( const T& src, bool asEnd = false);
+   explicit ArgListIterator( const T& src, bool asEnd = false);
 
    ArgListIterator( const ArgListIterator&) = default;
    ~ArgListIterator() = default;
@@ -75,6 +75,14 @@ public:
    /// previous (i.e., at the moment still current) argument.
    /// @since  0.2, 09.04.2016
    void remArgStrAsVal();
+
+   /// Returns the remaining arguments/values from the argument list as string,
+   /// like they were entered on the command line.
+   /// @param[in]  include_myself  If set, the current argument is also included
+   ///                             in the result string.
+   /// @return  The remaining arguments as string.
+   /// @since  0.14.2, 12.05.2017
+   std::string argsAsString( bool include_myself = true) const;
 
    /// Prefix increment operator.
    /// @return  This object.
@@ -108,6 +116,13 @@ private:
    /// @since  0.2, 09.04.2016
    void determineNextArg();
 
+   /// Returns if the current argument was used alone, i.e. character argument
+   /// may not have been combined with another.
+   /// @return  \c true if this character argument was not combined with
+   ///          another character argument, and for all other argument types.
+   /// @since 0.14.2, 12.05.2017
+   bool isSingleArg() const noexcept( false);
+
    /// The base object that provides access to the argument list.
    const T*  mpSource;
    /// Number of arguments.
@@ -127,7 +142,6 @@ private:
    /// values as simple values.
    bool      mAcceptDashedValue;
 
-private:
    /// Internal flag, set when a long argument followed by an equal sign and a
    /// value is found (--\<long_arg\>=\<value\>).<br>
    /// In this case, the argument is returned and this flag set so that the
@@ -182,7 +196,7 @@ template< typename T, typename E>
       } // end if
    } // end if
 
-} // end ArgListIterator< T, E>::ArgListIterator
+} // ArgListIterator< T, E>::ArgListIterator
 
 
 template< typename T, typename E>
@@ -190,20 +204,39 @@ template< typename T, typename E>
 {
    return (mpSource == other.mpSource) && (mArgIndex == other.mArgIndex) &&
           (mArgCharPos == other.mArgCharPos);
-} // end ArgListIterator< T, E>::operator ==
+} // ArgListIterator< T, E>::operator ==
 
 
 template< typename T, typename E>
    bool ArgListIterator< T, E>::operator !=( const ArgListIterator& other) const
 {
    return !(*this == other);
-} // end ArgListIterator< T, E>::operator !=
+} // ArgListIterator< T, E>::operator !=
 
 
 template< typename T, typename E> void ArgListIterator< T, E>::remArgStrAsVal()
 {
    mRemainingArgumentStringAsValue = true;
-} // end ArgListIterator< T, E>::remArgStrAsVal
+} // ArgListIterator< T, E>::remArgStrAsVal
+
+
+template< typename T, typename E>
+   std::string ArgListIterator< T, E>::argsAsString( bool include_myself) const
+{
+   if (!include_myself && !isSingleArg())
+      throw std::runtime_error( "cannot build remaining arguments string "
+                                "when included argument is not single argument");
+
+   int          argi = include_myself ? mCurrElement.mArgIndex : mArgIndex;
+   std::string  remaining( mpArgV[ argi++]);
+
+   for (; argi < mArgC; ++argi)
+   {
+      remaining.append( " ").append( mpArgV[ argi]);
+   } // end for
+
+   return remaining;
+} // ArgListIterator< T, E>::argsAsString
 
 
 template< typename T, typename E>
@@ -254,7 +287,7 @@ template< typename T, typename E>
    } // end if
 
    return *this;
-} // end ArgListIterator< T, E>::operator ++
+} // ArgListIterator< T, E>::operator ++
 
 
 template< typename T, typename E>
@@ -263,21 +296,21 @@ template< typename T, typename E>
    ArgListIterator  prev( *this);
    operator ++();
    return prev;
-} // end ArgListIterator< T, E>::operator ++
+} // ArgListIterator< T, E>::operator ++
 
 
 template< typename T, typename E>
    const E* ArgListIterator< T, E>::operator ->() const
 {
    return &mCurrElement;
-} // end ArgListIterator< T, E>::operator ->
+} // ArgListIterator< T, E>::operator ->
 
 
 template< typename T, typename E>
    const E& ArgListIterator< T, E>::operator *() const
 {
    return mCurrElement;
-} // end ArgListIterator< T, E>::operator *
+} // ArgListIterator< T, E>::operator *
 
 
 template< typename T, typename E>
@@ -332,16 +365,30 @@ template< typename T, typename E>
       } // end if
    } // end if
 
-} // end ArgListIterator< T, E>::determineNextArg
+} // ArgListIterator< T, E>::determineNextArg
 
 
 template< typename T, typename E>
    bool ArgListIterator< T, E>::isCtrlChar( char argChar)
 {
    return (argChar == '(') || (argChar == ')') || (argChar == '!');
-} // end ArgListIterator< T, E>::isCtrlChar
+} // ArgListIterator< T, E>::isCtrlChar
 
 
+template< typename T, typename E>
+   bool ArgListIterator< T, E>::isSingleArg() const noexcept( false)
+{
+
+   if (mCurrElement.mElementType == E::ElementType::singleCharArg)
+   {
+      return (mCurrElement.mArgCharPos == 1) &&
+             (mpArgV[ mCurrElement.mArgIndex][ 2] == '\0');
+   } // end if
+
+   return true;
+} // ArgListIterator< T, E>::isSingleArg
+
+   
 } // namespace detail
 } // namespace prog_args
 } // namespace celma

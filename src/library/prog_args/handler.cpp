@@ -543,8 +543,7 @@ template< typename T>
       while ((subAI != end) &&
              (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
       {
-         ai = subAI;
-         ++subAI;
+         ai = subAI++;
       } // end while
 
       mpLastArg = nullptr;
@@ -556,14 +555,21 @@ template< typename T>
       return ArgResult::unknown;
 
    // an argument that we know
-   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
+   if (p_arg_hdl->valueMode() == ValueMode::unknown)
       throw runtime_error( "Value mode not set for argument '" + arg_string + "'");
 
-   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
+   if (p_arg_hdl->valueMode() == ValueMode::none)
    {
       // no value needed
       handleIdentifiedArg( p_arg_hdl, arg_string);
       return ArgResult::consumed;
+   } // end if
+
+   if (p_arg_hdl->valueMode() == ValueMode::command)
+   {
+      // found last argument/value for me, rest for another object/tool
+      handleIdentifiedArg( p_arg_hdl, arg_string, ai.argsAsString( false));
+      return ArgResult::last;
    } // end if
 
    // check if the next element in the list is a value
@@ -571,14 +577,15 @@ template< typename T>
    // if the value mode of this argument is optional, we don't allow values to
    // directly follow the argument, because then we cannot distinguish if it's
    // a value or the next argument
-   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::required)
+   if (p_arg_hdl->valueMode() == ValueMode::required)
       ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue))
+   if ((ait2 == end) ||
+       (ait2->mElementType != detail::ArgListElement::ElementType::value))
    {
       // no next value
-      if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::optional)
+      if (p_arg_hdl->valueMode() == ValueMode::optional)
          handleIdentifiedArg( p_arg_hdl, arg_string);
       else
          throw runtime_error( "Argument '" + arg_string + "' requires value(s)");
@@ -618,25 +625,33 @@ Handler::ArgResult
 
    switch (ai->mElementType)
    {
-   case detail::ArgListElement::etValue:
+   case detail::ArgListElement::ElementType::value:
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
          mpLastArg->calledAssign( mReadingArgumentFile, ai->mValue);
          return ArgResult::consumed;
-      } else if (detail::TypedArgBase* hdl = mArguments.findArg( '-'))
+      } // end if
+      if (detail::TypedArgBase* hdl = mArguments.findArg( '-'))
       {
+         if (hdl->valueMode() == ValueMode::command)
+         {
+            // this and the following arguments/values are not for me
+            handleIdentifiedArg( hdl, string( "-"), ai.argsAsString());
+            return ArgResult::last;
+         } // end if
+         
          handleIdentifiedArg( hdl, string( "-"), ai->mValue);
          return ArgResult::consumed;
       } // end if
       break;
 
-   case detail::ArgListElement::etSingleCharArg:
+   case detail::ArgListElement::ElementType::singleCharArg:
       return processArg( ai->mArgChar, string( 1, ai->mArgChar), ai, end);
 
-   case detail::ArgListElement::etStringArg:
+   case detail::ArgListElement::ElementType::stringArg:
       return processArg( ai->mArgString, ai->mArgString, ai, end);
 
-   case detail::ArgListElement::etControl:
+   case detail::ArgListElement::ElementType::control:
       if (ai->mArgChar == '(')
       {
          if (!mpOpeningBracketHdlr)
@@ -838,14 +853,17 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
       auto const  result = evalSingleArgument( ai, alp.end());
       if (result == ArgResult::unknown)
       {
-         if (ai->mElementType == detail::ArgListElement::etValue)
+         if (ai->mElementType == detail::ArgListElement::ElementType::value)
             throw runtime_error( "Unknown argument '" + ai->mValue + "'");
-         if ((ai->mElementType == detail::ArgListElement::etSingleCharArg) ||
-             (ai->mElementType == detail::ArgListElement::etControl))
+         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg) ||
+             (ai->mElementType == detail::ArgListElement::ElementType::control))
             throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
          throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
       } // end if
+
+      if (result == ArgResult::last)
+         break;   // for
    } // end for
 
 } // Handler::iterateArguments

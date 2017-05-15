@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,12 +35,12 @@ namespace celma { namespace prog_args { namespace detail {
 ArgListElement::ArgListElement():
    mArgIndex( -1),
    mArgCharPos( -1),
-   mElementType( etInvalid),
+   mElementType( ElementType::invalid),
    mArgChar( '-'),
    mArgString(),
    mValue()
 {
-} // end ArgListElement::ArgListElement
+} // ArgListElement::ArgListElement
 
 
 
@@ -54,13 +54,13 @@ void ArgListElement::setArgChar( int argi, int argp, char argChar)
 
    mArgIndex    = argi;
    mArgCharPos  = argp;
-   mElementType = etSingleCharArg;
+   mElementType = ElementType::singleCharArg;
    mArgChar     = argChar;
 
    mArgString.clear();
    mValue.clear();
 
-} // end ArgListElement::setArgChar
+} // ArgListElement::setArgChar
 
 
 
@@ -73,13 +73,13 @@ void ArgListElement::setArgString( int argi, const string& argName)
 
    mArgIndex    = argi;
    mArgCharPos  = -1;
-   mElementType = etStringArg;
+   mElementType = ElementType::stringArg;
    mArgChar     = '-';
    mArgString   = argName;
 
    mValue.clear();
 
-} // end ArgListElement::setArgString
+} // ArgListElement::setArgString
 
 
 
@@ -92,13 +92,13 @@ void ArgListElement::setValue( int argi, const string& value)
 
    mArgIndex    = argi;
    mArgCharPos  = -1;
-   mElementType = etValue;
+   mElementType = ElementType::value;
    mArgChar     = '-';
    mValue       = value;
 
    mArgString.clear();
 
-} // end ArgListElement::setValue
+} // ArgListElement::setValue
 
 
 
@@ -112,13 +112,13 @@ void ArgListElement::setControl( int argi, int argp, char ctrlChar)
 
    mArgIndex    = argi;
    mArgCharPos  = argp;
-   mElementType = etControl;
+   mElementType = ElementType::control;
    mArgChar     = ctrlChar;
 
    mArgString.clear();
    mValue.clear();
 
-} // end ArgListElement::setControl
+} // ArgListElement::setControl
 
 
 
@@ -132,18 +132,18 @@ ostream& operator <<( ostream& os, const ArgListElement& ale)
 
    os << "argument index     = " << ale.mArgIndex << endl;
 
-   if (ale.mElementType == ArgListElement::etValue)
+   if (ale.mElementType == ArgListElement::ElementType::value)
    {
       os << "free value         = " << ale.mValue << endl;
-   } else if (ale.mElementType == ArgListElement::etSingleCharArg)
+   } else if (ale.mElementType == ArgListElement::ElementType::singleCharArg)
    {
       os << "character position = " << ale.mArgCharPos << endl
          << "argument character = " << ale.mArgChar << endl;
-   } else if (ale.mElementType == ArgListElement::etControl)
+   } else if (ale.mElementType == ArgListElement::ElementType::control)
    {
       os << "ctrl char position = " << ale.mArgCharPos << endl
          << "control character  = " << ale.mArgChar << endl;
-   } else if (ale.mElementType == ArgListElement::etStringArg)
+   } else if (ale.mElementType == ArgListElement::ElementType::stringArg)
    {
       os << "argument string    = " << ale.mArgString << endl;
    } else
@@ -152,7 +152,7 @@ ostream& operator <<( ostream& os, const ArgListElement& ale)
    } // end if
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
@@ -161,5 +161,5 @@ ostream& operator <<( ostream& os, const ArgListElement& ale)
 } // namespace celma
 
 
-// =========================  END OF arg_list_element.cpp  =========================
+// =======================  END OF arg_list_element.cpp  =======================
 
