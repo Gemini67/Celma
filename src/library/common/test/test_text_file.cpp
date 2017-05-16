@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,15 +14,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
-
-// C++ Standard Library includes
-#include <sstream>
+// headerfile of the module to test
+#include "celma/common/text_file.hpp"
 
 
 // Boost includes
@@ -31,13 +24,29 @@
 #include <utility>
 
 
-// project includes
-#include "celma/common/text_file.hpp"
+using celma::common::EmptyLineFilter;
+using celma::common::FileLineStat;
+using celma::common::NoFilter;
+using celma::common::StatLineHandler;
+using celma::common::TextFile;
 
 
-using namespace std;
-using namespace celma;
+using FilterStatTextFile = TextFile< EmptyLineFilter, StatLineHandler>;
 
+
+BOOST_TEST_DONT_PRINT_LOG_VALUE( TextFile<>::const_iterator);
+BOOST_TEST_DONT_PRINT_LOG_VALUE( FilterStatTextFile::const_iterator);
+
+
+namespace {
+
+const int  NumLines = 165;
+const int  NumEmptyLines = 46;
+const int  NumTextLines = NumLines - NumEmptyLines;
+
+const char* const  File = "/home/rene/projects/Celma/textfile/src/celma/common/text_file.hpp";
+
+} // namespace
 
 
 /// Use the class with the default policies: no filter, no line handler.
@@ -45,18 +54,22 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( default_policies)
 {
 
-   common::TextFile<>  ctf( "/home/rene/projects/Celma/textfile/src/celma/common/text_file.hpp");
-   int                 num_lines = 0;
+   TextFile<>  ctf( File);
+   int         num_lines = 0;
+   int         num_empty_lines = 0;
 
 
    for (auto const& line : ctf)
    {
+      if (line.empty())
+         ++num_empty_lines;
       ++num_lines;
    } // end for
 
-   BOOST_REQUIRE_EQUAL( num_lines, 163);
+   BOOST_REQUIRE_EQUAL( num_lines, NumLines);
+   BOOST_REQUIRE_EQUAL( num_empty_lines, NumEmptyLines);
 
-} // end default_policies
+} // default_policies
 
 
 
@@ -65,18 +78,22 @@ BOOST_AUTO_TEST_CASE( default_policies)
 BOOST_AUTO_TEST_CASE( no_empty_lines)
 {
 
-   common::TextFile< common::EmptyLineFilter>  ctf( "/home/rene/projects/Celma/textfile/src/celma/common/text_file.hpp");
-   int                                         num_lines = 0;
+   TextFile< EmptyLineFilter>  ctf( File);
+   int                         num_lines = 0;
+   int                         num_empty_lines = 0;
 
 
    for (auto const& line : ctf)
    {
+      if (line.empty())
+         ++num_empty_lines;
       ++num_lines;
    } // end for
 
-   BOOST_REQUIRE_EQUAL( num_lines, 118);
+   BOOST_REQUIRE_EQUAL( num_lines, NumTextLines);
 
-} // end no_empty_lines
+
+} // no_empty_lines
 
 
 
@@ -85,8 +102,8 @@ BOOST_AUTO_TEST_CASE( no_empty_lines)
 BOOST_AUTO_TEST_CASE( statistics_only)
 {
 
-   common::TextFile< common::NoFilter, common::StatLineHandler>  ctf( "/home/rene/projects/Celma/textfile/src/celma/common/text_file.hpp");
-   common::FileLineStat                                          fls;
+   TextFile< NoFilter, StatLineHandler>  ctf( File);
+   FileLineStat                          fls;
 
 
    for (auto it = ctf.begin(); it != ctf.end(); ++it)
@@ -94,11 +111,11 @@ BOOST_AUTO_TEST_CASE( statistics_only)
       it.setEndStat( &fls);
    } // end for
 
-   BOOST_REQUIRE_EQUAL( fls.linesRead,      163);
-   BOOST_REQUIRE_EQUAL( fls.linesFiltered,    0);
-   BOOST_REQUIRE_EQUAL( fls.linesProcessed, 163);
+   BOOST_REQUIRE_EQUAL( fls.linesRead,      NumLines);
+   BOOST_REQUIRE_EQUAL( fls.linesFiltered,  0);
+   BOOST_REQUIRE_EQUAL( fls.linesProcessed, NumLines);
 
-} // end statistics_only
+} // statistics_only
 
 
 
@@ -107,8 +124,8 @@ BOOST_AUTO_TEST_CASE( statistics_only)
 BOOST_AUTO_TEST_CASE( statistics_no_empty_lines)
 {
 
-   common::TextFile< common::EmptyLineFilter, common::StatLineHandler>  ctf( "/home/rene/projects/Celma/textfile/src/celma/common/text_file.hpp");
-   common::FileLineStat                                                 fls;
+   FilterStatTextFile  ctf( File);
+   FileLineStat        fls;
 
 
    for (auto it = ctf.begin(); it != ctf.end(); ++it)
@@ -116,11 +133,94 @@ BOOST_AUTO_TEST_CASE( statistics_no_empty_lines)
       it.setEndStat( &fls);
    } // end for
 
-   BOOST_REQUIRE_EQUAL( fls.linesRead,      163);
-   BOOST_REQUIRE_EQUAL( fls.linesFiltered,   45);
-   BOOST_REQUIRE_EQUAL( fls.linesProcessed, 118);
+   BOOST_REQUIRE_EQUAL( fls.linesRead,      NumLines);
+   BOOST_REQUIRE_EQUAL( fls.linesFiltered,  NumEmptyLines);
+   BOOST_REQUIRE_EQUAL( fls.linesProcessed, NumTextLines);
 
-} // end statistics_no_empty_lines
+} // statistics_no_empty_lines
+
+
+
+/// Create a copy of the iterator and test that both return the same results
+/// afterwards.
+/// @since  x.y.z, 16.05.2017
+BOOST_AUTO_TEST_CASE( copy_default_policies)
+{
+
+   TextFile<>  ctf( File);
+   int         num_lines = 0;
+   auto        iter( ctf.begin());
+
+
+   for (; iter != ctf.end(); ++iter)
+   {
+      if (++num_lines > 11)
+         break;
+   } // end for
+
+   auto  second_iter( iter);
+
+   BOOST_REQUIRE_EQUAL( iter, second_iter);
+   BOOST_REQUIRE_EQUAL( *iter, *second_iter);
+
+   ++iter;
+   BOOST_REQUIRE( iter != ctf.end());
+
+   ++second_iter;
+   BOOST_REQUIRE( second_iter != ctf.end());
+
+   BOOST_REQUIRE_EQUAL( iter, second_iter);
+   BOOST_REQUIRE_EQUAL( *iter, *second_iter);
+
+   ++second_iter;
+   BOOST_REQUIRE( second_iter != ctf.end());
+
+   ++iter;
+   BOOST_REQUIRE( iter != ctf.end());
+
+   BOOST_REQUIRE_EQUAL( iter, second_iter);
+   BOOST_REQUIRE_EQUAL( *iter, *second_iter);
+
+} // copy_default_policies
+
+
+
+/// Create a copy of the iterator with policies Read file, filter empty lines, create statistic.
+/// @since  0.3, 13.04.2016
+BOOST_AUTO_TEST_CASE( copy_statistics_no_empty_lines)
+{
+
+   FilterStatTextFile  ctf( File);
+   FileLineStat        fls;
+   int                 num_lines = 0;
+   auto                iter( ctf.begin());
+
+
+   iter.setEndStat( &fls);
+
+   for (; iter != ctf.end(); ++iter)
+   {
+      if (++num_lines > 11)
+         break;
+   } // end for
+
+   auto  second_iter( iter);
+
+   while (iter != ctf.end())
+   {
+      BOOST_REQUIRE_EQUAL( iter, second_iter);
+      BOOST_REQUIRE_EQUAL( *iter, *second_iter);
+
+      ++iter;
+      ++second_iter;
+
+      if (iter != ctf.end())
+      {
+         BOOST_REQUIRE( second_iter != ctf.end());
+      } // end if
+   } // end while
+      
+} // copy_statistics_no_empty_lines
 
 
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,7 +20,6 @@
 
 
 #include <string>
-#include <fstream>
 #include <stdexcept>
 #include "celma/common/detail/stream_line_iterator.hpp"
 #include "celma/common/detail/filter_policy.hpp"
@@ -45,50 +44,55 @@ using detail::StatLineHandler;
 /// @tparam  LineHandlerPolicy  Additional policy object that is called for each
 ///                             line. See celma::common::detail::DummyLineHandler
 ///                             for an example implementation.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 template< typename FilterPolicy = detail::NoFilter,
           typename LineHandlerPolicy = detail::DummyLineHandler> class TextFile
 {
 public:
    /// Default constructor. Call set() afterwards to specify the file to read.
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    TextFile();
 
    /// Constructor with file parameter.
    /// @param[in]  fname  The (path and) name of the file to read.
-   /// @since  0.3, 13.04.2016
-   explicit TextFile( const std::string& fname);
+   /// @since  x.y.z, 13.04.2016
+   explicit TextFile( const std::string& fname) noexcept( false);
 
-   /// Destructor for cleanup.
-   /// @since  0.3, 13.04.2016
-   ~TextFile();
-
-   /// Don't allow copy-constructing objects.
-   TextFile( const TextFile&) = delete;
-   /// Don't allow assignment.
-   TextFile& operator =( const TextFile&) = delete;
+   ~TextFile() = default;
+   TextFile( const TextFile&) = default;
+   TextFile& operator =( const TextFile&) = default;
 
    /// Specifies the (path and) name of the file to read.
    /// @param[in]  fname  The file to read.
-   /// @since  0.3, 13.04.2016
-   void set( const std::string& fname);
+   /// @since  x.y.z, 13.04.2016
+   void set( const std::string& fname) noexcept( false);
 
    /// Type of the iterator.
-   typedef detail::StreamLineIterator< std::ifstream, FilterPolicy, LineHandlerPolicy>  const_iterator;
+   typedef detail::StreamLineIterator< FilterPolicy, LineHandlerPolicy>  const_iterator;
 
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
-   /// @since  0.3, 13.04.2016
-   const_iterator begin();
+   /// @since  x.y.z, 13.04.2016
+   const_iterator begin() const;
+
+   /// Returns the iterator pointing to the beginning of the file.
+   /// @return  Iterator set on the beginning of the file.
+   /// @since  x.y.z, 16.05.2017
+   const_iterator cbegin() const;
 
    /// Returns the iterator pointing to the end of the file.
    /// @return  Iterator set on the end of the file.
-   /// @since  0.3, 13.04.2016
-   const_iterator end();
+   /// @since  x.y.z, 13.04.2016
+   const_iterator end() const;
+
+   /// Returns the iterator pointing to the end of the file.
+   /// @return  Iterator set on the end of the file.
+   /// @since  x.y.z, 16.05.20178
+   const_iterator cend() const;
 
 private:
    /// The file to read from.
-   std::ifstream  mStream;
+   const std::string  mFilename;
 
 }; // TextFile< FilterPolicy, LineHandlerPolicy>
 
@@ -99,57 +103,55 @@ private:
 
 template< typename FilterPolicy, typename LineHandlerPolicy>
    TextFile< FilterPolicy, LineHandlerPolicy>::TextFile():
-      mStream()
+      mFilename()
 {
-} // end TextFile< FilterPolicy, LineHandlerPolicy>::TextFile
+} // TextFile< FilterPolicy, LineHandlerPolicy>::TextFile
 
 
 template< typename FilterPolicy, typename LineHandlerPolicy>
    TextFile< FilterPolicy, LineHandlerPolicy>::TextFile( const std::string& fname):
-      mStream( fname)
+      mFilename( fname)
 {
-   if (!mStream || !mStream.is_open())
-      throw std::runtime_error( "could not open file '" + fname + "'");
-} // end TextFile< FilterPolicy, LineHandlerPolicy>::TextFile
+} // TextFile< FilterPolicy, LineHandlerPolicy>::TextFile
 
-
-template< typename FilterPolicy, typename LineHandlerPolicy>
-   TextFile< FilterPolicy, LineHandlerPolicy>::~TextFile()
-{
-   mStream.close();
-} // end TextFile< FilterPolicy, LineHandlerPolicy>::~FilterPolicy
 
 template< typename FilterPolicy, typename LineHandlerPolicy>
    void TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::set( const std::string& fname)
 {
-
-   if (mStream && mStream.is_open())
-      mStream.close();
-
-   mStream.open( fname);
-
-   if (!mStream || !mStream.is_open())
-      throw std::runtime_error( "could not open file '" + fname + "'");
-} // end TextFile< FilterPolicy, LineHandlerPolicy>::set
+   mFilename = fname;
+} // TextFile< FilterPolicy, LineHandlerPolicy>::set
 
 
 template< typename FilterPolicy, typename LineHandlerPolicy>
    typename TextFile< FilterPolicy, LineHandlerPolicy>::const_iterator
-      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::begin()
+      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::begin() const
 {
-   if (!mStream || !mStream.is_open())
-      throw std::runtime_error( "file is not open");
-   mStream.seekg( 0);
-   return const_iterator( mStream);
-} // end TextFile< FilterPolicy, LineHandlerPolicy>::begin
+   return const_iterator( mFilename);
+} // TextFile< FilterPolicy, LineHandlerPolicy>::begin
 
 
 template< typename FilterPolicy, typename LineHandlerPolicy>
    typename TextFile< FilterPolicy, LineHandlerPolicy>::const_iterator
-      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::end()
+      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::cbegin() const
 {
-   return const_iterator( mStream, true);
-} // end TextFile< FilterPolicy, LineHandlerPolicy>::end
+   return const_iterator( mFilename);
+} // TextFile< FilterPolicy, LineHandlerPolicy>::cbegin
+
+
+template< typename FilterPolicy, typename LineHandlerPolicy>
+   typename TextFile< FilterPolicy, LineHandlerPolicy>::const_iterator
+      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::end() const
+{
+   return const_iterator( mFilename, true);
+} // TextFile< FilterPolicy, LineHandlerPolicy>::end
+
+
+template< typename FilterPolicy, typename LineHandlerPolicy>
+   typename TextFile< FilterPolicy, LineHandlerPolicy>::const_iterator
+      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::cend() const
+{
+   return const_iterator( mFilename, true);
+} // TextFile< FilterPolicy, LineHandlerPolicy>::cend
 
 
 } // namespace common

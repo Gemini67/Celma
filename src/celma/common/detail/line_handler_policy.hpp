@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,21 +29,21 @@ namespace celma { namespace common { namespace detail {
 
 
 /// Default line handler policy: Does not do anything.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 class DummyLineHandler
 {
 protected:
    /// Policy method, does not do anything.
-   /// @since  6.0, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    void handleLine( LineHandlerCallPoints, const std::string&) const
    {
-   } // end DummyLineHandler::handleLine
+   } // DummyLineHandler::handleLine
 
 }; // DummyLineHandler
 
 
 /// Structure which contains all the counters.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 struct FileLineStat
 {
    /// Number of lines read from the file.
@@ -57,22 +57,32 @@ struct FileLineStat
 
 
 /// Example of a line handler policy that counts all lines processed.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 class StatLineHandler
 {
 public:
    /// 
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    StatLineHandler():
       mLinesRead( 0),
       mLinesFiltered( 0),
       mLinesProcessed( 0),
       mpFileLineStat( nullptr)
    {
-   } // end StatLineHandler::StatLineHandler
+   } // StatLineHandler::StatLineHandler
+
+   /// 
+   /// @since  x.y.z, 16.05.2017
+   StatLineHandler( const StatLineHandler& other):
+      mLinesRead( other.mLinesRead),
+      mLinesFiltered( other.mLinesFiltered),
+      mLinesProcessed( other.mLinesProcessed),
+      mpFileLineStat( nullptr)
+   {
+   } // StatLineHandler::StatLineHandler
 
    /// Destructor, stores the final values in the destination statistic object.
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    ~StatLineHandler()
    {
       if (mpFileLineStat != nullptr)
@@ -81,19 +91,19 @@ public:
          mpFileLineStat->linesFiltered  = mLinesFiltered;
          mpFileLineStat->linesProcessed = mLinesProcessed;
       } // end if
-   } // end StatLineHandler::~StatLineHandler
+   } // StatLineHandler::~StatLineHandler
 
    /// Sets the object in which the final statistic should be stored.
    /// @param  fls  Pointer to the file line statistic object.
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    void setEndStat( FileLineStat* fls)
    {
       mpFileLineStat = fls;
-   } // end StatLineHandler::setEndStat
+   } // StatLineHandler::setEndStat
 
    /// Returns the number of lines read.
    /// @return  Number of lines read.
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    int linesRead() const
    {
       return mLinesRead;
@@ -101,26 +111,26 @@ public:
 
    /// Returns the number of lines that were ignored by the filter.
    /// @return  Number of lines ignored by the filter.
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    int linesFiltered() const
    {
       return mLinesFiltered;
-   } // end StatLineHandler::linesFiltered
+   } // StatLineHandler::linesFiltered
 
    /// Returns the number of lines that were actually processed, i.e. returned
    /// by the iterator to the application.
    /// @return  .
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    int linesProcessed() const
    {
       return mLinesProcessed;
-   } // end StatLineHandler::linesProcessed
+   } // StatLineHandler::linesProcessed
 
 protected:
    /// Increments the counter depending on the type of the call point.
    /// @param[in]  lhcp  The call point from which this methd was called.
    /// @param[in]        The current line, ignored.
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    void handleLine( LineHandlerCallPoints lhcp, const std::string&) 
    {
       switch (lhcp)
@@ -130,7 +140,7 @@ protected:
       case LineHandlerCallPoints::lineProcessed:  ++mLinesProcessed;  break;
       default:                                    assert( false);     break;
       } // end switch
-   } // end StatLineHandler::handleLine
+   } // StatLineHandler::handleLine
 
 private:
    /// Counter how many lines were read from the file.
@@ -154,5 +164,5 @@ private:
 #endif   // CELMA_COMMON_DETAIL_LINE_HANDLER_POLICY_HPP
 
 
-// ===================  END OF line_handler_policy.hpp  ===================
+// =====================  END OF line_handler_policy.hpp  =====================
 

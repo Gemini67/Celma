@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,34 +27,34 @@ namespace celma { namespace common { namespace detail {
 
 
 /// Default filter policy: Does not filter anything.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 class NoFilter
 {
 protected:
    /// Policy method, does not do anything.
    /// @return  Always \c false.
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    bool filter( const std::string&) const
    {
       return false;
-   } // end NoFilter::filter
+   } // NoFilter::filter
 
 }; // NoFilter
 
 
 /// Empty line filter policy: Does filter out empty lines.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 class EmptyLineFilter
 {
 protected:
    /// Policy method. Filters out empty lines.
    /// @param[in]  line  The line to check.
    /// @return  \c true if the line is empty.
-   /// @since  0.3, 13.04.2016
+   /// @since  x.y.z, 13.04.2016
    bool filter( const std::string& line) const
    {
       return line.empty();
-   } // end EmptyLineFilter::filter
+   } // EmptyLineFilter::filter
 
 }; // EmptyLineFilter
 
