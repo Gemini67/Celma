@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v0.14.2
+   \mainpage  CELMA v0.14.4
 
    \tableofcontents
 
@@ -44,6 +44,7 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Logging, improvements on argument handler library, ...
+     0.14.4 | 2017-06-20        | Adapted tests of extractFuncName() to succeed with different compiler versions.
      0.14.2 | 2017-05-12        | Added support for 'command' arguments: Argument that mark the start of an argument list for another object/tool.
      0.14.1 | 2017-05-09        | Fixed handling of arguments with optional values.
      0.14.0 | 2017-03-16        | Added ValueHandler class.
