@@ -88,7 +88,8 @@ ArgumentKey::ArgumentKey( const string& arg_spec) noexcept( false):
          throw invalid_argument( "too many leading dashes in argument specification");
 
       // only one type of argument specification given
-      if (arg_spec.length() - ignore_leading_dashes == 1)
+      if ((arg_spec.length() - ignore_leading_dashes == 1) &&
+          (ignore_leading_dashes < 2))
          mChar = arg_spec[ ignore_leading_dashes];
       else
          mWord = arg_spec.substr( ignore_leading_dashes);
@@ -139,7 +140,12 @@ bool ArgumentKey::operator ==( const ArgumentKey& other) const
    if (!mWord.empty() && !other.mWord.empty())
       return mWord == other.mWord;
 
-   // actually we could not really veryify if it is the same argument ...
+   // positional arguments have all fields cleared
+   if ((mChar == '\0') && (other.mChar == '\0') &&
+       mWord.empty() && other.mWord.empty())
+      return true;
+
+   // actually we could not really verify if it is the same argument ...
    return false;
 } // ArgumentKey::operator ==
 
@@ -159,7 +165,7 @@ bool ArgumentKey::operator <( const ArgumentKey& other) const
    if (!mWord.empty() && !other.mWord.empty())
       return mWord < other.mWord;
 
-   // actually we could not really veryify if it is the same argument ...
+   // actually we could not really verify if it is the same argument ...
    return false;
 } // ArgumentKey::operator <
 
@@ -188,21 +194,6 @@ bool ArgumentKey::mismatch( const ArgumentKey& other) const
 
 
 
-/// Returns the key in string format.
-/// @return  The key of this object in string format.
-/// @since  0.2, 06.04.2016
-string ArgumentKey::str() const
-{
-
-   std::ostringstream  oss;
-
-
-   oss << *this;
-   return oss.str();
-} // ArgumentKey::str
-
-
-
 /// Prints the short and/or the long specifier of the key.<br>
 /// The string is created from the data extracted in the constructor, i.e. it
 /// may differ to this original string regarding the order of the arguments.
@@ -215,12 +206,12 @@ std::ostream& operator <<( std::ostream& os, const ArgumentKey& ak)
 
    if (ak.mChar != '\0')
    {
-      os << ak.mChar;
+      os << "-" << ak.mChar;
       if (ak.mWord.length() > 0)
-         os << "," << ak.mWord;
+         os << "," << "--" << ak.mWord;
    } else
    {
-      os << ak.mWord;
+      os << "--" << ak.mWord;
    } // end if
 
    return os;

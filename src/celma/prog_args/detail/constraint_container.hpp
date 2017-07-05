@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include "celma/prog_args/detail/argument_key.hpp"
+#include "celma/prog_args/detail/storage.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -45,22 +46,26 @@ class ConstraintContainer
 {
 public:
    /// List of supported constraints:
-   enum Constraint
+   enum class Constraint
    {
-      cUnknown,    //!< Initialisation value.
-      cRequired,   //!< Required argument(s).
-      cExcluded,   //!< Excluded (forbidden) argument(s).
-      cAllOf,
-      cAnyOf,
-      cOneOf
+      unknown,    //!< Initialisation value.
+      required,   //!< Required argument(s).
+      excluded,   //!< Excluded (forbidden) argument(s).
+      allOf,      //!< If one of a group of arguments is used, all arguments of
+                  //!< this group must be used.
+      anyOf,      //!< Any argument of a group of arguments may be used, but at
+                  //!< least one of them.
+      oneOf       //!< Exactly one argument of a group of argumnts must be used.
    };
 
    /// Sometimes need acceess to the current constraint container from other
    /// classes/methods. This member variable points to it.
    static ConstraintContainer*  mpCurrentConstraints;
 
-   /// Default constructor is just fine.
-   ConstraintContainer() = default;
+   /// Constructor.
+   /// @since  x.y.z, 26.06.2017
+   ConstraintContainer();
+
    /// Default destructor is just fine.
    ~ConstraintContainer() = default;
 
@@ -95,35 +100,19 @@ public:
    /// @since  0.2, 10.04.2016
    void checkRequired();
 
-private:
+protected:
    /// Helper class to store a (list of) argument(s).
    /// @since  0.2, 10.04.2016
    class Data
    {
    public:
       /// Constructor.
-      /// @param[in]  arg_spec  The argument specification, short and/or long
-      ///                       argument.
-      /// @param[in]  c         The type of the constraint.
-      /// @param[in]  origin    The origin (== argument) of this constraint.
+      /// @param[in]  c       The type of the constraint.
+      /// @param[in]  origin  The origin (== argument) of this constraint.
       /// @since  0.2, 10.04.2016
-      explicit Data( const std::string& arg_spec, Constraint c = cUnknown,
+      explicit Data( Constraint c = Constraint::unknown,
                      const std::string& origin = "");
 
-      /// Returns if either the short or long argument match.
-      /// @param[in]  other  The other object to compare against.
-      /// @return  \c true if the short or long argument match.
-      /// @since  0.2, 10.04.2016
-      bool operator ==( const Data& other) const;
-
-      /// Returns the argument specification as set on the constructor (rebuilt,
-      /// actually).
-      /// @return  The complete argument specification.
-      /// @since  0.2, 10.04.2016
-      std::string spec() const;
-
-      /// The short (char) argument.
-      ArgumentKey  mArgKeys;
       /// The type of the constraint.
       Constraint   mConstraint;
       /// The argument that set this constraint. Used for error reporting only.
@@ -131,11 +120,8 @@ private:
 
    }; // ConstraintContainer::Data
 
-   /// The type of the container in which the data is stored.
-   typedef std::vector< Data>  DataCont;
-
    /// The container with the current constraints.
-   DataCont  mConstraints;
+   Storage< Data>  mConstraints;
 
 }; // ConstraintContainer
 

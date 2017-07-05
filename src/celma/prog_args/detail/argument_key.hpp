@@ -70,11 +70,6 @@ public:
    /// @since  0.2, 06.04.2016
    bool mismatch( const ArgumentKey& other) const;
 
-   /// Returns the key in string format.
-   /// @return  The key of this object in string format.
-   /// @since  0.2, 06.04.2016
-   std::string str() const;
-
    /// Returns if the character argument is set.
    /// @return \c true if the character argument is set.
    /// @since  0.14.0, 16.03.2017
