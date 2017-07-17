@@ -63,13 +63,7 @@ class StatLineHandler
 public:
    /// 
    /// @since  x.y.z, 13.04.2016
-   StatLineHandler():
-      mLinesRead( 0),
-      mLinesFiltered( 0),
-      mLinesProcessed( 0),
-      mpFileLineStat( nullptr)
-   {
-   } // StatLineHandler::StatLineHandler
+   StatLineHandler() = default;
 
    /// 
    /// @since  x.y.z, 16.05.2017
@@ -144,13 +138,13 @@ protected:
 
 private:
    /// Counter how many lines were read from the file.
-   int            mLinesRead;
+   int            mLinesRead = 0;
    /// Counter how many lines were filtered.
-   int            mLinesFiltered;
+   int            mLinesFiltered = 0;
    /// Counter how many lines were processed.
-   int            mLinesProcessed;
+   int            mLinesProcessed = 0;
    /// Pointer to the object to store the final values in.
-   FileLineStat*  mpFileLineStat;
+   FileLineStat*  mpFileLineStat = nullptr;
 
 }; // StatLineHandler
 

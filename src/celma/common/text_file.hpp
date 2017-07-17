@@ -68,31 +68,31 @@ public:
    void set( const std::string& fname) noexcept( false);
 
    /// Type of the iterator.
-   typedef detail::StreamLineIterator< FilterPolicy, LineHandlerPolicy>  const_iterator;
+   using const_iterator = detail::StreamLineIterator< FilterPolicy, LineHandlerPolicy>;
 
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
    /// @since  x.y.z, 13.04.2016
-   const_iterator begin() const;
+   const_iterator begin() const noexcept( false);
 
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
    /// @since  x.y.z, 16.05.2017
-   const_iterator cbegin() const;
+   const_iterator cbegin() const noexcept( false);
 
    /// Returns the iterator pointing to the end of the file.
    /// @return  Iterator set on the end of the file.
    /// @since  x.y.z, 13.04.2016
-   const_iterator end() const;
+   const_iterator end() const noexcept( false);
 
    /// Returns the iterator pointing to the end of the file.
    /// @return  Iterator set on the end of the file.
    /// @since  x.y.z, 16.05.20178
-   const_iterator cend() const;
+   const_iterator cend() const noexcept( false);
 
 private:
    /// The file to read from.
-   const std::string  mFilename;
+   std::string  mFilename;
 
 }; // TextFile< FilterPolicy, LineHandlerPolicy>
 
@@ -112,12 +112,16 @@ template< typename FilterPolicy, typename LineHandlerPolicy>
    TextFile< FilterPolicy, LineHandlerPolicy>::TextFile( const std::string& fname):
       mFilename( fname)
 {
+   if (fname.empty())
+      throw std::runtime_error( "file name may not be empty");
 } // TextFile< FilterPolicy, LineHandlerPolicy>::TextFile
 
 
 template< typename FilterPolicy, typename LineHandlerPolicy>
    void TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::set( const std::string& fname)
 {
+   if (fname.empty())
+      throw std::runtime_error( "file name may not be empty");
    mFilename = fname;
 } // TextFile< FilterPolicy, LineHandlerPolicy>::set
 

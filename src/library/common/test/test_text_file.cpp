@@ -40,7 +40,7 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( FilterStatTextFile::const_iterator);
 
 namespace {
 
-const int  NumLines = 165;
+const int  NumLines = 169;
 const int  NumEmptyLines = 46;
 const int  NumTextLines = NumLines - NumEmptyLines;
 
@@ -49,8 +49,32 @@ const char* const  File = "/home/rene/projects/Celma/textfile/src/celma/common/t
 } // namespace
 
 
+
+/// Test some error conditions.
+/// @since  x.y.z, 13.06.2017
+BOOST_AUTO_TEST_CASE( test_error_handling)
+{
+
+   {
+      TextFile<>  ctf;
+      BOOST_REQUIRE_THROW( ctf.begin(), std::runtime_error);
+   } // end scope
+
+   {
+      BOOST_REQUIRE_THROW( TextFile<>( ""), std::runtime_error);
+   } // end scope
+
+   {
+      TextFile<>  ctf( "there is no such file");
+      BOOST_REQUIRE_THROW( ctf.begin(), std::runtime_error);
+   } // end scope
+
+} // test_error_handling
+
+
+
 /// Use the class with the default policies: no filter, no line handler.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 BOOST_AUTO_TEST_CASE( default_policies)
 {
 
@@ -73,8 +97,34 @@ BOOST_AUTO_TEST_CASE( default_policies)
 
 
 
+/// Use the class with the default policies: no filter, no line handler.
+/// @since  x.y.z, 13.06.2017
+BOOST_AUTO_TEST_CASE( default_policies_set)
+{
+
+   TextFile<>  ctf;
+   int         num_lines = 0;
+   int         num_empty_lines = 0;
+
+
+   ctf.set( File);
+
+   for (auto const& line : ctf)
+   {
+      if (line.empty())
+         ++num_empty_lines;
+      ++num_lines;
+   } // end for
+
+   BOOST_REQUIRE_EQUAL( num_lines, NumLines);
+   BOOST_REQUIRE_EQUAL( num_empty_lines, NumEmptyLines);
+
+} // default_policies_set
+
+
+
 /// Read the text file but ignore empty lines.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 BOOST_AUTO_TEST_CASE( no_empty_lines)
 {
 
@@ -98,7 +148,7 @@ BOOST_AUTO_TEST_CASE( no_empty_lines)
 
 
 /// Read all lines, now also create a statistic.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 BOOST_AUTO_TEST_CASE( statistics_only)
 {
 
@@ -120,7 +170,7 @@ BOOST_AUTO_TEST_CASE( statistics_only)
 
 
 /// Read file, filter empty lines, create statistic.
-/// @since  0.3, 13.04.2016
+/// @since  x.y.z, 13.04.2016
 BOOST_AUTO_TEST_CASE( statistics_no_empty_lines)
 {
 
@@ -185,8 +235,9 @@ BOOST_AUTO_TEST_CASE( copy_default_policies)
 
 
 
-/// Create a copy of the iterator with policies Read file, filter empty lines, create statistic.
-/// @since  0.3, 13.04.2016
+/// Create a copy of the iterator with policies Read file, filter empty lines,
+/// create statistic.
+/// @since  x.y.z, 13.04.2016
 BOOST_AUTO_TEST_CASE( copy_statistics_no_empty_lines)
 {
 

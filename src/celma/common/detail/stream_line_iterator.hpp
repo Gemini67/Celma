@@ -20,6 +20,7 @@
 
 
 #include <fstream>
+#include <stdexcept>
 #include <string>
 #include "celma/common/detail/line_handler_call_points.hpp"
 
@@ -40,17 +41,19 @@ template< typename F, typename H> class StreamLineIterator:
    using H::handleLine;
 
 public:
+   using iterator_category = std::forward_iterator_tag;
+
    /// Constructor.
    /// @param[in]  source  The source == file name to read from.
    /// @param[in]  atEnd   Set to \c true for end iterator.
    /// @since  x.y.z, 16.05.2017  (changed parameter type of source)
    /// @since  13.04.2016
-   StreamLineIterator( const std::string& source, bool atEnd = false);
+   StreamLineIterator( const std::string& source, bool atEnd = false) noexcept( false);
 
    /// Copy constructor.
    /// @param[in]  other  The other object to copy the data from.
    /// @since  x.y.z, 16.05.2017
-   StreamLineIterator( const StreamLineIterator& other);
+   StreamLineIterator( const StreamLineIterator& other) noexcept( false);
 
    /// Equality comparison operator.
    /// @param[in]  other  The other iterator object to compare against.
@@ -114,6 +117,10 @@ template< typename F, typename H>
          mCurrentLine(),
          mLineNbr( -1)
 {
+   if (mSourceFile.empty())
+      throw std::runtime_error( "need to specify a file name");
+   if (!mStream.is_open())
+      throw std::runtime_error( "could not open file '" + mSourceFile + "'");
    if (!mAtEnd)
       operator ++();
 } // StreamLineIterator< F, H>::StreamLineIterator
@@ -135,6 +142,8 @@ template< typename F, typename H>
       // ouch
       auto&  unconst_stream = const_cast< StreamLineIterator&>( other);
       mStream.open( mSourceFile);
+      if (!mStream.is_open())
+         throw std::runtime_error( "could not open file '" + mSourceFile + "'");
       mStream.seekg( unconst_stream.mStream.tellg());
    } // end if
    
