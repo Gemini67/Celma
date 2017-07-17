@@ -1,11 +1,12 @@
 
 PATH := $(shell pwd)/scripts:$(PATH)
+CPUS := $(shell lscpu -p | fgrep -v '\#' | wc -l)
 
 
 all:	debug release release-dbg
 
 debug:
-	@+if [ ! -d build/debug ]; then \
+	+if [ ! -d build/debug ]; then \
 	   mkdir -p build/debug; \
 	   cd build/debug; \
 	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
@@ -15,7 +16,7 @@ debug:
 	   cd -; \
 	fi; \
 	cd build/debug; \
-	make -j7; \
+	make -j${CPUS}; \
 	make install
 
 release:
@@ -29,7 +30,7 @@ release:
 	   cd -; \
 	fi; \
 	cd build/release; \
-	make -j7; \
+	make -j${CPUS}; \
 	make install
 
 release-dbg:
@@ -43,7 +44,7 @@ release-dbg:
 	   cd -; \
 	fi; \
 	cd build/release-dbg; \
-	make -j7; \
+	make -j${CPUS}; \
 	make install
 
 analyze:
@@ -60,7 +61,7 @@ analyze:
 	   cd -; \
 	fi; \
 	cd build/analyze; \
-	make -j7;
+	make -j${CPUS};
 
 test:	test-release test-debug
 
@@ -95,6 +96,6 @@ coverage:
 	   cd -; \
 	fi; \
 	cd build/coverage; \
-	/usr/bin/time --format="-- Build Duration: %E" make -j7 install; \
+	/usr/bin/time --format="-- Build Duration: %E" make -j${CPUS} install; \
 	/usr/bin/time --format="-- Build Duration: %E" make Celma_coverage
 

@@ -59,22 +59,22 @@ namespace celma { namespace format {
    }
 
 #define  SIGNED_FUNCTIONS( b, f) \
-   FUNCTION_ENABLED( b, true, f); \
+   FUNCTION_ENABLED( b, true, f) \
    BUFFER_FUNCTION_ENABLED( b, true, f)
 
 #define  UNSIGNED_FUNCTIONS( b, f) \
-   FUNCTION_ENABLED( b, false, f); \
+   FUNCTION_ENABLED( b, false, f) \
    BUFFER_FUNCTION_ENABLED( b, false, f)
 
 
-SIGNED_FUNCTIONS( 1, int8toString);
-UNSIGNED_FUNCTIONS( 1, uint8toString);
-SIGNED_FUNCTIONS( 2, int16toString);
-UNSIGNED_FUNCTIONS( 2, uint16toString);
-SIGNED_FUNCTIONS( 4, int32toString);
-UNSIGNED_FUNCTIONS( 4, uint32toString);
-SIGNED_FUNCTIONS( 8, int64toString);
-UNSIGNED_FUNCTIONS( 8, uint64toString);
+SIGNED_FUNCTIONS( 1, int8toString)
+UNSIGNED_FUNCTIONS( 1, uint8toString)
+SIGNED_FUNCTIONS( 2, int16toString)
+UNSIGNED_FUNCTIONS( 2, uint16toString)
+SIGNED_FUNCTIONS( 4, int32toString)
+UNSIGNED_FUNCTIONS( 4, uint32toString)
+SIGNED_FUNCTIONS( 8, int64toString)
+UNSIGNED_FUNCTIONS( 8, uint64toString)
 
 
 #undef  SIGNED_FUNCTIONS
