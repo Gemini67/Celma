@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -45,20 +45,10 @@ template< typename F> void addStandardArgument( const std::string& argString,
                                                 const char* std_grp_name = StandardArgsGroup)
 {
 
-   auto  ah( Groups::instance().getHandler( std_grp_name));
+   auto  ah = Groups::instance().getArgHandler( std_grp_name);
 
 
-   if (ah.get() == nullptr)
-   {
-      // argument handler not created yet
-      ah.reset( new Handler( 0));
-      ah->addArgument( argString, fun, func_name, desc);
-      Groups::instance().addArgHandler( std_grp_name, ah);
-   } else
-   {
-      // add argument to existing standard argument handler
-      ah->addArgument( argString, fun, func_name, desc);
-   } // end if
+   ah->addArgument( argString, fun, func_name, desc);
 
 } // addStandardArgument
 
@@ -84,20 +74,10 @@ template< typename F> void addStandardArgument( const std::string& argString,
                                                 const char* std_grp_name = StandardArgsGroup)
 {
 
-   auto  ah( Groups::instance().getHandler( std_grp_name));
+   auto  ah = Groups::instance().getArgHandler( std_grp_name);
 
 
-   if (ah.get() == nullptr)
-   {
-      // argument handler not created yet
-      ah.reset( new Handler( 0));
-      ah->addArgument( argString, fun, func_name, true, desc);
-      Groups::instance().addArgHandler( std_grp_name, ah);
-   } else
-   {
-      // add argument to existing standard argument handler
-      ah->addArgument( argString, fun, func_name, true, desc);
-   } // end if
+   ah->addArgument( argString, fun, func_name, true, desc);
 
 } // addStandardArgument
 

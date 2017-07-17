@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -67,11 +67,10 @@ int main( int argc, char* argv[])
 static void do_arguments_first( int argc, char* argv[])
 {
 
-   celma::prog_args::Groups::SharedArgHndl  ah( new celma::prog_args::Handler( celma::prog_args::Handler::AllHelp));
-
    try
    {
-      celma::prog_args::Groups::instance().addArgHandler( "Program Arguments:", ah);
+      auto  ah = celma::prog_args::Groups::instance().getArgHandler( "Program Arguments:",
+                                                                     celma::prog_args::Handler::AllHelp);
       celma::log::detail::addLogStandardArgs();
 
       if (argc == 1)

@@ -23,6 +23,7 @@
 #include <string>
 #include "celma/common/exception_base.hpp"
 #include "celma/log/detail/log_defs.hpp"
+#include "celma/log/detail/log_msg_property.hpp"
 
 
 namespace celma { namespace log { namespace detail {
@@ -68,6 +69,18 @@ public:
    /// @since  0.3, 19.06.2016
    void setText( const std::string& text);
 
+   /// 
+   /// @param[in]  property_name   .
+   /// @param[in]  property_value  .
+   /// @since  0.11, 11.12.2016
+   void setCustomProperty( const std::string& property_name,
+                           const std::string& property_value);
+
+   /// Returns the timestamp when the log message was created.
+   /// @return  The timestamp for the log message.
+   /// @since  0.11, 11.12.2016
+   time_t getTimestamp() const;
+
    /// Returns the process id.
    /// @return  The id of the process by which the log message was created.
    /// @since  0.3, 19.06.2016
@@ -109,25 +122,33 @@ public:
    /// @since  0.3, 19.06.2016
    const std::string& getText() const;
 
+   /// Returns the value of a custom property.
+   /// @param[in]  property_name  The name of the property to return the value of.
+   /// @return  The value of the property, empty string if the property is unknown.
+   /// @since  0.11, 12.12.2016
+   const std::string getPropertyValue( const std::string& property_name) const;
+
 private:
    /// Time stamp when the log message (i.e., this object) was created.
-   time_t        mTimestamp;
+   time_t          mTimestamp;
    /// The id of the process that created the log message.
-   pid_t         mProcessId;
+   pid_t           mProcessId;
    /// The name of the source file.
-   std::string   mFileName;
+   std::string     mFileName;
    /// The name of the function.
-   std::string   mFunctionName;
+   std::string     mFunctionName;
    /// The line number in the source file.
-   int           mLineNbr;
+   int             mLineNbr;
    /// The classification of the log message.
-   LogClass      mClass;
+   LogClass        mClass;
    /// The severity level of the log message.
-   LogLevel      mLevel;
+   LogLevel        mLevel;
    /// The error number for this log message.
-   int           mErrNbr;
+   int             mErrNbr;
    /// The text of the log message.
-   std::string   mText;
+   std::string     mText;
+   /// Stores custom-set properties of the log message.
+   LogMsgProperty  mCustomProperty;
 
 }; // LogMsg
 
@@ -136,76 +157,89 @@ private:
 // ===============
 
 
+inline time_t LogMsg::getTimestamp() const
+{
+   return mTimestamp;
+} // LogMsg::getTimestamp
+
+
 inline pid_t LogMsg::getProcessId() const
 {
    return mProcessId;
-} // end LogMsg::getProcessId
+} // LogMsg::getProcessId
 
 
 inline const std::string& LogMsg::getFileName() const
 {
    return mFileName;
-} // end LogMsg::getFileName
+} // LogMsg::getFileName
 
 
 inline const std::string& LogMsg::getFunctionName() const
 {
    return mFunctionName;
-} // end LogMsg::getFunctionName
+} // LogMsg::getFunctionName
 
 
 inline int LogMsg::getLineNbr() const
 {
    return mLineNbr;
-} // end LogMsg::getLineNbr
+} // LogMsg::getLineNbr
 
 
 inline LogClass LogMsg::getClass() const
 {
    return mClass;
-} // end LogMsg::getClass
+} // LogMsg::getClass
 
 
 inline LogLevel LogMsg::getLevel() const
 {
    return mLevel;
-} // end LogMsg::getLevel
+} // LogMsg::getLevel
 
 
 inline int LogMsg::getErrorNbr() const
 {
    return mErrNbr;
-} // end LogMsg::getErrorNbr
+} // LogMsg::getErrorNbr
 
 
 inline void LogMsg::setClass( LogClass lc)
 {
    mClass = lc;
-} // end LogMsg::setClass
+} // LogMsg::setClass
 
 
 inline void LogMsg::setLevel( LogLevel ll)
 {
    mLevel = ll;
-} // end LogMsg::setLevel
+} // LogMsg::setLevel
 
 
 inline void LogMsg::setErrorNumber( int error_nbr)
 {
    mErrNbr = error_nbr;
-} // end LogMsg::setErrorNumber
+} // LogMsg::setErrorNumber
 
 
 inline void LogMsg::setText( const std::string& text)
 {
    mText = text;
-} // end LogMsg::setText
+} // LogMsg::setText
 
 
 inline const std::string& LogMsg::getText() const
 {
    return mText;
-} // end LogMsg::getText
+} // LogMsg::getText
+
+
+inline const std::string
+   LogMsg::getPropertyValue( const std::string& property_name) const
+{
+   return mCustomProperty.getPropertyValue( property_name);
+} // LogMsg::getPropertyValue
 
 
 // macros

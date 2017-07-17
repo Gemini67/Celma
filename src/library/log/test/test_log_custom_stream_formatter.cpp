@@ -130,4 +130,4 @@ BOOST_FIXTURE_TEST_CASE( custom_log_format, TestCaseLogDestStream)
 
 
 
-// =======================  END OF test_log_printf.cpp  =======================
+// ===============  END OF test_log_custom_stream_formatter.cpp  ===============

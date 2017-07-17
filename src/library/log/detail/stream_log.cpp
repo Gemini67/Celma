@@ -45,6 +45,7 @@ StreamLog::StreamLog( id_t log_ids, const std::string filename,
    mLogName(),
    mErrNbrNext( false),
    mStrStream(),
+   mPropertyName(),
    mLogMsg( filename, function_name, line_nbr)
 {
 
@@ -120,6 +121,34 @@ void StreamLog::storeException( const common::ExceptionBase& eb)
    mStrStream << eb.text();
 
 } // end StreamLog::storeException
+
+
+
+bool StreamLog::hasPropertyName() const
+{
+
+   return !mPropertyName.empty();
+} // 
+
+
+
+void StreamLog::storePropertyName( const std::string& property_name)
+{
+
+   mPropertyName = property_name;
+
+} // StreamLog::storePropertyName
+
+
+
+void StreamLog::storeProperty( const std::string& property_value)
+{
+
+   mLogMsg.setCustomProperty( mPropertyName, property_value);
+
+   mPropertyName.clear();
+
+} // StreamLog::storeProperty
 
 
 

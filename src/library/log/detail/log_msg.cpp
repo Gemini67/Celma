@@ -49,12 +49,13 @@ LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_
    mClass( LogClass::undefined),
    mLevel( LogLevel::undefined),
    mErrNbr( 0),
-   mText()
+   mText(),
+   mCustomProperty()
 {
 
    common::remove_to_if_last_incl( mFileName, '/');
 
-} // end LogMsg::LogMsg
+} // LogMsg::LogMsg
 
 
 
@@ -69,8 +70,19 @@ void LogMsg::assign( const common::ExceptionBase& eb)
    mFunctionName = eb.functionName();
    mLineNbr      = eb.lineNbr();
    // text will be assigned separately
+   /// @todo  like where?
 
-} // end LogMsg::assign
+} // LogMsg::assign
+
+
+
+void LogMsg::setCustomProperty( const std::string& property_name,
+                                const std::string& property_value)
+{
+
+   mCustomProperty.addProperty( property_name, property_value);
+
+} // LogMsg::setCustomProperty
 
 
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -65,7 +65,7 @@ int main( int argc, char* argv[])
    LOG( log_trace) << "Still, this message should not appear anywhere.";
 
    exit( EXIT_SUCCESS);
-} // end main
+} // main
 
 
 
@@ -79,7 +79,7 @@ static void do_arguments_first()
 
    try
    {
-      celma::prog_args::Groups::instance().addArgHandler( "Program Arguments:", ah);
+      celma::prog_args::Groups::instance().getArgHandler( "Program Arguments:");
       celma::log::detail::addLogStandardArgs();
    } catch (const std::exception& e)
    {
@@ -87,7 +87,7 @@ static void do_arguments_first()
       ::exit( EXIT_FAILURE);
    } // end try
 
-} // end do_arguments_first
+} // do_arguments_first
 
 
 
@@ -114,7 +114,7 @@ static void do_arguments_again( int argc, char* argv[])
       ::exit( EXIT_FAILURE);
    } // end try
 
-} // end do_arguments_again
+} // do_arguments_again
 
 
 

@@ -54,7 +54,7 @@ class LogMsg;
 class Logging: public common::Singleton< Logging>
 {
 public:
-   friend class common::detail::StaticSingletonCreator< Logging>;
+   friend class common::Singleton< Logging>;
 
    /// Checks if there already exists a log with the specified name. If not, a
    /// new log is created.

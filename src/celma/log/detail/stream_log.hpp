@@ -23,6 +23,7 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 #include "celma/common/celma_exception.hpp"
+#include "celma/log/detail/custom_property.hpp"
 #include "celma/log/detail/log_defs.hpp"
 #include "celma/log/detail/log_msg.hpp"
 
@@ -162,6 +163,17 @@ public:
       return so;
    } // end operator <<
 
+   /// 
+   /// @param[in]  so  .
+   /// @param[in]  cp  .
+   /// @return  .
+   /// @since  0.11, 12.12.2016
+   friend StreamLog& operator <<( StreamLog& so, const customProperty& cp)
+   {
+      so.storePropertyName( cp.name());
+      return so;
+   } // end operator <<
+
    /// Input operator to add 'anything' to the internal stringstream.
    /// @tparam     T      The type of the value to add.
    /// @param[in]  so     The StreamLog to append the value.
@@ -175,6 +187,11 @@ public:
       {
          so.mLogMsg.setErrorNumber( boost::lexical_cast< int>( value));
          so.mErrNbrNext = false;
+      } else if (so.hasPropertyName())
+      {
+         std::ostringstream  oss;
+         oss << value;
+         so.storeProperty( oss.str());
       } else
       {
          so.mStrStream << value;
@@ -232,6 +249,21 @@ private:
    /// @since  0.3, 19.06.2016
    void storeException( const common::ExceptionBase& eb);
 
+   /// 
+   /// @return  .
+   /// @since  0.11, 12.12.2016
+   bool hasPropertyName() const;
+
+   /// 
+   /// @param[in]  property_name  .
+   /// @since  0.11, 12.12.2016
+   void storePropertyName( const std::string& property_name);
+
+   /// 
+   /// @param[in]  property_value  .
+   /// @since  0.11, 12.12.2016
+   void storeProperty( const std::string& property_value);
+
    /// The set of log ids to which the log message should be sent.
    const id_t          mLogIds;
    /// The name of the log to sent the log message to (if no log ids are set).
@@ -241,6 +273,9 @@ private:
    bool                mErrNbrNext;
    /// Internal stringstream object used to build the text of the log message.
    std::ostringstream  mStrStream;
+   /// Name of a custom property, when set the next value is stored as property
+   /// value.
+   std::string         mPropertyName;
    /// The log message we are about to fill with data.
    LogMsg              mLogMsg;
 
@@ -262,7 +297,7 @@ inline StreamLog& clear( StreamLog& in)
 {
    in.clear();
    return in;
-} // end clear
+} // clear
 
 
 /// This method is normally not called directly but used as a manipulator for
@@ -276,7 +311,7 @@ inline StreamLog& errnbr( StreamLog& in)
 {
    in.errnbr();
    return in;
-} // end errnbr
+} // errnbr
 
 
 } // namespace detail
