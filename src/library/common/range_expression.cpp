@@ -186,5 +186,5 @@ void RangeExpression::readNumber( int64_t& value)
 } // namespace celma
 
 
-// =========================  END OF range_expression.cpp  =========================
+// =======================  END OF range_expression.cpp  =======================
 
