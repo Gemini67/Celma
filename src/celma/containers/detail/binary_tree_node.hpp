@@ -120,13 +120,70 @@ public:
    }
 
    /// 
+   /// @return  Pointer to the node to use as new root, if the root node was
+   ///          deleted.
+   /// @since  x.y.z, 27.04.2017
+   BinaryTreeNode* detach( BinaryTreeNode* next_greater)
+   {
+
+      // test if this node has any child nodes
+      if (!left)
+      {
+         if (!right)
+         {
+            if (parent != nullptr)
+               parent->releaseChild( this);
+            // no sub-tree at all: can be deleted right away
+            return nullptr;
+         } // end if
+
+         // no left sub-tree: attach my right to my parent (if I have one)
+         if (parent == nullptr)
+            return right.release();
+
+         parent->releaseReplaceChild( this, right.release());
+         return nullptr;
+      } // end if
+
+      if (!right)
+      {
+         // no right sub-tree: attach my left to my parent (if I have one)
+         if (parent == nullptr)
+            return left.release();
+
+         parent->releaseReplaceChild( this, left.release());
+         return nullptr;
+      } // end if
+
+      // both left and right sub-trees exist
+      // replace myself with my next greater
+
+      // next greater cannot be NULL, since right was not NULL
+      // next greater must be a leaf, so no detach() necessary
+      if (next_greater->parent != nullptr)
+         parent->releaseChild( this);
+
+      next_greater->left.reset( left.release());
+      next_greater->right.reset( right.release());
+
+      if (parent != nullptr)
+      {
+         parent->releaseReplaceChild( this, next_greater);
+         return nullptr;
+      } // end if
+
+      next_greater->parent = nullptr;
+      return next_greater;
+   } // 
+   
+   /// 
    /// @param[in]  old_child  .
    /// @param[in]  new_child  .
    /// @since  x.y.z, 24.04.2017
    void replaceChild( BinaryTreeNode* old_child, BinaryTreeNode* new_child)
    {
       // no right sub-tree: left moves up
-      if (left == old_child)
+      if (left.get() == old_child)
          left.reset( new_child);
       else
          right.reset( new_child);
@@ -139,7 +196,7 @@ public:
    void releaseReplaceChild( BinaryTreeNode* old_child, BinaryTreeNode* new_child)
    {
       // no right sub-tree: left moves up
-      if (left == old_child)
+      if (left.get() == old_child)
       {
          left.release();
          left.reset( new_child);
@@ -155,7 +212,7 @@ public:
    /// @since  x.y.z, 24.04.2017
    void releaseChild( BinaryTreeNode* child_node)
    {
-      if (left == child_node)
+      if (left.get() == child_node)
          left.release();
       else
          right.release();

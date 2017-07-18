@@ -139,6 +139,8 @@ BOOST_AUTO_TEST_CASE( single_entry_tests)
       BOOST_REQUIRE( tree_iter == copy.end());
    } // end scope
 
+   copy.erase( copy.begin());
+
 } // single_entry_tests
 
 

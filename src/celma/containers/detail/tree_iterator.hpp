@@ -88,6 +88,14 @@ public:
       return mpNode != other.mpNode;
    }
 
+   /// 
+   /// @return  .
+   /// @since  x.y.z, 27.04.2017
+   operator N*()
+   {
+      return mpNode;
+   } // 
+   
 private:
    N*  mpNode;
 

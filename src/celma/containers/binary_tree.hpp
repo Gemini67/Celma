@@ -117,7 +117,6 @@ private:
    /// @since  x.y.z, 23.04.2017
    node_t* upperBoundNode( const T& value) const;
    template< typename F> void recursiveVisit( node_t* current_node, F fun) const;
-   iterator erase_root();
 
    size_t mCount = 0;
  
@@ -243,51 +242,19 @@ template< typename T>
    if (pos == end())
       return iterator();
 
-   if (mpRoot == pos)
-      return erase_root();
-
-   auto  next = pos;
-   ++next;
-
    auto  node_to_delete = static_cast< node_t*>( pos);
+   auto  next_greater = node_to_delete->increment();
+   auto  new_root = node_to_delete->detach( next_greater);
+
    --mCount;
 
-   if (!node_to_delete->left && !node_to_delete->right)
-   {
-      // delete a leaf
-      node_to_delete->parent.reset();
-      return next;
-   } // end if
-
-   if (!node_to_delete->right)
-   {
-      node_to_delete->parent->replaceChild( node_to_delete, node_to_delete->left.release());
-      return next;
-   } // end if
-
-   if (!node_to_delete->left)
-   {
-      // no left sub-tree: right moves up
-      node_to_delete->parent->replaceChild( node_to_delete, node_to_delete->right.release());
-      return next;
-   } // end if
-
-   // both left and right sub-trees exist
-   // set next greater node as new root
-   auto  next_node = static_cast< node_t*>( next);
-
-   // re-attach right sub-tree, if there is one
-   if (next_node->right)
-      next_node->parent->releaseReplaceChild( next_node, next_node->right.release());
+   if (mpRoot.get() == node_to_delete)
+      mpRoot.reset( new_root);
    else
-      // detach from previous position to make sure the node is not deleted
-      next_node->parent->releaseChild( next_node);
+      // if the node to delete was not the root node, it must be deleted now
+      delete node_to_delete;
 
-   // now we have the new root node, completely detached
-   next_node->left.reset( node_to_delete->left.release());
-   next_node->right.reset( node_to_delete->right.release());
-   next_node->parent = node_to_delete->parent;
-   return next;
+   return iterator( next_greater);
 } // 
 
 
@@ -528,51 +495,6 @@ template< typename T> template< typename F>
    recursiveVisit( current_node->right.get(), fun);
 
 } // BinaryTree< T>::recursiveVisit
-
-
-template< typename T>
-   typename BinaryTree< T>::iterator BinaryTree< T>::erase_root()
-{
-   if (!mpRoot.left && !mpRoot.right)
-   {
-      // last element removed from tree
-      mpRoot.reset();
-      mCount = 0;
-      return iterator();
-   } // end if
-   if (!mpRoot.right)
-   {
-      // no right sub-tree: left is new root
-      mpRoot.reset( mpRoot.left.release());
-      mpRoot.parent = nullptr;
-      --mCount;
-      return iterator();
-   } // end if
-   if (!mpRoot.left)
-   {
-      // no left sub-tree: right is new root
-      mpRoot.reset( mpRoot.right.release());
-      mpRoot.parent = nullptr;
-      --mCount;
-      return iterator( mpRoot);
-   } // end if
-   // both left and right sub-trees exist
-   // set next greater node as new root
-   auto  new_root = mpRoot->increment();
-   // re-attach right sub-tree, if there is one
-   if (new_root->right)
-      new_root->parent.releaseReplaceChild( new_root, new_root->right.release());
-   else
-      // detach from previous position to make sure the node is not deleted
-      new_root->parent.releaseChild( new_root);
-   // now we have the new root node, completely detached
-   new_root->left.reset( mpRoot.left.release());
-   new_root->right.reset( mpRoot.right.release());
-   new_root->parent = nullptr;
-   mpRoot.reset( new_root);
-   --mCount;
-   return iterator( mpRoot);
-} // 
 
 
 } // namespace containers
