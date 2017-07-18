@@ -21,6 +21,7 @@
 
 #include <string>
 #include "celma/appl/detail/env.hpp"
+#include "celma/appl/detail/date_time.hpp"
 #include "celma/appl/detail/fill_char.hpp"
 #include "celma/appl/detail/width.hpp"
 #include "celma/appl/generation_file_definition.hpp"
@@ -32,6 +33,7 @@ namespace celma { namespace appl {
 
 // bring helper classes into the same namespace
 using common::customProperty;
+using detail::date_time;
 using detail::env;
 using detail::fill_char;
 using detail::width;
@@ -43,7 +45,7 @@ using detail::width;
 /// Examples:
 /// - gfc << projectPath << "/log/application_errors.log" << fileNbr( notNull, @@@
 /// .
-/// @since  0.12, 11.01.2017
+/// @since  x.y.z, 11.01.2017
 class GenerationFileCreator
 {
 public:
@@ -62,7 +64,7 @@ public:
    /// @param[in]  c   .
    /// @param[in]  cp  .
    /// @return  .
-   /// @since  0.12, 11.01.2017
+   /// @since  x.y.z, 11.01.2017
    friend GenerationFileCreator& operator <<( GenerationFileCreator& c,
                                               const customProperty& cp)
    {
@@ -91,6 +93,14 @@ public:
       return c;
    } // end operator <<
 
+   /// @since  x.y.z, 22.03.2017
+   friend GenerationFileCreator& operator <<( GenerationFileCreator& c,
+                                              const date_time& dt)
+   {
+      c.setDateTimeFormat( dt.getFormatString());
+      return c;
+   } // end operator <<
+
    friend GenerationFileCreator& operator <<( GenerationFileCreator& c,
                                               const std::string& const_text);
 
@@ -103,6 +113,7 @@ private:
    void setEnv( const std::string& env_var_name);
    void addConstantText( const std::string& const_text);
    void customProperty( const std::string& proprty_name);
+   void setDateTimeFormat( const std::string& format_string);
 
    GenerationFileDefinition&  mDefs;
    int                        mFixedWidth = 0;
@@ -111,19 +122,10 @@ private:
 }; // GenerationFileCreator
 
 
-inline GenerationFileCreator& date_time( GenerationFileCreator& in)
-{
-
-   in.field( GenerationFileDefinition::ElementTypes::dateTime);
-
-   return in;
-} // date_time
-
-
 /// 
 /// @param[in]  in  .
 /// @return  .
-/// @since  6.0, 30.01.2017
+/// @since  x.y.z, 30.01.2017
 inline GenerationFileCreator& project_path( GenerationFileCreator& in)
 {
 
@@ -136,7 +138,7 @@ inline GenerationFileCreator& project_path( GenerationFileCreator& in)
 /// 
 /// @param[in]  in  .
 /// @return  .
-/// @since  x.y, 31.01.2017
+/// @since  x.y.z, 31.01.2017
 inline GenerationFileCreator& file_nbr( GenerationFileCreator& in)
 {
 
@@ -149,7 +151,7 @@ inline GenerationFileCreator& file_nbr( GenerationFileCreator& in)
 /// 
 /// @param[in]  in  .
 /// @return  .
-/// @since  x.y, 31.01.2017
+/// @since  x.y.z, 31.01.2017
 inline GenerationFileCreator& sep( GenerationFileCreator& in)
 {
 

@@ -126,19 +126,39 @@ void GenerationFileCreator::addConstantText( const std::string& const_text)
 void GenerationFileCreator::customProperty( const std::string& property_name)
 {
 
-   GenerationFileDefinition::Field  constant_field;
+   GenerationFileDefinition::Field  custom_field;
 
 
-   constant_field.mType       = GenerationFileDefinition::ElementTypes::customProperty;
-   constant_field.mParamInfo  = property_name;
-   constant_field.mFixedWidth = mFixedWidth;
+   custom_field.mType       = GenerationFileDefinition::ElementTypes::customProperty;
+   custom_field.mParamInfo  = property_name;
+   custom_field.mFixedWidth = mFixedWidth;
 
-   mDefs.mFields.push_back( constant_field);
+   mDefs.mFields.push_back( custom_field);
 
    mFixedWidth = 0;
    mFillChar   = '\0';
 
 } // GenerationFileCreator::customProperty
+
+
+
+void GenerationFileCreator::setDateTimeFormat( const std::string& format_string)
+{
+
+   GenerationFileDefinition::Field  datetime_field;
+
+
+   datetime_field.mType       = GenerationFileDefinition::ElementTypes::dateTime;
+   datetime_field.mParamInfo  = format_string;
+   datetime_field.mFixedWidth = mFixedWidth;
+
+   mDefs.mFields.push_back( datetime_field);
+
+   mFixedWidth = 0;
+   mFillChar   = '\0';
+
+} // GenerationFileCreator::setDateTimeFormat
+
 
 
 
