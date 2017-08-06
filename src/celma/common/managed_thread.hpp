@@ -84,7 +84,8 @@ template< class Function, class... Args>
 
 inline ManagedThread::~ManagedThread()
 {
-   join();
+   if (joinable())
+      join();
 } // ManagedThread::~ManagedThread
 
 
