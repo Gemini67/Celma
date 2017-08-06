@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include "celma/format/text_block_fwd.hpp"
+#include "celma/prog_args/detail/argument_key.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -33,6 +34,8 @@ class TypedArgBase;
 
 /// Provides storage for all arguments (specifyer plus description).<br>
 /// This is used to print the usage.
+/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 class ArgumentDesc
 {
@@ -52,12 +55,11 @@ public:
    ArgumentDesc();
 
    /// Adds an argument.
-   /// @param[in]  argSpec  The string with the arguments (character, long
-   ///                      format).
+   /// @param[in]  key      The short and/or lang argument keys.
    /// @param[in]  argDesc  The string with the description.
    /// @param[in]  argObj   Pointer to the object that handles this argument.
    /// @since  0.2, 10.04.2016
-   void addArgument( const std::string& argSpec, const std::string& argDesc,
+   void addArgument( const ArgumentKey& key, const std::string& argDesc,
                      TypedArgBase* argObj = nullptr);
 
    /// Makes sure that the argument specification length (in #mMaxArgLen) is at
@@ -107,13 +109,15 @@ private:
    {
    public:
       /// Constructor.
-      /// @param[in]  argSpec  The string with the arguments (character, long format).
-      /// @param[in]  argDesc  The string with the description.
-      /// @param[in]  argObj   Pointer to the object that handles this argument.
+      /// @param[in]  arg_key_hyph  The string with the short and/or long
+      ///                           argument keys, including hyphens.
+      /// @param[in]  argDesc       The string with the description.
+      /// @param[in]  argObj        Pointer to the object that handles this
+      ///                           argument.
       /// @since  0.2, 10.04.2016
-      ArgDesc( const std::string& argSpec, const std::string& argDesc,
+      ArgDesc( const std::string& arg_key_hyph, const std::string& argDesc,
                TypedArgBase* argObj):
-         mArgSpec( argSpec),
+         mKeyHyph( arg_key_hyph),
          mDescription( argDesc),
          mpArgObj( argObj)
       {
@@ -136,7 +140,7 @@ private:
       bool doPrint( bool printIsMandatory, bool printHidden) const;
 
       /// The argument specification (character and/or long format).
-      std::string    mArgSpec;
+      std::string    mKeyHyph;
       /// The description of the argument.
       std::string    mDescription;
       /// Pointer to the object that handles this argument.
@@ -166,8 +170,8 @@ private:
    ///                                lines).
    /// @param[out]  os                The stream to write to.
    /// @since  0.2, 10.04.2016
-   void printArguments( format::TextBlock& tb, bool printIsMandatory, int* printed,
-                        bool sameLine, std::ostream& os) const;
+   void printArguments( format::TextBlock& tb, bool printIsMandatory,
+                        int* printed, bool sameLine, std::ostream& os) const;
 
    /// The string with the spaces to use for indention.
    const std::string  mIndention;
@@ -219,5 +223,5 @@ inline void ArgumentDesc::setPrintHidden( bool do_print)
 #endif   // CELMA_PROG_ARGS_DETAIL_ARGUMENT_DESC_HPP
 
 
-// =========================  END OF argument_desc.hpp  =========================
+// ========================  END OF argument_desc.hpp  ========================
 

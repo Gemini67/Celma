@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,9 +27,6 @@
 #include "celma/prog_args/detail/constraint_container.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
@@ -39,25 +36,26 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  reqArgSpec  The argument specification of the forbidden
 ///                         argument(s).
 /// @since  0.2, 10.04.2016
-ConstraintExcludes::ConstraintExcludes( const string& reqArgSpec):
+ConstraintExcludes::ConstraintExcludes( const std::string& reqArgSpec):
    mExcludedArgSpec( reqArgSpec)
 {
-} // end ConstraintExcludes::ConstraintExcludes
+} // ConstraintExcludes::ConstraintExcludes
 
 
 
 /// Adds the 'exludes' constraint to the current argument handler.
-/// @param[in]  sourceArg  The argument that sets this constraint.
+/// @param[in]  key  The argument that sets this constraint.
 /// @since  0.2, 10.04.2016
-void ConstraintExcludes::executeConstraint( const std::string& sourceArg)
+void ConstraintExcludes::executeConstraint( const ArgumentKey& key)
 {
 
    assert( ConstraintContainer::mpCurrentConstraints != nullptr);
 
    ConstraintContainer::mpCurrentConstraints->
-      addConstraint( ConstraintContainer::cExcluded, mExcludedArgSpec, sourceArg);
+      addConstraint( ConstraintContainer::Constraint::excluded,
+                     mExcludedArgSpec, format::toString( key));
 
-} // end ConstraintExcludes::executeConstraint
+} // ConstraintExcludes::executeConstraint
 
 
 
@@ -66,5 +64,5 @@ void ConstraintExcludes::executeConstraint( const std::string& sourceArg)
 } // namespace celma
 
 
-// =========================  END OF constraint_excludes.cpp  =========================
+// =====================  END OF constraint_excludes.cpp  =====================
 

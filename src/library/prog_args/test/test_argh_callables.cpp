@@ -554,7 +554,7 @@ BOOST_AUTO_TEST_CASE( free_value)
    {
       Handler  ah( 0);
 
-      ah.addArgument( "", DEST_FUNCTION_VALUE( handlerFunValue), "Function");
+      ah.addArgument( "-", DEST_FUNCTION_VALUE( handlerFunValue), "Function");
 
       ArgString2Array  as2a( "hello", nullptr);
 
@@ -567,7 +567,7 @@ BOOST_AUTO_TEST_CASE( free_value)
       Handler      ah( 0);
       TestArgFunc  myTestObj;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
                                             ->setValueMode( Handler::ValueMode::required));
 
       ArgString2Array  as2a( "again", nullptr);

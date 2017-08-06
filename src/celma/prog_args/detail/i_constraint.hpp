@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,6 +25,9 @@
 namespace celma { namespace prog_args { namespace detail {
 
 
+class ArgumentKey;
+
+
 /// Base class for constraints.<br>
 /// Actually this base class is used for two different types of constraints:
 /// - Constraints depending on a specific argument, dynamically activated if
@@ -41,8 +44,10 @@ public:
 
    /// Called when an argument was identified and the corresponding handler
    /// called.
+   /// @param[in]  key  The argument to execute the constraint with.
+   /// @since  x.y.z, 18.07.2017  (use ArgumentKey as parameter type)
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg) = 0;
+   virtual void executeConstraint( const ArgumentKey& key) = 0;
 
    /// Needed on global constraints: The list of arguments for which the
    /// constraint is defined.
@@ -67,13 +72,14 @@ protected:
    /// found on the command line.
    /// @param[in]  constraint_arg_list  The list of argument(s) for which the
    ///                                  constraint is defined.
-   /// @param[in]  arg_spec             The specification of the argument just
+   /// @param[in]  key                  The specification of the argument just
    ///                                  found in the argument string.
    /// @return  \c true if the specified argument is in the list of constrained
    ///          arguments.
+   /// @since  x.y.z, 18.07.2017  (use ArgumentKey as parameter type)
    /// @since  0.2, 10.04.2016
    static bool isConstraintArgument( const std::string& constraint_arg_list,
-                                     const std::string& arg_spec);
+                                     const ArgumentKey& key);
 
 }; // IConstraint
 

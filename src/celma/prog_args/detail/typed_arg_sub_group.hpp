@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,16 +34,18 @@ namespace detail {
 
 /// Helper class to store an argument handler object that handles a sub-group of
 /// arguments.
+/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 class TypedArgSubGroup: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  ah_obj    The argument handler object.
+   /// @param[in]  key     The complete argument specification with short and/or
+   ///                     long argument.
+   /// @param[in]  ah_obj  The argument handler object.
    /// @since  0.2, 10.04.2016
-   TypedArgSubGroup( const std::string& arg_spec, Handler* ah_obj);
+   TypedArgSubGroup( const ArgumentKey& key, Handler* ah_obj);
 
    /// Required by framework, does nothing except setting the #mWasCalled flag.
    /// @since  0.2, 10.04.2016
