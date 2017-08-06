@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,6 +27,8 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Constraint: Argument requires another argument to be used.
+/// @since  x.y.z, 05.07.2017  (use Storage<> internally, pass argument keys as
+///                             ArgumentKey objects)
 /// @since  0.2, 10.04.2016
 class ConstraintRequires: public IConstraint
 {
@@ -39,9 +41,9 @@ public:
    explicit ConstraintRequires( const std::string& reqArgSpec);
    
    /// Adds the 'required' constraint to the current argument handler.
-   /// @param[in]  sourceArg  The argument that sets this constraint.
+   /// @param[in]  key  The argument that sets this constraint.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg) override;
+   virtual void executeConstraint( const ArgumentKey& key) override;
 
 private:
    /// The argument specification of the other, required argument.
@@ -66,7 +68,7 @@ private:
 inline detail::IConstraint* requires( const std::string& argSpec)
 {
    return new detail::ConstraintRequires( argSpec);
-} // end requires
+} // requires
 
 
 } // namespace prog_args

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -24,10 +24,8 @@
 
 
 // project includes
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
-
-
-using namespace std;
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -39,25 +37,26 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  reqArgSpec  The argument specification of the required
 ///                         argument.
 /// @since  0.2, 10.04.2016
-ConstraintRequires::ConstraintRequires( const string& reqArgSpec):
+ConstraintRequires::ConstraintRequires( const std::string& reqArgSpec):
    mRequiredArgSpec( reqArgSpec)
 {
-} // end ConstraintRequires::ConstraintRequires
+} // ConstraintRequires::ConstraintRequires
 
 
 
 /// Adds the 'required' constraint to the current argument handler.
-/// @param[in]  sourceArg  The argument that sets this constraint.
+/// @param[in]  key  The argument that sets this constraint.
 /// @since  0.2, 10.04.2016
-void ConstraintRequires::executeConstraint( const std::string& sourceArg)
+void ConstraintRequires::executeConstraint( const ArgumentKey& key)
 {
 
    assert( ConstraintContainer::mpCurrentConstraints != nullptr);
 
    ConstraintContainer::mpCurrentConstraints->
-      addConstraint( ConstraintContainer::cRequired, mRequiredArgSpec, sourceArg);
+      addConstraint( ConstraintContainer::Constraint::required,
+                     mRequiredArgSpec, format::toString( key));
 
-} // end ConstraintRequires::executeConstraint
+} // ConstraintRequires::executeConstraint
 
 
 
@@ -66,5 +65,5 @@ void ConstraintRequires::executeConstraint( const std::string& sourceArg)
 } // namespace celma
 
 
-// =========================  END OF constraint_requires.cpp  =========================
+// =====================  END OF constraint_requires.cpp  =====================
 

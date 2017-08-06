@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,16 +14,21 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args/detail/argument_key.hpp"
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ArgumentKeyTest
 #include <boost/test/unit_test.hpp>
 
 
 // project includes
-#include "celma/prog_args/detail/argument_key.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/test/check_return.hpp"
 
 
+using celma::format::toString;
 using celma::prog_args::detail::ArgumentKey;
 using std::invalid_argument;
 
@@ -41,10 +46,10 @@ namespace {
 bool string_equal( const ArgumentKey& left, const ArgumentKey& right)
 {
 
-   CHECK_EQUAL_RETURN( left.str(), right.str());
+   CHECK_EQUAL_RETURN( toString( left), toString( right));
 
    return true;
-} // end string_equal
+} // string_equal
 
 
 
@@ -132,7 +137,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
       BOOST_REQUIRE_THROW( ArgumentKey  ak( "--long,---l"), invalid_argument);
    } // end scope
 
-} // end test_errors
+} // test_errors
 
 
 
@@ -143,30 +148,41 @@ BOOST_AUTO_TEST_CASE( test_remove_leading_dashes)
 
    {
       ArgumentKey  short1( "-l");
-      BOOST_REQUIRE_EQUAL( short1.str(), "l");
+      BOOST_REQUIRE_EQUAL( toString( short1), "-l");
    } // end scope
 
    {
       ArgumentKey  long1( "--long");
-      BOOST_REQUIRE_EQUAL( long1.str(), "long");
+      BOOST_REQUIRE_EQUAL( toString( long1), "--long");
    } // end scope
 
    {
       ArgumentKey  both( "-l,long");
-      BOOST_REQUIRE_EQUAL( both.str(), "l,long");
+      BOOST_REQUIRE_EQUAL( toString( both), "-l,--long");
    } // end scope
 
    {
       ArgumentKey  both( "l,--long");
-      BOOST_REQUIRE_EQUAL( both.str(), "l,long");
+      BOOST_REQUIRE_EQUAL( toString( both), "-l,--long");
    } // end scope
 
    {
       ArgumentKey  both( "-l,--long");
-      BOOST_REQUIRE_EQUAL( both.str(), "l,long");
+      BOOST_REQUIRE_EQUAL( toString( both), "-l,--long");
    } // end scope
 
-} // end test_remove_leading_dashes
+   {
+      ArgumentKey  longy( "--l");
+      BOOST_REQUIRE_EQUAL( toString( longy), "--l");
+   } // end scope
+
+   // positional argument
+   {
+      ArgumentKey  pos( "-");
+      BOOST_REQUIRE_EQUAL( toString( pos), "--");
+   } // end scope
+
+} // test_remove_leading_dashes
 
 
 
@@ -254,7 +270,16 @@ BOOST_AUTO_TEST_CASE( test_comparison)
       BOOST_REQUIRE( !both2.mismatch( long1));
    } // end scope
 
-} // end test_comparison
+   // compare the 'keys' of positional arguments
+   {
+      ArgumentKey  pos1( "-");
+      ArgumentKey  pos2( "-");
+
+      BOOST_REQUIRE_EQUAL( pos1, pos2);
+      BOOST_REQUIRE( !pos1.mismatch( pos2));
+   } // end scope
+
+} // test_comparison
 
 
 
@@ -344,7 +369,7 @@ BOOST_AUTO_TEST_CASE( test_comparison_failed)
       BOOST_REQUIRE( !both1.mismatch( long2));
    } // end scope
 
-} // end test_comparison_failed
+} // test_comparison_failed
 
 
 
@@ -371,7 +396,7 @@ BOOST_AUTO_TEST_CASE( test_mismatch)
       BOOST_REQUIRE( both1.mismatch( both2));
    } // end scope
 
-} // end test_mismatch
+} // test_mismatch
 
 
 
@@ -504,7 +529,7 @@ BOOST_AUTO_TEST_CASE( test_copies)
       BOOST_REQUIRE( string_equal( both1, long1));
    } // end scope
 
-} // end test_copies
+} // test_copies
 
 
 

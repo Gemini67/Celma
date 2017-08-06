@@ -43,6 +43,11 @@ public:
    /// @since  0.2, 06.04.2016
    explicit ArgumentKey( const std::string& arg_spec) noexcept( false);
 
+   /// Constructor, takes a single character as argument key.
+   /// @param[in]  char_arg  The argument character.
+   /// @since  x.y.z, 17.07.2017
+   explicit ArgumentKey( char char_arg) noexcept;
+
    ArgumentKey( const ArgumentKey&) = default;
    ArgumentKey( ArgumentKey&&) = default;
 
@@ -70,11 +75,6 @@ public:
    /// @since  0.2, 06.04.2016
    bool mismatch( const ArgumentKey& other) const;
 
-   /// Returns the key in string format.
-   /// @return  The key of this object in string format.
-   /// @since  0.2, 06.04.2016
-   std::string str() const;
-
    /// Returns if the character argument is set.
    /// @return \c true if the character argument is set.
    /// @since  0.14.0, 16.03.2017
@@ -94,6 +94,12 @@ public:
    /// @return  The value of the string argument key.
    /// @since  0.14.0, 16.03.2017
    const std::string& argString() const;
+
+   /// 
+   /// @param[in]  other  .
+   /// @return  .
+   /// @since  x.y.z, 12.07.2017
+   bool startsWith( const ArgumentKey& other) const;
 
    /// Prints the short and/or the long specifier of the key.<br>
    /// The string is created from the data extracted in the constructor, i.e. it

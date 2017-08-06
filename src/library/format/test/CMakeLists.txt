@@ -30,5 +30,6 @@ celma_add_celma_boost_testprogram( test_int32_to_string )
 celma_add_celma_boost_testprogram( test_int64_to_string )
 celma_add_celma_boost_testprogram( test_int8_to_string )
 celma_add_celma_boost_testprogram( test_text_block )
+celma_add_celma_boost_testprogram( test_to_string )
 
 celma_add_celma_boost_testprogram( test_int2str_perf )

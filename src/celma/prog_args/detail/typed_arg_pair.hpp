@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,19 +40,19 @@ template< typename T1, typename T2> class TypedArgPair : public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  dest1     The first destination variable to store the
-   ///                       parameter value in.
-   /// @param[in]  vname1    The name of the first destination variable to store
-   ///                       the parameter value in.
-   /// @param[in]  dest2     The second destination variable to store the given
-   ///                       value in.
-   /// @param[in]  vname2    The name of the second destination variable to store
-   ///                       the given value in.
-   /// @param[in]  value2    The value to set for the second variable.
+   /// @param[in]  key     The complete argument specification with short and/or
+   ///                     long argument.
+   /// @param[in]  dest1   The first destination variable to store the
+   ///                     parameter value in.
+   /// @param[in]  vname1  The name of the first destination variable to store
+   ///                     the parameter value in.
+   /// @param[in]  dest2   The second destination variable to store the given
+   ///                     value in.
+   /// @param[in]  vname2  The name of the second destination variable to store
+   ///                     the given value in.
+   /// @param[in]  value2  The value to set for the second variable.
    /// @since  0.2, 10.04.2016
-   TypedArgPair( const std::string& arg_spec,
+   TypedArgPair( const ArgumentKey& key,
                  T1& dest1, const std::string& vname1, T2& dest2,
                  const std::string& vname2, const T2& value2);
 
@@ -95,11 +95,11 @@ private:
 
 
 template< typename T1, typename T2>
-   TypedArgPair< T1, T2>::TypedArgPair( const std::string& arg_spec, 
+   TypedArgPair< T1, T2>::TypedArgPair( const ArgumentKey& key,
                                         T1& dest1, const std::string& vname1,
                                         T2& dest2, const std::string& vname2,
                                         const T2& value2):
-      TypedArgBase( arg_spec, vname1, ValueMode::required, false),
+      TypedArgBase( key, vname1, ValueMode::required, false),
       mDestVar1( dest1),
       mDestVar2( dest2),
       mVarName2( vname2),

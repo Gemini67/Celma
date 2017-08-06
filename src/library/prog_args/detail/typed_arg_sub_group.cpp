@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,9 +32,9 @@ namespace celma { namespace prog_args { namespace detail {
 ///                       or long argument.
 /// @param[in]  ah_obj    The argument handler object.
 /// @since  0.2, 10.04.2016
-TypedArgSubGroup::TypedArgSubGroup( const std::string& arg_spec,
+TypedArgSubGroup::TypedArgSubGroup( const ArgumentKey& key,
                                     Handler* ah_obj):
-   TypedArgBase( arg_spec, "sub-group", ValueMode::none, false),
+   TypedArgBase( key, "sub-group", ValueMode::none, false),
    mpArgHandler( ah_obj),
    mWasCalled( false)
 {

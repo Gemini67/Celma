@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,6 +27,8 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Constraint: Exactly one of the specified arguments must be used.
+/// @since  x.y.z, 05.07.2017  (use Storage<> internally, pass argument keys as
+///                             ArgumentKey objects)
 /// @since  0.2, 10.04.2016
 class ConstraintOneOf: public IConstraint
 {
@@ -39,9 +41,9 @@ public:
    /// Called when an argument was identified. If the argument is one of those
    /// in the specified list, check if it is the first of these arguments that
    /// is used, i.e. #mUsedArgument is empty.
-   /// @param[in]  sourceArg  The argument that was used/identified.
+   /// @param[in]  key  The argument that was used/identified.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg) override;
+   virtual void executeConstraint( const ArgumentKey& key) override;
 
    /// Required for global constraints to make sure that the argument list
    /// contains both the short and long argument.
@@ -87,7 +89,7 @@ private:
 inline detail::IConstraint* one_of( const std::string& argSpec)
 {
    return new detail::ConstraintOneOf( argSpec);
-} // end one_of
+} // one_of
 
 
 } // namespace prog_args

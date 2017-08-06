@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,17 +22,17 @@
 // STL includes
 #include <iomanip>
 #include <iostream>
+#include <stdexcept>
 
 
 // project includes
 #include "celma/format/text_block.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
+
 
 
 /// Constructor.
@@ -46,44 +46,31 @@ ArgumentDesc::ArgumentDesc():
    mLineLength( DefaultLineLength),
    mPrintHidden( false)
 {
-} // end ArgumentDesc::ArgumentDesc
+} // ArgumentDesc::ArgumentDesc
 
 
 
 /// Adds an argument.
-/// @param[in]  argSpec  The string with the arguments (character, long
-///                      format).
+/// @param[in]  key      The short and/or lang argument keys.
 /// @param[in]  argDesc  The string with the description.
 /// @param[in]  argObj   Pointer to the object that handles this argument.
 /// @since  0.2, 10.04.2016
-void ArgumentDesc::addArgument( const string& argSpec, const string& argDesc,
+void ArgumentDesc::addArgument( const ArgumentKey& key,
+                                const std::string& argDesc,
                                 TypedArgBase* argObj)
 {
 
-   string             argSpecDashed( argSpec);
-   string::size_type  pos = argSpecDashed.find_first_of( ',');
+   const auto  arg_key_hyph( format::toString( key));
 
 
-   if (pos == string::npos)
-   {
-      // no comma: short or long?
-      if (argSpecDashed.length() == 1)  argSpecDashed.insert( 0, "-");
-      else                              argSpecDashed.insert( 0, "--");
-   } else
-   {
-      // with comma: short and long
-      argSpecDashed.insert( pos + 1, "--");
-      argSpecDashed.insert( 0,       "-");
-   } // end if
+   if (arg_key_hyph.length() > mMaxArgLen)
+      mMaxArgLen = arg_key_hyph.length();
 
-   if (argSpecDashed.length() > mMaxArgLen)
-      mMaxArgLen = argSpecDashed.length();
-
-   ArgDesc  ad( argSpecDashed, argDesc, argObj);
+   const ArgDesc  ad( arg_key_hyph, argDesc, argObj);
 
    mArguments.push_back( ad);
 
-} // end ArgumentDesc::addArgument
+} // ArgumentDesc::addArgument
 
 
 
@@ -104,7 +91,7 @@ void ArgumentDesc::setCaption( const char* mandatory, const char* optional)
    if (optional != nullptr)
       mCaptionOptional.assign( optional);
 
-} // end ArgumentDesc::setCaption
+} // ArgumentDesc::setCaption
 
 
 
@@ -116,18 +103,18 @@ void ArgumentDesc::setLineLength( int useLen)
 {
 
    if ((useLen < 60) || (useLen >= 240))
-      throw runtime_error( "Line length must be in the range 60..240");
+      throw std::runtime_error( "Line length must be in the range 60..240");
 
    mLineLength = useLen;
 
-} // end ArgumentDesc::setLineLength
+} // ArgumentDesc::setLineLength
 
 
 
 /// Prints the contents of the storage to the specified stream.
 /// @param[out]  os  the stream to write to.
 /// @since  0.2, 10.04.2016
-void ArgumentDesc::print( ostream& os) const
+void ArgumentDesc::print( std::ostream& os) const
 {
 
    bool  printIsMandatory = true;
@@ -151,7 +138,7 @@ void ArgumentDesc::print( ostream& os) const
       printIsMandatory = !printIsMandatory;
    } // end for
 
-} // end ArgumentDesc::print
+} // ArgumentDesc::print
 
 
 
@@ -170,8 +157,11 @@ void ArgumentDesc::print( ostream& os) const
 /// @param[out]  os                The stream to write to.
 /// @since  0.2, 10.04.2016
 void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
-                                   int* printed, bool sameLine, ostream& os) const
+                                   int* printed, bool sameLine,
+                                   std::ostream& os) const
 {
+
+   using std::endl;
 
    for (size_t i = 0; i < mArguments.size(); ++i)
    {
@@ -192,10 +182,10 @@ void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
       } // end if
 
       if (sameLine)
-         os << mIndention << setw( mMaxArgLen) << left
-            << mArguments[ i].mArgSpec << mIndention;
+         os << mIndention << std::setw( mMaxArgLen) << std::left
+            << mArguments[ i].mKeyHyph << mIndention;
       else
-         os << mIndention << left << mArguments[ i].mArgSpec << endl;
+         os << mIndention << std::left << mArguments[ i].mKeyHyph << endl;
 
       // if the destination variable contains the default value for an optional
       // argument, add this to the usage
@@ -203,7 +193,7 @@ void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
           !mArguments[ i].mpArgObj->isMandatory() &&
           mArguments[ i].mpArgObj->printDefault())
       {
-         string  descCopy( mArguments[ i].mDescription);
+         auto  descCopy( mArguments[ i].mDescription);
          descCopy.append( "\nDefault value: ");
          mArguments[ i].mpArgObj->defaultValue( descCopy);
          tb.format( os, descCopy);
@@ -216,7 +206,7 @@ void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
       ++printed[ printIsMandatory];
    } // end for
 
-} // end ArgumentDesc::printArguments
+} // ArgumentDesc::printArguments
 
 
 
@@ -225,13 +215,13 @@ void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
 /// @param[in]   ad  The object to dump the contents of the storage of.
 /// @return  The stream as passed as parameter.
 /// @since  0.2, 10.04.2016
-ostream& operator <<( ostream& os, const ArgumentDesc& ad)
+std::ostream& operator <<( std::ostream& os, const ArgumentDesc& ad)
 {
 
    ad.print( os);
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
@@ -251,7 +241,7 @@ bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden) co
    return ((printIsMandatory  && (mpArgObj != nullptr) && mpArgObj->isMandatory()) ||
            (!printIsMandatory && ((mpArgObj == nullptr) || !mpArgObj->isMandatory()))) &&
           (printHidden || (mpArgObj == nullptr) || !mpArgObj->isHidden());
-} // end ArgumentDesc::ArgDesc::doPrint
+} // ArgumentDesc::ArgDesc::doPrint
 
 
 
@@ -260,5 +250,5 @@ bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden) co
 } // namespace celma
 
 
-// =========================  END OF argument_desc.cpp  =========================
+// ========================  END OF argument_desc.cpp  ========================
 
