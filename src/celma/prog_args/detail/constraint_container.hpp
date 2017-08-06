@@ -40,7 +40,8 @@ namespace celma { namespace prog_args { namespace detail {
 /// @todo  Using a global variable to provide access to the current object of
 ///        this class is of course not thread-safe. Need to find a better
 ///        solution.
-/// @todo  Enum class.
+/// @since  x.y.z, 05.07.2017  (use Storage<> internally, pass argument keys as
+///                             ArgumentKey objects)
 /// @since  0.2, 10.04.2016
 class ConstraintContainer
 {
@@ -85,16 +86,15 @@ public:
    /// @param[in]  arg_spec         The (list of) argument specifications, both
    ///                              short and/or long argument must be set.
    /// @since  0.2, 10.04.2016
-   void addConstraint( Constraint constraint_type,
-                       const std::string& arg_spec);
+   void addConstraint( Constraint constraint_type, const std::string& arg_spec);
 
    /// Must be called for each argument from the command line that was
    /// identified.<br>
    /// Internally checks if there is a constraint for this argument.
-   /// @param[in]  argSpec  The argument (short or long) that was identified
-   ///                      from the command line.
+   /// @param[in]  key  The argument (short or long) that was identified from
+   ///                  the command line.
    /// @since  0.2, 10.04.2016
-   void argumentIdentified( const std::string& argSpec);
+   void argumentIdentified( const ArgumentKey& key);
 
    /// Checks if there are open constraints in the list.
    /// @since  0.2, 10.04.2016
@@ -121,7 +121,7 @@ protected:
    }; // ConstraintContainer::Data
 
    /// The container with the current constraints.
-   Storage< Data>  mConstraints;
+   Storage< Data, std::runtime_error>  mConstraints;
 
 }; // ConstraintContainer
 

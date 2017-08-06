@@ -32,8 +32,10 @@
 
 
 // project includes
+#include "celma/prog_args/detail/argument_key.hpp"
 
 
+using celma::prog_args::detail::ArgumentKey;
 using celma::prog_args::detail::ConstraintContainer;
 using std::runtime_error;
 
@@ -68,7 +70,7 @@ BOOST_AUTO_TEST_CASE( empty_constraints)
    ConstraintContainer  constraints;
 
 
-   BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( "a"));
+   BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( ArgumentKey( "a")));
    BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
 
 } // empty_constraints
@@ -173,7 +175,7 @@ BOOST_AUTO_TEST_CASE( one_requires_constraint)
 
       constraints.addConstraint( ConstraintContainer::Constraint::required,
                                  "o", "i,input");
-      constraints.argumentIdentified( "o,output");
+      constraints.argumentIdentified( ArgumentKey( "o,output"));
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
@@ -183,7 +185,7 @@ BOOST_AUTO_TEST_CASE( one_requires_constraint)
 
       constraints.addConstraint( ConstraintContainer::Constraint::required, 
                                  "output", "i,input");
-      constraints.argumentIdentified( "o,output");
+      constraints.argumentIdentified( ArgumentKey( "o,output"));
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
@@ -193,7 +195,7 @@ BOOST_AUTO_TEST_CASE( one_requires_constraint)
 
       constraints.addConstraint( ConstraintContainer::Constraint::required,
                                  "o,output", "i,input");
-      constraints.argumentIdentified( "o,output");
+      constraints.argumentIdentified( ArgumentKey( "o,output"));
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
@@ -244,7 +246,8 @@ BOOST_AUTO_TEST_CASE( one_excludes_constraint)
 
       constraints.addConstraint( ConstraintContainer::Constraint::excluded,
                                  "o", "i,input");
-      BOOST_REQUIRE_THROW( constraints.argumentIdentified( "o,output"),
+      BOOST_REQUIRE_THROW( constraints.argumentIdentified(
+                              ArgumentKey( "o,output")),
                            runtime_error);
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
@@ -255,7 +258,8 @@ BOOST_AUTO_TEST_CASE( one_excludes_constraint)
 
       constraints.addConstraint( ConstraintContainer::Constraint::excluded,
                                  "output", "i,input");
-      BOOST_REQUIRE_THROW( constraints.argumentIdentified( "o,output"),
+      BOOST_REQUIRE_THROW( constraints.argumentIdentified(
+                              ArgumentKey( "o,output")),
                            runtime_error);
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
@@ -266,7 +270,8 @@ BOOST_AUTO_TEST_CASE( one_excludes_constraint)
 
       constraints.addConstraint( ConstraintContainer::Constraint::excluded,
                                  "o,output", "i,input");
-      BOOST_REQUIRE_THROW( constraints.argumentIdentified( "o,output"),
+      BOOST_REQUIRE_THROW( constraints.argumentIdentified(
+                              ArgumentKey( "o,output")),
                            runtime_error);
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
@@ -305,7 +310,8 @@ BOOST_AUTO_TEST_CASE( combinations)
       constraints.addConstraint( ConstraintContainer::Constraint::required,
                                  "p", "o,output");
 
-      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( "p,port"));
+      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified(
+                                 ArgumentKey( "p,port")));
 
       // required argument not found
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
@@ -319,7 +325,8 @@ BOOST_AUTO_TEST_CASE( combinations)
       constraints.addConstraint( ConstraintContainer::Constraint::required,
                                  "p,port", "o,output");
 
-      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( "port"));
+      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified(
+                                 ArgumentKey( "port")));
 
       // required argument not found
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
@@ -336,8 +343,10 @@ BOOST_AUTO_TEST_CASE( combinations)
       constraints.addConstraint( ConstraintContainer::Constraint::required,
                                  "p", "o,output");
 
-      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( "p,port"));
-      BOOST_REQUIRE_THROW( constraints.argumentIdentified( "o"), runtime_error);
+      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified(
+                                 ArgumentKey( "p,port")));
+      BOOST_REQUIRE_THROW( constraints.argumentIdentified(
+                              ArgumentKey( "o")), runtime_error);
    } // end scope
 
 } // combinations

@@ -66,8 +66,8 @@ void ConstraintContainer::addConstraint( Constraint constraint_type,
    for (auto const& token : tokenizer)
    {
       // don't add the same constraint twice
-      const ArgumentKey   search( token);
-      auto                dataIt = mConstraints.find( search);
+      const ArgumentKey  search( token);
+      auto               dataIt = mConstraints.find( search);
 
       if ((dataIt == mConstraints.end()) ||
           (dataIt->data().mConstraint != constraint_type))
@@ -83,26 +83,25 @@ void ConstraintContainer::addConstraint( Constraint constraint_type,
 /// Must be called for each argument from the command line that was
 /// identified.<br>
 /// Internally checks if there is a constraint for this argument.
-/// @param[in]  argSpec  The argument (short or long) that was identified
-///                      from the command line.
+/// @param[in]  key  The argument (short or long) that was identified from
+///                  the command line.
 /// @since  0.2, 10.04.2016
-void ConstraintContainer::argumentIdentified( const string& argSpec)
+void ConstraintContainer::argumentIdentified( const ArgumentKey& key)
 {
 
    if (mConstraints.empty())
       return;
 
-   const ArgumentKey  search( argSpec);
-   auto               it = mConstraints.cbegin();
+   auto  it = mConstraints.cbegin();
 
-   while ((it = std::find( it, mConstraints.cend(), search)) != mConstraints.cend())
+   while ((it = std::find( it, mConstraints.cend(), key)) != mConstraints.cend())
    {
       if (it->data().mConstraint == Constraint::required)
       {
          it = mConstraints.erase( it);
       } else if (it->data().mConstraint == Constraint::excluded)
       {
-         throw std::runtime_error( "Argument '" + format::toString( search)
+         throw std::runtime_error( "Argument '" + format::toString( key)
                                    + "' is excluded by '" + it->data().mOrigin
                                    + "'");
       } // end if

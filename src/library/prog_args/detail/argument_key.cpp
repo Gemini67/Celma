@@ -126,6 +126,17 @@ ArgumentKey::ArgumentKey( const string& arg_spec) noexcept( false):
 
 
 
+/// Constructor, takes a single character as argument key.
+/// @param[in]  char_arg  The argument character.
+/// @since  x.y.z, 17.07.2017
+ArgumentKey::ArgumentKey( char char_arg) noexcept:
+   mChar( char_arg),
+   mWord()
+{
+} // ArgumentKey::ArgumentKey
+
+
+
 /// Compares two argument keys if the short or long specifier are the same.
 /// Mismatches are not detected by this function.
 /// @param[in]  other  The other key object to compare against.
@@ -191,6 +202,17 @@ bool ArgumentKey::mismatch( const ArgumentKey& other) const
 
    return false;
 } // ArgumentKey::mismatch
+
+
+/// 
+/// @param[in]  other  .
+/// @return  .
+/// @since  x.y.z, 12.07.2017
+bool ArgumentKey::startsWith( const ArgumentKey& other) const
+{
+   return !mWord.empty() && !other.mWord.empty() &&
+          (mWord.compare( 0, other.mWord.length(), other.mWord) == 0);
+} // ArgumentKey::startsWith
 
 
 

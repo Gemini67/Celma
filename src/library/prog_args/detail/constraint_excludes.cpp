@@ -44,16 +44,16 @@ ConstraintExcludes::ConstraintExcludes( const std::string& reqArgSpec):
 
 
 /// Adds the 'exludes' constraint to the current argument handler.
-/// @param[in]  sourceArg  The argument that sets this constraint.
+/// @param[in]  key  The argument that sets this constraint.
 /// @since  0.2, 10.04.2016
-void ConstraintExcludes::executeConstraint( const std::string& sourceArg)
+void ConstraintExcludes::executeConstraint( const ArgumentKey& key)
 {
 
    assert( ConstraintContainer::mpCurrentConstraints != nullptr);
 
    ConstraintContainer::mpCurrentConstraints->
       addConstraint( ConstraintContainer::Constraint::excluded,
-                     mExcludedArgSpec, sourceArg);
+                     mExcludedArgSpec, format::toString( key));
 
 } // ConstraintExcludes::executeConstraint
 

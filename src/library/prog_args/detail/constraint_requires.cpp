@@ -24,6 +24,7 @@
 
 
 // project includes
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
 
 
@@ -44,16 +45,16 @@ ConstraintRequires::ConstraintRequires( const std::string& reqArgSpec):
 
 
 /// Adds the 'required' constraint to the current argument handler.
-/// @param[in]  sourceArg  The argument that sets this constraint.
+/// @param[in]  key  The argument that sets this constraint.
 /// @since  0.2, 10.04.2016
-void ConstraintRequires::executeConstraint( const std::string& sourceArg)
+void ConstraintRequires::executeConstraint( const ArgumentKey& key)
 {
 
    assert( ConstraintContainer::mpCurrentConstraints != nullptr);
 
    ConstraintContainer::mpCurrentConstraints->
       addConstraint( ConstraintContainer::Constraint::required,
-                     mRequiredArgSpec, sourceArg);
+                     mRequiredArgSpec, format::toString( key));
 
 } // ConstraintRequires::executeConstraint
 

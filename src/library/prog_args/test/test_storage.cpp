@@ -117,13 +117,13 @@ BOOST_AUTO_TEST_CASE( test_add_one)
    {
       Storage< int>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n"));
-      BOOST_REQUIRE_THROW( s.addArgument( 42, "n"), runtime_error);
+      BOOST_REQUIRE_THROW( s.addArgument( 42, "n"), invalid_argument);
    } // end scope
 
    // add first argument/object, adding another object with same long argument
    // fails
    {
-      Storage< int>  s;
+      Storage< int, runtime_error>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "number"));
       BOOST_REQUIRE_THROW( s.addArgument( 42, "number"), runtime_error);
    } // end scope
@@ -133,13 +133,13 @@ BOOST_AUTO_TEST_CASE( test_add_one)
    {
       Storage< int>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n,number"));
-      BOOST_REQUIRE_THROW( s.addArgument( 42, "n"), runtime_error);
+      BOOST_REQUIRE_THROW( s.addArgument( 42, "n"), invalid_argument);
    } // end scope
 
    // add first argument/object, adding another object with same long argument
    // fails
    {
-      Storage< int>  s;
+      Storage< int, runtime_error>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n,number"));
       BOOST_REQUIRE_THROW( s.addArgument( 42, "number"), runtime_error);
    } // end scope
@@ -149,13 +149,13 @@ BOOST_AUTO_TEST_CASE( test_add_one)
    {
       Storage< int>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n,number"));
-      BOOST_REQUIRE_THROW( s.addArgument( 42, "n,name"), runtime_error);
+      BOOST_REQUIRE_THROW( s.addArgument( 42, "n,name"), invalid_argument);
    } // end scope
 
    // add first argument/object, adding another object with argument mismatch
    // fails
    {
-      Storage< int>  s;
+      Storage< int, runtime_error>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n,number"));
       BOOST_REQUIRE_THROW( s.addArgument( 42, "a,number"), runtime_error);
    } // end scope
@@ -175,13 +175,13 @@ BOOST_AUTO_TEST_CASE( test_add_two)
       Storage< int>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n"));
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "number"));
-      BOOST_REQUIRE_THROW( s.addArgument( 42, "n"), runtime_error);
+      BOOST_REQUIRE_THROW( s.addArgument( 42, "n"), invalid_argument);
    } // end scope
 
    // add first argument/object, adding another object with same long argument
    // fails
    {
-      Storage< int>  s;
+      Storage< int, runtime_error>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n"));
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "number"));
       BOOST_REQUIRE_THROW( s.addArgument( 42, "number"), runtime_error);
@@ -193,13 +193,13 @@ BOOST_AUTO_TEST_CASE( test_add_two)
       Storage< int>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "m,maximum"));
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n,number"));
-      BOOST_REQUIRE_THROW( s.addArgument( 42, "m,mode"), runtime_error);
+      BOOST_REQUIRE_THROW( s.addArgument( 42, "m,mode"), invalid_argument);
    } // end scope
 
    // add first argument/object, adding another object with same long argument
    // fails
    {
-      Storage< int>  s;
+      Storage< int, runtime_error>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "m,maximum"));
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n,number"));
       BOOST_REQUIRE_THROW( s.addArgument( 42, "a,maximum"), runtime_error);
@@ -211,13 +211,13 @@ BOOST_AUTO_TEST_CASE( test_add_two)
       Storage< int>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "m,maximum"));
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n,number"));
-      BOOST_REQUIRE_THROW( s.addArgument( 42, "n,name"), runtime_error);
+      BOOST_REQUIRE_THROW( s.addArgument( 42, "n,name"), invalid_argument);
    } // end scope
 
    // add first argument/object, adding another object with argument mismatch
    // fails
    {
-      Storage< int>  s;
+      Storage< int, runtime_error>  s;
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "m,maximum"));
       BOOST_REQUIRE_NO_THROW( s.addArgument( 42, "n,number"));
       BOOST_REQUIRE_THROW( s.addArgument( 42, "u,number"), runtime_error);

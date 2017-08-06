@@ -29,18 +29,20 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Helper class to store a function that serves as argument handler.
+/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 class TypedArgCallableValue: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  fun       The function to call when the argument is set on
-   ///                       the command line.
-   /// @param[in]  fname     The name of the function to call.
+   /// @param[in]  key    The complete argument specification with short and/or
+   ///                    long argument.
+   /// @param[in]  fun    The function to call when the argument is set on the
+   ///                    command line.
+   /// @param[in]  fname  The name of the function to call.
    /// @since  0.2, 10.04.2016
-   TypedArgCallableValue( const std::string& arg_spec,
+   TypedArgCallableValue( const ArgumentKey& key,
                           ArgHandlerCallableValue fun,
                           const std::string& fname);
 
@@ -85,10 +87,10 @@ private:
 // ===============
 
 
-inline TypedArgCallableValue::TypedArgCallableValue( const std::string& arg_spec,
+inline TypedArgCallableValue::TypedArgCallableValue( const ArgumentKey& key,
                                                      ArgHandlerCallableValue fun,
                                                      const std::string& fname):
-   TypedArgBase( arg_spec, fname, ValueMode::required, false),
+   TypedArgBase( key, fname, ValueMode::required, false),
    mFun( fun),
    mWasCalled( false)
 {

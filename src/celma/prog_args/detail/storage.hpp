@@ -105,6 +105,7 @@ private:
    ArgumentKey  mKey;
    /// The data to store with the argument.
    U            mData;
+
 }; // Data< U>
 
 
@@ -118,8 +119,9 @@ private:
 /// container for an entry, but since we are talking about program arguments
 /// here, we don't expect millions of entries.
 /// @tparam  T  The type of the objects to store.
+/// @tparam  E  The type of exception to throw when an argument already exists.
 /// @since  x.y.z, 21.06.2017
-template< typename T> class Storage
+template< typename T, class E = std::invalid_argument> class Storage
 {
 public:
    /// Constructor.
@@ -133,7 +135,7 @@ public:
    /// @param[in]  data  The data to store with the key.
    /// @param[in]  key   The key for this entry.
    /// @since  x.y.z, 23.06.2017
-   void addArgument( T data, const ArgumentKey& key);
+   void addArgument( T data, const ArgumentKey& key) noexcept( false);
 
    /// Adds a new entry.<br>
    /// Ensures that no entry with the same key (short or long argument) exists
@@ -141,7 +143,16 @@ public:
    /// @param[in]  data      The data to store with the key.
    /// @param[in]  arg_spec  The argument character, string or both.
    /// @since  x.y.z, 21.06.2017
-   void addArgument( T data, const std::string& arg_spec);
+   void addArgument( T data, const std::string& arg_spec) noexcept( false);
+
+   /// 
+   /// @param[in]  first  .
+   /// @param[in]  last   .
+   /// @param[in]  data   .
+   /// @return  .
+   /// @since  x.y.z, 20.07.2017
+   template< typename I> void insert( I first, const I& last, T data)
+      noexcept( false);
 
    /// Storage type for the argument keys and objects.
    typedef std::vector< Data< T>>  cont_t;
@@ -197,22 +208,22 @@ private:
    /// The argument keys and their objects.
    cont_t      mArgs;
 
-}; // Storage< T>
+}; // Storage< T, E>
 
 
 // inlined methods
 // ===============
 
 
-template< typename T> Storage< T>::Storage( bool allow_dups):
+template< typename T, typename E> Storage< T, E>::Storage( bool allow_dups):
    mAllowDuplicates( allow_dups),
    mArgs()
 {
-} // Storage< T>::Storage
+} // Storage< T, E>::Storage
 
 
-template< typename T>
-   void Storage< T>::addArgument( T data, const ArgumentKey& key)
+template< typename T, typename E>
+   void Storage< T, E>::addArgument( T data, const ArgumentKey& key)
 {
 
    if (!mAllowDuplicates)
@@ -220,81 +231,91 @@ template< typename T>
       for (const auto& entry : mArgs)
       {
          if (entry == key)
-            throw std::runtime_error(
-               "argument with key '" + format::toString( key) + "' stored already");
+            throw E( "argument with key '" + format::toString( key)
+                     + "' stored already");
          if (entry.mismatch( key))
-            throw std::runtime_error(
-               "argument with key '" + format::toString( key)
-               + "' conflicts with stored entry '" + format::toString( entry.key()));
+            throw E( "argument with key '" + format::toString( key)
+                     + "' conflicts with stored entry '"
+                     + format::toString( entry.key()));
       } // end for
    } // end if
 
    mArgs.push_back( Data< T>( key, data));
 
-} // Storage< T>::addArgument
+} // Storage< T, E>::addArgument
 
 
-template< typename T>
-   void Storage< T>::addArgument( T data, const std::string& arg_spec)
+template< typename T, typename E>
+   void Storage< T, E>::addArgument( T data, const std::string& arg_spec)
 {
    return addArgument( data, ArgumentKey( arg_spec));
-} // Storage< T>::addArgument
+} // Storage< T, E>::addArgument
 
 
-template< typename T>
-   typename Storage< T>::const_iterator Storage< T>::begin() const
+template< typename T, typename E>
+   template< typename I>
+      void Storage< T, E>::insert( I first, const I& last, T data)
+{
+   while (first != last)
+      addArgument( data, *first++);
+} // Storage< T, E>::insert
+
+
+template< typename T, typename E>
+   typename Storage< T, E>::const_iterator Storage< T, E>::begin() const
 {
    return mArgs.begin();
-} // Storage< T>::begin
+} // Storage< T, E>::begin
 
 
-template< typename T>
-   typename Storage< T>::const_iterator Storage< T>::cbegin() const
+template< typename T, typename E>
+   typename Storage< T, E>::const_iterator Storage< T, E>::cbegin() const
 {
    return mArgs.cbegin();
-} // Storage< T>::cbegin
+} // Storage< T, E>::cbegin
 
 
-template< typename T>
-   typename Storage< T>::const_iterator Storage< T>::end() const
+template< typename T, typename E>
+   typename Storage< T, E>::const_iterator Storage< T, E>::end() const
 {
    return mArgs.end();
-} // Storage< T>::end
+} // Storage< T, E>::end
 
 
-template< typename T>
-   typename Storage< T>::const_iterator Storage< T>::cend() const
+template< typename T, typename E>
+   typename Storage< T, E>::const_iterator Storage< T, E>::cend() const
 {
    return mArgs.cend();
-} // Storage< T>::cend
+} // Storage< T, E>::cend
 
 
-template< typename T>
-   typename Storage< T>::const_iterator
-      Storage< T>::find( const ArgumentKey& key) const
+template< typename T, typename E>
+   typename Storage< T, E>::const_iterator
+      Storage< T, E>::find( const ArgumentKey& key) const
 {
 //   return mArgs.find( key);
    return std::find( mArgs.cbegin(), mArgs.cend(), key);
-} // Storage< T>::find
+} // Storage< T, E>::find
 
 
-template< typename T> bool Storage< T>::empty() const
+template< typename T, typename E> bool Storage< T, E>::empty() const
 {
    return mArgs.empty();
-} // Storage< T>::empty
+} // Storage< T, E>::empty
 
 
-template< typename T>
-    typename Storage< T>::const_iterator Storage< T>::erase( const_iterator& it)
+template< typename T, typename E>
+   typename Storage< T, E>::const_iterator
+      Storage< T, E>::erase( const_iterator& it)
 {
    return mArgs.erase( it);
-} // Storage< T>::erase
+} // Storage< T, E>::erase
 
 
-template< typename T> size_t Storage< T>::size() const
+template< typename T, typename E> size_t Storage< T, E>::size() const
 {
    return mArgs.size();
-} // Storage< T>::size
+} // Storage< T, E>::size
 
 
 } // namespace detail

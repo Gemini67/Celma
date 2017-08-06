@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    outputVal.reset();
 
    {
-      ArgString2Array  as2a( "--o 5", nullptr);
+      ArgString2Array  as2a( "--ou 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE( outputVal.hasValue());

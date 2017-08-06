@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,38 +17,40 @@
 
 #include "celma/prog_args/groups.hpp"
 
+#include <string>
 
-using namespace std;
-using namespace celma;
+
+using celma::prog_args::Handler;
+
 
 
 int main( int argc, char* argv[])
 {
 
-   prog_args::Handler  ah( prog_args::Handler::AllHelp);
-   bool                quietFlag;
-   bool                debugMode;
-   int                 manInt1;
+   Handler  ah( Handler::AllHelp);
+   bool     quietFlag;
+   bool     debugMode;
+   int      manInt1;
 
 
    ah.addArgument( "q",             DEST_VAR( quietFlag), "be quiet");
    ah.addArgument( "debug_mode",    DEST_VAR( debugMode), "set to activate the debug mode");
    ah.addArgument( "mandatory_int", DEST_VAR( manInt1),   "mandatory integer value")->setIsMandatory();
 
-   string  inputName;
-   int     inputMode = 0;
+   std::string  inputName;
+   int          inputMode = 0;
 
-   prog_args::Handler  subInput( prog_args::Handler::hfHelpShort | prog_args::Handler::hfHelpLong);
+   Handler  subInput( Handler::hfHelpShort | Handler::hfHelpLong);
    subInput.addArgument( "f", DEST_VAR( inputName), DEST_VAR( inputMode), 1,
                          "specifies to read from a file");
    subInput.addArgument( "q", DEST_VAR( inputName), DEST_VAR( inputMode), 2,
                          "specifies to read from a queue");
    ah.addArgument( "i", &subInput, "input arguments");
 
-   string  outputName;
-   int     outputMode = 0;
+   std::string  outputName;
+   int          outputMode = 0;
 
-   prog_args::Handler  subOutput( prog_args::Handler::hfHelpShort | prog_args::Handler::hfHelpLong);
+   Handler  subOutput( Handler::hfHelpShort | Handler::hfHelpLong);
    subOutput.addArgument( "f", DEST_VAR( outputName), DEST_VAR( outputMode), 1,
                           "specifies to write into a file");
    subOutput.addArgument( "q", DEST_VAR( outputName), DEST_VAR( outputMode), 2,
