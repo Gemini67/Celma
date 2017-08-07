@@ -14,7 +14,7 @@ project( Celma )
 set( MAJORVERSION    0 )
 set( MINORVERSION    0 )
 set( RELEASE_VERSION 15 )
-set( PATCHLEVEL      0 )
+set( PATCHLEVEL      1 )
 
 enable_testing()
 include( CTest)
