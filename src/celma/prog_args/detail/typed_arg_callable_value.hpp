@@ -29,7 +29,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Helper class to store a function that serves as argument handler.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
 class TypedArgCallableValue: public TypedArgBase

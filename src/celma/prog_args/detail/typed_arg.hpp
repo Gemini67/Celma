@@ -46,7 +46,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Helper class to store a destination variable with its native type.
 /// @tparam  T  The type of the value.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg: public TypedArgBase
@@ -180,7 +180,7 @@ template< typename T>
 
 
 /// Specialisation of template TypedArg<> for boolean variables.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// since  6.0, 18.09.2013
 template<> class TypedArg< bool>: public TypedArgBase
@@ -267,7 +267,7 @@ private:
 
 /// Specialisation of TypedArg<> for values wrapped in CheckAssign<>.
 /// @tparam  T  The native type of the value.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg< common::CheckAssign< T>>:
@@ -361,7 +361,7 @@ template< typename T>
 
 
 /// Specialization of the TypedArg< CheckAssign< T> > template for boolean flags.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
 template<> class TypedArg< common::CheckAssign< bool>>: public TypedArgBase
@@ -443,7 +443,7 @@ private:
 
 /// Specialisation of TypedArg<> for values wrapped in a vector.
 /// @tparam  T  The type of the value(s) stored in the vector.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg< std::vector< T>>: public TypedArgBase
@@ -599,7 +599,6 @@ public:
    /// tuple element.
    /// @param[out]  tuple_element  The element of the the tuple to assign the
    ///                             value to.
-   /// @return  .
    /// @since  6.0, 04.01.2017
    template< typename T> void operator ()( T& tuple_element)
    {
@@ -623,7 +622,7 @@ private:
 /// Helper class to store a destination variable of type tuple with its native
 /// element types.
 /// @tparam  T  The types of the values.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.11, 07.01.2017  (converted from TypedArgTuple into specialisation)
 /// @since  0.11, 19.12.2016

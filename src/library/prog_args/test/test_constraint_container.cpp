@@ -46,17 +46,21 @@ using std::runtime_error;
 namespace {
 
 
+/// Helper class to access private members the class ConstraintContainer.
+/// @since  0.15.0, 27.06.2017
 class ConstraintAccess: public ConstraintContainer
 {
 public:
-   /// 
-   /// @return  .
-   /// @since  x.y.z, 27.06.2017
+   /// Returns the size of the constraint container.
+   /// @return  Size of the constraint container, i,e. number of constraints
+   ///          stored.
+   /// @since  0.15.0, 27.06.2017
    size_t size() const
    {
       return mConstraints.size();
-   }
-};
+   } // ConstraintAccess::size
+
+}; // ConstraintAccess
 
 
 } // namespace

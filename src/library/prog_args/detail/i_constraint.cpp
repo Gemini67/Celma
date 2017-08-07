@@ -78,7 +78,7 @@ void IConstraint::checkEndCondition() const
 ///                                  found in the argument string.
 /// @return  \c true if the specified argument is in the list of constrained
 ///          arguments.
-/// @since  x.y.z, 18.07.2017  (use ArgumentKey as parameter type)
+/// @since  0.15.0, 18.07.2017  (use ArgumentKey as parameter type)
 /// @since  0.2, 10.04.2016
 bool IConstraint::isConstraintArgument( const std::string& constraint_arg_list,
                                         const ArgumentKey& key)

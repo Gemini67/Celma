@@ -45,7 +45,7 @@ public:
    /// Called when an argument was identified and the corresponding handler
    /// called.
    /// @param[in]  key  The argument to execute the constraint with.
-   /// @since  x.y.z, 18.07.2017  (use ArgumentKey as parameter type)
+   /// @since  0.15.0, 18.07.2017  (use ArgumentKey as parameter type)
    /// @since  0.2, 10.04.2016
    virtual void executeConstraint( const ArgumentKey& key) = 0;
 
@@ -76,7 +76,7 @@ protected:
    ///                                  found in the argument string.
    /// @return  \c true if the specified argument is in the list of constrained
    ///          arguments.
-   /// @since  x.y.z, 18.07.2017  (use ArgumentKey as parameter type)
+   /// @since  0.15.0, 18.07.2017  (use ArgumentKey as parameter type)
    /// @since  0.2, 10.04.2016
    static bool isConstraintArgument( const std::string& constraint_arg_list,
                                      const ArgumentKey& key);

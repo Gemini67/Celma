@@ -722,7 +722,7 @@ private:
    ///                      groups).
    /// @param[in]      end  Iterator pointing to the end of the argument list.
    /// @return  Result of handling the current argument.
-   /// @since  x.y.z, 17.07.2017  (only ArgumentKey as parameter, no template
+   /// @since  0.15.0, 17.07.2017  (only ArgumentKey as parameter, no template
    ///                             anymore)
    /// @since  0.2, 10.04.2016
    ArgResult processArg( const detail::ArgumentKey& key,
@@ -765,7 +765,7 @@ private:
    /// @param[in]  key     The argument key: short and/or long argument.
    /// @param[in]  desc    The description of the argument.
    /// @return  Pointer to the passed argument handling object.
-   /// @since  x.y.z, 13.07.2017  (take ArgumentKey instead of string)
+   /// @since  0.15.0, 13.07.2017  (take ArgumentKey instead of string)
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* internAddArgument( detail::TypedArgBase* ah_obj,
                                             const detail::ArgumentKey& key,
@@ -775,8 +775,8 @@ private:
    /// If the argument specification in the list does not match the original
    /// specification of the argument (short and/or long), it is replaced in the
    /// \a constraint_arg_list.
-   /// @param[in]  constraint_arg_list  .
-   /// @return  .
+   /// @param[in]  constraint_arg_list  The list of arguments to check.
+   /// @return  \c true if all arguments in the list are valid.
    /// @since  0.2, 10.04.2016
    bool validArguments( std::string& constraint_arg_list) const;
 
@@ -785,7 +785,7 @@ private:
    /// two different, existing arguments.
    /// @param[in]  key  The argument specification to test.
    /// @return  \c true if the given combination is invalid.
-   /// @since  x.y.z, 06.08.2017
+   /// @since  0.15.0, 06.08.2017
    bool invalidCombination( const detail::ArgumentKey& key) const
       noexcept( false);
 

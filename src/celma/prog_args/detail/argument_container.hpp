@@ -31,7 +31,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Extracted from ArgumentHandler: Store an argument which may use the short
 /// argument format (character), the long format (string/name) or name.
-/// @since  x.y.z, 05.07.2017  (use container Storage)
+/// @since  0.15.0, 05.07.2017  (use container Storage)
 /// @since  0.2, 10.04.2016
 class ArgumentContainer
 {
@@ -65,7 +65,7 @@ public:
    /// @param[in]  key  The short and/or long argument name to check.
    /// @return  Pointer to the argument handler object if the argument is
    ///          defined, NULL otherwise.
-   /// @since  x.y.z, 12.07.2017  (take ArgumentKey as parameter)
+   /// @since  0.15.0, 12.07.2017  (take ArgumentKey as parameter)
    /// @since  0.2, 10.04.2016
    TypedArgBase* findArg( const ArgumentKey& key) const;
 

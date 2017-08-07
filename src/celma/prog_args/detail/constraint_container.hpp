@@ -40,7 +40,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @todo  Using a global variable to provide access to the current object of
 ///        this class is of course not thread-safe. Need to find a better
 ///        solution.
-/// @since  x.y.z, 05.07.2017  (use Storage<> internally, pass argument keys as
+/// @since  0.15.0, 05.07.2017  (use Storage<> internally, pass argument keys as
 ///                             ArgumentKey objects)
 /// @since  0.2, 10.04.2016
 class ConstraintContainer
@@ -64,7 +64,7 @@ public:
    static ConstraintContainer*  mpCurrentConstraints;
 
    /// Constructor.
-   /// @since  x.y.z, 26.06.2017
+   /// @since  0.15.0, 26.06.2017
    ConstraintContainer();
 
    /// Default destructor is just fine.
