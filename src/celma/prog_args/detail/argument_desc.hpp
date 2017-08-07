@@ -34,7 +34,7 @@ class TypedArgBase;
 
 /// Provides storage for all arguments (specifyer plus description).<br>
 /// This is used to print the usage.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
 class ArgumentDesc

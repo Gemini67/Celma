@@ -42,7 +42,7 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( Storage< int>::const_iterator)
 
 
 /// Verify that all possible errors are detected.
-/// @since  x.y.z, 22.06.2017
+/// @since  0.15.0, 22.06.2017
 BOOST_AUTO_TEST_CASE( test_errors)
 {
 
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
 
 /// Verify that adding entries works correctly.
-/// @since  x.y.z, 03.07.2017
+/// @since  0.15.0, 03.07.2017
 BOOST_AUTO_TEST_CASE( test_simple_add)
 {
 
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE( test_simple_add)
 
 
 /// Check adding one argument, conflict with second argument.
-/// @since  x.y.z, 22.06.2017
+/// @since  0.15.0, 22.06.2017
 BOOST_AUTO_TEST_CASE( test_add_one)
 {
 
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE( test_add_one)
 
 
 /// Check adding two arguments, conflict with third argument.
-/// @since  x.y.z, 22.06.2017
+/// @since  0.15.0, 22.06.2017
 BOOST_AUTO_TEST_CASE( test_add_two)
 {
 

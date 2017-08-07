@@ -27,7 +27,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Constraint: Exactly one of the specified arguments must be used.
-/// @since  x.y.z, 05.07.2017  (use Storage<> internally, pass argument keys as
+/// @since  0.15.0, 05.07.2017  (use Storage<> internally, pass argument keys as
 ///                             ArgumentKey objects)
 /// @since  0.2, 10.04.2016
 class ConstraintOneOf: public IConstraint

@@ -34,7 +34,7 @@ namespace detail {
 
 /// Helper class to store an argument handler object that handles a sub-group of
 /// arguments.
-/// @since  x.y.z, 17.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
 class TypedArgSubGroup: public TypedArgBase

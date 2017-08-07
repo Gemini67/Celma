@@ -30,7 +30,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Global constraint: All of the specified arguments must be used.
-/// @since  x.y.z, 19.07.2017  (use ArgumentKey type to handle keys)
+/// @since  0.15.0, 19.07.2017  (use ArgumentKey type to handle keys)
 /// @since  0.2, 10.04.2016
 class ConstraintAllOf: public IConstraint
 {

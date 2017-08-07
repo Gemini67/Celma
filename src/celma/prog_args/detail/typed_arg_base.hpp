@@ -78,7 +78,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///   variant is used to print the values of the features/flags handled by this
 ///   base class.
 ///
-/// @since  x.y.z, 13.07.2017  (use type ArgumentKey instead of string for
+/// @since  0.15.0, 13.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
 class TypedArgBase
@@ -141,7 +141,7 @@ public:
 
    /// Returns the argument key(s) specified for this argument.
    /// @return  The short and/or long argument specified for this argument.
-   /// @since  x.y.z, 13.07.2017  (renamed from argSpec())
+   /// @since  0.15.0, 13.07.2017  (renamed from argSpec())
    /// @since  0.2, 10.04.2016
    const ArgumentKey& key() const;
 

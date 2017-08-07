@@ -27,7 +27,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Constraint: None or just one of the specified arguments may be used.
-/// @since  x.y.z, 19.07.2017  (use ArgumentKey type to handle keys)
+/// @since  0.15.0, 19.07.2017  (use ArgumentKey type to handle keys)
 /// @since  0.2, 10.04.2016
 class ConstraintAnyOf: public IConstraint
 {

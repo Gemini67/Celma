@@ -128,7 +128,7 @@ ArgumentKey::ArgumentKey( const string& arg_spec) noexcept( false):
 
 /// Constructor, takes a single character as argument key.
 /// @param[in]  char_arg  The argument character.
-/// @since  x.y.z, 17.07.2017
+/// @since  0.15.0, 17.07.2017
 ArgumentKey::ArgumentKey( char char_arg) noexcept:
    mChar( char_arg),
    mWord()
@@ -166,7 +166,7 @@ bool ArgumentKey::operator ==( const ArgumentKey& other) const
 /// as key in a sorted STL container.
 /// @param[in]  other  The other key object to compare against.
 /// @return  \c true if this is less than \a other.
-/// @since  x.y.z, 09.02.2017
+/// @since  0.15.0, 09.02.2017
 bool ArgumentKey::operator <( const ArgumentKey& other) const
 {
 
@@ -204,10 +204,13 @@ bool ArgumentKey::mismatch( const ArgumentKey& other) const
 } // ArgumentKey::mismatch
 
 
-/// 
-/// @param[in]  other  .
-/// @return  .
-/// @since  x.y.z, 12.07.2017
+
+/// Returns if the long argument key starts with the given characters.
+/// @param[in]  other  The characters that the long argument should start
+///                    with.
+/// @return  \c true if this object has a long argument key and it starts
+///          with the characters given in \a other.
+/// @since  0.15.0, 12.07.2017
 bool ArgumentKey::startsWith( const ArgumentKey& other) const
 {
    return !mWord.empty() && !other.mWord.empty() &&

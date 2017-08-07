@@ -32,14 +32,14 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Type of the data entries that are actually stored.
 /// @tparam  U  The type of the objects to store.
-/// @since  x.y.z, 21.06.2017
+/// @since  0.15.0, 21.06.2017
 template< typename U> class Data
 {
 public:
    /// Constructor.
    /// @param[in]  key   The key == short and/or long argument.
    /// @param[in]  data  The data to store with the key.
-   /// @since  x.y.z, 21.06.2017
+   /// @since  0.15.0, 21.06.2017
    Data( const ArgumentKey& key, U data):
       mKey( key),
       mData( data)
@@ -57,7 +57,7 @@ public:
    /// both keys.
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this and \a other have the same key.
-   /// @since  x.y.z, 21.06.2017
+   /// @since  0.15.0, 21.06.2017
    bool operator ==( const Data& other) const
    {
       return mKey == other.mKey;
@@ -68,7 +68,7 @@ public:
    /// whatever is set first in both keys.
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this and \a other have the same key.
-   /// @since  x.y.z, 21.06.2017
+   /// @since  0.15.0, 21.06.2017
    bool operator ==( const ArgumentKey& other) const
    {
       return mKey == other;
@@ -78,7 +78,7 @@ public:
    /// entry.
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if a mismatch with an existing entry was detected.
-   /// @since  x.y.z, 22.06.2017
+   /// @since  0.15.0, 22.06.2017
    bool mismatch( const ArgumentKey& other) const
    {
       return mKey.mismatch( other);
@@ -86,7 +86,7 @@ public:
 
    /// Returns the key of an entry.
    /// @return  The key.
-   /// @since  x.y.z, 21.06.2017
+   /// @since  0.15.0, 21.06.2017
    const ArgumentKey& key() const
    {
       return mKey;
@@ -94,7 +94,7 @@ public:
 
    /// Returns the data element of an entry.
    /// @return  The data.
-   /// @since  x.y.z, 21.06.2017
+   /// @since  0.15.0, 21.06.2017
    const U& data() const
    {
       return mData;
@@ -120,13 +120,13 @@ private:
 /// here, we don't expect millions of entries.
 /// @tparam  T  The type of the objects to store.
 /// @tparam  E  The type of exception to throw when an argument already exists.
-/// @since  x.y.z, 21.06.2017
+/// @since  0.15.0, 21.06.2017
 template< typename T, class E = std::invalid_argument> class Storage
 {
 public:
    /// Constructor.
    /// @param[in]  allow_dups  Specifies if duplicate entries should be allowed.
-   /// @since  x.y.z, 21.06.2017
+   /// @since  0.15.0, 21.06.2017
    Storage( bool allow_dups = false);
 
    /// Adds a new entry.<br>
@@ -134,7 +134,7 @@ public:
    /// already.
    /// @param[in]  data  The data to store with the key.
    /// @param[in]  key   The key for this entry.
-   /// @since  x.y.z, 23.06.2017
+   /// @since  0.15.0, 23.06.2017
    void addArgument( T data, const ArgumentKey& key) noexcept( false);
 
    /// Adds a new entry.<br>
@@ -142,15 +142,14 @@ public:
    /// already.
    /// @param[in]  data      The data to store with the key.
    /// @param[in]  arg_spec  The argument character, string or both.
-   /// @since  x.y.z, 21.06.2017
+   /// @since  0.15.0, 21.06.2017
    void addArgument( T data, const std::string& arg_spec) noexcept( false);
 
-   /// 
-   /// @param[in]  first  .
-   /// @param[in]  last   .
-   /// @param[in]  data   .
-   /// @return  .
-   /// @since  x.y.z, 20.07.2017
+   /// Adds multiple keys to the internal container, all with the same value.
+   /// @param[in]  first  Iterator pointing to the first key to add.
+   /// @param[in]  last   End-iterator.
+   /// @param[in]  data   The value to add with the keys.
+   /// @since  0.15.0, 20.07.2017
    template< typename I> void insert( I first, const I& last, T data)
       noexcept( false);
 
@@ -162,44 +161,44 @@ public:
 
    /// Returns the first entry.
    /// @return  Iterator pointing to the first entry.
-   /// @since  x.y.z, 26.06.2017
+   /// @since  0.15.0, 26.06.2017
    const_iterator begin() const;
 
    /// Returns the first entry.
    /// @return  Iterator pointing to the first entry.
-   /// @since  x.y.z, 26.06.2017
+   /// @since  0.15.0, 26.06.2017
    const_iterator cbegin() const;
 
    /// Returns the past-the-end entry.
    /// @return  Iterator pointing behind the last entry.
-   /// @since  x.y.z, 26.06.2017
+   /// @since  0.15.0, 26.06.2017
    const_iterator end() const;
 
    /// Returns the past-the-end entry.
    /// @return  Iterator pointing behind the last entry.
-   /// @since  x.y.z, 26.06.2017
+   /// @since  0.15.0, 26.06.2017
    const_iterator cend() const;
 
    /// Searches for an entry.
    /// @param[in]  key  The key of the entry to search for.
    /// @return  Iterator pointing to the entry when found.
-   /// @since  x.y.z, 26.06.2017
+   /// @since  0.15.0, 26.06.2017
    const_iterator find( const ArgumentKey& key) const;
 
    /// Returns if then container is empty.
    /// @return  \c true if the container is empty.
-   /// @since  x.y.z, 26.06.2017
+   /// @since  0.15.0, 26.06.2017
    bool empty() const;
 
    /// Removes the entry that the given iterator is pointing to.
    /// @param[in]  it  Iterator pointing to the element to delete.
    /// @return  Iterator pointing to the next entry.
-   /// @since  x.y.z, 27.06.2017
+   /// @since  0.15.0, 27.06.2017
    const_iterator erase( const_iterator& it);
 
    /// Returns the number of entries.
    /// @return  Number of entries.
-   /// @since  x.y.z, 27.06.2017
+   /// @since  0.15.0, 27.06.2017
    size_t size() const;
 
 private:

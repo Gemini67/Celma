@@ -41,7 +41,7 @@ ConstraintContainer*  ConstraintContainer::mpCurrentConstraints = nullptr;
 
 
 /// Constructor.
-/// @since  x.y.z, 26.06.2017
+/// @since  0.15.0, 26.06.2017
 ConstraintContainer::ConstraintContainer():
    mConstraints( true)
 {
