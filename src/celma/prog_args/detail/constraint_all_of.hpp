@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,14 +19,18 @@
 #define CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ALL_OF_HPP
 
 
+#include <memory>
 #include <string>
+#include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/i_constraint.hpp"
+#include "celma/prog_args/detail/storage.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
 
 
 /// Global constraint: All of the specified arguments must be used.
+/// @since  0.15.0, 19.07.2017  (use ArgumentKey type to handle keys)
 /// @since  0.2, 10.04.2016
 class ConstraintAllOf: public IConstraint
 {
@@ -42,9 +46,9 @@ public:
    /// - If so, verify that this argument was not already used before and then
    ///   remove it from the list of remaining arguments.
    ///
-   /// @param[in]  sourceArg  The current argument that was identified.
+   /// @param[in]  key  The current argument that was identified.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg) override;
+   virtual void executeConstraint( const ArgumentKey& key) override;
 
    /// Returns the list of arguments that must be used.
    /// @return  The list of arguments as passed to the constructor.
@@ -61,13 +65,16 @@ public:
    virtual void checkEndCondition() const override;
 
 private:
+   /// Container for the keys, only keys needed.
+   typedef Storage< std::nullptr_t>  key_cont_t;
+
    /// The argument specifications of the arguments.<br>
    /// Non-const because non-complete argument specifications may be expanded.
    std::string  mArgSpecList;
-   /// Contains the argument that was actually used on the command line.<br>
-   /// Used to determine if an argument was used, may be used and for error
-   /// reporting.
-   std::string  mRemainingArguments;
+   /// When validated() is called, the arguments from #mArgSpecList are copied
+   /// here. Afterwards, executeConstraint() will delete the used argument from
+   /// it
+   key_cont_t   mRemainingArguments;
 
 }; // ConstraintAllOf
 

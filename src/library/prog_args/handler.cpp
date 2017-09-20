@@ -49,6 +49,10 @@ using std::string;
 using std::underflow_error;
 
 
+// module definitions
+const detail::ArgumentKey  Handler::mPosKey( "-");
+
+
 
 /// Constructor.
 /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
@@ -156,12 +160,23 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
                                                 IUsageText* txt2)
 {
 
+/*
+   return addArgument( key,
+                       detail::ArgHandlerCallable( [](=)
+                          {
+                             usage( txt1, txt2);
+                          }
+                       ),
+                       "Handler::usage",
+                       desc);
+*/
    return addArgument( arg_spec,
                        detail::ArgHandlerCallable(
                           std::bind( &Handler::usage, this, txt1, txt2)
                        ),
                        "Handler::usage",
                        desc);
+
 } // Handler::addHelpArgument
 
 
@@ -176,15 +191,17 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 {
 
-   auto  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
+   static const string        desc( "Specifies the (path and) file name of the "
+                                    "file with the program arguments to read.");
+   const detail::ArgumentKey  key( arg_spec);
+
+   auto  arg_hdl = new detail::TypedArgCallableValue( key,
                                                       std::bind( &Handler::readArgumentFile,
                                                                  this, std::placeholders::_1, true),
                                                                  "Handler::readArgumentFile");
 
 
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Specifies the (path and) file name of the "
-                             "file with the program arguments to read.");
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentFile
 
 
@@ -198,12 +215,13 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 {
 
-   auto  arg_hdl = new detail::TypedArg< bool>( arg_spec,
-                                                DEST_VAR( mPrintHidden));
+   static const string        desc( "Also print hidden arguments in the usage.");
+   const detail::ArgumentKey  key( arg_spec);
+
+   auto  arg_hdl = new detail::TypedArg< bool>( key, DEST_VAR( mPrintHidden));
 
 
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Also print hidden arguments in the usage.");
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentPrintHidden
 
 
@@ -220,15 +238,17 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 {
 
-   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
+   static const string  desc( "Prints the list of arguments and their destination "
+                             "variables.");
+   const detail::ArgumentKey  key( arg_spec);
+
+   auto  arg_hdl = new detail::TypedArgCallable( key,
                                                  DEST_MEMBER_METHOD( Handler,
                                                                      listArgVars));
 
 
    arg_hdl->setCardinality();
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Prints the list of arguments and their destination "
-                             "variables.");
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentListArgVars
 
 
@@ -244,18 +264,21 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
 {
 
+   static const string  desc( "Prints the list of argument groups.");
+
    if (!mUsedByGroup)
       throw invalid_argument( "Standard argument 'list argument groups' can"
                               " only be set when argument groups are used!"); 
 
-   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
+   const detail::ArgumentKey  key( arg_spec);
+
+   auto  arg_hdl = new detail::TypedArgCallable( key,
                                                  DEST_MEMBER_METHOD( Handler,
                                                                      listArgGroups));
 
 
    arg_hdl->setCardinality();
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Prints the list of argument groups.");
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentListArgGroups
 
 
@@ -270,12 +293,16 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallable( arg_spec, DEST_METHOD( Handler, endValueList, *this));
+   static const string  desc( "Marks the end of a multiple, separate value list.");
+
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+      = new detail::TypedArgCallable( key, DEST_METHOD( Handler, endValueList,
+                                      *this));
 
 
    arg_hdl->setCardinality();
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Marks the end of a multiple, separate value list.");
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentEndValues
 
 
@@ -456,13 +483,7 @@ detail::TypedArgBase* Handler::getArgHandler( const string& arg_spec)
                                             noexcept( false)
 {
 
-   const detail::ArgumentKey  arg_key( arg_spec);
-
-
-   if (arg_key.hasCharArg())
-      return mArguments.findArg( arg_key.argChar());
-
-   return mArguments.findArg( arg_key.argString());
+   return mArguments.findArg( detail::ArgumentKey( arg_spec));
 } // Handler::getArgHandler
 
 
@@ -505,34 +526,29 @@ void Handler::crossCheckArguments( const string ownName,
 
 
 
-/// The handling of single character arguments and argument strings/names is
-/// of course completely the same, except for the argument and its type.<br>
-/// So, this template handles both types of arguments. Needed only in the
-/// implementation, so the template definition is in the source file too.
-/// @tparam  T  The type of the argument (character or string).
-/// @param[in]      arg         The argument (character/short or long).
-/// @param[in]      arg_string  The argument character or string always in
-///                             string format.
-/// @param[in,out]  ai          The iterator pointing to the current argument.
-///                             May be increased here (for values or argument
-///                             groups).
-/// @param[in]      end         Iterator pointing to the end of the argument
-///                             list.
+/// Finally: Handle an identified argument from the command line.
+/// @param[in]      key  The argument (character/short or long).
+/// @param[in,out]  ai   The iterator pointing to the current argument.<br>
+///                      May be increased here (for values or argument
+///                      groups).
+/// @param[in]      end  Iterator pointing to the end of the argument list.
 /// @return  Result of handling the current argument.
+/// @since  0.15.0, 17.07.2017  (only ArgumentKey as parameter, no template
+///                             anymore)
 /// @since  0.2, 10.04.2016
-template< typename T>
-   Handler::ArgResult Handler::processArg( const T& arg,
-                                           const string& arg_string,
-                                           detail::ArgListParser::const_iterator& ai,
-                                           const detail::ArgListParser::const_iterator& end)
+Handler::ArgResult
+   Handler::processArg( const detail::ArgumentKey& key,
+                        detail::ArgListParser::const_iterator& ai,
+                        const detail::ArgListParser::const_iterator& end)
+                       noexcept( false)
 {
 
-   auto  p_arg_hdl = mSubGroupArgs.findArg( arg);
+   auto  p_arg_hdl = mSubGroupArgs.findArg( key);
 
 
    if (p_arg_hdl != nullptr)
    {
-      handleIdentifiedArg( p_arg_hdl, arg_string);
+      handleIdentifiedArg( p_arg_hdl, key);
 
       auto  subArgHandler = static_cast< detail::TypedArgSubGroup*>( p_arg_hdl)->obj();
       ++ai;
@@ -550,25 +566,26 @@ template< typename T>
       return ArgResult::consumed;
    } // end if
 
-   mpLastArg = p_arg_hdl = mArguments.findArg( arg);
+   mpLastArg = p_arg_hdl = mArguments.findArg( key);
    if (p_arg_hdl == nullptr)
       return ArgResult::unknown;
 
    // an argument that we know
    if (p_arg_hdl->valueMode() == ValueMode::unknown)
-      throw runtime_error( "Value mode not set for argument '" + arg_string + "'");
+      throw runtime_error( "Value mode not set for argument '"
+                           + format::toString( key) + "'");
 
    if (p_arg_hdl->valueMode() == ValueMode::none)
    {
       // no value needed
-      handleIdentifiedArg( p_arg_hdl, arg_string);
+      handleIdentifiedArg( p_arg_hdl, key);
       return ArgResult::consumed;
    } // end if
 
    if (p_arg_hdl->valueMode() == ValueMode::command)
    {
       // found last argument/value for me, rest for another object/tool
-      handleIdentifiedArg( p_arg_hdl, arg_string, ai.argsAsString( false));
+      handleIdentifiedArg( p_arg_hdl, key, ai.argsAsString( false));
       return ArgResult::last;
    } // end if
 
@@ -586,16 +603,17 @@ template< typename T>
    {
       // no next value
       if (p_arg_hdl->valueMode() == ValueMode::optional)
-         handleIdentifiedArg( p_arg_hdl, arg_string);
+         handleIdentifiedArg( p_arg_hdl, key);
       else
-         throw runtime_error( "Argument '" + arg_string + "' requires value(s)");
+         throw runtime_error( "Argument '" + format::toString( key)
+                              + "' requires value(s)");
    } else
    {
       // have a next value, and value mode can only be 'optional' or 'required'
       // first process the argument, *then* assign ait2 to ai
       // reason: arg and arg_string are references of ai->, so if we change ai
       // the references are still on the old value(s)
-      handleIdentifiedArg( p_arg_hdl, arg_string, ait2->mValue);
+      handleIdentifiedArg( p_arg_hdl, key, ait2->mValue);
       ai = ait2;
    } // end if
 
@@ -631,25 +649,25 @@ Handler::ArgResult
          mpLastArg->calledAssign( mReadingArgumentFile, ai->mValue);
          return ArgResult::consumed;
       } // end if
-      if (detail::TypedArgBase* hdl = mArguments.findArg( '-'))
+      if (detail::TypedArgBase* hdl = mArguments.findArg( mPosKey))
       {
          if (hdl->valueMode() == ValueMode::command)
          {
             // this and the following arguments/values are not for me
-            handleIdentifiedArg( hdl, string( "-"), ai.argsAsString());
+            handleIdentifiedArg( hdl, mPosKey, ai.argsAsString());
             return ArgResult::last;
          } // end if
          
-         handleIdentifiedArg( hdl, string( "-"), ai->mValue);
+         handleIdentifiedArg( hdl, mPosKey, ai->mValue);
          return ArgResult::consumed;
       } // end if
       break;
 
    case detail::ArgListElement::ElementType::singleCharArg:
-      return processArg( ai->mArgChar, string( 1, ai->mArgChar), ai, end);
+      return processArg( detail::ArgumentKey( ai->mArgChar), ai, end);
 
    case detail::ArgListElement::ElementType::stringArg:
-      return processArg( ai->mArgString, ai->mArgString, ai, end);
+      return processArg( detail::ArgumentKey( ai->mArgString), ai, end);
 
    case detail::ArgListElement::ElementType::control:
       if (ai->mArgChar == '(')
@@ -719,7 +737,7 @@ void Handler::checkMaxArgLen( size_t& maxArgLen) const
 bool Handler::argumentExists( char argChar) const
 {
 
-   return mArguments.findArg( argChar) != nullptr;
+   return mArguments.findArg( detail::ArgumentKey( argChar)) != nullptr;
 } // Handler::argumentExists
 
 
@@ -731,7 +749,7 @@ bool Handler::argumentExists( char argChar) const
 bool Handler::argumentExists( const string& argString) const
 {
 
-   return mArguments.findArg( argString) != nullptr;
+   return mArguments.findArg( detail::ArgumentKey( argString)) != nullptr;
 } // Handler::argumentExists
 
 
@@ -928,18 +946,19 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 
 
 /// Standard procedure for adding an argument handling object.
-/// @param[in]  ah_obj    Pointer to the object that handles the argument.
-/// @param[in]  arg_spec  The specification of the argument.
-/// @param[in]  desc      The description of the argument.
+/// @param[in]  ah_obj  Pointer to the object that handles the argument.
+/// @param[in]  key     The argument key: short and/or long argument.
+/// @param[in]  desc    The description of the argument.
 /// @return  Pointer to the passed argument handling object.
+/// @since  0.15.0, 13.07.2017  (take ArgumentKey instead of string)
 /// @since  0.2, 10.04.2016
 detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
-                                                  const string& arg_spec,
+                                                  const detail::ArgumentKey& key,
                                                   const string& desc)
 {
 
-   mArguments.addArgument( ah_obj, arg_spec);
-   mDescription.addArgument( arg_spec, desc, ah_obj);
+   mArguments.addArgument( ah_obj, key);
+   mDescription.addArgument( key, desc, ah_obj);
 
    if (mUsedByGroup)
       Groups::instance().crossCheckArguments( this);
@@ -953,8 +972,8 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
 /// If the argument specification in the list does not match the original
 /// specification of the argument (short and/or long), it is replaced in the
 /// \a constraint_arg_list.
-/// @param[in]  constraint_arg_list  .
-/// @return  .
+/// @param[in]  constraint_arg_list  The list of arguments to check.
+/// @return  \c true if all arguments in the list are valid.
 /// @since  0.2, 10.04.2016
 bool Handler::validArguments( string& constraint_arg_list) const
 {
@@ -965,61 +984,20 @@ bool Handler::validArguments( string& constraint_arg_list) const
 
    for (auto const& it : tok)
    {
-      const auto  comma_pos = it.find( ',');
-      string      current_arg;
-      if (comma_pos == string::npos)
+      const detail::ArgumentKey  key( it);
+      if (detail::TypedArgBase* arg = mArguments.findArg( key))
       {
-         detail::TypedArgBase*  arg = nullptr;
-         if (it.length() == 1)
-         {
-            // only a short argument
-            arg = mArguments.findArg( it[ 0]);
-         } else
-         {
-            // only a long argument
-            arg = mArguments.findArg( it);
-         } // end if
+         if (invalidCombination( key))
+            throw runtime_error( "Combination '" + it + "' is invalid");
 
-         // found the handler for this argument?
-         if (arg == nullptr)
-            return false;
-
-         // argument is valid but may use both short and long format
-         current_arg = arg->argSpec();
+         // argument from the list is valid
+         if (!new_constraint_arg_list.empty())
+            new_constraint_arg_list.append( ";");
+         new_constraint_arg_list.append( format::toString( arg->key()));
       } else
       {
-         // both short and long argument
-         const string           first(  it, 0, comma_pos);
-         const string           second( it, comma_pos + 1, string::npos);
-         detail::TypedArgBase*  arg_short = nullptr;
-         detail::TypedArgBase*  arg_long  = nullptr;
-
-         if (first.length() == 1)
-         {
-            arg_short = mArguments.findArg( first[ 0]);
-            arg_long  = mArguments.findArg( second);
-         } else
-         {
-            arg_short = mArguments.findArg( second[ 0]);
-            arg_long  = mArguments.findArg( first);
-         } // end if
-
-         // found both the short and long argument?
-         if ((arg_short == nullptr) || (arg_long == nullptr))
-            return false;
-
-         // do the short and long format (from the constraint string) really
-         // belong to the same handler?
-         if (arg_short != arg_long)
-            throw runtime_error( "argument short/long mismatch");
-
-         current_arg = arg_short->argSpec();
+         return false;
       } // end if
-
-      // argument from the list is valid
-      if (!new_constraint_arg_list.empty())
-         new_constraint_arg_list.append( ";");
-      new_constraint_arg_list.append( current_arg);
    } // end for
 
    // when we get here, all the arguments in the constraint string were valid
@@ -1031,16 +1009,50 @@ bool Handler::validArguments( string& constraint_arg_list) const
 
 
 
+/// Checks if the provided argument specification contains an invalid
+/// combination, i.e. a short and a long argument that are already used on
+/// two different, existing arguments.
+/// @param[in]  key  The argument specification to test.
+/// @return  \c true if the given combination is invalid.
+/// @since  0.15.0, 06.08.2017
+bool Handler::invalidCombination( const detail::ArgumentKey& key) const
+{
+
+   // if the argument is provided with short and long argument:
+   // search for both separately to make sure there is no mismatch
+   detail::TypedArgBase*  short_arg = nullptr;
+   detail::TypedArgBase*  long_arg = nullptr;
+
+
+   if (key.hasCharArg())
+   {
+      if ((short_arg = mArguments.findArg( detail::ArgumentKey( key.argChar()))) == nullptr)
+         throw runtime_error( "unknown argument '" + string( 1, key.argChar())
+                              + "'");
+   } // end if
+
+   if (key.hasStringArg())
+   {
+      if ((long_arg = mArguments.findArg( detail::ArgumentKey( key.argString()))) == nullptr)
+         throw runtime_error( "unknown argument '" + key.argString() + "'");
+   } // end if
+
+   return (short_arg != nullptr) && (long_arg != nullptr) &&
+          (short_arg != long_arg);
+} // Handler::invalidCombination
+
+
+
 /// When an argument was identified, passes the argument specification to all
 /// global constraint objects to check if a constraint is violated.
-/// @param[in]  arg_spec  The argument specification.
+/// @param[in]  key  The argument specification.
 /// @since  0.2, 10.04.2016
-void Handler::executeGlobalConstraints( const string& arg_spec)
+void Handler::executeGlobalConstraints( const detail::ArgumentKey& key)
 {
 
    for (auto & current_constraint : mGlobalConstraints)
    {
-      current_constraint->executeConstraint( arg_spec);
+      current_constraint->executeConstraint( key);
    } // end for
 
 } // Handler::executeGlobalConstraints
@@ -1053,7 +1065,7 @@ void Handler::executeGlobalConstraints( const string& arg_spec)
 void Handler::checkGlobalConstraints() const
 {
 
-   for (auto cit : mGlobalConstraints)
+   for (auto const& cit : mGlobalConstraints)
    {
       cit->checkEndCondition();
    } // end for
@@ -1069,24 +1081,25 @@ void Handler::checkGlobalConstraints() const
 /// - Produce verbose output if required.
 /// - Finally call calledAssign() for this argument.
 ///
-/// @param[in]  hdl       Pointer to the object that handles this argument.
-/// @param[in]  arg_spec  The argument specification.
-/// @param[in]  value     The value for the argument, empty string if not set.
+/// @param[in]  hdl    Pointer to the object that handles this argument.
+/// @param[in]  key    The short and/or long argument keys.
+/// @param[in]  value  The value for the argument, empty string if not set.
 /// @since  0.2, 10.04.2016
 void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
-                                   const string& arg_spec,
+                                   const detail::ArgumentKey& key,
                                    const string& value)
 {
 
-   mConstraints.argumentIdentified( arg_spec);
-   executeGlobalConstraints( hdl->argSpec());
+   mConstraints.argumentIdentified( key);
+   executeGlobalConstraints( hdl->key());
 
    if (mVerbose)
    {
       if (value.empty())
          mOutput << hdl->varName() << ": is set" << endl;
       else
-         mOutput << hdl->varName() << ": value '" << value << "' is assigned" << endl;
+         mOutput << hdl->varName() << ": value '" << value << "' is assigned"
+                 << endl;
    } // end if
 
    hdl->calledAssign( mReadingArgumentFile, value);

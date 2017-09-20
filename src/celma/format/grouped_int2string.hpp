@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -59,22 +59,22 @@ namespace celma { namespace format {
    }
 
 #define  SIGNED_FUNCTIONS( b, f) \
-   FUNCTION_ENABLED( b, true, f); \
+   FUNCTION_ENABLED( b, true, f) \
    BUFFER_FUNCTION_ENABLED( b, true, f)
 
 #define  UNSIGNED_FUNCTIONS( b, f) \
-   FUNCTION_ENABLED( b, false, f); \
+   FUNCTION_ENABLED( b, false, f) \
    BUFFER_FUNCTION_ENABLED( b, false, f)
 
 
-SIGNED_FUNCTIONS( 1, groupedInt8toString);
-UNSIGNED_FUNCTIONS( 1, groupedUint8toString);
-SIGNED_FUNCTIONS( 2, groupedInt16toString);
-UNSIGNED_FUNCTIONS( 2, groupedUint16toString);
-SIGNED_FUNCTIONS( 4, groupedInt32toString);
-UNSIGNED_FUNCTIONS( 4, groupedUint32toString);
-SIGNED_FUNCTIONS( 8, groupedInt64toString);
-UNSIGNED_FUNCTIONS( 8, groupedUint64toString);
+SIGNED_FUNCTIONS( 1, groupedInt8toString)
+UNSIGNED_FUNCTIONS( 1, groupedUint8toString)
+SIGNED_FUNCTIONS( 2, groupedInt16toString)
+UNSIGNED_FUNCTIONS( 2, groupedUint16toString)
+SIGNED_FUNCTIONS( 4, groupedInt32toString)
+UNSIGNED_FUNCTIONS( 4, groupedUint32toString)
+SIGNED_FUNCTIONS( 8, groupedInt64toString)
+UNSIGNED_FUNCTIONS( 8, groupedUint64toString)
 
 
 #undef  SIGNED_FUNCTIONS

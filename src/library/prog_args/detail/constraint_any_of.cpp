@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,7 +23,12 @@
 #include <stdexcept>
 
 
-using namespace std;
+// project includes
+#include "celma/format/to_string.hpp"
+#include "celma/prog_args/detail/argument_key.hpp"
+
+
+using std::string;
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -38,28 +43,29 @@ ConstraintAnyOf::ConstraintAnyOf( const string& reqArgSpec):
    mArgSpecList( reqArgSpec),
    mUsedArgument()
 {
-} // end ConstraintAnyOf::ConstraintAnyOf
+} // ConstraintAnyOf::ConstraintAnyOf
 
 
 
 /// Called when an argument was identified. If the argument is one of those
 /// in the specified list, check if it is the first of these arguments that
 /// is used, i.e. #mUsedArgument is empty.
-/// @param[in]  sourceArg  The argument that was used/identified.
+/// @param[in]  key  The argument that was used/identified.
 /// @since  1.1, 01.03.2016
-void ConstraintAnyOf::executeConstraint( const string& sourceArg)
+void ConstraintAnyOf::executeConstraint( const ArgumentKey& key)
 {
 
-   if (!isConstraintArgument( mArgSpecList, sourceArg))
+   if (!isConstraintArgument( mArgSpecList, key))
       return;
 
    if (!mUsedArgument.empty())
-      throw runtime_error( "Argument '" + sourceArg + "' cannot be used since '" +
-                           mUsedArgument + "' was already used");
+      throw std::runtime_error( "Argument '" + format::toString( key)
+                                + "' cannot be used since '" + mUsedArgument
+                                + "' was already used");
 
-   mUsedArgument = sourceArg;
+   mUsedArgument = format::toString( key);
 
-} // end ConstraintAnyOf::executeConstraint
+} // ConstraintAnyOf::executeConstraint
 
 
 
@@ -71,7 +77,7 @@ string& ConstraintAnyOf::argumentList()
 {
 
    return mArgSpecList;
-} // end ConstraintAnyOf::argumentList
+} // ConstraintAnyOf::argumentList
 
 
 
@@ -79,7 +85,7 @@ string& ConstraintAnyOf::argumentList()
 /// @since  0.2, 10.04.2016
 void ConstraintAnyOf::validated()
 {
-} // end ConstraintAnyOf::validated
+} // ConstraintAnyOf::validated
 
 
 
@@ -88,7 +94,7 @@ void ConstraintAnyOf::validated()
 /// @since  0.2, 10.04.2016
 void ConstraintAnyOf::checkEndCondition() const
 {
-} // end ConstraintAnyOf::checkEndCondition
+} // ConstraintAnyOf::checkEndCondition
 
 
 
@@ -97,5 +103,5 @@ void ConstraintAnyOf::checkEndCondition() const
 } // namespace celma
 
 
-// =========================  END OF constraint_any_of.cpp  =========================
+// ======================  END OF constraint_any_of.cpp  ======================
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -13,13 +13,6 @@
 **    celma::prog_args::Handler, using the Boost.Test module.
 **
 --*/
-
-
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
 
 
 // STL includes
@@ -40,28 +33,30 @@
 #include "celma/prog_args.hpp"
 
 
-using namespace std;
-using namespace celma;
+using std::string;
+using celma::prog_args::detail::ArgumentKey;
+using celma::prog_args::detail::TypedArgBase;
+using celma::prog_args::Handler;
 
 
 // module definitions
 
 /// Custom type: set flags in a bitset.
 /// @since  0.2, 10.04.2016
-class TypedArgBitset: public prog_args::detail::TypedArgBase
+class TypedArgBitset: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef bitset< 1024>  type;
+   typedef std::bitset< 1024>  type;
 
    /// Constructor.
-   /// @param[in]  arg_spec  The argument specification, i.e. short and/or long
-   ///                       argument.
-   /// @param[in]  dest      The destination variable to store the values in.
-   /// @param[in]  vname     The name of the destination variable to store the
-   ///                       value in.
+   /// @param[in]  key    The argument specification, i.e. short and/or long
+   ///                    argument.
+   /// @param[in]  dest   The destination variable to store the values in.
+   /// @param[in]  vname  The name of the destination variable to store the
+   ///                    value in.
    /// @since  0.2, 10.04.2016
-   TypedArgBitset( const string& arg_spec, type& dest, const string& vname);
+   TypedArgBitset( const ArgumentKey& key, type& dest, const string& vname);
 
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
@@ -79,7 +74,7 @@ public:
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual prog_args::detail::TypedArgBase* setListSep( char sep);
+   virtual TypedArgBase* setListSep( char sep);
 
 private:
    /// Reference of the destination variable to store the value(s) in.
@@ -94,9 +89,9 @@ private:
 // ===============
 
 
-TypedArgBitset::TypedArgBitset( const string& arg_spec, type& dest,
+TypedArgBitset::TypedArgBitset( const ArgumentKey& key, type& dest,
                                 const string& vname):
-   prog_args::detail::TypedArgBase( arg_spec, vname, ValueMode::required, false),
+   TypedArgBase( key, vname, Handler::ValueMode::required, false),
    mDestVar( dest),
    mListSep( ',')
 {
@@ -106,7 +101,7 @@ TypedArgBitset::TypedArgBitset( const string& arg_spec, type& dest,
 void TypedArgBitset::assign( const string& value)
 {
 
-   common::Tokenizer  tok( value, mListSep);
+   celma::common::Tokenizer  tok( value, mListSep);
 
 
    for (auto it : tok)
@@ -132,7 +127,7 @@ bool TypedArgBitset::hasValue() const
 } // end TypedArgBitset::hasValue
 
 
-prog_args::detail::TypedArgBase* TypedArgBitset::setListSep( char sep)
+TypedArgBase* TypedArgBitset::setListSep( char sep)
 {
    mListSep = sep;
    return this;
@@ -145,14 +140,16 @@ prog_args::detail::TypedArgBase* TypedArgBitset::setListSep( char sep)
 BOOST_AUTO_TEST_CASE( custom_bitset)
 {
 
-   prog_args::Handler    ah( 0);
+   Handler               ah( 0);
    TypedArgBitset::type  kilobits;
 
 
-   BOOST_REQUIRE_NO_THROW( ah.addCustomArgument< TypedArgBitset>( "b,bitset", DEST_VAR( kilobits), "bitset")
-                                                                ->setIsMandatory());
+   BOOST_REQUIRE_NO_THROW(
+      ah.addCustomArgument< TypedArgBitset>( "b,bitset", DEST_VAR( kilobits),
+                                             "bitset")
+                                           ->setIsMandatory());
 
-   common::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
+   const celma::common::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE_EQUAL( kilobits.count(), 6);

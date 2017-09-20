@@ -30,6 +30,7 @@
 #include "celma/prog_args/detail/arg_list_parser.hpp"
 #include "celma/prog_args/detail/argument_container.hpp"
 #include "celma/prog_args/detail/argument_desc.hpp"
+#include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
 #include "celma/prog_args/detail/typed_arg_callable.hpp"
 #include "celma/prog_args/detail/typed_arg_callable_value.hpp"
@@ -691,6 +692,9 @@ protected:
    friend std::ostream& operator <<( std::ostream& os, const Handler& ah);
 
 private:
+   /// The argument key to use to handle positional arguments.
+   static const detail::ArgumentKey  mPosKey;
+
    /// Type of the container to store the global constrainst in.
    typedef std::vector< detail::IConstraint*>  ConstraintCont;
 
@@ -711,26 +715,20 @@ private:
    /// @since  0.2, 10.04.2016
    void setIsSubGroupHandler();
 
-   /// The handling of single character arguments and argument strings/names is
-   /// of course completely the same, except for the argument and its type.<br>
-   /// So, this template handles both types of arguments. Needed only in the
-   /// implementation, so the template definition is in the source file too.
-   /// @tparam  T  The type of the argument (character or string).
-   /// @param[in]      arg         The argument (character/short or long).
-   /// @param[in]      arg_string  The argument character or string always in
-   ///                             string format.
-   /// @param[in,out]  ai          The iterator pointing to the current argument.
-   ///                             May be increased here (for values or argument
-   ///                             groups).
-   /// @param[in]      end         Iterator pointing to the end of the argument
-   ///                             list.
+   /// Finally: Handle an identified argument from the command line.
+   /// @param[in]      key  The argument (character/short or long).
+   /// @param[in,out]  ai   The iterator pointing to the current argument.<br>
+   ///                      May be increased here (for values or argument
+   ///                      groups).
+   /// @param[in]      end  Iterator pointing to the end of the argument list.
    /// @return  Result of handling the current argument.
+   /// @since  0.15.0, 17.07.2017  (only ArgumentKey as parameter, no template
+   ///                             anymore)
    /// @since  0.2, 10.04.2016
-   template< typename T>
-      ArgResult processArg( const T& arg, const std::string& argString,
-                            detail::ArgListParser::const_iterator& ai,
-                            const detail::ArgListParser::const_iterator& end)
-                          noexcept( false);
+   ArgResult processArg( const detail::ArgumentKey& key,
+                         detail::ArgListParser::const_iterator& ai,
+                         const detail::ArgListParser::const_iterator& end)
+                       noexcept( false);
 
    /// Tries to open the file with the program's name and read the arguments
    /// from this file.
@@ -763,29 +761,39 @@ private:
    void iterateArguments( detail::ArgListParser& alp) noexcept( false);
 
    /// Standard procedure for adding an argument handling object.
-   /// @param[in]  ah_obj    Pointer to the object that handles the argument.
-   /// @param[in]  arg_spec  The specification of the argument.
-   /// @param[in]  desc      The description of the argument.
+   /// @param[in]  ah_obj  Pointer to the object that handles the argument.
+   /// @param[in]  key     The argument key: short and/or long argument.
+   /// @param[in]  desc    The description of the argument.
    /// @return  Pointer to the passed argument handling object.
+   /// @since  0.15.0, 13.07.2017  (take ArgumentKey instead of string)
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* internAddArgument( detail::TypedArgBase* ah_obj,
-                                            const std::string& arg_spec,
+                                            const detail::ArgumentKey& key,
                                             const std::string& desc);
 
    /// Checks each argument in the list if it is a valid/known argument.<br>
    /// If the argument specification in the list does not match the original
    /// specification of the argument (short and/or long), it is replaced in the
    /// \a constraint_arg_list.
-   /// @param[in]  constraint_arg_list  .
-   /// @return  .
+   /// @param[in]  constraint_arg_list  The list of arguments to check.
+   /// @return  \c true if all arguments in the list are valid.
    /// @since  0.2, 10.04.2016
    bool validArguments( std::string& constraint_arg_list) const;
 
+   /// Checks if the provided argument specification contains an invalid
+   /// combination, i.e. a short and a long argument that are already used on
+   /// two different, existing arguments.
+   /// @param[in]  key  The argument specification to test.
+   /// @return  \c true if the given combination is invalid.
+   /// @since  0.15.0, 06.08.2017
+   bool invalidCombination( const detail::ArgumentKey& key) const
+      noexcept( false);
+
    /// When an argument was identified, passes the argument specification to all
    /// global constraint objects to check if a constraint is violated.
-   /// @param[in]  arg_spec  The argument specification.
+   /// @param[in]  key  The argument specification.
    /// @since  0.2, 10.04.2016
-   void executeGlobalConstraints( const std::string& arg_spec);
+   void executeGlobalConstraints( const detail::ArgumentKey& key);
 
    /// After all arguments were processed, call this method to iterate over all
    /// global constraints to check e.g. if a required argument is missing.
@@ -799,12 +807,12 @@ private:
    /// - Produce verbose output if required.
    /// - Finally call calledAssign() for this argument.
    ///
-   /// @param[in]  hdl       Pointer to the object that handles this argument.
-   /// @param[in]  arg_spec  The argument specification.
-   /// @param[in]  value     The value for the argument, empty string if not set.
+   /// @param[in]  hdl    Pointer to the object that handles this argument.
+   /// @param[in]  key    The short and/or long argument keys.
+   /// @param[in]  value  The value for the argument, empty string if not set.
    /// @since  0.2, 10.04.2016
    void handleIdentifiedArg( detail::TypedArgBase* hdl,
-                             const std::string& arg_spec,
+                             const detail::ArgumentKey& key,
                              const std::string& value = "");
 
    /// Stream to write output to.
@@ -888,7 +896,8 @@ private:
 /// @param  n  The destination variable.
 /// @param  s  The size of the bitset.
 /// @since  0.2, 10.04.2016
-#define DEST_BITSET( n, s)  celma::common::RangeDest< size_t, std::bitset< s> >( n), #n
+#define DEST_BITSET( n, s)  \
+   celma::common::RangeDest< size_t, std::bitset< s> >( n), #n
 
 /// Use this define to pass a function that takes no value as argument handler.
 /// @param[in]  f  The name of the function.
@@ -898,7 +907,8 @@ private:
 /// Use this define to pass a function that accepts a value as argument handler.
 /// @param[in]  f  The name of the function.
 /// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION_VALUE( f)  std::bind( &f, std::placeholders::_1), #f, true
+#define  DEST_FUNCTION_VALUE( f)  \
+   std::bind( &f, std::placeholders::_1), #f, true
 
 /// Use this define to pass a method (class member function) of the current
 /// object, that takes no value, as argument handler.
@@ -920,7 +930,8 @@ private:
 /// @param[in]  c  The name of the class.
 /// @param[in]  m  The name of the method.
 /// @since  0.13.1, 07.02.2017
-#define  DEST_MEMBER_METHOD_VALUE( c, m)  std::bind( & c :: m, this, std::placeholders::_1), #c "::" #m, true
+#define  DEST_MEMBER_METHOD_VALUE( c, m)  \
+   std::bind( & c :: m, this, std::placeholders::_1), #c "::" #m, true
 
 
 /// Use this define to pass a method (class member function) that accepts a
@@ -929,7 +940,8 @@ private:
 /// @param[in]  m  The name of the method.
 /// @param[in]  o  The object to call the method for.
 /// @since  0.2, 10.04.2016
-#define  DEST_METHOD_VALUE( c, m, o)  std::bind( & c :: m, &o, std::placeholders::_1), #c "::" #m, true
+#define  DEST_METHOD_VALUE( c, m, o)  \
+   std::bind( & c :: m, &o, std::placeholders::_1), #c "::" #m, true
 
 
 // inlined methods
@@ -943,8 +955,10 @@ template< typename T>
                             const std::string vname,
                             const std::string& desc)
 {
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( arg_spec, dest, vname);
-   return internAddArgument( arg_hdl, arg_spec, desc);
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl = new detail::TypedArg< T>( key, dest,
+                                                                  vname);
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgument
 
 
@@ -958,10 +972,11 @@ template< typename T1, typename T2>
                             const T2& value2,
                             const std::string& desc)
 {
-   detail::TypedArgBase*  arg_hdl =
-      new detail::TypedArgPair< T1, T2>( arg_spec, dest1, vname1, dest2, vname2,
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl =
+      new detail::TypedArgPair< T1, T2>( key, dest1, vname1, dest2, vname2,
                                          value2);
-   return internAddArgument( arg_hdl, arg_spec, desc);
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgument
 
 
@@ -970,8 +985,9 @@ template< typename T>
       Handler::addArgument( T& dest, const std::string vname,
                             const std::string& desc)
 {
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( "-", dest, vname);
-   return internAddArgument( arg_hdl, "", desc);
+   detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( mPosKey, dest,
+                                                              vname);
+   return internAddArgument( arg_hdl, mPosKey, desc);
 } // Handler::addArgument
 
 
@@ -982,8 +998,10 @@ template< typename T, typename C>
                             const std::string vname,
                             const std::string& desc)
 {
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgRange< T, C>( arg_spec, dest, vname);
-   return internAddArgument( arg_hdl, arg_spec, desc);
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+       = new detail::TypedArgRange< T, C>( key, dest, vname);
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgument
 
 
@@ -993,8 +1011,9 @@ template< typename T, typename C>
                             const std::string vname,
                             const std::string& desc)
 {
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgRange< T, C>( "-", dest, vname);
-   return internAddArgument( arg_hdl, "", desc);
+   detail::TypedArgBase*  arg_hdl
+      = new detail::TypedArgRange< T, C>( mPosKey, dest, vname);
+   return internAddArgument( arg_hdl, mPosKey, desc);
 } // Handler::addArgument
 
 
@@ -1004,8 +1023,10 @@ inline detail::TypedArgBase*
                          const std::string fname,
                          const std::string& desc)
 {
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallable( arg_spec, fun, fname);
-   return internAddArgument( arg_hdl, arg_spec, desc);
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+      = new detail::TypedArgCallable( key, fun, fname);
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgument
 
 
@@ -1016,8 +1037,10 @@ inline detail::TypedArgBase*
                          bool,
                          const std::string& desc)
 {
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallableValue( arg_spec, fun, fname);
-   return internAddArgument( arg_hdl, arg_spec, desc);
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+       = new detail::TypedArgCallableValue( key, fun, fname);
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgument
 
 
@@ -1028,9 +1051,11 @@ inline detail::TypedArgBase*
    if (subGroup == nullptr)
       throw std::runtime_error( "Sub-group object pointer is NULL");
    subGroup->setIsSubGroupHandler();
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgSubGroup( arg_spec, subGroup);
-   mSubGroupArgs.addArgument( arg_hdl, arg_spec);
-   mDescription.addArgument( arg_spec, desc, arg_hdl);
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+      = new detail::TypedArgSubGroup( key, subGroup);
+   mSubGroupArgs.addArgument( arg_hdl, key);
+   mDescription.addArgument( key, desc, arg_hdl);
    return arg_hdl;
 } // Handler::addArgument
 
@@ -1042,8 +1067,9 @@ template< typename C, typename T>
                                   const std::string vname,
                                   const std::string& desc)
 {
-   detail::TypedArgBase*  arg_hdl = new C( arg_spec, dest, vname);
-   return internAddArgument( arg_hdl, arg_spec, desc);
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl = new C( key, dest, vname);
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addCustomArgument
 
 

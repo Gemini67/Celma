@@ -40,7 +40,7 @@ using std::string;
 
 
 /// Constructor.
-/// @param[in]  arg_spec  The complete argument specification with short and/
+/// @param[in]  key       The complete argument specification with short and/
 ///                       or long argument.
 /// @param[in]  vname     The name of the destination variable to store the
 ///                       value in.
@@ -48,9 +48,9 @@ using std::string;
 /// @param[in]  printDef  Specifies if the default value of the destination
 ///                       variable should be printed in the usage or not.
 /// @since  0.2, 10.04.2016
-TypedArgBase::TypedArgBase( const string& arg_spec, const string& vname,
+TypedArgBase::TypedArgBase( const ArgumentKey& key, const string& vname,
                             ValueMode vm, bool printDef):
-   mArgSpec( arg_spec),
+   mKey( key),
    mVarName( vname),
    mValueMode( vm),
    mIsMandatory( false),
@@ -268,7 +268,7 @@ void TypedArgBase::activateConstraints()
 
    for (auto & curr_constraint : mConstraints)
    {
-      curr_constraint->executeConstraint( mArgSpec);
+      curr_constraint->executeConstraint( mKey);
    } // end for
 
 } // TypedArgBase::activateConstraints

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,18 +29,20 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Helper class to store a function that serves as argument handler.
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 class TypedArgCallable: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  fun       The function to call when the argument is set on
-   ///                       the command line.
-   /// @param[in]  fname     The name of the function to call.
+   /// @param[in]  key    The complete argument specification with short and/or
+   ///                    long argument.
+   /// @param[in]  fun    The function to call when the argument is set on the
+   ///                    command line.
+   /// @param[in]  fname  The name of the function to call.
    /// @since  0.2, 10.04.2016
-   TypedArgCallable( const std::string& arg_spec, ArgHandlerCallable fun,
+   TypedArgCallable( const ArgumentKey& key, ArgHandlerCallable fun,
                      const std::string& fname);
 
    /// Returns if the function was called or not.
@@ -72,10 +74,10 @@ private:
 // ===============
 
 
-inline TypedArgCallable::TypedArgCallable( const std::string& arg_spec,
+inline TypedArgCallable::TypedArgCallable( const ArgumentKey& key,
                                            ArgHandlerCallable fun,
                                            const std::string& fname):
-   TypedArgBase( arg_spec, fname, ValueMode::none, false),
+   TypedArgBase( key, fname, ValueMode::none, false),
    mFun( fun),
    mWasCalled( false)
 {

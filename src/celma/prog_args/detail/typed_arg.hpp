@@ -46,18 +46,20 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Helper class to store a destination variable with its native type.
 /// @tparam  T  The type of the value.
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  dest      The destination variable to store the value in.
-   /// @param[in]  vname     The name of the destination variable to store the
-   ///                       value in.
+   /// @param[in]  key    The complete argument specification with short and/or
+   ///                    long argument.
+   /// @param[in]  dest   The destination variable to store the value in.
+   /// @param[in]  vname  The name of the destination variable to store the
+   ///                    value in.
    /// @since  0.2, 10.04.2016
-   TypedArg( const std::string& arg_spec, T& dest, const std::string& vname);
+   TypedArg( const ArgumentKey& key, T& dest, const std::string& vname);
 
    /// Returns if the destination has a value set.
    /// @return  \c true if the destination variable contains a value,
@@ -104,9 +106,9 @@ private:
 
 
 template< typename T>
-   TypedArg< T>::TypedArg( const std::string& arg_spec, T& dest,
+   TypedArg< T>::TypedArg( const ArgumentKey& key, T& dest,
                            const std::string& vname):
-      TypedArgBase( arg_spec, vname, ValueMode::required, true),
+      TypedArgBase( key, vname, ValueMode::required, true),
       mDestVar( dest),
       mHasValueSet( false)
 {
@@ -178,19 +180,21 @@ template< typename T>
 
 
 /// Specialisation of template TypedArg<> for boolean variables.
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// since  6.0, 18.09.2013
 template<> class TypedArg< bool>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  dest      The destination variable to store the value in.
-   /// @param[in]  vname     The name of the destination variable to store the
-   ///                       value in.
+   /// @param[in]  key    The complete argument specification with short and/or
+   ///                    long argument.
+   /// @param[in]  dest   The destination variable to store the value in.
+   /// @param[in]  vname  The name of the destination variable to store the
+   ///                    value in.
    /// @since  0.2, 10.04.2016
-   TypedArg( const std::string& arg_spec, bool& dest, const std::string& vname):
-      TypedArgBase( arg_spec, vname, ValueMode::none, false),
+   TypedArg( const ArgumentKey& key, bool& dest, const std::string& vname):
+      TypedArgBase( key, vname, ValueMode::none, false),
       mDestVar( dest),
       mHasValueSet( false),
       mValue2Set( true)
@@ -263,19 +267,21 @@ private:
 
 /// Specialisation of TypedArg<> for values wrapped in CheckAssign<>.
 /// @tparam  T  The native type of the value.
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg< common::CheckAssign< T>>:
    public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  dest      The destination variable to store the value in.
-   /// @param[in]  vname     The name of the destination variable to store the
-   ///                       value in.
+   /// @param[in]  key    The complete argument specification with short and/or
+   ///                    long argument.
+   /// @param[in]  dest   The destination variable to store the value in.
+   /// @param[in]  vname  The name of the destination variable to store the
+   ///                    value in.
    /// @since  0.2, 10.04.2016
-   TypedArg( const std::string& arg_spec, common::CheckAssign< T>& dest,
+   TypedArg( const ArgumentKey& key, common::CheckAssign< T>& dest,
              const std::string& vname);
 
    /// Returns if the destination has a value set.
@@ -307,10 +313,10 @@ private:
 
 
 template< typename T>
-   TypedArg< common::CheckAssign< T>>::TypedArg( const std::string& arg_spec,
+   TypedArg< common::CheckAssign< T>>::TypedArg( const ArgumentKey& key,
                                                  common::CheckAssign< T>& dest,
                                                  const std::string& vname):
-      TypedArgBase( arg_spec, vname, ValueMode::required, false),
+      TypedArgBase( key, vname, ValueMode::required, false),
       mDestVar( dest)
 {
 } // TypedArg< common::CheckAssign< T>>::TypedArg
@@ -355,20 +361,22 @@ template< typename T>
 
 
 /// Specialization of the TypedArg< CheckAssign< T> > template for boolean flags.
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 template<> class TypedArg< common::CheckAssign< bool>>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  dest      The destination variable to store the value in.
-   /// @param[in]  vname     The name of the destination variable to store the
-   ///                       value in.
+   /// @param[in]  key    The complete argument specification with short and/or
+   ///                    long argument.
+   /// @param[in]  dest   The destination variable to store the value in.
+   /// @param[in]  vname  The name of the destination variable to store the
+   ///                    value in.
    /// @since  0.2, 10.04.2016
-   TypedArg( const std::string& arg_spec, common::CheckAssign< bool>& dest,
+   TypedArg( const ArgumentKey& key, common::CheckAssign< bool>& dest,
              const std::string& vname):
-      TypedArgBase( arg_spec, vname, ValueMode::none, false),
+      TypedArgBase( key, vname, ValueMode::none, false),
       mDestVar( dest),
       mValue2Set( true)
    {
@@ -435,6 +443,8 @@ private:
 
 /// Specialisation of TypedArg<> for values wrapped in a vector.
 /// @tparam  T  The type of the value(s) stored in the vector.
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg< std::vector< T>>: public TypedArgBase
 {
@@ -443,13 +453,13 @@ public:
    typedef typename std::vector< T>  vector_type;
 
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  dest      The destination variable to store the values in.
-   /// @param[in]  vname     The name of the destination variable to store the
-   ///                       value in.
+   /// @param[in]  key    The complete argument specification with short and/or
+   ///                    long argument.
+   /// @param[in]  dest   The destination variable to store the values in.
+   /// @param[in]  vname  The name of the destination variable to store the
+   ///                    value in.
    /// @since  0.2, 10.04.2016
-   TypedArg( const std::string& arg_spec, vector_type& dest,
+   TypedArg( const ArgumentKey& key, vector_type& dest,
              const std::string& vname);
 
    /// Returns if the destination has (at least) one value set.
@@ -496,10 +506,10 @@ private:
 
 
 template< typename T>
-   TypedArg< std::vector< T>>::TypedArg( const std::string& arg_spec,
+   TypedArg< std::vector< T>>::TypedArg( const ArgumentKey& key,
                                           vector_type& dest,
                                           const std::string& vname):
-      TypedArgBase( arg_spec, vname, ValueMode::required, false),
+      TypedArgBase( key, vname, ValueMode::required, false),
       mDestVar( dest),
       mListSep( ',')
 {
@@ -589,7 +599,6 @@ public:
    /// tuple element.
    /// @param[out]  tuple_element  The element of the the tuple to assign the
    ///                             value to.
-   /// @return  .
    /// @since  6.0, 04.01.2017
    template< typename T> void operator ()( T& tuple_element)
    {
@@ -613,19 +622,21 @@ private:
 /// Helper class to store a destination variable of type tuple with its native
 /// element types.
 /// @tparam  T  The types of the values.
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.11, 07.01.2017  (converted from TypedArgTuple into specialisation)
 /// @since  0.11, 19.12.2016
 template< typename... T> class TypedArg< std::tuple< T...>>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  dest      The destination variable to store the value in.
-   /// @param[in]  vname     The name of the destination variable to store the
-   ///                       value in.
+   /// @param[in]  key    The complete argument specification with short and/or
+   ///                    long argument.
+   /// @param[in]  dest   The destination variable to store the value in.
+   /// @param[in]  vname  The name of the destination variable to store the
+   ///                    value in.
    /// @since  0.11, 19.12.2016
-   TypedArg( const std::string& arg_spec, std::tuple< T...>& dest,
+   TypedArg( const ArgumentKey& key, std::tuple< T...>& dest,
              const std::string& vname);
 
    /// Returns if the destination has a value set.
@@ -681,10 +692,10 @@ private:
 
 
 template< typename... T>
-   TypedArg< std::tuple< T...>>::TypedArg( const std::string& arg_spec,
+   TypedArg< std::tuple< T...>>::TypedArg( const ArgumentKey& key,
                                            std::tuple< T...>& dest,
                                            const std::string& vname):
-      TypedArgBase( arg_spec, vname, ValueMode::required, false),
+      TypedArgBase( key, vname, ValueMode::required, false),
       mDestVar( dest),
       mTupleLength( common::tuple_length( dest))
 {

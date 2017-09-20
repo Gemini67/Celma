@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include <boost/scoped_ptr.hpp>
+#include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 #include "celma/prog_args/detail/i_constraint.hpp"
 #include "celma/prog_args/detail/i_format.hpp"
@@ -77,6 +78,8 @@ namespace celma { namespace prog_args { namespace detail {
 ///   variant is used to print the values of the features/flags handled by this
 ///   base class.
 ///
+/// @since  0.15.0, 13.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 class TypedArgBase
 {
@@ -108,7 +111,7 @@ public:
    static constexpr const char* valueMode2str( ValueMode vm);
 
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
+   /// @param[in]  key       The complete argument specification with short and/
    ///                       or long argument.
    /// @param[in]  vname     The name of the destination variable to store the
    ///                       value in.
@@ -116,7 +119,7 @@ public:
    /// @param[in]  printDef  Specifies if the default value of the destination
    ///                       variable should be printed in the usage or not.
    /// @since  0.2, 10.04.2016
-   TypedArgBase( const std::string& arg_spec, const std::string& vname,
+   TypedArgBase( const ArgumentKey& key, const std::string& vname,
                  ValueMode vm, bool printDef);
 
    /// Destructor, frees dynamically allocated memory.
@@ -136,10 +139,11 @@ public:
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const = 0;
 
-   /// Returns the complete specification of this argument.
+   /// Returns the argument key(s) specified for this argument.
    /// @return  The short and/or long argument specified for this argument.
+   /// @since  0.15.0, 13.07.2017  (renamed from argSpec())
    /// @since  0.2, 10.04.2016
-   const std::string& argSpec() const;
+   const ArgumentKey& key() const;
 
    /// For boolean arguments: Unset the flag (set to \c false) instead of
    /// setting it (the default).<br>
@@ -335,7 +339,7 @@ protected:
    void activateConstraints();
 
    /// The complete argument specification: short and/or long argument.
-   const std::string                 mArgSpec;
+   const ArgumentKey                 mKey;
    /// Contains the name of the variable in which the value(s) are stored.
    const std::string                 mVarName;
    /// The value mode of this argument, set depending on the type of the
@@ -400,10 +404,10 @@ constexpr const char* TypedArgBase::valueMode2str( ValueMode vm)
 } // TypedArgBase::valueMode2str
 
 
-inline const std::string& TypedArgBase::argSpec() const
+inline const ArgumentKey& TypedArgBase::key() const
 {
-   return mArgSpec;
-} // TypedArgBase::argSpec
+   return mKey;
+} // TypedArgBase::key
 
 
 inline TypedArgBase* TypedArgBase::setIsMandatory()
@@ -460,8 +464,8 @@ inline TypedArgBase::ValueMode TypedArgBase::valueMode() const
 
 inline TypedArgBase* TypedArgBase::setTakesMultiValue() noexcept( false)
 {
-   throw std::invalid_argument( "setting 'take multiple values' not allowed for variable '" +
-                                mVarName + "'");
+   throw std::invalid_argument( "setting 'take multiple values' not allowed "
+                                "for variable '" + mVarName + "'");
 } // TypedArgBase::setTakesMultiValue
 
 
@@ -473,8 +477,8 @@ inline bool TypedArgBase::takesMultiValue() const
 
 inline TypedArgBase* TypedArgBase::setListSep( char /* sep */) noexcept( false)
 {
-   throw std::invalid_argument( "setting list separator not allowed for variable '" +
-                                mVarName + "'");
+   throw std::invalid_argument( "setting list separator not allowed for "
+                                "variable '" + mVarName + "'");
 } // TypedArgBase::setListSep
 
 
@@ -484,7 +488,8 @@ inline const std::string& TypedArgBase::varName() const
 } // TypedArgBase::varName
 
 
-inline void TypedArgBase::defaultValue( std::string& /* dest */) const noexcept( false)
+inline void TypedArgBase::defaultValue( std::string& /* dest */) const
+   noexcept( false)
 {
    throw std::runtime_error( "default value not available from base class for "
                              "variable '" + mVarName + "'");

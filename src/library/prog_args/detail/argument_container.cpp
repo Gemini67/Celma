@@ -24,6 +24,7 @@
 
 
 // project includes
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args/handler.hpp"
 
 
@@ -39,27 +40,26 @@ namespace celma { namespace prog_args { namespace detail {
 /// Constructor.
 /// @since  0.2, 10.04.2016
 ArgumentContainer::ArgumentContainer():
-   mCharArgs(),
-   mLongArgs()
+   mArguments()
 {
-} // end ArgumentContainer::ArgumentContainer
+} // ArgumentContainer::ArgumentContainer
 
 
 
 /// Adds a new argument.
-/// @param[in]  argHandler  The object used to handle this argument.
-/// @param[in]  argSpec     The argument character, string or both.
+/// @param[in]  arg_handler  The object used to handle this argument.
+/// @param[in]  key          The argument character, string or both.
 /// @since  0.2, 10.04.2016
-void ArgumentContainer::addArgument( TypedArgBase* argHandler,
-                                     const string& argSpec)
+void ArgumentContainer::addArgument( TypedArgBase* arg_handler,
+                                     const ArgumentKey& key)
 {
 
-   SharedArg  sa( argHandler);
+   shared_handler_t  sa( arg_handler);
 
 
-   splitArgSpec( argSpec, sa);
+   mArguments.addArgument( sa, key);
 
-} // end ArgumentContainer::addArgument
+} // ArgumentContainer::addArgument
 
 
 
@@ -69,21 +69,16 @@ void ArgumentContainer::addArgument( TypedArgBase* argHandler,
 void ArgumentContainer::checkMandatoryCardinality() const
 {
 
-   for (CharArgCont::const_iterator caci = mCharArgs.begin(); caci != mCharArgs.end(); ++caci)
+   for (auto const& argi : mArguments)
    {
-      if (caci->second->isMandatory() && !caci->second->hasValue())
-         throw runtime_error( "Mandatory argument '" + string( 1, caci->first) + "' was not set");
-      caci->second->checkCardinality();
+      if (argi.data()->isMandatory() && !argi.data()->hasValue())
+         throw runtime_error( "Mandatory argument '"
+                              + format::toString( argi.key())
+                              + "' was not set");
+      argi.data()->checkCardinality();
    } // end for
 
-   for (LongArgCont::const_iterator laci = mLongArgs.begin(); laci != mLongArgs.end(); ++laci)
-   {
-      if (laci->second->isMandatory() && !laci->second->hasValue())
-         throw runtime_error( "Mandatory argument '" + laci->first + "' was not set");
-      laci->second->checkCardinality();
-   } // end for
-
-} // end ArgumentContainer::checkMandatoryCardinality
+} // ArgumentContainer::checkMandatoryCardinality
 
 
 
@@ -98,81 +93,63 @@ void ArgumentContainer::checkArgMix( const string& ownName,
                                      const ArgumentContainer& otherAH) const
 {
 
-   for (CharArgCont::const_iterator caci = otherAH.mCharArgs.begin();
-        caci != otherAH.mCharArgs.end(); ++caci)
+   for (auto const& other_argi : otherAH.mArguments)
    {
-      if (mCharArgs.find( caci->first) != mCharArgs.end())
-         throw invalid_argument( "Argument '-" + string( 1, caci->first)
-                                 + " from group '" + otherName
-                                 + "' is already used by '" + ownName + "'");
-   } // end for
-
-   for (LongArgCont::const_iterator laci = otherAH.mLongArgs.begin();
-        laci != otherAH.mLongArgs.end(); ++laci)
-   {
-      if (mLongArgs.find( laci->first) != mLongArgs.end())
-         throw invalid_argument( "Argument '--" + laci->first + " from group '"
-                                 + otherName + "' is already used by '"
-                                 + ownName + "'");
-   } // end for
-
-} // end ArgumentContainer::checkArgMix
-
-
-
-/// Searches if this single character argument is defined.
-/// @param[in]  charArg  The argument character to check.
-/// @return  Pointer to the argument handler object if the argument is
-///          defined, NULL otherwise.
-/// @since  0.2, 10.04.2016
-TypedArgBase* ArgumentContainer::findArg( char charArg) const
-{
-
-   CharArgCont::const_iterator  caci = mCharArgs.find( charArg);
-
-
-   return (caci == mCharArgs.end()) ? nullptr : caci->second.get();
-} // end ArgumentContainer::findArg
-
-
-
-/// Searches if this argument name is defined.
-/// @param[in]  longArg  The argument name to check.
-/// @return  Pointer to the argument handler object if the argument is
-///          defined, NULL otherwise.
-/// @since  0.2, 10.04.2016
-TypedArgBase* ArgumentContainer::findArg( const string& longArg) const
-{
-
-
-   LongArgCont::const_iterator  laci = mLongArgs.find( longArg);
-
-
-   if (laci == mLongArgs.end())
-   {
-      // check if an abbreviation was used
-      LongArgCont::const_iterator  laci2 = mLongArgs.lower_bound( longArg);
-      while (laci2 != mLongArgs.end())
+      for (auto const& argi : mArguments)
       {
-         const int  compRes = laci2->first.compare( 0, longArg.length(), longArg);
-         if (compRes == 0)
-         {
-            // found a match using the long argument as abbreviation
-            if (laci == mLongArgs.end())
-               laci = laci2;
-            else
-               throw runtime_error( "Long argument abbreviation '" + longArg +
-                                    "' matches more than one argument");
-         } else if (compRes > 0)
-         {
-            break;   // while
-         } // end if
-         ++laci2;
-      } // end while
-   } // end if
+         if (argi.key() == other_argi.key())
+            throw invalid_argument( "Argument '-"
+                                    + format::toString( argi.key())
+                                    + " from group '" + otherName
+                                    + "' is already used by '" + ownName + "'");
 
-   return (laci == mLongArgs.end()) ? nullptr : laci->second.get();
-} // end ArgumentContainer::findArg
+         if (argi.key().mismatch( other_argi.key()))
+            throw invalid_argument( "Argument '-"
+                                    + format::toString( other_argi.key())
+                                    + " from group '" + otherName
+                                    + "' has a mismatch with '"
+                                    + format::toString( argi.key())
+                                    + "' in group '" + ownName + "'");
+      } // end for
+   } // end for
+
+} // ArgumentContainer::checkArgMix
+
+
+
+/// Searches if this short or long argument is defined.<br>
+/// If a long argument name was used, also search for partial matches.
+/// @param[in]  key  The short and/or long argument name to check.
+/// @return  Pointer to the argument handler object if the argument is
+///          defined, NULL otherwise.
+/// @since  0.15.0, 12.07.2017  (take ArgumentKey as parameter)
+/// @since  0.2, 10.04.2016
+TypedArgBase* ArgumentContainer::findArg( const ArgumentKey& key) const
+{
+
+
+   TypedArgBase*  part_match = nullptr;
+
+
+   for (auto const& argi : mArguments)
+   {
+      if (argi == key)
+         return argi.data().get();
+
+      if (argi.key().startsWith( key))
+      {
+         // found a match using the long argument as abbreviation
+         if (part_match == nullptr)
+            part_match = argi.data().get();
+         else
+            throw runtime_error( "Long argument abbreviation '"
+                                 + format::toString( key)
+                                 + "' matches more than one argument");
+      } // end if
+   } // end for
+
+   return part_match;
+} // ArgumentContainer::findArg
 
 
 
@@ -184,89 +161,16 @@ TypedArgBase* ArgumentContainer::findArg( const string& longArg) const
 void ArgumentContainer::setUsageLineLength( int useLen)
 {
 
-   for (CharArgCont::const_iterator caci = mCharArgs.begin(); caci != mCharArgs.end(); ++caci)
+   for (auto & arg : mArguments)
    {
-      TypedArgSubGroup*  tasg = static_cast< TypedArgSubGroup*>( caci->second.get());
+      TypedArgSubGroup*  tasg = static_cast< TypedArgSubGroup*>( arg.data().get());
       if ((tasg != nullptr) && (tasg->obj() != nullptr))
       {
          tasg->obj()->setUsageLineLength( useLen);
       } // end if
    } // end for
 
-   for (LongArgCont::const_iterator laci = mLongArgs.begin(); laci != mLongArgs.end(); ++laci)
-   {
-      TypedArgSubGroup*  tasg = static_cast< TypedArgSubGroup*>( laci->second.get());
-      if ((tasg != nullptr) && (tasg->obj() != nullptr))
-      {
-         tasg->obj()->setUsageLineLength( useLen);
-      } // end if
-   } // end for
-
-} // end ArgumentContainer::setUsageLineLength
-
-
-
-/// Splits the argument specifyer string into single and long argument and
-/// stores it accordingly.
-/// @param[in]  argSpec  The string with the short, long or both arguments.
-/// @param[in]  sa       The object to handle these argument(s).
-/// @since  0.2, 10.04.2016
-void ArgumentContainer::splitArgSpec( const string& argSpec, const SharedArg& sa)
-{
-
-   string::size_type  pos = argSpec.find_first_of( ',');
-
-
-   if (pos == string::npos)
-   {
-      addArgObj( argSpec, sa);
-   } else
-   {
-      string  part( argSpec.substr( 0, pos));
-      addArgObj( part, sa);
-      part = argSpec.substr( pos + 1);
-      addArgObj( part, sa);
-   } // end if
-
-} // end ArgumentContainer::splitArgSpec
-
-
-
-/// Adds an object to either the single or multi character containers.
-/// @param[in]  singleArgSpec  The string with the single or multi-character
-///                            argument.
-/// @param[in]  sa             The object to handle this argument.
-/// @since  0.2, 10.04.2016
-void ArgumentContainer::addArgObj( const string& singleArgSpec,
-                                   const SharedArg& sa)
-{
-
-   if (singleArgSpec.length() == 0)
-   {
-      addArgObj( "-", sa);
-   } else if (singleArgSpec.length() == 1)
-   {
-      CharArgCont::const_iterator  caci = mCharArgs.find( singleArgSpec[ 0]);
-      if (caci != mCharArgs.end())
-         throw invalid_argument( "Destination '" + sa->varName()
-                                 + "': Argument '" + singleArgSpec +
-                                 "' already used for destination '" +
-                                 caci->second->varName() + "'!");
-
-      mCharArgs.insert( CharArgCont::value_type( singleArgSpec[ 0], sa));
-   } else
-   {
-      LongArgCont::const_iterator  laci = mLongArgs.find( singleArgSpec);
-      if (laci != mLongArgs.end())
-         throw invalid_argument( "Destination '" + sa->varName()
-                                   + "': Argument '" + singleArgSpec
-                                   + "' already used for destination '" +
-                                  laci->second->varName() + "'!");
-
-      mLongArgs.insert( LongArgCont::value_type( singleArgSpec, sa));
-   } // end if
-
-} // end ArgumentContainer::addArgObj
+} // ArgumentContainer::setUsageLineLength
 
 
 
@@ -278,24 +182,15 @@ void ArgumentContainer::addArgObj( const string& singleArgSpec,
 std::ostream& operator <<( std::ostream& os, const ArgumentContainer& ac)
 {
 
-   os << "Short (character) arguments:" << endl;
+   os << "Arguments:" << endl;
 
-   for (ArgumentContainer::CharArgCont::const_iterator cit = ac.mCharArgs.begin();
-        cit != ac.mCharArgs.end(); ++cit)
+   for (auto const& arg : ac.mArguments)
    {
-      os << "'-" << cit->first << "' " << cit->second << endl;
-   } // end for
-
-   os << endl << "Long (string) arguments:" << endl;
-
-   for (ArgumentContainer::LongArgCont::const_iterator cit = ac.mLongArgs.begin();
-        cit != ac.mLongArgs.end(); ++cit)
-   {
-      os << "'--" << cit->first << "' " << cit->second << endl;
+      os << '\'' << format::toString( arg.key()) << "' " << arg.data() << endl;
    } // end for
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
