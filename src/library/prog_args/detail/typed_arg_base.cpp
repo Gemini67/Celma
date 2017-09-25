@@ -29,6 +29,7 @@
 
 // project includes
 #include "celma/common/clear_container.hpp"
+#include "celma/format/to_string.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -193,6 +194,27 @@ void TypedArgBase::check( const string& val) const
    } // end for
 
 } // TypedArgBase::check
+
+
+/// Returns a text description of the check specified for this argument.
+/// @return  A string with the description of the check.
+/// @since  0.16.0, 12.08.2017
+string TypedArgBase::checkStr() const
+{
+
+   return format::toString( mChecks.begin(), mChecks.end());
+} // TypedArgBase::checkStr
+
+
+
+/// Returns a text description of the constraint specified for this argument.
+/// @return  A string with the description of the constraint.
+/// @since  0.16.0, 15.08.2017
+string TypedArgBase::constraintStr() const
+{
+
+   return format::toString( mConstraints.begin(), mConstraints.end());
+} // TypedArgBase::constraintStr
 
 
 

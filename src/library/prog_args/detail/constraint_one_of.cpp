@@ -103,6 +103,21 @@ void ConstraintOneOf::checkEndCondition() const
 
 
 
+/// Returns a text description of the constraint.
+/// @return  A string with the text description of the constraint.
+/// @since  0.16.0, 15.08.2017
+std::string ConstraintOneOf::toString() const
+{
+
+   std::ostringstream  oss;
+
+   oss << "One of ( " << mArgSpecList << ")";
+
+   return oss.str();
+} // ConstraintOneOf::toString
+
+
+
 } // namespace detail
 } // namespace prog_args
 } // namespace celma

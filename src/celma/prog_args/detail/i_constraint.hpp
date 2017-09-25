@@ -19,6 +19,7 @@
 #define CELMA_PROG_ARGS_DETAIL_I_CONSTRAINT_HPP
 
 
+#include <iosfwd>
 #include <string>
 
 
@@ -64,6 +65,11 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void checkEndCondition() const;
 
+   /// Returns a text description of the constraint.
+   /// @return  A string with the text description of the constraint.
+   /// @since  0.16.0, 15.08.2017
+   virtual std::string toString() const = 0;
+
 protected:
    /// Checks if the argument specified in \a arg_spec is one of the argument(s)
    /// specified in the \a constraint_arg_list.<br>
@@ -82,6 +88,17 @@ protected:
                                      const ArgumentKey& key);
 
 }; // IConstraint
+
+
+// inlined methods
+// ===============
+
+
+inline std::ostream& operator <<( std::ostream& os, IConstraint* pc)
+{
+
+   return os << pc->toString();
+} // operator <<
 
 
 } // namespace detail

@@ -45,6 +45,11 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void executeConstraint( const ArgumentKey& key) override;
 
+   /// Returns a text description of the constraint.
+   /// @return  A string with the text description of the constraint.
+   /// @since  0.16.0, 15.08.2017
+   virtual std::string toString() const override;
+
 private:
    /// The argument specification of the other, required argument.
    const std::string  mRequiredArgSpec;

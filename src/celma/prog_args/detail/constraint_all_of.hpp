@@ -64,6 +64,11 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void checkEndCondition() const override;
 
+   /// Returns a text description of the constraint.
+   /// @return  A string with the text description of the constraint.
+   /// @since  0.16.0, 15.08.2017
+   virtual std::string toString() const override;
+
 private:
    /// Container for the keys, only keys needed.
    typedef Storage< std::nullptr_t>  key_cont_t;

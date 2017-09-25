@@ -189,13 +189,23 @@ void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
 
       // if the destination variable contains the default value for an optional
       // argument, add this to the usage
-      if ((mArguments[ i].mpArgObj != nullptr) &&
-          !mArguments[ i].mpArgObj->isMandatory() &&
-          mArguments[ i].mpArgObj->printDefault())
+      if (mArguments[ i].mpArgObj != nullptr)
       {
          auto  descCopy( mArguments[ i].mDescription);
-         descCopy.append( "\nDefault value: ");
-         mArguments[ i].mpArgObj->defaultValue( descCopy);
+         if (!mArguments[ i].mpArgObj->isMandatory() && mArguments[ i].mpArgObj->printDefault())
+         {
+            descCopy.append( "\nDefault value: ");
+            mArguments[ i].mpArgObj->defaultValue(descCopy);
+         } // end if
+         if (mArguments[ i].mpArgObj->hasCheck())
+         {
+            descCopy.append( "\nCheck: ").append( mArguments[ i].mpArgObj->checkStr());
+         } // end if
+         if (mArguments[ i].mpArgObj->hasConstraint())
+         {
+            descCopy.append( "\nConstraint: ").append( mArguments[ i].mpArgObj->constraintStr());
+         } // end if
+
          tb.format( os, descCopy);
       } else
       {
