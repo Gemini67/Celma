@@ -19,8 +19,13 @@
 #include "celma/prog_args/detail/check_values.hpp"
 
 
-// project ncludes
+// C++ Standard Library includes
+#include <sstream>
+
+
+// project includes
 #include "celma/common/tokenizer.hpp"
+#include "celma/format/to_string.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -58,7 +63,23 @@ void CheckValues::checkValue( const std::string& val) const
    if (mValues.find( val)== mValues.end())
       throw std::range_error( "Value '" + val + "' is not in the list of allowed values");
 
-} // CheckValues<T>::checkValue
+} // CheckValues::checkValue
+
+
+
+/// Returns a text description of the check.
+/// @return  A string with the text description of the check.
+/// @since  0.16.0, 12.08.2017
+std::string CheckValues::toString() const
+{
+
+   std::ostringstream  oss;
+
+
+   oss << "Value in ( " << format::toString( mValues.begin(), mValues.end()) << ")";
+
+   return oss.str();
+} // CheckValues::toString
 
 
 

@@ -2334,6 +2334,14 @@ public:
          throw runtime_error( "not in tripple");
    }
 
+   /// Returns a text description of the check.
+   /// @return  A string with the text description of the check.
+   /// @since  0.16.0, 12.08.2017
+   virtual std::string toString() const override
+   {
+      return "";
+   }
+
 private:
    int  m1;
    int  m2;
