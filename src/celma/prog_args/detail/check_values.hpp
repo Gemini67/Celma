@@ -42,6 +42,11 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void checkValue( const std::string& val) const noexcept( false) override;
 
+   /// Returns a text description of the check.
+   /// @return  A string with the text description of the check.
+   /// @since  0.16.0, 12.08.2017
+   virtual std::string toString() const override;
+
 private:
    /// Storage type for the values.
    typedef  std::set< std::string>  StringSet;

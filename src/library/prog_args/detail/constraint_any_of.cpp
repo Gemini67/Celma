@@ -98,6 +98,21 @@ void ConstraintAnyOf::checkEndCondition() const
 
 
 
+/// Returns a text description of the constraint.
+/// @return  A string with the text description of the constraint.
+/// @since  0.16.0, 15.08.2017
+std::string ConstraintAnyOf::toString() const
+{
+
+   std::ostringstream  oss;
+
+   oss << "Any of ( " << mArgSpecList << ")";
+
+   return oss.str();
+} // ConstraintAnyOf::toString
+
+
+
 } // namespace detail
 } // namespace prog_args
 } // namespace celma

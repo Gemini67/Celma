@@ -92,7 +92,7 @@ public:
       optional,   //!< The value is optional.
       required,   //!< The argument must have a value.<br>
                   //!< This is the default for all other arguments.
-      command,    //!< An argumewnt with this value mode signals that this and
+      command,    //!< An argument with this value mode signals that this and
                   //!< all the following arguments and values are not anymore
                   //!< relevant for this object, but should be assigned as
                   //!< complete argument string to the value of the argument and
@@ -262,6 +262,16 @@ public:
    /// @since  0.2, 10.04.2016
    void check( const std::string& val) const;
 
+   /// Returns if the argument has a check specified.
+   /// @return  \c true if the argument has a check specified.
+   /// @since  0.16.0, 12.08.2017
+   bool hasCheck() const;
+
+   /// Returns a text description of the check specified for this argument.
+   /// @return  A string with the description of the check.
+   /// @since  0.16.0, 12.08.2017
+   std::string checkStr() const;
+
    /// Specifies the cardinality check to perform on this type before assignment
    /// of a new value.<br>
    /// For most types, cardinality is set to 'maximum(1)', meaning that at most
@@ -315,6 +325,16 @@ public:
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addConstraint( IConstraint* ic);
+
+   /// Returns if the argument has a constraint specified.
+   /// @return  \c true if the argument has a constraint specified.
+   /// @since  0.16.0, 15.08.2017
+   bool hasConstraint() const;
+
+   /// Returns a text description of the constraint specified for this argument.
+   /// @return  A string with the description of the constraint.
+   /// @since  0.16.0, 15.08.2017
+   std::string constraintStr() const;
 
    /// Called for printing an argument and its destination variable.<br>
    /// Calls dump() which can be overloaded by derived classes.
@@ -480,6 +500,18 @@ inline TypedArgBase* TypedArgBase::setListSep( char /* sep */) noexcept( false)
    throw std::invalid_argument( "setting list separator not allowed for "
                                 "variable '" + mVarName + "'");
 } // TypedArgBase::setListSep
+
+
+inline bool TypedArgBase::hasCheck() const
+{
+   return !mChecks.empty();
+} // TypedArgBase::hasCheck
+
+
+inline bool TypedArgBase::hasConstraint() const
+{
+   return !mConstraints.empty();
+} // TypedArgBase::hasConstraint
 
 
 inline const std::string& TypedArgBase::varName() const

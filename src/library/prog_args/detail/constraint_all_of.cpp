@@ -134,6 +134,21 @@ void ConstraintAllOf::checkEndCondition() const
 
 
 
+/// Returns a text description of the constraint.
+/// @return  A string with the text description of the constraint.
+/// @since  0.16.0, 15.08.2017
+string ConstraintAllOf::toString() const
+{
+
+   std::ostringstream  oss;
+
+   oss << "All of ( " << mArgSpecList << ")";
+
+   return oss.str();
+} // ConstraintAllOf::toString
+
+
+
 } // namespace detail
 } // namespace prog_args
 } // namespace celma

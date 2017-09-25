@@ -145,6 +145,58 @@ BOOST_AUTO_TEST_CASE( argument_output_custom_help)
 
 
 
+/// Test if checks are printed correctly in the usage.
+/// @since  0.16.0, 14.08.2017
+BOOST_AUTO_TEST_CASE( test_usage_output_checks)
+{
+
+   std::ostringstream   std_out;
+   std::ostringstream   err_out;
+   Handler              ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
+   std::string          string_arg;
+   int                  opt_int_arg1 = 42;
+   int                  opt_int_arg2 = 42;
+   int                  opt_int_arg3 = 42;
+
+
+   ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")
+                 ->setIsMandatory()
+                 ->addCheck( celma::prog_args::values( "tiger,dragon"));
+   ah.addArgument( "index1", DEST_VAR( opt_int_arg1), "Integer argument one")
+                 ->addCheck( celma::prog_args::lower( 20));
+   ah.addArgument( "index2", DEST_VAR( opt_int_arg2), "Integer argument two")
+                 ->addCheck( celma::prog_args::upper( 100))
+                 ->addConstraint( celma::prog_args::requires( "index3"));
+   ah.addArgument( "index3", DEST_VAR( opt_int_arg3), "Integer argument three")
+                 ->addCheck( celma::prog_args::range( 20, 100));
+
+   ArgString2Array  as2a( "-h", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_EQUAL( std_out.str(),
+                        "Usage:\nMandatory arguments:\n"
+                              "   -s          String argument\n"
+                              "               Check: Value in ( \"dragon\", \"tiger\")\n"
+                              "\n"
+                              "Optional arguments:\n"
+                              "   -h,--help   Prints the program usage\n"
+                              "   --index1    Integer argument one\n"
+                              "               Default value: 42\n"
+                              "               Check: Value >= 20\n"
+                              "   --index2    Integer argument two\n"
+                              "               Default value: 42\n"
+                              "               Check: Value < 100\n"
+                              "               Constraint: Requires index3\n"
+                              "   --index3    Integer argument three\n"
+                              "               Default value: 42\n"
+                              "               Check: 20 <= value < 100\n"
+                              "\n");
+   BOOST_REQUIRE( err_out.str().empty());
+
+} // test_usage_output_checks
+
+
+
 /// Two arguments, values assigned.
 /// @since  0.3, 04.06.2016
 BOOST_AUTO_TEST_CASE( argument_verbose_assignment)

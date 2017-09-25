@@ -59,6 +59,21 @@ void ConstraintExcludes::executeConstraint( const ArgumentKey& key)
 
 
 
+/// Returns a text description of the constraint.
+/// @return  A string with the text description of the constraint.
+/// @since  0.16.0, 15.08.2017
+std::string ConstraintExcludes::toString() const
+{
+
+   std::ostringstream  oss;
+
+   oss << "Excludes ( " << mExcludedArgSpec << ")";
+
+   return oss.str();
+} // ConstraintExcludes::toString
+
+
+
 } // namespace detail
 } // namespace prog_args
 } // namespace celma
