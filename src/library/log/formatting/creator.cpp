@@ -28,8 +28,9 @@ namespace celma { namespace log { namespace formatting {
 /// @since  x.y.z, 13.12.2016
 Creator::Creator( Definition& dest_def):
    mDefs( dest_def),
+   mFormatString(),
    mFixedWidth( 0),
-   mAlignRight( false)
+   mAlignLeft( false)
 {
 } // Creator::Creator
 
@@ -46,13 +47,15 @@ void Creator::field( Definition::FieldTypes field_type)
 
 
    field.mType       = field_type;
+   field.mConstant   = mFormatString;
    field.mFixedWidth = mFixedWidth;
-   field.mAlignRight = mAlignRight;
+   field.mAlignLeft  = mAlignLeft;
 
    mDefs.mFields.push_back( field);
 
+   mFormatString.clear();
    mFixedWidth = 0;
-   mAlignRight = false;
+   mAlignLeft  = false;
 
 } // Creator::field
 
@@ -70,14 +73,14 @@ void Creator::setFixedWidth( int fixed_width)
 
 
 
-/// Sets the flag that the output of the next field should be right-aligned.
+/// Sets the flag that the output of the next field should be left-aligned.
 /// @since  x.y.z, 13.12.2016
-void Creator::alignRight()
+void Creator::alignLeft()
 {
 
-   mAlignRight = true;
+   mAlignLeft = true;
 
-} // Creator::alignRight
+} // Creator::alignLeft
 
 
 
@@ -87,7 +90,9 @@ void Creator::alignRight()
 /// @since  x.y.z, 13.12.2016
 Creator& Creator::operator <<( Creator&( *m)( Creator&))
 {
+
    m( *this);
+
    return *this;
 } // operator <<
 
@@ -97,12 +102,15 @@ Creator& Creator::operator <<( Creator&( *m)( Creator&))
 /// @param[in]  c   The object to pass the custom property to.
 /// @param[in]  cp  The custom property to store.
 /// @return  The same object as passed in \a c.
-/// @since  0.11, 13.12.2016
+/// @since  x.y.z, 13.12.2016
 Creator& operator <<( Creator& c, const customProperty& cp)
 {
+
    c.customProperty( cp.name());
+
    return c;
 } // operator <<
+
 
 
 /// Operator to store a constant string in a creator object. This may later
@@ -110,7 +118,7 @@ Creator& operator <<( Creator& c, const customProperty& cp)
 /// @param[in]  c           The object to pass the constant string to.
 /// @param[in]  const_text  The custom property to store.
 /// @return  The same object as passed in \a c.
-/// @since  0.11, 13.12.2016
+/// @since  x.y.z, 13.12.2016
 Creator& operator <<( Creator& c, const std::string& const_text)
 {
 
@@ -122,14 +130,28 @@ Creator& operator <<( Creator& c, const std::string& const_text)
 
 
 /// Operator to store a fixed width setting in a creator object.
-/// @param[in]  c           The object to pass the fixed width to.
-/// @param[in]  const_text  The fixed width to store.
+/// @param[in]  c            The object to pass the fixed width to.
+/// @param[in]  fixed_width  The fixed width to store.
 /// @return  The same object as passed in \a c.
-/// @since  0.11, 13.12.2016
+/// @since  x.y.z, 13.12.2016
 Creator& operator <<( Creator& c, int fixed_width)
 {
 
    c.setFixedWidth( fixed_width);
+
+   return c;
+} // operator <<
+
+
+/// Operator to store the data of a 'format string' in a creator object.
+/// @param[in]  c   The object to pass the format string to.
+/// @param[in]  fs  The format string to store.
+/// @return  The same object as passed in \a c.
+/// @since  x.y.z, 26.09.2017
+Creator& operator <<( Creator& c, const detail::formatString& fs)
+{
+
+   c.formatString( fs.format());
 
    return c;
 } // operator <<
@@ -148,12 +170,13 @@ void Creator::addConstantText( const std::string& const_text)
    constant_field.mType       = Definition::FieldTypes::constant;
    constant_field.mConstant   = const_text;
    constant_field.mFixedWidth = mFixedWidth;
-   constant_field.mAlignRight = mAlignRight;
+   constant_field.mAlignLeft  = mAlignLeft;
 
    mDefs.mFields.push_back( constant_field);
 
+   mFormatString.clear();
    mFixedWidth = 0;
-   mAlignRight = false;
+   mAlignLeft  = false;
 
 } // Creator::addConstantText
 
@@ -165,20 +188,33 @@ void Creator::addConstantText( const std::string& const_text)
 void Creator::customProperty( const std::string& property_name)
 {
 
-   Definition::Field  constant_field;
+   Definition::Field  property_field;
 
 
-   constant_field.mType       = Definition::FieldTypes::customProperty;
-   constant_field.mConstant   = property_name;
-   constant_field.mFixedWidth = mFixedWidth;
-   constant_field.mAlignRight = mAlignRight;
+   property_field.mType       = Definition::FieldTypes::customProperty;
+   property_field.mConstant   = property_name;
+   property_field.mFixedWidth = mFixedWidth;
+   property_field.mAlignLeft  = mAlignLeft;
 
-   mDefs.mFields.push_back( constant_field);
+   mDefs.mFields.push_back( property_field);
 
+   mFormatString.clear();
    mFixedWidth = 0;
-   mAlignRight = false;
+   mAlignLeft  = false;
 
 } // Creator::customProperty
+
+
+
+/// Stores a format string that can be used by the next field.
+/// @param[in]  fmt  The format string to store.
+/// @since  x.y.z, 26.09.2017
+void Creator::formatString( const std::string& fmt)
+{
+
+   mFormatString = fmt;
+
+} // Creator::formatString
 
 
 

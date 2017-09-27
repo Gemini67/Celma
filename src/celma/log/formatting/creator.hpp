@@ -21,14 +21,16 @@
 
 #include <string>
 #include "celma/log/formatting/definition.hpp"
+#include "celma/log/formatting/detail/format_string.hpp"
 #include "celma/log/detail/custom_property.hpp"
 
 
 namespace celma { namespace log { namespace formatting {
 
 
-// bring helper class customProperty into the same namespace
-using detail::customProperty;
+// bring helper classes into the same namespace
+using log::detail::customProperty;
+using detail::formatString;
 
 
 /// Creates a log message format definition using stream-like syntax.
@@ -53,9 +55,9 @@ public:
    /// @since  x.y.z, 13.12.2016
    void setFixedWidth( int fixed_width);
 
-   /// Sets the flag that the output of the next field should be right-aligned.
+   /// Sets the flag that the output of the next field should be left-aligned.
    /// @since  x.y.z, 13.12.2016
-   void alignRight();
+   void alignLeft();
 
    /// Operator to handle manipulators.
    /// @param[in]  m  The manipulator to call.
@@ -79,11 +81,18 @@ public:
    friend Creator& operator <<( Creator& c, const std::string& const_text);
 
    /// Operator to store a fixed width setting in a creator object.
-   /// @param[in]  c           The object to pass the fixed width to.
-   /// @param[in]  const_text  The fixed width to store.
+   /// @param[in]  c            The object to pass the fixed width to.
+   /// @param[in]  fixed_width  The fixed width to store.
    /// @return  The same object as passed in \a c.
    /// @since  x.y.z, 13.12.2016
    friend Creator& operator <<( Creator& c, int fixed_width);
+
+   /// Operator to store the data of a 'format string' in a creator object.
+   /// @param[in]  c   The object to pass the format string to.
+   /// @param[in]  fs  The format string to store.
+   /// @return  The same object as passed in \a c.
+   /// @since  x.y.z, 26.09.2017
+   friend Creator& operator <<( Creator& c, const detail::formatString& fs);
 
 private:
    /// Called by the operator to actually store the constant text.<br>
@@ -97,12 +106,19 @@ private:
    /// @since  x.y.z, 13.12.2016
    void customProperty( const std::string& property_name);
 
+   /// Stores a format string that can be used by the next field.
+   /// @param[in]  fmt  The format string to store.
+   /// @since  x.y.z, 26.09.2017
+   void formatString( const std::string& fmt);
+
    /// The object to store the log message format definition in.
    Definition&  mDefs;
+   /// Format string for the next date, time or datetime field.
+   std::string  mFormatString;
    /// Value set for the 'fixed width', will be stored in the next field.
    int          mFixedWidth;
-   /// Contains the value of the 'align right' flag to store in the next field.
-   bool         mAlignRight;
+   /// Contains the value of the 'align left' flag to store in the next field.
+   bool         mAlignLeft;
 
 }; // Creator
 
@@ -210,15 +226,15 @@ inline Creator& pid( Creator& in)
 } // pid
 
 
-/// Adds the flag for right alignment for the following field.
-/// @param[in]  in  The object to use to store the right-alignment flag.
+/// Adds the flag for left alignment for the following field.
+/// @param[in]  in  The object to use to store the left-alignment flag.
 /// @return  The object as passed in.
 /// @since  x.y.z, 20.09.2017
-inline Creator& right( Creator& in)
+inline Creator& left( Creator& in)
 {
-   in.alignRight();
+   in.alignLeft();
    return in;
-} // right
+} // left
 
 
 /// Adds a 'constant text' field to the format definition.

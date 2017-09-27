@@ -73,8 +73,8 @@ protected:
       std::string  mConstant;
       /// The fixed width of the field, if set.
       int          mFixedWidth;
-      /// Set if the data in the field should be right-aligned.
-      bool         mAlignRight;
+      /// Set if the data in the field should be left-aligned.
+      bool         mAlignLeft;
    };
 
    /// Type of the container to store the fields of the format definition.

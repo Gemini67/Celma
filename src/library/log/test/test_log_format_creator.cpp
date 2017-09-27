@@ -18,6 +18,8 @@
 // include of the tested module's header file
 #include "celma/log/formatting/creator.hpp"
 
+#include <iostream>
+
 
 // Boost includes
 #define BOOST_TEST_MODULE LogCreatorTest
@@ -69,17 +71,17 @@ public:
       return mFields[ field_idx].mFixedWidth;
    } // DefinitionAccess::fixedWidth
 
-   /// Returns if right alignment should be used for the field at the given
+   /// Returns if left alignment should be used for the field at the given
    /// position.
    /// @param[in]  field_idx  The number of the field to return the alignment
    ///                        mode of.
-   /// @return  \c true if right alignment should be used for the field at the
+   /// @return  \c true if left alignment should be used for the field at the
    ///          given position.
    /// @since  x.y.z, 07.12.2016
-   bool alignRight( int field_idx) const
+   bool alignLeft( int field_idx) const
    {
-      return mFields[ field_idx].mAlignRight;
-   } // DefinitionAccess::alignRight
+      return mFields[ field_idx].mAlignLeft;
+   } // DefinitionAccess::alignLeft
 
 }; // DefinitionAccess
 
@@ -144,7 +146,7 @@ BOOST_AUTO_TEST_CASE( test_three)
 
    BOOST_REQUIRE_EQUAL( my_def.size(), 0);
 
-   format_creator << clf::date_time << "|" << clf::right << 5 << clf::line_nbr
+   format_creator << clf::date_time << "|" << clf::left << 5 << clf::line_nbr
                   << "|" << clf::text;
 
    BOOST_REQUIRE_EQUAL( my_def.size(), 5);
@@ -168,8 +170,8 @@ BOOST_AUTO_TEST_CASE( test_all_fields)
 
    format_creator << clf::filename << "|"
                   << clf::func_name << "["
-                  << clf::right << 6 << clf::line_nbr << "]"
-                  << clf::right << 5 << clf::pid << "|"
+                  << clf::left << 6 << clf::line_nbr << "]"
+                  << clf::left << 5 << clf::pid << "|"
                   << clf::date << " " << clf::time << "|"
                   << clf::level << "|"
                   << clf::log_class << "|"
@@ -191,7 +193,7 @@ BOOST_AUTO_TEST_CASE( test_all_fields)
    BOOST_REQUIRE_EQUAL( my_def.fieldType( 4),
                         DefinitionAccess::FieldTypes::lineNbr);
    BOOST_REQUIRE_EQUAL( my_def.fixedWidth( 4), 6);
-   BOOST_REQUIRE( my_def.alignRight( 4));
+   BOOST_REQUIRE( my_def.alignLeft( 4));
    BOOST_REQUIRE_EQUAL( my_def.fieldType( 5),
                         DefinitionAccess::FieldTypes::constant);
    BOOST_REQUIRE_EQUAL( my_def.constant( 5), "]");
@@ -247,7 +249,7 @@ BOOST_AUTO_TEST_CASE( test_custom_property)
    BOOST_REQUIRE_EQUAL( my_def.size(), 0);
 
    format_creator << clf::time << "|"
-                  << clf::right << 13 << clf::customProperty( "color")
+                  << clf::left << 13 << clf::customProperty( "color")
                   << "|" << clf::text;
 
    BOOST_REQUIRE_EQUAL( my_def.size(), 5);
@@ -256,10 +258,69 @@ BOOST_AUTO_TEST_CASE( test_custom_property)
                         clf::Definition::FieldTypes::customProperty);
    BOOST_REQUIRE_EQUAL( my_def.constant( 2),   "color");
    BOOST_REQUIRE_EQUAL( my_def.fixedWidth( 2), 13);
-   BOOST_REQUIRE_EQUAL( my_def.alignRight( 2), true);
+   BOOST_REQUIRE_EQUAL( my_def.alignLeft( 2), true);
 
 } // test_custom_property
 
 
 
-// =======================  END OF test_log_creator.cpp  =======================
+/// Test date, time and timestamp format string handling.
+/// @since  x.y.z, 26.09.2017
+BOOST_AUTO_TEST_CASE( test_format_string)
+{
+
+   namespace clf = celma::log::formatting;
+
+   {
+      DefinitionAccess  my_def;
+      Creator  format_creator( my_def);
+
+      format_creator << clf::time;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+      BOOST_REQUIRE_EQUAL( my_def.fieldType( 0),
+                           clf::Definition::FieldTypes::time);
+      BOOST_REQUIRE( my_def.constant( 0).empty());
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator  format_creator( my_def);
+
+      format_creator << clf::formatString( "%T") << clf::time;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+      BOOST_REQUIRE_EQUAL( my_def.fieldType( 0),
+                           clf::Definition::FieldTypes::time);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 0), "%T");
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator  format_creator( my_def);
+
+      format_creator << clf::formatString( "%Y-%M") << clf::date;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+      BOOST_REQUIRE_EQUAL( my_def.fieldType( 0),
+                           clf::Definition::FieldTypes::date);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 0), "%Y-%M");
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator  format_creator( my_def);
+
+      format_creator << clf::formatString( "%d-%h") << clf::date_time;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+      BOOST_REQUIRE_EQUAL( my_def.fieldType( 0),
+                           clf::Definition::FieldTypes::dateTime);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 0), "%d-%h");
+   } // end scope
+
+} // test_format_string
+
+
+
+// ===================  END OF test_log_format_creator.cpp  ===================
