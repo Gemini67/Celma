@@ -48,7 +48,7 @@ Format::Format( const Definition& def):
 ///                   message data into.
 /// @param[in]  msg   The log message whose data should be formatted.
 /// @since  x.y.z, 07.12.2016
-void Format::handleMsg( std::ostream& dest, const detail::LogMsg& msg) const
+void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
 {
 
    for (auto const& field_def : mFields)
@@ -109,7 +109,7 @@ void Format::handleMsg( std::ostream& dest, const detail::LogMsg& msg) const
       } // end switch
    } // end for
 
-} // Format::handleMsg
+} // Format::format
 
 
 

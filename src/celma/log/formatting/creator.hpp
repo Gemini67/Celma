@@ -20,17 +20,16 @@
 
 
 #include <string>
+#include "celma/common/manipulator.hpp"
 #include "celma/log/formatting/definition.hpp"
-#include "celma/log/formatting/detail/format_string.hpp"
-#include "celma/log/detail/custom_property.hpp"
 
 
 namespace celma { namespace log { namespace formatting {
 
 
 // bring helper classes into the same namespace
-using log::detail::customProperty;
-using detail::formatString;
+using customProperty = common::Manipulator< std::string, 0>;
+using formatString = common::Manipulator< std::string, 1>;
 
 
 /// Creates a log message format definition using stream-like syntax.
@@ -92,7 +91,7 @@ public:
    /// @param[in]  fs  The format string to store.
    /// @return  The same object as passed in \a c.
    /// @since  x.y.z, 26.09.2017
-   friend Creator& operator <<( Creator& c, const detail::formatString& fs);
+   friend Creator& operator <<( Creator& c, const formatString& fs);
 
 private:
    /// Called by the operator to actually store the constant text.<br>

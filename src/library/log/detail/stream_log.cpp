@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,7 +38,7 @@ namespace celma { namespace log { namespace detail {
 ///                            message was generated.
 /// @param[in]  line_nbr       The line number from which the log message
 ///                            originated.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 StreamLog::StreamLog( id_t log_ids, const std::string filename,
                       const char* const function_name, int line_nbr) noexcept( false):
    mLogIds( log_ids),
@@ -52,7 +52,7 @@ StreamLog::StreamLog( id_t log_ids, const std::string filename,
    if (mLogIds == 0)
       throw CELMA_RuntimeError( "no destination log id specified");
 
-} // end StreamLog::StreamLog
+} // StreamLog::StreamLog
 
 
 
@@ -67,7 +67,7 @@ StreamLog::StreamLog( id_t log_ids, const std::string filename,
 ///                            message was generated.
 /// @param[in]  line_nbr       The line number from which the log message
 ///                            originated.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 StreamLog::StreamLog( const std::string& log_name, const std::string filename,
                       const char* const function_name, int line_nbr) noexcept( false):
    mLogIds( 0),
@@ -80,12 +80,12 @@ StreamLog::StreamLog( const std::string& log_name, const std::string filename,
    if (mLogName.empty())
       throw CELMA_RuntimeError( "no destination log name specified");
 
-} // end StreamLog::StreamLog
+} // StreamLog::StreamLog
 
 
 
 /// Destructor. Finally create the requested log message.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 StreamLog::~StreamLog()
 {
    
@@ -100,7 +100,7 @@ StreamLog::~StreamLog()
    else
       Logging::instance().log( mLogIds, mLogMsg);
 
-} // end StreamLog::~StreamLog
+} // StreamLog::~StreamLog
 
 
 
@@ -108,7 +108,7 @@ StreamLog::~StreamLog()
 /// The text of the exception is assigned to the internal stringstream in
 /// order to keep the feature that log messages without text are discarded.
 /// @param[in]  eb  The exception to log.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 void StreamLog::storeException( const common::ExceptionBase& eb)
 {
 
@@ -120,7 +120,7 @@ void StreamLog::storeException( const common::ExceptionBase& eb)
    mLogMsg.assign( eb);
    mStrStream << eb.text();
 
-} // end StreamLog::storeException
+} // StreamLog::storeException
 
 
 
@@ -128,7 +128,7 @@ bool StreamLog::hasPropertyName() const
 {
 
    return !mPropertyName.empty();
-} // 
+} // StreamLog::hasPropertyName
 
 
 

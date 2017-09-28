@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,7 +38,7 @@ namespace celma { namespace log { namespace detail {
 /// @param[in]  file_name             The name of the source file.
 /// @param[in]  pretty_function_name  The name of the function.
 /// @param[in]  line_nbr              The line number.
-/// @since  0.3, 19.06.2016
+/// @since x.y.z, 19.06.2016
 LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_name,
                 int line_nbr):
    mTimestamp( ::time( nullptr)),
@@ -62,7 +62,7 @@ LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_
 /// Stores the data of an exception.<br>
 /// Note that also the line number, function name etc. are copied.
 /// @param[in]  eb  The exception to copy the data from.
-/// @since  0.3, 19.06.2016
+/// @since x.y.z, 19.06.2016
 void LogMsg::assign( const common::ExceptionBase& eb)
 {
 

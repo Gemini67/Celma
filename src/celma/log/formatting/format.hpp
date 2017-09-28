@@ -22,6 +22,7 @@
 #include <iosfwd>
 #include <string>
 #include "celma/log/formatting/definition.hpp"
+#include "celma/log/detail/i_format_stream.hpp"
 #include "celma/log/detail/log_msg.hpp"
 
 
@@ -30,7 +31,7 @@ namespace celma { namespace log { namespace formatting {
 
 /// Formats a log message for output.
 /// @since  x.y.z, 07.12.2016
-class Format: private Definition
+class Format: public detail::IFormatStream, private Definition
 {
 public:
    /// Constructor.
@@ -44,7 +45,8 @@ public:
    ///                   message data into.
    /// @param[in]  msg   The log message whose data should be formatted.
    /// @since  x.y.z, 07.12.2016
-   void handleMsg( std::ostream& dest, const detail::LogMsg& msg) const;
+   virtual void format( std::ostream& dest,
+                        const detail::LogMsg& msg) const override;
 
 private:
    /// Formats a date, time or timestamp.

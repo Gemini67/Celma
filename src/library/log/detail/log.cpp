@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,23 +33,23 @@ namespace celma { namespace log { namespace detail {
 
 
 /// Constructor.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 Log::Log():
    LogFilter(),
    mLoggers()
 {
-} // end Log::Log
+} // Log::Log
 
 
 
 /// Destructor.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 Log::~Log()
 {
 
    mLoggers.clear();
 
-} // end Log::~Log
+} // Log::~Log
 
 
 
@@ -57,15 +57,14 @@ Log::~Log()
 /// @param[in]  name  The symbolic name of this log destination.
 /// @param[in]  ldo   Pointer to the object that handles this log destination.
 /// @return  Pointer to the log destination object, can be used to set filters.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 ILogDest* Log::addDestination( const std::string& name, ILogDest* ldo)
 {
 
    mLoggers.push_back( LogDestData( name, ldo));
 
    return mLoggers.back().mpLogger.get();
-} // end Log::addDestination
-
+} // Log::addDestination
 
 
 
@@ -73,7 +72,7 @@ ILogDest* Log::addDestination( const std::string& name, ILogDest* ldo)
 /// @param[in]  name  The name of the log destination to return.
 /// @return  Pointer to the log destination object.
 /// @throw  Runtime error if a log destination with this name was not found.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 ILogDest* Log::getDestination( const std::string& name) noexcept( false)
 {
 
@@ -86,15 +85,16 @@ ILogDest* Log::getDestination( const std::string& name) noexcept( false)
       } // end if
    } // end for
 
-   throw CELMA_RuntimeError( "Log destination with name '" + name + "' does not exist");
+   throw CELMA_RuntimeError( "Log destination with name '" + name
+                             + "' does not exist");
 
-} // end Log::getDestination
+} // Log::getDestination
 
 
 
 /// Removes a destination.
 /// @param[in]  name  The name of the destination to remove.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 void Log::removeDestination( const std::string& name)
 {
 
@@ -107,13 +107,13 @@ void Log::removeDestination( const std::string& name)
       } // end if
    } // end for
 
-} // end Log::removeDestination
+} // Log::removeDestination
 
 
 
 /// Passes a log message to all current destinations.
 /// @param[in]  msg  The message to pass.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 void Log::message( const LogMsg& msg) const
 {
 
@@ -125,7 +125,7 @@ void Log::message( const LogMsg& msg) const
       } // end for
    } // end if
 
-} // end Log::message
+} // Log::message
 
 
 
@@ -133,7 +133,7 @@ void Log::message( const LogMsg& msg) const
 /// @param[in]  os  The stream to write into.
 /// @param[in]  l   The log to dump the information of.
 /// @return  The stream as passed in.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 std::ostream& operator <<( std::ostream& os, const Log& l)
 {
 
@@ -143,7 +143,7 @@ std::ostream& operator <<( std::ostream& os, const Log& l)
    } // end for
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 

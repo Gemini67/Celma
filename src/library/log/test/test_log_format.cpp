@@ -28,6 +28,7 @@
 #include <boost/test/unit_test.hpp>
 
 
+// project includes
 #include "celma/log/formatting/creator.hpp"
 
 
@@ -60,7 +61,7 @@ BOOST_AUTO_TEST_CASE( test_empty)
    Format              log_format( my_def);
 
 
-   log_format.handleMsg( oss, msg);
+   log_format.format( oss, msg);
 
    BOOST_REQUIRE( oss.str().empty());
 
@@ -84,8 +85,8 @@ BOOST_AUTO_TEST_CASE( test_fields)
    std::ostringstream  oss;
 
    {
-      Format              log_format( my_def);
-      log_format.handleMsg( oss, msg);
+      Format  log_format( my_def);
+      log_format.format( oss, msg);
 
       BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp");
    } // end scope
@@ -95,8 +96,8 @@ BOOST_AUTO_TEST_CASE( test_fields)
    oss.str( "");
 
    {
-      Format              log_format( my_def);
-      log_format.handleMsg( oss, msg);
+      Format  log_format( my_def);
+      log_format.format( oss, msg);
 
       BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp|test_one");
    } // end scope
@@ -120,9 +121,9 @@ BOOST_AUTO_TEST_CASE( test_align_fixedwidth)
 
    LogMsg              msg( "filename.cpp", "test_one", 1234);
    std::ostringstream  oss;
-
    Format              log_format( my_def);
-   log_format.handleMsg( oss, msg);
+
+   log_format.format( oss, msg);
 
    BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp        :  1234");
 
@@ -137,8 +138,107 @@ BOOST_AUTO_TEST_CASE( test_date_time)
 
    namespace clf = celma::log::formatting;
 
-   DefinitionAccess  my_def;
-   Creator           format_creator( my_def);
+   // date default formatting
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      format_creator << clf::date;
+
+      LogMsg              msg( "filename.cpp", "test_one", 1234);
+      std::ostringstream  oss;
+      Format              log_format( my_def);
+
+      msg.setTimestamp( 1506525448);
+      log_format.format( oss, msg);
+
+      BOOST_REQUIRE_EQUAL( oss.str(), "2017-09-27");
+   } // end scope
+
+   // date custom formatting
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      format_creator << clf::formatString( "%d") << clf::date;
+
+      LogMsg              msg( "filename.cpp", "test_one", 1234);
+      std::ostringstream  oss;
+      Format              log_format( my_def);
+
+      msg.setTimestamp( 1506525448);
+      log_format.format( oss, msg);
+
+      BOOST_REQUIRE_EQUAL( oss.str(), "27");
+   } // end scope
+
+   // time default formatting
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      format_creator << clf::time;
+
+      LogMsg              msg( "filename.cpp", "test_one", 1234);
+      std::ostringstream  oss;
+      Format              log_format( my_def);
+
+      msg.setTimestamp( 1506525448);
+      log_format.format( oss, msg);
+
+      BOOST_REQUIRE_EQUAL( oss.str(), "17:17:28");
+   } // end scope
+
+   // time custom formatting
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      format_creator << clf::formatString( "%r") << clf::time;
+
+      LogMsg              msg( "filename.cpp", "test_one", 1234);
+      std::ostringstream  oss;
+      Format              log_format( my_def);
+
+      msg.setTimestamp( 1506525448);
+      log_format.format( oss, msg);
+
+      BOOST_REQUIRE_EQUAL( oss.str(), "05:17:28 PM");
+   } // end scope
+
+   // timestamp default formatting
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      format_creator << clf::date_time;
+
+      LogMsg              msg( "filename.cpp", "test_one", 1234);
+      std::ostringstream  oss;
+      Format              log_format( my_def);
+
+      msg.setTimestamp( 1506525448);
+      log_format.format( oss, msg);
+
+      BOOST_REQUIRE_EQUAL( oss.str(), "2017-09-27 17:17:28");
+   } // end scope
+
+   // timestamp custom formatting
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      format_creator << clf::formatString( "now: %c") << clf::date_time;
+
+      LogMsg              msg( "filename.cpp", "test_one", 1234);
+      std::ostringstream  oss;
+      Format              log_format( my_def);
+
+      msg.setTimestamp( 1506525448);
+      log_format.format( oss, msg);
+
+      BOOST_REQUIRE_EQUAL( oss.str(), "now: Wed Sep 27 17:17:28 2017");
+   } // end scope
 
 } // test_date_time
 

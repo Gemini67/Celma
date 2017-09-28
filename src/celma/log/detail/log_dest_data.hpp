@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,8 +20,8 @@
 
 
 #include <iosfwd>
+#include <memory>
 #include <string>
-#include <boost/shared_ptr.hpp>
 #include "i_log_dest.hpp"
 
 
@@ -29,14 +29,14 @@ namespace celma { namespace log { namespace detail {
 
 
 /// Stores the properties of a log destination.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 class LogDestData
 {
 public:
    /// Constructor.
    /// @param[in]  name  The symbolic name of the log destination.
    /// @param[in]  ldo   The object handling the log destination.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    LogDestData( const std::string& name, ILogDest* ldo):
       mName( name),
       mpLogger( ldo)
@@ -47,13 +47,13 @@ public:
    /// @param[in]  os  The stream to write into.
    /// @param[in]  l   The log destination to dump the information of.
    /// @return  The stream as passed in.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    friend std::ostream& operator <<( std::ostream& os, const LogDestData& l);
    
    /// The symbolic name of the log destination.
-   std::string                   mName;
+   std::string                 mName;
    /// Pointer to the object handling the log destination.
-   boost::shared_ptr< ILogDest>  mpLogger;
+   std::shared_ptr< ILogDest>  mpLogger;
 
 }; // LogDestData
 

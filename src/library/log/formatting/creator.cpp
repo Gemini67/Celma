@@ -106,7 +106,7 @@ Creator& Creator::operator <<( Creator&( *m)( Creator&))
 Creator& operator <<( Creator& c, const customProperty& cp)
 {
 
-   c.customProperty( cp.name());
+   c.customProperty( cp.value());
 
    return c;
 } // operator <<
@@ -148,10 +148,10 @@ Creator& operator <<( Creator& c, int fixed_width)
 /// @param[in]  fs  The format string to store.
 /// @return  The same object as passed in \a c.
 /// @since  x.y.z, 26.09.2017
-Creator& operator <<( Creator& c, const detail::formatString& fs)
+Creator& operator <<( Creator& c, const formatString& fs)
 {
 
-   c.formatString( fs.format());
+   c.formatString( fs.value());
 
    return c;
 } // operator <<

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,7 +23,7 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 #include "celma/common/celma_exception.hpp"
-#include "celma/log/detail/custom_property.hpp"
+#include "celma/common/manipulator.hpp"
 #include "celma/log/detail/log_defs.hpp"
 #include "celma/log/detail/log_msg.hpp"
 
@@ -31,8 +31,11 @@
 namespace celma { namespace log { namespace detail {
 
 
+using customProperty = common::Manipulator< std::string>;
+
+
 /// Helper class to create a log message using C++ streams syntax.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 class StreamLog
 {
 public:
@@ -47,7 +50,7 @@ public:
    ///                            message was generated.
    /// @param[in]  line_nbr       The line number from which the log message
    ///                            originated.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    StreamLog( id_t log_ids, const std::string filename,
               const char* const function_name, int line_nbr) noexcept( false);
 
@@ -62,27 +65,27 @@ public:
    ///                            message was generated.
    /// @param[in]  line_nbr       The line number from which the log message
    ///                            originated.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    StreamLog( const std::string& log_name, const std::string filename,
               const char* const function_name, int line_nbr) noexcept( false);
 
    /// Destructor. Pass the created log message to the log framework.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    ~StreamLog();
 
    /// Helper function to use the temporary object to create the log message.
    /// @return  This object.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    StreamLog& self()
    {
       return *this;
-   } // end StreamLog::self
+   } // StreamLog::self
 
    /// Sets the log class for the current message.
    /// @param[in]  so  The object (= message) to set the log class for.
    /// @param[in]  lc  The log class to set.
    /// @return  The object passed in \a so.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so, LogClass lc)
    {
       // range check
@@ -92,13 +95,13 @@ public:
          so.mLogMsg.setClass( lc);
 
       return so;
-   } // end operator <<
+   } // operator <<
 
    /// Sets the log level for the current message.
    /// @param[in]  so  The object (= message) to set the log level for.
    /// @param[in]  ll  The log level to set.
    /// @return  The object passed in \a so.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so, LogLevel ll)
    {
       if (so.mLogMsg.getLevel() == LogLevel::undefined)
@@ -115,7 +118,7 @@ public:
       } // end if
       
       return so;
-   } // end operator <<
+   } // operator <<
 
    /// Logs an exception of type 'Celma runtime error'.<br>
    /// If the log level and class are not already set, they are set to
@@ -124,13 +127,13 @@ public:
    /// @param[in]  so   Me.
    /// @param[in]  cre  The exception object to log.
    /// @return  Myself.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so,
                                   const common::CelmaRuntimeError& cre)
    {
       so.storeException( cre);
       return so;
-   } // end operator <<
+   } // operator <<
 
    /// Logs an exception of type 'Celma logic error'.<br>
    /// If the log level and class are not already set, they are set to
@@ -139,13 +142,13 @@ public:
    /// @param[in]  so   Me.
    /// @param[in]  sre  The exception object to log.
    /// @return  Myself.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so,
                                   const common::CelmaLogicError& cle)
    {
       so.storeException( cle);
       return so;
-   } // end operator <<
+   } // operator <<
 
    /// Logs any exception.<br>
    /// The exception object needs a cast to the type \c 'const ExceptionBase&'
@@ -156,12 +159,12 @@ public:
    /// @param[in]  so  Me.
    /// @param[in]  eb  The exception object to log.
    /// @return  The object passed in \a so.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so, const common::ExceptionBase& eb)
    {
       so.storeException( eb);
       return so;
-   } // end operator <<
+   } // operator <<
 
    /// 
    /// @param[in]  so  .
@@ -170,16 +173,16 @@ public:
    /// @since  0.11, 12.12.2016
    friend StreamLog& operator <<( StreamLog& so, const customProperty& cp)
    {
-      so.storePropertyName( cp.name());
+      so.storePropertyName( cp.value());
       return so;
-   } // end operator <<
+   } // operator <<
 
    /// Input operator to add 'anything' to the internal stringstream.
    /// @tparam     T      The type of the value to add.
    /// @param[in]  so     The StreamLog to append the value.
    /// @param[in]  value  The value to append.
    /// @return  The StreamLog from the input parameter.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    template <typename T> friend StreamLog& operator <<( StreamLog& so,
                                                         const T& value)
    {
@@ -197,7 +200,7 @@ public:
          so.mStrStream << value;
       } // end if
       return so;
-   } // end operator <<
+   } // operator <<
 
 /*
    /// Input operator for ostream, prints the contents of the internal
@@ -205,63 +208,63 @@ public:
    /// @param[in]  os  The stream to write to.
    /// @param[in]  so  The StreamLog to dump the stringstream contents of.
    /// @return  The stream from the input parameter.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    friend std::ostream& operator <<( std::ostream& os, const StreamLog& so)
    {
       os << "file='" << so.mFile << "',line=" << so.mLineNbr << ",class="
          << so.mClass << ",level=" << so.mLevel << ",text='"
          << so.mStrStream.str() << "'";
       return os;
-   } // end operator <<
+   } // operator <<
 */
 
    /// This is the magic function to use manipulators: When a function is passed
    /// to the input operator, it is called.
    /// @param[in]  m  The function to call.
    /// @return  The object itself.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    StreamLog& operator <<( StreamLog&( *m)( StreamLog&))
    {
       m( *this);
       return *this;
-   } // end StreamLog::operator <<
+   } // StreamLog::operator <<
 
    /// Erases the contents of the internal stringstream.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    void clear()
    {
       mStrStream.str( "");
-   } // end StreamLog::clear
+   } // StreamLog::clear
 
    /// Stream manipulator: Specifies that the next value is the error number for
    /// the current message.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    void errnbr()
    {
       mErrNbrNext = true;
-   } // end StreamLog::errnbr
+   } // StreamLog::errnbr
 
 private:
    /// Stores the data of an exception in the log message object.<br>
    /// The text of the exception is assigned to the internal stringstream in
    /// order to keep the feature that log messages without text are discarded.
    /// @param[in]  eb  The exception to log.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    void storeException( const common::ExceptionBase& eb);
 
    /// 
    /// @return  .
-   /// @since  0.11, 12.12.2016
+   /// @since  x.y.z, 12.12.2016
    bool hasPropertyName() const;
 
    /// 
    /// @param[in]  property_name  .
-   /// @since  0.11, 12.12.2016
+   /// @since  x.y.z, 12.12.2016
    void storePropertyName( const std::string& property_name);
 
    /// 
    /// @param[in]  property_value  .
-   /// @since  0.11, 12.12.2016
+   /// @since  x.y.z, 12.12.2016
    void storeProperty( const std::string& property_value);
 
    /// The set of log ids to which the log message should be sent.
@@ -292,7 +295,7 @@ private:
 /// to generate a new log message.
 /// @param[in]  in  The object to call the clear() method of.
 /// @return  The StreamLog passed in the input parameter.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 inline StreamLog& clear( StreamLog& in)
 {
    in.clear();
@@ -306,7 +309,7 @@ inline StreamLog& clear( StreamLog& in)
 /// the error number for the current log message.
 /// @param[in]  in  The object to call the errnbr() method of.
 /// @return  The StreamLog passed in the input parameter.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 inline StreamLog& errnbr( StreamLog& in)
 {
    in.errnbr();
