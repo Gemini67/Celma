@@ -25,14 +25,34 @@ namespace celma { namespace log { namespace formatting {
 /// Constructor.
 /// @param[in]  dest_def  The format definition object to store the log
 ///                       format definition in.
+/// @param[in]  auto_sep  If set, this string is used as separator between
+///                       two fields and is added automatically.
 /// @since  x.y.z, 13.12.2016
-Creator::Creator( Definition& dest_def):
+Creator::Creator( Definition& dest_def, const char* auto_sep):
    mDefs( dest_def),
+   mAutoSep( (auto_sep != nullptr) ? auto_sep : ""),
    mFormatString(),
    mFixedWidth( 0),
    mAlignLeft( false)
 {
 } // Creator::Creator
+
+
+
+/// Sets a new auto separator string or deletes the existing one (the
+/// default).<br>
+/// The new separator will be used for the next field that is added.
+/// @param[in]  sep  The new separator to use, NULL to turn the feature off.
+/// @since  x.y.z, 29.09.2017
+void Creator::setAutoSep( const char* sep)
+{
+
+   if (sep != nullptr)
+      mAutoSep.assign( sep);
+   else
+      mAutoSep.clear();
+
+} // Creator::setAutoSep
 
 
 
@@ -51,11 +71,7 @@ void Creator::field( Definition::FieldTypes field_type)
    field.mFixedWidth = mFixedWidth;
    field.mAlignLeft  = mAlignLeft;
 
-   mDefs.mFields.push_back( field);
-
-   mFormatString.clear();
-   mFixedWidth = 0;
-   mAlignLeft  = false;
+   addField( field);
 
 } // Creator::field
 
@@ -158,6 +174,21 @@ Creator& operator <<( Creator& c, const formatString& fs)
 
 
 
+/// Operator to change the separator sring to use from now on.
+/// @param[in]  c    The object to change the eparator string in.
+/// @param[in]  sep  The separator string to set.
+/// @return  The same object as passed in \a c.
+/// @since  x.y.z, 02.10..2017
+Creator& operator <<( Creator& c, const separator& sep)
+{
+
+   c.setAutoSep( sep.value());
+
+   return c;
+} // operator <<
+
+
+
 /// Called by the operator to actually store the constant text.
 /// @param[in]  const_text  The constant text to store.
 /// @since  x.y.z, 13.12.2016
@@ -172,11 +203,7 @@ void Creator::addConstantText( const std::string& const_text)
    constant_field.mFixedWidth = mFixedWidth;
    constant_field.mAlignLeft  = mAlignLeft;
 
-   mDefs.mFields.push_back( constant_field);
-
-   mFormatString.clear();
-   mFixedWidth = 0;
-   mAlignLeft  = false;
+   addField( constant_field);
 
 } // Creator::addConstantText
 
@@ -196,11 +223,7 @@ void Creator::customProperty( const std::string& property_name)
    property_field.mFixedWidth = mFixedWidth;
    property_field.mAlignLeft  = mAlignLeft;
 
-   mDefs.mFields.push_back( property_field);
-
-   mFormatString.clear();
-   mFixedWidth = 0;
-   mAlignLeft  = false;
+   addField( property_field);
 
 } // Creator::customProperty
 
@@ -215,6 +238,36 @@ void Creator::formatString( const std::string& fmt)
    mFormatString = fmt;
 
 } // Creator::formatString
+
+
+
+/// Checks if an auto-separator must be added first, and then adds the field
+/// to the definition.<br>
+/// And while we're at it, prepare for the next field.
+/// @param[in]  field  The field to add.
+/// @since  x.y.z, 29.09.2017
+void Creator::addField( const Definition::Field& field)
+{
+
+   if (!mAutoSep.empty() && !mDefs.mFields.empty())
+   {
+      Definition::Field  separator_field;
+
+      separator_field.mType       = Definition::FieldTypes::constant;
+      separator_field.mConstant   = mAutoSep;
+      separator_field.mFixedWidth = 0;
+      separator_field.mAlignLeft  = false;
+
+      mDefs.mFields.push_back( separator_field);
+   } // end if
+
+   mDefs.mFields.push_back( field);
+
+   mFormatString.clear();
+   mFixedWidth = 0;
+   mAlignLeft  = false;
+
+} // Creator::addField
 
 
 

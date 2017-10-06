@@ -38,11 +38,12 @@ namespace celma { namespace log { namespace detail {
 /// @param[in]  file_name             The name of the source file.
 /// @param[in]  pretty_function_name  The name of the function.
 /// @param[in]  line_nbr              The line number.
-/// @since x.y.z, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_name,
                 int line_nbr):
    mTimestamp( ::time( nullptr)),
    mProcessId( ::getpid()),
+   mThreadId( ::pthread_self()),
    mFileName( file_name),
    mFunctionName( common::extractFuncname( pretty_function_name)),
    mLineNbr( line_nbr),
@@ -62,7 +63,7 @@ LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_
 /// Stores the data of an exception.<br>
 /// Note that also the line number, function name etc. are copied.
 /// @param[in]  eb  The exception to copy the data from.
-/// @since x.y.z, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 void LogMsg::assign( const common::ExceptionBase& eb)
 {
 
@@ -76,6 +77,10 @@ void LogMsg::assign( const common::ExceptionBase& eb)
 
 
 
+/// Stores a custom property to be used for this log message.
+/// @param[in]  property_name   The name of the property.
+/// @param[in]  property_value  The value of the property.
+/// @since  x.y.z, 11.12.2016
 void LogMsg::setCustomProperty( const std::string& property_name,
                                 const std::string& property_value)
 {

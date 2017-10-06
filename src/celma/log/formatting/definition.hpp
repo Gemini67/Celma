@@ -40,6 +40,7 @@ public:
       time,            //!< The time when the message was created.
       dateTime,        //!< The timestamp of the message.
       pid,             //!< The id of the process that created the message.
+      threadId,        //!< The if od the thread that created this message.
       lineNbr,         //!< The line number in the file.
       functionName,    //!< The name of the method/function in which the log
                        //!< message was created.

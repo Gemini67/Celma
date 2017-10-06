@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,13 +39,13 @@ namespace celma { namespace log { namespace detail {
 /// @param[in]  dest         The stream to write into.
 /// @param[in]  add_newline  Set to \c true if a newline character should be
 ///                          added to log message(s).
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 LogDestStream::LogDestStream( std::ostream& dest, bool add_newline):
    mDest( dest),
    mAddNewline( add_newline),
    mpFormatter( new FormatStreamDefault())
 {
-} // end LogDestStream::LogDestStream
+} // LogDestStream::LogDestStream
 
 
 
@@ -55,27 +55,28 @@ LogDestStream::LogDestStream( std::ostream& dest, bool add_newline):
 /// @param[in]  formatter  Pointer to the new formatter object to use. If a
 ///                        NULL pointer is passed, the previous formatter is
 ///                        replaced by the default stream formatter.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 void LogDestStream::setFormatter( IFormatBase* formatter)
 {
 
-   mpFormatter.reset( (formatter == nullptr) ? new FormatStreamDefault() :
-                                               static_cast< IFormatStream*>( formatter));
+   mpFormatter.reset(
+      (formatter == nullptr) ? new FormatStreamDefault() :
+                               static_cast< IFormatStream*>( formatter));
 
-} // end LogDestStream::setFormatter
+} // LogDestStream::setFormatter
 
 
 
 /// Called through the base class. Writes a log message to the specified
 /// stream.
 /// @param[in]  msg  The message to write.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 void LogDestStream::message( const LogMsg& msg)
 {
 
    mpFormatter->formatMsg( mDest, msg);
 
-} // end LogDestStream::message
+} // LogDestStream::message
 
 
 

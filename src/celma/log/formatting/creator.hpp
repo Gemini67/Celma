@@ -30,9 +30,26 @@ namespace celma { namespace log { namespace formatting {
 // bring helper classes into the same namespace
 using customProperty = common::Manipulator< std::string, 0>;
 using formatString = common::Manipulator< std::string, 1>;
+using separator = common::Manipulator< const char*, 2>;
 
 
-/// Creates a log message format definition using stream-like syntax.
+/// Creates a log message format definition using stream-like syntax.<br>
+/// As usual with streams, you set the properties first and then the value to
+/// which the properties apply.<br>
+/// Unlike output streams, there are no sticky properties, meaning you have to
+/// set them for each field where they are required, but you don't need to
+/// reset them.<br>
+/// Constant text is added as such to the destination format.<br>
+/// If an integer value is passed in by the stream operator, it defines the
+/// optional field width.<br>
+/// Another special feature can be used to generate separators betwenn the
+/// fields:
+/// - If the same separator should be used between all fields, pass the
+///   separator string to the constructor.
+/// - The separator() manipulator can be used to change the separator handling
+///   starting with the next field:
+///   - Pass a NULL pointer to turn off the separator feature.
+///   - Specify the new/other separator to use from now on,
 /// @since  x.y.z, 13.12.2016
 class Creator
 {
@@ -40,8 +57,21 @@ public:
    /// Constructor.
    /// @param[in]  dest_def  The format definition object to store the log
    ///                       format definition in.
+   /// @param[in]  auto_sep  If set, this string is used as separator between
+   ///                       two fields and is added automatically.
    /// @since  x.y.z, 13.12.2016
-   Creator( Definition& dest_def);
+   explicit Creator( Definition& dest_def, const char* auto_sep = nullptr);
+
+   Creator( const Creator&) = delete;
+   Creator( Creator&&) = default;
+   ~Creator() = default;
+
+   /// Sets a new auto separator string or deletes the existing one (the
+   /// default).<br>
+   /// The new separator will be used for the next field that is added.
+   /// @param[in]  sep  The new separator to use, NULL to turn the feature off.
+   /// @since  x.y.z, 29.09.2017
+   void setAutoSep( const char* sep = nullptr);
 
    /// Adds a field with the given type. Remaining parameters must be set
    /// before and are stored in the member variables.
@@ -93,6 +123,13 @@ public:
    /// @since  x.y.z, 26.09.2017
    friend Creator& operator <<( Creator& c, const formatString& fs);
 
+   /// Operator to change the separator sring to use from now on.
+   /// @param[in]  c    The object to change the eparator string in.
+   /// @param[in]  sep  The separator string to set.
+   /// @return  The same object as passed in \a c.
+   /// @since  x.y.z, 02.10..2017
+   friend Creator& operator <<( Creator& c, const separator& sep);
+
 private:
    /// Called by the operator to actually store the constant text.<br>
    /// Also adds the field
@@ -110,8 +147,17 @@ private:
    /// @since  x.y.z, 26.09.2017
    void formatString( const std::string& fmt);
 
+   /// Checks if an auto-separator must be added first, and then adds the field
+   /// to the definition.<br>
+   /// And while we're at it, prepare for the next field.
+   /// @param[in]  field  The field to add.
+   /// @since  x.y.z, 29.09.2017
+   void addField( const Definition::Field& field);
+
    /// The object to store the log message format definition in.
    Definition&  mDefs;
+   /// THe auto separator string to use, empty if the feature is not used.
+   std::string  mAutoSep;
    /// Format string for the next date, time or datetime field.
    std::string  mFormatString;
    /// Value set for the 'fixed width', will be stored in the next field.
@@ -214,7 +260,7 @@ inline Creator& line_nbr( Creator& in)
 } // line_nbr
 
 
-/// Adds an 'pid (process id)' field to the format definition.
+/// Adds a 'pid (process id)' field to the format definition.
 /// @param[in]  in  The object to use to add the field to the definition.
 /// @return  The object as passed in.
 /// @since  x.y.z, 20.09.2017
@@ -245,6 +291,17 @@ inline Creator& text( Creator& in)
    in.field( Definition::FieldTypes::text);
    return in;
 } // text
+
+
+/// Adds a 'thread id' field to the format definition.
+/// @param[in]  in  The object to use to add the field to the definition.
+/// @return  The object as passed in.
+/// @since  x.y.z, 04.10.2017
+inline Creator& thread_id( Creator& in)
+{
+   in.field( Definition::FieldTypes::threadId);
+   return in;
+} // thread_id
 
 
 /// Adds a 'time' field to the format definition.

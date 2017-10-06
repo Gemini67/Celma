@@ -124,6 +124,9 @@ void StreamLog::storeException( const common::ExceptionBase& eb)
 
 
 
+/// Returns if a property name is stored in this object.
+/// @return  \c true if a property name is stored.
+/// @since  x.y.z, 12.12.2016
 bool StreamLog::hasPropertyName() const
 {
 
@@ -132,6 +135,9 @@ bool StreamLog::hasPropertyName() const
 
 
 
+/// Stores a property name.
+/// @param[in]  property_name  The property name to store.
+/// @since  x.y.z, 12.12.2016
 void StreamLog::storePropertyName( const std::string& property_name)
 {
 
@@ -141,6 +147,10 @@ void StreamLog::storePropertyName( const std::string& property_name)
 
 
 
+/// Stores the value of a property with the previously given property name.
+/// @param[in]  property_value  The value to store for the property with the
+///                             previously given name.
+/// @since  x.y.z, 12.12.2016
 void StreamLog::storeProperty( const std::string& property_value)
 {
 

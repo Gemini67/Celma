@@ -252,18 +252,19 @@ private:
    /// @since  x.y.z, 19.06.2016
    void storeException( const common::ExceptionBase& eb);
 
-   /// 
-   /// @return  .
+   /// Returns if a property name is stored in this object.
+   /// @return  \c true if a property name is stored.
    /// @since  x.y.z, 12.12.2016
    bool hasPropertyName() const;
 
-   /// 
-   /// @param[in]  property_name  .
+   /// Stores a property name.
+   /// @param[in]  property_name  The property name to store.
    /// @since  x.y.z, 12.12.2016
    void storePropertyName( const std::string& property_name);
 
-   /// 
-   /// @param[in]  property_value  .
+   /// Stores the value of a property with the previously given property name.
+   /// @param[in]  property_value  The value to store for the property with the
+   ///                             previously given name.
    /// @since  x.y.z, 12.12.2016
    void storeProperty( const std::string& property_value);
 

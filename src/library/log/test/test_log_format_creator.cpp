@@ -90,22 +90,56 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( DefinitionAccess)
 BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::log::formatting::Definition::FieldTypes)
 
 
-/// First simple test.
+/// First simple tests.
 /// @since  x.y.z, 07.12.2016
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
    namespace clf = celma::log::formatting;
 
-   DefinitionAccess  my_def;
-   Creator           format_creator( my_def);
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
 
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
 
-   BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+      format_creator << clf::time;
 
-   format_creator << clf::time << "|" << clf::text;
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+   } // end scope
 
-   BOOST_REQUIRE_EQUAL( my_def.size(), 3);
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def, "|");
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << clf::time;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << clf::time << "|" << clf::text;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 3);
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def, "|");
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << clf::time << clf::text;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 3);
+   } // end scope
 
 } // test_one
 
@@ -118,16 +152,28 @@ BOOST_AUTO_TEST_CASE( test_two)
 
    namespace clf = celma::log::formatting;
 
-   DefinitionAccess  my_def;
-   Creator           format_creator( my_def);
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
 
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
 
-   BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+      format_creator << 10 << clf::date << "|" << 10 << clf::time << "|"
+                     << clf::text;
 
-   format_creator << 10 << clf::date << "|" << 10 << clf::time << "|"
-                  << clf::text;
+      BOOST_REQUIRE_EQUAL( my_def.size(), 5);
+   } // end scope
 
-   BOOST_REQUIRE_EQUAL( my_def.size(), 5);
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def, " | ");
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << 10 << clf::date << 10 << clf::time << clf::text;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 5);
+   } // end scope
 
 } // test_two
 
@@ -140,16 +186,29 @@ BOOST_AUTO_TEST_CASE( test_three)
 
    namespace clf = celma::log::formatting;
 
-   DefinitionAccess  my_def;
-   Creator           format_creator( my_def);
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
 
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
 
-   BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+      format_creator << clf::date_time << "|" << clf::left << 5 << clf::line_nbr
+                     << "|" << clf::text;
 
-   format_creator << clf::date_time << "|" << clf::left << 5 << clf::line_nbr
-                  << "|" << clf::text;
+      BOOST_REQUIRE_EQUAL( my_def.size(), 5);
+   } // end scope
 
-   BOOST_REQUIRE_EQUAL( my_def.size(), 5);
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def, "|");
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << clf::date_time << clf::left << 5 << clf::line_nbr
+                     << clf::text;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 5);
+   } // end scope
 
 } // test_three
 
@@ -320,6 +379,62 @@ BOOST_AUTO_TEST_CASE( test_format_string)
    } // end scope
 
 } // test_format_string
+
+
+
+/// Test that changing the separator works correctly.
+/// @since  x.y.z, 02.10.2017
+BOOST_AUTO_TEST_CASE( test_change_sep)
+{
+
+   namespace clf = celma::log::formatting;
+
+   DefinitionAccess  my_def;
+   Creator  format_creator( my_def, "|");
+
+   format_creator << "one" << "two" << "three"
+                  << clf::separator( ":")
+                  << "four" << "five";
+
+   BOOST_REQUIRE_EQUAL( my_def.size(), 9);
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 0),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 0), "one");
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 1),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 1), "|");
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 2),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 2), "two");
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 3),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 3), "|");
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 4),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 4), "three");
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 5),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 5), ":");
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 6),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 6), "four");
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 7),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 7), ":");
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 8),
+                        clf::Definition::FieldTypes::constant);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 8), "five");
+
+} // test_change_sep
 
 
 

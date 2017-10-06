@@ -28,9 +28,9 @@ namespace celma { namespace common {
 /// clause.<br>
 /// If you need two different manipulators in the same class/namespace with the
 /// same value type, you can use the second template parameter, the \a TAG, to
-/// dismabuiguiate the two types.<br>
+/// disambiguate the two types.<br>
 /// @tparam  T    The type of the value to store.
-/// @tparam  TAG  Optional, additional tag value, may be used to disambuiguiate
+/// @tparam  TAG  Optional, additional tag value, may be used to disambiguate
 ///               multiple using's for the same type.
 /// @since  x.y.z, 27.09.2017
 template< typename T, int TAG = 0> class Manipulator

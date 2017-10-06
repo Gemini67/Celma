@@ -23,10 +23,6 @@
 #include <iostream>
 
 
-// project includes
-#include "celma/log/detail/i_log_dest.hpp"
-
-
 namespace celma { namespace log { namespace detail {
 
 
@@ -36,11 +32,11 @@ namespace celma { namespace log { namespace detail {
 /// @param[in]  l   The log destination to dump the information of.
 /// @return  The stream as passed in.
 /// @since  x.y.z, 19.06.2016
-std::ostream& operator <<( std::ostream& os, const LogDestData&)
+std::ostream& operator <<( std::ostream& os, const LogDestData& l)
 {
-   /// @todo  implement me!
-   return os;
-} // end operator <<
+
+   return os << "Log dest name: " << l.mName << std::endl;
+} // operator <<
 
 
 

@@ -22,7 +22,7 @@
 #include <iosfwd>
 #include <memory>
 #include <string>
-#include "i_log_dest.hpp"
+#include "celma/log/detail/i_log_dest.hpp"
 
 
 namespace celma { namespace log { namespace detail {
@@ -41,7 +41,7 @@ public:
       mName( name),
       mpLogger( ldo)
    {
-   } // end LogDestData::LogDestData
+   } // LogDestData::LogDestData
 
    /// Writes information about a log destination.
    /// @param[in]  os  The stream to write into.

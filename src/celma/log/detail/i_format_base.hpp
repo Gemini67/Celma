@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,14 +26,13 @@ namespace celma { namespace log { namespace detail {
 /// Actually there are specific interfaces for each output destination type.
 /// Because the output destination type is not known yet, this class contains
 /// no methods at all.
-/// @todo  Move to detail.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 class IFormatBase
 {
 public:
    /// Empty, virtual destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~IFormatBase() { }
+   virtual ~IFormatBase() = default;
 
 }; // IFormatBase
 
