@@ -54,7 +54,8 @@ void NoGenerationPolicy::openLogfile( std::ofstream& outfile)
    outfile.open( mFullPathFilename.c_str(), std::ios_base::out | std::ios_base::app);
 
    if (!outfile)
-      throw CELMA_RuntimeError( "could not create/open logfile");
+      throw CELMA_RuntimeError( "could not create/open logfile at '"
+                                + mFullPathFilename + "'");
 
 }
 

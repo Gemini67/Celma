@@ -29,10 +29,10 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::string;
 using std::vector;

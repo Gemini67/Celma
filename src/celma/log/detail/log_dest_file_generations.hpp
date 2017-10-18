@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -31,7 +31,7 @@ namespace celma { namespace log { namespace detail {
 
 
 /// @todo  Use ProjectPath for path.
-/// @since  0.3, 19.06.2016
+/// @since  x.y.z, 19.06.2016
 template< typename P = NoGenerationPolicy> class LogDestFileGenerations:
    public ILogDest, private P
 {
@@ -41,7 +41,7 @@ public:
    /// 
    /// @param[in]  path      .
    /// @param[in]  filename  .
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    LogDestFileGenerations( const std::string& path, const std::string filename);
 
    /// Sets the new formatter to use.<br>
@@ -50,14 +50,14 @@ public:
    /// @param[in]  formatter  Pointer to the new formatter object to use. If a
    ///                        NULL pointer is passed, the previous formatter is
    ///                        replaced by the default stream formatter.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    virtual void setFormatter( IFormatBase* formatter = nullptr) override;
 
 private:
    /// Called through the base class. Writes a log message to the specified log
    /// file.
    /// @param[in]  msg  The message to write.
-   /// @since  0.3, 19.06.2016
+   /// @since  x.y.z, 19.06.2016
    virtual void message( const LogMsg& msg) override;
 
    /// The object used for formatting stream output.
@@ -77,7 +77,7 @@ template< typename P>
       P( path, filename),
       mpFormatter( new FormatStreamDefault())
 {
-} // end LogDestFileGenerations< P>::LogDestFileGenerations
+} // LogDestFileGenerations< P>::LogDestFileGenerations
 
 
 template< typename P>
@@ -85,7 +85,7 @@ template< typename P>
 {
    mpFormatter.reset( (formatter == nullptr) ? new FormatStreamDefault() :
                                                static_cast< IFormatStream*>( formatter));
-} // end LogDestFileGenerations< P>::setFormatter
+} // LogDestFileGenerations< P>::setFormatter
 
 
 template< typename P>
@@ -93,7 +93,7 @@ template< typename P>
 {
    openLogfile( mDest);
    mpFormatter->formatMsg( mDest, msg);
-} // end LogDestFileGenerations< P>::message
+} // LogDestFileGenerations< P>::message
 
 
 } // namespace detail

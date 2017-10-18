@@ -54,13 +54,14 @@ using celma::log::Logging;
 BOOST_AUTO_TEST_CASE( log_dest_file)
 {
 
-   const celma::log::id_t  my_log = Logging::instance().findCreateLog( "mine");
+   const auto  my_log = Logging::instance().findCreateLog( "mine");
+
 
    Logging::instance().getLog( my_log)
       ->addDestination( "file", new celma::log::detail::LogDestFileGenerations<>( "/tmp", "logfile.txt"));
 
    LOG_PRINTF( my_log, info, communication,
-               "log message create %s-like function call with %d parameters",
+               "log message created by %s-like function call with %d parameters",
                "printf()", 2);
 
    // have to remove this log destination again

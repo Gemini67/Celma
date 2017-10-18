@@ -29,8 +29,10 @@
    Module Name       | Description
    ----------------  | ----------------
    Argument handling | Contains the class celma::prog_args::Handler which provides easy and feature-rich argument handling.
-   Reflection        | Create a structure and a class that provides reflection-like access to the members of the structure. Starting point is celma::reflection::REFLECT.
-   Singleton         | Singleton pattern implementation with policies for static or dynamic object creation. See celma::common::Singleton.
+   Common            | Contains miscellaneous helper classes for your everyday tasks.
+   Format            | Formatting-related stuff like fast integer-to-string conversion, printing data in an ASCII table, or format a text block.
+   Indirect Acess    | Create a structure and a class that provides access to the members of the structure by name or its number. Starting point is celma::indirect_access::INDIRECT_ACCESS.
+   Logging           | Define one or multiple logs with one or multiple destinations, each using its own format.
 
 
    <hr>

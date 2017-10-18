@@ -20,7 +20,7 @@
 --*/
 
 
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/log/detail/add_log_standard_args.hpp"
 #include "celma/log/detail/log.hpp"
 #include "celma/log/logging.hpp"
@@ -102,7 +102,7 @@ static void do_arguments_again( int argc, char* argv[])
    {
       if (argc == 1)
       {
-         celma::common::ArgString2Array  as2a( "--log-stdout debug", argv[ 0]);
+         celma::appl::ArgString2Array  as2a( "--log-stdout debug", argv[ 0]);
          celma::prog_args::Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv);
       } else
       {

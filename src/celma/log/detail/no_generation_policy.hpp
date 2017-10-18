@@ -26,6 +26,7 @@
 namespace celma { namespace log { namespace detail {
 
 
+/// @since  x.y.z, 19.06.2016
 class NoGenerationPolicy
 {
 public:

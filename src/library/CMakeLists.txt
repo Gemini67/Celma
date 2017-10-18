@@ -2,12 +2,17 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
 
 cmake_minimum_required( VERSION 2.8 )
+
+add_subdirectory( appl )
+get_directory_property( appl_sources DIRECTORY ./appl
+   DEFINITION appl_sources
+)
 
 add_subdirectory( common )
 get_directory_property( common_sources DIRECTORY ./common
@@ -35,6 +40,7 @@ get_directory_property( indirect_access_sources DIRECTORY ./indirect_access
 )
 
 set( celma_lib_sources
+   ${appl_sources}
    ${common_sources}
    ${format_sources}
    ${log_sources}

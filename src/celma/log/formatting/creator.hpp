@@ -42,7 +42,7 @@ using separator = common::Manipulator< const char*, 2>;
 /// Constant text is added as such to the destination format.<br>
 /// If an integer value is passed in by the stream operator, it defines the
 /// optional field width.<br>
-/// Another special feature can be used to generate separators betwenn the
+/// Another special feature can be used to generate separators between the
 /// fields:
 /// - If the same separator should be used between all fields, pass the
 ///   separator string to the constructor.
@@ -80,7 +80,7 @@ public:
    void field( Definition::FieldTypes field_type);
 
    /// Sets a fixed width for the next field.
-   /// @param[in]  fixed_width  he fixed width to use for the next field.
+   /// @param[in]  fixed_width  The fixed width to use for the next field.
    /// @since  x.y.z, 13.12.2016
    void setFixedWidth( int fixed_width);
 
@@ -123,7 +123,7 @@ public:
    /// @since  x.y.z, 26.09.2017
    friend Creator& operator <<( Creator& c, const formatString& fs);
 
-   /// Operator to change the separator sring to use from now on.
+   /// Operator to change the separator string to use from now on.
    /// @param[in]  c    The object to change the eparator string in.
    /// @param[in]  sep  The separator string to set.
    /// @return  The same object as passed in \a c.

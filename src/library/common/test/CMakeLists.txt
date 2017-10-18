@@ -31,7 +31,6 @@ celma_add_boost_testprogram( test_value_result )
 celma_add_boost_mt_testprogram( test_managed_thread )
 celma_add_boost_mt_testprogram( test_sleep_on_error )
 
-celma_add_celma_boost_testprogram( test_arg_string_2_array )
 celma_add_celma_boost_testprogram( test_exception )
 celma_add_celma_boost_testprogram( test_extract_funcname )
 celma_add_celma_boost_testprogram( test_range_dest )

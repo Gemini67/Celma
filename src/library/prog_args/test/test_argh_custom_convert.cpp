@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,8 +33,8 @@
 
 
 // project includes
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args/handler.hpp"
-#include "celma/common/arg_string_2_array.hpp"
 
 
 using namespace std;
@@ -86,7 +86,7 @@ static istream& operator >>( istream& source, MyEnum& me)
    me = string2enum( v.c_str());
 
    return source;
-} // end operator >>
+} // operator >>
 
 
 
@@ -102,12 +102,12 @@ BOOST_AUTO_TEST_CASE( basic_conversion)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue), "Enum")
                                          ->setIsMandatory());
 
-   common::ArgString2Array  as2a( "-e meVal2", nullptr);
+   appl::ArgString2Array  as2a( "-e meVal2", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
 
-} // end basic_conversion
+} // basic_conversion
 
 
 
@@ -123,13 +123,13 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue), "Enum"));
 
-   common::ArgString2Array  as2a( "-e meVal2", nullptr);
+   appl::ArgString2Array  as2a( "-e meVal2", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( enumedValue.hasValue());
    BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
 
-} // end check_assign_conversion
+} // check_assign_conversion
 
 
 
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE( vector_conversion)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue), "Enum"));
 
-   common::ArgString2Array  as2a( "-e meVal1,meVal3", nullptr);
+   appl::ArgString2Array  as2a( "-e meVal1,meVal3", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE( !enumedValue.empty());
@@ -153,9 +153,9 @@ BOOST_AUTO_TEST_CASE( vector_conversion)
    BOOST_REQUIRE_EQUAL( enumedValue[ 0], meVal1);
    BOOST_REQUIRE_EQUAL( enumedValue[ 1], meVal3);
 
-} // end vector_conversion
+} // vector_conversion
 
 
 
-// =========================  END OF test_argh_custom_convert.cpp  =========================
+// ===================  END OF test_argh_custom_convert.cpp  ===================
 
