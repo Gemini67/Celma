@@ -30,6 +30,7 @@
 
 // project includes
 #include "celma/appl/project_path.hpp"
+#include "celma/appl/project_root.hpp"
 
 
 using celma::log::filename::Creator;
@@ -203,8 +204,8 @@ BOOST_AUTO_TEST_CASE( test_project_path)
 
       BOOST_REQUIRE_EQUAL( my_def.size(), 0);
 
-      celma::appl::ProjectPath::setProjectRoot(
-         celma::appl::ProjectPath::ProjRootSrc::env, "DIR");
+      celma::appl::ProjectRoot::instance().setProjectRoot(
+         celma::appl::ProjectRoot::ProjRootSrc::env, "DIR");
       celma::appl::ProjectPath  logdir( "log");
 
       format_creator << logdir << clf::path_sep << "myfile.log";

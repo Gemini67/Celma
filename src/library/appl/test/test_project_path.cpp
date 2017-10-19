@@ -24,31 +24,25 @@
 
 
 // project includes
+#include "celma/appl/project_root.hpp"
 #include "celma/common/string_util.hpp"
 
 
 using celma::appl::ProjectPath;
+using celma::appl::ProjectRoot;
 using celma::common::ensure_last;
 using std::runtime_error;
 using std::string;
 
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE( ProjectPath::ProjRootSrc);
+BOOST_TEST_DONT_PRINT_LOG_VALUE( ProjectRoot::ProjRootSrc)
 
 
 
 /// Test that all error conditions are caught.
-/// @since  0.12, 11.01.2017
+/// @since  x.y.z, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_errors)
 {
-
-   // set project root
-   BOOST_REQUIRE_THROW( ProjectPath::setProjectRoot( ProjectPath::ProjRootSrc::env),
-                        runtime_error);
-   BOOST_REQUIRE_THROW( ProjectPath::setProjectRoot( ProjectPath::ProjRootSrc::env,
-                                                     "THIS_ENVIRONMENT_VARIABLE_DOES_NOT_EXIST"),
-                        runtime_error);
-   BOOST_REQUIRE_THROW( ProjectPath::setProjectRoot( ProjectPath::ProjRootSrc::bin), runtime_error);
 
    // create paths
    BOOST_REQUIRE_THROW( ProjectPath( nullptr), runtime_error);
@@ -76,9 +70,11 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
 
 /// Test path creation based upon the value of the environment variable $HOME.
-/// @since  0.12, 11.01.2017
+/// @since  x.y.z, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_home)
 {
+
+   ProjectRoot::reset();
 
    string  home( ::getenv( "HOME"));
 
@@ -87,9 +83,6 @@ BOOST_AUTO_TEST_CASE( test_home)
    {
       ProjectPath  pp( ".cshrc");
 
-      BOOST_REQUIRE_EQUAL( ProjectPath::projectRootSrc(),
-                           ProjectPath::ProjRootSrc::home);
-      BOOST_REQUIRE_EQUAL( ProjectPath::projectRoot(), home);
 
       // do the same manually
       string  expResult( home);
@@ -124,7 +117,7 @@ BOOST_AUTO_TEST_CASE( test_home)
 
 /// Test path creation based upon the value of the environment variable
 /// $TEST_PROJ_ROOT_DIR which we set beforehand.
-/// @since  0.12, 11.01.2017
+/// @since  x.y.z, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_env)
 {
 
@@ -133,12 +126,12 @@ BOOST_AUTO_TEST_CASE( test_env)
 
    const string  env( ::getenv( "TEST_PROJ_ROOT_DIR"));
 
-   ProjectPath::setProjectRoot( ProjectPath::ProjRootSrc::env,
-                                "TEST_PROJ_ROOT_DIR");
+   ProjectRoot::reset();
+   ProjectRoot::instance( ProjectRoot::ProjRootSrc::env, "TEST_PROJ_ROOT_DIR");
 
-   BOOST_REQUIRE_EQUAL( ProjectPath::projectRootSrc(),
-                        ProjectPath::ProjRootSrc::env);
-   BOOST_REQUIRE_EQUAL( ProjectPath::projectRoot(), env);
+   BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
+                        ProjectRoot::instance().ProjRootSrc::env);
+   BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), env);
 
    {
       ProjectPath  pp( ".cshrc");
@@ -148,7 +141,7 @@ BOOST_AUTO_TEST_CASE( test_env)
       expResult.append( ".cshrc");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
 
    {
@@ -159,7 +152,7 @@ BOOST_AUTO_TEST_CASE( test_env)
       expResult.append( "etc/project.cfg");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
    
    {
@@ -170,7 +163,7 @@ BOOST_AUTO_TEST_CASE( test_env)
       expResult.append( "etc/myproject.xml");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
 
 } // test_env
@@ -178,7 +171,7 @@ BOOST_AUTO_TEST_CASE( test_env)
 
 
 /// Test path creation based upon the current working directory.
-/// @since  0.12, 11.01.2017
+/// @since  x.y.z, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_cwd)
 {
 
@@ -186,11 +179,12 @@ BOOST_AUTO_TEST_CASE( test_cwd)
 
    ensure_last( cwd);
 
-   ProjectPath::setProjectRoot( ProjectPath::ProjRootSrc::cwd);
+   ProjectRoot::reset();
+   ProjectRoot::instance( ProjectRoot::ProjRootSrc::cwd);
 
-   BOOST_REQUIRE_EQUAL( ProjectPath::projectRootSrc(),
-                        ProjectPath::ProjRootSrc::cwd);
-   BOOST_REQUIRE_EQUAL( ProjectPath::projectRoot(), cwd);
+   BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
+                        ProjectRoot::instance().ProjRootSrc::cwd);
+   BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), cwd);
 
    {
       ProjectPath  pp( ".cshrc");
@@ -200,7 +194,7 @@ BOOST_AUTO_TEST_CASE( test_cwd)
       expResult.append( ".cshrc");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
 
    {
@@ -211,7 +205,7 @@ BOOST_AUTO_TEST_CASE( test_cwd)
       expResult.append( "etc/project.cfg");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
    
    {
@@ -222,7 +216,7 @@ BOOST_AUTO_TEST_CASE( test_cwd)
       expResult.append( "etc/myproject.xml");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
 
 } // test_cwd
@@ -230,7 +224,7 @@ BOOST_AUTO_TEST_CASE( test_cwd)
 
 
 /// Test path creation based upon the (absolute) program start path.
-/// @since  0.12, 11.01.2017
+/// @since  x.y.z, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_prog_path)
 {
 
@@ -238,11 +232,12 @@ BOOST_AUTO_TEST_CASE( test_prog_path)
    const string  arg0( projroot + "bin/this_is_my_bin_path");
 
 
-   ProjectPath::setProjectRoot( ProjectPath::ProjRootSrc::bin, arg0.c_str());
+   ProjectRoot::reset();
+   ProjectRoot::instance( ProjectRoot::ProjRootSrc::bin, arg0.c_str());
 
-   BOOST_REQUIRE_EQUAL( ProjectPath::projectRootSrc(),
-                        ProjectPath::ProjRootSrc::bin);
-   BOOST_REQUIRE_EQUAL( ProjectPath::projectRoot(), projroot);
+   BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
+                        ProjectRoot::instance().ProjRootSrc::bin);
+   BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), projroot);
 
    {
       ProjectPath  pp( ".cshrc");
@@ -252,7 +247,7 @@ BOOST_AUTO_TEST_CASE( test_prog_path)
       expResult.append( ".cshrc");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
 
    {
@@ -263,7 +258,7 @@ BOOST_AUTO_TEST_CASE( test_prog_path)
       expResult.append( "etc/project.cfg");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
    
    {
@@ -274,7 +269,7 @@ BOOST_AUTO_TEST_CASE( test_prog_path)
       expResult.append( "etc/myproject.xml");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
-      BOOST_REQUIRE( ProjectPath::isOnProject( pp.str()));
+      BOOST_REQUIRE( ProjectRoot::instance().isOnProject( pp.str()));
    } // end scope
 
 } // test_prog_path

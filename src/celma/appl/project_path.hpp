@@ -34,48 +34,6 @@ namespace celma { namespace appl {
 class ProjectPath
 {
 public:
-   /// Specifies how the value for the 'project root' directory is determined:
-   enum class ProjRootSrc
-   {
-      unset,   //!< Project root not set yet.
-      home,    //!< Use environment variable $HOME.
-      env,     //!< Use the value of the environment variable specified in the
-               //!< 'source' parameter.
-      bin,     //!< Extract project root dir from binary path passed in
-               //!< 'source'. Path must be in the form
-               //!< '<proj-root-dir>/bin/prog'.
-      cwd      //!< Use 'current working directory'.
-   };
-
-   /// Initialise the 'project root' directory.<br>
-   /// If this method is not called explicitly, it is called by the first used
-   /// constructor with \a srcType set to ProjRootSrc::home.
-   /// @param[in]  srcType  Base to use to determine the root of the project.
-   /// @param[in]  source   If \a srcType ProjRootSrc::env or ProjRootSrc::bin
-   ///                      are used, the corresponding value (name of the
-   ///                      environment variable or the program start path,
-   ///                      respectively) must be passed here.
-   /// @since  x.y.z, 11.01.2017
-   static void setProjectRoot( ProjRootSrc srcType,
-                               const char* source = nullptr) noexcept( false);
-
-   /// Returns the project root dir.
-   /// @return  The path set for the project root directory.
-   /// @since  x.y.z, 11.01.2017
-   static const std::string& projectRoot();
-
-   /// Returns the type of the source that was used to determine the project
-   /// root.
-   /// @return  Source type used for setting the project root.
-   /// @since  x.y.z, 11.01.2017
-   static ProjRootSrc projectRootSrc();
-
-   /// Returns if the specified file is beneath the project root.
-   /// @param[in]  path_file_name  The absolute path and file name to check.
-   /// @return  \c true if the specified file is beneath the project root.
-   /// @since  x.y.z, 11.01.2017
-   static bool isOnProject( const std::string& path_file_name) noexcept( false);
-
    /// Constructor.
    /// @param[in]  subDir    The sub-directory of the project root path.
    /// @param[in]  filename  The name of the file.
@@ -127,12 +85,6 @@ public:
    friend std::ostream& operator <<( std::ostream& os, const ProjectPath& pp);
 
 private:
-   /// The project root path, same for all instances of this class (only one
-   /// project for one process).
-   static std::string  mProjectRoot;
-   /// The type of the source used to set the project root.
-   static ProjRootSrc  mProjectRootSource;
-
    /// Builds the absolute path and file name with all components.
    /// @param[in]  subDir    The sub-directory of the project root dir, may
    ///                       be NULL.
@@ -149,20 +101,6 @@ private:
 
 // inlined methods
 // ===============
-
-
-inline const std::string& ProjectPath::projectRoot()
-{
-   if (mProjectRoot.empty())
-      setProjectRoot( ProjRootSrc::home);
-   return mProjectRoot;
-} // ProjectPath::projectRoot
-
-
-inline ProjectPath::ProjRootSrc ProjectPath::projectRootSrc()
-{
-   return mProjectRootSource;
-} // ProjectPath::projectRootSrc
 
 
 inline const std::string& ProjectPath::str() const
