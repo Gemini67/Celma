@@ -29,6 +29,7 @@ namespace celma { namespace log { namespace filename {
 
 // bring helper classes into the same namespace
 using formatString = common::Manipulator< std::string>;
+using env_var = common::Manipulator< std::string, 1>;
 
 
 /// Creates a log filename format definition using stream-like syntax.<br>
@@ -113,6 +114,16 @@ public:
    /// @since  x.y.z, 11.10.2017
    friend Creator& operator <<( Creator& c, char fill_char);
 
+   /// Operator to store a path part that adds the value of the given
+   /// environment variable.
+   /// @param[in]  c   The object to pass the name of the environment variable
+   ///                 to.
+   /// @param[in]  ev  The objct with the name of the environment variable to
+   ///                 store.
+   /// @return  The same object as passed in \a c.
+   /// @since  x.y.z, 19.10.2017
+   friend Creator& operator <<( Creator& c, const env_var& ev);
+
 private:
    /// Called by the operator to actually store the constant text.<br>
    /// Also adds the part to the log file format definition.
@@ -124,6 +135,13 @@ private:
    /// @param[in]  fmt  The format string to store.
    /// @since  x.y.z, 11.10.2017
    void formatString( const std::string& fmt);
+
+   /// Called by the operator to actually store the name of an environment
+   /// variable.<br>
+   /// Also adds the part to the log file format definition.
+   /// @param[in]  env_var_name  The name of the environment variable.
+   /// @since  x.y.z, 19.10.2017
+   void addEnvVar( const std::string& env_var_name);
 
    /// Checks if two constant text parts can be concatenated, and if
    /// #mCheckPathSep is set, checks if a path separator must be added in

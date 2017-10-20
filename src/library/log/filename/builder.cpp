@@ -68,6 +68,15 @@ void Builder::filename( std::string& dest, int logfile_nbr,
       case PartTypes::number:
          formatNumber( dest, part_def, logfile_nbr);
          break;
+      case PartTypes::env:
+         {
+            const char*  env_value = ::getenv( part_def.mConstant.c_str());
+            if ((env_value != nullptr) && (env_value[ 0] != '\0'))
+            {
+               dest.append( env_value);
+            } // end if
+         } // end scope
+         break;
       } // end switch
    } // end for
 

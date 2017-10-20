@@ -35,6 +35,8 @@ public:
    enum class PartTypes
    {
       constant,   //!< Constant part of the path and/or filename.
+      env,        //!< An environment variable whose value is evaluated only
+                  //!< when a logfile name is created.
       date,       //!< Date as part of the path/filename.
       number      //!< Log file number.
    };

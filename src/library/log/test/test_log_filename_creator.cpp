@@ -97,6 +97,7 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( DefinitionAccess)
 BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::log::filename::Definition::PartTypes)
 
 
+
 /// First simple tests.
 /// @since  x.y.z, 16.10.2017
 BOOST_AUTO_TEST_CASE( test_one)
@@ -165,6 +166,85 @@ BOOST_AUTO_TEST_CASE( test_combine)
 
 
 
+/// Test using all path parts possible.
+/// @since  x.y.z, 19.10.2017
+BOOST_AUTO_TEST_CASE( test_all_parts)
+{
+
+   namespace clf = celma::log::filename;
+
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << "/tmp/log-" << clf::env_var( "APPL") << clf::date
+                     << ".log." << clf::number;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 5);
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 0),
+                           DefinitionAccess::PartTypes::constant);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 0), "/tmp/log-");
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 1),
+                           DefinitionAccess::PartTypes::env);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 1), "APPL");
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 2),
+                           DefinitionAccess::PartTypes::date);
+      BOOST_REQUIRE( my_def.constant( 2).empty());
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 3),
+                           DefinitionAccess::PartTypes::constant);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 3), ".log.");
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 4),
+                           DefinitionAccess::PartTypes::number);
+      BOOST_REQUIRE_EQUAL( my_def.fillChar( 4), '0');
+      BOOST_REQUIRE_EQUAL( my_def.fixedWidth( 4), 0);
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << "/tmp/log-" << clf::env_var( "APPL")
+                     << clf::formatString( "%d") << clf::date
+                     << ".log."
+                     << 3 << '_' << clf::number;
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 5);
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 0),
+                           DefinitionAccess::PartTypes::constant);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 0), "/tmp/log-");
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 1),
+                           DefinitionAccess::PartTypes::env);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 1), "APPL");
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 2),
+                           DefinitionAccess::PartTypes::date);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 2), "%d");
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 3),
+                           DefinitionAccess::PartTypes::constant);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 3), ".log.");
+
+      BOOST_REQUIRE_EQUAL( my_def.partType( 4),
+                           DefinitionAccess::PartTypes::number);
+      BOOST_REQUIRE_EQUAL( my_def.fillChar( 4), '_');
+      BOOST_REQUIRE_EQUAL( my_def.fixedWidth( 4), 3);
+   } // end scope
+
+} // test_all_parts
+
+
+
 /// Check that multiple path parts are correctly separated by a slash.
 /// @since  x.y.z, 16.10.2017
 BOOST_AUTO_TEST_CASE( test_check_path_sep)
@@ -178,7 +258,43 @@ BOOST_AUTO_TEST_CASE( test_check_path_sep)
 
       BOOST_REQUIRE_EQUAL( my_def.size(), 0);
 
+      format_creator << "/var" << clf::path_sep << "log";
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 0), "/var/log");
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
       format_creator << "/var" << clf::path_sep << "/log";
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 0), "/var/log");
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << "/var/" << clf::path_sep << "log";
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 1);
+      BOOST_REQUIRE_EQUAL( my_def.constant( 0), "/var/log");
+   } // end scope
+
+   {
+      DefinitionAccess  my_def;
+      Creator           format_creator( my_def);
+
+      BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+      format_creator << "/var/" << clf::path_sep << "/log";
 
       BOOST_REQUIRE_EQUAL( my_def.size(), 1);
       BOOST_REQUIRE_EQUAL( my_def.constant( 0), "/var/log");
@@ -204,7 +320,7 @@ BOOST_AUTO_TEST_CASE( test_project_path)
 
       BOOST_REQUIRE_EQUAL( my_def.size(), 0);
 
-      celma::appl::ProjectRoot::instance().setProjectRoot(
+      celma::appl::ProjectRoot::instance(
          celma::appl::ProjectRoot::ProjRootSrc::env, "DIR");
       celma::appl::ProjectPath  logdir( "log");
 
@@ -218,4 +334,4 @@ BOOST_AUTO_TEST_CASE( test_project_path)
 
 
 
-// ===================  END OF test_log_filename_creator.cpp  ===================
+// ==================  END OF test_log_filename_creator.cpp  ==================

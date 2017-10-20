@@ -171,6 +171,24 @@ Creator& operator <<( Creator& c, char fill_char)
 
 
 
+/// Operator to store a path part that adds the value of the given
+/// environment variable.
+/// @param[in]  c   The object to pass the name of the environment variable
+///                 to.
+/// @param[in]  ev  The objct with the name of the environment variable to
+///                 store.
+/// @return  The same object as passed in \a c.
+/// @since  x.y.z, 19.10.2017
+Creator& operator <<( Creator& c, const env_var& ev)
+{
+
+   c.addEnvVar( ev.value());
+
+   return c;
+} // operator <<
+
+
+
 /// Called by the operator to actually store the constant text.<br>
 /// Also adds the part to the log file format definition.
 /// @param[in]  const_text  The constant text to store.
@@ -183,8 +201,8 @@ void Creator::addConstantText( const std::string& const_text)
 
    constant_part.mType       = Definition::PartTypes::constant;
    constant_part.mConstant   = const_text;
-   constant_part.mFixedWidth = mFixedWidth;
-   constant_part.mFillChar   = mFillChar;
+   constant_part.mFixedWidth = 0;
+   constant_part.mFillChar   = '\0';
 
    addPart( constant_part);
 
@@ -201,6 +219,28 @@ void Creator::formatString( const std::string& fmt)
    mString = fmt;
 
 } // Creator::formatString
+
+
+
+/// Called by the operator to actually store the name of an environment
+/// variable.<br>
+/// Also adds the part to the log file format definition.
+/// @param[in]  env_var_name  The name of the environment variable.
+/// @since  x.y.z, 19.10.2017
+void Creator::addEnvVar( const std::string& env_var_name)
+{
+
+   Definition::Part  env_var_part;
+
+
+   env_var_part.mType       = Definition::PartTypes::env;
+   env_var_part.mConstant   = env_var_name;
+   env_var_part.mFixedWidth = 0;
+   env_var_part.mFillChar   = '\0';
+
+   addPart( env_var_part);
+
+} // Creator::addEnvVar
 
 
 
