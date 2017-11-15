@@ -30,6 +30,7 @@
 #include "celma/prog_args/detail/typed_arg.hpp"
 #include "celma/prog_args/detail/typed_arg_pair.hpp"
 #include "celma/prog_args/detail/typed_arg_range.hpp"
+#include "celma/prog_args/detail/typed_arg_value.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -46,6 +47,23 @@ template< typename T>
    detail::TypedArgBase* destination( T& dest_var, const std::string vname)
 {
    return new detail::TypedArg< T>( dest_var, vname);
+} // destination
+
+
+/// Returns the typed argument object corresponding to the type of the
+/// destination variable.
+/// @tparam  T  The type of the destination variable.
+/// @param[in]  dest_var  The destination variable of an argument.
+/// @param[in]  vname     The name of the destination variable.
+/// @param[in]  value     The value to set on the destination variable when the
+///                       argument is used.
+/// @return  The typed arg object for the type of the \a dest_var.
+/// @since  x.y.z, 15.11.2017
+template< typename T>
+   detail::TypedArgBase* destination( T& dest_var, const std::string vname,
+      const T& value)
+{
+   return new detail::TypedArgValue< T>( dest_var, vname, value);
 } // destination
 
 
@@ -141,6 +159,14 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @since  0.16.0, 09.11.2017  (adapted for new destination concept)
 /// @since  0.2, 10.04.2016
 #define DEST_VAR( n)  celma::prog_args::destination( n, #n)
+
+/// Macro used to call the celma::prog_args::destination() function for a single
+/// destination variable, where the value to set is also specified.
+/// @param  n  The destination variable.
+/// @param  v  The value to set on the destinaion variable when the argument is
+///            used.
+/// @since  x.y.z, 15.11.2017
+#define DEST_VAR_VALUE( n, v)  celma::prog_args::destination( n, #n, v)
 
 /// Macro used to call the celma::prog_args::destination() function for a pair
 /// of destination variables.

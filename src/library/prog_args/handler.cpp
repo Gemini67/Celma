@@ -123,6 +123,12 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    if (flag_set & hfArgHidden)
       addArgumentPrintHidden( "print-hidden");
 
+   if (flag_set & hfUsageShort)
+      addArgumentUsageShort( "help-short");
+
+   if (flag_set & hfUsageLong)
+      addArgumentUsageLong( "help-long");
+
    if (flag_set & hfListArgVar)
       addArgumentListArgVars( "list-arg-vars");
 
@@ -269,6 +275,48 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentPrintHidden
+
+
+
+/// Adds an argument that activates printing of usage with arguments with
+/// short argument key only.
+/// @param[in]  arg_spec  The argument(s) on the command line for activating
+///                       printing the usage with short arguments only.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  x.y.z, 25.09.2017
+detail::TypedArgBase*
+   Handler::addArgumentUsageShort( const std::string& arg_spec)
+{
+
+   static const string        desc( "Only print arguments with their short key "
+                                    "in the usage.");
+
+
+   return addArgument( arg_spec,
+      DEST_VAR_VALUE( mUsageContents, UsageContents::shortOnly), desc);
+} // Handler::addArgumentUsageShort
+
+
+
+/// Adds an argument that activates printing of usage with arguments with
+/// long argument key only.
+/// @param[in]  arg_spec  The argument(s) on the command line for activating
+///                       printing the usage with long arguments only.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  x.y.z, 25.09.2017
+detail::TypedArgBase*
+   Handler::addArgumentUsageLong( const std::string& arg_spec)
+{
+
+   static const string        desc( "Only print arguments with their long key "
+                                    "in the usage.");
+
+
+   return addArgument( arg_spec,
+      DEST_VAR_VALUE( mUsageContents, UsageContents::longOnly), desc);
+} // Handler::addArgumentUsageLong
 
 
 
@@ -974,10 +1022,6 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
 
-   size_t  stdArgLength = 0;
-
-   mDescription.setMinArgLen( stdArgLength);
-
    mOutput << "Usage:" << endl;
 
    mDescription.setPrintHidden( mPrintHidden);
@@ -1157,6 +1201,26 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
    hdl->calledAssign( mReadingArgumentFile, value);
 
 } // Handler::handleIdentifiedArg
+
+
+
+/// Prints the value of the usage contents enum.
+/// @param[in]  os  The stream to print to.
+/// @param[in]  v   The enum value to print.
+/// @return  The stream as given in \a os.
+/// @since  6.0, 26.10.2017
+std::ostream& operator <<( std::ostream& os, Handler::UsageContents v)
+{
+
+   switch (v)
+   {
+   case Handler::UsageContents::all:        os << "all";         break;
+   case Handler::UsageContents::shortOnly:  os << "long only";   break;
+   case Handler::UsageContents::longOnly:   os << "short only";  break;
+   } // end switch
+
+   return os << " (" << static_cast< int>( v) << ")";
+} // operator <<
 
 
 

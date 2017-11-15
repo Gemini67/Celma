@@ -231,10 +231,14 @@ public:
       /// Allows the argument '--print-hidden' to print the hidden arguments in
       /// the usage.
       hfArgHidden     = hfUsageHidden << 1,
+      /// Only print the arguments with their short argument in the usage.
+      hfUsageShort    = hfArgHidden << 1,
+      /// Only print the arguments with their long argument in the usage.
+      hfUsageLong     = hfUsageShort << 1,
       /// Adds the argument '--list-arg-vars' which, when used, prints the list
       /// of arguments and the names of the destination variables and their
       /// values.
-      hfListArgVar    = hfArgHidden << 1,
+      hfListArgVar    = hfUsageLong << 1,
       /// Special flag originally for testing: Don't exit after printing the
       /// usage.
       hfUsageCont     = hfListArgVar << 1,
@@ -258,6 +262,15 @@ public:
       beforeArgs,   //!< Position before the list of arguments.
       afterArgs     //!< Position after the list of arguments.
    }; // UsagePos
+
+   /// List of possible settings for printing the usage:
+   enum class UsageContents
+   {
+      all,         //!< Default: Display all arguments with their short and/or
+                   //!< long argument keys.
+      shortOnly,   //!< Display only those arguments with a short key.
+      longOnly     //!< Display only those arguments with a long key.
+   }; // UsageContents
 
    /// Make the type 'ValueMode' available through this class too.
    typedef detail::TypedArgBase::ValueMode  ValueMode;
@@ -373,6 +386,24 @@ public:
    ///          settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentPrintHidden( const std::string& arg_spec);
+
+   /// Adds an argument that activates printing of usage with arguments with
+   /// short argument key only.
+   /// @param[in]  arg_spec  The argument(s) on the command line for activating
+   ///                       printing the usage with short arguments only.
+   /// @return  The object managing this argument, may be used to apply further
+   ///          settings.
+   /// @since  x.y.z, 25.09.2017
+   detail::TypedArgBase* addArgumentUsageShort( const std::string& arg_spec);
+
+   /// Adds an argument that activates printing of usage with arguments with
+   /// long argument key only.
+   /// @param[in]  arg_spec  The argument(s) on the command line for activating
+   ///                       printing the usage with long arguments only.
+   /// @return  The object managing this argument, may be used to apply further
+   ///          settings.
+   /// @since  x.y.z, 25.09.2017
+   detail::TypedArgBase* addArgumentUsageLong( const std::string& arg_spec);
 
    /// Adds an argument that prints the list of arguments, their destination
    /// variables and their values.<br>
@@ -691,6 +722,8 @@ private:
    /// Needed together with the flag #mUsageContinues to bypass end-of-arguments
    /// checks so that evalArgument() can return.
    bool                         mUsagePrinted = false;
+   /// Defines the contents of the usage.
+   UsageContents                mUsageContents = UsageContents::all;
    /// The (top-level) arguments known by this class.
    detail::ArgumentContainer    mArguments;
    /// Argument sub-groups.
@@ -752,6 +785,17 @@ inline void Handler::setIsSubGroupHandler()
 {
    mIsSubGroupHandler = true;
 } // Handler::setIsSubGroupHandler
+
+
+// standalone functions
+
+
+/// Prints the value of the usage contents enum.
+/// @param[in]  os  The stream to print to.
+/// @param[in]  v   The enum value to print.
+/// @return  The stream as given in \a os.
+/// @since  6.0, 26.10.2017
+std::ostream& operator <<( std::ostream& os, Handler::UsageContents v);
 
 
 } // namespace prog_args

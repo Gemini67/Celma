@@ -23,6 +23,7 @@ celma_add_celma_boost_testprogram( test_argh_longarg_abbr )
 celma_add_celma_boost_testprogram( test_argh_output_streams)
 celma_add_celma_boost_testprogram( test_argh_range )
 celma_add_celma_boost_testprogram( test_argh_separate_values )
+celma_add_celma_boost_testprogram( test_argh_value_arg )
 celma_add_celma_boost_testprogram( test_arg_list_parser )
 celma_add_celma_boost_testprogram( test_argument_groups )
 celma_add_celma_boost_testprogram( test_argument_key )
@@ -85,9 +86,9 @@ set( test_arg_groups_usage_result
      "\n"
      "Standard Arguments:\n"
      "Optional:\n"
-     "   -h,--help         Prints the program usage\n"
-     "   --version         prints version information\n"
-     "   --modlist         prints module list\n"
+     "   -h,--help   Prints the program usage\n"
+     "   --version   prints version information\n"
+     "   --modlist   prints module list\n"
      "\n"
      "\n$"
 )
@@ -165,9 +166,9 @@ set( test_groups_sub_groups_usage_main_result
    "\n"
    "Standard Arguments:\n"
    "Optional:\n"
-   "   -h,--help         Prints the program usage\n"
-   "   --version         prints version information\n"
-   "   --modlist         prints module list\n"
+   "   -h,--help   Prints the program usage\n"
+   "   --version   prints version information\n"
+   "   --modlist   prints module list\n"
    "\n"
    "\n$"
 )

@@ -282,7 +282,6 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 
    for (auto & stored_group : mArgGroups)
    {
-      stored_group.mpArgHandler->mDescription.setMinArgLen( maxArgLen);
       stored_group.mpArgHandler->mDescription.setLineLength( mUsageLineLength);
       stored_group.mpArgHandler->mDescription.setCaption( "Mandatory:",
                                                             "Optional:");

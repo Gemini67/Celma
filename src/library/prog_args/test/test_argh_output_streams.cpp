@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
    ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")->setIsMandatory();
    ah.addArgument( "i,index", DEST_VAR( opt_int_arg), "Integer argument");
 
-   ArgString2Array  as2a( "-s text --list-arg-vars --index 4711", nullptr);
+   const ArgString2Array  as2a( "-s text --list-arg-vars --index 4711", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE_EQUAL( std_out.str(),

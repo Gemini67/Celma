@@ -62,12 +62,6 @@ public:
    void addArgument( const ArgumentKey& key, const std::string& argDesc,
                      TypedArgBase* argObj = nullptr);
 
-   /// Makes sure that the argument specification length (in #mMaxArgLen) is at
-   /// least \a minLen characters.
-   /// @param[in]  minLen  Minimum number of characters to set as arg spec len.
-   /// @since  0.2, 10.04.2016
-   void setMinArgLen( size_t minLen);
-
    /// Returns the argument specification length as stored in #mMaxArgLen.
    /// @return  The maximum argument specification length to use for formatting
    ///          the output.
@@ -194,13 +188,6 @@ private:
 
 // inlined methods
 // ===============
-
-
-inline void ArgumentDesc::setMinArgLen( size_t minLen)
-{
-   if (minLen > mMaxArgLen)
-      mMaxArgLen = minLen;
-} // end ArgumentDesc::setMinArgLen
 
 
 inline size_t ArgumentDesc::maxArgLen() const
