@@ -34,10 +34,13 @@ namespace celma { namespace prog_args { namespace detail {
 /// @since  0.2, 10.04.2016
 TypedArgSubGroup::TypedArgSubGroup( const ArgumentKey& key,
                                     Handler* ah_obj):
-   TypedArgBase( key, "sub-group", ValueMode::none, false),
+   TypedArgBase( "sub-group", ValueMode::none, false),
    mpArgHandler( ah_obj),
    mWasCalled( false)
 {
+
+   setKey( key);
+
 } // TypedArgSubGroup::TypedArgSubGroup
 
 

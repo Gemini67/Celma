@@ -24,20 +24,11 @@
 #include <string>
 #include <vector>
 
-#include "celma/common/check_assign.hpp"
-#include "celma/common/range_dest.hpp"
-
 #include "celma/prog_args/detail/arg_list_parser.hpp"
 #include "celma/prog_args/detail/argument_container.hpp"
 #include "celma/prog_args/detail/argument_desc.hpp"
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
-#include "celma/prog_args/detail/typed_arg_callable.hpp"
-#include "celma/prog_args/detail/typed_arg_callable_value.hpp"
-#include "celma/prog_args/detail/typed_arg.hpp"
-#include "celma/prog_args/detail/typed_arg_pair.hpp"
-#include "celma/prog_args/detail/typed_arg_range.hpp"
-#include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -48,19 +39,28 @@ class Groups;
 class ValueHandler;
 
 
-/// Class to store all command line argument descriptions as well as the
+/// Class to store all command line argument, their descriptions as well as the
 /// destination variables to store the values in.<br>
 /// To set up an argument handler, simply follow these steps:
 /// - Create object, specify the HandleFlags to get the desired behaviour.
-/// - For each argument, call addArgument() with the strings that specify the
-///   short and/or long arguments, the destination variable to store the value
-///   in when the argument is used (using the macro DEST_VAR()) plus a description
-///   of the argument and its value (for the usage).<br>
+/// - For each argument, call addArgument() with the parameters that specify
+///   - the short and/or long argument keys;
+///   - the handler for the destination variable to store the value in when the
+///     argument is used;
+///   - the name of the destination variable;
+///   - plus a description of the argument and its value (for the usage).
+///   .
 ///   The short (character) and long argument format are order independent in
-///   the argument string.
+///   the argument string.<br>
+///   The object to handle the destination variable is created using a function
+///   of the template family celma::prg_args::destinaion().<br>
+///   Use one of the \c DEST_... macros to easily create the second and third
+///   parameter of the function, the destination variable object plus the name
+///   of the destination variable.<br>
 ///   Example:  <code>addArgument( "s,silent", DEST_VAR( mRunSilent), "Set to suppress output");</code>
-/// - For free (i.e. positional) arguments, simply pass an empty string for the arguments:<br>
-///   Example:  <code>addArgument( "", DEST_VAR( mHostname), "The name of the host to connect to");</code>
+/// - For free (i.e. positional) arguments, simply pass a string with just a
+///   dash as 'argument key':<br>
+///   Example:  <code>addArgument( "-", DEST_VAR( mHostname), "The name of the host to connect to");</code>
 /// - For each argument, you can specify if it requires a value or not.<br>
 ///   Internally, the following defaults are applied:
 ///   - Arguments used to set a boolean variable don't accept a value.
@@ -69,6 +69,12 @@ class ValueHandler;
 ///   To change this 'value mode', call the function setValueMode() with the
 ///   desired value.<br>
 ///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent), "Specifies the verbose level, if set without value default is 'low'")->setValueMode( vmOptional);</code>
+/// - The value mode can also be used to flag a parameter that means:
+///   The remaining command line arguments are not for this program/
+///   application.<br>
+///   Use the vakue mode 'command' for this.<br>
+///   If such an argument is used, the remaining argument string is passed as
+///   value to its destination variable.
 /// - Additionally you can use the following modifiers for each argument to
 ///   further specify the handling of the argument and its value:
 ///   - setIsMandatory(): specifies that this argument is mandatory
@@ -131,12 +137,6 @@ class ValueHandler;
 ///        This could be used to make sure that an argument is handled by the
 ///        main object and not in the sub-group.
 /// @todo  Additional flag for Handler: Sort arguments for usage.
-/// @todo  Arguments that means: Everything that follows should not be treated
-///        as real program arguments anymore.<br>
-///        Example (here: first argument without a -):
-///           cmd [options ...] \<servername\> \<cmd\> [args ...]
-///        All following arguments are stored in the string provided with this
-///        parameter.
 /// @todo  Due to the fact that addArgument() does not return the Handler
 ///        object but the newly created TypedArg... object, it is not possible
 ///        to use function call chaining like boost::program_options does.<br>
@@ -176,15 +176,6 @@ class ValueHandler;
 ///        line is assigned.
 ///        Idea: vector is filled with default value(s), if the argument is
 ///        used the default should be replaced by the new values.
-/// @todo  Clean up the interface by removing all special addArgument()s for
-///        free values and
-///        a) simply document the case that an empty string should be passed
-///        b) and/or provide a constant 'free_value' (or so) that can be used.
-/// @todo  Instead of having containers with short and/or the long argument as
-///        key, and multiple places to split an argument specification string
-///        into short and long string: Call ArgSpec, takes the string as
-///        parameter, stores it internally and splits it into short and/or long
-///        argument, finally can be used for comparison etc.
 /// @todo  Flag and/or argument that changes the processing: Process all
 ///        arguments and throw/exit at the end only. This would help to detect
 ///        multiple errors in the argument string.
@@ -282,7 +273,7 @@ public:
                                    hfVerboseArgs | hfUsageHidden | hfArgHidden |
                                    hfListArgVar | hfUsageCont;
 
-   /// Constructor.
+   /// (Default) Constructor.
    /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
    ///                      possible values.
    /// @param[in]  txt1     Optional pointer to the object to provide additional
@@ -316,135 +307,18 @@ public:
    /// @since  0.2, 10.04.2016
    ~Handler();
 
-   /// Adds a single-value argument.
-   /// @tparam  T  The native type of the variable to store the value in.
+
+   /// Adds an argument with short and/or long arguments.
    /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The variable to store the value in.
-   /// @param[in]  vname     The name of the variable to store the value in.<br>
-   ///                       Used for error reporting.
+   /// @param[in]  dest      The object that handles the type-specific stuff.<br>
+   ///                       Use the celma::prog_args::destination() template
+   ///                       functions to obtain the correct object.
    /// @param[in]  desc      The description of this argument.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T>
-      detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                         T& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds a single-value argument where an additional value is set on a
-   /// second variable when the parameter is used.
-   /// @tparam  T1  The native type of the variable to store the argument value in.
-   /// @tparam  T2  The native type of the second variable.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest1     The variable to store the argument value in.
-   /// @param[in]  vname1    The name of the variable to store the argument value
-   ///                       in.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  dest2     The variable to store the given value in.
-   /// @param[in]  vname2    The name of the variable to store the given value in.
-   /// @param[in]  value2    The value to store in the second variable.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T1, typename T2>
-      detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                         T1& dest1, const std::string vname1,
-                                         T2& dest2, const std::string vname2,
-                                         const T2& value2,
-                                         const std::string& desc);
-
-   /// Adds a free, single-value argument.
-   /// @tparam  T  The native type of the variable to store the value in.
-   /// @param[in]  dest   The variable to store the value in.
-   /// @param[in]  vname  The name of the variable to store the value in.<br>
-   ///                    Used for error reporting.
-   /// @param[in]  desc   The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T>
-      detail::TypedArgBase* addArgument( T& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds a multi-value argument that supports a range definition string for
-   /// the values.
-   /// @tparam  T  The native type of the variable to store the value(s) in.
-   /// @tparam  C  The type of the container used to store the values in.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The variable to store the value(s) in.
-   /// @param[in]  vname     The name of the variable to store the value in.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T, typename C>
-      detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                         const common::RangeDest< T, C>& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds a free, multi-value argument that supports a range definition string
-   /// for the values.
-   /// @tparam  T  The native type of the variable to store the value(s) in.
-   /// @tparam  C  The type of the container used to store the values in.
-   /// @param[in]  dest   The variable to store the value(s) in.
-   /// @param[in]  vname  The name of the variable to store the value in.<br>
-   ///                    Used for error reporting.
-   /// @param[in]  desc   The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T, typename C>
-      detail::TypedArgBase* addArgument( const common::RangeDest< T, C>& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds an argument handler function that is called when an argument that
-   /// does not accept any value is set.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  fun       The function to call for this argument.<br>
-   ///                       Use the macros DEST_FUNCTION or DEST_METHOD to
-   ///                       easily set up the correct call.
-   /// @param[in]  fname     The name of the function to call.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
+   /// @since  0.16.0, 09.11.2017
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      detail::ArgHandlerCallable fun,
-                                      const std::string fname,
-                                      const std::string& desc);
-
-   /// Adds an argument handler function that is called when an argument that
-   /// may accept or requires a parameter is set.<br>
-   /// Due to ambiguity problems there is no addArgument() version for using a
-   /// free value for a callable. But you can achieve this easily by passing an
-   /// empty string ("") as \a arg_spec.
-   /// @param[in]  arg_spec     The arguments on the command line for this
-   ///                          argument.
-   /// @param[in]  fun          The function to call for this argument.<br>
-   ///                          This function must take an std::string as
-   ///                          parameter.<br>
-   ///                          Use the macros DEST_FUNCTION_VALUE or
-   ///                          DEST_METHOD_VALUE to easily set up the correct
-   ///                          call.
-   /// @param[in]  fname        The name of the function to call.<br>
-   ///                          Used for error reporting.
-   /// @param[in]  takes_value  Dummy parameter used to distinguish from the
-   ///                          non-value variant.
-   /// @param[in]  desc         The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      detail::ArgHandlerCallableValue fun,
-                                      const std::string fname,
-                                      bool takes_value,
+                                      detail::TypedArgBase* dest,
                                       const std::string& desc);
 
    /// Adds a sub-group.<br>
@@ -529,25 +403,6 @@ public:
    ///          settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentEndValues( const std::string& arg_spec);
-
-   /// Adds an argument with a custom destination type.
-   /// @tparam  C  The custom class used to handle variables of the custom
-   ///             destination type. This class must be derived from the class
-   ///             TypedArgBase.
-   /// @tparam  T  The custom type of the destination variable to handle.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The variable to store the value(s) in.
-   /// @param[in]  vname     The name of the variable to store the value in.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename C, typename T>
-      detail::TypedArgBase* addCustomArgument( const std::string& arg_spec,
-                                               T& dest,
-                                               const std::string vname,
-                                               const std::string& desc);
 
    /// Specifies the callback function for a control argument.<br>
    /// If no handler is defined for a control character, it is treated as error
@@ -871,206 +726,19 @@ private:
 }; // Handler
 
 
-// macros
-// ======
-
-
-/// Macro used to pass the destination variable and its name.
-/// @param  n  The destination variable.
-/// @since  0.2, 10.04.2016
-#define DEST_VAR( n)  n, #n
-
-/// Macro used to pass a destination variable that accepts a range string as
-/// value.
-/// @param  n  The destination variable.
-/// @param  t  The value type of the destination variable.
-/// @param  c  The type of the container/the destination variable.
-/// @todo  Try to change this (and the class RangeDest?) so that the type of
-///        the destination variable (container type) does not need to be
-///        set separately.
-/// @since  0.2, 10.04.2016
-#define DEST_RANGE( n, t, c)  celma::common::RangeDest< t, c < t > >( n), #n
-
-/// Macro used to pass a destination variable that accepts a range string as
-/// value.
-/// @param  n  The destination variable.
-/// @param  s  The size of the bitset.
-/// @since  0.2, 10.04.2016
-#define DEST_BITSET( n, s)  \
-   celma::common::RangeDest< size_t, std::bitset< s> >( n), #n
-
-/// Use this define to pass a function that takes no value as argument handler.
-/// @param[in]  f  The name of the function.
-/// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION( f)  std::bind( &f), #f
-
-/// Use this define to pass a function that accepts a value as argument handler.
-/// @param[in]  f  The name of the function.
-/// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION_VALUE( f)  \
-   std::bind( &f, std::placeholders::_1), #f, true
-
-/// Use this define to pass a method (class member function) of the current
-/// object, that takes no value, as argument handler.
-/// @param[in]  c  The name of the class.
-/// @param[in]  m  The name of the method.
-/// @since  0.13.1, 07.02.2017
-#define  DEST_MEMBER_METHOD( c, m)  std::bind( & c :: m, this), #c "::" #m
-
-/// Use this define to pass a method (class member function) that takes no value
-/// as argument handler.
-/// @param[in]  c  The name of the class.
-/// @param[in]  m  The name of the method.
-/// @param[in]  o  The object to call the method for.
-/// @since  0.2, 10.04.2016
-#define  DEST_METHOD( c, m, o)  std::bind( & c :: m, &o), #c "::" #m
-
-/// Use this define to pass a method (class member function) of the current
-/// object, that accepts a value, as argument handler.
-/// @param[in]  c  The name of the class.
-/// @param[in]  m  The name of the method.
-/// @since  0.13.1, 07.02.2017
-#define  DEST_MEMBER_METHOD_VALUE( c, m)  \
-   std::bind( & c :: m, this, std::placeholders::_1), #c "::" #m, true
-
-
-/// Use this define to pass a method (class member function) that accepts a
-/// value as argument handler.
-/// @param[in]  c  The name of the class.
-/// @param[in]  m  The name of the method.
-/// @param[in]  o  The object to call the method for.
-/// @since  0.2, 10.04.2016
-#define  DEST_METHOD_VALUE( c, m, o)  \
-   std::bind( & c :: m, &o, std::placeholders::_1), #c "::" #m, true
-
-
 // inlined methods
 // ===============
 
 
-template< typename T>
-   detail::TypedArgBase*
-      Handler::addArgument( const std::string& arg_spec,
-                            T& dest,
-                            const std::string vname,
-                            const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl = new detail::TypedArg< T>( key, dest,
-                                                                  vname);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addArgument
-
-
-template< typename T1, typename T2>
-   detail::TypedArgBase*
-      Handler::addArgument( const std::string& arg_spec,
-                            T1& dest1,
-                            const std::string vname1,
-                            T2& dest2,
-                            const std::string vname2,
-                            const T2& value2,
-                            const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl =
-      new detail::TypedArgPair< T1, T2>( key, dest1, vname1, dest2, vname2,
-                                         value2);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addArgument
-
-
-template< typename T>
-   detail::TypedArgBase*
-      Handler::addArgument( T& dest, const std::string vname,
-                            const std::string& desc)
-{
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( mPosKey, dest,
-                                                              vname);
-   return internAddArgument( arg_hdl, mPosKey, desc);
-} // Handler::addArgument
-
-
-template< typename T, typename C>
-   detail::TypedArgBase*
-      Handler::addArgument( const std::string& arg_spec,
-                            const common::RangeDest< T, C>& dest,
-                            const std::string vname,
-                            const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-       = new detail::TypedArgRange< T, C>( key, dest, vname);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addArgument
-
-
-template< typename T, typename C>
-   detail::TypedArgBase*
-      Handler::addArgument( const common::RangeDest< T, C>& dest,
-                            const std::string vname,
-                            const std::string& desc)
-{
-   detail::TypedArgBase*  arg_hdl
-      = new detail::TypedArgRange< T, C>( mPosKey, dest, vname);
-   return internAddArgument( arg_hdl, mPosKey, desc);
-} // Handler::addArgument
-
-
 inline detail::TypedArgBase*
    Handler::addArgument( const std::string& arg_spec,
-                         detail::ArgHandlerCallable fun,
-                         const std::string fname,
+                         detail::TypedArgBase* dest,
                          const std::string& desc)
 {
    const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallable( key, fun, fname);
-   return internAddArgument( arg_hdl, key, desc);
+   dest->setKey( key);
+   return internAddArgument( dest, key, desc);
 } // Handler::addArgument
-
-
-inline detail::TypedArgBase*
-   Handler::addArgument( const std::string& arg_spec,
-                         detail::ArgHandlerCallableValue fun,
-                         const std::string fname,
-                         bool,
-                         const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-       = new detail::TypedArgCallableValue( key, fun, fname);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addArgument
-
-
-inline detail::TypedArgBase*
-   Handler::addArgument( const std::string& arg_spec, Handler* subGroup,
-                         const std::string& desc)
-{
-   if (subGroup == nullptr)
-      throw std::runtime_error( "Sub-group object pointer is NULL");
-   subGroup->setIsSubGroupHandler();
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgSubGroup( key, subGroup);
-   mSubGroupArgs.addArgument( arg_hdl, key);
-   mDescription.addArgument( key, desc, arg_hdl);
-   return arg_hdl;
-} // Handler::addArgument
-
-
-template< typename C, typename T>
-   detail::TypedArgBase*
-      Handler::addCustomArgument( const std::string& arg_spec,
-                                  T& dest,
-                                  const std::string vname,
-                                  const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl = new C( key, dest, vname);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addCustomArgument
 
 
 inline void Handler::setUsageLineLength( int useLen)

@@ -22,7 +22,6 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include <boost/scoped_ptr.hpp>
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 #include "celma/prog_args/detail/i_constraint.hpp"
@@ -111,20 +110,23 @@ public:
    static constexpr const char* valueMode2str( ValueMode vm);
 
    /// Constructor.
-   /// @param[in]  key       The complete argument specification with short and/
-   ///                       or long argument.
    /// @param[in]  vname     The name of the destination variable to store the
    ///                       value in.
    /// @param[in]  vm        The value mode to set for this argument.
    /// @param[in]  printDef  Specifies if the default value of the destination
    ///                       variable should be printed in the usage or not.
-   /// @since  0.2, 10.04.2016
-   TypedArgBase( const ArgumentKey& key, const std::string& vname,
-                 ValueMode vm, bool printDef);
+   /// @since  0.16.0, 09.11.2017
+   TypedArgBase( const std::string& vname, ValueMode vm, bool printDef);
 
    /// Destructor, frees dynamically allocated memory.
    /// @since  0.2, 10.04.2016
    virtual ~TypedArgBase();
+
+   /// Set the argument key.
+   /// @param[in]  key  The complete argument specification with short and/or
+   ///                  long argument.
+   /// @since  0.16.0, 09.11.2017
+   void setKey( const ArgumentKey& key);
 
    /// Assigns a value.
    /// @param[in]  ignore_cardinality  Specifies if the cardinality of calls/
@@ -359,30 +361,30 @@ protected:
    void activateConstraints();
 
    /// The complete argument specification: short and/or long argument.
-   const ArgumentKey                 mKey;
+   ArgumentKey                     mKey;
    /// Contains the name of the variable in which the value(s) are stored.
-   const std::string                 mVarName;
+   const std::string               mVarName;
    /// The value mode of this argument, set depending on the type of the
    /// destination variable.
-   ValueMode                         mValueMode;
+   ValueMode                       mValueMode;
    /// Set if this argument is mandatory, not set by default.
-   bool                              mIsMandatory;
+   bool                            mIsMandatory = false;
    /// Set if this argument can handle multiple, separate values in the
    /// argument list.
-   bool                              mTakeMultipleValues;
+   bool                            mTakeMultipleValues = false;
    /// Set if the destination variable for this argument already contains the
    /// default value which may be printed in the usage.
-   bool                              mPrintDefault;
+   bool                            mPrintDefault;
    /// Set if this argument should be hidden = not printed in the usage.
-   bool                              mIsHidden;
+   bool                            mIsHidden = false;
    /// Stores all the checks (objects) defined for this argument.
-   std::vector< ICheck*>             mChecks;
+   std::vector< ICheck*>           mChecks;
    /// Stores all the formatters (objects) defined for this argument.
-   std::vector< IFormat*>            mFormats;
+   std::vector< IFormat*>          mFormats;
    /// Pointer to the object that manages the cardinality check.
-   boost::scoped_ptr< ICardinality>  mpCardinality;
+   std::unique_ptr< ICardinality>  mpCardinality;
    /// Stores the constraints defined for this argument.
-   std::vector< IConstraint*>        mConstraints;
+   std::vector< IConstraint*>      mConstraints;
 
 private:
    /// Should assign a value to the specified destination variable.

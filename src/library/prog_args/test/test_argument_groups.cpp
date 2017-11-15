@@ -29,6 +29,7 @@
 
 // project includes
 #include "celma/common/arg_string_2_array.hpp"
+#include "celma/prog_args/destination.hpp"
 
 
 using celma::common::ArgString2Array;
@@ -115,9 +116,9 @@ BOOST_AUTO_TEST_CASE( duplicate_standard_arg)
       std::string  firstFree;
       std::string  secondFree;
 
-      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( DEST_VAR( firstFree),
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "-", DEST_VAR( firstFree),
                                                     "first free argument"));
-      BOOST_REQUIRE_THROW( secondAH->addArgument( DEST_VAR( secondFree),
+      BOOST_REQUIRE_THROW( secondAH->addArgument( "-", DEST_VAR( secondFree),
                                                   "second free argument"),
                                                   invalid_argument);
 

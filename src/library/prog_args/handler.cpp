@@ -31,6 +31,8 @@
 #include "celma/common/reset_at_exit.hpp"
 #include "celma/common/scoped_value.hpp"
 #include "celma/common/tokenizer.hpp"
+#include "celma/prog_args/destination.hpp"
+#include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
 
@@ -51,6 +53,8 @@ using std::underflow_error;
 
 // module definitions
 const detail::ArgumentKey  Handler::mPosKey( "-");
+
+#define VAR_NAME( n)  n, #n
 
 
 
@@ -109,8 +113,11 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
       args = "help";
 
    if (!args.empty())
-      addArgument( args, detail::ArgHandlerCallable( std::bind( &Handler::usage, this, txt1, txt2)),
-                   "Handler::usage",
+      addArgument( args,
+                   new detail::TypedArgCallable(
+                      detail::ArgHandlerCallable(
+                         std::bind( &Handler::usage, this, txt1, txt2)),
+                         "Handler::usage"),
                    "Prints the program usage");
 
    if (flag_set & hfArgHidden)
@@ -137,6 +144,41 @@ Handler::~Handler()
    common::Vector::clear( mGlobalConstraints);
 
 } // Handler::~Handler
+
+
+
+/// Adds a sub-group.<br>
+/// Note: Theoretically we could pass the object by reference, but then the
+/// compiler cannot distinguish anymore between this function and the variant
+/// to add an argument resulting in a function call.
+/// @param[in]  arg_spec  The arguments on the command line to enter/start
+///                       the sub-group.
+/// @param[in]  subGroup  The object to handle the sub-group arguments.
+/// @param[in]  desc      The description of this sub-group argument.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  0.2, 10.04.2016
+detail::TypedArgBase*
+   Handler::addArgument( const string& arg_spec, Handler* subGroup,
+                         const string& desc)
+{
+
+   if (subGroup == nullptr)
+      throw runtime_error( "Sub-group object pointer is NULL");
+
+   subGroup->setIsSubGroupHandler();
+
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+      = new detail::TypedArgSubGroup( key, subGroup);
+
+   arg_hdl->setKey( key);
+
+   mSubGroupArgs.addArgument( arg_hdl, key);
+   mDescription.addArgument( key, desc, arg_hdl);
+
+   return arg_hdl;
+} // Handler::addArgument
 
 
 
@@ -170,13 +212,13 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
                        "Handler::usage",
                        desc);
 */
-   return addArgument( arg_spec,
-                       detail::ArgHandlerCallable(
-                          std::bind( &Handler::usage, this, txt1, txt2)
-                       ),
-                       "Handler::usage",
-                       desc);
 
+   return addArgument( arg_spec,
+                       new detail::TypedArgCallable(
+                          detail::ArgHandlerCallable(
+                             std::bind( &Handler::usage, this, txt1, txt2)),
+                          "Handler::usage"),
+                       desc);
 } // Handler::addHelpArgument
 
 
@@ -195,11 +237,13 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
                                     "file with the program arguments to read.");
    const detail::ArgumentKey  key( arg_spec);
 
-   auto  arg_hdl = new detail::TypedArgCallableValue( key,
-                                                      std::bind( &Handler::readArgumentFile,
-                                                                 this, std::placeholders::_1, true),
-                                                                 "Handler::readArgumentFile");
+   auto  arg_hdl = new detail::TypedArgCallableValue(
+                      std::bind( &Handler::readArgumentFile,
+                                 this, std::placeholders::_1, true),
+                      "Handler::readArgumentFile");
 
+
+   arg_hdl->setKey( key);
 
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentFile
@@ -218,8 +262,10 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
    static const string        desc( "Also print hidden arguments in the usage.");
    const detail::ArgumentKey  key( arg_spec);
 
-   auto  arg_hdl = new detail::TypedArg< bool>( key, DEST_VAR( mPrintHidden));
+   auto  arg_hdl = new detail::TypedArg< bool>( VAR_NAME( mPrintHidden));
 
+
+   arg_hdl->setKey( key);
 
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentPrintHidden
@@ -239,15 +285,17 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 {
 
    static const string  desc( "Prints the list of arguments and their destination "
-                             "variables.");
+                              "variables.");
    const detail::ArgumentKey  key( arg_spec);
 
-   auto  arg_hdl = new detail::TypedArgCallable( key,
-                                                 DEST_MEMBER_METHOD( Handler,
-                                                                     listArgVars));
+   auto  arg_hdl = new detail::TypedArgCallable(
+      detail::ArgHandlerCallable(
+         std::bind( &Handler::listArgVars, this)), "Handler::listArgVars");
 
 
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
+
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentListArgVars
 
@@ -268,16 +316,17 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
 
    if (!mUsedByGroup)
       throw invalid_argument( "Standard argument 'list argument groups' can"
-                              " only be set when argument groups are used!"); 
+                              " only be set when argument groups are used!");
 
    const detail::ArgumentKey  key( arg_spec);
 
-   auto  arg_hdl = new detail::TypedArgCallable( key,
-                                                 DEST_MEMBER_METHOD( Handler,
-                                                                     listArgGroups));
+   auto  arg_hdl = new detail::TypedArgCallable(
+      detail::ArgHandlerCallable(
+         std::bind( &Handler::listArgGroups, this)), desc);
 
-
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
+
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentListArgGroups
 
@@ -297,11 +346,14 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 
    const detail::ArgumentKey  key( arg_spec);
    detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallable( key, DEST_METHOD( Handler, endValueList,
-                                      *this));
+      = new detail::TypedArgCallable(
+         detail::ArgHandlerCallable(
+            std::bind( &Handler::endValueList, this)), desc);
 
 
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
+
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentEndValues
 
@@ -657,7 +709,7 @@ Handler::ArgResult
             handleIdentifiedArg( hdl, mPosKey, ai.argsAsString());
             return ArgResult::last;
          } // end if
-         
+
          handleIdentifiedArg( hdl, mPosKey, ai->mValue);
          return ArgResult::consumed;
       } // end if
