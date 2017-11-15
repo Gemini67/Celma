@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,7 +33,7 @@
 
 
 // project includes
-#include "celma/prog_args/handler.hpp"
+#include "celma/prog_args.hpp"
 #include "celma/common/arg_string_2_array.hpp"
 
 
@@ -99,7 +99,8 @@ BOOST_AUTO_TEST_CASE( basic_conversion)
    MyEnum              enumedValue( initVal);
 
 
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue), "Enum")
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+                                           "Enum")
                                          ->setIsMandatory());
 
    common::ArgString2Array  as2a( "-e meVal2", nullptr);

@@ -36,14 +36,12 @@ class TypedArgCallableValue: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  fun    The function to call when the argument is set on the
    ///                    command line.
    /// @param[in]  fname  The name of the function to call.
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArgCallableValue( const ArgumentKey& key,
-                          ArgHandlerCallableValue fun,
+   TypedArgCallableValue( ArgHandlerCallableValue fun,
                           const std::string& fname);
 
    /// Returns if the function was called or not.
@@ -78,7 +76,7 @@ private:
    /// Reference of the destination variable to store the value in.
    ArgHandlerCallableValue  mFun;
    /// Flag set when the function is called.
-   bool                     mWasCalled;
+   bool                     mWasCalled = false;
 
 }; // TypedArgCallableValue
 
@@ -87,12 +85,10 @@ private:
 // ===============
 
 
-inline TypedArgCallableValue::TypedArgCallableValue( const ArgumentKey& key,
-                                                     ArgHandlerCallableValue fun,
+inline TypedArgCallableValue::TypedArgCallableValue( ArgHandlerCallableValue fun,
                                                      const std::string& fname):
-   TypedArgBase( key, fname, ValueMode::required, false),
-   mFun( fun),
-   mWasCalled( false)
+   TypedArgBase( fname, ValueMode::required, false),
+   mFun( fun)
 {
 } // TypedArgCallableValue::TypedArgCallableValue
 

@@ -40,8 +40,6 @@ template< typename T1, typename T2> class TypedArgPair : public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  key     The complete argument specification with short and/or
-   ///                     long argument.
    /// @param[in]  dest1   The first destination variable to store the
    ///                     parameter value in.
    /// @param[in]  vname1  The name of the first destination variable to store
@@ -51,9 +49,9 @@ public:
    /// @param[in]  vname2  The name of the second destination variable to store
    ///                     the given value in.
    /// @param[in]  value2  The value to set for the second variable.
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArgPair( const ArgumentKey& key,
-                 T1& dest1, const std::string& vname1, T2& dest2,
+   TypedArgPair( T1& dest1, const std::string& vname1, T2& dest2,
                  const std::string& vname2, const T2& value2);
 
    /// Returns if the destination has a value set.
@@ -85,7 +83,7 @@ private:
    /// reference to a temporary value/variable.
    const T2           mValue2;
    /// Flag, set when the argument was found/the value is set.
-   bool               mValueSet;  
+   bool               mValueSet = false;
 
 }; // TypedArgPair< T1, T2>
 
@@ -95,16 +93,14 @@ private:
 
 
 template< typename T1, typename T2>
-   TypedArgPair< T1, T2>::TypedArgPair( const ArgumentKey& key,
-                                        T1& dest1, const std::string& vname1,
+   TypedArgPair< T1, T2>::TypedArgPair( T1& dest1, const std::string& vname1,
                                         T2& dest2, const std::string& vname2,
                                         const T2& value2):
-      TypedArgBase( key, vname1, ValueMode::required, false),
+      TypedArgBase( vname1, ValueMode::required, false),
       mDestVar1( dest1),
       mDestVar2( dest2),
       mVarName2( vname2),
-      mValue2( value2),
-      mValueSet( false)
+      mValue2( value2)
 {
 } // TypedArgPair< T1, T2>::TypedArgPair
 

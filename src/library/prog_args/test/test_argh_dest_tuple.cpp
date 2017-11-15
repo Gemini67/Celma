@@ -21,7 +21,7 @@
 
 
 // project includes
-#include "celma/prog_args/handler.hpp"
+#include "celma/prog_args.hpp"
 #include "celma/common/arg_string_2_array.hpp"
 
 
