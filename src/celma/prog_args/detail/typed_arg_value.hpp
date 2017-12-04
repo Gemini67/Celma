@@ -25,6 +25,7 @@
 #include "celma/common/check_assign.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
@@ -40,6 +41,9 @@ namespace celma { namespace prog_args { namespace detail {
 /// set on the command line, the value to set is specified on the argument.<br>
 /// Use this when multiple arguments are used to set different values in the
 /// same destination variable.
+/// By default is checked that the original value of the destination variable is
+/// modified only once. To allow multiple changes, i.e. the last argument that
+/// modifies the value wins, set checkOriginalValue() to \c false.
 /// @tparam  T  The type of the value.
 /// @since  x.y.z, 25.09.2017
 template< typename T> class TypedArgValue: public TypedArgBase
@@ -71,6 +75,13 @@ public:
    /// @since  x.y.z, 25.09.2017
    virtual void defaultValue( std::string& dest) const override;
 
+   /// Allows to change the "original value check" mode.
+   /// @param[in]  yesNo  Set to \c false for turning the value check off.
+   /// @return  Pointer to this object.
+   /// @since  x.y.z, 16.11.2017
+   virtual TypedArgBase* checkOriginalValue( bool yesNo) noexcept( false)
+      override;
+
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
@@ -87,6 +98,10 @@ private:
    T&       mDestVar;
    /// The value to set when the argument is used.
    const T  mValue;
+   /// The original value of the destination variable when the object was
+   /// created. Used to detect multiple assignments to the same destination
+   /// variable through multiple arguments.
+   const T  mOrigValue;
    /// Flag, set when the argument was found/the value is set.
    bool     mHasValueSet = false;
 
@@ -102,8 +117,10 @@ template< typename T>
                                      const T& value):
       TypedArgBase( vname, ValueMode::none, true),
       mDestVar( dest),
-      mValue( value)
+      mValue( value),
+      mOrigValue( dest)
 {
+   mCheckOrigValue = true;
    mpCardinality.reset( new CardinalityMax( 1));
 } // TypedArgValue< T>::TypedArgValue
 
@@ -127,6 +144,14 @@ template< typename T> void TypedArgValue< T>::defaultValue( std::string&) const
 } // TypedArgValue< T>::defaultValue
 
 
+template< typename T>
+   TypedArgBase* TypedArgValue< T>::checkOriginalValue( bool yesNo)
+{
+   mCheckOrigValue = yesNo;
+   return this;
+} // TypedArgValue::checkOriginalValue
+
+
 template< typename T> void TypedArgValue< T>::dump( std::ostream& os) const
 {
    os << "value type '" << type< T>::name() << "', destination '"
@@ -141,6 +166,9 @@ template< typename T> void TypedArgValue< T>::dump( std::ostream& os) const
 
 template< typename T> void TypedArgValue< T>::assign( const std::string&)
 {
+   if (mCheckOrigValue && (mDestVar != mOrigValue))
+      throw std::runtime_error( "destination variable '" + mVarName
+         + "' has already been set to '" + format::toString( mDestVar) + "'");
    mDestVar = mValue;
    mHasValueSet = true;
 } // TypedArgValue< T>::assign

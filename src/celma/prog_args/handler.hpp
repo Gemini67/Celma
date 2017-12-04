@@ -20,7 +20,7 @@
 
 
 #include <functional>
-#include <ostream>
+#include <iosfwd>
 #include <string>
 #include <vector>
 
@@ -97,6 +97,11 @@ class ValueHandler;
 ///     separator character by which a list of values is split.
 ///   - setCardinality(): Allows to change or delete the cardinality check that
 ///     is applied to this argument.
+///   - checkOriginalValue(): For value arguments, i.e. 'flag' arguments where
+///     the value to set on the destinaion variable is part of the argument
+///     itself, multiple changes to the same destination variable are prevented
+///     by checking the original value before changing it. Set
+///     checkOriginalValue() to \c false to allow multiple changes.
 ///   .
 ///   It is possible to add multiple checks to the same argument. In this case,
 ///   a value must be accepted by all checks. The checks are executed in the
@@ -391,19 +396,27 @@ public:
    /// short argument key only.
    /// @param[in]  arg_spec  The argument(s) on the command line for activating
    ///                       printing the usage with short arguments only.
+   /// @param[in]  desc      Optional text for the description of the argument
+   ///                       in the usage. If not set, the default description
+   ///                       is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
    /// @since  x.y.z, 25.09.2017
-   detail::TypedArgBase* addArgumentUsageShort( const std::string& arg_spec);
+   detail::TypedArgBase* addArgumentUsageShort( const std::string& arg_spec,
+      const char* desc = nullptr);
 
    /// Adds an argument that activates printing of usage with arguments with
    /// long argument key only.
    /// @param[in]  arg_spec  The argument(s) on the command line for activating
    ///                       printing the usage with long arguments only.
+   /// @param[in]  desc      Optional text for the description of the argument
+   ///                       in the usage. If not set, the default description
+   ///                       is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
    /// @since  x.y.z, 25.09.2017
-   detail::TypedArgBase* addArgumentUsageLong( const std::string& arg_spec);
+   detail::TypedArgBase* addArgumentUsageLong( const std::string& arg_spec,
+      const char* desc = nullptr);
 
    /// Adds an argument that prints the list of arguments, their destination
    /// variables and their values.<br>
@@ -551,13 +564,6 @@ protected:
    /// @since  0.2, 10.04.2016
    void checkMissingMandatoryCardinality() const;
 
-   /// Checks and sets the maximum argument length, needed to format the usage.
-   /// @param[in,out]  maxArgLen  Maximum argument length as needed so far, may
-   ///                            be increased if this class contains longer
-   ///                            arguments.
-   /// @since  0.2, 10.04.2016
-   void checkMaxArgLen( size_t& maxArgLen) const;
-
    /// Checks if the specified argument is already used.
    /// @param[in]  argChar  The argument character to check.
    /// @return  \c true if the argument is already in use.
@@ -702,59 +708,59 @@ private:
                              const std::string& value = "");
 
    /// Stream to write output to.
-   std::ostream&                mOutput;
+   std::ostream&                  mOutput;
    /// Stream to write error output to.
-   std::ostream&                mErrorOutput;
+   std::ostream&                  mErrorOutput;
    /// Set when the flag #hfReadProgArg was passed to the constructor. Then the
    /// default program arguments file is read before the command line arguments
    /// are evaluated.
-   const bool                   mReadProgramArguments;
+   const bool                     mReadProgramArguments;
    /// Set when the flag #hfVerboseArgs was passed to the constructor. Produces
    /// verbose output when a value is assigned to a variable.
-   const bool                   mVerbose;
+   const bool                     mVerbose;
    /// Set when the flag #hfUsageHidden was passed to the constructor. Specifies
    /// if hidden arguments should be printed in the usage or not.
-   bool                         mPrintHidden;
+   bool                           mPrintHidden;
    /// Set when the flag #hfUsageCont was passed to the constructor. Specifies
    /// that the program flow should continue after printing the usage.
-   const bool                   mUsageContinues;
+   const bool                     mUsageContinues;
    /// Set when the usage was printed.<br>
    /// Needed together with the flag #mUsageContinues to bypass end-of-arguments
    /// checks so that evalArgument() can return.
-   bool                         mUsagePrinted = false;
+   bool                           mUsagePrinted = false;
    /// Defines the contents of the usage.
-   UsageContents                mUsageContents = UsageContents::all;
+   detail::shared_usage_params_t  mpUsageParams;
    /// The (top-level) arguments known by this class.
-   detail::ArgumentContainer    mArguments;
+   detail::ArgumentContainer      mArguments;
    /// Argument sub-groups.
-   detail::ArgumentContainer    mSubGroupArgs;
+   detail::ArgumentContainer      mSubGroupArgs;
    /// Storage for the arguments and their descriptions.
-   detail::ArgumentDesc         mDescription;
+   detail::ArgumentDesc           mDescription;
    /// Function called for an opening bracket '('.
-   HandlerFunc                  mpOpeningBracketHdlr;
+   HandlerFunc                    mpOpeningBracketHdlr;
    /// Function called for a closing bracket ')'.
-   HandlerFunc                  mpClosingBracketHdlr;
+   HandlerFunc                    mpClosingBracketHdlr;
    /// Function called for an exclamation mark '!'.
-   HandlerFunc                  mpExclamationMarkHdlr;
+   HandlerFunc                    mpExclamationMarkHdlr;
    /// Set when this object is used as argument handler for a sub-group.
-   bool                         mIsSubGroupHandler = false;
+   bool                           mIsSubGroupHandler = false;
    /// The current constraints, dynamically created through the arguments that
    /// were processed so far.
-   detail::ConstraintContainer  mConstraints;
+   detail::ConstraintContainer    mConstraints;
    /// Global constraints, i.e. constraints that affect multiple arguments
    /// and/or are not triggered by a specific argument.
-   ConstraintCont               mGlobalConstraints;
+   ConstraintCont                 mGlobalConstraints;
 
    /// Pointer to the last argument handler that was used. Needed for
    /// processing multiple, separate values.
-   detail::TypedArgBase*        mpLastArg = nullptr;
+   detail::TypedArgBase*          mpLastArg = nullptr;
    /// Reading arguments from a file should not influence the cardinality
    /// checks, i.e. it should be possible to overwrite a value from a file
    /// without triggering a 'too many values' exception.
-   bool                         mReadingArgumentFile = false;
+   bool                           mReadingArgumentFile = false;
    /// Flag, set when this argument handler object was created by a Groups
    /// object.
-   bool                         mUsedByGroup;
+   bool                           mUsedByGroup;
 
 }; // Handler
 
@@ -785,17 +791,6 @@ inline void Handler::setIsSubGroupHandler()
 {
    mIsSubGroupHandler = true;
 } // Handler::setIsSubGroupHandler
-
-
-// standalone functions
-
-
-/// Prints the value of the usage contents enum.
-/// @param[in]  os  The stream to print to.
-/// @param[in]  v   The enum value to print.
-/// @return  The stream as given in \a os.
-/// @since  6.0, 26.10.2017
-std::ostream& operator <<( std::ostream& os, Handler::UsageContents v);
 
 
 } // namespace prog_args

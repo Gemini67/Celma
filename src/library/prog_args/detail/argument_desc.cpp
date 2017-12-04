@@ -22,6 +22,7 @@
 // STL includes
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 
 
@@ -34,41 +35,38 @@
 namespace celma { namespace prog_args { namespace detail {
 
 
+using std::string;
+
+
 
 /// Constructor.
+/// @param[in]  usage_params  The object that contains the parameters for
+///                           printing the usage.
+/// @since  x.y.z, 21.11.2017  (added paramater arg_desc_params)
 /// @since  0.2, 10.04.2016
-ArgumentDesc::ArgumentDesc():
+ArgumentDesc::ArgumentDesc( shared_usage_params_t& usage_params):
+   mpUsageParams( usage_params),
    mIndention( IndentLength, ' '),
    mArguments(),
-   mMaxArgLen( 0),
    mCaptionMandatory( "Mandatory arguments:"),
-   mCaptionOptional( "Optional arguments:"),
-   mLineLength( DefaultLineLength),
-   mPrintHidden( false)
+   mCaptionOptional( "Optional arguments:")
 {
 } // ArgumentDesc::ArgumentDesc
 
 
 
 /// Adds an argument.
-/// @param[in]  key      The short and/or lang argument keys.
-/// @param[in]  argDesc  The string with the description.
-/// @param[in]  argObj   Pointer to the object that handles this argument.
+/// @param[in]  arg_desc  The string with the description.
+/// @param[in]  arg_obj   Pointer to the object that handles this argument.
+/// @since  x.y.z, 17.11.2017  (removed key parameter, object may not be NULL
+///         anymore)
 /// @since  0.2, 10.04.2016
-void ArgumentDesc::addArgument( const ArgumentKey& key,
-                                const std::string& argDesc,
-                                TypedArgBase* argObj)
+void ArgumentDesc::addArgument( const string& arg_desc, TypedArgBase* arg_obj)
 {
 
-   const auto  arg_key_hyph( format::toString( key));
+   assert( arg_obj != nullptr);
 
-
-   if (arg_key_hyph.length() > mMaxArgLen)
-      mMaxArgLen = arg_key_hyph.length();
-
-   const ArgDesc  ad( arg_key_hyph, argDesc, argObj);
-
-   mArguments.push_back( ad);
+   mArguments.push_back( ArgDesc( arg_desc, arg_obj));
 
 } // ArgumentDesc::addArgument
 
@@ -117,22 +115,33 @@ void ArgumentDesc::setLineLength( int useLen)
 void ArgumentDesc::print( std::ostream& os) const
 {
 
+   size_t  max_length = 0;
+
+
+   for (auto const& arg_desc : mArguments)
+   {
+      if (!arg_desc.doPrint( true, mPrintHidden, mpUsageParams->contents())
+          && !arg_desc.doPrint( false, mPrintHidden, mpUsageParams->contents()))
+         continue;  // for
+
+      max_length = std::max( max_length, arg_desc.key( mpUsageParams->contents()).length());
+   } // end for
+
    bool  printIsMandatory = true;
    int   printed[ 2] = { 0, 0};
 
-
    for (int printLoop = 0; printLoop < 2; ++printLoop)
    {
-      if (mMaxArgLen < MaxNameLength)
+      if (max_length < MaxNameLength)
       {
-         format::TextBlock  tb( 2 * IndentLength + mMaxArgLen, mLineLength, false);
+         format::TextBlock  tb( 2 * IndentLength + max_length, mLineLength, false);
 
-         printArguments( tb, printIsMandatory, printed, true, os);
+         printArguments( os, tb, printIsMandatory, printed, true, max_length);
       } else
       {
          format::TextBlock  tb( 2 * IndentLength, mLineLength, true);
 
-         printArguments( tb, printIsMandatory, printed, false, os);
+         printArguments( os, tb, printIsMandatory, printed, false, max_length);
       } // end if
 
       printIsMandatory = !printIsMandatory;
@@ -143,6 +152,7 @@ void ArgumentDesc::print( std::ostream& os) const
 
 
 /// Finally prints the arguments.
+/// @param[out]  os                The stream to write to.
 /// @param[in]   tb                The object used to format the description
 ///                                of the parameters.
 /// @param[in]   printIsMandatory  Specifies if the mandatory (\c true) or
@@ -154,18 +164,18 @@ void ArgumentDesc::print( std::ostream& os) const
 ///                                description should be printed on the same
 ///                                line, \c false otherwise (printed on two
 ///                                lines).
-/// @param[out]  os                The stream to write to.
+/// @param[in]   max_length        The maximum length of all arguments.
 /// @since  0.2, 10.04.2016
-void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
-                                   int* printed, bool sameLine,
-                                   std::ostream& os) const
+void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
+   bool printIsMandatory, int* printed, bool sameLine, int max_length) const
 {
 
    using std::endl;
 
    for (size_t i = 0; i < mArguments.size(); ++i)
    {
-      if (!mArguments[ i].doPrint( printIsMandatory, mPrintHidden))
+      if (!mArguments[ i].doPrint( printIsMandatory, mPrintHidden,
+          mpUsageParams->contents()))
          continue;   // for
 
       if (printed[ printIsMandatory] == 0)
@@ -182,35 +192,34 @@ void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
       } // end if
 
       if (sameLine)
-         os << mIndention << std::setw( mMaxArgLen) << std::left
-            << mArguments[ i].mKeyHyph << mIndention;
+         os << mIndention << std::setw( max_length) << std::left
+            << mArguments[ i].key( mpUsageParams->contents()) << mIndention;
       else
-         os << mIndention << std::left << mArguments[ i].mKeyHyph << endl;
+         os << mIndention << std::left
+            << mArguments[ i].key( mpUsageParams->contents())
+            << endl;
 
       // if the destination variable contains the default value for an optional
       // argument, add this to the usage
-      if (mArguments[ i].mpArgObj != nullptr)
+      auto  descCopy( mArguments[ i].mDescription);
+      if (!mArguments[ i].mpArgObj->isMandatory()
+          && mArguments[ i].mpArgObj->printDefault())
       {
-         auto  descCopy( mArguments[ i].mDescription);
-         if (!mArguments[ i].mpArgObj->isMandatory() && mArguments[ i].mpArgObj->printDefault())
-         {
-            descCopy.append( "\nDefault value: ");
-            mArguments[ i].mpArgObj->defaultValue(descCopy);
-         } // end if
-         if (mArguments[ i].mpArgObj->hasCheck())
-         {
-            descCopy.append( "\nCheck: ").append( mArguments[ i].mpArgObj->checkStr());
-         } // end if
-         if (mArguments[ i].mpArgObj->hasConstraint())
-         {
-            descCopy.append( "\nConstraint: ").append( mArguments[ i].mpArgObj->constraintStr());
-         } // end if
-
-         tb.format( os, descCopy);
-      } else
-      {
-         tb.format( os, mArguments[ i].mDescription);
+         descCopy.append( "\nDefault value: ");
+         mArguments[ i].mpArgObj->defaultValue(descCopy);
       } // end if
+      if (mArguments[ i].mpArgObj->hasCheck())
+      {
+         descCopy.append( "\nCheck: ")
+            .append( mArguments[ i].mpArgObj->checkStr());
+      } // end if
+      if (mArguments[ i].mpArgObj->hasConstraint())
+      {
+         descCopy.append( "\nConstraint: ")
+            .append( mArguments[ i].mpArgObj->constraintStr());
+      } // end if
+
+      tb.format( os, descCopy);
       os  << endl;
 
       ++printed[ printIsMandatory];
@@ -246,12 +255,46 @@ std::ostream& operator <<( std::ostream& os, const ArgumentDesc& ad)
 ///          and when hidden parameters may be printed or this parameter is
 ///          is not hidden.
 /// @since  0.2, 10.04.2016
-bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden) const
+bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden,
+   UsageParams::Contents usage_contents) const
 {
-   return ((printIsMandatory  && (mpArgObj != nullptr) && mpArgObj->isMandatory()) ||
-           (!printIsMandatory && ((mpArgObj == nullptr) || !mpArgObj->isMandatory()))) &&
-          (printHidden || (mpArgObj == nullptr) || !mpArgObj->isHidden());
+
+   return (printIsMandatory == mpArgObj->isMandatory())
+          && (printHidden || !mpArgObj->isHidden())
+          && ((usage_contents == UsageParams::Contents::all)
+              || ((usage_contents == UsageParams::Contents::shortOnly)
+                  && mpArgObj->key().hasCharArg())
+              || ((usage_contents == UsageParams::Contents::longOnly)
+                  && mpArgObj->key().hasStringArg()));
 } // ArgumentDesc::ArgDesc::doPrint
+
+
+
+/// Returns the key string of the argument with the specified contents.
+/// @param[in]  usage_contents  Contents of the key string to return.
+/// @return  The key string with the given contents.
+/// @since  x.y.z, 20.11.2017
+string ArgumentDesc::ArgDesc::key( UsageParams::Contents usage_contents) const
+{
+
+   if (usage_contents == UsageParams::Contents::all)
+   {
+      std::ostringstream  os;
+      os << format::toString( mpArgObj->key());
+      return os.str();
+   } // end if
+
+   if (usage_contents == UsageParams::Contents::shortOnly)
+   {
+      string  result( "-");
+      result.append( 1, mpArgObj->key().argChar());
+      return result;
+   } // end if
+
+   string  result( "--");
+   result.append( mpArgObj->key().argString());
+   return result;
+} // ArgumentDesc::ArgDesc::key
 
 
 

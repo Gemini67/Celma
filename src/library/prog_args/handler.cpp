@@ -94,6 +94,10 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mVerbose( (flag_set & hfVerboseArgs) != 0),
    mPrintHidden( (flag_set & hfUsageHidden) != 0),
    mUsageContinues( (flag_set & hfUsageCont) != 0),
+   mpUsageParams( new detail::UsageParams()),
+   mArguments(),
+   mSubGroupArgs(),
+   mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
    mpExclamationMarkHdlr(),
@@ -124,10 +128,10 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
       addArgumentPrintHidden( "print-hidden");
 
    if (flag_set & hfUsageShort)
-      addArgumentUsageShort( "help-short");
+      mpUsageParams->addArgumentUsageShort( *this, "help-short");
 
    if (flag_set & hfUsageLong)
-      addArgumentUsageLong( "help-long");
+      mpUsageParams->addArgumentUsageLong( *this, "help-long");
 
    if (flag_set & hfListArgVar)
       addArgumentListArgVars( "list-arg-vars");
@@ -181,7 +185,7 @@ detail::TypedArgBase*
    arg_hdl->setKey( key);
 
    mSubGroupArgs.addArgument( arg_hdl, key);
-   mDescription.addArgument( key, desc, arg_hdl);
+   mDescription.addArgument( desc, arg_hdl);
 
    return arg_hdl;
 } // Handler::addArgument
@@ -282,19 +286,18 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 /// short argument key only.
 /// @param[in]  arg_spec  The argument(s) on the command line for activating
 ///                       printing the usage with short arguments only.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
 /// @since  x.y.z, 25.09.2017
 detail::TypedArgBase*
-   Handler::addArgumentUsageShort( const std::string& arg_spec)
+   Handler::addArgumentUsageShort( const std::string& arg_spec,
+      const char* desc)
 {
 
-   static const string        desc( "Only print arguments with their short key "
-                                    "in the usage.");
-
-
-   return addArgument( arg_spec,
-      DEST_VAR_VALUE( mUsageContents, UsageContents::shortOnly), desc);
+   return mpUsageParams->addArgumentUsageShort( *this, arg_spec, desc);
 } // Handler::addArgumentUsageShort
 
 
@@ -303,19 +306,18 @@ detail::TypedArgBase*
 /// long argument key only.
 /// @param[in]  arg_spec  The argument(s) on the command line for activating
 ///                       printing the usage with long arguments only.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
 /// @since  x.y.z, 25.09.2017
 detail::TypedArgBase*
-   Handler::addArgumentUsageLong( const std::string& arg_spec)
+   Handler::addArgumentUsageLong( const std::string& arg_spec,
+      const char* desc)
 {
 
-   static const string        desc( "Only print arguments with their long key "
-                                    "in the usage.");
-
-
-   return addArgument( arg_spec,
-      DEST_VAR_VALUE( mUsageContents, UsageContents::longOnly), desc);
+   return mpUsageParams->addArgumentUsageLong( *this, arg_spec, desc);
 } // Handler::addArgumentUsageLong
 
 
@@ -812,24 +814,6 @@ void Handler::checkMissingMandatoryCardinality() const
 
 
 
-/// Checks and sets the maximum argument length, needed to format the usage.
-/// @param[in,out]  maxArgLen  Maximum argument length as needed so far, may
-///                            be increased if this class contains longer
-///                            arguments.
-/// @since  0.2, 10.04.2016
-void Handler::checkMaxArgLen( size_t& maxArgLen) const
-{
-
-   size_t  myArgLength = 0;
-
-
-   myArgLength = std::max( myArgLength, mDescription.maxArgLen());
-   maxArgLen   = std::max( myArgLength, maxArgLen);
-
-} // Handler::checkMaxArgLen
-
-
-
 /// Checks if the specified argument is already used.
 /// @param[in]  argChar  The argument character to check.
 /// @return  \c true if the argument is already in use.
@@ -1054,7 +1038,7 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
 {
 
    mArguments.addArgument( ah_obj, key);
-   mDescription.addArgument( key, desc, ah_obj);
+   mDescription.addArgument( desc, ah_obj);
 
    if (mUsedByGroup)
       Groups::instance().crossCheckArguments( this);
@@ -1201,26 +1185,6 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
    hdl->calledAssign( mReadingArgumentFile, value);
 
 } // Handler::handleIdentifiedArg
-
-
-
-/// Prints the value of the usage contents enum.
-/// @param[in]  os  The stream to print to.
-/// @param[in]  v   The enum value to print.
-/// @return  The stream as given in \a os.
-/// @since  6.0, 26.10.2017
-std::ostream& operator <<( std::ostream& os, Handler::UsageContents v)
-{
-
-   switch (v)
-   {
-   case Handler::UsageContents::all:        os << "all";         break;
-   case Handler::UsageContents::shortOnly:  os << "long only";   break;
-   case Handler::UsageContents::longOnly:   os << "short only";  break;
-   } // end switch
-
-   return os << " (" << static_cast< int>( v) << ")";
-} // operator <<
 
 
 

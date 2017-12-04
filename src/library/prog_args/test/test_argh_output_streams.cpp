@@ -237,4 +237,145 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
 
 
 
+/// Usage with only short arguments.
+/// @since  x.y.z, 17.11.2017
+BOOST_AUTO_TEST_CASE( test_usage_short)
+{
+
+   {
+      std::ostringstream   std_out;
+      std::ostringstream   err_out;
+      Handler              ah( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort);
+      int                  intArg1 = 0;
+      int                  intArg2 = 0;
+      int                  intArg3 = 0;
+
+
+      ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
+      ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
+      ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
+
+      ArgString2Array  as2a( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help      Prints the program usage\n"
+         "   --help-short   Only print arguments with their short key in the usage.\n"
+         "   -f             The first argument.\n"
+         "                  Default value: 0\n"
+         "   -s,--second    The second argument.\n"
+         "                  Default value: 0\n"
+         "   --third        The third argument.\n"
+         "                  Default value: 0\n"
+         "\n");
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+   {
+      std::ostringstream   std_out;
+      std::ostringstream   err_out;
+      Handler              ah( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort);
+      int                  intArg1 = 0;
+      int                  intArg2 = 0;
+      int                  intArg3 = 0;
+
+
+      ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
+      ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
+      ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
+
+      ArgString2Array  as2a( "--help-short -h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h   Prints the program usage\n"
+         "   -f   The first argument.\n"
+         "        Default value: 0\n"
+         "   -s   The second argument.\n"
+         "        Default value: 0\n"
+         "\n");
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+} // test_usage_short
+
+
+
+/// Usage with only long arguments.
+/// @since  x.y.z, 20.11.2017
+BOOST_AUTO_TEST_CASE( test_usage_long)
+{
+
+   {
+      std::ostringstream   std_out;
+      std::ostringstream   err_out;
+      Handler              ah( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageLong);
+      int                  intArg1 = 0;
+      int                  intArg2 = 0;
+      int                  intArg3 = 0;
+
+
+      ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
+      ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
+      ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
+
+      ArgString2Array  as2a( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help     Prints the program usage\n"
+         "   --help-long   Only print arguments with their long key in the usage.\n"
+         "   -f            The first argument.\n"
+         "                 Default value: 0\n"
+         "   -s,--second   The second argument.\n"
+         "                 Default value: 0\n"
+         "   --third       The third argument.\n"
+         "                 Default value: 0\n"
+         "\n");
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+   {
+      std::ostringstream   std_out;
+      std::ostringstream   err_out;
+      Handler              ah( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageLong);
+      int                  intArg1 = 0;
+      int                  intArg2 = 0;
+      int                  intArg3 = 0;
+
+
+      ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
+      ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
+      ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
+
+      ArgString2Array  as2a( "--help-long -h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   --help        Prints the program usage\n"
+         "   --help-long   Only print arguments with their long key in the usage.\n"
+         "   --second      The second argument.\n"
+         "                 Default value: 0\n"
+         "   --third       The third argument.\n"
+         "                 Default value: 0\n"
+         "\n");
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+} // test_usage_long
+
+
+
 // ===================  END OF test_argh_output_streams.cpp  ===================

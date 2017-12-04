@@ -267,14 +267,6 @@ bool Groups::argumentExists( const string& argString) const
 void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 {
 
-   size_t  maxArgLen = 0;
-
-
-   for (auto const& stored_group : mArgGroups)
-   {
-      stored_group.mpArgHandler->checkMaxArgLen( maxArgLen);
-   } // end for
-
    if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
 

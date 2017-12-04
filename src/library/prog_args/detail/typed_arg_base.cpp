@@ -277,6 +277,21 @@ void TypedArgBase::checkCardinality()
 
 
 
+/// Allows to change the "original value check" mode. This is only applicable
+/// to typed arg value objects.
+/// @param[in]  yesNo  Set to \c false for turning the value check off.
+/// @return  Pointer to this object.
+/// @since  x.y.z, 16.11.2017
+TypedArgBase* TypedArgBase::checkOriginalValue( bool yesNo)
+{
+
+   throw std::invalid_argument( "may not change 'check original value' "
+      "mode on variable '" + mVarName + "'");
+
+} // TypedArgBase::checkOriginalValue
+
+
+
 /// Used for printing an argument and its destination variable.<br>
 /// This function should be overloaded by derived classes.
 /// @param[out]  os  The stream to print to.

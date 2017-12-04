@@ -293,6 +293,13 @@ public:
    /// @since  0.2, 10.04.2016
    void checkCardinality();
 
+   /// Allows to change the "original value check" mode. This is only applicable
+   /// to typed arg value objects.
+   /// @param[in]  yesNo  Set to \c false for turning the value check off.
+   /// @return  Pointer to this object.
+   /// @since  x.y.z, 16.11.2017
+   virtual TypedArgBase* checkOriginalValue( bool yesNo) noexcept( false);
+
 /*
    /// Adds a value conversion: The value from the argument list (command line)
    /// is converted before it is checked and/or stored.
@@ -377,6 +384,11 @@ protected:
    bool                            mPrintDefault;
    /// Set if this argument should be hidden = not printed in the usage.
    bool                            mIsHidden = false;
+   /// Set to activate the comparison of the destination variable with its
+   /// original value before a new value is assigned.<br>
+   /// This may be used by the typed arg value class to detect multiple
+   /// assignments to the same destination variable.
+   bool                            mCheckOrigValue = false;
    /// Stores all the checks (objects) defined for this argument.
    std::vector< ICheck*>           mChecks;
    /// Stores all the formatters (objects) defined for this argument.

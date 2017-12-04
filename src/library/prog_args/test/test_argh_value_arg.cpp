@@ -83,6 +83,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 BOOST_AUTO_TEST_CASE( test_value_arg)
 {
 
+   // use the first value argument
    {
       Handler  ah( 0);
       int      my_dest = 0;
@@ -98,6 +99,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
       BOOST_REQUIRE_EQUAL( my_dest, -1);
    } // end scope
 
+   // use the second value argument
    {
       Handler  ah( 0);
       int      my_dest = 0;
@@ -113,6 +115,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
       BOOST_REQUIRE_EQUAL( my_dest, 1);
    } // end scope
 
+   // error when using both value arguments
    {
       Handler  ah( 0);
       int      my_dest = 0;
@@ -121,6 +124,24 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
          ah.addArgument( "left", DEST_VAR_VALUE( my_dest, -1), "left"));
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right"));
+
+      const ArgString2Array  as2a( "--right --left", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+                           std::runtime_error);
+   } // end scope
+
+   // allow use of both value arguments
+   {
+      Handler  ah( 0);
+      int      my_dest = 0;
+
+      BOOST_REQUIRE_NO_THROW(
+         ah.addArgument( "left", DEST_VAR_VALUE( my_dest, -1), "left")
+            ->checkOriginalValue( false));
+      BOOST_REQUIRE_NO_THROW(
+         ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right")
+            ->checkOriginalValue( false));
 
       const ArgString2Array  as2a( "--right --left", nullptr);
 
