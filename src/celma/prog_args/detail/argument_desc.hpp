@@ -82,11 +82,6 @@ public:
    /// @since  0.2, 10.04.2016
    void setLineLength( int useLen);
 
-   /// Specifies if hidden arguments should be printed or not.
-   /// @param[in]  do_print  \c true = print hidden arguments.
-   /// @since  0.2, 10.04.2016
-   void setPrintHidden( bool do_print);
-
    /// Prints the contents of the storage to the specified stream.
    /// @param[out]  os  the stream to write to.
    /// @param[in]   ad  The object to dump the contents of the storage of.
@@ -179,20 +174,7 @@ private:
    std::string            mCaptionOptional;
    /// The line length used when printing the usage.
    int                    mLineLength = DefaultLineLength;
-   /// Specifies if hidden arguments should be printed or not.
-   bool                   mPrintHidden = false;
-
 }; // ArgumentDesc
-
-
-// inlined methods
-// ===============
-
-
-inline void ArgumentDesc::setPrintHidden( bool do_print)
-{
-   mPrintHidden = do_print;
-} // ArgumentDesc::setPrintHidden
 
 
 } // namespace detail

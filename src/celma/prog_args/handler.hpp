@@ -260,7 +260,7 @@ public:
       hfInGroup       = hfListArgGroups << 1
    }; // HandleFlags
 
-   /// List of possible positions for the additional output 
+   /// List of possible positions for the additional output.
    enum class UsagePos
    {
       unused,       //!< Initialization value.
@@ -320,6 +320,31 @@ public:
             int flag_set = hfHelpShort | hfHelpLong,
             IUsageText* txt1 = nullptr,
             IUsageText* txt2 = nullptr);
+
+   /// Constructor to be used by a sub-group. Copies some settings from the main
+   /// argument handler object.<br>
+   /// It is possible to create a sub-group argument handler using one of the
+   /// other constructors, but then the settings are of course not copied.<br>
+   /// The following flags are ignored, the settings are taken from the main
+   /// argument handler:<br>
+   /// #hfReadProgArg, #hfVerboseArgs, #hfUsageHidden, #hfUsageShort,
+   /// #hfUsageLong and #hfUsageCont.
+   /// @param[in]  main_ah   The main argument handler to copy the settings
+   ///                       from.
+   /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
+   ///                       of possible values.
+   /// @param[in]  txt1      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @param[in]  txt2      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @since  x.y.z, 04.12.2017
+   Handler( Handler& main_ah, int flag_set, IUsageText* txt1 = nullptr,
+            IUsageText* txt2 = nullptr);
+
+   /// Don't allow copying.
+   Handler( const Handler&) = delete;
+   /// Don't allow assignments.
+   Handler& operator =( const Handler&) = delete;
 
    /// Destructor, deletes dynamically allocated objects.
    /// @since  0.2, 10.04.2016
@@ -382,15 +407,21 @@ public:
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentFile( const std::string& arg_spec);
 
-   /// Adds an argument that activates printing of hidden arguments in the usage.<br>
+   /// Adds an argument that activates printing of hidden arguments in the
+   /// usage.<br>
    /// Same as setting the flag #hfArgHidden, but allows to specify the
-   /// argument.
+   /// argument and its description.
    /// @param[in]  arg_spec  The argument(s) on the command line for activating
    ///                       printing the hidden arguments.
+   /// @param[in]  desc      Optional text for the description of the argument
+   ///                       in the usage. If not set, the default description
+   ///                       is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
+   /// @since  x.y.z, 06.12.2017  (adapted to using usage parameters object)
    /// @since  0.2, 10.04.2016
-   detail::TypedArgBase* addArgumentPrintHidden( const std::string& arg_spec);
+   detail::TypedArgBase* addArgumentPrintHidden( const std::string& arg_spec,
+      const char* desc = nullptr);
 
    /// Adds an argument that activates printing of usage with arguments with
    /// short argument key only.
@@ -462,6 +493,11 @@ public:
    ///                     The value must be in the range 60 <= useLen < 240.
    /// @since  0.2, 10.04.2016
    void setUsageLineLength( int useLen);
+
+   /// Re-sets the usage parameters to use for displaying the usage.
+   /// @param[in]  usage_params  Shared object to share for the usage parameters.
+   /// @since  x.y.z, 04.12.2017
+   void setUsageParams( detail::shared_usage_params_t& usage_params);
 
    /// Adds a constraint to the argument handler itself that affects multiple
    /// arguments.<br>
@@ -590,11 +626,6 @@ private:
    /// Type of the container to store the global constrainst in.
    typedef std::vector< detail::IConstraint*>  ConstraintCont;
 
-   /// Don't allow copying.
-   Handler( const Handler&) = delete;
-   /// Don't allow assignments.
-   Handler& operator =( const Handler&) = delete;
-
    /// Function to print the usage of a program (when requested through the
    /// arguments). The additional parameters allow to print additional
    /// information.
@@ -718,9 +749,6 @@ private:
    /// Set when the flag #hfVerboseArgs was passed to the constructor. Produces
    /// verbose output when a value is assigned to a variable.
    const bool                     mVerbose;
-   /// Set when the flag #hfUsageHidden was passed to the constructor. Specifies
-   /// if hidden arguments should be printed in the usage or not.
-   bool                           mPrintHidden;
    /// Set when the flag #hfUsageCont was passed to the constructor. Specifies
    /// that the program flow should continue after printing the usage.
    const bool                     mUsageContinues;
@@ -785,6 +813,12 @@ inline void Handler::setUsageLineLength( int useLen)
    mDescription.setLineLength( useLen);
    mSubGroupArgs.setUsageLineLength( useLen);
 } // Handler::setUsageLineLength
+
+
+inline void Handler::setUsageParams( detail::shared_usage_params_t& usage_params)
+{
+   mpUsageParams = usage_params;
+} // Handler::setUsageParams
 
 
 inline void Handler::setIsSubGroupHandler()

@@ -26,7 +26,7 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/clear_container.hpp"
 #include "celma/common/reset_at_exit.hpp"
 #include "celma/common/scoped_value.hpp"
@@ -92,7 +92,6 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mErrorOutput( error_os),
    mReadProgramArguments( (flag_set & hfReadProgArg) != 0),
    mVerbose( (flag_set & hfVerboseArgs) != 0),
-   mPrintHidden( (flag_set & hfUsageHidden) != 0),
    mUsageContinues( (flag_set & hfUsageCont) != 0),
    mpUsageParams( new detail::UsageParams()),
    mArguments(),
@@ -124,8 +123,84 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
                          "Handler::usage"),
                    "Prints the program usage");
 
+   if (flag_set & hfUsageHidden)
+      mpUsageParams->setPrintHidden();
+
    if (flag_set & hfArgHidden)
-      addArgumentPrintHidden( "print-hidden");
+      mpUsageParams->addArgumentPrintHidden( *this, "print-hidden");
+
+   if (flag_set & hfUsageShort)
+      mpUsageParams->addArgumentUsageShort( *this, "help-short");
+
+   if (flag_set & hfUsageLong)
+      mpUsageParams->addArgumentUsageLong( *this, "help-long");
+
+   if (flag_set & hfListArgVar)
+      addArgumentListArgVars( "list-arg-vars");
+
+   if (flag_set & hfListArgGroups)
+      addArgumentListArgGroups( "list-arg-groups");
+
+   if (flag_set & hfEndValues)
+      addArgumentEndValues( "endvalues");
+
+} // Handler::Handler
+
+
+
+/// Constructor to be used by a sub-group. Copies some settings from the main
+/// argument handler object.<br>
+/// It is possible to create a sub-group argument handler using one of the
+/// other constructors, but then the settings are of course not copied.<br>
+/// The following flags are ignored, the settings are taken from the main
+/// argument handler:<br>
+/// #hfReadProgArg, #hfVerboseArgs, #hfUsageHidden, #hfUsageShort,
+/// #hfUsageLong and #hfUsageCont.
+/// @param[in]  main_ah   The main argument handler to copy the settings
+///                       from.
+/// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
+///                       of possible values.
+/// @param[in]  txt1      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @param[in]  txt2      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @since  x.y.z, 04.12.2017
+Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
+                  IUsageText* txt2):
+   mOutput( main_ah.mOutput),
+   mErrorOutput( main_ah.mErrorOutput),
+   mReadProgramArguments( false),
+   mVerbose( main_ah.mVerbose),
+   mUsageContinues( main_ah.mUsageContinues),
+   mpUsageParams( main_ah.mpUsageParams),
+   mArguments(),
+   mSubGroupArgs(),
+   mDescription( mpUsageParams),
+   mpOpeningBracketHdlr(),
+   mpClosingBracketHdlr(),
+   mpExclamationMarkHdlr(),
+   mConstraints(),
+   mGlobalConstraints(),
+   mUsedByGroup( (flag_set & hfInGroup) != 0)
+{
+
+   string  args;
+
+
+   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
+      args = "h,help";
+   else if (flag_set & hfHelpShort)
+      args = "h";
+   else if (flag_set & hfHelpLong)
+      args = "help";
+
+   if (!args.empty())
+      addArgument( args,
+                   new detail::TypedArgCallable(
+                      detail::ArgHandlerCallable(
+                         std::bind( &Handler::usage, this, txt1, txt2)),
+                         "Handler::usage"),
+                   "Prints the program usage");
 
    if (flag_set & hfUsageShort)
       mpUsageParams->addArgumentUsageShort( *this, "help-short");
@@ -179,8 +254,7 @@ detail::TypedArgBase*
    subGroup->setIsSubGroupHandler();
 
    const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgSubGroup( key, subGroup);
+   auto  arg_hdl = new detail::TypedArgSubGroup( key, subGroup);
 
    arg_hdl->setKey( key);
 
@@ -260,24 +334,24 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 
 
 
-/// Adds an argument that activates printing of hidden arguments in the usage.
+/// Adds an argument that activates printing of hidden arguments in the
+/// usage.<br>
+/// Same as setting the flag #hfArgHidden, but allows to specify the
+/// argument and its description.
 /// @param[in]  arg_spec  The argument(s) on the command line for activating
 ///                       printing the hidden arguments.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
+/// @since  x.y.z, 06.12.2017  (adapted to using usage parameters object)
 /// @since  0.2, 10.04.2016
-detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
+detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec,
+   const char* desc)
 {
 
-   static const string        desc( "Also print hidden arguments in the usage.");
-   const detail::ArgumentKey  key( arg_spec);
-
-   auto  arg_hdl = new detail::TypedArg< bool>( VAR_NAME( mPrintHidden));
-
-
-   arg_hdl->setKey( key);
-
-   return internAddArgument( arg_hdl, key, desc);
+   return mpUsageParams->addArgumentPrintHidden( *this, arg_spec, desc);
 } // Handler::addArgumentPrintHidden
 
 
@@ -890,7 +964,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       if (line.empty() || (line[ 0] == '#'))
          continue;   // while
 
-      common::ArgString2Array  as2a( line, nullptr);
+      appl::ArgString2Array  as2a( line, nullptr);
       detail::ArgListParser    alp( as2a.mArgc, as2a.mpArgv);
 
       iterateArguments( alp);
@@ -1006,10 +1080,8 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
 
-   mOutput << "Usage:" << endl;
-
-   mDescription.setPrintHidden( mPrintHidden);
-   mOutput << mDescription << endl;
+   mOutput << "Usage:" << endl
+           << mDescription << endl;
 
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::afterArgs))
       mOutput << txt1 << endl << endl;

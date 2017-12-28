@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of class celma::prog_args::detail::@@@.
+/// See documentation of class celma::prog_args::detail::UsageParams.
 
 
 // module header file include
@@ -73,7 +73,7 @@ detail::TypedArgBase*
 ///                        is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
-    /// @since  x.y.z, 16.11.2017
+/// @since  x.y.z, 16.11.2017
 detail::TypedArgBase*
    UsageParams::addArgumentUsageLong( Handler& handler,
       const string& arg_spec, const char* desc)
@@ -91,6 +91,30 @@ detail::TypedArgBase*
 
 
 
+/// Adds an argument that activates printing of hidden arguments in the usage.
+/// @param[out]  handler   The argument handler to add the argument to.
+/// @param[in]   arg_spec  The argument(s) on the command line for activating
+///                        printing the hidden arguments.
+/// @param[in]  desc       Optional text for the description of the argument
+///                        in the usage. If not set, the default description
+///                        is used.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  x.y.z, 06.12.2017  (moved here from Handler)
+/// @since  0.2, 10.04.2016
+detail::TypedArgBase*
+   UsageParams::addArgumentPrintHidden( Handler& handler,
+      const string& arg_spec, const char* desc)
+{
+
+   static const string  default_desc( "Also print hidden arguments in the usage.");
+
+   return handler.addArgument( arg_spec, DEST_VAR( mPrintHidden),
+      (desc != nullptr) ? desc : default_desc);
+} // UsageParams::addArgumentPrintHidden
+
+
+
 /// Directly specifies the contents for printing the usage.
 /// @param[in]  usage_contents  The contents to print n the usage.
 /// @since  x.y.z, 21.11.2017
@@ -100,6 +124,17 @@ void UsageParams::setContents( Contents usage_contents)
    mContents = usage_contents;
 
 } // UsageParams::setContents
+
+
+
+/// Sets the flag 'print hidden' to print hidden arguments.
+/// @since  x.y.z, 06.12.2017
+void UsageParams::setPrintHidden()
+{
+
+   mPrintHidden = true;
+
+} // UsageParams::setPrintHidden
 
 
 

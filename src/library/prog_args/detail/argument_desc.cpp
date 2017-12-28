@@ -120,8 +120,10 @@ void ArgumentDesc::print( std::ostream& os) const
 
    for (auto const& arg_desc : mArguments)
    {
-      if (!arg_desc.doPrint( true, mPrintHidden, mpUsageParams->contents())
-          && !arg_desc.doPrint( false, mPrintHidden, mpUsageParams->contents()))
+      if (!arg_desc.doPrint( true, mpUsageParams->printHidden(),
+                             mpUsageParams->contents())
+          && !arg_desc.doPrint( false, mpUsageParams->printHidden(),
+                                mpUsageParams->contents()))
          continue;  // for
 
       max_length = std::max( max_length, arg_desc.key( mpUsageParams->contents()).length());
@@ -174,7 +176,8 @@ void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
 
    for (size_t i = 0; i < mArguments.size(); ++i)
    {
-      if (!mArguments[ i].doPrint( printIsMandatory, mPrintHidden,
+      if (!mArguments[ i].doPrint( printIsMandatory,
+          mpUsageParams->printHidden(),
           mpUsageParams->contents()))
          continue;   // for
 

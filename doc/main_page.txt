@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v0.17.0
+   \mainpage  CELMA v1.0.0
 
    \tableofcontents
 
@@ -29,8 +29,10 @@
    Module Name       | Description
    ----------------  | ----------------
    Argument handling | Contains the class celma::prog_args::Handler which provides easy and feature-rich argument handling.
-   Reflection        | Create a structure and a class that provides reflection-like access to the members of the structure. Starting point is celma::reflection::REFLECT.
-   Singleton         | Singleton pattern implementation with policies for static or dynamic object creation. See celma::common::Singleton.
+   Common            | Contains miscellaneous helper classes for your everyday tasks.
+   Format            | Formatting-related stuff like fast integer-to-string conversion, printing data in an ASCII table, or format a text block.
+   Indirect Acess    | Create a structure and a class that provides access to the members of the structure by name or its number. Starting point is celma::indirect_access::INDIRECT_ACCESS.
+   Logging           | Define one or multiple logs with one or multiple destinations, each using its own format.
 
 
    <hr>
@@ -43,7 +45,8 @@
 
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
-     x.y.z  | under development | Logging, improvements on argument handler library, ...
+     1.0.0  | under development | Logging, improvements on argument handler library, ...
+     1.0.0  | 2017-12-28        | Added modules for logging.
      0.17.0 | 2017-11-14        | Simplified prog_args::Handler interface through destination() functions.
      0.16.0 | 2017-09-25        | Added output of constraints to usage.
      0.15.1 | 2017-08-07        | More warnings fixed.

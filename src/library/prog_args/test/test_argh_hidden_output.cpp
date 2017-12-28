@@ -11,18 +11,18 @@
 --*/
 
 
-// C++ STandard Library includes
+// C++ Standard Library includes
 #include <stdexcept>
 #include <iostream>
 #include <string>
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::cout;
 using std::endl;

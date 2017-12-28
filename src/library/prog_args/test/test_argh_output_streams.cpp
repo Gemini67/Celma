@@ -25,12 +25,13 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
+using std::string;
 
 
 
@@ -84,7 +85,7 @@ BOOST_AUTO_TEST_CASE( argument_output)
    std::ostringstream   std_out;
    std::ostringstream   err_out;
    Handler              ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
-   std::string          string_arg;
+   string               string_arg;
    int                  opt_int_arg = 42;
 
 
@@ -117,7 +118,7 @@ BOOST_AUTO_TEST_CASE( argument_output_custom_help)
    std::ostringstream   std_out;
    std::ostringstream   err_out;
    Handler              ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
-   std::string          string_arg;
+   string               string_arg;
    int                  opt_int_arg = 42;
 
 
@@ -153,7 +154,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
    std::ostringstream   std_out;
    std::ostringstream   err_out;
    Handler              ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
-   std::string          string_arg;
+   string               string_arg;
    int                  opt_int_arg1 = 42;
    int                  opt_int_arg2 = 42;
    int                  opt_int_arg3 = 42;
@@ -207,7 +208,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
    Handler              ah( std_out, err_out,
                             Handler::AllHelp | Handler::hfUsageCont |
                             Handler::hfListArgVar | Handler::hfVerboseArgs);
-   std::string          string_arg;
+   string               string_arg;
    int                  opt_int_arg = 42;
 
 
@@ -375,6 +376,148 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
    } // end scope
 
 } // test_usage_long
+
+
+
+/// Usage with only short arguments.
+/// @since  x.y.z, 04.12..2017
+BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
+{
+
+   {
+      std::ostringstream   std_out;
+      std::ostringstream   err_out;
+      Handler              masterAH( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort);
+
+      Handler              subInput( 0);
+      string               inputName;
+      int                  inputType = 0;
+
+      Handler              subOutput( 0);
+      string               outputName;
+      int                  outputType = 0;
+
+      subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
+         "cache name");
+      subInput.addArgument( "f,file", DEST_PAIR( inputName, inputType, 2),
+         "file name");
+      subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
+         "queue name");
+      masterAH.addArgument( "i", &subInput, "input arguments");
+
+      subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
+         "cache name");
+      subOutput.addArgument( "f", DEST_PAIR( outputName, outputType, 2),
+         "file name");
+      subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
+         "queue name");
+      masterAH.addArgument( "o", &subOutput, "output arguments");
+
+      ArgString2Array  as2a( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help      Prints the program usage\n"
+         "   --help-short   Only print arguments with their short key in the usage.\n"
+         "   -i             input arguments\n"
+         "   -o             output arguments\n"
+         "\n");
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+   {
+      std::ostringstream   std_out;
+      std::ostringstream   err_out;
+      Handler              masterAH( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort
+         | Handler::hfUsageLong);
+
+      Handler              subInput( masterAH, Handler::AllHelp);
+      string               inputName;
+      int                  inputType = 0;
+
+      Handler              subOutput( masterAH, Handler::AllHelp);
+      string               outputName;
+      int                  outputType = 0;
+
+      subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
+         "cache name");
+      subInput.addArgument( "f,file", DEST_PAIR( inputName, inputType, 2),
+         "file name");
+      subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
+         "queue name");
+      masterAH.addArgument( "i", &subInput, "input arguments");
+
+      subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
+         "cache name");
+      subOutput.addArgument( "f", DEST_PAIR( outputName, outputType, 2),
+         "file name");
+      subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
+         "queue name");
+      masterAH.addArgument( "o", &subOutput, "output arguments");
+
+      ArgString2Array  as2a( "-ih", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help   Prints the program usage\n"
+         "   -c          cache name\n"
+         "   -f,--file   file name\n"
+         "   --queue     queue name\n"
+         "\n");
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+   {
+      std::ostringstream   std_out;
+      std::ostringstream   err_out;
+      Handler              masterAH( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort
+         | Handler::hfUsageLong);
+
+      Handler              subInput( masterAH, Handler::AllHelp);
+      string               inputName;
+      int                  inputType = 0;
+
+      Handler              subOutput( masterAH, Handler::AllHelp);
+      string               outputName;
+      int                  outputType = 0;
+
+      subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
+         "cache name");
+      subInput.addArgument( "f,file", DEST_PAIR( inputName, inputType, 2),
+         "file name");
+      subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
+         "queue name");
+      masterAH.addArgument( "i", &subInput, "input arguments");
+
+      subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
+         "cache name");
+      subOutput.addArgument( "f", DEST_PAIR( outputName, outputType, 2),
+         "file name");
+      subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
+         "queue name");
+      masterAH.addArgument( "o", &subOutput, "output arguments");
+
+      ArgString2Array  as2a( "--help-short -ih", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h   Prints the program usage\n"
+         "   -c   cache name\n"
+         "   -f   file name\n"
+         "\n");
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+} // test_usage_subgroup_short
 
 
 
