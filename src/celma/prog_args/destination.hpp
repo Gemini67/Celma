@@ -58,7 +58,7 @@ template< typename T>
 /// @param[in]  value     The value to set on the destination variable when the
 ///                       argument is used.
 /// @return  The typed arg object for the type of the \a dest_var.
-/// @since  x.y.z, 15.11.2017
+/// @since  1.1.0, 15.11.2017
 template< typename T>
    detail::TypedArgBase* destination( T& dest_var, const std::string vname,
       const T& value)
@@ -165,7 +165,7 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @param  n  The destination variable.
 /// @param  v  The value to set on the destinaion variable when the argument is
 ///            used.
-/// @since  x.y.z, 15.11.2017
+/// @since  1.1.0, 15.11.2017
 #define DEST_VAR_VALUE( n, v)  celma::prog_args::destination( n, #n, v)
 
 /// Macro used to call the celma::prog_args::destination() function for a pair

@@ -164,7 +164,7 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
 ///                       additional text for the usage.
 /// @param[in]  txt2      Optional pointer to the object to provide
 ///                       additional text for the usage.
-/// @since  x.y.z, 04.12.2017
+/// @since  1.1.0, 04.12.2017
 Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
                   IUsageText* txt2):
    mOutput( main_ah.mOutput),
@@ -308,9 +308,15 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 
 
 /// Adds an argument that takes the path/filename of an argument file as
-/// parameter.
-/// @param[in]  arg_spec  The arguments on the command line for specifying the
-///                       file with the arguments.
+/// parameter.<br>
+/// When the flag #hfReadProgArg is passed to the constructor, the program
+/// arguments file with the predefined name is always read if it exists.<br>
+/// With the method it is possible to specify an argument with which the
+/// (path and) name of the arguments file can be specified. Only if this
+/// given argument is then used on the command line, the argument file is
+/// read.
+/// @param[in]  arg_spec  The arguments on the command line for specifying
+///                       the file with the arguments.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
 /// @since  0.2, 10.04.2016
@@ -345,7 +351,7 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 ///                       is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
-/// @since  x.y.z, 06.12.2017  (adapted to using usage parameters object)
+/// @since  1.1.0, 06.12.2017  (adapted to using usage parameters object)
 /// @since  0.2, 10.04.2016
 detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec,
    const char* desc)
@@ -365,7 +371,7 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec,
 ///                       is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
-/// @since  x.y.z, 25.09.2017
+/// @since  1.1.0, 25.09.2017
 detail::TypedArgBase*
    Handler::addArgumentUsageShort( const std::string& arg_spec,
       const char* desc)
@@ -385,7 +391,7 @@ detail::TypedArgBase*
 ///                       is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
-/// @since  x.y.z, 25.09.2017
+/// @since  1.1.0, 25.09.2017
 detail::TypedArgBase*
    Handler::addArgumentUsageLong( const std::string& arg_spec,
       const char* desc)

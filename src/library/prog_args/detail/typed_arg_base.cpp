@@ -281,7 +281,7 @@ void TypedArgBase::checkCardinality()
 /// to typed arg value objects.
 /// @param[in]  yesNo  Set to \c false for turning the value check off.
 /// @return  Pointer to this object.
-/// @since  x.y.z, 16.11.2017
+/// @since  1.1.0, 16.11.2017
 TypedArgBase* TypedArgBase::checkOriginalValue( bool yesNo)
 {
 

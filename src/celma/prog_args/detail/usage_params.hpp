@@ -37,7 +37,7 @@ class TypedArgBase;
 
 
 /// Stores the parameters for printing the usage.
-/// @since  x.y.z, 21.11.2017
+/// @since  1.1.0, 21.11.2017
 class UsageParams
 {
 public:
@@ -63,7 +63,7 @@ public:
    ///                        is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
-   /// @since  x.y.z, 16.11.2017
+   /// @since  1.1.0, 16.11.2017
    detail::TypedArgBase* addArgumentUsageShort( Handler& handler,
       const std::string& arg_spec, const char* desc = nullptr);
 
@@ -72,12 +72,12 @@ public:
    /// @param[out]  handler   The argument handler to add the argument to.
    /// @param[in]   arg_spec  The argument(s) on the command line for activating
    ///                        printing the usage with long arguments only.
-   /// @param[in]  desc       Optional text for the description of the argument
+   /// @param[in]   desc      Optional text for the description of the argument
    ///                        in the usage. If not set, the default description
    ///                        is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
-   /// @since  x.y.z, 16.11.2017
+   /// @since  1.1.0, 16.11.2017
    detail::TypedArgBase* addArgumentUsageLong( Handler& handler,
       const std::string& arg_spec, const char* desc = nullptr);
 
@@ -85,33 +85,33 @@ public:
    /// @param[out]  handler   The argument handler to add the argument to.
    /// @param[in]   arg_spec  The argument(s) on the command line for activating
    ///                        printing the hidden arguments.
-   /// @param[in]  desc       Optional text for the description of the argument
+   /// @param[in]   desc      Optional text for the description of the argument
    ///                        in the usage. If not set, the default description
    ///                        is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
-   /// @since  x.y.z, 06.12.2017  (moved here from Handler)
+   /// @since  1.1.0, 06.12.2017  (moved here from Handler)
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentPrintHidden( Handler& handler,
          const std::string& arg_spec, const char* desc = nullptr);
 
    /// Directly specifies the contents for printing the usage.
-   /// @param[in]  usage_contents  The contents to print n the usage.
-   /// @since  x.y.z, 21.11.2017
+   /// @param[in]  usage_contents  The contents to print in the usage.
+   /// @since  1.1.0, 21.11.2017
    void setContents( Contents usage_contents);
 
    /// Returns the specified contents for printing the usage
    /// @return  The contents to print in the usage.
-   /// @since  x.y.z, 21.11.2017
+   /// @since  1.1.0, 21.11.2017
    Contents contents() const;
 
    /// Sets the flag 'print hidden' to print hidden arguments.
-   /// @since  x.y.z, 06.12.2017
+   /// @since  1.1.0, 06.12.2017
    void setPrintHidden();
 
    /// Returns if hidden arguments should be printed.
    /// @return  \c true if hidden arguments should be printed too.
-   /// @since  x.y.z, 06.12.2017
+   /// @since  1.1.0, 06.12.2017
    bool printHidden() const;
 
 private:
@@ -152,7 +152,7 @@ inline bool UsageParams::printHidden() const
 /// @param[in]  os  The stream to print to.
 /// @param[in]  c   The enum value to print.
 /// @return  The stream as given in \a os.
-/// @since  x.y.z, 26.10.2017
+/// @since  1.1.0, 26.10.2017
 std::ostream& operator <<( std::ostream& os, UsageParams::Contents c);
 
 

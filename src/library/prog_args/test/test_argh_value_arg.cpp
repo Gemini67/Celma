@@ -34,7 +34,7 @@ using celma::prog_args::Handler;
 
 
 /// Test handling of errors.
-/// @since  x.y.z, 25.09.2017
+/// @since  1.1.0, 25.09.2017
 BOOST_AUTO_TEST_CASE( test_errors)
 {
 
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
 
 /// Test correct usage of a value argument.
-/// @since  x.y.z, 15.11.2017
+/// @since  1.1.0, 15.11.2017
 BOOST_AUTO_TEST_CASE( test_value_arg)
 {
 

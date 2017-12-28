@@ -42,7 +42,7 @@ using std::string;
 /// Constructor.
 /// @param[in]  usage_params  The object that contains the parameters for
 ///                           printing the usage.
-/// @since  x.y.z, 21.11.2017  (added paramater arg_desc_params)
+/// @since  1.1.0, 21.11.2017  (added paramater arg_desc_params)
 /// @since  0.2, 10.04.2016
 ArgumentDesc::ArgumentDesc( shared_usage_params_t& usage_params):
    mpUsageParams( usage_params),
@@ -58,7 +58,7 @@ ArgumentDesc::ArgumentDesc( shared_usage_params_t& usage_params):
 /// Adds an argument.
 /// @param[in]  arg_desc  The string with the description.
 /// @param[in]  arg_obj   Pointer to the object that handles this argument.
-/// @since  x.y.z, 17.11.2017  (removed key parameter, object may not be NULL
+/// @since  1.1.0, 17.11.2017  (removed key parameter, object may not be NULL
 ///         anymore)
 /// @since  0.2, 10.04.2016
 void ArgumentDesc::addArgument( const string& arg_desc, TypedArgBase* arg_obj)
@@ -276,7 +276,7 @@ bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden,
 /// Returns the key string of the argument with the specified contents.
 /// @param[in]  usage_contents  Contents of the key string to return.
 /// @return  The key string with the given contents.
-/// @since  x.y.z, 20.11.2017
+/// @since  1.1.0, 20.11.2017
 string ArgumentDesc::ArgDesc::key( UsageParams::Contents usage_contents) const
 {
 

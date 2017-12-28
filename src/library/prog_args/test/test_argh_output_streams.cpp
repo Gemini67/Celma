@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
 
 
 /// Usage with only short arguments.
-/// @since  x.y.z, 17.11.2017
+/// @since  1.1.0, 17.11.2017
 BOOST_AUTO_TEST_CASE( test_usage_short)
 {
 
@@ -309,7 +309,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
 
 /// Usage with only long arguments.
-/// @since  x.y.z, 20.11.2017
+/// @since  1.1.0, 20.11.2017
 BOOST_AUTO_TEST_CASE( test_usage_long)
 {
 
@@ -380,7 +380,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
 
 /// Usage with only short arguments.
-/// @since  x.y.z, 04.12..2017
+/// @since  1.1.0, 04.12..2017
 BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
 {
 

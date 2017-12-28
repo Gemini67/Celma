@@ -337,7 +337,7 @@ public:
    ///                       additional text for the usage.
    /// @param[in]  txt2      Optional pointer to the object to provide
    ///                       additional text for the usage.
-   /// @since  x.y.z, 04.12.2017
+   /// @since  1.1.0, 04.12.2017
    Handler( Handler& main_ah, int flag_set, IUsageText* txt1 = nullptr,
             IUsageText* txt2 = nullptr);
 
@@ -350,8 +350,9 @@ public:
    /// @since  0.2, 10.04.2016
    ~Handler();
 
-
-   /// Adds an argument with short and/or long arguments.
+   /// Adds an argument with short and/or long arguments.<br>
+   /// For positional arguments, i.e. arguments not preceeded by a an argument
+   /// character/name, specify "-" as \a arg_spec.
    /// @param[in]  arg_spec  The arguments on the command line for this argument.
    /// @param[in]  dest      The object that handles the type-specific stuff.<br>
    ///                       Use the celma::prog_args::destination() template
@@ -399,9 +400,15 @@ public:
                                           IUsageText* txt2 = nullptr);
 
    /// Adds an argument that takes the path/filename of an argument file as
-   /// parameter.
-   /// @param[in]  arg_spec  The arguments on the command line for specifying the
-   ///                       file with the arguments.
+   /// parameter.<br>
+   /// When the flag #hfReadProgArg is passed to the constructor, the program
+   /// arguments file with the predefined name is always read if it exists.<br>
+   /// With the method it is possible to specify an argument with which the
+   /// (path and) name of the arguments file can be specified. Only if this
+   /// given argument is then used on the command line, the argument file is
+   /// read.
+   /// @param[in]  arg_spec  The arguments on the command line for specifying
+   ///                       the file with the arguments.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
    /// @since  0.2, 10.04.2016
@@ -418,7 +425,7 @@ public:
    ///                       is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
-   /// @since  x.y.z, 06.12.2017  (adapted to using usage parameters object)
+   /// @since  1.1.0, 06.12.2017  (adapted to using usage parameters object)
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentPrintHidden( const std::string& arg_spec,
       const char* desc = nullptr);
@@ -432,7 +439,7 @@ public:
    ///                       is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
-   /// @since  x.y.z, 25.09.2017
+   /// @since  1.1.0, 25.09.2017
    detail::TypedArgBase* addArgumentUsageShort( const std::string& arg_spec,
       const char* desc = nullptr);
 
@@ -445,7 +452,7 @@ public:
    ///                       is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
-   /// @since  x.y.z, 25.09.2017
+   /// @since  1.1.0, 25.09.2017
    detail::TypedArgBase* addArgumentUsageLong( const std::string& arg_spec,
       const char* desc = nullptr);
 
@@ -496,7 +503,7 @@ public:
 
    /// Re-sets the usage parameters to use for displaying the usage.
    /// @param[in]  usage_params  Shared object to share for the usage parameters.
-   /// @since  x.y.z, 04.12.2017
+   /// @since  1.1.0, 04.12.2017
    void setUsageParams( detail::shared_usage_params_t& usage_params);
 
    /// Adds a constraint to the argument handler itself that affects multiple

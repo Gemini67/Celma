@@ -45,7 +45,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// modified only once. To allow multiple changes, i.e. the last argument that
 /// modifies the value wins, set checkOriginalValue() to \c false.
 /// @tparam  T  The type of the value.
-/// @since  x.y.z, 25.09.2017
+/// @since  1.1.0, 25.09.2017
 template< typename T> class TypedArgValue: public TypedArgBase
 {
 public:
@@ -54,44 +54,44 @@ public:
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
    /// @param[in]  value  The value to set.
-   /// @since  x.y.z, 25.09.2017
+   /// @since  1.1.0, 25.09.2017
    TypedArgValue( T& dest, const std::string& vname, const T& value);
 
    /// Returns if the destination has a value set.<br>
    /// Of course this applies only when the value through the current object.
    /// @return  \c true if the destination variable contains a value.
-   /// @since  x.y.z, 25.09.2017
+   /// @since  1.1.0, 25.09.2017
    virtual bool hasValue() const override;
 
    /// This type doesn't allow to change the value mode: Throws always.
    /// @param[in]  vm  Ignored.
    /// @return  Pointer to this object.
    /// @throw  std::logic_error.
-   /// @since  x.y.z, 25.09.2017
+   /// @since  1.1.0, 25.09.2017
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Adds the value of the destination variable to the string.
    /// @param[in]  dest  The string to append the default value to.
-   /// @since  x.y.z, 25.09.2017
+   /// @since  1.1.0, 25.09.2017
    virtual void defaultValue( std::string& dest) const override;
 
    /// Allows to change the "original value check" mode.
    /// @param[in]  yesNo  Set to \c false for turning the value check off.
    /// @return  Pointer to this object.
-   /// @since  x.y.z, 16.11.2017
+   /// @since  1.1.0, 16.11.2017
    virtual TypedArgBase* checkOriginalValue( bool yesNo) noexcept( false)
       override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
-   /// @since  x.y.z, 25.09.2017
+   /// @since  1.1.0, 25.09.2017
    virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
    /// @param[in]  value  Ignored.
-   /// @since  x.y.z, 25.09.2017
+   /// @since  1.1.0, 25.09.2017
    virtual void assign( const std::string& value) override;
 
    /// Reference of the destination variable to store the value in.
