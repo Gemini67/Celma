@@ -257,6 +257,16 @@ public:
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setListSep( char sep) noexcept( false);
 
+   /// Special feature for destination variable type vector:<br>
+   /// Clear the contents of the vector before assigning the value(s) from the
+   /// command line. If the feature is off (the default), the value(s from the
+   /// command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination vector that should be overwritten by the argument's values.
+   /// Throws when called for other destination types.
+   /// @since  1.2.0, 28.12.2017
+   virtual void setClearBeforeAssign() noexcept( false);
+
    /// Calls all check methods defined for this argument. The check methods
    /// throw an exception when a check failed, so: No exception, value can be
    /// stored.
@@ -324,7 +334,7 @@ public:
    /// Should add the value of the destination variable to the string when
    /// called.<br>
    /// Throws an exception when called for the base class.
-   /// @param[in]  dest  The string to append the default value to.
+   /// @param[out]  dest  The string to append the default value to.
    /// @since  0.2, 10.04.2016
    virtual void defaultValue( std::string& dest) const noexcept( false);
 
@@ -514,6 +524,13 @@ inline TypedArgBase* TypedArgBase::setListSep( char /* sep */) noexcept( false)
    throw std::invalid_argument( "setting list separator not allowed for "
                                 "variable '" + mVarName + "'");
 } // TypedArgBase::setListSep
+
+
+inline void TypedArgBase::setClearBeforeAssign() noexcept( false)
+{
+   throw std::invalid_argument( "setting 'clear before assign' is not allowed "
+                                "for variable '" + mVarName + "'");
+} // TypedArgBase::setClearBeforeAssign
 
 
 inline bool TypedArgBase::hasCheck() const
