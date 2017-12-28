@@ -110,5 +110,5 @@ int main( int argc, char* argv[])
 
 
 
-// =========================  END OF test_long_arg_desc.cpp  =========================
+// ======================  END OF test_long_arg_desc.cpp  ======================
 

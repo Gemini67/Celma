@@ -25,6 +25,7 @@
 
 // project includes
 #include "celma/format/to_string.hpp"
+#include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/handler.hpp"
 
 

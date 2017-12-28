@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v0.16.0
+   \mainpage  CELMA v0.17.0
 
    \tableofcontents
 
@@ -46,6 +46,7 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Logging, improvements on argument handler library, ...
+     0.17.0 | 2017-11-14        | Simplified prog_args::Handler interface through destination() functions.
      0.16.0 | 2017-09-25        | Added output of constraints to usage.
      0.15.1 | 2017-08-07        | More warnings fixed.
      0.15.0 | 2017-08-06        | Always use class ArgumentKey for handling/storing the short/long argument key.

@@ -53,13 +53,12 @@ template< typename T> class TypedArg: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  dest   The destination variable to store the value in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
+   /// @since  x.y,z, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArg( const ArgumentKey& key, T& dest, const std::string& vname);
+   TypedArg( T& dest, const std::string& vname);
 
    /// Returns if the destination has a value set.
    /// @return  \c true if the destination variable contains a value,
@@ -96,7 +95,7 @@ private:
    /// Reference of the destination variable to store the value in.
    T&    mDestVar;
    /// Flag, set when the argument was found/the value is set.
-   bool  mHasValueSet;  
+   bool  mHasValueSet = false;
 
 }; // TypedArg< T>
 
@@ -106,11 +105,9 @@ private:
 
 
 template< typename T>
-   TypedArg< T>::TypedArg( const ArgumentKey& key, T& dest,
-                           const std::string& vname):
-      TypedArgBase( key, vname, ValueMode::required, true),
-      mDestVar( dest),
-      mHasValueSet( false)
+   TypedArg< T>::TypedArg( T& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::required, true),
+      mDestVar( dest)
 {
    mpCardinality.reset( new CardinalityMax( 1));
 } // TypedArg< T>::TypedArg
@@ -187,17 +184,14 @@ template<> class TypedArg< bool>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  dest   The destination variable to store the value in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArg( const ArgumentKey& key, bool& dest, const std::string& vname):
-      TypedArgBase( key, vname, ValueMode::none, false),
-      mDestVar( dest),
-      mHasValueSet( false),
-      mValue2Set( true)
+   TypedArg( bool& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::none, false),
+      mDestVar( dest)
    {
       mpCardinality.reset( new CardinalityMax( 1));
    } // TypedArg< bool>::TypedArg
@@ -254,9 +248,9 @@ private:
    /// Reference of the destination variable to store the value in.
    bool&  mDestVar;
    /// Flag set when a value was assigned through an argument.
-   bool   mHasValueSet;
+   bool   mHasValueSet = false;
    /// The value to set when assign is called. Default = \c true.
-   bool   mValue2Set;
+   bool   mValue2Set = true;
 
 }; // TypedArg< bool>
 
@@ -275,14 +269,12 @@ template< typename T> class TypedArg< common::CheckAssign< T>>:
 {
 public:
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  dest   The destination variable to store the value in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArg( const ArgumentKey& key, common::CheckAssign< T>& dest,
-             const std::string& vname);
+   TypedArg( common::CheckAssign< T>& dest, const std::string& vname);
 
    /// Returns if the destination has a value set.
    /// @return  \c true if the destination variable contains a value,
@@ -313,10 +305,9 @@ private:
 
 
 template< typename T>
-   TypedArg< common::CheckAssign< T>>::TypedArg( const ArgumentKey& key,
-                                                 common::CheckAssign< T>& dest,
+   TypedArg< common::CheckAssign< T>>::TypedArg( common::CheckAssign< T>& dest,
                                                  const std::string& vname):
-      TypedArgBase( key, vname, ValueMode::required, false),
+      TypedArgBase( vname, ValueMode::required, false),
       mDestVar( dest)
 {
 } // TypedArg< common::CheckAssign< T>>::TypedArg
@@ -368,15 +359,13 @@ template<> class TypedArg< common::CheckAssign< bool>>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  dest   The destination variable to store the value in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArg( const ArgumentKey& key, common::CheckAssign< bool>& dest,
-             const std::string& vname):
-      TypedArgBase( key, vname, ValueMode::none, false),
+   TypedArg( common::CheckAssign< bool>& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::none, false),
       mDestVar( dest),
       mValue2Set( true)
    {
@@ -453,14 +442,12 @@ public:
    typedef typename std::vector< T>  vector_type;
 
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  dest   The destination variable to store the values in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArg( const ArgumentKey& key, vector_type& dest,
-             const std::string& vname);
+   TypedArg( vector_type& dest, const std::string& vname);
 
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
@@ -496,7 +483,7 @@ private:
    /// Reference of the destination variable to store the value(s) in.
    vector_type&  mDestVar;
    /// The character to use a list separator, default: ,
-   char          mListSep;
+   char          mListSep = ',';
 
 }; // TypedArg< std::vector< T>>
 
@@ -506,12 +493,10 @@ private:
 
 
 template< typename T>
-   TypedArg< std::vector< T>>::TypedArg( const ArgumentKey& key,
-                                          vector_type& dest,
-                                          const std::string& vname):
-      TypedArgBase( key, vname, ValueMode::required, false),
-      mDestVar( dest),
-      mListSep( ',')
+   TypedArg< std::vector< T>>::TypedArg( vector_type& dest,
+                                         const std::string& vname):
+      TypedArgBase( vname, ValueMode::required, false),
+      mDestVar( dest)
 {
    mpCardinality.reset();
 } // TypedArg< std::vector< T>>::TypedArg
@@ -630,14 +615,12 @@ template< typename... T> class TypedArg< std::tuple< T...>>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  dest   The destination variable to store the value in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.11, 19.12.2016
-   TypedArg( const ArgumentKey& key, std::tuple< T...>& dest,
-             const std::string& vname);
+   TypedArg( std::tuple< T...>& dest, const std::string& vname);
 
    /// Returns if the destination has a value set.
    /// @return  \c true if the destination variable contains a value,
@@ -692,10 +675,9 @@ private:
 
 
 template< typename... T>
-   TypedArg< std::tuple< T...>>::TypedArg( const ArgumentKey& key,
-                                           std::tuple< T...>& dest,
+   TypedArg< std::tuple< T...>>::TypedArg( std::tuple< T...>& dest,
                                            const std::string& vname):
-      TypedArgBase( key, vname, ValueMode::required, false),
+      TypedArgBase( vname, ValueMode::required, false),
       mDestVar( dest),
       mTupleLength( common::tuple_length( dest))
 {

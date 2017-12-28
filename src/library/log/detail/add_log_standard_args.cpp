@@ -36,8 +36,13 @@
 namespace celma { namespace log { namespace detail {
 
 
-// static functions prototypes
+namespace {
+
+
 static void log2stdout( const std::string& log_name);
+
+
+} // namespace
 
 
 
@@ -60,6 +65,10 @@ void addLogStandardArgs( const char* std_grp_name)
 
 
 
+namespace {
+
+
+
 /// This function is called when the standard argument to turn on logging to
 /// \c stdout is actually used. Adds the stream log destination with \c cout to
 /// the specified log.
@@ -77,7 +86,11 @@ static void log2stdout( const std::string& log_name)
                                     append( "' exists"));
    } // end if
 
-} // end log2stdout
+} // log2stdout
+
+
+
+} // namespace
 
 
 
