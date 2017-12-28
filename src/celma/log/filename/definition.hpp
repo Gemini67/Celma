@@ -19,6 +19,7 @@
 #define CELMA_LOG_FILENAME_DEFINITION_HPP
 
 
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -26,7 +27,7 @@
 namespace celma { namespace log { namespace filename {
 
 
-/// Stores the definition of a the format of a filename.
+/// Stores the definition of the format of a log filename.
 /// @since  x.y.z, 11.10.2017
 class Definition
 {
@@ -49,6 +50,17 @@ public:
    // Also use default copy assignment.
    Definition& operator =( const Definition&) = default;
 
+   /// Returns if this file name definition includes a log file generation
+   /// number.
+   /// @return  \c true if the definition includes a (generation) number.
+   /// @since  x.y.z, 20.12.2017
+   bool hasGenerationNbr() const;
+
+   /// Returns if this file name definition includes a date field.
+   /// @return  \c true if the definition includes a date field.
+   /// @since  x.y.z, 21.12.2017
+   bool hasDateField() const;
+
 protected:
    friend class Creator;
 
@@ -63,7 +75,7 @@ protected:
       /// The fixed width of the number field, if set.
       int          mFixedWidth;
       /// The fill character for the number field, if set.
-      int          mFillChar;
+      char         mFillChar;
    };
 
    /// Type of the container to store the fields of the format definition.
@@ -73,6 +85,28 @@ protected:
    vector_t  mParts;
 
 }; // Definition
+
+
+// inlined methods
+// ===============
+
+
+inline bool Definition::hasGenerationNbr() const
+{
+   return std::find_if( mParts.begin(), mParts.end(), []( auto const& part)
+      {
+         return part.mType == PartTypes::number;
+      }) != mParts.end();
+} // Definition::hasGenerationNbr
+
+
+inline bool Definition::hasDateField() const
+{
+   return std::find_if( mParts.begin(), mParts.end(), []( auto const& part)
+      {
+         return part.mType == PartTypes::date;
+      }) != mParts.end();
+} // Definition::hasDateField
 
 
 } // namespace filename

@@ -19,6 +19,7 @@
 #define CELMA_LOG_FILENAME_BUILDER_HPP
 
 
+#include <ctime>
 #include <iosfwd>
 #include <string>
 #include "celma/log/filename/definition.hpp"
@@ -34,21 +35,39 @@ class LogMsg;
 namespace filename {
 
 
-/// Formats a log message for output, using the given Destination object to
+/// Formats a log message for output, using the given Definition object to
 /// format the fields.
 /// @since  x.y.z, 16.10.2017
 class Builder: private Definition
 {
 public:
+   /// Convenience method that builds and returns a log filename without the
+   /// need to explicitly create a Builder object.
+   /// @param[in]  def          The object with the format definition.
+   /// @param[in]  logfile_nbr  The number of the logfile. May eventually not be
+   ///                          used, depending on the definiion of the log
+   ///                          filename.
+   /// @param[in]  timestamp    The timestamp to use for building a date part of
+   ///                          the log filename. May eventually not be used,
+   ///                          depending on the definition of the log filename.
+   /// @return  The path and filename of the logfile built according to the
+   ///          given definition.
+   /// @since  x.y.z, 22.12.2017
+   static std::string filename( const Definition& def, int logfile_nbr = 0,
+      time_t timestamp = ::time( nullptr));
+
    /// Constructor.
    /// @param[in]  def  The object with the format definition.
    /// @since  x.y.z, 16.10.2017
    Builder( const Definition& def);
 
-   /// 
-   /// @param[in]  dest         .
-   /// @param[in]  logfile_nbr  .
-   /// @param[in]  timestamp    .
+   /// Creates a log file number according to the format definition given in the
+   /// constructor.
+   /// @param[out]  dest         Returns the log file path and name.
+   /// @param[in]   logfile_nbr  The number of thelog file. May eventually not
+   ///                           be used.
+   /// @param[in]   timestamp    The timestamp to use when the log filename
+   ///                           definition incluses a date part.
    /// @since  x.y.z, 16.10.2017
    void filename( std::string& dest, int logfile_nbr, time_t timestamp) const;
 

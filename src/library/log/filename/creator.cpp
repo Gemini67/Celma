@@ -107,7 +107,7 @@ Creator& Creator::operator <<( Creator&( *m)( Creator&))
 
 
 
-/// Operator to store a constant string in a creator object.
+/// Operator to pass a constant string to a creator object.
 /// @param[in]  c           The object to pass the constant string to.
 /// @param[in]  const_text  The text part to add.<br>
 ///                         If the previous part was a constant text too,
@@ -124,7 +124,7 @@ Creator& operator <<( Creator& c, const std::string& const_text)
 
 
 
-/// Operator to store a fixed width setting for the log file number in a
+/// Operator to pass a fixed width setting for the log file number to a
 /// creator object.
 /// @param[in]  c            The object to pass the fixed width to.
 /// @param[in]  fixed_width  The fixed width to store.
@@ -140,7 +140,7 @@ Creator& operator <<( Creator& c, int fixed_width)
 
 
 
-/// Operator to store the data of a 'format string' in a creator object.
+/// Operator to pass the data of a 'format string' to a creator object.
 /// @param[in]  c   The object to pass the format string to.
 /// @param[in]  fs  The format string to store.
 /// @return  The same object as passed in \a c.

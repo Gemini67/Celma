@@ -15,6 +15,7 @@ file( GLOB log_sources
       "*.cpp"
       "detail/*.cpp"
       "filename/*.cpp"
+      "files/*.cpp"
       "formatting/*.cpp"
 )
 

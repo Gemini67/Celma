@@ -42,6 +42,30 @@ using env_var = common::Manipulator< std::string, 1>;
 /// to one constant string.<br>
 /// If an integer value is passed in by the stream operator, it defines the
 /// optional field width for the following log file number.<br>
+/// If a single character is passed in by the stream operator, it defines the
+/// fill character for the following log file number.<br>
+/// List of manipulators and stream elements:
+/// - Text constant:<br>
+///   Is taken as constnat text.
+/// - Integer constant:<br>
+///   Specifies the width of the following log file number.
+/// - Character constant:<br>
+///   Specifies the fill character to use with the following log file number.
+/// - \c date:<br>
+///   Next field in the path/filename is a date. If no date format is specified,
+///   '%F' is used.<br>
+///   Although the name is just 'date', the format string can contain date
+///   and/or time fields.
+/// - \c env_var( name):<br>
+///   Uses the value of the given environment variable as part of the
+///   path/filename.
+/// - \c formatString( fmt)<br>
+///   Specifies the format string to use for formatting the date/time field.
+/// - \c number:<br>
+///   Adds a log file number field to the definition.
+/// - \c path_sep:<br>
+///   Makes sure that the previous and the following part are correctly
+///   separated by one path separator character (a slash).
 /// @since  x.y.z, 11.10.2017
 class Creator
 {
@@ -52,6 +76,7 @@ public:
    /// @since  x.y.z, 11.10.2017
    explicit Creator( Definition& dest_def);
 
+   // copying is not allowed, moving and deleting is default
    Creator( const Creator&) = delete;
    Creator( Creator&&) = default;
    ~Creator() = default;
@@ -72,7 +97,10 @@ public:
    /// @since  x.y.z, 16.10.2017
    void setFillChar( char fill_char);
 
-   /// 
+   /// When adding two parts of constant text (which will internally be
+   /// concatenated), call this function in between if the two parts come from
+   /// parameters/environment variables etc., and you need to make sure that a
+   /// path separator (a slash) is in between.
    /// @since  x.y.z, 16.10.2017
    void setCheckPathSeparator();
 
@@ -82,7 +110,7 @@ public:
    /// @since  x.y.z, 11.10.2017
    Creator& operator <<( Creator&( *m)( Creator&));
 
-   /// Operator to store a constant string in a creator object.
+   /// Operator to pass a constant string to a creator object.
    /// @param[in]  c           The object to pass the constant string to.
    /// @param[in]  const_text  The text part to add.<br>
    ///                         If the previous part was a constant text too,
@@ -91,7 +119,7 @@ public:
    /// @since  x.y.z, 11.10.2017
    friend Creator& operator <<( Creator& c, const std::string& const_text);
 
-   /// Operator to store a fixed width setting for the log file number in a
+   /// Operator to pass a fixed width setting for the log file number to a
    /// creator object.
    /// @param[in]  c            The object to pass the fixed width to.
    /// @param[in]  fixed_width  The fixed width to store.
@@ -99,7 +127,7 @@ public:
    /// @since  x.y.z, 11.10.2017
    friend Creator& operator <<( Creator& c, int fixed_width);
 
-   /// Operator to store the data of a 'format string' in a creator object.
+   /// Operator to pass the data of a 'format string' to a creator object.
    /// @param[in]  c   The object to pass the format string to.
    /// @param[in]  fs  The format string to store.
    /// @return  The same object as passed in \a c.

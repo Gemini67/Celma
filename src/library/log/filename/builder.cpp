@@ -26,6 +26,7 @@
 // C++ Standard Library include
 #include <iomanip>
 #include <ostream>
+#include <stdexcept>
 
 
 // project includes
@@ -33,6 +34,33 @@
 
 
 namespace celma { namespace log { namespace filename {
+
+
+
+/// Convenience method that builds and returns a log filename without the
+/// need to explicitly create a Builder object.
+/// @param[in]  def          The object with the format definition.
+/// @param[in]  logfile_nbr  The number of the logfile. May eventually not be
+///                          used, depending on the definiion of the log
+///                          filename.
+/// @param[in]  timestamp    The timestamp to use for building a date part of
+///                          the log filename. May eventually not be used,
+///                          depending on the definiion of the log filename.
+/// @return  The path and filename of the logfile built according to the
+///          given definition.
+/// @since  x.y.z, 22.12.2017
+std::string Builder::filename( const Definition& def, int logfile_nbr,
+      time_t timestamp)
+{
+
+   Builder      my_builder( def);
+   std::string  result;
+
+
+   my_builder.filename( result, logfile_nbr, timestamp);
+
+   return result;
+} // Builder::filename
 
 
 
@@ -46,14 +74,20 @@ Builder::Builder( const Definition& def):
 
 
 
-/// 
-/// @param[in]  dest         .
-/// @param[in]  logfile_nbr  .
-/// @param[in]  timestamp    .
+/// Creates a log file number according to the format definition given in the
+/// constructor.
+/// @param[out]  dest         Returns the log file path and name.
+/// @param[in]   logfile_nbr  The number of thelog file. May eventually not
+///                           be used.
+/// @param[in]   timestamp    The timestamp to use when the log filename
+///                           definition incluses a date part.
 /// @since  x.y.z, 16.10.2017
 void Builder::filename( std::string& dest, int logfile_nbr,
                         time_t timestamp) const
 {
+
+   if (mParts.empty())
+      throw std::runtime_error( "no path parts defined");
 
    for (auto const& part_def : mParts)
    {
@@ -126,8 +160,8 @@ void Builder::formatNumber( std::string& dest, const Part& part_def,
 
    if (part_def.mFixedWidth > 0)
       oss << std::setw( part_def.mFixedWidth);
-//   if (part_def.mFillChar != '\0')
-//      oss << std::setfill( part_def.mFillChar);
+   if (part_def.mFillChar != '\0')
+      oss << std::setfill( part_def.mFillChar);
 
    oss << logfile_nbr;
 

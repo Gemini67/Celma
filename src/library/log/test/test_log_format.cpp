@@ -51,7 +51,7 @@ public:
 
 
 /// Test that an empty format definition results in an empty string.
-/// @since  x.y.z, 257.09.2017
+/// @since  x.y.z, 27.09.2017
 BOOST_AUTO_TEST_CASE( test_empty)
 {
 
