@@ -32,11 +32,11 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/multi_setter.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::runtime_error;
 using std::string;

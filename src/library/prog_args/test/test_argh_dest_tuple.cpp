@@ -21,8 +21,8 @@
 
 
 // project includes
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
-#include "celma/common/arg_string_2_array.hpp"
 
 
 using celma::prog_args::Handler;
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::common::ArgString2Array  as2a( "-p 3", nullptr);
+      celma::appl::ArgString2Array  as2a( "-p 3", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
                            std::runtime_error);
    } // end scope
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::common::ArgString2Array  as2a( "-p 3,4,5", nullptr);
+      celma::appl::ArgString2Array  as2a( "-p 3,4,5", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
                            std::runtime_error);
    } // end scope
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::common::ArgString2Array  as2a( "-p 3,hello", nullptr);
+      celma::appl::ArgString2Array  as2a( "-p 3,hello", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
                            std::bad_cast);
    } // end scope
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::common::ArgString2Array  as2a( "-p 3,9", nullptr);
+      celma::appl::ArgString2Array  as2a( "-p 3,9", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::common::ArgString2Array  as2a( "--pair 4711,foobar", nullptr);
+      celma::appl::ArgString2Array  as2a( "--pair 4711,foobar", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 4711);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), "foobar");
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
                                               "Key and value")
                                             ->setTakesMultiValue());
 
-      celma::common::ArgString2Array  as2a( "-p 3 9", nullptr);
+      celma::appl::ArgString2Array  as2a( "-p 3 9", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::common::ArgString2Array  as2a( "-p 3,9,27", nullptr);
+      celma::appl::ArgString2Array  as2a( "-p 3,9,27", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::common::ArgString2Array  as2a( "--pair 4711,foobar,42", nullptr);
+      celma::appl::ArgString2Array  as2a( "--pair 4711,foobar,42", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 4711);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), "foobar");
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
                                               "Key and value")
                                             ->setTakesMultiValue());
 
-      celma::common::ArgString2Array  as2a( "-p 3 9 27", nullptr);
+      celma::appl::ArgString2Array  as2a( "-p 3 9 27", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);

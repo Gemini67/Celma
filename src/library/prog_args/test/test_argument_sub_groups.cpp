@@ -32,7 +32,7 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
 
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE( invalid_sub_group)
    BOOST_REQUIRE_THROW( masterAH.addArgument( "o", subAH, "output arguments"),
                         runtime_error);
 
-} // end invalid_sub_group
+} // invalid_sub_group
 
 
 
@@ -64,11 +64,11 @@ BOOST_AUTO_TEST_CASE( invalid_sub_group)
 BOOST_AUTO_TEST_CASE( one_sub_group)
 {
 
-   common::ArgString2Array  as2a( "-oc mycache", nullptr);
-   prog_args::Handler       masterAH( 0);
-   prog_args::Handler       subAH( 0);
-   string                   outputName;
-   int                      outputType = 0;
+   appl::ArgString2Array  as2a( "-oc mycache", nullptr);
+   prog_args::Handler     masterAH( 0);
+   prog_args::Handler     subAH( 0);
+   string                 outputName;
+   int                    outputType = 0;
 
 
    BOOST_REQUIRE_NO_THROW( subAH.addArgument( "c", DEST_PAIR( outputName, outputType, 1), "cache name"));
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE( one_sub_group)
    BOOST_REQUIRE_EQUAL( outputType, 1);
    BOOST_REQUIRE_EQUAL( outputName, "mycache");
 
-} // end one_sub_group
+} // one_sub_group
 
 
 
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
          DEST_PAIR( outputName, outputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( subOutputAH = masterAH.addArgument( "o", &subOutput, "output arguments"));
 
-      common::ArgString2Array  as2a( "-oc mycache", nullptr);
+      appl::ArgString2Array  as2a( "-oc mycache", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
 
       BOOST_REQUIRE( !subInputAH->hasValue());
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
          DEST_PAIR( outputName, outputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( subOutputAH = masterAH.addArgument( "o", &subOutput, "output arguments"));
 
-      common::ArgString2Array  as2a( "-if myfile -o -q myqueue", nullptr);
+      appl::ArgString2Array  as2a( "-if myfile -o -q myqueue", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
 
       BOOST_REQUIRE( subInputAH->hasValue());
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_EQUAL( outputName, "myqueue");
    } // end scope
 
-} // end two_sub_groups
+} // two_sub_groups
 
 
 
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
          DEST_PAIR( outputName, outputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subOutput, "output arguments"));
 
-      common::ArgString2Array  as2a( "-c valc -oc mycache -l last", nullptr);
+      appl::ArgString2Array  as2a( "-c valc -oc mycache -l last", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( paramC, "valc");
       BOOST_REQUIRE_EQUAL( inputType,  0);
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
          DEST_PAIR( outputName, outputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subOutput, "output arguments"));
 
-      common::ArgString2Array  as2a( "-c otherValC -if myfile -a howdy -o -q myqueue -l lastagain", nullptr);
+      appl::ArgString2Array  as2a( "-c otherValC -if myfile -a howdy -o -q myqueue -l lastagain", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( paramC, "otherValC");
       BOOST_REQUIRE_EQUAL( inputType,  2);
@@ -272,7 +272,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
       BOOST_REQUIRE_EQUAL( paramL, "lastagain");
    } // end scope
 
-} // end two_sub_groups_mixed_toplevel
+} // two_sub_groups_mixed_toplevel
 
 
 
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "z", DEST_VAR( outputFlag2), "flag 2"));
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subOutput, "output arguments"));
 
-      common::ArgString2Array  as2a( "-c valc -oc mycache -v -l last", nullptr);
+      appl::ArgString2Array  as2a( "-c valc -oc mycache -v -l last", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( paramC, "valc");
       BOOST_REQUIRE_EQUAL( inputType,  0);
@@ -381,7 +381,7 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "z", DEST_VAR( outputFlag2), "flag 2"));
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subOutput, "output arguments"));
 
-      common::ArgString2Array  as2a( "-c otherValC -if myfile -z -a howdy -ovq myqueue -l lastagain", nullptr);
+      appl::ArgString2Array  as2a( "-c otherValC -if myfile -z -a howdy -ovq myqueue -l lastagain", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgc, as2a.mpArgv));
       BOOST_REQUIRE_EQUAL( paramC, "otherValC");
       BOOST_REQUIRE_EQUAL( inputType,  2);
@@ -396,7 +396,7 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
       BOOST_REQUIRE( !outputFlag2);
    } // end scope
 
-} // end sub_multi_args
+} // sub_multi_args
 
 
 
