@@ -51,7 +51,7 @@ public:
 
 
 /// Test that an empty format definition results in an empty string.
-/// @since  x.y.z, 27.09.2017
+/// @since  1.0.0, 27.09.2017
 BOOST_AUTO_TEST_CASE( test_empty)
 {
 
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE( test_fields)
 
 
 /// Test the left-alignment and the fixed width in formatting a log message.
-/// @since  x.y.z, 26.09.2017
+/// @since  1.0.0, 26.09.2017
 BOOST_AUTO_TEST_CASE( test_align_fixedwidth)
 {
 
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE( test_align_fixedwidth)
 
 
 /// Test formatting the date, time and date_time fields.
-/// @since  x.y.z, 26.09.2017
+/// @since  1.0.0, 26.09.2017
 BOOST_AUTO_TEST_CASE( test_date_time)
 {
 

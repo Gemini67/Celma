@@ -30,23 +30,23 @@ namespace celma { namespace log { namespace files {
 
 /// Base class for log file handle policies. Contains the part common to all
 /// policies.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 class PolicyBase
 {
 public:
    /// Constructor. Stores the object to use to create the log file names.
    /// @param[in]  fname_def  Log filename definition.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    PolicyBase( const filename::Definition& fname_def);
 
    /// Copy constructor. Only copies the log filename definition, not any
    /// eventually open log file.
    /// @param[in]  other  The other object to copy the data from.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    PolicyBase( const PolicyBase& other);
 
    /// Default, virtual destructor.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual ~PolicyBase() = default;
 
    /// Opens the current log file, checks if it still is okay to use the file,
@@ -54,7 +54,7 @@ public:
    /// a new file.<br>
    /// All that is done calling the virtual function which must be implemented
    /// by the derived classes, the real policies.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    void open() noexcept( false);
 
    /// Write the next log message. Either in the currently opened file, if that
@@ -64,12 +64,12 @@ public:
    ///                       message to write into the file.<br>
    ///                       Provided e.g. for date checks.
    /// @param[in]  msg_text  The formatted text of the log message to write.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    void writeMessage( const detail::LogMsg& msg, const std::string& msg_text);
 
    /// Returns the path and file name of the currently open log file.
    /// @return  The path and file name of the currently open log file.
-   /// @since  x.y.z, 22.12.2017
+   /// @since  1.0.0, 22.12.2017
    const std::string& logFileName() const;
 
 protected:
@@ -77,12 +77,12 @@ protected:
    /// @return
    /// - \c true if it is (still) okay to write into the current log file.
    /// - \c false if a new log file should be opened.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual bool openCheck() = 0;
 
    /// Called when openCheck() returned \c false. The current file is already
    /// closed then, all the function has to do is roll the log file generations.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual void rollFiles() = 0;
 
    /// Called to check if the next log message can still be written into the
@@ -92,7 +92,7 @@ protected:
    /// @return  \c true if the log message can be written into the current log
    ///          file, \c false if a new file should be opened for this log
    ///          message.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual bool writeCheck( const detail::LogMsg& msg,
       const std::string& msg_text) = 0;
 
@@ -101,7 +101,7 @@ protected:
    /// @param[in]  msg       The log message object.
    /// @param[in]  msg_text  The formatted text of the log message that was
    ///                       written into the log file.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual void written( const detail::LogMsg& msg,
       const std::string& msg_text) = 0;
 
@@ -109,7 +109,7 @@ protected:
    /// file generations, and finally opens a new log file.<br>
    /// This functions is called when either the openCheck() or writeCheck()
    /// function returned \c false.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual void reOpenFile();
 
    /// The definition how to build the file name.

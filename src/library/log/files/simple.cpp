@@ -25,7 +25,7 @@ namespace celma { namespace log { namespace files {
 
 /// Constructor.
 /// @param[in]  fname_def  The object used to create the file name.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 Simple::Simple( const filename::Definition& fname_def):
    PolicyBase( fname_def)
 {
@@ -35,7 +35,7 @@ Simple::Simple( const filename::Definition& fname_def):
 
 /// Copy constructor. Copies onle the definition.
 /// @param[in]  fname_def  The object used to create the file name.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 Simple::Simple( const Simple& other):
    PolicyBase( other.mFilenameDefinition)
 {
@@ -45,7 +45,7 @@ Simple::Simple( const Simple& other):
 
 /// Check if the currently opened file is valid for writing into.
 /// @return  Always \c true.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 bool Simple::openCheck()
 {
 
@@ -55,7 +55,7 @@ bool Simple::openCheck()
 
 
 /// Does nothing. And should actually never be called anyway.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void Simple::rollFiles()
 {
 } // Simple::rollFiles
@@ -66,7 +66,7 @@ void Simple::rollFiles()
 /// @param[in]  msg       The message object. Ignored.
 /// @param[in]  msg_text  The formatted text of the log message. Ignored.
 /// @return  Always \c true.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 bool Simple::writeCheck( const detail::LogMsg&, const std::string&)
 {
 
@@ -79,7 +79,7 @@ bool Simple::writeCheck( const detail::LogMsg&, const std::string&)
 /// nothing in this class.
 /// @param[in]  msg       The message object. Ignored.
 /// @param[in]  msg_text  The formatted text of the log message. Ignored.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void Simple::written( const detail::LogMsg&, const std::string&)
 {
 } // Simple::written

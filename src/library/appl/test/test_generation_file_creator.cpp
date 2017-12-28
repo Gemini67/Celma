@@ -58,7 +58,7 @@ public:
 
 
 /// 
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 BOOST_AUTO_TEST_CASE( test_two)
 {
 
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE( test_two)
 
 
 /// 
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 BOOST_AUTO_TEST_CASE( test_two_sep)
 {
 

@@ -35,7 +35,7 @@ using customProperty = common::Manipulator< std::string>;
 
 
 /// Helper class to create a log message using C++ streams syntax.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 class StreamLog
 {
 public:
@@ -50,7 +50,7 @@ public:
    ///                            message was generated.
    /// @param[in]  line_nbr       The line number from which the log message
    ///                            originated.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    StreamLog( id_t log_ids, const std::string filename,
               const char* const function_name, int line_nbr) noexcept( false);
 
@@ -65,17 +65,17 @@ public:
    ///                            message was generated.
    /// @param[in]  line_nbr       The line number from which the log message
    ///                            originated.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    StreamLog( const std::string& log_name, const std::string filename,
               const char* const function_name, int line_nbr) noexcept( false);
 
    /// Destructor. Pass the created log message to the log framework.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    ~StreamLog();
 
    /// Helper function to use the temporary object to create the log message.
    /// @return  This object.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    StreamLog& self()
    {
       return *this;
@@ -85,7 +85,7 @@ public:
    /// @param[in]  so  The object (= message) to set the log class for.
    /// @param[in]  lc  The log class to set.
    /// @return  The object passed in \a so.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so, LogClass lc)
    {
       // range check
@@ -101,7 +101,7 @@ public:
    /// @param[in]  so  The object (= message) to set the log level for.
    /// @param[in]  ll  The log level to set.
    /// @return  The object passed in \a so.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so, LogLevel ll)
    {
       if (so.mLogMsg.getLevel() == LogLevel::undefined)
@@ -127,7 +127,7 @@ public:
    /// @param[in]  so   Me.
    /// @param[in]  cre  The exception object to log.
    /// @return  Myself.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so,
                                   const common::CelmaRuntimeError& cre)
    {
@@ -142,7 +142,7 @@ public:
    /// @param[in]  so   Me.
    /// @param[in]  sre  The exception object to log.
    /// @return  Myself.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so,
                                   const common::CelmaLogicError& cle)
    {
@@ -159,7 +159,7 @@ public:
    /// @param[in]  so  Me.
    /// @param[in]  eb  The exception object to log.
    /// @return  The object passed in \a so.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    friend StreamLog& operator <<( StreamLog& so, const common::ExceptionBase& eb)
    {
       so.storeException( eb);
@@ -182,7 +182,7 @@ public:
    /// @param[in]  so     The StreamLog to append the value.
    /// @param[in]  value  The value to append.
    /// @return  The StreamLog from the input parameter.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    template <typename T> friend StreamLog& operator <<( StreamLog& so,
                                                         const T& value)
    {
@@ -208,7 +208,7 @@ public:
    /// @param[in]  os  The stream to write to.
    /// @param[in]  so  The StreamLog to dump the stringstream contents of.
    /// @return  The stream from the input parameter.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    friend std::ostream& operator <<( std::ostream& os, const StreamLog& so)
    {
       os << "file='" << so.mFile << "',line=" << so.mLineNbr << ",class="
@@ -222,7 +222,7 @@ public:
    /// to the input operator, it is called.
    /// @param[in]  m  The function to call.
    /// @return  The object itself.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    StreamLog& operator <<( StreamLog&( *m)( StreamLog&))
    {
       m( *this);
@@ -230,7 +230,7 @@ public:
    } // StreamLog::operator <<
 
    /// Erases the contents of the internal stringstream.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    void clear()
    {
       mStrStream.str( "");
@@ -238,7 +238,7 @@ public:
 
    /// Stream manipulator: Specifies that the next value is the error number for
    /// the current message.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    void errnbr()
    {
       mErrNbrNext = true;
@@ -249,23 +249,23 @@ private:
    /// The text of the exception is assigned to the internal stringstream in
    /// order to keep the feature that log messages without text are discarded.
    /// @param[in]  eb  The exception to log.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    void storeException( const common::ExceptionBase& eb);
 
    /// Returns if a property name is stored in this object.
    /// @return  \c true if a property name is stored.
-   /// @since  x.y.z, 12.12.2016
+   /// @since  1.0.0, 12.12.2016
    bool hasPropertyName() const;
 
    /// Stores a property name.
    /// @param[in]  property_name  The property name to store.
-   /// @since  x.y.z, 12.12.2016
+   /// @since  1.0.0, 12.12.2016
    void storePropertyName( const std::string& property_name);
 
    /// Stores the value of a property with the previously given property name.
    /// @param[in]  property_value  The value to store for the property with the
    ///                             previously given name.
-   /// @since  x.y.z, 12.12.2016
+   /// @since  1.0.0, 12.12.2016
    void storeProperty( const std::string& property_value);
 
    /// The set of log ids to which the log message should be sent.
@@ -296,7 +296,7 @@ private:
 /// to generate a new log message.
 /// @param[in]  in  The object to call the clear() method of.
 /// @return  The StreamLog passed in the input parameter.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 inline StreamLog& clear( StreamLog& in)
 {
    in.clear();
@@ -310,7 +310,7 @@ inline StreamLog& clear( StreamLog& in)
 /// the error number for the current log message.
 /// @param[in]  in  The object to call the errnbr() method of.
 /// @return  The StreamLog passed in the input parameter.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 inline StreamLog& errnbr( StreamLog& in)
 {
    in.errnbr();

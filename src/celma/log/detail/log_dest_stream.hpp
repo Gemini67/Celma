@@ -31,7 +31,7 @@ class LogMsg;
 
 
 /// Log destination: (o) Stream.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 class LogDestStream: public ILogDest
 {
 public:
@@ -42,11 +42,11 @@ public:
    /// @param[in]  dest         The stream to write into.
    /// @param[in]  add_newline  Set to \c true if a newline character should be
    ///                          added to log message(s).
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    explicit LogDestStream( std::ostream& dest, bool add_newline = false);
 
    /// Empty, virtual destructor.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    virtual ~LogDestStream() = default;
 
    /// Sets the new formatter to use.<br>
@@ -55,14 +55,14 @@ public:
    /// @param[in]  formatter  Pointer to the new formatter object to use. If a
    ///                        NULL pointer is passed, the previous formatter is
    ///                        replaced by the default stream formatter.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    virtual void setFormatter( IFormatBase* formatter = nullptr) override;
 
 private:
    /// Called through the base class. Writes a log message to the specified
    /// stream.
    /// @param[in]  msg  The message to write.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    virtual void message( const LogMsg& msg) override;
 
    /// The stream to write into.

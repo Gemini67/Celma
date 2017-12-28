@@ -54,7 +54,7 @@ public:
 
 
 /// Test that an empty format definition results in an error.
-/// @since  x.y.z, 20.10.2017
+/// @since  1.0.0, 20.10.2017
 BOOST_AUTO_TEST_CASE( test_empty)
 {
 
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE( test_empty)
 
 
 /// Test the creation of a logfile name with different parts.
-/// @since  x.y.z, 20.10.2017
+/// @since  1.0.0, 20.10.2017
 BOOST_AUTO_TEST_CASE( test_parts)
 {
 

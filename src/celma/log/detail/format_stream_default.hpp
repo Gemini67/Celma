@@ -30,14 +30,14 @@ namespace celma { namespace log { namespace detail {
 /// Default formatter for stream output.<br>
 /// Generates a log entry with the format:
 ///    <pre>pid|line-nbr|log-class|log-level|error-nbr|text</pre>
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 class FormatStreamDefault: public IFormatStream
 {
 private:
    /// Implementation of the interface: Generate the log entry.
    /// @param[out]  out  The stream to write the log entry into.
    /// @param[in]   msg  The log message object with the data to log.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    virtual void format( std::ostream& out, const LogMsg& msg) const override;
 
 }; // FormatStreamDefault

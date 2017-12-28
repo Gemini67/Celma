@@ -66,14 +66,14 @@ using env_var = common::Manipulator< std::string, 1>;
 /// - \c path_sep:<br>
 ///   Makes sure that the previous and the following part are correctly
 ///   separated by one path separator character (a slash).
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 class Creator
 {
 public:
    /// Constructor.
    /// @param[in]  dest_def  The filename definition object to store the log
    ///                       filename format definition in.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    explicit Creator( Definition& dest_def);
 
    // copying is not allowed, moving and deleting is default
@@ -84,30 +84,30 @@ public:
    /// Adds a path/filename part with the given type. Remaining parameters must
    /// be set before and are stored in the member variables.
    /// @param[in]  part_type  The type of the part to add.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    void part( Definition::PartTypes part_type);
 
    /// Sets a fixed width for the next part, the log file number.
    /// @param[in]  fixed_width  The fixed width to use for log file number.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    void setFixedWidth( int fixed_width);
 
    /// Sets the fill-character to use when adding the log file number.
    /// @param[in]  fill_char  The fill-character to use.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    void setFillChar( char fill_char);
 
    /// When adding two parts of constant text (which will internally be
    /// concatenated), call this function in between if the two parts come from
    /// parameters/environment variables etc., and you need to make sure that a
    /// path separator (a slash) is in between.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    void setCheckPathSeparator();
 
    /// Operator to handle manipulators.
    /// @param[in]  m  The manipulator to call.
    /// @return  This object.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    Creator& operator <<( Creator&( *m)( Creator&));
 
    /// Operator to pass a constant string to a creator object.
@@ -116,7 +116,7 @@ public:
    ///                         If the previous part was a constant text too,
    ///                         this text will be appended to it.
    /// @return  The same object as passed in \a c.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    friend Creator& operator <<( Creator& c, const std::string& const_text);
 
    /// Operator to pass a fixed width setting for the log file number to a
@@ -124,14 +124,14 @@ public:
    /// @param[in]  c            The object to pass the fixed width to.
    /// @param[in]  fixed_width  The fixed width to store.
    /// @return  The same object as passed in \a c.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    friend Creator& operator <<( Creator& c, int fixed_width);
 
    /// Operator to pass the data of a 'format string' to a creator object.
    /// @param[in]  c   The object to pass the format string to.
    /// @param[in]  fs  The format string to store.
    /// @return  The same object as passed in \a c.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    friend Creator& operator <<( Creator& c, const formatString& fs);
 
    /// Operator to change the fill character to use for a fixed width log file
@@ -139,7 +139,7 @@ public:
    /// @param[in]  c    The object to change the eparator string in.
    /// @param[in]  sep  The separator string to set.
    /// @return  The same object as passed in \a c.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    friend Creator& operator <<( Creator& c, char fill_char);
 
    /// Operator to store a path part that adds the value of the given
@@ -149,26 +149,26 @@ public:
    /// @param[in]  ev  The objct with the name of the environment variable to
    ///                 store.
    /// @return  The same object as passed in \a c.
-   /// @since  x.y.z, 19.10.2017
+   /// @since  1.0.0, 19.10.2017
    friend Creator& operator <<( Creator& c, const env_var& ev);
 
 private:
    /// Called by the operator to actually store the constant text.<br>
    /// Also adds the part to the log file format definition.
    /// @param[in]  const_text  The constant text to store.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    void addConstantText( const std::string& const_text);
 
    /// Stores a format string that should be used by the next date part.
    /// @param[in]  fmt  The format string to store.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    void formatString( const std::string& fmt);
 
    /// Called by the operator to actually store the name of an environment
    /// variable.<br>
    /// Also adds the part to the log file format definition.
    /// @param[in]  env_var_name  The name of the environment variable.
-   /// @since  x.y.z, 19.10.2017
+   /// @since  1.0.0, 19.10.2017
    void addEnvVar( const std::string& env_var_name);
 
    /// Checks if two constant text parts can be concatenated, and if
@@ -177,7 +177,7 @@ private:
    /// definition.<br>
    /// And while we're at it, prepare for the next part.
    /// @param[in]  part  The part to add.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    void addPart( const Definition::Part& part);
 
    /// The object to store the log message format definition in.
@@ -205,7 +205,7 @@ private:
 /// Adds a 'date' field to the log filename format definition.
 /// @param[in]  in  The object to use to add the part to the definition.
 /// @return  The object as passed in.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 inline Creator& date( Creator& in)
 {
    in.part( Definition::PartTypes::date);
@@ -216,7 +216,7 @@ inline Creator& date( Creator& in)
 /// Adds a 'log file number' field to the log filename format definition.
 /// @param[in]  in  The object to use to add the part to the definition.
 /// @return  The object as passed in.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 inline Creator& number( Creator& in)
 {
    in.part( Definition::PartTypes::number);
@@ -228,7 +228,7 @@ inline Creator& number( Creator& in)
 /// following one are separated by exactly one slash.
 /// @param[in]  in  The object to set the 'check path separator' flag on.
 /// @return  The object as passed in.
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 inline Creator& path_sep( Creator& in)
 {
    in.setCheckPathSeparator();

@@ -52,7 +52,7 @@ private:
    /// Interface definition of the method to be implmented by derived classes.
    /// @param[out]  out  The stream to write into.
    /// @param[in]   msg  The message to format the data of.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    virtual void format( std::ostream& out,
                         const celma::log::detail::LogMsg& msg) const override
    {
@@ -63,7 +63,7 @@ private:
 
 
 /// Helper class to make sure that the test environment is torn down in any case.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 class TestCaseLogDestStream
 {
 public:
@@ -93,7 +93,7 @@ protected:
 
 
 /// Test the default stream log format.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 BOOST_FIXTURE_TEST_CASE( default_log_format, TestCaseLogDestStream)
 {
 
@@ -121,7 +121,7 @@ BOOST_FIXTURE_TEST_CASE( default_log_format, TestCaseLogDestStream)
 
 
 /// Test the custom stream log format.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 BOOST_FIXTURE_TEST_CASE( custom_log_format, TestCaseLogDestStream)
 {
 
@@ -139,7 +139,7 @@ BOOST_FIXTURE_TEST_CASE( custom_log_format, TestCaseLogDestStream)
 
 
 /// Test the output produced with a log format object.
-/// @since  x.y.z, 03.10.2017
+/// @since  1.0.0, 03.10.2017
 BOOST_FIXTURE_TEST_CASE( test_log_formatter, TestCaseLogDestStream)
 {
 

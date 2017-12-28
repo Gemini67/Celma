@@ -37,7 +37,7 @@ namespace celma { namespace log { namespace files {
 /// @param[in]  max_file_size  The maximum size of a log file.
 /// @param[in]  max_gen        Maximum number of log file generations to
 ///                            keep.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 MaxSize::MaxSize( const filename::Definition& fname_def, size_t max_file_size,
                   int max_gen):
    PolicyBase( fname_def),
@@ -57,7 +57,7 @@ MaxSize::MaxSize( const filename::Definition& fname_def, size_t max_file_size,
 /// Copy constructor. Copies only the settings but not any eventually open
 /// log file.
 /// @param[in]  other  The other object to copy the data from.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 MaxSize::MaxSize( const MaxSize& other):
    PolicyBase( other),
    mMaxFileSize( other.mMaxFileSize),
@@ -71,7 +71,7 @@ MaxSize::MaxSize( const MaxSize& other):
 /// Checks the currently open file if the file limit is reached.
 /// @return  \c true if the current log file can still be used, \c false if
 ///          the log file(s) should be rolled.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 bool MaxSize::openCheck()
 {
    mCurrentFilesize = mFile.tellp();
@@ -82,7 +82,7 @@ bool MaxSize::openCheck()
 
 /// Called when openCheck() return \c false. Rolls the existing log file
 /// generations.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void MaxSize::rollFiles()
 {
 
@@ -110,7 +110,7 @@ void MaxSize::rollFiles()
 /// @param[in]  msg_text  The formatted text of the log message.
 /// @return  \c true if the log message text can be written into the current
 ///          log file.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 bool MaxSize::writeCheck( const detail::LogMsg&, const std::string& msg_text)
 {
 
@@ -124,7 +124,7 @@ bool MaxSize::writeCheck( const detail::LogMsg&, const std::string& msg_text)
 /// @param[in]  msg       Ignored.
 /// @param[in]  msg_text  The formatted text of the log message that was
 ///                       written into the log file.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void MaxSize::written( const detail::LogMsg&, const std::string& msg_text)
 {
 

@@ -47,7 +47,7 @@ namespace {
 /// @param[in]  envName  The name of the environment variable to return the
 ///                      value of.
 /// @return  The value of the environment variable.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 inline const char* checkGetEnv( const char* envName) noexcept( false)
 {
 
@@ -71,7 +71,7 @@ inline const char* checkGetEnv( const char* envName) noexcept( false)
 /// @param[in]  subDir    The sub-directory of the project root path.
 /// @param[in]  filename  The name of the file.
 /// @param[in]  fileExt   The file extension/suffix.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 ProjectPath::ProjectPath( const char* subDir, const char* filename,
                           const char* fileExt)
 {
@@ -103,7 +103,7 @@ ProjectPath::ProjectPath( const char* subDir, const char* filename)
 
 /// Constructor.
 /// @param[in]  filename  The (path and) name of the file, maybe with suffix.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 ProjectPath::ProjectPath( const char* filename)
 {
 
@@ -120,7 +120,7 @@ ProjectPath::ProjectPath( const char* filename)
 /// @param[out]  os  The stream to write to.
 /// @param[in]   pp  The object to stream the path/filename of.
 /// @return  The stream as passed in \a os.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 std::ostream& operator <<( std::ostream& os, const ProjectPath& pp)
 {
 
@@ -134,7 +134,7 @@ std::ostream& operator <<( std::ostream& os, const ProjectPath& pp)
 ///                       be NULL.
 /// @param[in]  filename  The file name.
 /// @param[in]  fileExt   The file extension/suffix, may be NULL.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 void ProjectPath::store( const char* subDir, const char* filename,
                          const char* fileExt)
 {

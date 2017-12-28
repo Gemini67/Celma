@@ -38,7 +38,7 @@ namespace celma { namespace log { namespace formatting {
 
 /// Constructor.
 /// @param[in]  def  The object with the format definition.
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 Format::Format( const Definition& def):
    Definition( def)
 {
@@ -51,7 +51,7 @@ Format::Format( const Definition& def):
 /// @param[out]  dest  The destination stream to write the formatted log
 ///                    message data into.
 /// @param[in]   msg   The log message whose data should be formatted.
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
 {
 
@@ -115,7 +115,7 @@ void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
 /// @param[in]   format_str  The default format string, used when no custom
 ///                          format string is available.
 /// @param[in]   timestamp   The timestamp to format.
-/// @since  x.y.z, 11.12.2016
+/// @since  1.0.0, 11.12.2016
 void Format::formatDateTime( std::ostream& dest, const Field& field_def,
                              const char* format_str, time_t timestamp) const
 {
@@ -139,7 +139,7 @@ void Format::formatDateTime( std::ostream& dest, const Field& field_def,
 /// @param[out]  dest  The destination stream to write into.
 /// @param[in]   def   The object with the width and alignment settings.
 /// @param[in]   str   The string to write.
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 void Format::append( std::ostream& dest, const Field& def,
                      const std::string& str) const
 {

@@ -67,7 +67,7 @@ namespace detail {
 /// Returns the display text for the specified log message class.
 /// @param[in]  lc  The log class to return the text for.
 /// @return  The display text for the specified log class.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 inline const char* logClass2text( LogClass lc)
 {
    switch (lc)
@@ -87,7 +87,7 @@ inline const char* logClass2text( LogClass lc)
 /// Returns the display text for the specified log message level.
 /// @param[in]  ll  The log level to return the text for.
 /// @return  The display text for the specified log level.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 inline const char* logLevel2text( LogLevel ll)
 {
    switch (ll)
@@ -107,7 +107,7 @@ inline const char* logLevel2text( LogLevel ll)
 /// Returns the log message class for the specified display class text.
 /// @param[in]  lcText  The display text to return the class for.
 /// @return  The log class.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 inline LogClass text2logClass( const char* lcText)
 {
 
@@ -124,7 +124,7 @@ inline LogClass text2logClass( const char* lcText)
 /// Returns the log message level for the specified display log text.
 /// @param[in]  llText  The display text to return the level for.
 /// @return  The log level.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 inline LogLevel text2logLevel( const char* llText)
 {
 
@@ -145,7 +145,7 @@ inline LogLevel text2logLevel( const char* llText)
 /// @param[in]  os  The stream to insert into.
 /// @param[in]  ll  The log level.
 /// @return  The stream as passed in.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 inline std::ostream& operator <<( std::ostream& os, const LogLevel ll)
 {
    return os << detail::logLevel2text( ll) << " (" << static_cast< int>( ll)
@@ -157,7 +157,7 @@ inline std::ostream& operator <<( std::ostream& os, const LogLevel ll)
 /// @param[in]  os  The stream to insert into.
 /// @param[in]  lc  The log class.
 /// @return  The stream as passed in.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 inline std::ostream& operator <<( std::ostream& os, const LogClass lc)
 {
    return os << detail::logClass2text( lc) << " (" << static_cast< int>( lc)

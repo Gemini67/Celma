@@ -28,7 +28,7 @@ namespace celma { namespace log { namespace filename {
 
 
 /// Stores the definition of the format of a log filename.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 class Definition
 {
 public:
@@ -53,19 +53,19 @@ public:
    /// Returns if this file name definition includes a log file generation
    /// number.
    /// @return  \c true if the definition includes a (generation) number.
-   /// @since  x.y.z, 20.12.2017
+   /// @since  1.0.0, 20.12.2017
    bool hasGenerationNbr() const;
 
    /// Returns if this file name definition includes a date field.
    /// @return  \c true if the definition includes a date field.
-   /// @since  x.y.z, 21.12.2017
+   /// @since  1.0.0, 21.12.2017
    bool hasDateField() const;
 
 protected:
    friend class Creator;
 
    /// The data that is stored for each part.
-   /// @since  x.y.z, 11.10.2017
+   /// @since  1.0.0, 11.10.2017
    struct Part
    {
       /// The type of the field.

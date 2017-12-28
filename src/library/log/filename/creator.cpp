@@ -25,7 +25,7 @@ namespace celma { namespace log { namespace filename {
 /// Constructor.
 /// @param[in]  dest_def  The filename definition object to store the log
 ///                       filename format definition in.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 Creator::Creator( Definition& dest_def):
    mDefs( dest_def),
    mString(),
@@ -40,7 +40,7 @@ Creator::Creator( Definition& dest_def):
 /// Adds a path/filename part with the given type. Remaining parameters must
 /// be set before and are stored in the member variables.
 /// @param[in]  part_type  The type of the part to add.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 void Creator::part( Definition::PartTypes part_type)
 {
 
@@ -60,7 +60,7 @@ void Creator::part( Definition::PartTypes part_type)
 
 /// Sets a fixed width for the next part, the log file number.
 /// @param[in]  fixed_width  The fixed width to use for log file number.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 void Creator::setFixedWidth( int fixed_width)
 {
 
@@ -72,7 +72,7 @@ void Creator::setFixedWidth( int fixed_width)
 
 /// Sets the fill-character to use when adding the log file number.
 /// @param[in]  fill_char  The fill-character to use.
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 void Creator::setFillChar( char fill_char)
 {
 
@@ -83,7 +83,7 @@ void Creator::setFillChar( char fill_char)
 
 
 /// 
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 void Creator::setCheckPathSeparator()
 {
 
@@ -96,7 +96,7 @@ void Creator::setCheckPathSeparator()
 /// Operator to handle manipulators.
 /// @param[in]  m  The manipulator to call.
 /// @return  This object.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 Creator& Creator::operator <<( Creator&( *m)( Creator&))
 {
 
@@ -113,7 +113,7 @@ Creator& Creator::operator <<( Creator&( *m)( Creator&))
 ///                         If the previous part was a constant text too,
 ///                         this text will be appended to it.
 /// @return  The same object as passed in \a c.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 Creator& operator <<( Creator& c, const std::string& const_text)
 {
 
@@ -129,7 +129,7 @@ Creator& operator <<( Creator& c, const std::string& const_text)
 /// @param[in]  c            The object to pass the fixed width to.
 /// @param[in]  fixed_width  The fixed width to store.
 /// @return  The same object as passed in \a c.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 Creator& operator <<( Creator& c, int fixed_width)
 {
 
@@ -144,7 +144,7 @@ Creator& operator <<( Creator& c, int fixed_width)
 /// @param[in]  c   The object to pass the format string to.
 /// @param[in]  fs  The format string to store.
 /// @return  The same object as passed in \a c.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 Creator& operator <<( Creator& c, const formatString& fs)
 {
 
@@ -160,7 +160,7 @@ Creator& operator <<( Creator& c, const formatString& fs)
 /// @param[in]  c    The object to change the eparator string in.
 /// @param[in]  sep  The separator string to set.
 /// @return  The same object as passed in \a c.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 Creator& operator <<( Creator& c, char fill_char)
 {
 
@@ -178,7 +178,7 @@ Creator& operator <<( Creator& c, char fill_char)
 /// @param[in]  ev  The objct with the name of the environment variable to
 ///                 store.
 /// @return  The same object as passed in \a c.
-/// @since  x.y.z, 19.10.2017
+/// @since  1.0.0, 19.10.2017
 Creator& operator <<( Creator& c, const env_var& ev)
 {
 
@@ -192,7 +192,7 @@ Creator& operator <<( Creator& c, const env_var& ev)
 /// Called by the operator to actually store the constant text.<br>
 /// Also adds the part to the log file format definition.
 /// @param[in]  const_text  The constant text to store.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 void Creator::addConstantText( const std::string& const_text)
 {
 
@@ -212,7 +212,7 @@ void Creator::addConstantText( const std::string& const_text)
 
 /// Stores a format string that should be used by the next date part.
 /// @param[in]  fmt  The format string to store.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 void Creator::formatString( const std::string& fmt)
 {
 
@@ -226,7 +226,7 @@ void Creator::formatString( const std::string& fmt)
 /// variable.<br>
 /// Also adds the part to the log file format definition.
 /// @param[in]  env_var_name  The name of the environment variable.
-/// @since  x.y.z, 19.10.2017
+/// @since  1.0.0, 19.10.2017
 void Creator::addEnvVar( const std::string& env_var_name)
 {
 
@@ -250,7 +250,7 @@ void Creator::addEnvVar( const std::string& env_var_name)
 /// definition.<br>
 /// And while we're at it, prepare for the next part.
 /// @param[in]  part  The part to add.
-/// @since  x.y.z, 11.10.2017
+/// @since  1.0.0, 11.10.2017
 void Creator::addPart( const Definition::Part& part)
 {
 

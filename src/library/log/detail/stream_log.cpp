@@ -38,7 +38,7 @@ namespace celma { namespace log { namespace detail {
 ///                            message was generated.
 /// @param[in]  line_nbr       The line number from which the log message
 ///                            originated.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 StreamLog::StreamLog( id_t log_ids, const std::string filename,
                       const char* const function_name, int line_nbr) noexcept( false):
    mLogIds( log_ids),
@@ -67,7 +67,7 @@ StreamLog::StreamLog( id_t log_ids, const std::string filename,
 ///                            message was generated.
 /// @param[in]  line_nbr       The line number from which the log message
 ///                            originated.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 StreamLog::StreamLog( const std::string& log_name, const std::string filename,
                       const char* const function_name, int line_nbr) noexcept( false):
    mLogIds( 0),
@@ -85,7 +85,7 @@ StreamLog::StreamLog( const std::string& log_name, const std::string filename,
 
 
 /// Destructor. Finally create the requested log message.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 StreamLog::~StreamLog()
 {
    
@@ -108,7 +108,7 @@ StreamLog::~StreamLog()
 /// The text of the exception is assigned to the internal stringstream in
 /// order to keep the feature that log messages without text are discarded.
 /// @param[in]  eb  The exception to log.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 void StreamLog::storeException( const common::ExceptionBase& eb)
 {
 
@@ -126,7 +126,7 @@ void StreamLog::storeException( const common::ExceptionBase& eb)
 
 /// Returns if a property name is stored in this object.
 /// @return  \c true if a property name is stored.
-/// @since  x.y.z, 12.12.2016
+/// @since  1.0.0, 12.12.2016
 bool StreamLog::hasPropertyName() const
 {
 
@@ -137,7 +137,7 @@ bool StreamLog::hasPropertyName() const
 
 /// Stores a property name.
 /// @param[in]  property_name  The property name to store.
-/// @since  x.y.z, 12.12.2016
+/// @since  1.0.0, 12.12.2016
 void StreamLog::storePropertyName( const std::string& property_name)
 {
 
@@ -150,7 +150,7 @@ void StreamLog::storePropertyName( const std::string& property_name)
 /// Stores the value of a property with the previously given property name.
 /// @param[in]  property_value  The value to store for the property with the
 ///                             previously given name.
-/// @since  x.y.z, 12.12.2016
+/// @since  1.0.0, 12.12.2016
 void StreamLog::storeProperty( const std::string& property_value)
 {
 

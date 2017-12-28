@@ -28,7 +28,7 @@ namespace celma { namespace log { namespace formatting {
 
 /// Use this class to create a log message format definition using stream
 /// syntax.
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 class Definition
 {
 public:
@@ -65,7 +65,7 @@ protected:
    friend class Creator;
 
    /// The data that is stored for each field.
-   /// @since  x.y.z, 07.12.2016
+   /// @since  1.0.0, 07.12.2016
    struct Field
    {
       /// The type of the field.

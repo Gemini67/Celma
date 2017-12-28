@@ -35,7 +35,7 @@ namespace celma { namespace log { namespace files {
 
 /// Constructor. Stores the object to use to create the log file names.
 /// @param[in]  fname_def  Log filename definition.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 PolicyBase::PolicyBase( const filename::Definition& fname_def):
    mFilenameDefinition( fname_def),
    mCurrentLogfileName(),
@@ -48,7 +48,7 @@ PolicyBase::PolicyBase( const filename::Definition& fname_def):
 /// Copy constructor. Only copies the log filename definition, not any
 /// eventually open log file.
 /// @param[in]  other  The other object to copy the data from.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 PolicyBase::PolicyBase( const PolicyBase& other):
    mFilenameDefinition( other.mFilenameDefinition),
    mCurrentLogfileName(),
@@ -63,7 +63,7 @@ PolicyBase::PolicyBase( const PolicyBase& other):
 /// a new file.<br>
 /// All that is done calling the virtual function which must be implemented
 /// by the derived classes, the real policies.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void PolicyBase::open()
 {
 
@@ -92,7 +92,7 @@ void PolicyBase::open()
 ///                       message to write into the file.<br>
 ///                       Provided e.g. for date checks.
 /// @param[in]  msg_text  The formatted text of the log message to write.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void PolicyBase::writeMessage( const detail::LogMsg& msg,
    const std::string& msg_text)
 {
@@ -112,7 +112,7 @@ void PolicyBase::writeMessage( const detail::LogMsg& msg,
 /// file generations, and finally opens a new log file.<br>
 /// This functions is called when either the openCheck() or writeCheck()
 /// function returned \c false.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void PolicyBase::reOpenFile()
 {
 

@@ -26,7 +26,7 @@ namespace celma { namespace log { namespace detail {
 /// Call this function to pass a log message object to the message() method
 /// of the derived class.
 /// @param[in]  msg  The message to handle.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 void ILogDest::handleMessage( const LogMsg& msg)
 {
 
@@ -41,7 +41,7 @@ void ILogDest::handleMessage( const LogMsg& msg)
 /// @param[in]  formatter  Pointer to the new formatter object to use. If a
 ///                        NULL pointer is passed, the previous formatter is
 ///                        replaced by the default stream formatter.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 void ILogDest::setFormatter( IFormatBase*)
 {
 } // ILogDest::setFormatter

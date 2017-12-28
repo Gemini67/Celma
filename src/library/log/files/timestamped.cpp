@@ -34,7 +34,7 @@ namespace celma { namespace log { namespace files {
 /// Constructor. Checks if the given log filename definition contains a date
 /// field.
 /// @param[in]  fname_def  The definition of the log file path and namees.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 Timestamped::Timestamped( const filename::Definition& fname_def):
    PolicyBase( fname_def),
    mTimestampLast( 0)
@@ -51,7 +51,7 @@ Timestamped::Timestamped( const filename::Definition& fname_def):
 /// Copy constructor. Copies only the settings but not any eventually open
 /// log file.
 /// @param[in]  other  The other object to copy the data from.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 Timestamped::Timestamped( const Timestamped& other):
    PolicyBase( other),
    mTimestampLast( 0)
@@ -64,7 +64,7 @@ Timestamped::Timestamped( const Timestamped& other):
 /// Also calculates the maximum timestamp for log messages to be written into
 /// this file.
 /// @return  Always \c true.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 bool Timestamped::openCheck()
 {
 
@@ -100,7 +100,7 @@ bool Timestamped::openCheck()
 
 
 /// Does nothing in this policy.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void Timestamped::rollFiles()
 {
 } // Timestamped::rollFiles
@@ -115,7 +115,7 @@ void Timestamped::rollFiles()
 /// @param[in]  msg_text  Ignored.
 /// @return  \c true if the log message text can be written into the current
 ///          log file.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 bool Timestamped::writeCheck( const detail::LogMsg& msg,
    const std::string&)
 {
@@ -129,7 +129,7 @@ bool Timestamped::writeCheck( const detail::LogMsg& msg,
 /// nothing.
 /// @param[in]  msg       Ignored.
 /// @param[in]  msg_text  
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 void Timestamped::written( const detail::LogMsg&, const std::string&)
 {
 } // Timestamped::written

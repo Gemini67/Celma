@@ -29,39 +29,39 @@ namespace celma { namespace log { namespace files {
 
 /// The most simple case for writing log messages into a file:<br>
 /// Open the file and write. No rolling, no generations, no nothing.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 class Simple: public PolicyBase
 {
 public:
    /// Constructor.
    /// @param[in]  fname_def  The object used to create the file name.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    Simple( const filename::Definition& fname_def);
 
    /// Copy constructor. Copies onle the definition.
    /// @param[in]  fname_def  The object used to create the file name.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    Simple( const Simple& other);
 
    /// Default destructor.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual ~Simple() = default;
 
 private:
    /// Check if the currently opened file is valid for writing into.
    /// @return  Always \c true.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual bool openCheck() override;
 
    /// Does nothing. And should actually never be called anyway.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual void rollFiles() override;
 
    /// Checks if the next message can still be written into the current file.
    /// @param[in]  msg       The message object. Ignored.
    /// @param[in]  msg_text  The formatted text of the log message. Ignored.
    /// @return  Always \c true.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual bool writeCheck( const detail::LogMsg& msg,
       const std::string& msg_text) override;
 
@@ -69,7 +69,7 @@ private:
    /// nothing in this class.
    /// @param[in]  msg       The message object. Ignored.
    /// @param[in]  msg_text  The formatted text of the log message. Ignored.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual void written( const detail::LogMsg& msg,
       const std::string& msg_text) override;
 

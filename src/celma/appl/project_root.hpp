@@ -27,7 +27,7 @@ namespace celma { namespace appl {
 
 
 /// Provides the path of the root directory of a project.
-/// @since  x.y.z, 18.10.2017  (extracted from ProjectPath)
+/// @since  1.0.0, 18.10.2017  (extracted from ProjectPath)
 class ProjectRoot: public common::Singleton< ProjectRoot>
 {
 public:
@@ -52,25 +52,25 @@ public:
    ///                      are used, the corresponding value (name of the
    ///                      environment variable or the program start path,
    ///                      respectively) must be passed here.
-   /// @since  x.y.z, 11.01.2017
+   /// @since  1.0.0, 11.01.2017
    void setProjectRoot( ProjRootSrc srcType,
                         const char* source = nullptr) noexcept( false);
 
    /// Returns the project root dir.
    /// @return  The path set for the project root directory.
-   /// @since  x.y.z, 11.01.2017
+   /// @since  1.0.0, 11.01.2017
    const std::string& path();
 
    /// Returns the type of the source that was used to determine the project
    /// root.
    /// @return  Source type used for setting the project root.
-   /// @since  x.y.z, 11.01.2017
+   /// @since  1.0.0, 11.01.2017
    ProjRootSrc projectRootSrc();
 
    /// Returns if the specified file is beneath the project root.
    /// @param[in]  path_file_name  The absolute path and file name to check.
    /// @return  \c true if the specified file is beneath the project root.
-   /// @since  x.y.z, 11.01.2017
+   /// @since  1.0.0, 11.01.2017
    bool isOnProject( const std::string& path_file_name) noexcept( false);
 
 protected:
@@ -82,7 +82,7 @@ protected:
    /// @param[in]  srcType  .
    /// @param[in]  source   .
    /// @return  .
-   /// @since  x.y.z, 18.10.2017
+   /// @since  1.0.0, 18.10.2017
    ProjectRoot( ProjRootSrc srcType,
                 const char* source = nullptr) noexcept( false);
 

@@ -40,7 +40,7 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( ProjectRoot::ProjRootSrc)
 
 
 /// Test that all error conditions are caught.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_errors)
 {
 
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
 
 /// Test path creation based upon the value of the environment variable $HOME.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_home)
 {
 
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE( test_home)
 
 /// Test path creation based upon the value of the environment variable
 /// $TEST_PROJ_ROOT_DIR which we set beforehand.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_env)
 {
 
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE( test_env)
 
 
 /// Test path creation based upon the current working directory.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_cwd)
 {
 
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE( test_cwd)
 
 
 /// Test path creation based upon the (absolute) program start path.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_prog_path)
 {
 

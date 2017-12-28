@@ -42,12 +42,12 @@ using name_property   = Manipulator< std::string, 1>;
 
 
 /// Test helper class with one manipulator.
-/// @since  x.y.z, 05.10.2017
+/// @since  1.0.0, 05.10.2017
 class Test1
 {
 public:
    /// Constructor.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    Test1():
       mProperty()
    {
@@ -57,7 +57,7 @@ public:
    /// @param[in]  t   The object to assign the value to.
    /// @param[in]  sp  The manipulator with the value.
    /// @return  The object as passed in.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    friend Test1& operator <<( Test1& t, const string_property& sp)
    {
       t.mProperty = sp.value();
@@ -71,12 +71,12 @@ public:
 
 
 /// Test helper class with two manipulators with different types.
-/// @since  x.y.z, 05.10.2017
+/// @since  1.0.0, 05.10.2017
 class Test2
 {
 public:
    /// Constructor.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    Test2():
       mStrProperty(),
       mIntProperty( 0)
@@ -87,7 +87,7 @@ public:
    /// @param[in]  t   The object to assign the value to.
    /// @param[in]  sp  The manipulator with the string value.
    /// @return  The object as passed in.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    friend Test2& operator <<( Test2& t, const string_property& sp)
    {
       t.mStrProperty = sp.value();
@@ -98,7 +98,7 @@ public:
    /// @param[in]  t   The object to assign the value to.
    /// @param[in]  ip  The manipulator with the value.
    /// @return  The object as passed in.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    friend Test2& operator <<( Test2& t, const int_property& ip)
    {
       t.mIntProperty = ip.value();
@@ -114,12 +114,12 @@ public:
 
 
 /// Test helper class with three manipulators, two of which with the same type.
-/// @since  x.y.z, 05.10.2017
+/// @since  1.0.0, 05.10.2017
 class Test3
 {
 public:
    /// Constructor.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    Test3():
       mStrProperty(),
       mIntProperty( 0),
@@ -131,7 +131,7 @@ public:
    /// @param[in]  t   The object to assign the value to.
    /// @param[in]  sp  The manipulator with the string value.
    /// @return  The object as passed in.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    friend Test3& operator <<( Test3& t, const string_property& sp)
    {
       t.mStrProperty = sp.value();
@@ -142,7 +142,7 @@ public:
    /// @param[in]  t   The object to assign the value to.
    /// @param[in]  ip  The manipulator with the value.
    /// @return  The object as passed in.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    friend Test3& operator <<( Test3& t, const int_property& ip)
    {
       t.mIntProperty = ip.value();
@@ -153,7 +153,7 @@ public:
    /// @param[in]  t   The object to assign the value to.
    /// @param[in]  np  The manipulator with the string value.
    /// @return  The object as passed in.
-   /// @since  x.y.z, 05.10.2017
+   /// @since  1.0.0, 05.10.2017
    friend Test3& operator <<( Test3& t, const name_property& np)
    {
       t.mName = np.value();
@@ -175,7 +175,7 @@ public:
 
 
 /// Test a class that uses a single manipulator.
-/// @since  x.y.z, 05.10.2017
+/// @since  1.0.0, 05.10.2017
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE( test_one)
 
 
 /// Test a class that uses two manipulators with different types.
-/// @since  x.y.z, 05.10.2017
+/// @since  1.0.0, 05.10.2017
 BOOST_AUTO_TEST_CASE( test_two)
 {
 
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE( test_two)
 
 
 /// Test a class that uses three manipulators, of which two use the same type.
-/// @since  x.y.z, 05.10.2017
+/// @since  1.0.0, 05.10.2017
 BOOST_AUTO_TEST_CASE( test_three)
 {
 

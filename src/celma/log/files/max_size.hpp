@@ -29,7 +29,7 @@ namespace celma { namespace log { namespace files {
 
 
 /// Log file policy that ensures a maximum log file size.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 class MaxSize: public PolicyBase
 {
 public:
@@ -39,30 +39,30 @@ public:
    /// @param[in]  max_file_size  The maximum size of a log file.
    /// @param[in]  max_gen        Maximum number of log file generations to
    ///                            keep.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    MaxSize( const filename::Definition& fname_def, size_t max_file_size,
       int max_gen) noexcept( false);
 
    /// Copy constructor. Copies only the settings but not any eventually open
    /// log file.
    /// @param[in]  other  The other object to copy the data from.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    MaxSize( const MaxSize& other);
 
    /// Default destructor.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual ~MaxSize() = default;
 
 private:
    /// Checks the currently open file if the file limit is reached.
    /// @return  \c true if the current log file can still be used, \c false if
    ///          the log file(s) should be rolled.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual bool openCheck() override;
 
    /// Called when openCheck() return \c false. Rolls the existing log file
    /// generations.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual void rollFiles();
 
    /// Called to check if the next log message can still be written into the
@@ -73,7 +73,7 @@ private:
    /// @param[in]  msg_text  The formatted text of the log message.
    /// @return  \c true if the log message text can be written into the current
    ///          log file.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual bool writeCheck( const detail::LogMsg& msg,
       const std::string& msg_text) override;
 
@@ -82,7 +82,7 @@ private:
    /// @param[in]  msg       Ignored.
    /// @param[in]  msg_text  The formatted text of the log message that was
    ///                       written into the log file.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual void written( const detail::LogMsg& msg,
       const std::string& msg_text) override;
 

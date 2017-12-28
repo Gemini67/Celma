@@ -32,13 +32,13 @@ namespace celma { namespace common {
 /// @tparam  T    The type of the value to store.
 /// @tparam  TAG  Optional, additional tag value, may be used to disambiguate
 ///               multiple using's for the same type.
-/// @since  x.y.z, 27.09.2017
+/// @since  1.0.0, 27.09.2017
 template< typename T, int TAG = 0> class Manipulator
 {
 public:
    /// Constructor. Stores the given value.
    /// @param[in]  val  The value to store.
-   /// @since  x.y.z, 27.09.2017
+   /// @since  1.0.0, 27.09.2017
    explicit Manipulator( const T& val);
 
    // some defaulted or deleted methods
@@ -49,7 +49,7 @@ public:
 
    /// Returns the stored value.
    /// @return  The value passed to the constructor.
-   /// @since  x.y.z, 27.09.2017
+   /// @since  1.0.0, 27.09.2017
    const T& value() const;
 
 private:

@@ -33,7 +33,7 @@ namespace celma { namespace prog_args {
 ///                           usage.
 /// @param[in]  std_grp_name  The name of the argument group used for standard
 ///                           arguments.
-/// @since  x.y.z, 28.12.2017
+/// @since  1.0.0, 28.12.2017
 /// @since  0.3, 19.06.2016
 inline void addStandardArgument( const std::string& argString,
                                  detail::TypedArgBase* dest,

@@ -37,13 +37,13 @@ using celma::log::filename::Creator;
 
 
 /// Helper class used to check the contents of the created format.
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 class DefinitionAccess: public celma::log::filename::Definition
 {
 public:
    /// Returns the stored size, i.e. number of format entries.
    /// @return  The number of format entries stored.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    size_t size() const
    {
       return mParts.size();
@@ -52,7 +52,7 @@ public:
    /// Returns the type of the field at the given position.
    /// @param[in]  field_idx  The number of the field to return the type of.
    /// @return  The type of the field at the given position.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    PartTypes partType( int part_idx) const
    {
       return mParts[ part_idx].mType;
@@ -62,7 +62,7 @@ public:
    /// @param[in]  field_idx  The number of the field to return the constant
    ///                        value of.
    /// @return  The constant value of the field at the given position.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    const std::string& constant( int field_idx) const
    {
       return mParts[ field_idx].mConstant;
@@ -72,7 +72,7 @@ public:
    /// @param[in]  field_idx  The number of the field to return the fixed width
    ///                        of.
    /// @return  The fixed width of the field at the given position.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    int fixedWidth( int field_idx) const
    {
       return mParts[ field_idx].mFixedWidth;
@@ -84,7 +84,7 @@ public:
    ///                        mode of.
    /// @return  \c true if left alignment should be used for the field at the
    ///          given position.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    char fillChar( int field_idx) const
    {
       return mParts[ field_idx].mFillChar;
@@ -99,7 +99,7 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::log::filename::Definition::PartTypes)
 
 
 /// First simple tests.
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE( test_one)
 
 
 /// Check that multiple constant text parts are concatenated to one element.
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 BOOST_AUTO_TEST_CASE( test_combine)
 {
 
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE( test_combine)
 
 
 /// Test using all path parts possible.
-/// @since  x.y.z, 19.10.2017
+/// @since  1.0.0, 19.10.2017
 BOOST_AUTO_TEST_CASE( test_all_parts)
 {
 
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE( test_all_parts)
 
 
 /// Check that multiple path parts are correctly separated by a slash.
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 BOOST_AUTO_TEST_CASE( test_check_path_sep)
 {
 
@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_CASE( test_check_path_sep)
 
 
 /// Check usage of class ProjectPath.
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 BOOST_AUTO_TEST_CASE( test_project_path)
 {
 

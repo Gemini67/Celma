@@ -35,7 +35,7 @@
 
 
 /// Test some error conditions.
-/// @since  x.y.z, 21.12.2017
+/// @since  1.0.0, 21.12.2017
 BOOST_AUTO_TEST_CASE( test_errors)
 {
 
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
 
 /// Try to create log file handlers with the different log file policies.
-/// @since  x.y.z, 14.12.2017
+/// @since  1.0.0, 14.12.2017
 BOOST_AUTO_TEST_CASE( test_one)
 {
 

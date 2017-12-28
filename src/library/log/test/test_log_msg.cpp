@@ -31,7 +31,7 @@ using celma::log::detail::LogMsg;
 
 
 /// Test the default values set by the LogMsg class.
-/// @since  x.y.z, 04.10.2017
+/// @since  1.0.0, 04.10.2017
 BOOST_AUTO_TEST_CASE( test_defaults)
 {
 
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE( test_defaults)
 
 
 /// Test the values set by the initialisation macro.
-/// @since  x.y.z, 04.10.2017
+/// @since  1.0.0, 04.10.2017
 BOOST_AUTO_TEST_CASE( test_macro)
 {
 
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( test_macro)
 
 
 /// Test the setter methods of the LogMsg class.
-/// @since  x.y.z, 04.10.2017
+/// @since  1.0.0, 04.10.2017
 BOOST_AUTO_TEST_CASE( test_setters)
 {
 

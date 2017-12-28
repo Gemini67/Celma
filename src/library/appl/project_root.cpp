@@ -45,7 +45,7 @@ namespace {
 /// @param[in]  envName  The name of the environment variable to return the
 ///                      value of.
 /// @return  The value of the environment variable.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 inline const char* checkGetEnv( const char* envName) noexcept( false)
 {
 
@@ -73,7 +73,7 @@ inline const char* checkGetEnv( const char* envName) noexcept( false)
 ///                      are used, the corresponding value (name of the
 ///                      environment variable or the program start path,
 ///                      respectively) must be passed here.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 void ProjectRoot::setProjectRoot( ProjRootSrc srcType, const char* source)
 {
 
@@ -125,7 +125,7 @@ void ProjectRoot::setProjectRoot( ProjRootSrc srcType, const char* source)
 /// Returns if the specified file is beneath the project root.
 /// @param[in]  path_file_name  The absolute path and file name to check.
 /// @return  \c true if the specified file is beneath the project root.
-/// @since  x.y.z, 11.01.2017
+/// @since  1.0.0, 11.01.2017
 bool ProjectRoot::isOnProject( const std::string& path_file_name)
 {
 

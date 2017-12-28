@@ -31,7 +31,7 @@ namespace celma { namespace log { namespace detail {
 
 
 /// Class to store all the data of a log message.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 class LogMsg
 {
 public:
@@ -40,103 +40,103 @@ public:
    /// @param[in]  file_name             The name of the source file.
    /// @param[in]  pretty_function_name  The name of the function.
    /// @param[in]  line_nbr              The line number.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    LogMsg( const std::string& file_name, const char* const pretty_function_name,
            int line_nbr);
 
    /// Stores the data of an exception.<br>
    /// Note that also the line number, function name etc. are copied.
    /// @param[in]  eb  The exception to copy the data from.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    void assign( const common::ExceptionBase& eb);
 
    /// Sets the log class.
    /// @param[in]  lc  The log class of this message.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    void setClass( LogClass lc);
 
    /// Sets the log level.
    /// @param[in]  ll  The log level.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    void setLevel( LogLevel ll);
 
    /// Sets the error number, if there is any.
    /// @param[in]  error_nbr  The error number.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    void setErrorNumber( int error_nbr);
 
    /// Sets the log message text.
    /// @param[in]  text  The text to log.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    void setText( const std::string& text);
 
    /// Stores a custom property to be used for this log message.
    /// @param[in]  property_name   The name of the property.
    /// @param[in]  property_value  The value of the property.
-   /// @since  x.y.z, 11.12.2016
+   /// @since  1.0.0, 11.12.2016
    void setCustomProperty( const std::string& property_name,
                            const std::string& property_value);
 
    /// Sets the timestamp for the log message.
    /// @param[in]  ts  The timestamp to store.
-   /// @since  x.y.z, 27.09.2017
+   /// @since  1.0.0, 27.09.2017
    void setTimestamp( time_t ts);
 
    /// Returns the timestamp when the log message was created.
    /// @return  The timestamp for the log message.
-   /// @since  x.y.z, 11.12.2016
+   /// @since  1.0.0, 11.12.2016
    time_t getTimestamp() const;
 
    /// Returns the process id.
    /// @return  The id of the process by which the log message was created.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    pid_t getProcessId() const;
 
    /// Returns the thread id.
    /// @return  The id of the thread by which the log message was created.
-   /// @since  x.y.z, 04.10.2017
+   /// @since  1.0.0, 04.10.2017
    pthread_t getThreadId() const;
 
    /// Returns the source file name.
    /// @return  The name of the source file where the log message was created.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    const std::string& getFileName() const;
 
    /// The name of the function.
    /// @return  The name of the function where the log message was created.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    const std::string& getFunctionName() const;
 
    /// The line number.
    /// @return  Returns the number of the line in the source file where the log
    /// message was created.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    int getLineNbr() const;
 
    /// The log class.
    /// @return  The log class of the message.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    LogClass getClass() const;
 
    /// The log level.
    /// @return  The log level.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    LogLevel getLevel() const;
 
    /// Returns the error number.
    /// @return  The error number set for the log message.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    int getErrorNbr() const;
 
    /// Returns the log message text.
    /// @return  The text of the log message.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.0.0, 19.06.2016
    const std::string& getText() const;
 
    /// Returns the value of a custom property.
    /// @param[in]  property_name  The name of the property to return the value of.
    /// @return  The value of the property, empty string if the property is unknown.
-   /// @since  x.y.z, 12.12.2016
+   /// @since  1.0.0, 12.12.2016
    const std::string getPropertyValue( const std::string& property_name) const;
 
 private:
@@ -273,7 +273,7 @@ inline const std::string
 
 /// Use this macro as parameter for the LogMsg constructor to correctly
 /// initialise a log message object.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 #define LOG_MSG_OBJECT_INIT  __FILE__, \
                              __PRETTY_FUNCTION__, \
                              __LINE__

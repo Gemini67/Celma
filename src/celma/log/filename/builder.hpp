@@ -37,7 +37,7 @@ namespace filename {
 
 /// Formats a log message for output, using the given Definition object to
 /// format the fields.
-/// @since  x.y.z, 16.10.2017
+/// @since  1.0.0, 16.10.2017
 class Builder: private Definition
 {
 public:
@@ -52,13 +52,13 @@ public:
    ///                          depending on the definition of the log filename.
    /// @return  The path and filename of the logfile built according to the
    ///          given definition.
-   /// @since  x.y.z, 22.12.2017
+   /// @since  1.0.0, 22.12.2017
    static std::string filename( const Definition& def, int logfile_nbr = 0,
       time_t timestamp = ::time( nullptr));
 
    /// Constructor.
    /// @param[in]  def  The object with the format definition.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    Builder( const Definition& def);
 
    /// Creates a log file number according to the format definition given in the
@@ -68,7 +68,7 @@ public:
    ///                           be used.
    /// @param[in]   timestamp    The timestamp to use when the log filename
    ///                           definition incluses a date part.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    void filename( std::string& dest, int logfile_nbr, time_t timestamp) const;
 
 private:
@@ -79,7 +79,7 @@ private:
    /// @param[in]   format_str  The default format string, used when no custom
    ///                          format string is available.
    /// @param[in]   timestamp   The timestamp to format.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    void formatDate( std::string& dest, const Part& part_def,
                     const char* format_str, time_t timestamp) const;
 
@@ -89,7 +89,7 @@ private:
    /// @param[in]   part_def     The object with contains the format settings
    ///                           for the logfile number
    /// @param[in]   logfile_nbr  The logfile number to format.
-   /// @since  x.y.z, 16.10.2017
+   /// @since  1.0.0, 16.10.2017
    void formatNumber( std::string& dest, const Part& part_def,
                       int logfile_nbr) const;
 

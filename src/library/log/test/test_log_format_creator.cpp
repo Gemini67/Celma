@@ -30,13 +30,13 @@ using celma::log::formatting::Creator;
 
 
 /// Helper class used to check the contents of the created format.
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 class DefinitionAccess: public celma::log::formatting::Definition
 {
 public:
    /// Returns the stored size, i.e. number of format entries.
    /// @return  The number of format entries stored.
-   /// @since  x.y.z, 07.12.2016
+   /// @since  1.0.0, 07.12.2016
    size_t size() const
    {
       return mFields.size();
@@ -45,7 +45,7 @@ public:
    /// Returns the type of the field at the given position.
    /// @param[in]  field_idx  The number of the field to return the type of.
    /// @return  The type of the field at the given position.
-   /// @since  x.y.z, 07.12.2016
+   /// @since  1.0.0, 07.12.2016
    FieldTypes fieldType( int field_idx) const
    {
       return mFields[ field_idx].mType;
@@ -55,7 +55,7 @@ public:
    /// @param[in]  field_idx  The number of the field to return the constant
    ///                        value of.
    /// @return  The constant value of the field at the given position.
-   /// @since  x.y.z, 07.12.2016
+   /// @since  1.0.0, 07.12.2016
    const std::string& constant( int field_idx) const
    {
       return mFields[ field_idx].mConstant;
@@ -65,7 +65,7 @@ public:
    /// @param[in]  field_idx  The number of the field to return the fixed width
    ///                        of.
    /// @return  The fixed width of the field at the given position.
-   /// @since  x.y.z, 07.12.2016
+   /// @since  1.0.0, 07.12.2016
    int fixedWidth( int field_idx) const
    {
       return mFields[ field_idx].mFixedWidth;
@@ -77,7 +77,7 @@ public:
    ///                        mode of.
    /// @return  \c true if left alignment should be used for the field at the
    ///          given position.
-   /// @since  x.y.z, 07.12.2016
+   /// @since  1.0.0, 07.12.2016
    bool alignLeft( int field_idx) const
    {
       return mFields[ field_idx].mAlignLeft;
@@ -91,7 +91,7 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::log::formatting::Definition::FieldTypes)
 
 
 /// First simple tests.
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE( test_one)
 
 
 /// Test with more fields.
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 BOOST_AUTO_TEST_CASE( test_two)
 {
 
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE( test_two)
 
 
 /// Test with 3 columns.
-/// @since  x.y.z, 07.12.2016
+/// @since  1.0.0, 07.12.2016
 BOOST_AUTO_TEST_CASE( test_three)
 {
 
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE( test_three)
 
 
 /// Test all format entries.
-/// @since  x.y.z, 20.09.2017
+/// @since  1.0.0, 20.09.2017
 BOOST_AUTO_TEST_CASE( test_all_fields)
 {
 
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE( test_custom_property)
 
 
 /// Test date, time and timestamp format string handling.
-/// @since  x.y.z, 26.09.2017
+/// @since  1.0.0, 26.09.2017
 BOOST_AUTO_TEST_CASE( test_format_string)
 {
 
@@ -383,7 +383,7 @@ BOOST_AUTO_TEST_CASE( test_format_string)
 
 
 /// Test that changing the separator works correctly.
-/// @since  x.y.z, 02.10.2017
+/// @since  1.0.0, 02.10.2017
 BOOST_AUTO_TEST_CASE( test_change_sep)
 {
 

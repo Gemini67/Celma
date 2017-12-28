@@ -26,7 +26,7 @@ namespace celma { namespace log { namespace detail {
 /// Actually there are specific interfaces for each output destination type.
 /// Because the output destination type is not known yet, this class contains
 /// no methods at all.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.0.0, 19.06.2016
 class IFormatBase
 {
 public:

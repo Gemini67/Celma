@@ -38,7 +38,7 @@ namespace celma { namespace log { namespace files {
 /// The formatting for the log messages is defined through classes that
 /// implement the IFormatBase interfac.<br>
 /// This class finally brings all this together.
-/// @since  x.y.z, 13.12.2017
+/// @since  1.0.0, 13.12.2017
 template< typename P> class Handler: public detail::ILogDest
 {
 public:
@@ -47,7 +47,7 @@ public:
    /// @param[in]  file_policy  Pointer to the policy for handling the log
    ///                          file(s). This class takes ownership of the
    ///                          object.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    Handler( P* file_policy);
 
    Handler( const Handler&) = delete;
@@ -60,14 +60,14 @@ public:
    /// @param[in]  formatter  Pointer to the new formatter object to use. If a
    ///                        NULL pointer is passed, the previous formatter is
    ///                        replaced by the default stream formatter.
-   /// @since  x.y.z, 14.12.2017
+   /// @since  1.0.0, 14.12.2017
    virtual void setFormatter( detail::IFormatBase* formatter = nullptr) override;
 
 private:
    /// Implementation of the ILogDest interface: Formats the given log message
    /// and writes the log message text into the log file.
    /// @param[in]  msg  The object with the data of the log message to write.
-   /// @since  x.y.z, 13.12.2017
+   /// @since  1.0.0, 13.12.2017
    virtual void message( const detail::LogMsg& msg) override;
 
    /// The policy object to handle the log file(s).
