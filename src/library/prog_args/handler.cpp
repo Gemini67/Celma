@@ -26,11 +26,13 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/clear_container.hpp"
 #include "celma/common/reset_at_exit.hpp"
 #include "celma/common/scoped_value.hpp"
 #include "celma/common/tokenizer.hpp"
+#include "celma/prog_args/destination.hpp"
+#include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
 
@@ -51,6 +53,8 @@ using std::underflow_error;
 
 // module definitions
 const detail::ArgumentKey  Handler::mPosKey( "-");
+
+#define VAR_NAME( n)  n, #n
 
 
 
@@ -88,8 +92,11 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mErrorOutput( error_os),
    mReadProgramArguments( (flag_set & hfReadProgArg) != 0),
    mVerbose( (flag_set & hfVerboseArgs) != 0),
-   mPrintHidden( (flag_set & hfUsageHidden) != 0),
    mUsageContinues( (flag_set & hfUsageCont) != 0),
+   mpUsageParams( new detail::UsageParams()),
+   mArguments(),
+   mSubGroupArgs(),
+   mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
    mpExclamationMarkHdlr(),
@@ -109,12 +116,97 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
       args = "help";
 
    if (!args.empty())
-      addArgument( args, detail::ArgHandlerCallable( std::bind( &Handler::usage, this, txt1, txt2)),
-                   "Handler::usage",
+      addArgument( args,
+                   new detail::TypedArgCallable(
+                      detail::ArgHandlerCallable(
+                         std::bind( &Handler::usage, this, txt1, txt2)),
+                         "Handler::usage"),
                    "Prints the program usage");
 
+   if (flag_set & hfUsageHidden)
+      mpUsageParams->setPrintHidden();
+
    if (flag_set & hfArgHidden)
-      addArgumentPrintHidden( "print-hidden");
+      mpUsageParams->addArgumentPrintHidden( *this, "print-hidden");
+
+   if (flag_set & hfUsageShort)
+      mpUsageParams->addArgumentUsageShort( *this, "help-short");
+
+   if (flag_set & hfUsageLong)
+      mpUsageParams->addArgumentUsageLong( *this, "help-long");
+
+   if (flag_set & hfListArgVar)
+      addArgumentListArgVars( "list-arg-vars");
+
+   if (flag_set & hfListArgGroups)
+      addArgumentListArgGroups( "list-arg-groups");
+
+   if (flag_set & hfEndValues)
+      addArgumentEndValues( "endvalues");
+
+} // Handler::Handler
+
+
+
+/// Constructor to be used by a sub-group. Copies some settings from the main
+/// argument handler object.<br>
+/// It is possible to create a sub-group argument handler using one of the
+/// other constructors, but then the settings are of course not copied.<br>
+/// The following flags are ignored, the settings are taken from the main
+/// argument handler:<br>
+/// #hfReadProgArg, #hfVerboseArgs, #hfUsageHidden, #hfUsageShort,
+/// #hfUsageLong and #hfUsageCont.
+/// @param[in]  main_ah   The main argument handler to copy the settings
+///                       from.
+/// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
+///                       of possible values.
+/// @param[in]  txt1      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @param[in]  txt2      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @since  1.1.0, 04.12.2017
+Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
+                  IUsageText* txt2):
+   mOutput( main_ah.mOutput),
+   mErrorOutput( main_ah.mErrorOutput),
+   mReadProgramArguments( false),
+   mVerbose( main_ah.mVerbose),
+   mUsageContinues( main_ah.mUsageContinues),
+   mpUsageParams( main_ah.mpUsageParams),
+   mArguments(),
+   mSubGroupArgs(),
+   mDescription( mpUsageParams),
+   mpOpeningBracketHdlr(),
+   mpClosingBracketHdlr(),
+   mpExclamationMarkHdlr(),
+   mConstraints(),
+   mGlobalConstraints(),
+   mUsedByGroup( (flag_set & hfInGroup) != 0)
+{
+
+   string  args;
+
+
+   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
+      args = "h,help";
+   else if (flag_set & hfHelpShort)
+      args = "h";
+   else if (flag_set & hfHelpLong)
+      args = "help";
+
+   if (!args.empty())
+      addArgument( args,
+                   new detail::TypedArgCallable(
+                      detail::ArgHandlerCallable(
+                         std::bind( &Handler::usage, this, txt1, txt2)),
+                         "Handler::usage"),
+                   "Prints the program usage");
+
+   if (flag_set & hfUsageShort)
+      mpUsageParams->addArgumentUsageShort( *this, "help-short");
+
+   if (flag_set & hfUsageLong)
+      mpUsageParams->addArgumentUsageLong( *this, "help-long");
 
    if (flag_set & hfListArgVar)
       addArgumentListArgVars( "list-arg-vars");
@@ -137,6 +229,40 @@ Handler::~Handler()
    common::Vector::clear( mGlobalConstraints);
 
 } // Handler::~Handler
+
+
+
+/// Adds a sub-group.<br>
+/// Note: Theoretically we could pass the object by reference, but then the
+/// compiler cannot distinguish anymore between this function and the variant
+/// to add an argument resulting in a function call.
+/// @param[in]  arg_spec  The arguments on the command line to enter/start
+///                       the sub-group.
+/// @param[in]  subGroup  The object to handle the sub-group arguments.
+/// @param[in]  desc      The description of this sub-group argument.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  0.2, 10.04.2016
+detail::TypedArgBase*
+   Handler::addArgument( const string& arg_spec, Handler* subGroup,
+                         const string& desc)
+{
+
+   if (subGroup == nullptr)
+      throw runtime_error( "Sub-group object pointer is NULL");
+
+   subGroup->setIsSubGroupHandler();
+
+   const detail::ArgumentKey  key( arg_spec);
+   auto  arg_hdl = new detail::TypedArgSubGroup( key, subGroup);
+
+   arg_hdl->setKey( key);
+
+   mSubGroupArgs.addArgument( arg_hdl, key);
+   mDescription.addArgument( desc, arg_hdl);
+
+   return arg_hdl;
+} // Handler::addArgument
 
 
 
@@ -170,21 +296,27 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
                        "Handler::usage",
                        desc);
 */
-   return addArgument( arg_spec,
-                       detail::ArgHandlerCallable(
-                          std::bind( &Handler::usage, this, txt1, txt2)
-                       ),
-                       "Handler::usage",
-                       desc);
 
+   return addArgument( arg_spec,
+                       new detail::TypedArgCallable(
+                          detail::ArgHandlerCallable(
+                             std::bind( &Handler::usage, this, txt1, txt2)),
+                          "Handler::usage"),
+                       desc);
 } // Handler::addHelpArgument
 
 
 
 /// Adds an argument that takes the path/filename of an argument file as
-/// parameter.
-/// @param[in]  arg_spec  The arguments on the command line for specifying the
-///                       file with the arguments.
+/// parameter.<br>
+/// When the flag #hfReadProgArg is passed to the constructor, the program
+/// arguments file with the predefined name is always read if it exists.<br>
+/// With the method it is possible to specify an argument with which the
+/// (path and) name of the arguments file can be specified. Only if this
+/// given argument is then used on the command line, the argument file is
+/// read.
+/// @param[in]  arg_spec  The arguments on the command line for specifying
+///                       the file with the arguments.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
 /// @since  0.2, 10.04.2016
@@ -195,34 +327,78 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
                                     "file with the program arguments to read.");
    const detail::ArgumentKey  key( arg_spec);
 
-   auto  arg_hdl = new detail::TypedArgCallableValue( key,
-                                                      std::bind( &Handler::readArgumentFile,
-                                                                 this, std::placeholders::_1, true),
-                                                                 "Handler::readArgumentFile");
+   auto  arg_hdl = new detail::TypedArgCallableValue(
+                      std::bind( &Handler::readArgumentFile,
+                                 this, std::placeholders::_1, true),
+                      "Handler::readArgumentFile");
 
+
+   arg_hdl->setKey( key);
 
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentFile
 
 
 
-/// Adds an argument that activates printing of hidden arguments in the usage.
+/// Adds an argument that activates printing of hidden arguments in the
+/// usage.<br>
+/// Same as setting the flag #hfArgHidden, but allows to specify the
+/// argument and its description.
 /// @param[in]  arg_spec  The argument(s) on the command line for activating
 ///                       printing the hidden arguments.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
+/// @since  1.1.0, 06.12.2017  (adapted to using usage parameters object)
 /// @since  0.2, 10.04.2016
-detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
+detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec,
+   const char* desc)
 {
 
-   static const string        desc( "Also print hidden arguments in the usage.");
-   const detail::ArgumentKey  key( arg_spec);
-
-   auto  arg_hdl = new detail::TypedArg< bool>( key, DEST_VAR( mPrintHidden));
-
-
-   return internAddArgument( arg_hdl, key, desc);
+   return mpUsageParams->addArgumentPrintHidden( *this, arg_spec, desc);
 } // Handler::addArgumentPrintHidden
+
+
+
+/// Adds an argument that activates printing of usage with arguments with
+/// short argument key only.
+/// @param[in]  arg_spec  The argument(s) on the command line for activating
+///                       printing the usage with short arguments only.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  1.1.0, 25.09.2017
+detail::TypedArgBase*
+   Handler::addArgumentUsageShort( const std::string& arg_spec,
+      const char* desc)
+{
+
+   return mpUsageParams->addArgumentUsageShort( *this, arg_spec, desc);
+} // Handler::addArgumentUsageShort
+
+
+
+/// Adds an argument that activates printing of usage with arguments with
+/// long argument key only.
+/// @param[in]  arg_spec  The argument(s) on the command line for activating
+///                       printing the usage with long arguments only.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  1.1.0, 25.09.2017
+detail::TypedArgBase*
+   Handler::addArgumentUsageLong( const std::string& arg_spec,
+      const char* desc)
+{
+
+   return mpUsageParams->addArgumentUsageLong( *this, arg_spec, desc);
+} // Handler::addArgumentUsageLong
 
 
 
@@ -239,15 +415,17 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 {
 
    static const string  desc( "Prints the list of arguments and their destination "
-                             "variables.");
+                              "variables.");
    const detail::ArgumentKey  key( arg_spec);
 
-   auto  arg_hdl = new detail::TypedArgCallable( key,
-                                                 DEST_MEMBER_METHOD( Handler,
-                                                                     listArgVars));
+   auto  arg_hdl = new detail::TypedArgCallable(
+      detail::ArgHandlerCallable(
+         std::bind( &Handler::listArgVars, this)), "Handler::listArgVars");
 
 
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
+
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentListArgVars
 
@@ -268,16 +446,17 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
 
    if (!mUsedByGroup)
       throw invalid_argument( "Standard argument 'list argument groups' can"
-                              " only be set when argument groups are used!"); 
+                              " only be set when argument groups are used!");
 
    const detail::ArgumentKey  key( arg_spec);
 
-   auto  arg_hdl = new detail::TypedArgCallable( key,
-                                                 DEST_MEMBER_METHOD( Handler,
-                                                                     listArgGroups));
+   auto  arg_hdl = new detail::TypedArgCallable(
+      detail::ArgHandlerCallable(
+         std::bind( &Handler::listArgGroups, this)), desc);
 
-
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
+
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentListArgGroups
 
@@ -297,11 +476,14 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 
    const detail::ArgumentKey  key( arg_spec);
    detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallable( key, DEST_METHOD( Handler, endValueList,
-                                      *this));
+      = new detail::TypedArgCallable(
+         detail::ArgHandlerCallable(
+            std::bind( &Handler::endValueList, this)), desc);
 
 
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
+
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentEndValues
 
@@ -657,7 +839,7 @@ Handler::ArgResult
             handleIdentifiedArg( hdl, mPosKey, ai.argsAsString());
             return ArgResult::last;
          } // end if
-         
+
          handleIdentifiedArg( hdl, mPosKey, ai->mValue);
          return ArgResult::consumed;
       } // end if
@@ -709,24 +891,6 @@ void Handler::checkMissingMandatoryCardinality() const
    mSubGroupArgs.checkMandatoryCardinality();
 
 } // Handler::checkMissingMandatoryCardinality
-
-
-
-/// Checks and sets the maximum argument length, needed to format the usage.
-/// @param[in,out]  maxArgLen  Maximum argument length as needed so far, may
-///                            be increased if this class contains longer
-///                            arguments.
-/// @since  0.2, 10.04.2016
-void Handler::checkMaxArgLen( size_t& maxArgLen) const
-{
-
-   size_t  myArgLength = 0;
-
-
-   myArgLength = std::max( myArgLength, mDescription.maxArgLen());
-   maxArgLen   = std::max( myArgLength, maxArgLen);
-
-} // Handler::checkMaxArgLen
 
 
 
@@ -806,7 +970,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       if (line.empty() || (line[ 0] == '#'))
          continue;   // while
 
-      common::ArgString2Array  as2a( line, nullptr);
+      appl::ArgString2Array  as2a( line, nullptr);
       detail::ArgListParser    alp( as2a.mArgc, as2a.mpArgv);
 
       iterateArguments( alp);
@@ -922,14 +1086,8 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
 
-   size_t  stdArgLength = 0;
-
-   mDescription.setMinArgLen( stdArgLength);
-
-   mOutput << "Usage:" << endl;
-
-   mDescription.setPrintHidden( mPrintHidden);
-   mOutput << mDescription << endl;
+   mOutput << "Usage:" << endl
+           << mDescription << endl;
 
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::afterArgs))
       mOutput << txt1 << endl << endl;
@@ -958,7 +1116,7 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
 {
 
    mArguments.addArgument( ah_obj, key);
-   mDescription.addArgument( key, desc, ah_obj);
+   mDescription.addArgument( desc, ah_obj);
 
    if (mUsedByGroup)
       Groups::instance().crossCheckArguments( this);

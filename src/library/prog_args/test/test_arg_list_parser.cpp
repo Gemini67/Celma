@@ -35,10 +35,10 @@
 #include <boost/test/unit_test.hpp>
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::detail::ArgListElement;
 using celma::prog_args::detail::ArgListParser;
 

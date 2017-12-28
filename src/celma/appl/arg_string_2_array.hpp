@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of class celma::common::ArgString2Array.
+/// See documentation of class celma::appl::ArgString2Array.
 
 
 #ifndef CELMA_COMMON_ARG_STRING_2_ARRAY_HPP
@@ -22,7 +22,7 @@
 #include <string>
 
 
-namespace celma { namespace common {
+namespace celma { namespace appl {
 
 
 /// Helper class to convert an argument string (e.g. '-n PROC1 -v -d /tmp') into
@@ -72,12 +72,12 @@ private:
 }; // ArgString2Array
 
 
-} // namespace common
+} // namespace appl
 } // namespace celma
 
 
 #endif   // CELMA_COMMON_ARG_STRING_2_ARRAY_HPP
 
 
-// =========================  END OF arg_string_2_array.hpp  =========================
+// ======================  END OF arg_string_2_array.hpp  ======================
 

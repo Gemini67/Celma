@@ -41,23 +41,18 @@ using std::string;
 
 
 /// Constructor.
-/// @param[in]  key       The complete argument specification with short and/
-///                       or long argument.
 /// @param[in]  vname     The name of the destination variable to store the
 ///                       value in.
 /// @param[in]  vm        The value mode to set for this argument.
 /// @param[in]  printDef  Specifies if the default value of the destination
 ///                       variable should be printed in the usage or not.
-/// @since  0.2, 10.04.2016
-TypedArgBase::TypedArgBase( const ArgumentKey& key, const string& vname,
-                            ValueMode vm, bool printDef):
-   mKey( key),
+/// @since  0.16.0, 09.11.2017
+TypedArgBase::TypedArgBase( const std::string& vname, ValueMode vm,
+                            bool printDef):
+   mKey( "-"),
    mVarName( vname),
    mValueMode( vm),
-   mIsMandatory( false),
-   mTakeMultipleValues( false),
    mPrintDefault( printDef),
-   mIsHidden( false),
    mChecks(),
    mFormats(),
    mpCardinality( new CardinalityMax( 1)),
@@ -77,6 +72,19 @@ TypedArgBase::~TypedArgBase()
    common::Vector::clear( mConstraints);
 
 } // TypedArgBase::~TypedArgBase
+
+
+
+/// Set the argument key and destination variable name.
+/// @param[in]  key  The complete argument specification with short and/or
+///                  long argument.
+/// @since  0.16.0, 09.11.2017
+void TypedArgBase::setKey( const ArgumentKey& key)
+{
+
+   mKey = key;
+
+} // TypedArgBase::setKey
 
 
 
@@ -266,6 +274,21 @@ void TypedArgBase::checkCardinality()
       mpCardinality->check();
 
 } // TypedArgBase::checkCardinality
+
+
+
+/// Allows to change the "original value check" mode. This is only applicable
+/// to typed arg value objects.
+/// @param[in]  yesNo  Set to \c false for turning the value check off.
+/// @return  Pointer to this object.
+/// @since  1.1.0, 16.11.2017
+TypedArgBase* TypedArgBase::checkOriginalValue( bool yesNo)
+{
+
+   throw std::invalid_argument( "may not change 'check original value' "
+      "mode on variable '" + mVarName + "'");
+
+} // TypedArgBase::checkOriginalValue
 
 
 

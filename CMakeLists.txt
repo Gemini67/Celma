@@ -11,9 +11,9 @@ cmake_minimum_required( VERSION 2.8 )
 
 project( Celma )
 
-set( MAJORVERSION    0 )
-set( MINORVERSION    0 )
-set( RELEASE_VERSION 16 )
+set( MAJORVERSION    1 )
+set( MINORVERSION    1 )
+set( RELEASE_VERSION 0 )
 set( PATCHLEVEL      0 )
 
 enable_testing()

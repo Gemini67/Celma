@@ -75,6 +75,7 @@ Groups::SharedArgHndl Groups::getArgHandler( const string& grpName,
                                                   mHandlerFlags | this_handler_flags,
                                                   txt1, txt2);
 
+   new_handler->setUsageParams( mpUsageParams);
    mArgGroups.push_back( Storage( grpName, new_handler));
 
    // pass the argument 'list argument groups' only to the first Handler object
@@ -128,6 +129,7 @@ Groups::SharedArgHndl Groups::getArgValueHandler( const string& grpName,
                                                        mHandlerFlags | this_handler_flags,
                                                        txt1, txt2);
 
+   new_handler->setUsageParams( mpUsageParams);
    mArgGroups.push_back( Storage( grpName, new_handler));
 
    // pass the argument 'list argument groups' only to the first Handler object
@@ -267,14 +269,6 @@ bool Groups::argumentExists( const string& argString) const
 void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 {
 
-   size_t  maxArgLen = 0;
-
-
-   for (auto const& stored_group : mArgGroups)
-   {
-      stored_group.mpArgHandler->checkMaxArgLen( maxArgLen);
-   } // end for
-
    if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
 
@@ -282,7 +276,6 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 
    for (auto & stored_group : mArgGroups)
    {
-      stored_group.mpArgHandler->mDescription.setMinArgLen( maxArgLen);
       stored_group.mpArgHandler->mDescription.setLineLength( mUsageLineLength);
       stored_group.mpArgHandler->mDescription.setCaption( "Mandatory:",
                                                             "Optional:");
@@ -377,7 +370,8 @@ Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
    mHandlerFlags( (flag_set & Groups2HandlerFlags) | Handler::hfInGroup),
    mArgGroups(),
    mEvaluating( false),
-   mUsageLineLength( detail::ArgumentDesc::DefaultLineLength)
+   mUsageLineLength( detail::ArgumentDesc::DefaultLineLength),
+   mpUsageParams( new detail::UsageParams())
 {
 } // Groups::Groups
 

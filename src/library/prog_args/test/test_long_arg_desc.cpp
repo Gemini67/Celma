@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -21,7 +21,7 @@
 
 
 // project include
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
 
 
@@ -33,7 +33,7 @@ using namespace celma;
 int main( int argc, char* argv[])
 {
 
-   common::ArgString2Array  as2a( "-h", nullptr);
+   appl::ArgString2Array  as2a( "-h", nullptr);
 
 
    if (argc != 2)
@@ -110,5 +110,5 @@ int main( int argc, char* argv[])
 
 
 
-// =========================  END OF test_long_arg_desc.cpp  =========================
+// ======================  END OF test_long_arg_desc.cpp  ======================
 

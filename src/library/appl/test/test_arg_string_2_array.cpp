@@ -11,11 +11,8 @@
 --*/
 
 
-// OS/C library includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test header file include
+#include "celma/appl/arg_string_2_array.hpp"
 
 
 // Boost includes
@@ -24,12 +21,7 @@
 #include <utility>
 
 
-// project includes
-#include "celma/common/arg_string_2_array.hpp"
-
-
-using namespace std;
-using namespace celma;
+using celma::appl::ArgString2Array;
 
 
 /// Test argument strings without an argument.
@@ -38,21 +30,21 @@ BOOST_AUTO_TEST_CASE( no_arguments)
 {
 
    {
-      common::ArgString2Array  as2a( "", nullptr);
+      ArgString2Array  as2a( "", nullptr);
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 1);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
       BOOST_REQUIRE( as2a.mpArgv[ 1] == nullptr);
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "", "my_own_program_name");
+      ArgString2Array  as2a( "", "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 1);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
       BOOST_REQUIRE( as2a.mpArgv[ 1] == nullptr);
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name");
+      ArgString2Array  as2a( "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 1);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
       BOOST_REQUIRE( as2a.mpArgv[ 1] == nullptr);
@@ -68,7 +60,7 @@ BOOST_AUTO_TEST_CASE( single_argument)
 {
 
    {
-      common::ArgString2Array  as2a( "-v", nullptr);
+      ArgString2Array  as2a( "-v", nullptr);
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
@@ -76,7 +68,7 @@ BOOST_AUTO_TEST_CASE( single_argument)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v", "my_own_program_name");
+      ArgString2Array  as2a( "-v", "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
@@ -84,7 +76,7 @@ BOOST_AUTO_TEST_CASE( single_argument)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v");
+      ArgString2Array  as2a( "my_own_program_name -v");
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
@@ -101,7 +93,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
 {
 
    {
-      common::ArgString2Array  as2a( "-v 'my multi-word value'", nullptr);
+      ArgString2Array  as2a( "-v 'my multi-word value'", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -111,7 +103,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v 'my multi-word value'", "my_own_program_name");
+      ArgString2Array  as2a( "-v 'my multi-word value'", "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -121,7 +113,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value'");
+      ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value'");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -131,7 +123,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v \"my multi-word value\"", nullptr);
+      ArgString2Array  as2a( "-v \"my multi-word value\"", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -141,7 +133,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v \"my multi-word value\"", "my_own_program_name");
+      ArgString2Array  as2a( "-v \"my multi-word value\"", "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -151,7 +143,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\"");
+      ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\"");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -161,7 +153,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "--value='my multi-word value'", nullptr);
+      ArgString2Array  as2a( "--value='my multi-word value'", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -170,7 +162,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "--value='my multi-word value'", "my_own_program_name");
+      ArgString2Array  as2a( "--value='my multi-word value'", "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -179,7 +171,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name --value='my multi-word value'");
+      ArgString2Array  as2a( "my_own_program_name --value='my multi-word value'");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -188,7 +180,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "--value==\"it's my party\"", nullptr);
+      ArgString2Array  as2a( "--value==\"it's my party\"", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -197,7 +189,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "--value==\"it's my party\"", "my_own_program_name");
+      ArgString2Array  as2a( "--value==\"it's my party\"", "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -206,7 +198,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name --value==\"it's my party\"");
+      ArgString2Array  as2a( "my_own_program_name --value==\"it's my party\"");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -215,7 +207,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name --value==\"it's my 'official' party\"");
+      ArgString2Array  as2a( "my_own_program_name --value==\"it's my 'official' party\"");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -224,7 +216,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name --value=='it is my \"official\" party'");
+      ArgString2Array  as2a( "my_own_program_name --value=='it is my \"official\" party'");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -233,7 +225,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name --value=='it\\'s my \"official\" party'");
+      ArgString2Array  as2a( "my_own_program_name --value=='it\\'s my \"official\" party'");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -260,7 +252,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
       //   - source code:      it\\\\\\'s
       //   - string:           it\\\'s
       //   - parsed argument:  it\'s
-      common::ArgString2Array  as2a( "my_own_program_name --value==\"'it\\\\\\'s my \\\"official\\\" party'\"");
+      ArgString2Array  as2a( "my_own_program_name --value==\"'it\\\\\\'s my \\\"official\\\" party'\"");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -278,7 +270,7 @@ BOOST_AUTO_TEST_CASE( mixed_quotes)
 {
 
    {
-      common::ArgString2Array  as2a( "-v \"my child's pet\"", nullptr);
+      ArgString2Array  as2a( "-v \"my child's pet\"", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -288,7 +280,7 @@ BOOST_AUTO_TEST_CASE( mixed_quotes)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v \"my child's pet\"", "my_own_program_name");
+      ArgString2Array  as2a( "-v \"my child's pet\"", "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -298,7 +290,7 @@ BOOST_AUTO_TEST_CASE( mixed_quotes)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v \"my child's pet\"");
+      ArgString2Array  as2a( "my_own_program_name -v \"my child's pet\"");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -308,7 +300,7 @@ BOOST_AUTO_TEST_CASE( mixed_quotes)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v 'my \"best\" idea'", nullptr);
+      ArgString2Array  as2a( "-v 'my \"best\" idea'", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -318,7 +310,7 @@ BOOST_AUTO_TEST_CASE( mixed_quotes)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v 'my \"best\" idea'", "my_own_program_name");
+      ArgString2Array  as2a( "-v 'my \"best\" idea'", "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -328,7 +320,7 @@ BOOST_AUTO_TEST_CASE( mixed_quotes)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v 'my \"best\" idea'");
+      ArgString2Array  as2a( "my_own_program_name -v 'my \"best\" idea'");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -347,7 +339,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
 {
 
    {
-      common::ArgString2Array  as2a( "-v 'my multi-word value' -w 'two words'", nullptr);
+      ArgString2Array  as2a( "-v 'my multi-word value' -w 'two words'", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -359,7 +351,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v 'my multi-word value' -w 'two words'",
+      ArgString2Array  as2a( "-v 'my multi-word value' -w 'two words'",
                                      "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
@@ -372,7 +364,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value' "
+      ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value' "
                                      "-w 'two words'");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
@@ -385,7 +377,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v 'my multi-word value' -w \"two words\"", nullptr);
+      ArgString2Array  as2a( "-v 'my multi-word value' -w \"two words\"", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -397,7 +389,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v 'my multi-word value' -w \"two words\"",
+      ArgString2Array  as2a( "-v 'my multi-word value' -w \"two words\"",
                                      "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
@@ -410,7 +402,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value' "
+      ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value' "
                                      "-w \"two words\"");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
@@ -423,7 +415,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v \"my multi-word value\" -w 'two words'", nullptr);
+      ArgString2Array  as2a( "-v \"my multi-word value\" -w 'two words'", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -435,7 +427,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v \"my multi-word value\" -w 'two words'",
+      ArgString2Array  as2a( "-v \"my multi-word value\" -w 'two words'",
                                      "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
@@ -448,7 +440,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\" "
+      ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\" "
                                      "-w 'two words'");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
@@ -461,7 +453,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v \"my multi-word value\" -w \"two words\"", nullptr);
+      ArgString2Array  as2a( "-v \"my multi-word value\" -w \"two words\"", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
@@ -473,7 +465,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v \"my multi-word value\" -w \"two words\"",
+      ArgString2Array  as2a( "-v \"my multi-word value\" -w \"two words\"",
                                      "my_own_program_name");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
@@ -486,7 +478,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\" "
+      ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\" "
                                      "-w \"two words\"");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
@@ -508,7 +500,7 @@ BOOST_AUTO_TEST_CASE( one_free)
 {
 
    {
-      common::ArgString2Array  as2a( "my_name", nullptr);
+      ArgString2Array  as2a( "my_name", nullptr);
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "my_name");
@@ -516,7 +508,7 @@ BOOST_AUTO_TEST_CASE( one_free)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_name", "my_own_program_name");
+      ArgString2Array  as2a( "my_name", "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "my_name");
@@ -524,7 +516,7 @@ BOOST_AUTO_TEST_CASE( one_free)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name my_name");
+      ArgString2Array  as2a( "my_own_program_name my_name");
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "my_name");
@@ -541,7 +533,7 @@ BOOST_AUTO_TEST_CASE( multiple_arguments)
 {
 
    {
-      common::ArgString2Array  as2a( "-v -d /tmp --name=proc1 --limit 17 -- -s -5", nullptr);
+      ArgString2Array  as2a( "-v -d /tmp --name=proc1 --limit 17 -- -s -5", nullptr);
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 10);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
@@ -557,7 +549,7 @@ BOOST_AUTO_TEST_CASE( multiple_arguments)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "-v -d /tmp --name=proc1 --limit 17 -- -s -5",
+      ArgString2Array  as2a( "-v -d /tmp --name=proc1 --limit 17 -- -s -5",
                                      "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 10);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -574,7 +566,7 @@ BOOST_AUTO_TEST_CASE( multiple_arguments)
    } // end scope
 
    {
-      common::ArgString2Array  as2a( "my_own_program_name -v -d /tmp --name=proc1 "
+      ArgString2Array  as2a( "my_own_program_name -v -d /tmp --name=proc1 "
                                      "--limit 17 -- -s -5");
       BOOST_REQUIRE_EQUAL( as2a.mArgc, 10);
       BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
@@ -594,5 +586,5 @@ BOOST_AUTO_TEST_CASE( multiple_arguments)
 
 
 
-// =========================  END OF test_arg_string_2_array.cpp  =========================
+// ===================  END OF test_arg_string_2_array.cpp  ===================
 

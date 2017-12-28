@@ -23,6 +23,7 @@ celma_add_celma_boost_testprogram( test_argh_longarg_abbr )
 celma_add_celma_boost_testprogram( test_argh_output_streams)
 celma_add_celma_boost_testprogram( test_argh_range )
 celma_add_celma_boost_testprogram( test_argh_separate_values )
+celma_add_celma_boost_testprogram( test_argh_value_arg )
 celma_add_celma_boost_testprogram( test_arg_list_parser )
 celma_add_celma_boost_testprogram( test_argument_groups )
 celma_add_celma_boost_testprogram( test_argument_key )
@@ -85,9 +86,9 @@ set( test_arg_groups_usage_result
      "\n"
      "Standard Arguments:\n"
      "Optional:\n"
-     "   -h,--help         Prints the program usage\n"
-     "   --version         prints version information\n"
-     "   --modlist         prints module list\n"
+     "   -h,--help   Prints the program usage\n"
+     "   --version   prints version information\n"
+     "   --modlist   prints module list\n"
      "\n"
      "\n$"
 )
@@ -165,9 +166,9 @@ set( test_groups_sub_groups_usage_main_result
    "\n"
    "Standard Arguments:\n"
    "Optional:\n"
-   "   -h,--help         Prints the program usage\n"
-   "   --version         prints version information\n"
-   "   --modlist         prints module list\n"
+   "   -h,--help   Prints the program usage\n"
+   "   --version   prints version information\n"
+   "   --modlist   prints module list\n"
    "\n"
    "\n$"
 )
@@ -337,17 +338,17 @@ celma_add_test_output_check( test_long_arg_desc_long_name_4  test_long_arg_desc_
 set( test_argh_hidden_output_result
    "^Usage:\n"
    "Mandatory arguments:\n"
-   "   --int-man             integer mandatory\n"
-   "   --string-man          string mandatory\n"
+   "   --int-man        integer mandatory\n"
+   "   --string-man     string mandatory\n"
    "\n"
    "Optional arguments:\n"
-   "   -h                    Prints the program usage\n"
-   "   --print-hidden        Also print hidden arguments in the usage.\n"
-   "   --flag                flag\n"
-   "   --int-opt             integer optional\n"
-   "                         Default value: 0\n"
-   "   --string-opt          string optional\n"
-   "                         Default value:\n"
+   "   -h               Prints the program usage\n"
+   "   --print-hidden   Also print hidden arguments in the usage.\n"
+   "   --flag           flag\n"
+   "   --int-opt        integer optional\n"
+   "                    Default value: 0\n"
+   "   --string-opt     string optional\n"
+   "                    Default value:\n"
    "\n"
    "\n"
    "--------------------------------------------------------------------------------\n"
