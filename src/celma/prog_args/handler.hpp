@@ -176,11 +176,6 @@ class ValueHandler;
 /// @todo  Pass the verbose flag to the assign methods and then print the
 ///        verbose output there. This will cover all cases and also allows e.g.
 ///        to print the second assignment if a pair is used.
-/// @todo  For destination type vector: Add flag/feature that the contents of
-///        the vector should be cleared before the first value from the command
-///        line is assigned.
-///        Idea: vector is filled with default value(s), if the argument is
-///        used the default should be replaced by the new values.
 /// @todo  Flag and/or argument that changes the processing: Process all
 ///        arguments and throw/exit at the end only. This would help to detect
 ///        multiple errors in the argument string.

@@ -71,7 +71,7 @@ public:
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Adds the value of the destination variable to the string.
-   /// @param[in]  dest  The string to append the default value to.
+   /// @param[out]  dest  The string to append the default value to.
    /// @since  1.1.0, 25.09.2017
    virtual void defaultValue( std::string& dest) const override;
 

@@ -9,7 +9,7 @@
 **
 **
 **  Description:
-**    Test program for the hanlding of tuples by the module prog_args::Handler,
+**    Test program for the handling of tuples by the module prog_args::Handler,
 **    using the Boost.Test module.
 **
 --*/

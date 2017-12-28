@@ -282,7 +282,7 @@ void TypedArgBase::checkCardinality()
 /// @param[in]  yesNo  Set to \c false for turning the value check off.
 /// @return  Pointer to this object.
 /// @since  1.1.0, 16.11.2017
-TypedArgBase* TypedArgBase::checkOriginalValue( bool yesNo)
+TypedArgBase* TypedArgBase::checkOriginalValue( bool)
 {
 
    throw std::invalid_argument( "may not change 'check original value' "
