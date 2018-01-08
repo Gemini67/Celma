@@ -41,6 +41,7 @@ namespace detail {
 
 
 /// Base class for a class that provides indirect access to its member variables.
+/// @since  1.2.1, 08.01.2018  (renamed to Base)
 /// @since  0.5, 03.11.2016  (feature renamed to 'indirect access')
 /// @since  0.4, 02.05.2016
 class Base

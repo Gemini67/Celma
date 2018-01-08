@@ -29,7 +29,7 @@ namespace celma { namespace indirect_access { namespace detail {
 
 /// This class actually handles the access indirect to a field.
 /// @tparam  T  The type of the field/variable.
-/// @since  x.y.z, 08.01.2018  (renamed to Field, copying is not allowed)
+/// @since  1.2.1, 08.01.2018  (renamed to Field, copying is not allowed)
 /// @since  0.5, 03.11.2016  (feature renamed to 'indirect access')
 /// @since  0.4, 02.05.2016
 template< typename T> class Field: public IField

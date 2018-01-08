@@ -28,7 +28,7 @@ namespace celma { namespace indirect_access { namespace detail {
 /// information and defines the methods needed by the interface.<br>
 /// This class should not used directly by an application, the corresponding
 /// usage is generated through the "indirect access" macros.
-/// @since  x.y.z, 08.01.2018  (renamed to IField)
+/// @since  1.2.1, 08.01.2018  (renamed to IField)
 /// @since  0.5, 03.11.2016  (feature renamed to 'indirect access')
 /// @since  0.4, 02.05.2016
 class IField
