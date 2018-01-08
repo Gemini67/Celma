@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,11 +11,11 @@
 
 
 /// @file
-/// See description of class celma::indirect_access::detail::IndirectAccessBase.
+/// See description of class celma::indirect_access::detail::Base.
 
 
-#ifndef CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_BASE_HPP
-#define CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_BASE_HPP
+#ifndef CELMA_INDIRECT_ACCESS_DETAIL_BASE_HPP
+#define CELMA_INDIRECT_ACCESS_DETAIL_BASE_HPP
 
 
 #include <iosfwd>
@@ -26,8 +26,8 @@
 #include <vector>
 
 
-#include "celma/indirect_access/detail/i_indirect_access_field.hpp"
-#include "celma/indirect_access/detail/indirect_access_field.hpp"
+#include "celma/indirect_access/detail/i_field.hpp"
+#include "celma/indirect_access/detail/field.hpp"
 
 
 namespace celma {
@@ -41,11 +41,16 @@ namespace detail {
 
 
 /// Base class for a class that provides indirect access to its member variables.
-/// @since  0.5, 03.11.2016  (renamed to 'indirect access')
+/// @since  0.5, 03.11.2016  (feature renamed to 'indirect access')
 /// @since  0.4, 02.05.2016
-class IndirectAccessBase
+class Base
 {
 public:
+   /// Copying of objects of this class is not allowed.
+   Base( const Base&) = delete;
+   /// Assignment of another object is also not allowed.
+   Base& operator =( const Base&) = delete;
+
    /// Assigns a new value.
    /// @tparam  T  The type of the value.
    /// @param[in]  id        The id/number of the field/variable to assign the
@@ -108,15 +113,17 @@ public:
    /// @param[in]   obj  The pointer to the object to print the contents of.
    /// @return  The stream as passed in.
    /// @since  0.4, 13.07.2016
-   friend std::ostream& operator <<( std::ostream& os, const IndirectAccessBase* obj);
+   friend std::ostream& operator <<( std::ostream& os,
+      const Base* obj);
 
 protected:
-   /// Constructor.
+   /// Protected constructor to make sure that this class is always used as base
+   /// class.
    /// @since  0.4, 02.05.2016
-   IndirectAccessBase();
+   Base();
 
    /// Default destructor.
-   virtual ~IndirectAccessBase() = default;
+   virtual ~Base() = default;
 
    /// Adds a new field.
    /// @tparam  T  The type of the value/variable.
@@ -128,23 +135,18 @@ protected:
 
 private:
    /// Shared pointer type to store.
-   typedef std::shared_ptr< IIndirectAccess>            field_ptr;
+   typedef std::shared_ptr< IField>                     field_ptr;
    /// Vector type for storing the fields and access them by id.
    typedef std::vector< field_ptr>                      id_cont_t;
    /// Container type for accessing the fields by name.
    typedef std::unordered_map< std::string, field_ptr>  name_cont_t;
-
-   /// Copying of objects of this class is not allowed.
-   IndirectAccessBase( const IndirectAccessBase&) = delete;
-   /// Assignment of another object is also not allowed.
-   IndirectAccessBase& operator =( const IndirectAccessBase&) = delete;
 
    /// Primary container, access by field id.
    id_cont_t    mId2Field;
    /// Second container for access by name.
    name_cont_t  mName2Field;
 
-}; // IndirectAccessBase
+}; // Base
 
 
 // inlined methods
@@ -152,31 +154,31 @@ private:
 
 
 template< typename T>
-   void IndirectAccessBase::set( uint16_t id, const T& newValue) noexcept( false)
+   void Base::set( uint16_t id, const T& newValue) noexcept( false)
 {
    if (id >= mId2Field.size())
       throw std::runtime_error( "invalid field id");
    if (mId2Field[ id]->typeName() != type< T>::name())
       throw std::runtime_error( "cannot assign value with different type");
-   auto  my_obj = static_cast< IndirectAccessField< T>*>( mId2Field[ id].get());
+   auto  my_obj = static_cast< Field< T>*>( mId2Field[ id].get());
    my_obj->set( newValue);
-} // end IndirectAccessBase::set
+} // Base::set
 
 
 template< typename T>
-   const T& IndirectAccessBase::get( uint16_t id) const noexcept( false)
+   const T& Base::get( uint16_t id) const noexcept( false)
 {
    if (id >= mId2Field.size())
       throw std::runtime_error( "invalid field id");
    if (mId2Field[ id]->typeName() != type< T>::name())
       throw std::runtime_error( "cannot return value with different type");
-   auto  my_obj = static_cast< IndirectAccessField< T>*>( mId2Field[ id].get());
+   auto  my_obj = static_cast< Field< T>*>( mId2Field[ id].get());
    return my_obj->get();
-} // end IndirectAccessBase::get
+} // Base::get
 
 
 template< typename T>
-   void IndirectAccessBase::set( const std::string& name,
+   void Base::set( const std::string& name,
                                  const T& new_value) noexcept( false)
 {
    auto  it = mName2Field.find( name);
@@ -184,43 +186,41 @@ template< typename T>
       throw std::runtime_error( "invalid field name");
    if (it->second->typeName() != type< T>::name())
       throw std::runtime_error( "cannot assign value with different type");
-   auto  my_obj = static_cast< IndirectAccessField< T>*>( it->second.get());
+   auto  my_obj = static_cast< Field< T>*>( it->second.get());
    my_obj->set( new_value);
-} // end IndirectAccessBase::set
+} // Base::set
 
 
 template< typename T>
-   const T& IndirectAccessBase::get( const std::string& name) const
-                                   noexcept( false)
+   const T& Base::get( const std::string& name) const noexcept( false)
 {
    auto  it = mName2Field.find( name);
    if (it == mName2Field.end())
       throw std::runtime_error( "invalid field name");
    if (it->second->typeName() != type< T>::name())
       throw std::runtime_error( "cannot return value with different type");
-   auto  my_obj = static_cast< IndirectAccessField< T>*>( it->second.get());
+   auto  my_obj = static_cast< Field< T>*>( it->second.get());
    return my_obj->get();
-} // end IndirectAccessBase::get
+} // Base::get
 
 
-inline uint16_t IndirectAccessBase::size() const noexcept( true)
+inline uint16_t Base::size() const noexcept( true)
 {
    return static_cast< uint16_t>( mId2Field.size());
-} // end IndirectAccessBase::size
+} // Base::size
 
 
 template< typename T>
-   void IndirectAccessBase::addField( const std::string& name, T& value)
-                                    noexcept( false)
+   void Base::addField( const std::string& name, T& value) noexcept( false)
 {
    if (mName2Field.find( name) != mName2Field.end())
       throw std::runtime_error( "field with this name already exists");
 
-   field_ptr  new_field( new IndirectAccessField< T>( name, value));
+   field_ptr  new_field( new Field< T>( name, value));
 
    mId2Field.push_back( new_field);
    mName2Field.insert( name_cont_t::value_type( name, new_field));
-} // end IndirectAccessBase::addField
+} // Base::addField
 
 
 } // namespace detail
@@ -228,8 +228,8 @@ template< typename T>
 } // namespace celma
 
 
-#endif   // CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_BASE_HPP
+#endif   // CELMA_INDIRECT_ACCESS_DETAIL_BASE_HPP
 
 
-// =====================  END OF indirect_access_base.hpp  =====================
+// =====  END OF base.hpp  =====
 

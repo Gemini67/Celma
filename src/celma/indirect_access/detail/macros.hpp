@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,12 +14,12 @@
 /// Internal macro definitions for generating indirect field access.
 
 
-#ifndef CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_MACROS_HPP
-#define CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_MACROS_HPP
+#ifndef CELMA_INDIRECT_ACCESS_DETAIL_MACROS_HPP
+#define CELMA_INDIRECT_ACCESS_DETAIL_MACROS_HPP
 
 
 #include <iosfwd>
-#include "celma/indirect_access/detail/indirect_access_base.hpp"
+#include "celma/indirect_access/detail/base.hpp"
 
 
 /// One field == member variable of the 'normal' structure.
@@ -77,15 +77,18 @@
 /// @param  n  The name of the class to create.
 /// @param  l  The list of fields/variables and their types.
 #define INDIRECT( n, l) \
-   class IndirectAccess_ ## n : public celma::indirect_access::detail::IndirectAccessBase \
+   class IndirectAccess_ ## n : public celma::indirect_access::detail::Base \
    { \
    public: \
       IndirectAccess_ ## n( n& dest): \
-         IndirectAccessBase(), \
+         Base(), \
          mDestination( dest) \
       { \
          l(ADD_MEMBER)\
       } \
+      IndirectAccess_ ## n( const IndirectAccess_ ## n&) = delete; \
+      ~IndirectAccess_ ## n() = default; \
+      IndirectAccess_ ## n& operator =( const IndirectAccess_ ## n&) = delete; \
       l(CLASS_FIELD) \
       const n& data() const noexcept( false) \
       { \
@@ -100,8 +103,8 @@
    }
 
 
-#endif   // CELMA_INDIRECT_ACCESS_DETAIL_INDIRECT_ACCESS_MACROS_HPP
+#endif   // CELMA_INDIRECT_ACCESS_DETAIL_MACROS_HPP
 
 
-// ====================  END OF indirect_access_macros.hpp  ====================
+// =====  END OF macros.hpp  =====
 
