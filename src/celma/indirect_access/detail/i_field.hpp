@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,11 +11,11 @@
 
 
 /// @file
-/// See description of class celma::indirect_access::detail::IIndirectAccess.
+/// See description of class celma::indirect_access::detail::IField.
 
 
-#ifndef CELMA_INDIRECT_ACCESS_DETAIL_I_INDIRECT_ACCESS_FIELD_HPP
-#define CELMA_INDIRECT_ACCESS_DETAIL_I_INDIRECT_ACCESS_FIELD_HPP
+#ifndef CELMA_INDIRECT_ACCESS_DETAIL_I_FIELD_HPP
+#define CELMA_INDIRECT_ACCESS_DETAIL_I_FIELD_HPP
 
 
 #include <string>
@@ -27,21 +27,15 @@ namespace celma { namespace indirect_access { namespace detail {
 /// Base class for accessing fields in a structure. Handles some shared
 /// information and defines the methods needed by the interface.<br>
 /// This class should not used directly by an application, the corresponding
-/// usage is generate
-/// @since  0.5, 03.11.2016  (renamed to 'indirect access')
+/// usage is generated through the "indirect access" macros.
+/// @since  1.2.1, 08.01.2018  (renamed to IField)
+/// @since  0.5, 03.11.2016  (feature renamed to 'indirect access')
 /// @since  0.4, 02.05.2016
-class IIndirectAccess
+class IField
 {
 public:
-   /// Constructor.
-   /// @param[in]  name       The name of the field == the variable in the
-   ///                        structure.
-   /// @param[in]  type_name  The name of the type.
-   /// @since  0.4, 02.05.2016
-   IIndirectAccess( const std::string& name, const std::string& type_name);
-
    /// Default destructor is fine.
-   virtual ~IIndirectAccess() = default;
+   virtual ~IField() = default;
 
    /// Returns the name of the field/variable.
    /// @return  The name as passed to the constructor.
@@ -60,36 +54,43 @@ public:
    virtual const std::string str() const noexcept( false) = 0;
 
 protected:
+   /// Protected constructor to make sure that this class is always used as base
+   /// class.
+   /// @param[in]  name       The name of the field == the variable in the
+   ///                        structure.
+   /// @param[in]  type_name  The name of the type.
+   /// @since  0.4, 02.05.2016
+   IField( const std::string& name, const std::string& type_name);
+
    /// The name of the field/variable.
    const std::string  mName;
    /// The type as string.
    const std::string  mTypeName;
 
-}; // IIndirectAccess
+}; // IField
 
 
 // inlined methods
 // ===============
 
 
-inline IIndirectAccess::IIndirectAccess( const std::string& name,
-                                         const std::string& type_name):
+inline IField::IField( const std::string& name, const std::string& type_name):
    mName( name),
    mTypeName( type_name)
 {
-} // end IIndirectAccess::IIndirectAccess
+} // IField::IField
 
 
-inline const std::string& IIndirectAccess::fieldName() const noexcept( true)
+inline const std::string& IField::fieldName() const noexcept( true)
 {
    return mName;
-} // end IIndirectAccess::fieldName
+} // IField::fieldName
 
 
-inline const std::string& IIndirectAccess::typeName() const noexcept( true)
+inline const std::string& IField::typeName() const noexcept( true)
 {
    return mTypeName;
-} // end IIndirectAccess::typeName
+} // IField::typeName
 
 
 } // namespace detail
@@ -97,8 +98,8 @@ inline const std::string& IIndirectAccess::typeName() const noexcept( true)
 } // namespace celma
 
 
-#endif   // CELMA_INDIRECT_ACCESS_DETAIL_I_INDIRECT_ACCESS_FIELD_HPP
+#endif   // CELMA_INDIRECT_ACCESS_DETAIL_I_FIELD_HPP
 
 
-// ======================  END OF i_indirect_access.hpp  ======================
+// =====  END OF i_field.hpp  =====
 

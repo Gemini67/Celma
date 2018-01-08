@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,11 +11,11 @@
 
 
 /// @file
-/// See documentation of class celma::indirect_access::detail::IndirectAccessBase.
+/// See documentation of class celma::indirect_access::detail::Base.
 
 
 // module header file include
-#include "celma/indirect_access/detail/indirect_access_base.hpp"
+#include "celma/indirect_access/detail/base.hpp"
 
 
 namespace celma { namespace indirect_access { namespace detail {
@@ -26,13 +26,14 @@ namespace celma { namespace indirect_access { namespace detail {
 /// @param[in]  id  The id of the field to return the name of.
 /// @return  The name of the field with the given id.
 /// @since  0.4, 02.05.2016
-const std::string& IndirectAccessBase::getFieldName( uint16_t id) const
-                                                       noexcept( false)
+const std::string& Base::getFieldName( uint16_t id) const noexcept( false)
 {
+
    if (id >= mId2Field.size())
       throw std::runtime_error( "invalid field id");
+
    return mId2Field[ id]->fieldName();
-} // end IndirectAccessBase::getFieldName
+} // Base::getFieldName
 
 
 
@@ -40,13 +41,14 @@ const std::string& IndirectAccessBase::getFieldName( uint16_t id) const
 /// @param[in]  id  The id of the field to return the value of.
 /// @return  The current value of the variable as string.
 /// @since  0.4, 02.07.2016
-const std::string IndirectAccessBase::getFieldValueString( uint16_t id) const
-                                                    noexcept( false)
+const std::string Base::getFieldValueString( uint16_t id) const noexcept( false)
 {
+
    if (id >= mId2Field.size())
       throw std::runtime_error( "invalid field id");
+
    return mId2Field[ id]->str();
-} // end IndirectAccessBase::getFieldValueString
+} // Base::getFieldValueString
 
 
 
@@ -54,13 +56,14 @@ const std::string IndirectAccessBase::getFieldValueString( uint16_t id) const
 /// @param[in]  id  The id of the field to return the value of.
 /// @return  The type of the value as string.
 /// @since  0.4, 02.07.2016
-const std::string& IndirectAccessBase::getFieldTypeString( uint16_t id) const
-                                                    noexcept( false)
+const std::string& Base::getFieldTypeString( uint16_t id) const noexcept( false)
 {
+
    if (id >= mId2Field.size())
       throw std::runtime_error( "invalid field id");
+
    return mId2Field[ id]->typeName();
-} // end IndirectAccessBase::getFieldTypeString
+} // Base::getFieldTypeString
 
 
 
@@ -70,7 +73,7 @@ const std::string& IndirectAccessBase::getFieldTypeString( uint16_t id) const
 /// @param[in]   obj  The pointer to the object to print the contents of.
 /// @return  The stream as passed in.
 /// @since  0.4, 13.07.2016
-std::ostream& operator <<( std::ostream& os, const IndirectAccessBase* obj)
+std::ostream& operator <<( std::ostream& os, const Base* obj)
 {
 
    for (size_t i = 0; i < obj->mId2Field.size(); ++i)
@@ -84,17 +87,18 @@ std::ostream& operator <<( std::ostream& os, const IndirectAccessBase* obj)
    } // end for
    
    return os;
-} // end operator <<
+} // operator <<
 
 
 
-/// Constructor.
+/// Protected constructor to make sure that this class is always used as base
+/// class.
 /// @since  0.4, 02.05.2016
-IndirectAccessBase::IndirectAccessBase():
+Base::Base():
    mId2Field(),
    mName2Field()
 {
-} // end IndirectAccessBase::IndirectAccessBase
+} // Base::Base
 
 
 
@@ -103,5 +107,5 @@ IndirectAccessBase::IndirectAccessBase():
 } // namespace celma
 
 
-// =====================  END OF indirect_access_base.cpp  =====================
+// =====  END OF base.cpp  =====
 

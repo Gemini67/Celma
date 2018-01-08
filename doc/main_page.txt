@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.2.0
+   \mainpage  CELMA v1.2.1
 
    \tableofcontents
 
@@ -46,6 +46,7 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.2.1  | 2018-01-08        | Updated files/classes of "indirect access".
      1.2.0  | 2017-12-28        | Added feature 'clear vector before assigning values' in argument handling.
      1.1.0  | 2017-12-28        | Implemented 'usage parameters' module for handling the parameters for the usage.
      1.0.0  | 2017-12-28        | Added modules for logging.

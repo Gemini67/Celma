@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,11 +35,11 @@
 */
 
 
-#ifndef CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_MACROS_HPP
-#define CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_MACROS_HPP
+#ifndef CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_HPP
+#define CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_HPP
 
 
-#include "celma/indirect_access/detail/indirect_access_macros.hpp"
+#include "celma/indirect_access/detail/macros.hpp"
 
 
 /// The main macro, the only one that should actually be used by the
@@ -55,7 +55,8 @@
 // otherwise macro expansion does not work
 
 
-#endif   // CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_MACROS_HPP
+#endif   // CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_HPP
 
 
-// ====================  END OF indirect_access_macros.hpp  ====================
+// =====  END OF indirect_access.hpp  =====
+
