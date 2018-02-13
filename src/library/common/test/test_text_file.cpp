@@ -34,8 +34,8 @@ using celma::common::TextFile;
 using FilterStatTextFile = TextFile< EmptyLineFilter, StatLineHandler>;
 
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE( TextFile<>::const_iterator);
-BOOST_TEST_DONT_PRINT_LOG_VALUE( FilterStatTextFile::const_iterator);
+BOOST_TEST_DONT_PRINT_LOG_VALUE( TextFile<>::const_iterator)
+BOOST_TEST_DONT_PRINT_LOG_VALUE( FilterStatTextFile::const_iterator)
 
 
 namespace {

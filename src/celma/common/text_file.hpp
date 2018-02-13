@@ -42,8 +42,9 @@ using detail::StatLineHandler;
 ///                             celma::common::detail::NoFilter for an example
 ///                             implementation.
 /// @tparam  LineHandlerPolicy  Additional policy object that is called for each
-///                             line. See celma::common::detail::DummyLineHandler
-///                             for an example implementation.
+///                             line.<br>
+///                             See celma::common::detail::DummyLineHandler for
+///                             an example implementation.
 /// @since  x.y.z, 13.04.2016
 template< typename FilterPolicy = detail::NoFilter,
           typename LineHandlerPolicy = detail::DummyLineHandler> class TextFile
@@ -68,7 +69,9 @@ public:
    void set( const std::string& fname) noexcept( false);
 
    /// Type of the iterator.
-   using const_iterator = detail::StreamLineIterator< FilterPolicy, LineHandlerPolicy>;
+   using const_iterator = detail::StreamLineIterator<
+      FilterPolicy, LineHandlerPolicy
+   >;
 
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
@@ -118,7 +121,9 @@ template< typename FilterPolicy, typename LineHandlerPolicy>
 
 
 template< typename FilterPolicy, typename LineHandlerPolicy>
-   void TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::set( const std::string& fname)
+   void TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::set(
+      const std::string& fname
+   )
 {
    if (fname.empty())
       throw std::runtime_error( "file name may not be empty");

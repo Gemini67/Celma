@@ -26,6 +26,7 @@ celma_add_boost_testprogram( test_tokenizer )
 celma_add_boost_testprogram( test_tokenizer_base )
 celma_add_boost_testprogram( test_transform_call )
 # celma_add_boost_testprogram( test_type_name )
+celma_add_boost_testprogram( test_use_once )
 celma_add_boost_testprogram( test_value_result )
 
 celma_add_boost_mt_testprogram( test_managed_thread )
