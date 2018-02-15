@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -22,6 +22,7 @@ celma_add_boost_testprogram( test_first_pass )
 celma_add_boost_testprogram( test_merge_sorted_cont )
 celma_add_boost_testprogram( test_manipulator )
 celma_add_boost_testprogram( test_reset_at_exit )
+celma_add_boost_testprogram( test_text_file )
 celma_add_boost_testprogram( test_tokenizer )
 celma_add_boost_testprogram( test_tokenizer_base )
 celma_add_boost_testprogram( test_transform_call )
