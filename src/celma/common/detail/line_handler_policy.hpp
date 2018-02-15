@@ -29,12 +29,12 @@ namespace celma { namespace common { namespace detail {
 
 
 /// Default line handler policy: Does not do anything.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 class DummyLineHandler
 {
 protected:
    /// Policy method, does not do anything.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    void handleLine( LineHandlerCallPoints, const std::string&) const
    {
    } // DummyLineHandler::handleLine
@@ -43,7 +43,7 @@ protected:
 
 
 /// Structure which contains all the counters.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 struct FileLineStat
 {
    /// Number of lines read from the file.
@@ -57,21 +57,21 @@ struct FileLineStat
 
 
 /// Example of a line handler policy that counts all lines processed.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 class StatLineHandler
 {
 public:
    /// Constructor, expects a pointer to the statistic object to use.<br>
    /// If no object pointer is passed (NULL), no statistic is calculated.
    /// @param[in]  stat_obj  Pointer to the statistic object to use.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    StatLineHandler( FileLineStat* stat_obj = nullptr):
       mpFileLineStat( stat_obj)
    {
    } // StatLineHandler::StatLineHandler
 
    /// Copy constructor. Does *not* copy the pointer to the statistic object.
-   /// @since  x.y.z, 16.05.2017
+   /// @since  1.3.0, 16.05.2017
    StatLineHandler( const StatLineHandler&):
       mpFileLineStat( nullptr)
    {
@@ -79,7 +79,7 @@ public:
 
    /// Move constructor. Takes the pointer to the statistic object from the
    /// other object.
-   /// @since  x.y.z, 15.02.2018
+   /// @since  1.3.0, 15.02.2018
    StatLineHandler( StatLineHandler&& other):
       mpFileLineStat( other.mpFileLineStat)
    {
@@ -87,12 +87,12 @@ public:
    } // StatLineHandler::StatLineHandler
 
    /// Destructor, nothing to do.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    ~StatLineHandler() = default;
 
    /// Returns the pointer to the internal statistic object.
    /// @return  The pointer to the internally used statistic object. May be NULL.
-   /// @since  x.y.z, 15.02.2017
+   /// @since  1.3.0, 15.02.2017
    FileLineStat* stat() const
    {
       return mpFileLineStat;
@@ -102,7 +102,7 @@ protected:
    /// Increments the counter depending on the type of the call point.
    /// @param[in]  lhcp  The call point from which this methd was called.
    /// @param[in]        The current line, ignored.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    void handleLine( LineHandlerCallPoints lhcp, const std::string&)
    {
       if (mpFileLineStat == nullptr)

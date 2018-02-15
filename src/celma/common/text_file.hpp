@@ -48,25 +48,25 @@ using detail::StatLineHandler;
 ///             implementation.
 /// @tparam  S  The type of the statistics object used by the line handler class
 ///             to compute a statistic.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 template< typename F = detail::NoFilter,
           typename H = detail::DummyLineHandler,
           typename S = std::nullptr_t> class TextFile
 {
 public:
    /// Default constructor. Call set() afterwards to specify the file to read.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    TextFile();
 
    /// Constructor with file parameter.
    /// @param[in]  fname  The (path and) name of the file to read.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    explicit TextFile( const std::string& fname) noexcept( false);
 
    /// Copy constructor,<br>
    /// The pointer to an eventually set statistics object is not copied.
    /// @param[in]  other  The other object to copy the data from.
-   /// @since  x.y.z, 15.02.2018
+   /// @since  1.3.0, 15.02.2018
    TextFile( const TextFile& other);
 
    ~TextFile() = default;
@@ -74,7 +74,7 @@ public:
 
    /// Specifies the (path and) name of the file to read.
    /// @param[in]  fname  The file to read.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    void set( const std::string& fname) noexcept( false);
 
    /// Specifies the object to use to calculate the statistic while iterating
@@ -82,7 +82,7 @@ public:
    /// The object will be passed to the next iterator that is created.
    /// @param[in]  stat_obj  The object to use. Its type must correspond to the
    ///                       type expected/used by the line handler.
-   /// @since  x.y.z, 13.02.2018
+   /// @since  1.3.0, 13.02.2018
    void setStatObj( S& stat_obj);
 
    /// Type of the iterator.
@@ -90,22 +90,22 @@ public:
 
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    const_iterator begin() const noexcept( false);
 
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
-   /// @since  x.y.z, 16.05.2017
+   /// @since  1.3.0, 16.05.2017
    const_iterator cbegin() const noexcept( false);
 
    /// Returns the iterator pointing to the end of the file.
    /// @return  Iterator set on the end of the file.
-   /// @since  x.y.z, 13.04.2016
+   /// @since  1.3.0, 13.04.2016
    const_iterator end() const noexcept( false);
 
    /// Returns the iterator pointing to the end of the file.
    /// @return  Iterator set on the end of the file.
-   /// @since  x.y.z, 16.05.2017
+   /// @since  1.3.0, 16.05.2017
    const_iterator cend() const noexcept( false);
 
 private:
@@ -117,7 +117,7 @@ private:
    ///             work (enable_if).
    /// @param  Not used.
    /// @return  A new iterator.
-   /// @since  x.y.z, 13.02.2018
+   /// @since  1.3.0, 13.02.2018
    template< typename T>
       typename std::enable_if< !std::is_same< T, std::nullptr_t>::value,
                                const_iterator
@@ -134,7 +134,7 @@ private:
    /// @tparam  T  Accepts only std::nullptr_t.
    /// @param  Not used.
    /// @return  A new iterator.
-   /// @since  x.y.z, 13.02.2018
+   /// @since  1.3.0, 13.02.2018
    template< typename T>
       typename std::enable_if< std::is_same< T, std::nullptr_t>::value,
                                const_iterator

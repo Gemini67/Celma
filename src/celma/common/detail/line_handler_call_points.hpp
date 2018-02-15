@@ -23,7 +23,7 @@ namespace celma { namespace common { namespace detail {
 
 
 /// Symbolic names for the statistic call points used by the class TextFile.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 enum class LineHandlerCallPoints
 {
    lineRead,       //!< Line read from the file.

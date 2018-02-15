@@ -43,7 +43,7 @@ namespace {
 
 const char* const  File = "/home/rene/projects/Celma/textfile/src/celma/common/text_file.hpp";
 
-/// @since  x.y.z, 15.02.2018
+/// @since  1.3.0, 15.02.2018
 class TestFixture
 {
 public:
@@ -57,7 +57,7 @@ public:
 
    /// Constructor of the test fixture class.<br>
    /// When used for the first time, counts the lines in the test file.
-   /// @since  x.y.z, 15.02.2018
+   /// @since  1.3.0, 15.02.2018
    TestFixture();
 
 }; // TestFixture
@@ -71,7 +71,7 @@ int  TestFixture::NumTextLines = -1;
 
 
 /// Test some error conditions.
-/// @since  x.y.z, 13.06.2017
+/// @since  1.3.0, 13.06.2017
 BOOST_AUTO_TEST_CASE( test_error_handling)
 {
 
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE( test_error_handling)
 
 
 /// Use the class with the default policies: no filter, no line handler.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 BOOST_FIXTURE_TEST_CASE( default_policies, TestFixture)
 {
 
@@ -133,7 +133,7 @@ BOOST_FIXTURE_TEST_CASE( default_policies, TestFixture)
 
 
 /// Use the class with the default policies: no filter, no line handler.
-/// @since  x.y.z, 13.06.2017
+/// @since  1.3.0, 13.06.2017
 BOOST_FIXTURE_TEST_CASE( default_policies_set, TestFixture)
 {
 
@@ -159,7 +159,7 @@ BOOST_FIXTURE_TEST_CASE( default_policies_set, TestFixture)
 
 
 /// Use the class with the default policies: no filter, no line handler.
-/// @since  x.y.z, 15.02.2018
+/// @since  1.3.0, 15.02.2018
 BOOST_FIXTURE_TEST_CASE( default_policies_set_const, TestFixture)
 {
 
@@ -179,7 +179,7 @@ BOOST_FIXTURE_TEST_CASE( default_policies_set_const, TestFixture)
 
 
 /// Read the text file but ignore empty lines.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 BOOST_FIXTURE_TEST_CASE( no_empty_lines, TestFixture)
 {
 
@@ -197,13 +197,12 @@ BOOST_FIXTURE_TEST_CASE( no_empty_lines, TestFixture)
 
    BOOST_REQUIRE_EQUAL( num_lines, NumTextLines);
 
-
 } // no_empty_lines
 
 
 
 /// Read all lines, now also create a statistic.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 BOOST_FIXTURE_TEST_CASE( statistics_only, TestFixture)
 {
 
@@ -235,7 +234,7 @@ BOOST_FIXTURE_TEST_CASE( statistics_only, TestFixture)
 
 
 /// Read file, filter empty lines, create statistic.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 BOOST_FIXTURE_TEST_CASE( statistics_no_empty_lines, TestFixture)
 {
 
@@ -261,7 +260,7 @@ BOOST_FIXTURE_TEST_CASE( statistics_no_empty_lines, TestFixture)
 
 /// Create a copy of the iterator and test that both return the same results
 /// afterwards.
-/// @since  x.y.z, 16.05.2017
+/// @since  1.3.0, 16.05.2017
 BOOST_FIXTURE_TEST_CASE( copy_default_policies, TestFixture)
 {
 
@@ -305,7 +304,7 @@ BOOST_FIXTURE_TEST_CASE( copy_default_policies, TestFixture)
 
 /// Create a copy of the iterator with policies Read file, filter empty lines,
 /// create statistic.
-/// @since  x.y.z, 13.04.2016
+/// @since  1.3.0, 13.04.2016
 BOOST_FIXTURE_TEST_CASE( copy_statistics_no_empty_lines, TestFixture)
 {
 
@@ -351,7 +350,7 @@ namespace {
 
 /// Constructor of the test fixture class.<br>
 /// When used for the first time, counts the lines in the test file.
-/// @since  x.y.z, 15.02.2018
+/// @since  1.3.0, 15.02.2018
 TestFixture::TestFixture()
 {
 

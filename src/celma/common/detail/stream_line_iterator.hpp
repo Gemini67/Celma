@@ -32,7 +32,7 @@ namespace celma { namespace common { namespace detail {
 /// @tparam  F  Filter policy.
 /// @tparam  H  Policy object to call for each line.
 /// @tparam  C  The type of the statistic object.
-/// @since  x.y.z, 16.05.2017  (open file here)
+/// @since  1.3.0, 16.05.2017  (open file here)
 /// @since  13.04.2016
 template< typename F, typename H, typename C = std::nullptr_t>
    class StreamLineIterator:
@@ -48,7 +48,7 @@ public:
    /// Constructor.
    /// @param[in]  source  The source == file name to read from.
    /// @param[in]  atEnd   Set to \c true for end iterator.
-   /// @since  x.y.z, 16.05.2017  (changed parameter type of source)
+   /// @since  1.3.0, 16.05.2017  (changed parameter type of source)
    /// @since  13.04.2016
    explicit StreamLineIterator( const std::string& source, bool atEnd = false)
       noexcept( false);
@@ -56,18 +56,18 @@ public:
    /// Constructor that takes a pointer to the statistics object to use.
    /// @param[in]  source    The source == file name to read from.
    /// @param[in]  stat_obj  Pointer to the statistic object to use.
-   /// @since  x.y.z, 15.02.2018
+   /// @since  1.3.0, 15.02.2018
    StreamLineIterator( const std::string& source, C* stat_obj) noexcept( false);
 
    /// Copy constructor.
    /// @param[in]  other  The other object to copy the data from.
-   /// @since  x.y.z, 16.05.2017
+   /// @since  1.3.0, 16.05.2017
    StreamLineIterator( const StreamLineIterator& other) noexcept( false);
 
    /// Equality comparison operator.
    /// @param[in]  other  The other iterator object to compare against.
    /// @return  \c true if \c this and \a other are equal.
-   /// @since  x.y.z, 16.05.2017
+   /// @since  1.3.0, 16.05.2017
    bool operator ==( const StreamLineIterator& other) const;
 
    /// Not-equal comparison operator.
