@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,5 +40,5 @@ enum class LineHandlerCallPoints
 #endif   // CELMA_COMMON_DETAIL_LINE_HANDLER_CALL_POINTS_HPP
 
 
-// ===================  END OF line_handler_call_points.hpp  ===================
+// =====  END OF line_handler_call_points.hpp  =====
 

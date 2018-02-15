@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,11 +19,14 @@
 #define CELMA_COMMON_TEXT_FILE_HPP
 
 
+#include <functional>
 #include <string>
 #include <stdexcept>
+#include <type_traits>
 #include "celma/common/detail/stream_line_iterator.hpp"
 #include "celma/common/detail/filter_policy.hpp"
 #include "celma/common/detail/line_handler_policy.hpp"
+#include "celma/common/reset_at_exit.hpp"
 
 
 namespace celma { namespace common {
@@ -37,17 +40,18 @@ using detail::StatLineHandler;
 
 /// Class that provides iterator access to the contents of a textfile, plus
 /// policies that can be used to filter or do other stuff.
-/// @tparam  FilterPolicy       Line filter policy, can be used to ignore lines
-///                             from the file. See
-///                             celma::common::detail::NoFilter for an example
-///                             implementation.
-/// @tparam  LineHandlerPolicy  Additional policy object that is called for each
-///                             line.<br>
-///                             See celma::common::detail::DummyLineHandler for
-///                             an example implementation.
+/// @tparam  F  Line filter policy, can be used to ignore lines from the file.
+///             See celma::common::detail::NoFilter for an example
+///             implementation.
+/// @tparam  H  Additional policy object that is called for each line.<br>
+///             See celma::common::detail::DummyLineHandler for an example
+///             implementation.
+/// @tparam  S  The type of the statistics object used by the line handler class
+///             to compute a statistic.
 /// @since  x.y.z, 13.04.2016
-template< typename FilterPolicy = detail::NoFilter,
-          typename LineHandlerPolicy = detail::DummyLineHandler> class TextFile
+template< typename F = detail::NoFilter,
+          typename H = detail::DummyLineHandler,
+          typename S = std::nullptr_t> class TextFile
 {
 public:
    /// Default constructor. Call set() afterwards to specify the file to read.
@@ -59,8 +63,13 @@ public:
    /// @since  x.y.z, 13.04.2016
    explicit TextFile( const std::string& fname) noexcept( false);
 
+   /// Copy constructor,<br>
+   /// The pointer to an eventually set statistics object is not copied.
+   /// @param[in]  other  The other object to copy the data from.
+   /// @since  x.y.z, 15.02.2018
+   TextFile( const TextFile& other);
+
    ~TextFile() = default;
-   TextFile( const TextFile&) = default;
    TextFile& operator =( const TextFile&) = default;
 
    /// Specifies the (path and) name of the file to read.
@@ -68,10 +77,16 @@ public:
    /// @since  x.y.z, 13.04.2016
    void set( const std::string& fname) noexcept( false);
 
+   /// Specifies the object to use to calculate the statistic while iterating
+   /// over the contents of a text file.<br>
+   /// The object will be passed to the next iterator that is created.
+   /// @param[in]  stat_obj  The object to use. Its type must correspond to the
+   ///                       type expected/used by the line handler.
+   /// @since  x.y.z, 13.02.2018
+   void setStatObj( S& stat_obj);
+
    /// Type of the iterator.
-   using const_iterator = detail::StreamLineIterator<
-      FilterPolicy, LineHandlerPolicy
-   >;
+   using const_iterator = detail::StreamLineIterator< F, H, S>;
 
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
@@ -90,77 +105,127 @@ public:
 
    /// Returns the iterator pointing to the end of the file.
    /// @return  Iterator set on the end of the file.
-   /// @since  x.y.z, 16.05.20178
+   /// @since  x.y.z, 16.05.2017
    const_iterator cend() const noexcept( false);
 
 private:
+   /// Internal method that actually creates a new iterator object.<br>
+   /// This specific method creates an iterator that accepts/uses a statistic
+   /// object.
+   /// @tparam  T  The type of the statistic object.<br>
+   ///             Must be a separate template parameter here for SFINAE to
+   ///             work (enable_if).
+   /// @param  Not used.
+   /// @return  A new iterator.
+   /// @since  x.y.z, 13.02.2018
+   template< typename T>
+      typename std::enable_if< !std::is_same< T, std::nullptr_t>::value,
+                               const_iterator
+                             >::type
+         beginStatIter( T*) const
+   {
+      const ResetAtExit< S*>  rae( mpStatObject, nullptr);
+      return const_iterator( mFilename, mpStatObject);
+   } // TextFile< F, H, S>::beginStatIter
+
+   /// Internal method that actually creates a new iterator object.<br>
+   /// This specific method creates an iterator that does not accept/use a
+   /// statistic object.
+   /// @tparam  T  Accepts only std::nullptr_t.
+   /// @param  Not used.
+   /// @return  A new iterator.
+   /// @since  x.y.z, 13.02.2018
+   template< typename T>
+      typename std::enable_if< std::is_same< T, std::nullptr_t>::value,
+                               const_iterator
+                             >::type
+         beginStatIter( T*) const
+   {
+      return const_iterator( mFilename);
+   } // TextFile< F, H, S>::beginStatIter
+
    /// The file to read from.
    std::string  mFilename;
+   /// The object to use for calculating the file statistics. Will be passed to
+   /// the next iterator object that is created through a begin()/cbegin() call.
+   mutable S*   mpStatObject = nullptr;
 
-}; // TextFile< FilterPolicy, LineHandlerPolicy>
+}; // TextFile< F, H, S>
 
 
 // inlined methods
 // ===============
 
 
-template< typename FilterPolicy, typename LineHandlerPolicy>
-   TextFile< FilterPolicy, LineHandlerPolicy>::TextFile():
-      mFilename()
+template< typename F, typename H, typename S> TextFile< F, H, S>::TextFile():
+   mFilename()
 {
-} // TextFile< FilterPolicy, LineHandlerPolicy>::TextFile
+} // TextFile< F, H, S>::TextFile
 
 
-template< typename FilterPolicy, typename LineHandlerPolicy>
-   TextFile< FilterPolicy, LineHandlerPolicy>::TextFile( const std::string& fname):
+template< typename F, typename H, typename S>
+   TextFile< F, H, S>::TextFile( const std::string& fname):
       mFilename( fname)
 {
    if (fname.empty())
       throw std::runtime_error( "file name may not be empty");
-} // TextFile< FilterPolicy, LineHandlerPolicy>::TextFile
+} // TextFile< F, H, S>::TextFile
 
 
-template< typename FilterPolicy, typename LineHandlerPolicy>
-   void TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::set(
-      const std::string& fname
-   )
+template< typename F, typename H, typename S>
+   TextFile< F, H, S>::TextFile( const TextFile& other):
+      mFilename( other.mFilename),
+      mpStatObject( nullptr)
+{
+} // TextFile< F, H, S>::TextFile
+
+
+template< typename F, typename H, typename S>
+   void TextFile< F, H, S>::TextFile::set( const std::string& fname)
 {
    if (fname.empty())
       throw std::runtime_error( "file name may not be empty");
    mFilename = fname;
-} // TextFile< FilterPolicy, LineHandlerPolicy>::set
+} // TextFile< F, H, S>::set
 
 
-template< typename FilterPolicy, typename LineHandlerPolicy>
-   typename TextFile< FilterPolicy, LineHandlerPolicy>::const_iterator
-      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::begin() const
+template< typename F, typename H, typename S>
+   void TextFile< F, H, S>::setStatObj( S& stat_obj)
 {
-   return const_iterator( mFilename);
-} // TextFile< FilterPolicy, LineHandlerPolicy>::begin
+   mpStatObject = &stat_obj;
+} // TextFile< F, H, S>::setStatObj
 
 
-template< typename FilterPolicy, typename LineHandlerPolicy>
-   typename TextFile< FilterPolicy, LineHandlerPolicy>::const_iterator
-      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::cbegin() const
+template< typename F, typename H, typename S>
+   typename TextFile< F, H, S>::const_iterator
+      TextFile< F, H, S>::TextFile::begin() const
 {
-   return const_iterator( mFilename);
-} // TextFile< FilterPolicy, LineHandlerPolicy>::cbegin
+   return beginStatIter( mpStatObject);
+} // TextFile< F, H, S>::begin
 
 
-template< typename FilterPolicy, typename LineHandlerPolicy>
-   typename TextFile< FilterPolicy, LineHandlerPolicy>::const_iterator
-      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::end() const
+template< typename F, typename H, typename S>
+   typename TextFile< F, H, S>::const_iterator
+      TextFile< F, H, S>::TextFile::cbegin() const
+{
+   return beginStatIter( mpStatObject);
+} // TextFile< F, H, S>::cbegin
+
+
+template< typename F, typename H, typename S>
+   typename TextFile< F, H, S>::const_iterator
+      TextFile< F, H, S>::TextFile::end() const
 {
    return const_iterator( mFilename, true);
-} // TextFile< FilterPolicy, LineHandlerPolicy>::end
+} // TextFile< F, H, S>::end
 
 
-template< typename FilterPolicy, typename LineHandlerPolicy>
-   typename TextFile< FilterPolicy, LineHandlerPolicy>::const_iterator
-      TextFile< FilterPolicy, LineHandlerPolicy>::TextFile::cend() const
+template< typename F, typename H, typename S>
+   typename TextFile< F, H, S>::const_iterator
+      TextFile< F, H, S>::TextFile::cend() const
 {
    return const_iterator( mFilename, true);
-} // TextFile< FilterPolicy, LineHandlerPolicy>::cend
+} // TextFile< F, H, S>::cend
 
 
 } // namespace common
@@ -170,5 +235,5 @@ template< typename FilterPolicy, typename LineHandlerPolicy>
 #endif   // CELMA_COMMON_TEXT_FILE_HPP
 
 
-// ==========================  END OF text_file.hpp  ==========================
+// =====  END OF text_file.hpp  =====
 

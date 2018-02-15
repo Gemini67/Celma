@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -47,11 +47,11 @@ protected:
 struct FileLineStat
 {
    /// Number of lines read from the file.
-   int  linesRead;
+   int  linesRead = 0;
    /// Thereof: Number of lines filtered.
-   int  linesFiltered;
+   int  linesFiltered = 0;
    /// Number of lines actually processed.
-   int  linesProcessed;
+   int  linesProcessed = 0;
 
 }; // FileLineStat
 
@@ -61,93 +61,74 @@ struct FileLineStat
 class StatLineHandler
 {
 public:
-   /// 
+   /// Constructor, expects a pointer to the statistic object to use.<br>
+   /// If no object pointer is passed (NULL), no statistic is calculated.
+   /// @param[in]  stat_obj  Pointer to the statistic object to use.
    /// @since  x.y.z, 13.04.2016
-   StatLineHandler() = default;
+   StatLineHandler( FileLineStat* stat_obj = nullptr):
+      mpFileLineStat( stat_obj)
+   {
+   } // StatLineHandler::StatLineHandler
 
-   /// 
+   /// Copy constructor. Does *not* copy the pointer to the statistic object.
    /// @since  x.y.z, 16.05.2017
-   StatLineHandler( const StatLineHandler& other):
-      mLinesRead( other.mLinesRead),
-      mLinesFiltered( other.mLinesFiltered),
-      mLinesProcessed( other.mLinesProcessed),
+   StatLineHandler( const StatLineHandler&):
       mpFileLineStat( nullptr)
    {
    } // StatLineHandler::StatLineHandler
 
-   /// Destructor, stores the final values in the destination statistic object.
-   /// @since  x.y.z, 13.04.2016
-   ~StatLineHandler()
+   /// Move constructor. Takes the pointer to the statistic object from the
+   /// other object.
+   /// @since  x.y.z, 15.02.2018
+   StatLineHandler( StatLineHandler&& other):
+      mpFileLineStat( other.mpFileLineStat)
    {
-      if (mpFileLineStat != nullptr)
-      {
-         mpFileLineStat->linesRead      = mLinesRead;
-         mpFileLineStat->linesFiltered  = mLinesFiltered;
-         mpFileLineStat->linesProcessed = mLinesProcessed;
-      } // end if
-   } // StatLineHandler::~StatLineHandler
+      other.mpFileLineStat = nullptr;
+   } // StatLineHandler::StatLineHandler
 
-   /// Sets the object in which the final statistic should be stored.
-   /// @param  fls  Pointer to the file line statistic object.
+   /// Destructor, nothing to do.
    /// @since  x.y.z, 13.04.2016
-   void setEndStat( FileLineStat* fls)
-   {
-      mpFileLineStat = fls;
-   } // StatLineHandler::setEndStat
+   ~StatLineHandler() = default;
 
-   /// Returns the number of lines read.
-   /// @return  Number of lines read.
-   /// @since  x.y.z, 13.04.2016
-   int linesRead() const
+   /// Returns the pointer to the internal statistic object.
+   /// @return  The pointer to the internally used statistic object. May be NULL.
+   /// @since  x.y.z, 15.02.2017
+   FileLineStat* stat() const
    {
-      return mLinesRead;
-   } // end StatLineHandler::linesRead
-
-   /// Returns the number of lines that were ignored by the filter.
-   /// @return  Number of lines ignored by the filter.
-   /// @since  x.y.z, 13.04.2016
-   int linesFiltered() const
-   {
-      return mLinesFiltered;
-   } // StatLineHandler::linesFiltered
-
-   /// Returns the number of lines that were actually processed, i.e. returned
-   /// by the iterator to the application.
-   /// @return  .
-   /// @since  x.y.z, 13.04.2016
-   int linesProcessed() const
-   {
-      return mLinesProcessed;
-   } // StatLineHandler::linesProcessed
+      return mpFileLineStat;
+   } // StatLineHandler::stat
 
 protected:
    /// Increments the counter depending on the type of the call point.
    /// @param[in]  lhcp  The call point from which this methd was called.
    /// @param[in]        The current line, ignored.
    /// @since  x.y.z, 13.04.2016
-   void handleLine( LineHandlerCallPoints lhcp, const std::string&) 
+   void handleLine( LineHandlerCallPoints lhcp, const std::string&)
    {
+      if (mpFileLineStat == nullptr)
+         return;
       switch (lhcp)
       {
-      case LineHandlerCallPoints::lineRead:       ++mLinesRead;       break;
-      case LineHandlerCallPoints::lineFiltered:   ++mLinesFiltered;   break;
-      case LineHandlerCallPoints::lineProcessed:  ++mLinesProcessed;  break;
-      default:                                    assert( false);     break;
+      case LineHandlerCallPoints::lineRead:
+         ++mpFileLineStat->linesRead;
+         break;
+      case LineHandlerCallPoints::lineFiltered:
+         ++mpFileLineStat->linesFiltered;
+         break;
+      case LineHandlerCallPoints::lineProcessed:
+         ++mpFileLineStat->linesProcessed;
+         break;
+      default:
+         assert( false);
+         break;
       } // end switch
    } // StatLineHandler::handleLine
 
 private:
-   /// Counter how many lines were read from the file.
-   int            mLinesRead = 0;
-   /// Counter how many lines were filtered.
-   int            mLinesFiltered = 0;
-   /// Counter how many lines were processed.
-   int            mLinesProcessed = 0;
    /// Pointer to the object to store the final values in.
    FileLineStat*  mpFileLineStat = nullptr;
 
 }; // StatLineHandler
-
 
 
 } // namespace detail
@@ -158,5 +139,5 @@ private:
 #endif   // CELMA_COMMON_DETAIL_LINE_HANDLER_POLICY_HPP
 
 
-// =====================  END OF line_handler_policy.hpp  =====================
+// =====  END OF line_handler_policy.hpp  =====
 

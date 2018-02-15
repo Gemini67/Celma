@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -31,10 +31,12 @@ namespace celma { namespace common { namespace detail {
 /// Iterator for a textfile.
 /// @tparam  F  Filter policy.
 /// @tparam  H  Policy object to call for each line.
+/// @tparam  C  The type of the statistic object.
 /// @since  x.y.z, 16.05.2017  (open file here)
 /// @since  13.04.2016
-template< typename F, typename H> class StreamLineIterator:
-   public F, public H
+template< typename F, typename H, typename C = std::nullptr_t>
+   class StreamLineIterator:
+      public F, public H
 {
 
    using F::filter;
@@ -48,7 +50,14 @@ public:
    /// @param[in]  atEnd   Set to \c true for end iterator.
    /// @since  x.y.z, 16.05.2017  (changed parameter type of source)
    /// @since  13.04.2016
-   StreamLineIterator( const std::string& source, bool atEnd = false) noexcept( false);
+   explicit StreamLineIterator( const std::string& source, bool atEnd = false)
+      noexcept( false);
+
+   /// Constructor that takes a pointer to the statistics object to use.
+   /// @param[in]  source    The source == file name to read from.
+   /// @param[in]  stat_obj  Pointer to the statistic object to use.
+   /// @since  x.y.z, 15.02.2018
+   StreamLineIterator( const std::string& source, C* stat_obj) noexcept( false);
 
    /// Copy constructor.
    /// @param[in]  other  The other object to copy the data from.
@@ -75,7 +84,7 @@ public:
    /// Post-increment operator.
    /// @return  Object pointing to the current line.
    /// @since  13.04.2016
-   StreamLineIterator< F, H> operator ++( int);
+   StreamLineIterator< F, H, C> operator ++( int);
 
    /// Dereference operator.
    /// The current line.
@@ -93,29 +102,28 @@ private:
    /// The stream to read from.
    std::ifstream      mStream;
    /// Set to \c true if this object is at the end of the stream.
-   bool               mAtEnd;
+   bool               mAtEnd = false;
    /// The current line read from the stream.
    std::string        mCurrentLine;
    /// Line number counter.
-   int                mLineNbr;
+   int                mLineNbr = -1;
 
-}; // StreamLineIterator< F, H>
+}; // StreamLineIterator< F, H, C>
 
 
 // inlined methods
 // ===============
 
 
-template< typename F, typename H>
-   StreamLineIterator< F, H>::StreamLineIterator( const std::string& source,
-                                                  bool atEnd):
-         F(),
-         H(),
-         mSourceFile( source),
-         mStream( source),
-         mAtEnd( atEnd),
-         mCurrentLine(),
-         mLineNbr( -1)
+template< typename F, typename H, typename C>
+   StreamLineIterator< F, H, C>::StreamLineIterator( const std::string& source,
+     bool atEnd):
+   F(),
+   H(),
+   mSourceFile( source),
+   mStream( source),
+   mAtEnd( atEnd),
+   mCurrentLine()
 {
    if (mSourceFile.empty())
       throw std::runtime_error( "need to specify a file name");
@@ -123,11 +131,29 @@ template< typename F, typename H>
       throw std::runtime_error( "could not open file '" + mSourceFile + "'");
    if (!mAtEnd)
       operator ++();
-} // StreamLineIterator< F, H>::StreamLineIterator
+} // StreamLineIterator< F, H, C>::StreamLineIterator
 
 
-template< typename F, typename H>
-   StreamLineIterator< F, H>::StreamLineIterator( const StreamLineIterator& other):
+template< typename F, typename H, typename C>
+   StreamLineIterator< F, H, C>::StreamLineIterator( const std::string& source,
+     C* stat_obj):
+   F(),
+   H( stat_obj),
+   mSourceFile( source),
+   mStream( source),
+   mCurrentLine()
+{
+   if (mSourceFile.empty())
+      throw std::runtime_error( "need to specify a file name");
+   if (!mStream.is_open())
+      throw std::runtime_error( "could not open file '" + mSourceFile + "'");
+   if (!mAtEnd)
+      operator ++();
+} // StreamLineIterator< F, H, C>::StreamLineIterator
+
+
+template< typename F, typename H, typename C>
+   StreamLineIterator< F, H, C>::StreamLineIterator( const StreamLineIterator& other):
       F( other),
       H( other),
       mSourceFile( other.mSourceFile),
@@ -146,27 +172,27 @@ template< typename F, typename H>
          throw std::runtime_error( "could not open file '" + mSourceFile + "'");
       mStream.seekg( unconst_stream.mStream.tellg());
    } // end if
-   
-} // StreamLineIterator< F, H>::StreamLineIterator
+
+} // StreamLineIterator< F, H, C>::StreamLineIterator
 
 
-template< typename F, typename H>
-   bool StreamLineIterator< F, H>::operator ==( const StreamLineIterator& other) const
+template< typename F, typename H, typename C>
+   bool StreamLineIterator< F, H, C>::operator ==( const StreamLineIterator& other) const
 {
    return (mSourceFile == other.mSourceFile) && (mAtEnd == other.mAtEnd) &&
           (mAtEnd || (mLineNbr == other.mLineNbr));
-} // StreamLineIterator< F, H>::operator !=
+} // StreamLineIterator< F, H, C>::operator !=
 
 
-template< typename F, typename H>
-   bool StreamLineIterator< F, H>::operator !=( const StreamLineIterator& other) const
+template< typename F, typename H, typename C>
+   bool StreamLineIterator< F, H, C>::operator !=( const StreamLineIterator& other) const
 {
    return !(*this == other);
-} // StreamLineIterator< F, H>::operator !=
+} // StreamLineIterator< F, H, C>::operator !=
 
 
-template< typename F, typename H>
-   StreamLineIterator< F, H>& StreamLineIterator< F, H>::operator ++()
+template< typename F, typename H, typename C>
+   StreamLineIterator< F, H, C>& StreamLineIterator< F, H, C>::operator ++()
 {
    for (;;)
    {
@@ -189,30 +215,30 @@ template< typename F, typename H>
       handleLine( LineHandlerCallPoints::lineFiltered, mCurrentLine);
    } // end for
    return *this;
-} // StreamLineIterator< F, H>::operator ++
+} // StreamLineIterator< F, H, C>::operator ++
 
 
-template< typename F, typename H>
-   StreamLineIterator< F, H> StreamLineIterator< F, H>::operator ++( int)
+template< typename F, typename H, typename C>
+   StreamLineIterator< F, H, C> StreamLineIterator< F, H, C>::operator ++( int)
 {
    auto  obj_copy( *this);
    ++(*this);
    return obj_copy;
-} // StreamLineIterator< F, H>::operator ++
+} // StreamLineIterator< F, H, C>::operator ++
 
 
-template< typename F, typename H>
-   std::string StreamLineIterator< F, H>::operator *()
+template< typename F, typename H, typename C>
+   std::string StreamLineIterator< F, H, C>::operator *()
 {
    return mCurrentLine;
-} // StreamLineIterator< F, H>::operator *
+} // StreamLineIterator< F, H, C>::operator *
 
 
-template< typename F, typename H>
-   int StreamLineIterator< F, H>::lineNbr() const
+template< typename F, typename H, typename C>
+   int StreamLineIterator< F, H, C>::lineNbr() const
 {
    return mLineNbr;
-} // StreamLineIterator< F, H>::lineNbr
+} // StreamLineIterator< F, H, C>::lineNbr
 
 
 } // namespace detail
@@ -223,6 +249,4 @@ template< typename F, typename H>
 #endif   // CELMA_COMMON_DETAIL_STREAM_LINE_ITERATOR_HPP
 
 
-// =====================  END OF stream_line_iterator.hpp  =====================
-
-
+// =====  END OF stream_line_iterator.hpp  =====
