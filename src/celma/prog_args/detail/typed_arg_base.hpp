@@ -22,7 +22,6 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include <boost/scoped_ptr.hpp>
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 #include "celma/prog_args/detail/i_constraint.hpp"
@@ -92,7 +91,7 @@ public:
       optional,   //!< The value is optional.
       required,   //!< The argument must have a value.<br>
                   //!< This is the default for all other arguments.
-      command,    //!< An argumewnt with this value mode signals that this and
+      command,    //!< An argument with this value mode signals that this and
                   //!< all the following arguments and values are not anymore
                   //!< relevant for this object, but should be assigned as
                   //!< complete argument string to the value of the argument and
@@ -111,20 +110,23 @@ public:
    static constexpr const char* valueMode2str( ValueMode vm);
 
    /// Constructor.
-   /// @param[in]  key       The complete argument specification with short and/
-   ///                       or long argument.
    /// @param[in]  vname     The name of the destination variable to store the
    ///                       value in.
    /// @param[in]  vm        The value mode to set for this argument.
    /// @param[in]  printDef  Specifies if the default value of the destination
    ///                       variable should be printed in the usage or not.
-   /// @since  0.2, 10.04.2016
-   TypedArgBase( const ArgumentKey& key, const std::string& vname,
-                 ValueMode vm, bool printDef);
+   /// @since  0.16.0, 09.11.2017
+   TypedArgBase( const std::string& vname, ValueMode vm, bool printDef);
 
    /// Destructor, frees dynamically allocated memory.
    /// @since  0.2, 10.04.2016
    virtual ~TypedArgBase();
+
+   /// Set the argument key.
+   /// @param[in]  key  The complete argument specification with short and/or
+   ///                  long argument.
+   /// @since  0.16.0, 09.11.2017
+   void setKey( const ArgumentKey& key);
 
    /// Assigns a value.
    /// @param[in]  ignore_cardinality  Specifies if the cardinality of calls/
@@ -255,12 +257,32 @@ public:
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setListSep( char sep) noexcept( false);
 
+   /// Special feature for destination variable type vector:<br>
+   /// Clear the contents of the vector before assigning the value(s) from the
+   /// command line. If the feature is off (the default), the value(s from the
+   /// command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination vector that should be overwritten by the argument's values.
+   /// Throws when called for other destination types.
+   /// @since  1.2.0, 28.12.2017
+   virtual void setClearBeforeAssign() noexcept( false);
+
    /// Calls all check methods defined for this argument. The check methods
    /// throw an exception when a check failed, so: No exception, value can be
    /// stored.
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
    void check( const std::string& val) const;
+
+   /// Returns if the argument has a check specified.
+   /// @return  \c true if the argument has a check specified.
+   /// @since  0.16.0, 12.08.2017
+   bool hasCheck() const;
+
+   /// Returns a text description of the check specified for this argument.
+   /// @return  A string with the description of the check.
+   /// @since  0.16.0, 12.08.2017
+   std::string checkStr() const;
 
    /// Specifies the cardinality check to perform on this type before assignment
    /// of a new value.<br>
@@ -280,6 +302,13 @@ public:
    /// requirement (e.g. minimum number of values) was met.
    /// @since  0.2, 10.04.2016
    void checkCardinality();
+
+   /// Allows to change the "original value check" mode. This is only applicable
+   /// to typed arg value objects.
+   /// @param[in]  yesNo  Set to \c false for turning the value check off.
+   /// @return  Pointer to this object.
+   /// @since  1.1.0, 16.11.2017
+   virtual TypedArgBase* checkOriginalValue( bool yesNo) noexcept( false);
 
 /*
    /// Adds a value conversion: The value from the argument list (command line)
@@ -305,7 +334,7 @@ public:
    /// Should add the value of the destination variable to the string when
    /// called.<br>
    /// Throws an exception when called for the base class.
-   /// @param[in]  dest  The string to append the default value to.
+   /// @param[out]  dest  The string to append the default value to.
    /// @since  0.2, 10.04.2016
    virtual void defaultValue( std::string& dest) const noexcept( false);
 
@@ -315,6 +344,16 @@ public:
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addConstraint( IConstraint* ic);
+
+   /// Returns if the argument has a constraint specified.
+   /// @return  \c true if the argument has a constraint specified.
+   /// @since  0.16.0, 15.08.2017
+   bool hasConstraint() const;
+
+   /// Returns a text description of the constraint specified for this argument.
+   /// @return  A string with the description of the constraint.
+   /// @since  0.16.0, 15.08.2017
+   std::string constraintStr() const;
 
    /// Called for printing an argument and its destination variable.<br>
    /// Calls dump() which can be overloaded by derived classes.
@@ -339,30 +378,35 @@ protected:
    void activateConstraints();
 
    /// The complete argument specification: short and/or long argument.
-   const ArgumentKey                 mKey;
+   ArgumentKey                     mKey;
    /// Contains the name of the variable in which the value(s) are stored.
-   const std::string                 mVarName;
+   const std::string               mVarName;
    /// The value mode of this argument, set depending on the type of the
    /// destination variable.
-   ValueMode                         mValueMode;
+   ValueMode                       mValueMode;
    /// Set if this argument is mandatory, not set by default.
-   bool                              mIsMandatory;
+   bool                            mIsMandatory = false;
    /// Set if this argument can handle multiple, separate values in the
    /// argument list.
-   bool                              mTakeMultipleValues;
+   bool                            mTakeMultipleValues = false;
    /// Set if the destination variable for this argument already contains the
    /// default value which may be printed in the usage.
-   bool                              mPrintDefault;
+   bool                            mPrintDefault;
    /// Set if this argument should be hidden = not printed in the usage.
-   bool                              mIsHidden;
+   bool                            mIsHidden = false;
+   /// Set to activate the comparison of the destination variable with its
+   /// original value before a new value is assigned.<br>
+   /// This may be used by the typed arg value class to detect multiple
+   /// assignments to the same destination variable.
+   bool                            mCheckOrigValue = false;
    /// Stores all the checks (objects) defined for this argument.
-   std::vector< ICheck*>             mChecks;
+   std::vector< ICheck*>           mChecks;
    /// Stores all the formatters (objects) defined for this argument.
-   std::vector< IFormat*>            mFormats;
+   std::vector< IFormat*>          mFormats;
    /// Pointer to the object that manages the cardinality check.
-   boost::scoped_ptr< ICardinality>  mpCardinality;
+   std::unique_ptr< ICardinality>  mpCardinality;
    /// Stores the constraints defined for this argument.
-   std::vector< IConstraint*>        mConstraints;
+   std::vector< IConstraint*>      mConstraints;
 
 private:
    /// Should assign a value to the specified destination variable.
@@ -480,6 +524,25 @@ inline TypedArgBase* TypedArgBase::setListSep( char /* sep */) noexcept( false)
    throw std::invalid_argument( "setting list separator not allowed for "
                                 "variable '" + mVarName + "'");
 } // TypedArgBase::setListSep
+
+
+inline void TypedArgBase::setClearBeforeAssign() noexcept( false)
+{
+   throw std::invalid_argument( "setting 'clear before assign' is not allowed "
+                                "for variable '" + mVarName + "'");
+} // TypedArgBase::setClearBeforeAssign
+
+
+inline bool TypedArgBase::hasCheck() const
+{
+   return !mChecks.empty();
+} // TypedArgBase::hasCheck
+
+
+inline bool TypedArgBase::hasConstraint() const
+{
+   return !mConstraints.empty();
+} // TypedArgBase::hasConstraint
 
 
 inline const std::string& TypedArgBase::varName() const

@@ -29,10 +29,10 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::string;
 using std::vector;
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
                                                  "single integer allowed"));
          BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( dest_i2),
                                                  "single integer allowed"));
-         BOOST_REQUIRE_NO_THROW( ah.addArgument( DEST_VAR( dest_free),
+         BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( dest_free),
                                                  "single free integer allowed"));
       } // end TestData::TestData
 
@@ -459,7 +459,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
                                                  "single integer allowed"));
          BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( dest_i2),
                                                  "single integer allowed"));
-         BOOST_REQUIRE_NO_THROW( ah.addArgument( DEST_VAR( dest_free),
+         BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( dest_free),
                                                  "multiple free integers allowed"));
 
       } // end TestData::TestData

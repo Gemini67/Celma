@@ -15,11 +15,11 @@
 #include <cstring>
 #include <iostream>
 #include <string>
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 using std::cerr;

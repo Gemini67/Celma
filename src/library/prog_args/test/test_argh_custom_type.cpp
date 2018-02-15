@@ -15,7 +15,7 @@
 --*/
 
 
-// STL includes
+// C++ Standard Library includes
 #include <string>
 #include <iostream>
 #include <bitset>
@@ -28,7 +28,7 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/prog_args.hpp"
 
@@ -50,13 +50,12 @@ public:
    typedef std::bitset< 1024>  type;
 
    /// Constructor.
-   /// @param[in]  key    The argument specification, i.e. short and/or long
-   ///                    argument.
    /// @param[in]  dest   The destination variable to store the values in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
+   /// @since  0.16.0, 13.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArgBitset( const ArgumentKey& key, type& dest, const string& vname);
+   TypedArgBitset( type& dest, const string& vname);
 
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
@@ -89,9 +88,8 @@ private:
 // ===============
 
 
-TypedArgBitset::TypedArgBitset( const ArgumentKey& key, type& dest,
-                                const string& vname):
-   TypedArgBase( key, vname, Handler::ValueMode::required, false),
+TypedArgBitset::TypedArgBitset( type& dest, const string& vname):
+   TypedArgBase( vname, Handler::ValueMode::required, false),
    mDestVar( dest),
    mListSep( ',')
 {
@@ -145,11 +143,10 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
 
 
    BOOST_REQUIRE_NO_THROW(
-      ah.addCustomArgument< TypedArgBitset>( "b,bitset", DEST_VAR( kilobits),
-                                             "bitset")
-                                           ->setIsMandatory());
+      ah.addArgument( "b,bitset", new TypedArgBitset( kilobits, "bitset"),
+                      "a bit set")->setIsMandatory());
 
-   const celma::common::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
+   const celma::appl::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
    BOOST_REQUIRE_EQUAL( kilobits.count(), 6);

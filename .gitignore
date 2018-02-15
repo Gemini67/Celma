@@ -4,3 +4,4 @@ lib64/
 doc/html/
 tags
 src/celma/celma_version.hpp
+.idea

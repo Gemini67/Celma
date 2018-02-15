@@ -16,7 +16,7 @@
 
 
 // module to test, header file include
-#include "celma/prog_args/handler.hpp"
+#include "celma/prog_args.hpp"
 
 
 // STL includes
@@ -30,11 +30,11 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args/helpers/triple_logic.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 using celma::prog_args::helpers::TripleLogic;
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,flag", DEST_VAR( flag), "Flag"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",  DEST_VAR( iVal), "Flag"));
-      BOOST_REQUIRE_NO_THROW( ah.addArgument(           DEST_VAR( name), "Name")
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-",      DEST_VAR( name), "Name")
                                             ->setIsMandatory());
 
       ArgString2Array  as2a( "-i 17", nullptr);
@@ -445,7 +445,7 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,flag", DEST_VAR( flag), "Flag"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",  DEST_VAR( iVal), "Flag"));
-      BOOST_REQUIRE_NO_THROW( ah.addArgument(           DEST_VAR( name), "Name")
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-",      DEST_VAR( name), "Name")
                                             ->setIsMandatory());
 
       ArgString2Array  as2a( "-f PROCESS1", nullptr);
@@ -470,8 +470,8 @@ BOOST_AUTO_TEST_CASE( one_free_value)
    int      v2;
 
 
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( DEST_VAR( v1), "one"));
-   BOOST_REQUIRE_THROW( ah.addArgument( DEST_VAR( v2), "two"), invalid_argument);
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( v1), "one"));
+   BOOST_REQUIRE_THROW( ah.addArgument( "-", DEST_VAR( v2), "two"), invalid_argument);
 
 } // one_free_value
 
@@ -691,7 +691,7 @@ BOOST_AUTO_TEST_CASE( one_free_int)
    CheckAssign< int>  repetitions;
 
 
-   ah.addArgument( DEST_VAR( repetitions), "Number of repetitions");
+   ah.addArgument( "-", DEST_VAR( repetitions), "Number of repetitions");
 
    ArgString2Array  as2a( "123", nullptr);
 
@@ -869,7 +869,7 @@ BOOST_AUTO_TEST_CASE( one_free_double)
    CheckAssign< double>  factor;
 
 
-   ah.addArgument( DEST_VAR( factor), "Factor");
+   ah.addArgument( "-", DEST_VAR( factor), "Factor");
 
    ArgString2Array  as2a( "99.98", nullptr);
 
@@ -1021,7 +1021,7 @@ BOOST_AUTO_TEST_CASE( one_free_string)
    CheckAssign< string>  name;
 
 
-   ah.addArgument( DEST_VAR( name), "Name");
+   ah.addArgument( "-", DEST_VAR( name), "Name");
 
    ArgString2Array  as2a( "PROCESS1", nullptr);
 
@@ -1661,7 +1661,7 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
          as2a( argstring, nullptr)
       {
          ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
-         ah.addArgument(                DEST_VAR( name),     "Name");
+         ah.addArgument( "-",           DEST_VAR( name),     "Name");
       } // end TestData::TestData
 
       /// The argument handler object for the test.
@@ -2332,6 +2332,14 @@ public:
       int  checkVal = boost::lexical_cast< int>( val);
       if ((checkVal != m1) && (checkVal != m2) && (checkVal != m3))
          throw runtime_error( "not in tripple");
+   }
+
+   /// Returns a text description of the check.
+   /// @return  A string with the text description of the check.
+   /// @since  0.16.0, 12.08.2017
+   virtual std::string toString() const override
+   {
+      return "";
    }
 
 private:

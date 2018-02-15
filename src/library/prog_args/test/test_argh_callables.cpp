@@ -19,7 +19,7 @@
 
 
 // module to test, header file include
-#include "celma/prog_args/handler.hpp"
+#include "celma/prog_args.hpp"
 
 
 // STL includes
@@ -32,11 +32,11 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/multi_setter.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::runtime_error;
 using std::string;
@@ -498,7 +498,7 @@ BOOST_AUTO_TEST_CASE( multi_setter2_check)
    string   var2;
 
    typedef  celma::common::MultiSetter2< int, string>  my_setter;
-   my_setter  ms( DEST_VAR( var1), DEST_VAR( var2), "hello world");
+   my_setter  ms( DEST_MULTI_SETTER2( var1, var2, "hello world"));
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,multi",
@@ -526,9 +526,8 @@ BOOST_AUTO_TEST_CASE( multi_setter3_check)
    string   string_var3;
 
    typedef  celma::common::MultiSetter3< string, int, string>  my_setter;
-   my_setter  ms( DEST_VAR( string_var1),
-                  DEST_VAR( int_var2), 42,
-                  DEST_VAR( string_var3), "hello world");
+   my_setter  ms( DEST_MULTI_SETTER3( string_var1, int_var2, 42,
+                                      string_var3, "hello world"));
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,multi",

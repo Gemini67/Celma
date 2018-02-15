@@ -32,10 +32,10 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::vector;
 
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
       vector< int>  myVec;
 
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer")
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer")
                                             ->setIsMandatory());
       ArgString2Array  as2a( "", nullptr);
 
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
       BOOST_REQUIRE_EQUAL( myVec[ 6], 9);
    } // end scope
 
-} // end test_vector
+} // test_vector
 
 
 
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
       vector< int>  myVec;
 
 
-      ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
+      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
       ArgString2Array  as2a( "", nullptr);
 
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
       vector< int>  myVec;
 
 
-      ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
+      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
       ArgString2Array  as2a( "10,20,40", nullptr);
 
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
       vector< int>  myVec;
 
 
-      ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
+      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
       ArgString2Array  as2a( "3-9", nullptr);
 
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
       BOOST_REQUIRE_EQUAL( myVec[ 6], 9);
    } // end scope
 
-} // end test_vector_free
+} // test_vector_free
 
 
 
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
       BOOST_REQUIRE( myBitset[ 9]);
    } // end scope
 
-} // end test_bitset
+} // test_bitset
 
 
 
@@ -334,7 +334,7 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
       BOOST_REQUIRE_EQUAL( myVec[ 0], 0);
    } // end scope
 
-} // end test_vector_format
+} // test_vector_format
 
 
 

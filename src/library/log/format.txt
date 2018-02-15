@@ -1,0 +1,86 @@
+Formatting
+==========
+
+
+logical logs (e.g. trace, operation etc)
+
+each logical logs can have 0..n destinations
+
+destination: stream, file, ...
+
+formatting:
+- which fields
+- output format of the field
+
+procedure (today)
+- StreamLog fills LogMsg object
+- LogMsg object is passed to each destination
+
+
+thoughts:
+- the same logical log can have different destinations that require different
+  formatting:
+  -> formatting is related to destination, not (logical) log
+- possibilites to connect log destination with formatter:
+  - formatter is passed as parameter to the log destination in the constructor
+  - formatter is passed to the log destination later (by function call)
+  - formatter is template parameter of log destination
+- possibilites of program flow:
+  - message is passed to formatter, output of formatter to log destination
+  - message is passed to log destination, which passes it to formatter
+- log destination message-queue
+  - input LogMsg
+  - output type depends of queue that is used
+
+
+LogDestRtdsQueue
+LogDestZeroMq
+Maybe such special destinations don't use a formatter supported by the framework
+but implement it internally.
+
+The problem with the first 2 formatter pass methods described above:
+The input type as well as the output type of the formatter need to be known in
+order to specify the interface method.
+
+
+Idea now:
+One formatter base class per formatting needed, e.g.
+class IFormatStream
+{
+public:
+   void format( std::ostream& out, const LogMsg& msg) const = 0;
+
+};
+
+class IFormat0mq
+{
+public:
+  void format( zmq::msg& out, const LogMsg& msg) const = 0;
+
+};
+
+Passing the destination as out-parameter is more efficient.
+
+
+File Generations
+================
+
+Possible ways to define file generations:
+- One file per day
+- maximum size
+- maximum number of messages
+
+In order to be able to handle file generations, the class must know the path and
+the file name.
+
+template< typename P = NoGenerationPolicy> class LogDestFileGenerations:
+   public ILogDest, private P
+{
+public:
+   LogDestFileGenerations( const std::string& path, const std::string filename);
+
+private:
+   virtual void message( const LogMsg& msg);
+
+};
+
