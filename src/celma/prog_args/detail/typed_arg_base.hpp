@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,6 +30,8 @@
 
 // the specific checks are not actually needed here, but they are included
 // anyway for convenience of the user
+#include "celma/prog_args/detail/check_is_file.hpp"
+#include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
 #include "celma/prog_args/detail/check_upper.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
@@ -567,5 +569,5 @@ inline void TypedArgBase::defaultValue( std::string& /* dest */) const
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_BASE_HPP
 
 
-// ========================  END OF typed_arg_base.hpp  ========================
+// =====  END OF typed_arg_base.hpp  =====
 
