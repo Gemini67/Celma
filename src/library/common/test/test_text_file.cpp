@@ -41,7 +41,7 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( FilterStatTextFile::const_iterator)
 
 namespace {
 
-const char* const  File = "/home/rene/projects/Celma/textfile/src/celma/common/text_file.hpp";
+const char* const  File = "/etc/mime.types";
 
 /// @since  1.3.0, 15.02.2018
 class TestFixture

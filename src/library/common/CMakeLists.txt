@@ -2,18 +2,18 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
 
 cmake_minimum_required( VERSION 2.8 )
 
-set( common_sources
-   ${CMAKE_CURRENT_SOURCE_DIR}/exception_base.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/extract_funcname.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/print_version_info.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/range_expression.cpp
+# list of files to add to the library
+# use GLOB (instead of GLOB_RECURSE) so we can exclude the test directory
+file( GLOB common_sources
+      "*.cpp"
+      "detail/*.cpp"
 )
 
 add_subdirectory( test )
