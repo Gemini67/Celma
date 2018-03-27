@@ -26,6 +26,7 @@
 
 // project includes
 #include "celma/common/tokenizer.hpp"
+#include "celma/format/to_string.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -36,6 +37,15 @@ using std::string;
 
 // module definitions
 ConstraintContainer*  ConstraintContainer::mpCurrentConstraints = nullptr;
+
+
+
+/// Constructor.
+/// @since  0.15.0, 26.06.2017
+ConstraintContainer::ConstraintContainer():
+   mConstraints( true)
+{
+} // ConstraintContainer::ConstraintContainer
 
 
 
@@ -56,14 +66,13 @@ void ConstraintContainer::addConstraint( Constraint constraint_type,
    for (auto const& token : tokenizer)
    {
       // don't add the same constraint twice
-      const Data                      search( token);
-      const DataCont::const_iterator  dataIt = std::find( mConstraints.begin(),
-                                                          mConstraints.end(),
-                                                          search);
+      const ArgumentKey  search( token);
+      auto               dataIt = mConstraints.find( search);
+
       if ((dataIt == mConstraints.end()) ||
-          (dataIt->mConstraint != constraint_type))
+          (dataIt->data().mConstraint != constraint_type))
       {
-         mConstraints.push_back( Data( token, constraint_type, created_by));
+         mConstraints.addArgument( Data( constraint_type, created_by), search);
       } // end if
    } // end for
 
@@ -74,27 +83,27 @@ void ConstraintContainer::addConstraint( Constraint constraint_type,
 /// Must be called for each argument from the command line that was
 /// identified.<br>
 /// Internally checks if there is a constraint for this argument.
-/// @param[in]  argSpec  The argument (short or long) that was identified
-///                      from the command line.
+/// @param[in]  key  The argument (short or long) that was identified from
+///                  the command line.
 /// @since  0.2, 10.04.2016
-void ConstraintContainer::argumentIdentified( const string& argSpec)
+void ConstraintContainer::argumentIdentified( const ArgumentKey& key)
 {
 
    if (mConstraints.empty())
       return;
 
-   const Data  search( argSpec);
-   auto        it = mConstraints.begin();
+   auto  it = mConstraints.cbegin();
 
-   while ((it = std::find( it, mConstraints.end(), search)) != mConstraints.end())
+   while ((it = std::find( it, mConstraints.cend(), key)) != mConstraints.cend())
    {
-      if (it->mConstraint == cRequired)
+      if (it->data().mConstraint == Constraint::required)
       {
          it = mConstraints.erase( it);
-      } else if (it->mConstraint == cExcluded)
+      } else if (it->data().mConstraint == Constraint::excluded)
       {
-         throw std::runtime_error( "Argument '" + it->spec() +
-                                   "' is excluded by '" + it->mOrigin + "'");
+         throw std::runtime_error( "Argument '" + format::toString( key)
+                                   + "' is excluded by '" + it->data().mOrigin
+                                   + "'");
       } // end if
    } // end while
 
@@ -109,14 +118,15 @@ void ConstraintContainer::checkRequired()
 
    for (auto const& current_constraint : mConstraints)
    {
-      if (current_constraint.mConstraint == cRequired)
+      if (current_constraint.data().mConstraint == Constraint::required)
       {
          
-         throw std::runtime_error( string( "Argument '").
-                                   append( current_constraint.spec()).
-                                   append( "' required by '").
-                                   append( current_constraint.mOrigin).
-                                   append( "' is missing"));
+         throw std::runtime_error(
+            string( "Argument '").
+                  append( format::toString( current_constraint.key())).
+                  append( "' required by '").
+                  append( current_constraint.data().mOrigin).
+                  append( "' is missing"));
       } // end if
    } // end for
 
@@ -130,37 +140,11 @@ void ConstraintContainer::checkRequired()
 /// @param[in]  c         The type of the constraint.
 /// @param[in]  origin    The origin (== argument) of this constraint.
 /// @since  0.2, 10.04.2016
-ConstraintContainer::Data::Data( const string& arg_spec, Constraint c,
-                                 const string& origin):
-   mArgKeys( arg_spec),
+ConstraintContainer::Data::Data( Constraint c, const string& origin):
    mConstraint( c),
    mOrigin( origin)
 {
 } // ConstraintContainer::Data::Data
-
-
-
-/// Returns if either the short or long argument match.
-/// @param[in]  other  The other object to compare against.
-/// @return  \c true if the short or long argument match.
-/// @since  0.2, 10.04.2016
-bool ConstraintContainer::Data::operator ==( const ConstraintContainer::Data& other) const
-{
-
-   return mArgKeys == other.mArgKeys;
-} // ConstraintContainer::Data::operator ==
-
-
-
-/// Returns the argument specification as set on the constructor (rebuilt,
-/// actually).
-/// @return  The complete argument specification.
-/// @since  0.2, 10.04.2016
-string ConstraintContainer::Data::spec() const
-{
-
-   return mArgKeys.str();
-} // ConstraintContainer::Data::spec
 
 
 

@@ -4,7 +4,7 @@
 
 
 #include <string>
-#include "celma/indirect_access/indirect_access_macros.hpp"
+#include "celma/indirect_access/indirect_access.hpp"
 
 
 #define  ADDRESS_RECORD_FIELDS(FIELD) \

@@ -18,6 +18,7 @@
 
 
 #include "celma/prog_args/groups.hpp"
+#include "celma/prog_args/destination.hpp"
 
 
 using celma::prog_args::Groups;
@@ -29,7 +30,8 @@ int main( int argc, char* argv[])
 {
 
    auto  ah1 = Groups::instance().getArgHandler( "Program Arguments:");
-   auto  ah2 = Groups::instance().getArgHandler( "Standard Arguments:", Handler::AllHelp);
+   auto  ah2 = Groups::instance().getArgHandler( "Standard Arguments:",
+                                                 Handler::AllHelp);
 
 
    bool  quietFlag;
@@ -39,10 +41,13 @@ int main( int argc, char* argv[])
    bool  printModList;
 
    ah1->addArgument( "q",             DEST_VAR( quietFlag), "be quiet");
-   ah1->addArgument( "debug_mode",    DEST_VAR( debugMode), "set to activate the debug mode");
-   ah1->addArgument( "mandatory_int", DEST_VAR( manInt1),   "mandatory integer value")->setIsMandatory();
+   ah1->addArgument( "debug_mode",    DEST_VAR( debugMode),
+                     "set to activate the debug mode");
+   ah1->addArgument( "mandatory_int", DEST_VAR( manInt1),
+                     "mandatory integer value")->setIsMandatory();
 
-   ah2->addArgument( "version", DEST_VAR( printVersion), "prints version information");
+   ah2->addArgument( "version", DEST_VAR( printVersion),
+                     "prints version information");
    ah2->addArgument( "modlist", DEST_VAR( printModList), "prints module list");
 
 
@@ -50,9 +55,9 @@ int main( int argc, char* argv[])
    int     inputMode = 0;
 
    Handler  subInput( Handler::hfHelpShort | Handler::hfHelpLong);
-   subInput.addArgument( "f", DEST_VAR( inputName), DEST_VAR( inputMode), 1,
+   subInput.addArgument( "f", DEST_PAIR( inputName, inputMode, 1),
                          "specifies to read from a file");
-   subInput.addArgument( "q", DEST_VAR( inputName), DEST_VAR( inputMode), 2,
+   subInput.addArgument( "q", DEST_PAIR( inputName, inputMode, 2),
                          "specifies to read from a queue");
    ah1->addArgument( "i", &subInput, "input arguments");
 
@@ -60,9 +65,9 @@ int main( int argc, char* argv[])
    int     outputMode = 0;
 
    Handler  subOutput( Handler::hfHelpShort | Handler::hfHelpLong);
-   subOutput.addArgument( "f", DEST_VAR( outputName), DEST_VAR( outputMode), 1,
+   subOutput.addArgument( "f", DEST_PAIR( outputName, outputMode, 1),
                           "specifies to write into a file");
-   subOutput.addArgument( "q", DEST_VAR( outputName), DEST_VAR( outputMode), 2,
+   subOutput.addArgument( "q", DEST_PAIR( outputName, outputMode, 2),
                           "specifies to write into a queue");
    ah1->addArgument( "o", &subOutput, "output arguments");
 

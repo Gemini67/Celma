@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,6 +20,7 @@
 
 
 #include <stdexcept>
+#include <sstream>
 #include <boost/lexical_cast.hpp>
 #include "celma/prog_args/detail/i_check.hpp"
 
@@ -44,30 +45,46 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void checkValue( const std::string& val) const override;
 
+   /// Returns a text description of the check.
+   /// @return  A string with the text description of the check.
+   /// @since  0.16.0, 12.08.2017
+   virtual std::string toString() const override;
+
 private:
    /// The lower limit to check against.
-   T  mCheckValue;
+   const T  mCheckValue;
 
-}; // CheckLower<T>
+}; // CheckLower< T>
 
 
 // inlined methods
 // ===============
 
 
-template< typename T> CheckLower<T>::CheckLower( T value):
-                                   mCheckValue( value)
+template< typename T> CheckLower< T>::CheckLower( T value):
+   mCheckValue( value)
 {
-} // end CheckLower<T>::CheckLower
+} // CheckLower< T>::CheckLower
 
 
-template< typename T> void CheckLower<T>::checkValue( const std::string& val) const
+template< typename T> void CheckLower< T>::checkValue( const std::string& val) const
 {
    T  native = boost::lexical_cast< T>( val);
    if (native < mCheckValue)
       throw std::underflow_error( "Value " + val + " is below limit " +
                                   boost::lexical_cast< std::string>( mCheckValue));
-} // end CheckLower<T>::checkValue
+} // CheckLower< T>::checkValue
+
+
+template< typename T> std::string CheckLower< T>::toString() const
+{
+
+   std::ostringstream  oss;
+
+   oss << "Value >= " << mCheckValue;
+
+   return oss.str();
+} // CheckLower< T>::toString
 
 
 } // namespace detail
@@ -85,7 +102,7 @@ template< typename T> void CheckLower<T>::checkValue( const std::string& val) co
 template< typename T> detail::ICheck* lower( T value)
 {
    return new detail::CheckLower< T>( value);
-} // end lower
+} // lower
 
 
 } // namespace prog_args

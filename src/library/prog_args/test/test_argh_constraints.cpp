@@ -29,10 +29,10 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::runtime_error;
 using std::string;
@@ -546,7 +546,9 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i,name;r")), runtime_error);
+      BOOST_REQUIRE_THROW( ah.addConstraint(
+                              celma::prog_args::all_of( "n;i,name;r")),
+                           runtime_error);
    } // end scope
 
    // none of the specified arguments used: constraint is not fulfilled

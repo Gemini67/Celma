@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,6 +20,8 @@
 
 
 #include <stdexcept>
+#include <sstream>
+#include <string>
 #include <boost/lexical_cast.hpp>
 #include "celma/prog_args/detail/i_check.hpp"
 
@@ -43,30 +45,46 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void checkValue( const std::string& val) const override;
 
+   /// Returns a text description of the check.
+   /// @return  A string with the text description of the check.
+   /// @since  0.16.0, 12.08.2017
+   virtual std::string toString() const override;
+
 private:
    /// The upper limit to check against.
-   T  mCheckValue;
+   const T  mCheckValue;
 
-}; // CheckUpper<T>
+}; // CheckUpper< T>
 
 
 // inlined methods
 // ===============
 
 
-template< typename T> CheckUpper<T>::CheckUpper( T value):
-                                   mCheckValue( value)
+template< typename T> CheckUpper< T>::CheckUpper( T value):
+   mCheckValue( value)
 {
-} // end CheckUpper<T>::CheckUpper
+} // CheckUpper< T>::CheckUpper
 
 
-template< typename T> void CheckUpper<T>::checkValue( const std::string& val) const
+template< typename T> void CheckUpper< T>::checkValue( const std::string& val) const
 {
    T  native = boost::lexical_cast< T>( val);
    if (native >= mCheckValue)
       throw std::overflow_error( "Value " + val + " is above or equal to limit " +
                                  boost::lexical_cast< std::string>( mCheckValue));
-} // end CheckUpper<T>::checkValue
+} // CheckUpper< T>::checkValue
+
+
+template< typename T> std::string CheckUpper< T>::toString() const
+{
+
+   std::ostringstream  oss;
+
+   oss << "Value < " << mCheckValue;
+
+   return oss.str();
+} // CheckUpper< T>::toString
 
 
 } // namespace detail

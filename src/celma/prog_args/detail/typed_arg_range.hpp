@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,14 +41,12 @@ public:
    typedef common::RangeDest< T, C>  dest_type;
 
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  dest      The destination variable to store the values in.
-   /// @param[in]  vname     The name of the destination variable to store the
+   /// @param[in]  dest   The destination variable to store the values in.
+   /// @param[in]  vname  The name of the destination variable to store the
    ///                       value in.
+   /// @since  0.16.0, 13.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArgRange( const std::string& arg_spec, const dest_type& dest,
-                  const std::string& vname);
+   TypedArgRange( const dest_type& dest, const std::string& vname);
 
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
@@ -91,10 +89,9 @@ private:
 
 
 template< typename T, typename C>
-   TypedArgRange< T, C>::TypedArgRange( const std::string& arg_spec,
-                                        const dest_type& dest,
+   TypedArgRange< T, C>::TypedArgRange( const dest_type& dest,
                                         const std::string& vname):
-      TypedArgBase( arg_spec, vname, ValueMode::required, false),
+      TypedArgBase( vname, ValueMode::required, false),
       mDestVar( dest)
 {
 } // TypedArgRange< T, C>::TypedArgRange

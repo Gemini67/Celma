@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -11,10 +11,10 @@ cmake_minimum_required( VERSION 2.8 )
 
 project( Celma )
 
-set( MAJORVERSION    0 )
-set( MINORVERSION    0 )
-set( RELEASE_VERSION 14 )
-set( PATCHLEVEL      2 )
+set( MAJORVERSION    1 )
+set( MINORVERSION    4 )
+set( RELEASE_VERSION 1 )
+set( PATCHLEVEL      0 )
 
 enable_testing()
 include( CTest)
