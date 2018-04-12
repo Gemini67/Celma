@@ -30,11 +30,12 @@
 
 // the specific checks are not actually needed here, but they are included
 // anyway for convenience of the user
-#include "celma/prog_args/detail/check_is_file.hpp"
+#include "celma/prog_args/detail/check_is_absolute_path.hpp"
 #include "celma/prog_args/detail/check_is_directory.hpp"
+#include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
-#include "celma/prog_args/detail/check_upper.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
+#include "celma/prog_args/detail/check_upper.hpp"
 #include "celma/prog_args/detail/check_values.hpp"
 
 // also the specific formatters are not actually needed here, but they are also

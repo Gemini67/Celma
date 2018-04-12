@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.4.1
+   \mainpage  CELMA v1.4.2
 
    \tableofcontents
 
@@ -46,6 +46,7 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.4.2  | 2018-04-12        | Added value-checks "is absolute path" in argument handler.
      1.4.1  | 2018-03-05        | Added value-checks "is file" and "is directory" in argument handler.
      1.4.0  | 2018-03-01        | Added classes FileInfo and FileOperations.
      1.3.0  | 2018-02-15        | Added class TextFile.

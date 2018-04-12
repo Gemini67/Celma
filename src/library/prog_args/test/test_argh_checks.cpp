@@ -1186,5 +1186,128 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
 
 
 
+/// Verify that the "is an absolute path" check work correctly.
+/// @since  1.4.2, 12.04.2018
+BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
+{
+
+   using celma::prog_args::isAbsolutePath;
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
+
+      ArgString2Array  as2a( "-p ./data/file.dat", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+         runtime_error);
+   } // end scope
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
+
+      ArgString2Array  as2a( "-p data/file.dat", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+         runtime_error);
+   } // end scope
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
+
+      ArgString2Array  as2a( "-p ~/data/file.dat", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+         runtime_error);
+   } // end scope
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
+
+      ArgString2Array  as2a( "-p /etc/passwd", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   } // end scope
+
+
+} // correctly_check_absolute_path
+
+
+
+/// Verify that a combined check for "is a directory" and "is an absolute path"
+/// work correctly.
+/// @since  1.4.2, 12.04.2018
+BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
+{
+
+   using celma::prog_args::isAbsolutePath;
+   using celma::prog_args::isDirectory;
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
+         ->addCheck( isDirectory());
+
+      ArgString2Array  as2a( "-d /etc/passwd", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+         runtime_error);
+   } // end scope
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
+         ->addCheck( isDirectory());
+
+      ArgString2Array  as2a( "-d etc", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+         runtime_error);
+   } // end scope
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
+         ->addCheck( isDirectory());
+
+      ArgString2Array  as2a( "-d ./etc", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+         runtime_error);
+   } // end scope
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
+         ->addCheck( isDirectory());
+
+      ArgString2Array  as2a( "-d /etc", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   } // end scope
+
+} // check_directory_and_absolute_path
+
+
+
 // =====  END OF test_argh_checks.cpp  =====
 
