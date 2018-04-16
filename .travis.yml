@@ -1,0 +1,23 @@
+language: cpp
+
+os: linux
+
+compiler:
+  - cpp
+  - clang
+
+# before_install:
+#   - sudo apt-get -qq update
+#   - sudo apt-get install -y libxml2-dev
+
+addons:
+  apt:
+    packages:
+      - cmake
+      - libboost-dev
+
+script:
+  - cmake --version
+  - g++ --version
+  - clang++ --version
+  - make && make test && make coverage && make doxygen
