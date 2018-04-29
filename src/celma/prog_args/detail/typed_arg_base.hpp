@@ -268,7 +268,7 @@ public:
    /// destination vector that should be overwritten by the argument's values.
    /// Throws when called for other destination types.
    /// @since  1.2.0, 28.12.2017
-   virtual void setClearBeforeAssign() noexcept( false);
+   virtual TypedArgBase* setClearBeforeAssign() noexcept( false);
 
    /// Calls all check methods defined for this argument. The check methods
    /// throw an exception when a check failed, so: No exception, value can be
@@ -522,14 +522,14 @@ inline bool TypedArgBase::takesMultiValue() const
 } // TypedArgBase::takesMultiValue
 
 
-inline TypedArgBase* TypedArgBase::setListSep( char /* sep */) noexcept( false)
+inline TypedArgBase* TypedArgBase::setListSep( char /* sep */)
 {
    throw std::invalid_argument( "setting list separator not allowed for "
                                 "variable '" + mVarName + "'");
 } // TypedArgBase::setListSep
 
 
-inline void TypedArgBase::setClearBeforeAssign() noexcept( false)
+inline TypedArgBase* TypedArgBase::setClearBeforeAssign()
 {
    throw std::invalid_argument( "setting 'clear before assign' is not allowed "
                                 "for variable '" + mVarName + "'");
