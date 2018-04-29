@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -18,6 +18,7 @@ celma_add_celma_boost_testprogram( test_argh_command_arg )
 celma_add_celma_boost_testprogram( test_argh_constraints )
 celma_add_celma_boost_testprogram( test_argh_custom_convert )
 celma_add_celma_boost_testprogram( test_argh_custom_type )
+celma_add_celma_boost_testprogram( test_argh_dest_bitset )
 celma_add_celma_boost_testprogram( test_argh_dest_tuple )
 celma_add_celma_boost_testprogram( test_argh_dest_vector )
 celma_add_celma_boost_testprogram( test_argh_longarg_abbr )
