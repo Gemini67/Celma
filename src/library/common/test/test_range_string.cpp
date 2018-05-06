@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,13 +15,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-
-
-// C++ Standard Library includes
-#include <iostream>
+// module to test header file include
+#include "celma/common/range_string.hpp"
 
 
 // Boost includes
@@ -29,12 +24,7 @@
 #include <boost/test/unit_test.hpp>
 
 
-// project includes
-#include "celma/common/range_string.hpp"
-
-
-using namespace std;
-using namespace celma;
+using celma::common::RangeString;
 
 
 
@@ -43,8 +33,8 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
-   common::RangeString<>                  rs( "1");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "1");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -53,7 +43,7 @@ BOOST_AUTO_TEST_CASE( test_one)
    ++it;
    BOOST_REQUIRE( it == rs.end());
 
-} // end test_one
+} // test_one
 
 
 
@@ -62,8 +52,8 @@ BOOST_AUTO_TEST_CASE( test_one)
 BOOST_AUTO_TEST_CASE( test_two_values)
 {
 
-   common::RangeString<>                  rs( "1,2");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "1,2");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -76,7 +66,7 @@ BOOST_AUTO_TEST_CASE( test_two_values)
    ++it;
    BOOST_REQUIRE( it == rs.end());
 
-} // end test_two_values
+} // test_two_values
 
 
 
@@ -85,8 +75,8 @@ BOOST_AUTO_TEST_CASE( test_two_values)
 BOOST_AUTO_TEST_CASE( test_three_values)
 {
 
-   common::RangeString<>                  rs( "1,2,4");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "1,2,4");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -103,7 +93,7 @@ BOOST_AUTO_TEST_CASE( test_three_values)
    ++it;
    BOOST_REQUIRE( it == rs.end());
 
-} // end test_three_values
+} // test_three_values
 
 
 
@@ -112,8 +102,8 @@ BOOST_AUTO_TEST_CASE( test_three_values)
 BOOST_AUTO_TEST_CASE( test_simple_range)
 {
 
-   common::RangeString<>                  rs( "3-5");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "3-5");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -130,7 +120,7 @@ BOOST_AUTO_TEST_CASE( test_simple_range)
    ++it;
    BOOST_REQUIRE( it == rs.end());
 
-} // end test_simple_range
+} // test_simple_range
 
 
 
@@ -139,8 +129,8 @@ BOOST_AUTO_TEST_CASE( test_simple_range)
 BOOST_AUTO_TEST_CASE( test_two_simple_ranges)
 {
 
-   common::RangeString<>                  rs( "3-5,11-14");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "3-5,11-14");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -173,7 +163,7 @@ BOOST_AUTO_TEST_CASE( test_two_simple_ranges)
    ++it;
    BOOST_REQUIRE( it == rs.end());
 
-} // end test_simple_range
+} // test_simple_range
 
 
 
@@ -182,8 +172,8 @@ BOOST_AUTO_TEST_CASE( test_two_simple_ranges)
 BOOST_AUTO_TEST_CASE( test_simple_mix)
 {
 
-   common::RangeString<>                  rs( "1,3-5,9,11-14");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "1,3-5,9,11-14");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -224,7 +214,7 @@ BOOST_AUTO_TEST_CASE( test_simple_mix)
    ++it;
    BOOST_REQUIRE( it == rs.end());
 
-} // end test_simple_mix
+} // test_simple_mix
 
 
 
@@ -233,8 +223,8 @@ BOOST_AUTO_TEST_CASE( test_simple_mix)
 BOOST_AUTO_TEST_CASE( test_range_increment)
 {
 
-   common::RangeString<>                  rs( "1-10[2]");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "1-10[2]");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -268,8 +258,8 @@ BOOST_AUTO_TEST_CASE( test_range_increment)
 BOOST_AUTO_TEST_CASE( test_two_ranges_increment)
 {
 
-   common::RangeString<>                  rs( "2-11[2],20-40[3]");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "2-11[2],20-40[3]");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -331,8 +321,8 @@ BOOST_AUTO_TEST_CASE( test_two_ranges_increment)
 BOOST_AUTO_TEST_CASE( test_mix_all)
 {
 
-   common::RangeString<>                  rs( "1-10[2]{3,5},15,20-40[3]{23-35[6]},41,47");
-   common::RangeString<>::const_iterator  it = rs.begin();
+   RangeString<>  rs( "1-10[2]{3,5},15,20-40[3]{23-35[6]},41,47");
+   auto           it = rs.begin();
 
 
    BOOST_REQUIRE( it != rs.end());
@@ -381,5 +371,5 @@ BOOST_AUTO_TEST_CASE( test_mix_all)
 
 
 
-// =========================  END OF test_range_string.cpp  =========================
+// =====  END OF test_range_string.cpp  =====
 
