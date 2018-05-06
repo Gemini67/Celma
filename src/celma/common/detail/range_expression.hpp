@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,18 +12,18 @@
 
 
 /// @file
-/// See documentation of class celma::common::RangeExpression.
+/// See documentation of class celma::common::detail::RangeExpression.
 
 
-#ifndef CELMA_COMMON_RANGE_EXPRESSION_HPP
-#define CELMA_COMMON_RANGE_EXPRESSION_HPP
+#ifndef CELMA_COMMON_DETAIL_RANGE_EXPRESSION_HPP
+#define CELMA_COMMON_DETAIL_RANGE_EXPRESSION_HPP
 
 
 #include <cstdint>
 #include <string>
 
 
-namespace celma { namespace common {
+namespace celma { namespace common { namespace detail {
 
 
 /// Helper class to extract the different parts of a range expression.<br>
@@ -118,13 +118,13 @@ private:
    /// Whole matched expression.
    std::string             mMatchedExpression;
    /// Set of flags, which values/expressions were found in the range string.
-   int                     mFound;
+   int                     mFound = 0;
    /// Single/Range start value.
-   int64_t                 mStartValue;
+   int64_t                 mStartValue = 0;
    /// Range end value.
-   int64_t                 mEndValue;
+   int64_t                 mEndValue = 0;
    /// Range increment value.
-   int64_t                 mIncrementValue;
+   int64_t                 mIncrementValue = 0;
    /// Range exclude value.
    std::string             mExcludeValue;
    /// The position in the string to parse.
@@ -140,57 +140,58 @@ private:
 inline const std::string& RangeExpression::matchedExpression() const
 {
    return mMatchedExpression;
-} // end RangeExpression::matchedExpression
+} // RangeExpression::matchedExpression
 
 
 inline int64_t RangeExpression::startValue() const
 {
    return mStartValue;
-} // end RangeExpression::startValue
+} // RangeExpression::startValue
 
 
 inline bool RangeExpression::hasRangeEnd() const
 {
    return mFound & miEndValue;
-} // end RangeExpression::hasRangeEnd
+} // RangeExpression::hasRangeEnd
 
 
 inline int64_t RangeExpression::endValue() const
 {
    return mEndValue;
-} // end RangeExpression::endValue
+} // RangeExpression::endValue
 
 
 inline bool RangeExpression::hasIncrement() const
 {
    return mFound & miIncrement;
-} // end RangeExpression::hasIncrement
+} // RangeExpression::hasIncrement
 
 
 inline int64_t RangeExpression::incrementValue() const
 {
    return mIncrementValue;
-} // end RangeExpression::incrementValue
+} // RangeExpression::incrementValue
 
 
 inline bool RangeExpression::hasExcludeExpr() const
 {
    return mFound & miExclude;
-} // end RangeExpression::hasExcludeExpr
+} // RangeExpression::hasExcludeExpr
 
 
 inline const std::string& RangeExpression::excludeExpression() const
 {
    return mExcludeValue;
-} // end RangeExpression::excludeExpression
+} // RangeExpression::excludeExpression
 
 
+} // namespace detail
 } // namespace common
 } // namespace celma
 
 
-#endif   // CELMA_COMMON_RANGE_EXPRESSION_HPP
+#endif   // CELMA_COMMON_DETAIL_RANGE_EXPRESSION_HPP
 
 
-// =========================  END OF range_expression.hpp  =========================
+// =====  END OF range_expression.hpp  =====
 
