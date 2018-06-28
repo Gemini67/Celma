@@ -58,7 +58,7 @@ public:
    /// @param[in]  dest   The destination variable to store the value in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                    value in.
-   /// @since  x.y,z, 10.11.2017  (removed key parameter)
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( T& dest, const std::string& vname);
 
