@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -399,19 +399,19 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       int                  outputType = 0;
 
       subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
-         "cache name");
+         "cache name")->setPrintDefault( false);
       subInput.addArgument( "f,file", DEST_PAIR( inputName, inputType, 2),
-         "file name");
+         "file name")->setPrintDefault( false);
       subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
-         "queue name");
+         "queue name")->setPrintDefault( false);
       masterAH.addArgument( "i", &subInput, "input arguments");
 
       subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
-         "cache name");
+         "cache name")->setPrintDefault( false);
       subOutput.addArgument( "f", DEST_PAIR( outputName, outputType, 2),
-         "file name");
+         "file name")->setPrintDefault( false);
       subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
-         "queue name");
+         "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", &subOutput, "output arguments");
 
       ArgString2Array  as2a( "-h", nullptr);
@@ -444,19 +444,19 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       int                  outputType = 0;
 
       subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
-         "cache name");
+         "cache name")->setPrintDefault( false);
       subInput.addArgument( "f,file", DEST_PAIR( inputName, inputType, 2),
-         "file name");
+         "file name")->setPrintDefault( false);
       subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
-         "queue name");
+         "queue name")->setPrintDefault( false);
       masterAH.addArgument( "i", &subInput, "input arguments");
 
       subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
-         "cache name");
+         "cache name")->setPrintDefault( false);
       subOutput.addArgument( "f", DEST_PAIR( outputName, outputType, 2),
-         "file name");
+         "file name")->setPrintDefault( false);
       subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
-         "queue name");
+         "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", &subOutput, "output arguments");
 
       ArgString2Array  as2a( "-ih", nullptr);
@@ -489,19 +489,19 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       int                  outputType = 0;
 
       subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
-         "cache name");
+         "cache name")->setPrintDefault( false);
       subInput.addArgument( "f,file", DEST_PAIR( inputName, inputType, 2),
-         "file name");
+         "file name")->setPrintDefault( false);
       subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
-         "queue name");
+         "queue name")->setPrintDefault( false);
       masterAH.addArgument( "i", &subInput, "input arguments");
 
       subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
-         "cache name");
+         "cache name")->setPrintDefault( false);
       subOutput.addArgument( "f", DEST_PAIR( outputName, outputType, 2),
-         "file name");
+         "file name")->setPrintDefault( false);
       subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
-         "queue name");
+         "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", &subOutput, "output arguments");
 
       ArgString2Array  as2a( "--help-short -ih", nullptr);
@@ -521,4 +521,5 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
 
 
 
-// ===================  END OF test_argh_output_streams.cpp  ===================
+// =====  END OF test_argh_output_streams.cpp  =====
+

@@ -88,7 +88,6 @@ protected:
    /// @since  0.2, 10.04.2016
    virtual void dump( std::ostream& os) const override;
 
-private:
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
@@ -238,7 +237,6 @@ protected:
          << "   " << static_cast< const TypedArgBase&>( *this);
    } // TypedArg< bool>::dump
 
-private:
    /// Stores the value in the destination variable.
    /// @since  0.2, 10.04.2016
    virtual void assign( const std::string& /* value */) override
@@ -247,6 +245,7 @@ private:
       mHasValueSet = true;
    } // TypedArg< bool>::assign
 
+private:
    /// Reference of the destination variable to store the value in.
    bool&  mDestVar;
    /// Flag set when a value was assigned through an argument.
@@ -486,12 +485,12 @@ protected:
    /// @since  0.2, 10.04.2016
    virtual void dump( std::ostream& os) const override;
 
-private:
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
    virtual void assign( const std::string& value) override;
 
+private:
    /// Reference of the destination variable to store the value(s) in.
    vector_type&  mDestVar;
    /// The character to use as a list separator, default: ,
@@ -899,7 +898,6 @@ protected:
    ///    1.4.3, 29.04.2018
    virtual void dump( std::ostream& os) const override;
 
-private:
    /// Stores the value in the destination variable.
    /// @param[in]  value
    ///    The value to store in string format.
@@ -907,6 +905,7 @@ private:
    ///    1.4.3, 29.04.2018
    virtual void assign( const std::string& value) override;
 
+private:
    /// Reference of the destination variable to store the value(s) in.
    bitset_type&  mDestVar;
    /// The character to use as a list separator, default: ,
