@@ -3,14 +3,14 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
-**    Test program for the module detail::StreamLog, using the Boost.Test
-**    framework.
+**    Test program for the module celma::log::detail::StreamLog, using the
+**    Boost.Test framework.
 **
 --*/
 
@@ -34,8 +34,9 @@ using celma::log::Logging;
 
 
 
-/// 
-/// @since  0.11, 12.12.2016
+/// Adds a log message as destination.
+/// @since
+///    0.11, 12.12.2016
 BOOST_AUTO_TEST_CASE( test_default)
 {
 
@@ -57,8 +58,9 @@ BOOST_AUTO_TEST_CASE( test_default)
 
 
 
-/// 
-/// @since  0.11, 12.12.2016
+/// Checks that a custom property is correctly stored in the log message object.
+/// @since
+///    0.11, 12.12.2016
 BOOST_AUTO_TEST_CASE( test_one_custom_property)
 {
 
@@ -80,8 +82,9 @@ BOOST_AUTO_TEST_CASE( test_one_custom_property)
 
 
 
-/// 
-/// @since  0.11, 12.12.2016
+/// Two custom properties msut be stored in the log message.
+/// @since
+///    0.11, 12.12.2016
 BOOST_AUTO_TEST_CASE( test_two_custom_properties)
 {
 
@@ -106,4 +109,4 @@ BOOST_AUTO_TEST_CASE( test_two_custom_properties)
 
 
 
-// =======================  END OF test_stream_log.cpp  =======================
+// =====  END OF test_stream_log.cpp  =====
