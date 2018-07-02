@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE( destination_bool)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -f   two flags\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
@@ -84,11 +84,11 @@ BOOST_AUTO_TEST_CASE( destination_bool)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'-f' store first value with type 'bool' in 'dest_flag', second value with type 'bool' in 'second_flag'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -i   int and string\n"
          "        Default value: 0\n"
          "\n");
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -i   int and string\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
@@ -203,11 +203,11 @@ BOOST_AUTO_TEST_CASE( destination_int)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'-i' store first value with type 'int' in 'dest_int', second value with type 'std::string' in 'second_string'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -s   string and int\n"
          "        Default value:\n"
          "\n");
@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -s   string and int\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
@@ -324,11 +324,11 @@ BOOST_AUTO_TEST_CASE( destination_string)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'-s' store first value with type 'std::string' in 'dest_string', second value with type 'int' in 'second_int'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
@@ -380,7 +380,7 @@ BOOST_AUTO_TEST_CASE( destination_vector)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -v   vector and string\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
@@ -405,11 +405,11 @@ BOOST_AUTO_TEST_CASE( destination_vector)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'-v' store first value with type 'std::vector<int>' in 'dest_vector', second value with type 'std::string' in 'second_string'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
@@ -480,7 +480,7 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -b   bitset and int\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
@@ -504,11 +504,11 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'-b' store first value with type 'std::bitset<10>' in 'dest_bitset', second value with type 'int' in 'second_int'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "\n");
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope

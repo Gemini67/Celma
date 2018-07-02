@@ -41,7 +41,8 @@ using std::string;
 
 
 /// Destructor, frees dynamically allocated memory.
-/// @since  0.2, 10.04.2016
+/// @since
+///    0.2, 10.04.2016
 TypedArgBase::~TypedArgBase()
 {
 
@@ -53,7 +54,7 @@ TypedArgBase::~TypedArgBase()
 
 
 
-/// Set the argument key and destination variable name.
+/// Set the argument key.
 /// @param[in]  key
 ///    The complete argument specification with short and/or long argument.
 /// @since
@@ -91,16 +92,27 @@ TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
 
 
 
-/// Assigns a value.
+/// Assigns a value.<br>
+/// Checks if the argument is deprecated, or if a cardinality constraint is
+/// violated. If not, the virtual method assign() is called to actually
+/// assign the value, and finally activateConstraints() is called to activate
+/// the contrainst (sic!) triggered by this argument.
+///
 /// @param[in]  ignore_cardinality
 ///    Specifies if the cardinality of calls/value assignments should be
 ///    ignored.
 /// @param[in]  value
 ///    The value to assign, in string format.
 /// @since
+///    x.y.z, 29.06.2018  (renamed from calledAssign)
+/// @since
 ///    0.2, 10.04.2016
-void TypedArgBase::calledAssign( bool ignore_cardinality, const string& value)
+void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
 {
+
+   if (mIsDeprecated)
+      throw std::runtime_error( "argument '" + format::toString( mKey)
+         + "' is deprecated!");
 
    if (!ignore_cardinality && (mpCardinality.get() != nullptr))
       mpCardinality->gotValue();
@@ -108,12 +120,13 @@ void TypedArgBase::calledAssign( bool ignore_cardinality, const string& value)
    assign( value);
    activateConstraints();
 
-} // TypedArgBase::calledAssign
+} // TypedArgBase::assignValue
 
 
 
 /// Adds a value formatter: The value from the argument list (command line)
-/// is formatted before it is checked and/or stored.
+/// is formatted before it is checked and/or stored.<br>
+/// Throws when called for an argument that does not accept values.
 /// @param[in]  f
 ///    Pointer to the formatter to add.
 /// @return
@@ -301,6 +314,23 @@ TypedArgBase* TypedArgBase::checkOriginalValue( bool)
 
 
 
+/// Marks an argument as deprecated.
+/// @return
+///    Pointer to this object.
+/// @since
+///    x.y.z, 30.04.2018
+TypedArgBase* TypedArgBase::setIsDeprecated()
+{
+   if (mIsMandatory)
+      throw std::logic_error( "mandatory argument for variable '" + mVarName
+         + "' cannot be set 'deprected'");
+
+   mIsDeprecated = true;
+   return this;
+} // TypedArgBase::setIsDeprecated
+
+
+
 /// Used for printing an argument and its destination variable.<br>
 /// This function should be overloaded by derived classes.
 /// @param[out]  os
@@ -395,7 +425,8 @@ ostream& operator <<( ostream& os, const TypedArgBase& tab)
       << (tab.mIsMandatory ? "mandatory, " : "optional, ")
       << (tab.takesMultiValue() ? "takes" : "does not take") << " multiple&separate values, "
       << (tab.mPrintDefault ? "" : "don't ") << "print dflt, "
-      << (tab.mIsHidden ? "hidden, " : "visible, ")
+      << (tab.mIsHidden ? "hidden, " : "")
+      << (tab.mIsDeprecated ? "deprecated, " : "")
       << (tab.mChecks.empty() ? "no" : boost::lexical_cast< string>( tab.mChecks.size()))
       << " checks, "
       << (tab.mFormats.empty() ? "no" : boost::lexical_cast< string>( tab.mFormats.size()))
@@ -431,5 +462,5 @@ ostream& operator <<( ostream& os, TypedArgBase::ValueMode vm)
 } // namespace celma
 
 
-// =====  END OF typed_arg_base.cpp  ======
+// =====  END OF typed_arg_base.cpp  =====
 

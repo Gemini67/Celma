@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,7 +37,8 @@ class TypedArgBase;
 
 
 /// Stores the parameters for printing the usage.
-/// @since  1.1.0, 21.11.2017
+/// @since
+///    1.1.0, 21.11.2017
 class UsageParams
 {
 public:
@@ -95,6 +96,24 @@ public:
    detail::TypedArgBase* addArgumentPrintHidden( Handler& handler,
          const std::string& arg_spec, const char* desc = nullptr);
 
+   /// Adds an argument that activates printing of deprecated arguments in the
+   /// usage.
+   /// @param[out]  handler
+   ///    The argument handler to add the argument to.
+   /// @param[in]   arg_spec
+   ///    The argument(s) on the command line for activating printing the hidden
+   ///    arguments.
+   /// @param[in]   desc
+   ///    Optional text for the description of the argument in the usage. If not
+   ///    set, the default description is used.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
+   /// @since
+   ///    x.y.z, 30.04.2018
+   detail::TypedArgBase* addArgumentPrintDeprecated( Handler& handler,
+         const std::string& arg_spec, const char* desc = nullptr);
+
    /// Directly specifies the contents for printing the usage.
    /// @param[in]  usage_contents  The contents to print in the usage.
    /// @since  1.1.0, 21.11.2017
@@ -114,11 +133,25 @@ public:
    /// @since  1.1.0, 06.12.2017
    bool printHidden() const;
 
+   /// Sets the flag 'print deprecated' to print deprecated arguments.
+   /// @since
+   ///    x.y.z, 30.04.2018
+   void setPrintDeprecated();
+
+   /// Returns if deprecated arguments should be printed.
+   /// @return
+   ///    \c true if deprecated arguments should be printed too.
+   /// @since
+   ///    x.y.z, 30.04.2018
+   bool printDeprecated() const;
+
 private:
    /// Defines the contents of the usage.
    Contents  mContents = Contents::all;
    /// Specifies if hidden arguments should be printed.
    bool      mPrintHidden = false;
+   /// Specifies if deprecated arguments should be printed.
+   bool      mPrintDeprecated = false;
 
 }; // UsageParams
 
@@ -144,6 +177,12 @@ inline bool UsageParams::printHidden() const
 } // UsageParams::printHidden
 
 
+inline bool UsageParams::printDeprecated() const
+{
+   return mPrintDeprecated;
+} // UsageParams::printDeprecated
+
+
 // standalone functions
 // ====================
 
@@ -164,5 +203,5 @@ std::ostream& operator <<( std::ostream& os, UsageParams::Contents c);
 #endif   // CELMA_PROG_ARGS_DETAIL_USAGE_PARAMS_HPP
 
 
-// =========================  END OF usage_params.hpp  =========================
+// =====  END OF usage_params.hpp  =====
 

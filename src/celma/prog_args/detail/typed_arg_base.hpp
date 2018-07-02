@@ -81,8 +81,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///   base class.
 /// .
 /// @since
-///    0.15.0, 13.07.2017  (use type ArgumentKey instead of string for
-///                        arguments)
+///    0.15.0, 13.07.2017  (use type ArgumentKey instead of string for arguments)
 /// @since
 ///    0.2, 10.04.2016
 class TypedArgBase
@@ -132,15 +131,23 @@ public:
    ///    0.16.0, 09.11.2017
    void setKey( const ArgumentKey& key);
 
-   /// Assigns a value.
+   /// Assigns a value.<br>
+   /// Checks if the argument is deprecated, or if a cardinality constraint is
+   /// violated. If not, the virtual method assign() is called to actually
+   /// assign the value, and finally activateConstraints() is called to activate
+   /// the contrainst (sic!) triggered by this argument.
+   ///
    /// @param[in]  ignore_cardinality
    ///    Specifies if the cardinality of calls/value assignments should be
    ///    ignored.
    /// @param[in]  value
    ///    The value to assign, in string format.
    /// @since
+   ///    x.y.z, 29.06.2018  (renamed from calledAssign)
+   /// @since
    ///    0.2, 10.04.2016
-   void calledAssign( bool ignore_cardinality, const std::string& value = "");
+   void assignValue( bool ignore_cardinality, const std::string& value)
+      noexcept( false);
 
    /// Should return if the argument was used/parameter was set.
    /// @return
@@ -177,11 +184,11 @@ public:
    ///    Pointer to this object.
    /// @since
    ///    0.2, 10.04.2016
-   virtual TypedArgBase* setIsMandatory();
+   virtual TypedArgBase* setIsMandatory() noexcept( false);
 
    /// Returns if this argument is mandatory (required) or not.
    /// @return
-   ///    \c true if the argument is mandatory, \c false otherwise.
+   ///    \c true if the argument is mandatory.
    /// @since
    ///    0.2, 10.04.2016
    bool isMandatory() const;
@@ -189,7 +196,7 @@ public:
    /// Sets the flag if the default value of the destination variable should be
    /// printed in the usage or not.
    /// @param[in]  doPrint
-   ///    \c true = do print the default value, \c false = don't.
+   ///    \c true = do print the default value.
    /// @return
    ///    Pointer to this object.
    /// @since
@@ -199,7 +206,7 @@ public:
    /// Returns if the default value of the destination variable should be
    /// printed in the usage.
    /// @return
-   ///    \c true if the default value should be printed, \c false otherwise.
+   ///    \c true if the default value should be printed.
    /// @since
    ///    0.2, 10.04.2016
    bool printDefault() const;
@@ -213,7 +220,7 @@ public:
 
    /// Returns if this argument is hidden.
    /// @return
-   //    \c true if this argument is hidden.
+   ///    \c true if this argument is hidden.
    /// @since
    ///    0.2, 10.04.2016
    bool isHidden() const;
@@ -251,8 +258,7 @@ public:
    /// @return
    ///    Pointer to this object.
    /// @throws
-   ///    runtime_error when called on a type that cannot handle multiple
-   ///    values.
+   ///    runtime_error when called on a type that cannot handle multiple values.
    /// @since
    ///    0.2, 10.04.2016
    virtual TypedArgBase* setTakesMultiValue() noexcept( false);
@@ -370,6 +376,20 @@ public:
    /// @since
    ///    1.1.0, 16.11.2017
    virtual TypedArgBase* checkOriginalValue( bool yesNo) noexcept( false);
+
+   /// Marks an argument as deprecated.
+   /// @return
+   ///    Pointer to this object.
+   /// @since
+   ///    x.y.z, 30.04.2018
+   virtual TypedArgBase* setIsDeprecated() noexcept( false);
+
+   /// Returns if the argument is marked as deprecated.
+   /// @return
+   ///    \c true if the argument is marked as deprecated.
+   /// @since
+   ///    x.y.z, 30.04.2018
+   bool isDeprecated() const;
 
 /*
    /// Adds a value conversion: The value from the argument list (command line)
@@ -502,6 +522,9 @@ protected:
    /// This may be used by the typed arg value class to detect multiple
    /// assignments to the same destination variable.
    bool                            mCheckOrigValue = false;
+   /// Set if an argument is deprecated. Issues an error message
+   /// "argument is deprecated" instead of "unknown argument".
+   bool                            mIsDeprecated = false;
    /// Stores all the checks (objects) defined for this argument.
    std::vector< ICheck*>           mChecks;
    /// Stores all the formatters (objects) defined for this argument.
@@ -513,24 +536,32 @@ protected:
 
 private:
    /// Should assign a value to the specified destination variable.
-   /// @param[in]  value  The value to assign in string format.
-   /// @since  0.2, 10.04.2016
+   /// @param[in]  value
+   ///    The value to assign in string format.
+   /// @since
+   ///    0.2, 10.04.2016
    virtual void assign( const std::string& value = "") = 0;
 
    /// Used for printing an argument and its destination variable.<br>
    /// This function should be overloaded by derived classes.
-   /// @param[out]  os  The stream to print to.
-   /// @since  0.2, 10.04.2016
+   /// @param[out]  os
+   ///    The stream to print to.
+   /// @since
+   ///    0.2, 10.04.2016
    virtual void dump( std::ostream& os) const;
 
 }; // TypedArgBase
 
 
 /// Prints the value of the enum in readable form.
-/// @param[out]  os  The stream to print to.
-/// @param[in]   vm  The enum value to print.
-/// @return  The stream as passed in.
-/// @since  0.2, 10.04.2016
+/// @param[out]  os
+///    The stream to print to.
+/// @param[in]   vm
+///    The enum value to print.
+/// @return
+///    The stream as passed in.
+/// @since
+///    0.2, 10.04.2016
 std::ostream& operator <<( std::ostream& os, TypedArgBase::ValueMode vm);
 
 
@@ -559,6 +590,9 @@ inline const ArgumentKey& TypedArgBase::key() const
 
 inline TypedArgBase* TypedArgBase::setIsMandatory()
 {
+   if (mIsDeprecated)
+      throw std::logic_error( "deprecated argument for variable '" + mVarName
+         + "' cannot be set 'mandatory'");
    mIsMandatory = true;
    return this;
 } // TypedArgBase::setIsMandatory
@@ -640,6 +674,12 @@ inline bool TypedArgBase::hasCheck() const
 {
    return !mChecks.empty();
 } // TypedArgBase::hasCheck
+
+
+inline bool TypedArgBase::isDeprecated() const
+{
+   return mIsDeprecated;
+} // TypedArgBase::isDeprecated
 
 
 inline bool TypedArgBase::hasConstraint() const

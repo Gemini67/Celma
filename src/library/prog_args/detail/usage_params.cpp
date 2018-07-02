@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -115,6 +115,33 @@ detail::TypedArgBase*
 
 
 
+/// Adds an argument that activates printing of deprecated arguments in the
+/// usage.
+/// @param[out]  handler
+///    The argument handler to add the argument to.
+/// @param[in]   arg_spec
+///    The argument(s) on the command line for activating printing the hidden
+///    arguments.
+/// @param[in]   desc
+///    Optional text for the description of the argument in the usage. If not
+///    set, the default description is used.
+/// @return
+///    The object managing this argument, may be used to apply further
+///    settings.
+/// @since
+///    x.y.z, 30.04.2018
+detail::TypedArgBase* UsageParams::addArgumentPrintDeprecated( Handler& handler,
+   const string& arg_spec, const char* desc)
+{
+
+   static const string  default_desc( "Also print deprecated arguments in the usage.");
+
+   return handler.addArgument( arg_spec, DEST_VAR( mPrintDeprecated),
+      (desc != nullptr) ? desc : default_desc);
+} // UsageParams::addArgumentPrintDeprecated
+
+
+
 /// Directly specifies the contents for printing the usage.
 /// @param[in]  usage_contents  The contents to print in the usage.
 /// @since  1.1.0, 21.11.2017
@@ -135,6 +162,18 @@ void UsageParams::setPrintHidden()
    mPrintHidden = true;
 
 } // UsageParams::setPrintHidden
+
+
+
+/// Sets the flag 'print deprecated' to print deprecated arguments.
+/// @since
+///    x.y.z, 30.04.2018
+void UsageParams::setPrintDeprecated()
+{
+
+   mPrintDeprecated = true;
+
+} // UsageParams::setPrintDeprecated
 
 
 
@@ -163,5 +202,5 @@ std::ostream& operator <<( std::ostream& os, UsageParams::Contents c)
 } // namespace celma
 
 
-// =========================  END OF usage_params.cpp  =========================
+// =====  END OF usage_params.cpp  =====
 

@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE( help_usage)
    ArgString2Array  as2a( "-h", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
-   BOOST_REQUIRE_EQUAL( std_out.str(), "Usage:\nOptional arguments:\n   -h,--help   Prints the program usage\n\n");
+   BOOST_REQUIRE_EQUAL( std_out.str(), "Usage:\nOptional arguments:\n   -h,--help   Prints the program usage.\n\n");
    BOOST_REQUIRE( err_out.str().empty());
 
 } // help_usage
@@ -100,13 +100,202 @@ BOOST_AUTO_TEST_CASE( argument_output)
                         "   -s           String argument\n"
                         "\n"
                         "Optional arguments:\n"
-                        "   -h,--help    Prints the program usage\n"
+                        "   -h,--help    Prints the program usage.\n"
                         "   -i,--index   Integer argument\n"
                         "                Default value: 42\n"
                         "\n");
    BOOST_REQUIRE( err_out.str().empty());
 
 } // argument_output
+
+
+
+/// Two arguments, one optional, one mandatory, one hidden and one deprecated.
+/// @since
+///    x.y.z, 30.04.2018
+BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
+{
+
+   /// Helper class used to provide a fresh set of the Handler object and the
+   /// test variables.
+   /// @since
+   ///    x.y.z, 30.04.2018
+   class TestData
+   {
+   public:
+      /// Constructor, initialises the Handler.
+      /// @param[in]  argstring
+      ///    The argument string to pass to \c ArgString2Array.
+      /// @since
+      ///    x.y.z, 30.04.2018
+      TestData( int flag_set, const string& argstring):
+         mStdOut(),
+         mErrOut(),
+         mHandler( mStdOut, mErrOut, Handler::AllHelp | Handler::hfUsageCont | flag_set),
+         mStringArg(),
+         mAs2a( argstring, nullptr)
+      {
+         mHandler.addArgument( "s", DEST_VAR( mStringArg), "String argument")
+            ->setIsMandatory();
+         mHandler.addArgument( "i,index", DEST_VAR( mOptIntArg),
+            "Integer argument");
+         mHandler.addArgument( "hidden", DEST_VAR( mHidden),
+            "Hidden boolean argument")->setIsHidden();
+         mHandler.addArgument( "deprecated", DEST_VAR( mDummy),
+            "Deprecated argument, don't use anymore")->setIsDeprecated();
+      } // end TestData::TestData
+
+      /// Captures the output to \c stdout.
+      std::ostringstream   mStdOut;
+      /// Captures the output to \c stderr.
+      std::ostringstream   mErrOut;
+      /// The argument handler object used for the test.
+      Handler              mHandler;
+      /// Mandatory string argument.
+      string               mStringArg;
+      /// Optional integer argument.
+      int                  mOptIntArg = 42;
+      /// Deprecated argument variable.
+      bool                 mDummy = false;
+      /// Hidden variable.
+      bool                 mHidden = false;
+      /// Argument string split to argc, argv.
+      ArgString2Array      mAs2a;
+   }; // TestData
+
+   {
+      TestData  td( 0, "-h");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgc,
+         td.mAs2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( td.mStdOut.str(),
+                           "Usage:\nMandatory arguments:\n"
+                           "   -s           String argument\n"
+                           "\n"
+                           "Optional arguments:\n"
+                           "   -h,--help    Prints the program usage.\n"
+                           "   -i,--index   Integer argument\n"
+                           "                Default value: 42\n"
+                           "\n");
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+   {
+      TestData  td( Handler::hfUsageHidden, "-h");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgc,
+         td.mAs2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( td.mStdOut.str(),
+                           "Usage:\nMandatory arguments:\n"
+                           "   -s           String argument\n"
+                           "\n"
+                           "Optional arguments:\n"
+                           "   -h,--help    Prints the program usage.\n"
+                           "   -i,--index   Integer argument\n"
+                           "                Default value: 42\n"
+                           "   --hidden     Hidden boolean argument\n"
+                           "\n");
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+   {
+      TestData  td( Handler::hfUsageDeprecated, "-h");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgc,
+         td.mAs2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( td.mStdOut.str(),
+                           "Usage:\nMandatory arguments:\n"
+                           "   -s             String argument\n"
+                           "\n"
+                           "Optional arguments:\n"
+                           "   -h,--help      Prints the program usage.\n"
+                           "   -i,--index     Integer argument\n"
+                           "                  Default value: 42\n"
+                           "   --deprecated   Deprecated argument, don't use anymore\n"
+                           "\n");
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+   {
+      TestData  td( Handler::hfUsageHidden | Handler::hfUsageDeprecated, "-h");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgc,
+         td.mAs2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( td.mStdOut.str(),
+                           "Usage:\nMandatory arguments:\n"
+                           "   -s             String argument\n"
+                           "\n"
+                           "Optional arguments:\n"
+                           "   -h,--help      Prints the program usage.\n"
+                           "   -i,--index     Integer argument\n"
+                           "                  Default value: 42\n"
+                           "   --hidden       Hidden boolean argument\n"
+                           "   --deprecated   Deprecated argument, don't use anymore\n"
+                           "\n");
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+   {
+      TestData  td( Handler::hfArgHidden, "--print-hidden -h");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgc,
+         td.mAs2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( td.mStdOut.str(),
+                           "Usage:\nMandatory arguments:\n"
+                           "   -s               String argument\n"
+                           "\n"
+                           "Optional arguments:\n"
+                           "   -h,--help        Prints the program usage.\n"
+                           "   --print-hidden   Also print hidden arguments in the usage.\n"
+                           "   -i,--index       Integer argument\n"
+                           "                    Default value: 42\n"
+                           "   --hidden         Hidden boolean argument\n"
+                           "\n");
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+   {
+      TestData  td( Handler::hfArgDeprecated, "--print-deprecated -h");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgc,
+         td.mAs2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( td.mStdOut.str(),
+                           "Usage:\nMandatory arguments:\n"
+                           "   -s                   String argument\n"
+                           "\n"
+                           "Optional arguments:\n"
+                           "   -h,--help            Prints the program usage.\n"
+                           "   --print-deprecated   Also print deprecated arguments in the usage.\n"
+                           "   -i,--index           Integer argument\n"
+                           "                        Default value: 42\n"
+                           "   --deprecated         Deprecated argument, don't use anymore\n"
+                           "\n");
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+   {
+      TestData  td( Handler::hfArgHidden | Handler::hfArgDeprecated,
+         "--print-hidden --print-deprecated -h");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgc,
+         td.mAs2a.mpArgv));
+      BOOST_REQUIRE_EQUAL( td.mStdOut.str(),
+                           "Usage:\nMandatory arguments:\n"
+                           "   -s                   String argument\n"
+                           "\n"
+                           "Optional arguments:\n"
+                           "   -h,--help            Prints the program usage.\n"
+                           "   --print-hidden       Also print hidden arguments in the usage.\n"
+                           "   --print-deprecated   Also print deprecated arguments in the usage.\n"
+                           "   -i,--index           Integer argument\n"
+                           "                        Default value: 42\n"
+                           "   --hidden             Hidden boolean argument\n"
+                           "   --deprecated         Deprecated argument, don't use anymore\n"
+                           "\n");
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+} // test_handling_hidden_deprecated
 
 
 
@@ -135,7 +324,7 @@ BOOST_AUTO_TEST_CASE( argument_output_custom_help)
                         "   -s           String argument\n"
                         "\n"
                         "Optional arguments:\n"
-                        "   -h,--help    Prints the program usage\n"
+                        "   -h,--help    Prints the program usage.\n"
                         "   -u,--usage   Custom arguments for help\n"
                         "   -i,--index   Integer argument\n"
                         "                Default value: 42\n"
@@ -180,7 +369,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
                               "               Check: Value in ( \"dragon\", \"tiger\")\n"
                               "\n"
                               "Optional arguments:\n"
-                              "   -h,--help   Prints the program usage\n"
+                              "   -h,--help   Prints the program usage.\n"
                               "   --index1    Integer argument one\n"
                               "               Default value: 42\n"
                               "               Check: Value >= 20\n"
@@ -223,13 +412,13 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
                         "Handler::listArgVars: is set\n"
                         "Arguments:\n"
                         "'-h,--help' calls function/method 'Handler::usage'.\n"
-                        "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+                        "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
                         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-                        "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, visible, no checks, no formats\n"
+                        "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
                         "'-s' value type 'std::string', destination 'string_arg', value = text.\n"
-                        "   value 'required' (2), mandatory, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
+                        "   value 'required' (2), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
                         "'-i,--index' value type 'int', destination 'opt_int_arg', value not set.\n"
-                        "   value 'required' (2), optional, does not take multiple&separate values, print dflt, visible, no checks, no formats\n"
+                        "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
                         "\n"
                         "opt_int_arg: value '4711' is assigned\n");
    BOOST_REQUIRE( err_out.str().empty());
@@ -263,7 +452,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h,--help      Prints the program usage\n"
+         "   -h,--help      Prints the program usage.\n"
          "   --help-short   Only print arguments with their short key in the usage.\n"
          "   -f             The first argument.\n"
          "                  Default value: 0\n"
@@ -295,7 +484,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -f   The first argument.\n"
          "        Default value: 0\n"
          "   -s   The second argument.\n"
@@ -333,7 +522,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h,--help     Prints the program usage\n"
+         "   -h,--help     Prints the program usage.\n"
          "   --help-long   Only print arguments with their long key in the usage.\n"
          "   -f            The first argument.\n"
          "                 Default value: 0\n"
@@ -365,7 +554,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   --help        Prints the program usage\n"
+         "   --help        Prints the program usage.\n"
          "   --help-long   Only print arguments with their long key in the usage.\n"
          "   --second      The second argument.\n"
          "                 Default value: 0\n"
@@ -420,7 +609,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h,--help      Prints the program usage\n"
+         "   -h,--help      Prints the program usage.\n"
          "   --help-short   Only print arguments with their short key in the usage.\n"
          "   -i             input arguments\n"
          "   -o             output arguments\n"
@@ -465,7 +654,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h,--help   Prints the program usage\n"
+         "   -h,--help   Prints the program usage.\n"
          "   -c          cache name\n"
          "   -f,--file   file name\n"
          "   --queue     queue name\n"
@@ -510,7 +699,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       BOOST_REQUIRE_EQUAL( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h   Prints the program usage\n"
+         "   -h   Prints the program usage.\n"
          "   -c   cache name\n"
          "   -f   file name\n"
          "\n");
@@ -522,4 +711,3 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
 
 
 // =====  END OF test_argh_output_streams.cpp  =====
-
