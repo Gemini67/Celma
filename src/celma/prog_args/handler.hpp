@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -102,6 +102,25 @@ class ValueHandler;
 ///     itself, multiple changes to the same destination variable are prevented
 ///     by checking the original value before changing it. Set
 ///     checkOriginalValue() to \c false to allow multiple changes.
+///   - setIsDeprecated(): When an argument is no longer available, you may want
+///     to give the user this information instead of just saying "unknown
+///     argument". So, just mark an argument as deprecated, then it will no
+///     longer appear in the usage, and if the argument is used on the command
+///     line, the proper error message is printed.<br>
+///     If the argument was mandatory before, remove this flag. Setting a
+///     deprecated argument to mandatory, or vice versa, will throw in
+///     addArgument().
+///   - setReplacedBy(): When an argument is replaced by another, you may want
+///     to give the user this information instead of just saying "unknown
+///     argument". So, just mark an argument as "replaced by", then it will no
+///     longer appear in the usage, and if the argument is used on the command
+///     line, the proper error message is printed.<br>
+///     Internally the argument is handled like a deprecated argument, so
+///     features related to deprecated arguments apply to replaced arguments
+///     too.<br>
+///     If the argument was mandatory before, remove this flag. Setting a
+///     deprecated argument to mandatory, or vice versa, will throw in
+///     addArgument().
 ///   .
 ///   It is possible to add multiple checks to the same argument. In this case,
 ///   a value must be accepted by all checks. The checks are executed in the
@@ -198,7 +217,6 @@ class ValueHandler;
 ///        multiple times (and cardinality is 1):<br>
 ///        Error/Exception (as is), store the first value (ignore additional
 ///        calls), store the last value.
-/// @todo  Add test-feature: Process all arguments, print all errors.
 /// @todo  Use different exit codes from evalArgumentErrorExit(), depending on
 ///        the type of the exception that was called.
 /// @todo  Add pre- and post-argument list help texts also to argument handlers
@@ -217,42 +235,47 @@ public:
    enum HandleFlags
    {
       /// Allows the argument '-h' to print the usage of the program.
-      hfHelpShort     = 0x01,
+      hfHelpShort       = 0x01,
       /// Allows the argument '--help' to print the usage of the program.
-      hfHelpLong      = hfHelpShort << 1,
+      hfHelpLong        = hfHelpShort << 1,
       /// Specifies to read arguments from the optional program arguments file
       /// before parsing the command line arguments.<br>
       /// File: $HOME/.progargs/\<progfilename\>.pa
-      hfReadProgArg   = hfHelpLong  << 1,
+      hfReadProgArg     = hfHelpLong  << 1,
       /// Produces verbose output when a value is assigned to a variable.
-      hfVerboseArgs   = hfReadProgArg << 1,
+      hfVerboseArgs     = hfReadProgArg << 1,
       /// Specifies that hidden arguments should be printed too in the usage.
-      hfUsageHidden   = hfVerboseArgs << 1,
+      hfUsageHidden     = hfVerboseArgs << 1,
       /// Allows the argument '--print-hidden' to print the hidden arguments in
       /// the usage.
-      hfArgHidden     = hfUsageHidden << 1,
+      hfArgHidden       = hfUsageHidden << 1,
+      /// Specifies that deprecated arguments should be printed too in the usage.
+      hfUsageDeprecated =  hfArgHidden << 1,
+      /// Allows the argument '--print-deprecated' to print the deprecated
+      /// arguments in he usage.
+      hfArgDeprecated   = hfUsageDeprecated << 1,
       /// Only print the arguments with their short argument in the usage.
-      hfUsageShort    = hfArgHidden << 1,
+      hfUsageShort      = hfArgDeprecated << 1,
       /// Only print the arguments with their long argument in the usage.
-      hfUsageLong     = hfUsageShort << 1,
+      hfUsageLong       = hfUsageShort << 1,
       /// Adds the argument '--list-arg-vars' which, when used, prints the list
       /// of arguments and the names of the destination variables and their
       /// values.
-      hfListArgVar    = hfUsageLong << 1,
+      hfListArgVar      = hfUsageLong << 1,
       /// Special flag originally for testing: Don't exit after printing the
       /// usage.
-      hfUsageCont     = hfListArgVar << 1,
+      hfUsageCont       = hfListArgVar << 1,
       /// Activates the argument '--endvalues' that is used to signal the end of
       /// a separate value list.
-      hfEndValues     = hfUsageCont << 1,
+      hfEndValues       = hfUsageCont << 1,
       /// Activates the argument '--list-arg-groups' which lists the names of
       /// all known argument groups.<br>
       /// If argument groups are used, set this argument when creating the
       /// Groups singleton object.
-      hfListArgGroups = hfEndValues << 1,
+      hfListArgGroups   = hfEndValues << 1,
       /// This flag is set by the Groups class when it creates a Handler object.
       /// Don't use otherwise!
-      hfInGroup       = hfListArgGroups << 1
+      hfInGroup         = hfListArgGroups << 1
    }; // HandleFlags
 
    /// List of possible positions for the additional output.
@@ -730,7 +753,7 @@ private:
    /// - Check argument constraints.
    /// - Check global constraints.
    /// - Produce verbose output if required.
-   /// - Finally call calledAssign() for this argument.
+   /// - Finally call assignValue() for this argument.
    ///
    /// @param[in]  hdl    Pointer to the object that handles this argument.
    /// @param[in]  key    The short and/or long argument keys.
@@ -836,5 +859,5 @@ inline void Handler::setIsSubGroupHandler()
 #endif   // CELMA_PROG_ARGS_HANDLER_HPP
 
 
-// ===========================  END OF handler.hpp  ===========================
+// =====  END OF handler.hpp  =====
 

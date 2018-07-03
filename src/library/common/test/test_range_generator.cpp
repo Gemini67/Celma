@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,13 +14,13 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
+// module to test header file include
+#include "celma/common/detail/range_generator.hpp"
 
 
 // C++ Standard Library includes
-#include <iostream>
+#include <set>
+#include <stdexcept>
 
 
 // Boost includes
@@ -28,12 +28,8 @@
 #include <boost/test/unit_test.hpp>
 
 
-// project includes
-#include "celma/common/range_generator.hpp"
-
-
-using namespace std;
-using namespace celma;
+using celma::common::detail::RangeGenerator;
+using std::logic_error;
 
 
 
@@ -42,13 +38,13 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( test_invalid_single)
 {
 
-   common::RangeGenerator< int>*  ptr = nullptr;
+   RangeGenerator< int>*  ptr = nullptr;
 
 
-   BOOST_REQUIRE_THROW( ptr = new common::RangeGenerator< int>( -1), logic_error);
+   BOOST_REQUIRE_THROW( ptr = new RangeGenerator< int>( -1), logic_error);
    delete ptr;
 
-} // end test_invalid_single
+} // test_invalid_single
 
 
 
@@ -58,13 +54,13 @@ BOOST_AUTO_TEST_CASE( test_invalid_single)
 BOOST_AUTO_TEST_CASE( test_invalid_range)
 {
 
-   common::RangeGenerator< int>*  ptr = nullptr;
+   RangeGenerator< int>*  ptr = nullptr;
 
 
-   BOOST_REQUIRE_THROW( ptr = new common::RangeGenerator< int>( 12, 7), logic_error);
+   BOOST_REQUIRE_THROW( ptr = new RangeGenerator< int>( 12, 7), logic_error);
    delete ptr;
 
-} // end test_invalid_range
+} // test_invalid_range
 
 
 
@@ -73,13 +69,13 @@ BOOST_AUTO_TEST_CASE( test_invalid_range)
 BOOST_AUTO_TEST_CASE( test_invalid_range_end)
 {
 
-   common::RangeGenerator< int>*  ptr = nullptr;
+   RangeGenerator< int>*  ptr = nullptr;
 
 
-   BOOST_REQUIRE_THROW( ptr = new common::RangeGenerator< int>( -5, 5), logic_error);
+   BOOST_REQUIRE_THROW( ptr = new RangeGenerator< int>( -5, 5), logic_error);
    delete ptr;
 
-} // end test_invalid_range_end
+} // test_invalid_range_end
 
 
 
@@ -88,13 +84,13 @@ BOOST_AUTO_TEST_CASE( test_invalid_range_end)
 BOOST_AUTO_TEST_CASE( test_invalid_range_increment)
 {
 
-   common::RangeGenerator< int>*  ptr = nullptr;
+   RangeGenerator< int>*  ptr = nullptr;
 
 
-   BOOST_REQUIRE_THROW( ptr = new common::RangeGenerator< int>( 3, 9, -1), logic_error);
+   BOOST_REQUIRE_THROW( ptr = new RangeGenerator< int>( 3, 9, -1), logic_error);
    delete ptr;
 
-} // end test_invalid_range_increment
+} // test_invalid_range_increment
 
 
 
@@ -103,12 +99,12 @@ BOOST_AUTO_TEST_CASE( test_invalid_range_increment)
 BOOST_AUTO_TEST_CASE( test_single_value_exclude)
 {
 
-   common::RangeGenerator< int>  rg( 1);
+   RangeGenerator< int>  rg( 1);
 
 
    BOOST_REQUIRE_THROW( rg.excludeValue( 11), logic_error);
 
-} // end test_single_value_exclude
+} // test_single_value_exclude
 
 
 
@@ -117,7 +113,7 @@ BOOST_AUTO_TEST_CASE( test_single_value_exclude)
 BOOST_AUTO_TEST_CASE( test_range_value_exclude)
 {
 
-   common::RangeGenerator< int>  rg( 10, 20);
+   RangeGenerator< int>  rg( 10, 20);
 
 
    BOOST_REQUIRE_THROW( rg.excludeValue(  9), logic_error);
@@ -125,7 +121,7 @@ BOOST_AUTO_TEST_CASE( test_range_value_exclude)
    BOOST_REQUIRE_THROW( rg.excludeValue( 20), logic_error);
    BOOST_REQUIRE_THROW( rg.excludeValue( 21), logic_error);
 
-} // end test_range_value_exclude
+} // test_range_value_exclude
 
 
 
@@ -134,11 +130,11 @@ BOOST_AUTO_TEST_CASE( test_range_value_exclude)
 BOOST_AUTO_TEST_CASE( test_range_value_exclude_set)
 {
 
-   common::RangeGenerator< int>  rg( 10, 20);
+   RangeGenerator< int>  rg( 10, 20);
 
 
    {
-      set< int>  excludes;
+      std::set< int>  excludes;
       excludes.insert( 9);
 
       BOOST_REQUIRE_THROW( rg.excludeValues( excludes.begin(), excludes.end()),
@@ -146,7 +142,7 @@ BOOST_AUTO_TEST_CASE( test_range_value_exclude_set)
    } // end scope
 
    {
-      set< int>  excludes;
+      std::set< int>  excludes;
       excludes.insert( 15);
       excludes.insert( 21);
 
@@ -154,7 +150,7 @@ BOOST_AUTO_TEST_CASE( test_range_value_exclude_set)
                            logic_error);
    } // end scope
 
-} // end test_range_value_exclude_set
+} // test_range_value_exclude_set
 
 
 
@@ -163,7 +159,7 @@ BOOST_AUTO_TEST_CASE( test_range_value_exclude_set)
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
-   common::RangeGenerator< int>  rg( 1);
+   RangeGenerator< int>  rg( 1);
 
 
    BOOST_REQUIRE( rg != rg.end());
@@ -173,9 +169,9 @@ BOOST_AUTO_TEST_CASE( test_one)
    BOOST_REQUIRE( rg == rg.end());
 
    // test that increment the iterator after end throws
-   BOOST_REQUIRE_THROW( ++rg, runtime_error);
+   BOOST_REQUIRE_THROW( ++rg, std::runtime_error);
 
-} // end test_one
+} // test_one
 
 
 
@@ -184,7 +180,7 @@ BOOST_AUTO_TEST_CASE( test_one)
 BOOST_AUTO_TEST_CASE( test_zero)
 {
 
-   common::RangeGenerator< int>  rg( 0);
+   RangeGenerator< int>  rg( 0);
 
 
    BOOST_REQUIRE( static_cast< int>( rg) != rg.end());
@@ -193,7 +189,7 @@ BOOST_AUTO_TEST_CASE( test_zero)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_zero
+} // test_zero
 
 
 
@@ -202,7 +198,7 @@ BOOST_AUTO_TEST_CASE( test_zero)
 BOOST_AUTO_TEST_CASE( test_range_one)
 {
 
-   common::RangeGenerator< int>  rg( 5, 5);
+   RangeGenerator< int>  rg( 5, 5);
 
 
    BOOST_REQUIRE( static_cast< int>( rg) != rg.end());
@@ -211,7 +207,7 @@ BOOST_AUTO_TEST_CASE( test_range_one)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_range_one
+} // test_range_one
 
 
 
@@ -220,7 +216,7 @@ BOOST_AUTO_TEST_CASE( test_range_one)
 BOOST_AUTO_TEST_CASE( test_range_two)
 {
 
-   common::RangeGenerator< int>  rg( 5, 6);
+   RangeGenerator< int>  rg( 5, 6);
 
 
    BOOST_REQUIRE( static_cast< int>( rg) != rg.end());
@@ -233,7 +229,7 @@ BOOST_AUTO_TEST_CASE( test_range_two)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_range_two
+} // test_range_two
 
 
 
@@ -242,7 +238,7 @@ BOOST_AUTO_TEST_CASE( test_range_two)
 BOOST_AUTO_TEST_CASE( test_range_skip_over)
 {
 
-   common::RangeGenerator< int>  rg( 13, 20, 10);
+   RangeGenerator< int>  rg( 13, 20, 10);
 
 
    BOOST_REQUIRE( static_cast< int>( rg) != rg.end());
@@ -251,7 +247,7 @@ BOOST_AUTO_TEST_CASE( test_range_skip_over)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_range_skip_over
+} // test_range_skip_over
 
 
 
@@ -260,7 +256,7 @@ BOOST_AUTO_TEST_CASE( test_range_skip_over)
 BOOST_AUTO_TEST_CASE( test_range_skip_end)
 {
 
-   common::RangeGenerator< int>  rg( 13, 23, 10);
+   RangeGenerator< int>  rg( 13, 23, 10);
 
 
    BOOST_REQUIRE( static_cast< int>( rg) != rg.end());
@@ -273,7 +269,7 @@ BOOST_AUTO_TEST_CASE( test_range_skip_end)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_range_skip_end
+} // test_range_skip_end
 
 
 
@@ -282,7 +278,7 @@ BOOST_AUTO_TEST_CASE( test_range_skip_end)
 BOOST_AUTO_TEST_CASE( test_range_exclude)
 {
 
-   common::RangeGenerator< int>  rg( 14, 16);
+   RangeGenerator< int>  rg( 14, 16);
 
 
    rg.excludeValue( 15);
@@ -297,7 +293,7 @@ BOOST_AUTO_TEST_CASE( test_range_exclude)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_range_exclude
+} // test_range_exclude
 
 
 
@@ -306,7 +302,7 @@ BOOST_AUTO_TEST_CASE( test_range_exclude)
 BOOST_AUTO_TEST_CASE( test_range_skip)
 {
 
-   common::RangeGenerator< int>  rg( 13, 20, 2);
+   RangeGenerator< int>  rg( 13, 20, 2);
 
 
    BOOST_REQUIRE( static_cast< int>( rg) != rg.end());
@@ -327,7 +323,7 @@ BOOST_AUTO_TEST_CASE( test_range_skip)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_range_skip
+} // test_range_skip
 
 
 
@@ -336,8 +332,8 @@ BOOST_AUTO_TEST_CASE( test_range_skip)
 BOOST_AUTO_TEST_CASE( test_range_skip_exclude)
 {
 
-   common::RangeGenerator< int>  rg( 13, 20, 2);
-   set< int>                     excludes;
+   RangeGenerator< int>  rg( 13, 20, 2);
+   std::set< int>        excludes;
 
 
    excludes.insert( 15);
@@ -355,7 +351,7 @@ BOOST_AUTO_TEST_CASE( test_range_skip_exclude)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_range_skip_exclude
+} // test_range_skip_exclude
 
 
 
@@ -365,7 +361,7 @@ BOOST_AUTO_TEST_CASE( test_range_skip_exclude)
 BOOST_AUTO_TEST_CASE( test_range_neg)
 {
 
-   common::RangeGenerator< int, INT_MIN>  rg( -2, 2);
+   RangeGenerator< int, INT_MIN>  rg( -2, 2);
 
 
    BOOST_REQUIRE( static_cast< int>( rg) != rg.end());
@@ -390,9 +386,9 @@ BOOST_AUTO_TEST_CASE( test_range_neg)
    ++rg;
    BOOST_REQUIRE( rg == rg.end());
 
-} // end test_range_neg
+} // test_range_neg
 
 
 
-// =========================  END OF test_range_generator.cpp  =========================
+// =====  END OF test_range_generator.cpp  =====
 
