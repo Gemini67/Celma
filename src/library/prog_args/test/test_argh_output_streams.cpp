@@ -113,14 +113,14 @@ BOOST_AUTO_TEST_CASE( argument_output)
 /// Special arguments: one optional, one mandatory, one hidden, one deprecated
 /// and one "replaced by".
 /// @since
-///    x.y.z, 30.04.2018
+///    1.6.0, 30.04.2018
 BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 {
 
    /// Helper class used to provide a fresh set of the Handler object and the
    /// test variables.
    /// @since
-   ///    x.y.z, 30.04.2018
+   ///    1.6.0, 30.04.2018
    class TestData
    {
    public:
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
       /// @param[in]  argstring
       ///    The argument string to pass to \c ArgString2Array.
       /// @since
-      ///    x.y.z, 30.04.2018
+      ///    1.6.0, 30.04.2018
       TestData( int flag_set, const string& argstring):
          mStdOut(),
          mErrOut(),

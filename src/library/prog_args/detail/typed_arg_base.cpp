@@ -104,7 +104,7 @@ TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
 /// @param[in]  value
 ///    The value to assign, in string format.
 /// @since
-///    x.y.z, 29.06.2018  (renamed from calledAssign)
+///    1.6.0, 29.06.2018  (renamed from calledAssign)
 /// @since
 ///    0.2, 10.04.2016
 void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
@@ -324,7 +324,7 @@ TypedArgBase* TypedArgBase::checkOriginalValue( bool)
 /// @return
 ///    Pointer to this object.
 /// @since
-///    x.y.z, 30.04.2018
+///    1.6.0, 30.04.2018
 TypedArgBase* TypedArgBase::setIsDeprecated()
 {
 
@@ -342,7 +342,7 @@ TypedArgBase* TypedArgBase::setIsDeprecated()
 /// @return
 ///    Pointer to this object.
 /// @since
-///    x.y.z, 03.07.2018
+///    1.6.0, 03.07.2018
 TypedArgBase* TypedArgBase::setReplacedBy( const std::string& new_arg_key)
 {
 

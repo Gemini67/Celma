@@ -37,7 +37,7 @@ using celma::prog_args::Handler;
 
 /// Error case: An argument cannot be both mandatory and deprecated.
 /// @since
-///    x.y.z, 29.06.2018
+///    1.6.0, 29.06.2018
 BOOST_AUTO_TEST_CASE( feature_clash)
 {
 
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE( feature_clash)
 
 /// Using a deprecated argument should throw.
 /// @since
-///    x.y.z, 29.06.2018
+///    1.6.0, 29.06.2018
 BOOST_AUTO_TEST_CASE( invalid_use_of_deprecated_argument)
 {
 
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE( invalid_use_of_deprecated_argument)
 
 /// Using a replaced argument should throw.
 /// @since
-///    x.y.z, 03.07.2018
+///    1.6.0, 03.07.2018
 BOOST_AUTO_TEST_CASE( invalid_use_of_replaced_argument)
 {
 

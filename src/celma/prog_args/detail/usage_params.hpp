@@ -110,7 +110,7 @@ public:
    ///    The object managing this argument, may be used to apply further
    ///    settings.
    /// @since
-   ///    x.y.z, 30.04.2018
+   ///    1.6.0, 30.04.2018
    detail::TypedArgBase* addArgumentPrintDeprecated( Handler& handler,
          const std::string& arg_spec, const char* desc = nullptr);
 
@@ -135,14 +135,14 @@ public:
 
    /// Sets the flag 'print deprecated' to print deprecated arguments.
    /// @since
-   ///    x.y.z, 30.04.2018
+   ///    1.6.0, 30.04.2018
    void setPrintDeprecated();
 
    /// Returns if deprecated arguments should be printed.
    /// @return
    ///    \c true if deprecated arguments should be printed too.
    /// @since
-   ///    x.y.z, 30.04.2018
+   ///    1.6.0, 30.04.2018
    bool printDeprecated() const;
 
 private:

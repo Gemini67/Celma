@@ -143,7 +143,7 @@ public:
    /// @param[in]  value
    ///    The value to assign, in string format.
    /// @since
-   ///    x.y.z, 29.06.2018  (renamed from calledAssign)
+   ///    1.6.0, 29.06.2018  (renamed from calledAssign)
    /// @since
    ///    0.2, 10.04.2016
    void assignValue( bool ignore_cardinality, const std::string& value)
@@ -381,21 +381,21 @@ public:
    /// @return
    ///    Pointer to this object.
    /// @since
-   ///    x.y.z, 30.04.2018
+   ///    1.6.0, 30.04.2018
    virtual TypedArgBase* setIsDeprecated() noexcept( false);
 
    /// Returns if the argument is marked as deprecated.
    /// @return
    ///    \c true if the argument is marked as deprecated.
    /// @since
-   ///    x.y.z, 30.04.2018
+   ///    1.6.0, 30.04.2018
    bool isDeprecated() const;
 
    /// Marks an argument as replaced by another argument.
    /// @return
    ///    Pointer to this object.
    /// @since
-   ///    x.y.z, 03.07.2018
+   ///    1.6.0, 03.07.2018
    virtual TypedArgBase* setReplacedBy( const std::string& new_arg_key)
       noexcept( false);
 
@@ -403,7 +403,7 @@ public:
    /// @return
    ///    \c true if the argument is marked as replaced.
    /// @since
-   ///    x.y.z, 02.07.2018
+   ///    1.6.0, 02.07.2018
    bool isReplaced() const;
 
    /// Returns the value stored in the "replaced by" property (without checking
@@ -411,7 +411,7 @@ public:
    /// @return
    ///    The value stored in "replaced by".
    /// @since
-   ///    x.y.z, 03.07.2018
+   ///    1.6.0, 03.07.2018
    const std::string& replacedBy() const;
 
 /*
