@@ -391,6 +391,29 @@ public:
    ///    x.y.z, 30.04.2018
    bool isDeprecated() const;
 
+   /// Marks an argument as replaced by another argument.
+   /// @return
+   ///    Pointer to this object.
+   /// @since
+   ///    x.y.z, 03.07.2018
+   virtual TypedArgBase* setReplacedBy( const std::string& new_arg_key)
+      noexcept( false);
+
+   /// Returns if the argument is marked as "replaced by another argument".
+   /// @return
+   ///    \c true if the argument is marked as replaced.
+   /// @since
+   ///    x.y.z, 02.07.2018
+   bool isReplaced() const;
+
+   /// Returns the value stored in the "replaced by" property (without checking
+   /// e.g. if the "is deprecated" flag is set).
+   /// @return
+   ///    The value stored in "replaced by".
+   /// @since
+   ///    x.y.z, 03.07.2018
+   const std::string& replacedBy() const;
+
 /*
    /// Adds a value conversion: The value from the argument list (command line)
    /// is converted before it is checked and/or stored.
@@ -525,6 +548,8 @@ protected:
    /// Set if an argument is deprecated. Issues an error message
    /// "argument is deprecated" instead of "unknown argument".
    bool                            mIsDeprecated = false;
+   /// The key of the argument that replaced this argument.
+   std::string                     mReplacedBy;
    /// Stores all the checks (objects) defined for this argument.
    std::vector< ICheck*>           mChecks;
    /// Stores all the formatters (objects) defined for this argument.
@@ -680,6 +705,18 @@ inline bool TypedArgBase::isDeprecated() const
 {
    return mIsDeprecated;
 } // TypedArgBase::isDeprecated
+
+
+inline bool TypedArgBase::isReplaced() const
+{
+   return mIsDeprecated && !mReplacedBy.empty();
+} // TypedArgBase::isReplaced
+
+
+inline const std::string& TypedArgBase::replacedBy() const
+{
+   return mReplacedBy;
+} // TypedArgBase::replacedBy
 
 
 inline bool TypedArgBase::hasConstraint() const

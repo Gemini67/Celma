@@ -225,6 +225,17 @@ void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
             .append( mArguments[ i].mpArgObj->constraintStr());
       } // end if
 
+      if (mArguments[ i].mpArgObj->isDeprecated())
+      {
+         if (mArguments[ i].mpArgObj->isReplaced())
+            descCopy.append( "\n[replaced by '")
+               .append( mArguments[ i].mpArgObj->replacedBy()).append( "']");
+         else
+            descCopy.append( "\n[deprecated]");
+      } // end if
+      if (mArguments[ i].mpArgObj->isHidden())
+         descCopy.append( "\n[hidden]");
+
       tb.format( os, descCopy);
       os  << endl;
 

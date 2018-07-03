@@ -134,7 +134,7 @@ detail::TypedArgBase* UsageParams::addArgumentPrintDeprecated( Handler& handler,
    const string& arg_spec, const char* desc)
 {
 
-   static const string  default_desc( "Also print deprecated arguments in the usage.");
+   static const string  default_desc( "Also print deprecated and replaced arguments in the usage.");
 
    return handler.addArgument( arg_spec, DEST_VAR( mPrintDeprecated),
       (desc != nullptr) ? desc : default_desc);

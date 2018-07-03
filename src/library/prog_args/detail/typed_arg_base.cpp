@@ -111,8 +111,14 @@ void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
 {
 
    if (mIsDeprecated)
-      throw std::runtime_error( "argument '" + format::toString( mKey)
-         + "' is deprecated!");
+   {
+      if (mReplacedBy.empty())
+         throw std::runtime_error( "argument '" + format::toString( mKey)
+            + "' is deprecated!");
+      else
+         throw std::runtime_error( "argument '" + format::toString( mKey)
+            + "' has been replaced by '" + mReplacedBy + "'!");
+   } // end if
 
    if (!ignore_cardinality && (mpCardinality.get() != nullptr))
       mpCardinality->gotValue();
@@ -321,13 +327,34 @@ TypedArgBase* TypedArgBase::checkOriginalValue( bool)
 ///    x.y.z, 30.04.2018
 TypedArgBase* TypedArgBase::setIsDeprecated()
 {
+
    if (mIsMandatory)
       throw std::logic_error( "mandatory argument for variable '" + mVarName
-         + "' cannot be set 'deprected'");
+         + "' cannot be set 'deprecated'");
 
    mIsDeprecated = true;
    return this;
 } // TypedArgBase::setIsDeprecated
+
+
+
+/// Marks an argument as replaced by another argument.
+/// @return
+///    Pointer to this object.
+/// @since
+///    x.y.z, 03.07.2018
+TypedArgBase* TypedArgBase::setReplacedBy( const std::string& new_arg_key)
+{
+
+   if (mIsMandatory)
+      throw std::logic_error( "mandatory argument for variable '" + mVarName
+         + "' cannot be set 'replaced by'");
+
+   mIsDeprecated = true;
+   mReplacedBy = new_arg_key;
+
+   return this;
+} // TypedArgBase::setReplacedBy
 
 
 
@@ -399,6 +426,7 @@ TypedArgBase::TypedArgBase( const std::string& vname, ValueMode vm,
    mVarName( vname),
    mValueMode( vm),
    mPrintDefault( printDef),
+   mReplacedBy(),
    mChecks(),
    mFormats(),
    mpCardinality( new CardinalityMax( 1)),
@@ -421,12 +449,24 @@ TypedArgBase::TypedArgBase( const std::string& vname, ValueMode vm,
 ostream& operator <<( ostream& os, const TypedArgBase& tab)
 {
 
+   std::string  deprecated_str;
+
+
+   if (tab.mIsDeprecated)
+   {
+      if (tab.mReplacedBy.empty())
+         deprecated_str = "deprecated, ";
+      else
+         deprecated_str = "replaced by '"
+            + format::toString( tab.mReplacedBy) + "', ";
+   } // end if
+
    os << "value " << tab.mValueMode << ", "
       << (tab.mIsMandatory ? "mandatory, " : "optional, ")
       << (tab.takesMultiValue() ? "takes" : "does not take") << " multiple&separate values, "
       << (tab.mPrintDefault ? "" : "don't ") << "print dflt, "
       << (tab.mIsHidden ? "hidden, " : "")
-      << (tab.mIsDeprecated ? "deprecated, " : "")
+      << deprecated_str
       << (tab.mChecks.empty() ? "no" : boost::lexical_cast< string>( tab.mChecks.size()))
       << " checks, "
       << (tab.mFormats.empty() ? "no" : boost::lexical_cast< string>( tab.mFormats.size()))

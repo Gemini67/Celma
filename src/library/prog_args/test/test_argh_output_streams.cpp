@@ -110,10 +110,11 @@ BOOST_AUTO_TEST_CASE( argument_output)
 
 
 
-/// Two arguments, one optional, one mandatory, one hidden and one deprecated.
+/// Special arguments: one optional, one mandatory, one hidden, one deprecated
+/// and one "replaced by".
 /// @since
 ///    x.y.z, 30.04.2018
-BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
+BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 {
 
    /// Helper class used to provide a fresh set of the Handler object and the
@@ -133,6 +134,7 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
          mErrOut(),
          mHandler( mStdOut, mErrOut, Handler::AllHelp | Handler::hfUsageCont | flag_set),
          mStringArg(),
+         mReplacedBy(),
          mAs2a( argstring, nullptr)
       {
          mHandler.addArgument( "s", DEST_VAR( mStringArg), "String argument")
@@ -143,6 +145,9 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
             "Hidden boolean argument")->setIsHidden();
          mHandler.addArgument( "deprecated", DEST_VAR( mDummy),
             "Deprecated argument, don't use anymore")->setIsDeprecated();
+         mHandler.addArgument( "n,name", DEST_VAR( mReplacedBy),
+            "Argument replaced by '-i', don't use anymore")
+            ->setPrintDefault( false)->setReplacedBy( "-i");
       } // end TestData::TestData
 
       /// Captures the output to \c stdout.
@@ -157,6 +162,8 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
       int                  mOptIntArg = 42;
       /// Deprecated argument variable.
       bool                 mDummy = false;
+      /// Argument "replaced by".
+      string               mReplacedBy;
       /// Hidden variable.
       bool                 mHidden = false;
       /// Argument string split to argc, argv.
@@ -194,6 +201,7 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
                            "   -i,--index   Integer argument\n"
                            "                Default value: 42\n"
                            "   --hidden     Hidden boolean argument\n"
+                           "                [hidden]\n"
                            "\n");
       BOOST_REQUIRE( td.mErrOut.str().empty());
    } // end scope
@@ -212,6 +220,9 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
                            "   -i,--index     Integer argument\n"
                            "                  Default value: 42\n"
                            "   --deprecated   Deprecated argument, don't use anymore\n"
+                           "                  [deprecated]\n"
+                           "   -n,--name      Argument replaced by '-i', don't use anymore\n"
+                           "                  [replaced by '-i']\n"
                            "\n");
       BOOST_REQUIRE( td.mErrOut.str().empty());
    } // end scope
@@ -230,7 +241,11 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
                            "   -i,--index     Integer argument\n"
                            "                  Default value: 42\n"
                            "   --hidden       Hidden boolean argument\n"
+                           "                  [hidden]\n"
                            "   --deprecated   Deprecated argument, don't use anymore\n"
+                           "                  [deprecated]\n"
+                           "   -n,--name      Argument replaced by '-i', don't use anymore\n"
+                           "                  [replaced by '-i']\n"
                            "\n");
       BOOST_REQUIRE( td.mErrOut.str().empty());
    } // end scope
@@ -250,6 +265,7 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
                            "   -i,--index       Integer argument\n"
                            "                    Default value: 42\n"
                            "   --hidden         Hidden boolean argument\n"
+                           "                    [hidden]\n"
                            "\n");
       BOOST_REQUIRE( td.mErrOut.str().empty());
    } // end scope
@@ -265,10 +281,14 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
                            "\n"
                            "Optional arguments:\n"
                            "   -h,--help            Prints the program usage.\n"
-                           "   --print-deprecated   Also print deprecated arguments in the usage.\n"
+                           "   --print-deprecated   Also print deprecated and replaced arguments in the\n"
+                           "                        usage.\n"
                            "   -i,--index           Integer argument\n"
                            "                        Default value: 42\n"
                            "   --deprecated         Deprecated argument, don't use anymore\n"
+                           "                        [deprecated]\n"
+                           "   -n,--name            Argument replaced by '-i', don't use anymore\n"
+                           "                        [replaced by '-i']\n"
                            "\n");
       BOOST_REQUIRE( td.mErrOut.str().empty());
    } // end scope
@@ -286,16 +306,21 @@ BOOST_AUTO_TEST_CASE( test_handling_hidden_deprecated)
                            "Optional arguments:\n"
                            "   -h,--help            Prints the program usage.\n"
                            "   --print-hidden       Also print hidden arguments in the usage.\n"
-                           "   --print-deprecated   Also print deprecated arguments in the usage.\n"
+                           "   --print-deprecated   Also print deprecated and replaced arguments in the\n"
+                           "                        usage.\n"
                            "   -i,--index           Integer argument\n"
                            "                        Default value: 42\n"
                            "   --hidden             Hidden boolean argument\n"
+                           "                        [hidden]\n"
                            "   --deprecated         Deprecated argument, don't use anymore\n"
+                           "                        [deprecated]\n"
+                           "   -n,--name            Argument replaced by '-i', don't use anymore\n"
+                           "                        [replaced by '-i']\n"
                            "\n");
       BOOST_REQUIRE( td.mErrOut.str().empty());
    } // end scope
 
-} // test_handling_hidden_deprecated
+} // usage_with_special_arguments
 
 
 

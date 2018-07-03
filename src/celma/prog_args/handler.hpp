@@ -110,6 +110,17 @@ class ValueHandler;
 ///     If the argument was mandatory before, remove this flag. Setting a
 ///     deprecated argument to mandatory, or vice versa, will throw in
 ///     addArgument().
+///   - setReplacedBy(): When an argument is replaced by another, you may want
+///     to give the user this information instead of just saying "unknown
+///     argument". So, just mark an argument as "replaced by", then it will no
+///     longer appear in the usage, and if the argument is used on the command
+///     line, the proper error message is printed.<br>
+///     Internally the argument is handled like a deprecated argument, so
+///     features related to deprecated arguments apply to replaced arguments
+///     too.<br>
+///     If the argument was mandatory before, remove this flag. Setting a
+///     deprecated argument to mandatory, or vice versa, will throw in
+///     addArgument().
 ///   .
 ///   It is possible to add multiple checks to the same argument. In this case,
 ///   a value must be accepted by all checks. The checks are executed in the
@@ -206,7 +217,6 @@ class ValueHandler;
 ///        multiple times (and cardinality is 1):<br>
 ///        Error/Exception (as is), store the first value (ignore additional
 ///        calls), store the last value.
-/// @todo  Add test-feature: Process all arguments, print all errors.
 /// @todo  Use different exit codes from evalArgumentErrorExit(), depending on
 ///        the type of the exception that was called.
 /// @todo  Add pre- and post-argument list help texts also to argument handlers
