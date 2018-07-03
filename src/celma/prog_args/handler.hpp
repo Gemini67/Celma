@@ -68,7 +68,10 @@ class ValueHandler;
 ///   .
 ///   To change this 'value mode', call the function setValueMode() with the
 ///   desired value.<br>
-///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent), "Specifies the verbose level, if set without value default is 'low'")->setValueMode( vmOptional);</code>
+///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent),
+///                               "Specifies the verbose level, if set without "
+///                               "value default is 'low'")
+///                             ->setValueMode( vmOptional);</code>
 /// - The value mode can also be used to flag a parameter that means:
 ///   The remaining command line arguments are not for this program/
 ///   application.<br>
@@ -321,7 +324,7 @@ public:
    /// @since  0.2, 10.04.2016
    explicit Handler( int flagSet = hfHelpShort | hfHelpLong,
                      IUsageText* txt1 = nullptr,
-                     IUsageText* txt2 = nullptr);
+                     IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor that allows to specify the output streams to write to.
    /// @param[in]  os        The stream to write normal output to.
@@ -337,7 +340,7 @@ public:
    Handler( std::ostream& os, std::ostream& error_os,
             int flag_set = hfHelpShort | hfHelpLong,
             IUsageText* txt1 = nullptr,
-            IUsageText* txt2 = nullptr);
+            IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor to be used by a sub-group. Copies some settings from the main
    /// argument handler object.<br>
@@ -357,7 +360,7 @@ public:
    ///                       additional text for the usage.
    /// @since  1.1.0, 04.12.2017
    Handler( Handler& main_ah, int flag_set, IUsageText* txt1 = nullptr,
-            IUsageText* txt2 = nullptr);
+            IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Don't allow copying.
    Handler( const Handler&) = delete;
@@ -554,7 +557,7 @@ public:
    ///                     space at the end as separator to the following text.
    /// @since  0.2, 10.04.2016
    void evalArgumentsErrorExit( int argc, char* argv[],
-                                const std::string& prefix);
+      const std::string& prefix);
 
    /// Helps to determine if an object is a 'plain' Handler object or a
    /// ValueHandler object.
@@ -574,7 +577,7 @@ public:
    /// @return  Pointer to the object handling the specified argument.
    /// @since  0.14.0, 16.03.2017
    detail::TypedArgBase* getArgHandler( const std::string& arg_spec)
-                                      noexcept( false);
+      noexcept( false);
 
 protected:
 	/// Class needs access to internals.
@@ -650,6 +653,20 @@ private:
 
    /// Type of the container to store the global constrainst in.
    typedef std::vector< detail::IConstraint*>  ConstraintCont;
+
+   /// Called by the constructors to evaluate the set of flags given.
+   /// @param[in]  flag_set
+   ///    The set of flags to set.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @since
+   ///    x.y.z, 16.02.2018
+   void handleStartFlags( int flag_set, IUsageText* txt1, IUsageText* txt2)
+      noexcept( false);
 
    /// Function to print the usage of a program (when requested through the
    /// arguments). The additional parameters allow to print additional

@@ -54,9 +54,6 @@ using std::underflow_error;
 // module definitions
 const detail::ArgumentKey  Handler::mPosKey( "-");
 
-#define VAR_NAME( n)  n, #n
-
-
 
 /// Constructor.
 /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
@@ -105,50 +102,7 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
-   string  args;
-
-
-   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
-      args = "h,help";
-   else if (flag_set & hfHelpShort)
-      args = "h";
-   else if (flag_set & hfHelpLong)
-      args = "help";
-
-   if (!args.empty())
-      addArgument( args,
-                   new detail::TypedArgCallable(
-                      detail::ArgHandlerCallable(
-                         std::bind( &Handler::usage, this, txt1, txt2)),
-                         "Handler::usage"),
-                   "Prints the program usage.");
-
-   if (flag_set & hfUsageHidden)
-      mpUsageParams->setPrintHidden();
-
-   if (flag_set & hfArgHidden)
-      mpUsageParams->addArgumentPrintHidden( *this, "print-hidden");
-
-   if (flag_set & hfUsageDeprecated)
-      mpUsageParams->setPrintDeprecated();
-
-   if (flag_set & hfArgDeprecated)
-      mpUsageParams->addArgumentPrintDeprecated( *this, "print-deprecated");
-
-   if (flag_set & hfUsageShort)
-      mpUsageParams->addArgumentUsageShort( *this, "help-short");
-
-   if (flag_set & hfUsageLong)
-      mpUsageParams->addArgumentUsageLong( *this, "help-long");
-
-   if (flag_set & hfListArgVar)
-      addArgumentListArgVars( "list-arg-vars");
-
-   if (flag_set & hfListArgGroups)
-      addArgumentListArgGroups( "list-arg-groups");
-
-   if (flag_set & hfEndValues)
-      addArgumentEndValues( "endvalues");
+   handleStartFlags( flag_set, txt1, txt2);
 
 } // Handler::Handler
 
@@ -190,38 +144,7 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
-   string  args;
-
-
-   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
-      args = "h,help";
-   else if (flag_set & hfHelpShort)
-      args = "h";
-   else if (flag_set & hfHelpLong)
-      args = "help";
-
-   if (!args.empty())
-      addArgument( args,
-                   new detail::TypedArgCallable(
-                      detail::ArgHandlerCallable(
-                         std::bind( &Handler::usage, this, txt1, txt2)),
-                         "Handler::usage"),
-                   "Prints the program usage.");
-
-   if (flag_set & hfUsageShort)
-      mpUsageParams->addArgumentUsageShort( *this, "help-short");
-
-   if (flag_set & hfUsageLong)
-      mpUsageParams->addArgumentUsageLong( *this, "help-long");
-
-   if (flag_set & hfListArgVar)
-      addArgumentListArgVars( "list-arg-vars");
-
-   if (flag_set & hfListArgGroups)
-      addArgumentListArgGroups( "list-arg-groups");
-
-   if (flag_set & hfEndValues)
-      addArgumentEndValues( "endvalues");
+   handleStartFlags( flag_set, txt1, txt2);
 
 } // Handler::Handler
 
@@ -1067,6 +990,70 @@ std::ostream& operator <<( std::ostream& os, const Handler& ah)
 {
    return os << ah.mDescription;
 } // operator <<
+
+
+
+/// Called by the constructors to evaluate the set of flags given.
+/// @param[in]  flag_set
+///    The set of flags to set.
+/// @param[in]  txt1
+///    Optional pointer to the object to provide additional text for the
+///    usage.
+/// @param[in]  txt2
+///    Optional pointer to the object to provide additional text for the
+///    usage.
+/// @since
+///    x.y.z, 16.02.2018
+void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
+   IUsageText* txt2)
+{
+
+   string  args;
+
+
+   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
+      args = "h,help";
+   else if (flag_set & hfHelpShort)
+      args = "h";
+   else if (flag_set & hfHelpLong)
+      args = "help";
+
+   if (!args.empty())
+      addArgument( args,
+                   new detail::TypedArgCallable(
+                      detail::ArgHandlerCallable(
+                         std::bind( &Handler::usage, this, txt1, txt2)),
+                         "Handler::usage"),
+                   "Prints the program usage.");
+
+   if (flag_set & hfUsageHidden)
+      mpUsageParams->setPrintHidden();
+
+   if (flag_set & hfArgHidden)
+      mpUsageParams->addArgumentPrintHidden( *this, "print-hidden");
+
+   if (flag_set & hfUsageDeprecated)
+      mpUsageParams->setPrintDeprecated();
+
+   if (flag_set & hfArgDeprecated)
+      mpUsageParams->addArgumentPrintDeprecated( *this, "print-deprecated");
+
+   if (flag_set & hfUsageShort)
+      mpUsageParams->addArgumentUsageShort( *this, "help-short");
+
+   if (flag_set & hfUsageLong)
+      mpUsageParams->addArgumentUsageLong( *this, "help-long");
+
+   if (flag_set & hfListArgVar)
+      addArgumentListArgVars( "list-arg-vars");
+
+   if (flag_set & hfListArgGroups)
+      addArgumentListArgGroups( "list-arg-groups");
+
+   if (flag_set & hfEndValues)
+      addArgumentEndValues( "endvalues");
+
+} // Handler::handleStartFlags
 
 
 
