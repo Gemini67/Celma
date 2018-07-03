@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,28 +12,28 @@
 
 
 /// @file
-/// See documentation of template celma::common::RangeStringIterator.
+/// See documentation of template celma::common::detail::RangeStringIterator.
 
 
-#ifndef CELMA_COMMON_RANGE_STRING_ITERATOR_HPP
-#define CELMA_COMMON_RANGE_STRING_ITERATOR_HPP
+#ifndef CELMA_COMMON_DETAIL_RANGE_STRING_ITERATOR_HPP
+#define CELMA_COMMON_DETAIL_RANGE_STRING_ITERATOR_HPP
 
 
 #include <iterator>
 #include <memory>
 #include <stdexcept>
 #include "celma/common/pre_postfix.hpp"
-#include "celma/common/range_expression.hpp"
-#include "celma/common/range_generator.hpp"
+#include "celma/common/detail/range_expression.hpp"
+#include "celma/common/detail/range_generator.hpp"
 
 
-namespace celma { namespace common {
+namespace celma { namespace common { namespace detail {
 
 
-/// @tparam  T   The object with the range expression: An std::string.
-/// @tparam  TF  The type of the values to generate.
 /// Range string iterator, returning the next value computed from the specified
 /// range.
+/// @tparam  T   The object with the range expression: An std::string.
+/// @tparam  TF  The type of the values to generate.
 /// @since  0.2, 07.04.2016
 template< typename T, typename TF>
    class RangeStringIterator: public std::iterator< std::forward_iterator_tag,
@@ -263,12 +263,13 @@ template< typename T, typename TF>
 } // RangeStringIterator< T, TF>::createRanger
 
 
+} // namespace detail
 } // namespace common
 } // namespace celma
 
 
-#endif   // CELMA_COMMON_RANGE_STRING_ITERATOR_HPP
+#endif   // CELMA_COMMON_DETAIL_RANGE_STRING_ITERATOR_HPP
 
 
-// ====================  END OF range_string_iterator.hpp  ====================
+// =====  END OF range_string_iterator.hpp  =====
 

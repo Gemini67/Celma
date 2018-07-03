@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,7 +16,7 @@
 
 
 // module header file include
-#include "celma/common/range_expression.hpp"
+#include "celma/common/detail/range_expression.hpp"
 
 
 // C/OS library includes
@@ -31,10 +31,10 @@
 #include "celma/common/celma_exception.hpp"
 
 
-using namespace std;
+namespace celma { namespace common { namespace detail {
 
 
-namespace celma { namespace common {
+using std::string;
 
 
 
@@ -43,13 +43,9 @@ namespace celma { namespace common {
 RangeExpression::RangeExpression():
    mRangeString(),
    mMatchedExpression(),
-   mFound( 0),
-   mStartValue(),
-   mEndValue(),
-   mIncrementValue(),
    mExcludeValue()
 {
-} // end RangeExpression::RangeExpression
+} // RangeExpression::RangeExpression
 
 
 
@@ -75,7 +71,7 @@ void RangeExpression::parseString( const string& s)
 
    mMatchedExpression.assign( mRangeString, 0, mNextPos);
 
-} // end RangeExpression::parseString
+} // RangeExpression::parseString
 
 
 
@@ -126,8 +122,8 @@ bool RangeExpression::parse()
       // exclude-range?
       if ((mNextPos < mRangeString.length()) && (mRangeString[ mNextPos] == '{'))
       {
-         string::size_type  exclude_begin = ++mNextPos;
-         string::size_type  inner_exclude = 0;
+         auto const  exclude_begin = ++mNextPos;
+         auto        inner_exclude = 0;
 
          // find the end of the exclude range
          // since the exclude-range itself can be a range that contains an
@@ -160,7 +156,7 @@ bool RangeExpression::parse()
    } // end if
 
    return true;
-} // end RangeExpression::parse
+} // RangeExpression::parse
 
 
 
@@ -178,13 +174,14 @@ void RangeExpression::readNumber( int64_t& value)
       value = (value * 10) + (mRangeString[ mNextPos++] - '0');
    } // end while
 
-} // end RangeExpression::readNumber
+} // RangeExpression::readNumber
 
 
 
+} // namespace detail
 } // namespace common
 } // namespace celma
 
 
-// =========================  END OF range_expression.cpp  =========================
+// =====  END OF range_expression.cpp  =====
 

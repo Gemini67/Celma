@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,9 +14,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
+// module to test header file include
+#include "celma/common/range_dest.hpp"
 
 
 // C++ Standard Library includes
@@ -32,12 +31,7 @@
 #include <boost/test/unit_test.hpp>
 
 
-// project includes
-#include "celma/common/range_dest.hpp"
-
-
-using namespace std;
-using namespace celma;
+using celma::common::RangeDest;
 
 
 
@@ -46,8 +40,10 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( test_int_vector)
 {
 
-   vector< int>                            myVector;
-   common::RangeDest< int, vector< int> >  rd( myVector);
+   using std::vector;
+
+   vector< int>                   myVector;
+   RangeDest< int, vector< int>>  rd( myVector);
 
 
    rd.set( 15);
@@ -55,7 +51,7 @@ BOOST_AUTO_TEST_CASE( test_int_vector)
    BOOST_REQUIRE( !myVector.empty());
    BOOST_REQUIRE_EQUAL( myVector[ 0], 15);
 
-} // end test_int_vector
+} // test_int_vector
 
 
 
@@ -64,8 +60,11 @@ BOOST_AUTO_TEST_CASE( test_int_vector)
 BOOST_AUTO_TEST_CASE( test_string_vector)
 {
 
-   vector< string>                               myVector;
-   common::RangeDest< string, vector< string> >  rd( myVector);
+   using std::string;
+   using std::vector;
+
+   vector< string>                      myVector;
+   RangeDest< string, vector< string>>  rd( myVector);
 
 
    rd.set( "hello");
@@ -76,7 +75,7 @@ BOOST_AUTO_TEST_CASE( test_string_vector)
    BOOST_REQUIRE_EQUAL( myVector[ 0], "hello");
    BOOST_REQUIRE_EQUAL( myVector[ 1], "world");
 
-} // end test_string_vector
+} // test_string_vector
 
 
 
@@ -85,18 +84,20 @@ BOOST_AUTO_TEST_CASE( test_string_vector)
 BOOST_AUTO_TEST_CASE( test_int_list)
 {
 
-   list< int>                            myList;
-   common::RangeDest< int, list< int> >  rd( myList);
+   using std::list;
+
+   list< int>                   myList;
+   RangeDest< int, list< int>>  rd( myList);
 
 
    rd.set( 15);
 
-   list< int>::const_iterator  cit = myList.begin();
+   auto  cit = myList.begin();
 
    BOOST_REQUIRE( !myList.empty());
    BOOST_REQUIRE_EQUAL( *cit, 15);
 
-} // end test_int_list
+} // test_int_list
 
 
 
@@ -105,8 +106,11 @@ BOOST_AUTO_TEST_CASE( test_int_list)
 BOOST_AUTO_TEST_CASE( test_string_list)
 {
 
-   list< string>                               myList;
-   common::RangeDest< string, list< string> >  rd( myList);
+   using std::list;
+   using std::string;
+
+   list< string>                      myList;
+   RangeDest< string, list< string>>  rd( myList);
 
 
    rd.set( "hello");
@@ -115,13 +119,13 @@ BOOST_AUTO_TEST_CASE( test_string_list)
    BOOST_REQUIRE( !myList.empty());
    BOOST_REQUIRE_EQUAL( myList.size(), 2);
 
-   list< string>::const_iterator  cit = myList.begin();
+   auto  cit = myList.begin();
 
    BOOST_REQUIRE_EQUAL( *cit, "hello");
    ++cit;
    BOOST_REQUIRE_EQUAL( *cit, "world");
 
-} // end test_string_list
+} // test_string_list
 
 
 
@@ -130,18 +134,20 @@ BOOST_AUTO_TEST_CASE( test_string_list)
 BOOST_AUTO_TEST_CASE( test_int_set)
 {
 
-   set< int>                            mySet;
-   common::RangeDest< int, set< int> >  rd( mySet);
+   using std::set;
+
+   set< int>                   mySet;
+   RangeDest< int, set< int>>  rd( mySet);
 
 
    rd.set( 15);
 
-   set< int>::const_iterator  cit = mySet.begin();
+   auto  cit = mySet.begin();
 
    BOOST_REQUIRE( !mySet.empty());
    BOOST_REQUIRE_EQUAL( *cit, 15);
 
-} // end test_int_set
+} // test_int_set
 
 
 
@@ -150,8 +156,11 @@ BOOST_AUTO_TEST_CASE( test_int_set)
 BOOST_AUTO_TEST_CASE( test_string_set)
 {
 
-   set< string>                               mySet;
-   common::RangeDest< string, set< string> >  rd( mySet);
+   using std::set;
+   using std::string;
+
+   set< string>                      mySet;
+   RangeDest< string, set< string>>  rd( mySet);
 
 
    rd.set( "hello");
@@ -160,13 +169,13 @@ BOOST_AUTO_TEST_CASE( test_string_set)
    BOOST_REQUIRE( !mySet.empty());
    BOOST_REQUIRE_EQUAL( mySet.size(), 2);
 
-   set< string>::const_iterator  cit = mySet.begin();
+   auto  cit = mySet.begin();
 
    BOOST_REQUIRE_EQUAL( *cit, "hello");
    ++cit;
    BOOST_REQUIRE_EQUAL( *cit, "world");
 
-} // end test_string_set
+} // test_string_set
 
 
 
@@ -175,8 +184,10 @@ BOOST_AUTO_TEST_CASE( test_string_set)
 BOOST_AUTO_TEST_CASE( test_bitset)
 {
 
-   bitset< 1024>                               myBitset;
-   common::RangeDest< size_t, bitset< 1024> >  rd( myBitset);
+   using std::bitset;
+
+   bitset< 1024>                      myBitset;
+   RangeDest< size_t, bitset< 1024>>  rd( myBitset);
 
 
    rd.set( 15);
@@ -187,9 +198,9 @@ BOOST_AUTO_TEST_CASE( test_bitset)
    BOOST_REQUIRE( myBitset[ 15]);
    BOOST_REQUIRE( myBitset[ 25]);
 
-} // end test_bitset
+} // test_bitset
 
 
 
-// =========================  END OF test_range_dest.cpp  =========================
+// =====  END OF test_range_dest.cpp  =====
 

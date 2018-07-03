@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -115,6 +115,7 @@ void printUsage( int flags, int argc, char* argv[])
       ah.evalArguments( argc, argv);
    } catch (const std::exception& e)
    {
+      std::cerr << "*** ERROR: caught exception: " << e.what() << endl;
    } // end try
 
 } // printUsage
@@ -124,5 +125,5 @@ void printUsage( int flags, int argc, char* argv[])
 } // namespace
 
 
-// ===================  END OF test_argh_hidden_output.cpp  ===================
+// =====  END OF test_argh_hidden_output.cpp  =====
 

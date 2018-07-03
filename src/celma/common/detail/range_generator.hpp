@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,11 +12,11 @@
 
 
 /// @file
-/// See documentation of template celma::common::RangeGenerator.
+/// See documentation of template celma::common::detail::RangeGenerator.
 
 
-#ifndef CELMA_COMMON_RANGE_GENERATOR_HPP
-#define CELMA_COMMON_RANGE_GENERATOR_HPP
+#ifndef CELMA_COMMON_DETAIL_RANGE_GENERATOR_HPP
+#define CELMA_COMMON_DETAIL_RANGE_GENERATOR_HPP
 
 
 #include <set>
@@ -24,7 +24,7 @@
 #include "celma/common/pre_postfix.hpp"
 
 
-namespace celma { namespace common {
+namespace celma { namespace common { namespace detail {
 
 
 /// Generates all numbers in a range.<br>
@@ -51,7 +51,7 @@ public:
    {
       if (mStartValue == iterEndValue)
          throw std::logic_error( "single value may not be iterator-end");
-   } // end RangeGenerator< T, iterEndValue>::RangeGenerator
+   } // RangeGenerator< T, iterEndValue>::RangeGenerator
 
    /// Constructor for a range.
    /// @param[in]  start_value  The start value of the range.
@@ -70,7 +70,7 @@ public:
          throw std::logic_error( "iterator-end must be outside the range");
       if (mIncrement < 0)
          throw std::logic_error( "increment value must be positive");
-   } // end RangeGenerator< T, iterEndValue>::RangeGenerator
+   } // RangeGenerator< T, iterEndValue>::RangeGenerator
 
    /// Sets a value of the range that should excluded. The value must be
    /// within the range \<startvalue\> \< excl \< \<endvalue\>.
@@ -85,7 +85,7 @@ public:
       if ((value <= mStartValue) || (mEndValue <= value))
          throw std::logic_error( "exclude values outside of range");
       mExludeValues.insert( value);
-   } // end RangeGenerator< T, iterEndValue>::excludeValue
+   } // RangeGenerator< T, iterEndValue>::excludeValue
 
    /// Allows to add multiple exclude values.
    /// @tparam  iterator  The iterator type to use.
@@ -99,7 +99,7 @@ public:
       {
          excludeValue( *it_begin);
       } // end for
-   } // end RangeGenerator< T, iterEndValue>::excludeValues
+   } // RangeGenerator< T, iterEndValue>::excludeValues
 
    /// Returns the end-of-iteration value, *not* the last value in the range.
    /// @return  The end-of-iteration value, used to check if the end of the
@@ -108,7 +108,7 @@ public:
    T end() const
    {
       return iterEndValue;
-   } // end RangeGenerator< T, iterEndValue>::end
+   } // RangeGenerator< T, iterEndValue>::end
 
    /// Prefix increment.
    /// @return  This object.
@@ -140,7 +140,7 @@ public:
          } // end for
       } // end if
       return *this;
-   } // end RangeGenerator< T, iterEndValue>::operator ++
+   } // RangeGenerator< T, iterEndValue>::operator ++
 
    /// Postfix increment.
    /// @return  This object.
@@ -150,7 +150,7 @@ public:
       const RangeGenerator  copy( *this);
       ++(*this);
       return copy;
-   } // end RangeGenerator< T, iterEndValue>::operator ++
+   } // RangeGenerator< T, iterEndValue>::operator ++
 
    /// Returns the current value.
    /// @return  The current value, \c iterEndValue if the end of the range was
@@ -159,7 +159,7 @@ public:
    operator T() const
    {
       return mStartValue;
-   } // end RangeGenerator< T, iterEndValue>::operator T
+   } // RangeGenerator< T, iterEndValue>::operator T
 
 private:
    /// The start and current value.
@@ -176,12 +176,13 @@ private:
 }; // RangeGenerator< T, iterEndValue>
 
 
+} // namespace detail
 } // namespace common
 } // namespace celma
 
 
-#endif   // CELMA_COMMON_RANGE_GENERATOR_HPP
+#endif   // CELMA_COMMON_DETAIL_RANGE_GENERATOR_HPP
 
 
-// =======================  END OF range_generator.hpp  =======================
+// =====  END OF range_generator.hpp  =====
 
