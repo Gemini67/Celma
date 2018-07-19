@@ -12,7 +12,7 @@ cmake_minimum_required( VERSION 2.8 )
 project( Celma )
 
 set( MAJORVERSION    1 )
-set( MINORVERSION    6 )
+set( MINORVERSION    7 )
 set( RELEASE_VERSION 0 )
 set( PATCHLEVEL      0 )
 
