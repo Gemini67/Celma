@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -42,7 +42,7 @@ public:
    RangeDest( C& dest):
       mDestination( dest)
    {
-   } // end RangeDest< T, C>::RangeDest
+   } // RangeDest< T, C>::RangeDest
 
    /// Stores/Sets a value in the container.
    /// @param[in]  v  The value to store in the container.
@@ -50,7 +50,7 @@ public:
    void set( const T& v)
    {
       mDestination.push_back( v);
-   } // end RangeDest< T, C>::set
+   } // RangeDest< T, C>::set
 
    /// Returns if the destination container is empty (no value set/stored).
    /// @return  \c true if the destination container is empty.
@@ -58,7 +58,7 @@ public:
    bool empty() const
    {
       return mDestination.empty();
-   } // end RangeDest< T, C>::empty
+   } // RangeDest< T, C>::empty
 
 private:
    /// The container to store the values in.
@@ -82,7 +82,7 @@ public:
    RangeDest( dest_type& dest):
       mDestination( dest)
    {
-   } // end RangeDest< size_t, std::bitset< S> >::RangeDest
+   } // RangeDest< size_t, std::bitset< S> >::RangeDest
 
    /// Sets a flag in the bitset.
    /// @param[in]  v  The index of the flag to set.
@@ -90,7 +90,7 @@ public:
    void set( const size_t& v)
    {
       mDestination.set( v);
-   } // end RangeDest< size_t, std::bitset< S> >:set
+   } // RangeDest< size_t, std::bitset< S> >:set
 
    /// Returns if destination bitset is empty (no value set).
    /// @return  \c true if no value is set in the destination bitset.
@@ -98,7 +98,7 @@ public:
    bool empty() const
    {
       return mDestination.none();
-   } // end RangeDest< T, C>::empty
+   } // RangeDest< T, C>::empty
 
 private:
    /// The bitset to set the flags on.
@@ -122,7 +122,7 @@ public:
    RangeDest( dest_type& dest):
       mDestination( dest)
    {
-   } // end RangeDest< T, std::set< T> >::RangeDest
+   } // RangeDest< T, std::set< T> >::RangeDest
 
    /// Stores/Sets a value in the set.
    /// @param[in]  v  The value to store in the set.
@@ -130,7 +130,7 @@ public:
    void set( const T& v)
    {
       mDestination.insert( v);
-   } // end RangeDest< T, std::set< T> >::set
+   } // RangeDest< T, std::set< T> >::set
 
    /// Returns if the destination set is empty (no value stored).
    /// @return  \c true if the destination set is empty.
@@ -138,7 +138,7 @@ public:
    bool empty() const
    {
       return mDestination.empty();
-   } // end RangeDest< T, C>::empty
+   } // RangeDest< T, C>::empty
 
 private:
    /// The set to store the values in.
@@ -154,5 +154,5 @@ private:
 #endif   // CELMA_COMMON_RANGE_DEST_HPP
 
 
-// =========================  END OF range_dest.hpp  =========================
+// =====  END OF range_dest.hpp  =====
 

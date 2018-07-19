@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.2.1
+   \mainpage  CELMA v1.7.0
 
    \tableofcontents
 
@@ -46,6 +46,15 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.7.0  | 2018-07-19        | Added bitset iterators.
+     1.6.0  | 2018-07-03        | Added new features "deprecated" and "replaced by" to the argument handler library.
+     1.5.0  | 2018-06-28        | Added more macros for controlling when log messages should be generated. Changed argument class handling pairs for improved functionality.
+     1.4.3  | 2018-05-06        | Patch 1: Improved directory structure of range generator modules.
+     1.4.3  | 2018-04-29        | Added destination value type "bitset" to argument handler.
+     1.4.2  | 2018-04-12        | Added value-checks "is absolute path" in argument handler.
+     1.4.1  | 2018-03-05        | Added value-checks "is file" and "is directory" in argument handler.
+     1.4.0  | 2018-03-01        | Added classes FileInfo and FileOperations.
+     1.3.0  | 2018-02-15        | Added class TextFile.
      1.2.1  | 2018-01-08        | Updated files/classes of "indirect access".
      1.2.0  | 2017-12-28        | Added feature 'clear vector before assigning values' in argument handling.
      1.1.0  | 2017-12-28        | Implemented 'usage parameters' module for handling the parameters for the usage.
