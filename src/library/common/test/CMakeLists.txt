@@ -13,6 +13,7 @@ add_definitions( -DBOOST_TEST_DYN_LINK)
 
 celma_add_boost_testprogram( test_adjust )
 celma_add_boost_testprogram( test_any_type_base )
+celma_add_boost_testprogram( test_bitset_iterator )
 celma_add_boost_testprogram( test_clear_container )
 # celma_add_boost_testprogram( test_constexpr_string_concat )
 # celma_add_boost_testprogram( test_constexpr_string_from )

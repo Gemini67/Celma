@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.6.0
+   \mainpage  CELMA v1.7.0
 
    \tableofcontents
 
@@ -46,6 +46,7 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.7.0  | 2018-07-19        | Added bitset iterators.
      1.6.0  | 2018-07-03        | Added new features "deprecated" and "replaced by" to the argument handler library.
      1.5.0  | 2018-06-28        | Added more macros for controlling when log messages should be generated. Changed argument class handling pairs for improved functionality.
      1.4.3  | 2018-05-06        | Patch 1: Improved directory structure of range generator modules.
