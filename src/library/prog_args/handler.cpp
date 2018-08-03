@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -95,7 +95,7 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mUsageContinues( (flag_set & hfUsageCont) != 0),
    mpUsageParams( new detail::UsageParams()),
    mArguments(),
-   mSubGroupArgs(),
+   mSubGroupArgs( true),
    mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
@@ -121,13 +121,19 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
                       detail::ArgHandlerCallable(
                          std::bind( &Handler::usage, this, txt1, txt2)),
                          "Handler::usage"),
-                   "Prints the program usage");
+                   "Prints the program usage.");
 
    if (flag_set & hfUsageHidden)
       mpUsageParams->setPrintHidden();
 
    if (flag_set & hfArgHidden)
       mpUsageParams->addArgumentPrintHidden( *this, "print-hidden");
+
+   if (flag_set & hfUsageDeprecated)
+      mpUsageParams->setPrintDeprecated();
+
+   if (flag_set & hfArgDeprecated)
+      mpUsageParams->addArgumentPrintDeprecated( *this, "print-deprecated");
 
    if (flag_set & hfUsageShort)
       mpUsageParams->addArgumentUsageShort( *this, "help-short");
@@ -200,7 +206,7 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
                       detail::ArgHandlerCallable(
                          std::bind( &Handler::usage, this, txt1, txt2)),
                          "Handler::usage"),
-                   "Prints the program usage");
+                   "Prints the program usage.");
 
    if (flag_set & hfUsageShort)
       mpUsageParams->addArgumentUsageShort( *this, "help-short");
@@ -584,7 +590,7 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
 
 
 /// Same as evalArguments(). Difference is that this method catches
-/// exceptions, reports them on stderr and then exits the program.<br>
+/// exceptions, reports them on \c stderr and then exits the program.<br>
 /// In other words: If the function returns, all argument requirements and
 /// constraints were met.
 /// @param[in]  argc    Number of arguments passed to the process.
@@ -631,6 +637,46 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
 
    exit( EXIT_FAILURE);
 } // Handler::evalArgumentsErrorExit
+
+
+
+/// After calling evalArguments(), prints the list of arguments that were
+/// used and the values that were set.
+///
+/// @param[in]  contents_set
+///    Set of flags that specify the contents of the summary to print.
+/// @param[out]  os
+///    The stream to write the summary to.
+/// @param[in]   standalone
+///    If set, prints a title and a line if no arguments were found,
+///    otherwise only prints the list of arguments used.
+/// @param[in]   arg_prefix
+///    Specifies the prefix for the arguments of this handler. Used when the
+///    argument handler handles the arguments of a sub-group.
+/// @since 1.8.0, 03.07.2018
+void Handler::printSummary( sumoptset_t contents_set, std::ostream& os,
+   bool standalone, const char* arg_prefix) const
+{
+
+   if (standalone)
+      os << "Argument summary:" << std::endl;
+
+   // collect the summary in a stream, so we can check if anything was found
+   std::ostringstream  oss;
+
+   mArguments.printSummary( contents_set, oss, arg_prefix);
+   mSubGroupArgs.printSummary( contents_set, oss, arg_prefix);
+
+   if (oss.str().empty())
+   {
+      if (standalone)
+         os << "   No arguments used/values set." << std::endl;
+   } else
+   {
+      os << oss.str();
+   } // end if
+
+} // Handler::printSummary
 
 
 
@@ -828,7 +874,7 @@ Handler::ArgResult
    case detail::ArgListElement::ElementType::value:
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
-         mpLastArg->calledAssign( mReadingArgumentFile, ai->mValue);
+         mpLastArg->assignValue( mReadingArgumentFile, ai->mValue);
          return ArgResult::consumed;
       } // end if
       if (detail::TypedArgBase* hdl = mArguments.findArg( mPosKey))
@@ -1237,7 +1283,7 @@ void Handler::checkGlobalConstraints() const
 /// - Check argument constraints.
 /// - Check global constraints.
 /// - Produce verbose output if required.
-/// - Finally call calledAssign() for this argument.
+/// - Finally call assignValue() for this argument.
 ///
 /// @param[in]  hdl    Pointer to the object that handles this argument.
 /// @param[in]  key    The short and/or long argument keys.
@@ -1260,7 +1306,7 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
                  << endl;
    } // end if
 
-   hdl->calledAssign( mReadingArgumentFile, value);
+   hdl->assignValue( mReadingArgumentFile, value);
 
 } // Handler::handleIdentifiedArg
 
@@ -1270,5 +1316,5 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
 } // namespace celma
 
 
-// ===========================  END OF handler.cpp  ===========================
+// =====  END OF handler.cpp  =====
 

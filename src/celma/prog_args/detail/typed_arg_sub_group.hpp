@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -56,6 +56,16 @@ public:
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
+   /// Should not be called. Prints the text "subgroup".
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
    /// Returns the argument handler object.
    /// @return  The object stored internally.
    /// @since  0.2, 10.04.2016
@@ -77,13 +87,19 @@ private:
 inline bool TypedArgSubGroup::hasValue() const
 {
    return mWasCalled;
-} // end TypedArgSubGroup::hasValue
+} // TypedArgSubGroup::hasValue
+
+
+inline void TypedArgSubGroup::printValue( std::ostream& os, bool) const
+{
+   os << "[subgroup]";
+} // TypedArgSubGroup::printValue
 
 
 inline Handler* TypedArgSubGroup::obj() const
 {
    return mpArgHandler;
-} // end TypedArgSubGroup::obj
+} // TypedArgSubGroup::obj
 
 
 } // namespace detail
@@ -94,5 +110,5 @@ inline Handler* TypedArgSubGroup::obj() const
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_SUB_GROUP_HPP
 
 
-// =====================  END OF typed_arg_sub_group.hpp  =====================
+// =====  END OF typed_arg_sub_group.hpp  =====
 

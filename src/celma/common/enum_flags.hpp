@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -44,7 +44,12 @@ namespace celma { namespace common {
 /// afterwards, assign enum values or compare against them as if the enum would
 /// be defined with bit-shifting.<br>
 /// Main difference when using this class instead of a simple \c int: Don't
-/// assign logically-or'ed values, but a list of values instead.
+/// assign logically-or'ed values, but a list of values instead.<br>
+/// But, on the other hand, it is possible to build an enum set by or-ing
+/// multiple enum values. All it takes is that the or-operator (template)
+/// provided at the end of this module must be defined in the same namespace
+/// as the enum it should work on. In other words: Add the corresponding using
+/// clause.
 ///
 /// @tparam  E  The enum whose values should be treated like bit-flags.
 /// @tparam  T  The underlying integer type used to represent the set values.
@@ -57,13 +62,17 @@ public:
    // ------------
 
    /// Default constructor, no flag set.
+   ///
    /// @since 0.8, 11.11.2016
    EnumFlags() noexcept;
 
-   /// Constructor with a single bit/flag to set.
+   /// Constructor with a single bit/flag to set.<br>
+   /// Not 'explicit' on purpose to allow e.g. passing enum values to a function
+   /// that expects an EnumFlags parameter.
+   ///
    /// @param[in]  start_value  The bit/flag to set.
    /// @since 0.8, 11.11.2016
-   explicit EnumFlags( E start_value) noexcept;
+   EnumFlags( E start_value) noexcept;
 
    /// Constructor with an initializer list of enum values, i.e. multiple bits/
    /// flags to set.
@@ -73,8 +82,8 @@ public:
 
    /// Use default copy constructor.
    EnumFlags( const EnumFlags&) = default;
-   /// No move constructor.
-   EnumFlags( const EnumFlags&&) = delete;
+   /// Allow move constructor (actually copies).
+   EnumFlags( EnumFlags&&) = default;
    /// Use default destructor.
    ~EnumFlags() = default;
 
@@ -134,6 +143,19 @@ public:
    /// @return  \c true if the two objects differ in at least one bit/flag.
    /// @since  0.8, 13.11.2016
    bool operator !=( const EnumFlags& enum_flags) const noexcept;
+
+   bool operator !=( const T& value) const noexcept;
+
+   // set construction operators
+   // --------------------------
+
+   /// Returns a new EnumFlags object with all the bits of this object plus the
+   /// given bit/flag set.
+   ///
+   /// @param[in]  or_value  The additional enum value/flag to set.
+   /// @return  New object with all bits set as described.
+   /// @since  1.8.0, 26.07.2018
+   EnumFlags operator |( E or_value) noexcept;
 
    // modifiers
    // ---------
@@ -362,6 +384,22 @@ template< typename E, typename T>
 
 
 template< typename E, typename T>
+   bool EnumFlags< E, T>::operator !=( const T& value) const noexcept
+{
+   return mSetValue != value;
+} // EnumFlags< E, T>::operator !=
+
+
+template< typename E, typename T>
+   EnumFlags< E, T> EnumFlags< E, T>::operator |( E or_value) noexcept
+{
+   auto  copy( *this);
+   copy |= or_value;
+   return copy;
+} // EnumFlags< E, T>::operator |
+
+
+template< typename E, typename T>
    EnumFlags< E, T>& EnumFlags< E, T>::operator |=( E or_value) noexcept
 {
    mSetValue |= bitval( or_value);
@@ -482,6 +520,26 @@ template< typename E, typename T>
 } // EnumFlags< E, T>::operator &
 
 
+/// Helper function to logically or two enum values as enum flags.<br>
+/// Defined in celma namespace, add a using clause to your module if needed.
+///
+/// @param[in]  lhs
+///    The first enum value to store.
+/// @param[in]  rhs
+///    The second enum value to store.
+/// @return
+///    An EnumFlags object where the two flags are set.
+/// @since
+///    1.8.0, 26.07.2018
+template< typename E, typename T = typename std::underlying_type< E>::type>
+   EnumFlags< E, T> operator |( E lhs, E rhs)
+{
+   EnumFlags< E, T>  ef( lhs);
+   ef |= rhs;
+   return ef;
+} // operator |
+
+
 } // namespace common
 } // namespace celma
 
@@ -489,5 +547,5 @@ template< typename E, typename T>
 #endif   // CELMA_COMMON_ENUM_FLAGS_HPP
 
 
-// ==========================  END OF enum_flags.hpp  ==========================
+// =====  END OF enum_flags.hpp  =====
 

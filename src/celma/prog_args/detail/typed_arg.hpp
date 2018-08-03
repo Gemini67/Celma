@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,6 +17,7 @@
 /// - TypedArg< bool>
 /// - TypedArg< CheckAssign< T> >
 /// - TypedArg< CheckAssign< bool> >
+/// - TypedArg< std::bitset< T...>>
 /// - TypedArg< std::tuple< T...>>
 /// - TypedArg< std::vector< T>>
 
@@ -26,6 +27,8 @@
 
 
 #include <cstring>
+#include <bitset>
+#include <iomanip>
 #include <iostream>
 #include <tuple>
 #include <vector>
@@ -33,6 +36,7 @@
 #include "celma/common/check_assign.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
@@ -45,49 +49,67 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Helper class to store a destination variable with its native type.
+///
 /// @tparam  T  The type of the value.
-/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
-///                             arguments)
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  dest   The destination variable to store the value in.
-   /// @param[in]  vname  The name of the destination variable to store the
-   ///                    value in.
-   /// @since  x.y,z, 10.11.2017  (removed key parameter)
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the value in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  0.16.0, 10.11.2017 (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( T& dest, const std::string& vname);
 
    /// Returns if the destination has a value set.
-   /// @return  \c true if the destination variable contains a value,
-   ///          \c false otherwise.
+   ///
+   /// @return  \c true if the destination variable contains a value.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Checks that the value mode 'command' is only set for destination types
    /// "std::string".<br>
    /// For all other value modes and types, the metzhod of the base clase is
    /// called.
+   ///
    /// @param[in]  vm  The value mode to set.
    /// @return  Pointer to this object.
    /// @since  0.14.2, 12.05.2017
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Adds the value of the destination variable to the string.
+   ///
    /// @param[out]  dest  The string to append the default value to.
    /// @since  0.2, 10.04.2016
    virtual void defaultValue( std::string& dest) const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
+   ///
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
    virtual void dump( std::ostream& os) const override;
 
-private:
    /// Stores the value in the destination variable.
+   ///
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
    virtual void assign( const std::string& value) override;
@@ -117,6 +139,15 @@ template< typename T> bool TypedArg< T>::hasValue() const
 {
    return mHasValueSet;
 } // TypedArg< T>::hasValue
+
+
+template< typename T> void TypedArg< T>::printValue( std::ostream& os,
+   bool print_type) const
+{
+   os << format::toString( mDestVar);
+   if (print_type)
+      os  << " [" << type< T>::name() << "]";
+} // TypedArg< T>::printValue
 
 
 template< typename T>
@@ -177,16 +208,19 @@ template< typename T>
 
 
 /// Specialisation of template TypedArg<> for boolean variables.
-/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
-///                             arguments)
+///
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
 /// since  6.0, 18.09.2013
 template<> class TypedArg< bool>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  dest   The destination variable to store the value in.
-   /// @param[in]  vname  The name of the destination variable to store the
-   ///                    value in.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the value in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( bool& dest, const std::string& vname):
@@ -197,16 +231,34 @@ public:
    } // TypedArg< bool>::TypedArg
 
    /// Returns if the destination has a value set.
-   /// @return  \c true if the destination variable contains a value,
-   ///          \c false otherwise.
+   ///
+   /// @return  \c true if the destination variable contains a value.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override
    {
       return mHasValueSet;
    } // TypedArg< bool>::hasValue
 
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << std::boolalpha << mDestVar;
+      if (print_type)
+         os << " [bool]";
+   } // TypedArg< bool>::printValue
+
    /// Would specify that the argument is mandatory (required). This does not
    /// make sense for a flag/boolean value: Throw exception.
+   ///
    /// @return  Nothing, always throws.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setIsMandatory() noexcept( false) override
@@ -217,6 +269,7 @@ public:
 
    /// Unset the flag (set to \c false) when the argument is detected, instead
    /// of setting it (the default).
+   ///
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* unsetFlag() override
@@ -227,6 +280,7 @@ public:
 
 protected:
    /// Used for printing an argument and its destination variable.
+   ///
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
    virtual void dump( std::ostream& os) const override
@@ -236,8 +290,9 @@ protected:
          << "   " << static_cast< const TypedArgBase&>( *this);
    } // TypedArg< bool>::dump
 
-private:
    /// Stores the value in the destination variable.
+   ///
+   /// @param  Ignored.
    /// @since  0.2, 10.04.2016
    virtual void assign( const std::string& /* value */) override
    {
@@ -245,6 +300,7 @@ private:
       mHasValueSet = true;
    } // TypedArg< bool>::assign
 
+private:
    /// Reference of the destination variable to store the value in.
    bool&  mDestVar;
    /// Flag set when a value was assigned through an argument.
@@ -260,36 +316,53 @@ private:
 
 
 /// Specialisation of TypedArg<> for values wrapped in CheckAssign<>.
+///
 /// @tparam  T  The native type of the value.
-/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
-///                             arguments)
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg< common::CheckAssign< T>>:
    public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  dest   The destination variable to store the value in.
-   /// @param[in]  vname  The name of the destination variable to store the
-   ///                    value in.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the value in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( common::CheckAssign< T>& dest, const std::string& vname);
 
    /// Returns if the destination has a value set.
-   /// @return  \c true if the destination variable contains a value,
-   ///          \c false otherwise.
+   ///
+   /// @return  \c true if the destination variable contains a value.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
 protected:
    /// Used for printing an argument and its destination variable.
+   ///
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
    virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
+   ///
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
    virtual void assign( const std::string& value) override;
@@ -317,6 +390,16 @@ template< typename T> bool TypedArg< common::CheckAssign< T>>::hasValue() const
 {
    return mDestVar.hasValue();
 } // TypedArg< common::CheckAssign< T>>::hasValue
+
+
+template< typename T>
+   void TypedArg< common::CheckAssign< T>>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( static_cast< T>( mDestVar));
+   if (print_type)
+      os << " [" << type< T>::name() << "]";
+} // TypedArg< common::CheckAssign< T>>::printValue
 
 
 template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostream& os) const
@@ -352,16 +435,19 @@ template< typename T>
 
 
 /// Specialization of the TypedArg< CheckAssign< T> > template for boolean flags.
-/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
-///                             arguments)
+///
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
 template<> class TypedArg< common::CheckAssign< bool>>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  dest   The destination variable to store the value in.
-   /// @param[in]  vname  The name of the destination variable to store the
-   ///                    value in.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the value in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( common::CheckAssign< bool>& dest, const std::string& vname):
@@ -372,16 +458,34 @@ public:
    } // TypedArg< common::CheckAssign< bool>>::TypedArg
 
    /// Returns if the destination has a value set.
-   /// @return  \c true if the destination variable contains a value,
-   ///          \c false otherwise.
+   ///
+   /// @return  \c true if the destination variable contains a value.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override
    {
       return mDestVar.hasValue();
    } // TypedArg< common::CheckAssign< bool>>::hasValue
 
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << std::boolalpha << static_cast< bool>( mDestVar);
+      if (print_type)
+         os << " [bool]";
+   } // TypedArg< common::CheckAssign< bool>>::printValue
+
    /// Would specify that the argument is mandatory (required). This does not
    /// make sense for a flag/boolean value: Throw exception.
+   ///
    /// @return  Nothing, always throws.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setIsMandatory() noexcept( false) override
@@ -392,6 +496,7 @@ public:
 
    /// Unset the flag (set to \c false) when the argument is detected, instead
    /// of setting it (the default).
+   ///
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* unsetFlag() override
@@ -402,6 +507,7 @@ public:
 
 protected:
    /// Used for printing an argument and its destination variable.
+   ///
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
    void dump( std::ostream& os) const override
@@ -412,6 +518,7 @@ protected:
 
 private:
    /// Stores the value in the destination variable.
+   ///
    /// @since  0.2, 10.04.2016
    virtual void assign( const std::string& /* value */) override
    {
@@ -431,9 +538,10 @@ private:
 
 
 /// Specialisation of TypedArg<> for values wrapped in a vector.
+///
 /// @tparam  T  The type of the value(s) stored in the vector.
-/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
-///                             arguments)
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
 template< typename T> class TypedArg< std::vector< T>>: public TypedArgBase
 {
@@ -442,27 +550,43 @@ public:
    typedef typename std::vector< T>  vector_type;
 
    /// Constructor.
-   /// @param[in]  dest   The destination variable to store the values in.
-   /// @param[in]  vname  The name of the destination variable to store the
-   ///                    value in.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( vector_type& dest, const std::string& vname);
 
    /// Returns if the destination has (at least) one value set.
-   /// @return  \c true if the destination variable contains (at least) one
-   ///          value, \c false otherwise.
+   ///
+   /// @return  \c true if the destination variable contains (at least) on.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
    /// Overloads TypedArgBase::setTakesMultiValue().<br>
    /// For vectors it is possible/allowed to activate this feature.
+   ///
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setTakesMultiValue() override;
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
+   ///
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
@@ -474,21 +598,25 @@ public:
    /// command line are appended.<br>
    /// Use this feature if some default value(s) have been assigned to the
    /// destination vector that should be overwritten by the argument's values.
+   ///
+   /// @return  Pointer to this object.
    /// @since  1.2.0, 28.12.2017
-   virtual void setClearBeforeAssign() override;
+   virtual TypedArgBase* setClearBeforeAssign() override;
 
 protected:
    /// Used for printing an argument and its destination variable.
+   ///
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
    virtual void dump( std::ostream& os) const override;
 
-private:
    /// Stores the value in the destination variable.
+   ///
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
    virtual void assign( const std::string& value) override;
 
+private:
    /// Reference of the destination variable to store the value(s) in.
    vector_type&  mDestVar;
    /// The character to use as a list separator, default: ,
@@ -520,31 +648,46 @@ template< typename T> bool TypedArg< std::vector< T>>::hasValue() const
 } // TypedArg< std::vector< T>>::hasValue
 
 
-template< typename T> TypedArgBase* TypedArg< std::vector< T>>::setTakesMultiValue()
+template< typename T>
+   void TypedArg< std::vector< T>>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( mDestVar.begin(), mDestVar.end());
+   if (print_type)
+      os << " [" << type< std::vector< T>>::name() << "]";
+} // TypedArg< std::vector< T>>::printValue
+
+
+template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::setTakesMultiValue()
 {
    mTakeMultipleValues = true;
    return this;
 } // TypedArg< std::vector< T>>::setTakesMultiValue
 
 
-template< typename T> TypedArgBase* TypedArg< std::vector< T>>::setListSep( char sep)
+template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::setListSep( char sep)
 {
    mListSep = sep;
    return this;
 } // TypedArg< std::vector< T>>::setListSep
 
 
-template< typename T> void TypedArg< std::vector< T>>::setClearBeforeAssign()
+template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::setClearBeforeAssign()
 {
    mClearB4Assign = true;
+   return this;
 } // TypedArg< std::vector< T>>::setClearBeforeAssign
 
 
-template< typename T> void TypedArg< std::vector< T>>::dump( std::ostream& os) const
+template< typename T>
+   void TypedArg< std::vector< T>>::dump( std::ostream& os) const
 {
    os << "value type '" << type< vector_type>::name()
       << "', destination vector '" << mVarName << "', currently "
-      << (mDestVar.empty() ? "no" : boost::lexical_cast< std::string>( mDestVar.size()))
+      << (mDestVar.empty() ? "no" : std::to_string( mDestVar.size()))
       << " values." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
 } // TypedArg< std::vector< T>>::dump
@@ -597,6 +740,7 @@ class TupleElementValueAssign
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  value  The value to assign to the tuple element.
    /// @since  0.11, 04.01.2017
    TupleElementValueAssign( const std::string& value):
@@ -607,6 +751,7 @@ public:
    /// Operator called for the tuple element. Converts the value from #mValue to
    /// the required destination type and assigns it to \a tuple_value, i.e. the
    /// tuple element.
+   ///
    /// @param[out]  tuple_element  The element of the the tuple to assign the
    ///                             value to.
    /// @since  6.0, 04.01.2017
@@ -631,41 +776,60 @@ private:
 
 /// Helper class to store a destination variable of type tuple with its native
 /// element types.
+///
 /// @tparam  T  The types of the values.
-/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
-///                             arguments)
-/// @since  0.11, 07.01.2017  (converted from TypedArgTuple into specialisation)
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
+/// @since  0.11, 07.01.2017
+///    (converted from TypedArgTuple into specialisation)
 /// @since  0.11, 19.12.2016
 template< typename... T> class TypedArg< std::tuple< T...>>: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  dest   The destination variable to store the value in.
-   /// @param[in]  vname  The name of the destination variable to store the
-   ///                    value in.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the value in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.11, 19.12.2016
    TypedArg( std::tuple< T...>& dest, const std::string& vname);
 
    /// Returns if the destination has a value set.
-   /// @return  \c true if the destination variable contains a value,
-   ///          \c false otherwise.
+   ///
+   /// @return  \c true if the destination variable contains a value.
    /// @since  0.11, 19.12.2016
    virtual bool hasValue() const override;
 
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
    /// Adds the value of the destination variable to the string.
+   ///
    /// @param[out]  dest  The string to append the default value to.
    /// @since  0.11, 19.12.2016
    virtual void defaultValue( std::string& dest) const override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().<br>
    /// For tuples it is possible/allowed to activate this feature.
+   ///
    /// @return  Pointer to this object.
    /// @since  0.11, 04.01.2017
    virtual TypedArgBase* setTakesMultiValue() override;
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
+   ///
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
    /// @since  0.11, 04.01.2017
@@ -673,12 +837,14 @@ public:
 
 protected:
    /// Used for printing an argument and its destination variable.
+   ///
    /// @param[out]  os  The stream to print to.
    /// @since  0.11, 19.12.2016
    virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
+   ///
    /// @param[in]  value  The value to store in string format.
    /// @since  0.11, 19.12.2016
    virtual void assign( const std::string& value) override;
@@ -714,6 +880,16 @@ template< typename... T> bool TypedArg< std::tuple< T...>>::hasValue() const
 {
    return mNumValuesSet == mTupleLength;
 } // TypedArg< std::tuple< T...>>::hasValue
+
+
+template< typename... T>
+   void TypedArg< std::tuple< T...>>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( mDestVar);
+   if (print_type)
+      os << " [" << type< std::tuple< T...>>::name() << "]";
+} // TypedArg< std::tuple< T...>>::printValue
 
 
 template< typename... T>
@@ -816,6 +992,219 @@ template< typename... T>
 } // TypedArg< std::tuple< T...>>::assign
 
 
+// Template TypedArg< std::bitset< T>>
+// ===================================
+
+
+/// Specialisation of TypedArg<> for destination value type bitset.
+///
+/// @tparam  N  The size of the bitset.
+/// @since  1.4.3, 29.04.2018
+template< size_t N> class TypedArg< std::bitset< N>>: public TypedArgBase
+{
+public:
+   /// The type of the destination variable.
+   typedef typename std::bitset< N>  bitset_type;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  1.4.3, 29.04.2018
+   TypedArg( bitset_type& dest, const std::string& vname);
+
+   /// Returns if the destination has (at least) one value set.
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  1.4.3, 29.04.2018
+   virtual bool hasValue() const override;
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
+   /// Overloads TypedArgBase::setTakesMultiValue().<br>
+   /// For bitsets it is possible/allowed to activate this feature.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.4.3, 29.04.2018
+   virtual TypedArgBase* setTakesMultiValue() override;
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @since  1.4.3, 29.04.2018
+   virtual TypedArgBase* setListSep( char sep) override;
+
+   /// Special feature for destination variable type bitset:<br>
+   /// Clear the contents of the bitset before assigning the value(s) from the
+   /// command line. If the feature is off (the default), the value(s from the
+   /// command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination bitset that should be overwritten by the argument's values.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.4.3, 29.04.2018
+   virtual TypedArgBase* setClearBeforeAssign() override;
+
+   /// Unset the flags (reset in the bitset) when the argument is detected,
+   /// instead of setting it (the default).
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.4.3, 29.04.2018
+   virtual TypedArgBase* unsetFlag() override;
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.4.3, 29.04.2018
+   virtual void dump( std::ostream& os) const override;
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value  The value to store in string format.
+   /// @since  1.4.3, 29.04.2018
+   virtual void assign( const std::string& value) override;
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   bitset_type&  mDestVar;
+   /// The character to use as a list separator, default: ,
+   char          mListSep = ',';
+   /// If set, the contents of the bitset are cleared before the first value(s)
+   /// from the command line are assigned.
+   bool          mClearB4Assign = false;
+   /// Specifies if the flags in the bitset should set (the default) or reset.
+   bool          mResetFlags = false;
+
+
+}; // TypedArg< std::bitset< N>>
+
+
+// inlined methods
+// ===============
+
+
+template< size_t N>
+   TypedArg< std::bitset< N>>::TypedArg( bitset_type& dest,
+                                         const std::string& vname):
+      TypedArgBase( vname, ValueMode::required, false),
+      mDestVar( dest)
+{
+   mpCardinality.reset();
+} // TypedArg< std::bitset< N>>::TypedArg
+
+
+template< size_t N> bool TypedArg< std::bitset< N>>::hasValue() const
+{
+   return mDestVar.any();
+} // TypedArg< std::bitset< N>>::hasValue
+
+
+template< size_t N>
+   void TypedArg< std::bitset< N>>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( mDestVar);
+   if (print_type)
+      os << " [" << type< std::bitset< N>>::name() << "]";
+} // TypedArg< std::bitset< N>>::printValue
+
+
+template< size_t N>
+   TypedArgBase* TypedArg< std::bitset< N>>::setTakesMultiValue()
+{
+   mTakeMultipleValues = true;
+   return this;
+} // TypedArg< std::bitset< N>>::setTakesMultiValue
+
+
+template< size_t N>
+   TypedArgBase* TypedArg< std::bitset< N>>::setListSep( char sep)
+{
+   mListSep = sep;
+   return this;
+} // TypedArg< std::bitset< N>>::setListSep
+
+
+template< size_t N>
+   TypedArgBase* TypedArg< std::bitset< N>>::setClearBeforeAssign()
+{
+   mClearB4Assign = true;
+   return this;
+} // TypedArg< std::bitset< N>>::setClearBeforeAssign
+
+
+template< size_t N> TypedArgBase* TypedArg< std::bitset< N>>::unsetFlag()
+{
+   mResetFlags = true;
+   return this;
+} // TypedArg< std::bitset< N>>::unsetFlag
+
+
+template< size_t N>
+   void TypedArg< std::bitset< N>>::dump( std::ostream& os) const
+{
+   os << "value type '" << type< bitset_type>::name()
+      << "', destination bitset '" << mVarName << "', currently "
+      << (mDestVar.none() ? "no" : boost::lexical_cast< std::string>( mDestVar.count()))
+      << " values." << std::endl
+      << "   " << static_cast< const TypedArgBase&>( *this);
+} // TypedArg< std::bitset< N>>::dump
+
+
+template< size_t N>
+   void TypedArg< std::bitset< N>>::assign( const std::string& value)
+{
+   if (mClearB4Assign)
+   {
+      mDestVar.reset();
+      // clear only once
+      mClearB4Assign = false;
+   } // end if
+
+   common::Tokenizer  tok( value, mListSep);
+   for (auto it = tok.begin(); it != tok.end(); ++it)
+   {
+      if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
+         mpCardinality->gotValue();
+
+      auto const&  listVal( *it);
+
+      check( listVal);
+
+      if (!mFormats.empty())
+      {
+         auto  valCopy( listVal);
+         format( valCopy);
+         auto const  pos = boost::lexical_cast< size_t>( valCopy);
+         if (pos > N)
+            throw std::runtime_error( "position " + std::to_string( pos)
+               + " is outside the range of the bitset");
+         mDestVar[ pos] = !mResetFlags;
+      } else
+      {
+         auto const  pos = boost::lexical_cast< size_t>( listVal);
+         if (pos > N)
+            throw std::runtime_error( "position " + std::to_string( pos)
+               + " is outside the range of the bitset");
+         mDestVar[ pos] = !mResetFlags;
+      } // end if
+   } // end for
+} // TypedArg< std::bitset< N>>::assign
+
+
 } // namespace detail
 } // namespace prog_args
 } // namespace celma
@@ -824,5 +1213,5 @@ template< typename... T>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
 
 
-// ==========================  END OF typed_arg.hpp  ==========================
+// =====  END OF typed_arg.hpp  =====
 
