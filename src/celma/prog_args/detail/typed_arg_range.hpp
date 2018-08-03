@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -54,6 +54,18 @@ public:
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
    /// Throws.
    /// @return  Nothing, always throws.
    /// @throw  logic_error.
@@ -101,6 +113,16 @@ template< typename T, typename C> bool TypedArgRange< T, C>::hasValue() const
 {
    return !mDestVar.empty();
 } // TypedArgRange< T, C>::hasValue
+
+
+template< typename T, typename C>
+   void TypedArgRange< T, C>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( mDestVar);
+   if (print_type)
+      os << " [" << type< C>::name() << "]";
+} // TypedArgRange< T, C>::printValue
 
 
 template< typename T, typename C> TypedArgBase*

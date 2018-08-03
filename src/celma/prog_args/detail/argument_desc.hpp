@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -109,19 +109,22 @@ private:
       ArgDesc& operator =( const ArgDesc&) = default;
 
       /// Returns if this entry should be printed in the usage now.
-      /// @param[in]  printIsMandatory  Specifies if only mandatory (\c true)
-      ///                               parameters should be printed or all.
-      /// @param[in]  printHidden       Specifies if hidden parameters should be
-      ///                               printed or not.
-      /// @param[in]  usage_contents    Specifies which arguments to print.
-      /// @return  \c true if mandatory parameters are requested and this
-      ///          parameter is mandatory, or if non-mandatory (optional)
-      ///          parameters are requested and this parameter is not mandatory,
-      ///          and when hidden parameters may be printed or this parameter
-      ///          is not hidden.
-      /// @since  0.2, 10.04.2016
+      /// @param[in]  printIsMandatory
+      ///    Specifies if only mandatory (\c true) parameters should be printed
+      ///    or all.
+      /// @param[in]  printHidden
+      ///    Specifies if hidden parameters should be printed or not.
+      /// @param[in]  print_deprecated
+      ///    Specifies if deprecated parameters should be printed or not.
+      /// @param[in]  usage_contents
+      ///    Specifies which arguments to print.
+      /// @return
+      ///    \c true if the current argument should be printed in the usage with
+      ///    the given parameters.
+      /// @since
+      ///    0.2, 10.04.2016
       bool doPrint( bool printIsMandatory, bool printHidden,
-         UsageParams::Contents usage_contents) const;
+         bool print_deprecated, UsageParams::Contents usage_contents) const;
 
       /// Returns the key string of the argument with the specified contents.
       /// @param[in]  usage_contents  Contents of the key string to return.
