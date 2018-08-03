@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,11 +12,11 @@
 
 
 /// @file
-/// See documentation of template function celma::common::measure.
+/// See documentation of template function celma::test::measure.
 
 
-#ifndef CELMA_COMMON_MEASURE_HPP
-#define CELMA_COMMON_MEASURE_HPP
+#ifndef CELMA_TEST_MEASURE_HPP
+#define CELMA_TEST_MEASURE_HPP
 
 
 #include <sched.h>
@@ -25,7 +25,7 @@
 #include "celma/common/micro_timer.hpp"
 
 
-namespace celma { namespace common {
+namespace celma { namespace test {
 
 
 /// Standard function for performance tests.
@@ -40,7 +40,7 @@ template< typename F> uint64_t measure( uint64_t num_loops,
                                         const char* func_name, F fun)
 {
 
-   MicroTimer  mt;
+   common::MicroTimer  mt;
 
 
    ::sched_yield();
@@ -61,12 +61,12 @@ template< typename F> uint64_t measure( uint64_t num_loops,
 } // measure
 
 
-} // namespace common
+} // namespace test
 } // namespace celma
 
 
-#endif   // CELMA_COMMON_MEASURE_HPP
+#endif   // CELMA_TEST_MEASURE_HPP
 
 
-// ===========================  END OF measure.hpp  ===========================
+// =====  END OF measure.hpp  =====
 

@@ -156,6 +156,18 @@ public:
    ///    0.2, 10.04.2016
    virtual bool hasValue() const = 0;
 
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const = 0;
+
    /// Returns the argument key(s) specified for this argument.
    /// @return
    ///    The short and/or long argument specified for this argument.
