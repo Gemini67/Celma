@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -56,7 +56,6 @@ class Handler;
 /// object whose lifetimes lasts at least until evalArguments() was called!
 /// @since  0.13.0, 05.02.2017  (redesign to handle special parameters)
 /// @since  0.2, 10.04.2016
-/// @todo  Add method evalArgumentsErrorExit() like in Handler class.
 class Groups: public common::Singleton< Groups>
 {
 
@@ -132,6 +131,41 @@ public:
    /// @since  0.2, 10.04.2016
    void evalArguments( int argc, char* argv[]) noexcept( false);
 
+   /// Same as evalArguments(). Difference is that this method catches
+   /// exceptions, reports them on \c stderr and then exits the program.<br>
+   /// In other words: If the function returns, all argument requirements and
+   /// constraints were met.
+   /// @param[in]  argc
+   ///    Number of arguments passed to the process.
+   /// @param[in]  argv
+   ///    List of argument strings.
+   /// @param[in]  prefix
+   ///    Prefix text to print before the error message.<br>
+   ///    The prefix may be an empty string. If not, add a space at the end as
+   ///    separator to the following text.
+   /// @since
+   ///    1.8.0, 03.07.2018
+   void evalArgumentsErrorExit( int argc, char* argv[],
+                                const std::string& prefix);
+
+   /// After calling evalArguments(), prints the list of arguments that were
+   /// used and the values that were set.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @since  1.8.0, 03.07.2018
+   void printSummary( sumoptset_t contents_set = sumoptset_t(),
+      std::ostream& os = std::cout) const;
+
+   /// Same as before, but only the output stream to write to can/must be
+   /// specified.
+   ///
+   /// @param[out]  os  The stream to write the summary to.
+   /// @since  1.8.0, 03.07.2018
+   void printSummary( std::ostream& os) const;
+
    /// Needed for testing purposes, but may be used in 'normal' programs too:
    /// Removes a previously added argument handler object.
    /// @param[in]  grpName  The symbolic name of the argument handler to remove.
@@ -199,6 +233,11 @@ public:
    void listArgGroups();
 
 protected:
+   /// Constructor.
+   /// @param[in]  flag_set  Set of the flags to pass to all handler objects.
+   /// @since  1.8.0, 11.07.2018
+   Groups( int flag_set);
+
    /// Constructor.
    /// @param[in]  os        The stream to write normal output to.
    /// @param[in]  error_os  The stream to write error output to.
@@ -268,6 +307,12 @@ inline bool Groups::evaluatedByArgGroups() const
 } // Groups::evaluatedByArgGroups
 
 
+inline void Groups::printSummary( std::ostream& os) const
+{
+   printSummary( sumoptset_t(), os);
+} // Groups::printSummary
+
+
 inline void Groups::setUsageLineLength( int useLen)
 {
    mUsageLineLength = useLen;
@@ -281,5 +326,5 @@ inline void Groups::setUsageLineLength( int useLen)
 #endif   // CELMA_PROG_ARGS_GROUPS_HPP
 
 
-// ============================  END OF groups.hpp  ============================
+// =====  END OF groups.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,6 +17,11 @@
 
 // module header file include
 #include "celma/prog_args/groups.hpp"
+
+
+// C++ Standard Library includes
+#include <sstream>
+#include <stdexcept>
 
 
 // project includes
@@ -190,6 +195,90 @@ void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
 
 
 
+/// Same as evalArguments(). Difference is that this method catches
+/// exceptions, reports them on \c stderr and then exits the program.<br>
+/// In other words: If the function returns, all argument requirements and
+/// constraints were met.
+/// @param[in]  argc
+///    Number of arguments passed to the process.
+/// @param[in]  argv
+///    List of argument strings.
+/// @param[in]  prefix
+///    Prefix text to print before the error message.<br>
+///    The prefix may be an empty string. If not, add a space at the end as
+///    separator to the following text.
+/// @since
+///    1.8.0, 03.07.2018
+void Groups::evalArgumentsErrorExit( int argc, char* argv[],
+   const std::string& prefix)
+{
+
+   try
+   {
+
+      evalArguments( argc, argv);
+      return;   // return here, easier error exit below
+
+   } catch (const std::invalid_argument& ia)
+   {
+      mErrorOutput << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
+   } catch (const std::logic_error& le)
+   {
+      mErrorOutput << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
+   } catch (const std::overflow_error& oe)
+   {
+      mErrorOutput << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
+   } catch (const std::range_error& re)
+   {
+      mErrorOutput << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
+   } catch (const std::underflow_error& ue)
+   {
+      mErrorOutput << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;
+   } catch (const std::runtime_error& rte)
+   {
+      mErrorOutput << prefix << "Caught 'runtime error' exception: " << rte.what() << "!" << endl;
+   } catch (const std::exception& e)
+   {
+      mErrorOutput << prefix << "Caught unspecific std::exception: " << e.what() << "!" << endl;
+   } catch (...)
+   {
+      mErrorOutput << prefix << "Caught unknown exception!" << endl;
+   } // end try
+
+   exit( EXIT_FAILURE);
+} // Groups::evalArgumentsErrorExit
+
+
+
+/// After calling evalArguments(), prints the list of arguments that were
+/// used and the values that were set.
+///
+/// @param[in]  contents_set
+///    Set of flags that specify the contents of the summary to print.
+/// @param[out]  os
+///    The stream to write the summary to.
+/// @since  1.8.0, 03.07.2018
+void Groups::printSummary( sumoptset_t contents_set, std::ostream& os) const
+{
+
+   os << "Argument summary:" << std::endl;
+
+   std::ostringstream  oss;
+
+   for (auto const& argh : mArgGroups)
+   {
+      argh.mpArgHandler->printSummary( contents_set, oss, false, nullptr);
+   } // end for
+
+   if (oss.str().empty())
+      os << "   No arguments used/values set." << std::endl;
+   else
+      os << oss.str();
+
+} // Groups::printSummary
+
+
+
 /// Needed for testing purposes, but may be used in 'normal' programs too:
 /// Removes a previously added argument handler object.
 /// @param[in]  grpName  The symbolic name of the argument handler to remove.
@@ -359,6 +448,22 @@ void Groups::listArgGroups()
 
 
 /// Constructor.
+/// @param[in]  flag_set  Set of the flags to pass to all handler objects.
+/// @since  1.8.0, 11.07.2018
+Groups::Groups( int flag_set):
+   mOutput( std::cout),
+   mErrorOutput( std::cerr),
+   mHandlerFlags( (flag_set & Groups2HandlerFlags) | Handler::hfInGroup),
+   mArgGroups(),
+   mEvaluating( false),
+   mUsageLineLength( detail::ArgumentDesc::DefaultLineLength),
+   mpUsageParams( new detail::UsageParams())
+{
+} // Groups::Groups
+
+
+
+/// Constructor.
 /// @param[in]  os        The stream to write normal output to.
 /// @param[in]  error_os  The stream to write error output to.
 /// @param[in]  flag_set  Set of the flags to pass to all handler objects.
@@ -381,5 +486,5 @@ Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
 } // namespace celma
 
 
-// ============================  END OF groups.cpp  ============================
+// =====  END OF groups.cpp  =====
 
