@@ -333,6 +333,23 @@ public:
    ///    1.2.0, 28.12.2017
    virtual TypedArgBase* setClearBeforeAssign() noexcept( false);
 
+   /// Special feature for destination variable type vector:<br>
+   /// Sort the contents of the vector.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setSortData() noexcept( false);
+
+   /// Special feature for destination variable type vector:<br>
+   /// Make sure only unique values are stored in the vector.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      noexcept( false);
+
    /// Calls all check methods defined for this argument. The check methods
    /// throw an exception when a check failed, so: No exception, value can be
    /// stored.
@@ -705,6 +722,20 @@ inline TypedArgBase* TypedArgBase::setClearBeforeAssign()
    throw std::invalid_argument( "setting 'clear before assign' is not allowed "
                                 "for variable '" + mVarName + "'");
 } // TypedArgBase::setClearBeforeAssign
+
+
+inline TypedArgBase* TypedArgBase::setSortData()
+{
+   throw std::invalid_argument( "setting 'sort data' is not allowed for "
+      "variable '" + mVarName + "'");
+} // TypedArgBase::setSortData
+
+
+inline TypedArgBase* TypedArgBase::setUniqueData( bool)
+{
+   throw std::invalid_argument( "setting 'unique data' is not allowed for "
+      "variable '" + mVarName + "'");
+} // TypedArgBase::setUniqueData
 
 
 inline bool TypedArgBase::hasCheck() const

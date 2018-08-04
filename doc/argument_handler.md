@@ -26,6 +26,10 @@ Here is a list of the features provided by the sub-library for argument handling
 - An argument may be mandatory or optional.
 - An argument may not accept a value at all, may accept a value or not, or need a value.$
 - Number of values that an argument accepts or expects can be defined.
+- When storing values from the command line in a vector, you can specify that
+  - the vector should be cleared before the first value is assigned
+  - the values should sorted
+  - duplicate values are not allowed
 - Relations between arguments may be defined.
 - Can read arguments from a file, or can store the current arguments in a file for later re-use.
 - After evaluating the arguments from the command line, a summary can be printed (list of arguments used and values set).

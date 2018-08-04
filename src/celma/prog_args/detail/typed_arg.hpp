@@ -27,6 +27,7 @@
 
 
 #include <cstring>
+#include <algorithm>
 #include <bitset>
 #include <iomanip>
 #include <iostream>
@@ -603,6 +604,23 @@ public:
    /// @since  1.2.0, 28.12.2017
    virtual TypedArgBase* setClearBeforeAssign() override;
 
+   /// Special feature for destination variable type vector:<br>
+   /// Sort the contents of the vector.
+   ///
+   /// @since  1.9.0, 04.08.2018
+   virtual TypedArgBase* setSortData() override;
+
+   /// Special feature for destination variable type vector:<br>
+   /// Make sure only unique values are stored in the vector.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      override;
+
 protected:
    /// Used for printing an argument and its destination variable.
    ///
@@ -624,6 +642,13 @@ private:
    /// If set, the contents of the vector are cleared before the first value(s)
    /// from the command line are assigned.
    bool          mClearB4Assign = false;
+   /// If set, the contents of the vector are sorted.
+   bool          mSortData = false;
+   /// If set, makes sure that the data in the vector contains no duplicates.
+   bool          mUniqueData = false;
+   /// If set, trying to add a duplicate value to the vector is treated as an
+   /// error, otherwise (the default) it is silently discarded.
+   bool          mTreatDuplicatesAsErrors = false;
 
 }; // TypedArg< std::vector< T>>
 
@@ -683,6 +708,24 @@ template< typename T>
 
 
 template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::setSortData()
+{
+   mSortData = true;
+   return this;
+} // TypedArg< std::vector< T>>::setSortData
+
+
+template< typename T>
+   TypedArgBase*
+      TypedArg< std::vector< T>>::setUniqueData( bool duplicates_are_errors)
+{
+   mUniqueData = true;
+   mTreatDuplicatesAsErrors = duplicates_are_errors;
+   return this;
+} // TypedArg< std::vector< T>>::setUniqueData
+
+
+template< typename T>
    void TypedArg< std::vector< T>>::dump( std::ostream& os) const
 {
    os << "value type '" << type< vector_type>::name()
@@ -709,20 +752,34 @@ template< typename T>
       if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
          mpCardinality->gotValue();
 
-      auto const&  listVal( *it);
+      auto  listVal( *it);
 
       check( listVal);
 
       if (!mFormats.empty())
       {
-         auto  valCopy( listVal);
-         format( valCopy);
-         mDestVar.push_back( boost::lexical_cast< T>( valCopy));
-      } else
-      {
-         mDestVar.push_back( boost::lexical_cast< T>( listVal));
+         format( listVal);
       } // end if
+
+      auto const  dest_value = boost::lexical_cast< T>( listVal);
+      if (mUniqueData)
+      {
+         if (std::find( mDestVar.begin(), mDestVar.end(), dest_value)
+            != mDestVar.end())
+         {
+            if (mTreatDuplicatesAsErrors)
+               throw std::runtime_error( "refuse to store duplicate values in"
+                  " variable '" + mVarName + "'");
+            continue; // for
+         } // end if
+      } // end if
+
+      mDestVar.push_back( dest_value);
    } // end for
+
+   if (mSortData)
+      std::sort( mDestVar.begin(), mDestVar.end());
+
 } // TypedArg< std::vector< T>>::assign
 
 
