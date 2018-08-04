@@ -20,6 +20,7 @@
 
 
 #include <stdexcept>
+#include <string>
 #include "celma/common/file_info.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 
@@ -39,7 +40,8 @@ public:
    /// directory.
    /// @param[in]  val  The value to check in string format.
    /// @since  1.4.1, 02.03.2018
-   virtual void checkValue( const std::string& val) const override;
+   virtual void checkValue( const std::string& val) const noexcept( false)
+      override;
 
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.

@@ -19,10 +19,17 @@
 #include "celma/prog_args/handler.hpp"
 
 
+// OS/C lib includes
+#include <cstdlib>
+#include <cstring>
+#include <libgen.h>
+
+
 // C++ Standard Library includes
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <memory>
 
 
 // project includes
@@ -971,9 +978,11 @@ bool Handler::argumentExists( const string& argString) const
 void Handler::readEvalFileArguments( const char* arg0)
 {
 
-   const char*  progNameOnly = basename( arg0);
-   const char*  homeDir = getenv( "HOME");
+   // have to copy the path since basename() may want to modify it
+   std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
 
+   const char*  progNameOnly = ::basename( copy.get());
+   const char*  homeDir = ::getenv( "HOME");
 
    if (homeDir == nullptr)
       return;
