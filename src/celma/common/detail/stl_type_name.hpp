@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -70,6 +70,16 @@
 #      define experimental_string_view
 #   else
 #      define have_string_view 0
+#   endif
+#   if __has_include(<variant>)
+#      include <variant>
+#      define have_variant 1
+#   elif __has_include(<experimental/variant>)
+#      include <experimental/variant>
+#      define have_variant 1
+#      define experimental_variant
+#   else
+#      define have_variant 0
 #   endif
 #endif   // has_include
 
@@ -271,5 +281,5 @@ PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::unordered_multimap);
 #endif   // CELMA_STL_TYPE_NAME_HPP
 
 
-// ========================  END OF stl_type_name.hpp  ========================
+// =====  END OF stl_type_name.hpp  =====
 

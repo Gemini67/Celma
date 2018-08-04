@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,7 @@
 
 
 // C++ Standard Library includes
+#include <bitset>
 #include <list>
 #include <map>
 #include <vector>
@@ -34,7 +35,57 @@ using celma::format::toString;
 
 
 
+/// Conversion of ints, boolean values, doubles etc.
+///
+/// @since  1.8.0, 23.07.2018
+BOOST_AUTO_TEST_CASE( test_basics)
+{
+
+   {
+      bool  flag = false;
+      auto  result = toString( flag);
+
+      BOOST_REQUIRE_EQUAL( result, "false");
+   } // end scope
+
+
+   {
+      bool  flag = true;
+      auto  result = toString( flag);
+
+      BOOST_REQUIRE_EQUAL( result, "true");
+   } // end scope
+
+
+   {
+      int   ival = 42;
+      auto  result = toString( ival);
+
+      BOOST_REQUIRE_EQUAL( result, "42");
+   } // end scope
+
+
+   {
+      double  d = M_PI;
+      auto    result = toString( d);
+
+      BOOST_REQUIRE_EQUAL( result, "3.141593");
+   } // end scope
+
+
+   {
+      std::string  str( "hello world");
+      auto         result = toString( str);
+
+      BOOST_REQUIRE_EQUAL( result, "\"hello world\"");
+   } // end scope
+
+} // test_basics
+
+
+
 /// Test storing the contents of a vector in a string.
+///
 /// @since  0.14.3, 20.06.2017
 BOOST_AUTO_TEST_CASE( test_vector)
 {
@@ -86,6 +137,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
 
 
 /// Test storing the contents of a list in a string.
+///
 /// @since  0.14.3, 20.06.2017
 BOOST_AUTO_TEST_CASE( test_list)
 {
@@ -141,6 +193,7 @@ BOOST_AUTO_TEST_CASE( test_list)
 
 
 /// Test storing the contents of a map in a string.
+///
 /// @since  0.14.3, 20.06.2017
 BOOST_AUTO_TEST_CASE( test_map)
 {
@@ -192,6 +245,7 @@ BOOST_AUTO_TEST_CASE( test_map)
 
 
 /// Test storing the contents of a multi-map in a string.
+///
 /// @since  1.1, 17.11.2015
 BOOST_AUTO_TEST_CASE( test_multimap)
 {
@@ -244,5 +298,80 @@ BOOST_AUTO_TEST_CASE( test_multimap)
 
 
 
-// ========================  END OF test_to_string.cpp  ========================
+/// Test converting the contents of a bitset.
+///
+/// @since  1.8.0, 05.07.2018
+BOOST_AUTO_TEST_CASE( bitset_to_string)
+{
+
+   // empty bitset
+   {
+      std::bitset< 10>  bs;
+      const auto        str( toString( bs));
+
+      BOOST_REQUIRE_EQUAL( str, "0000000000");
+   } // end scope
+
+   // two bits set
+   {
+      std::bitset< 12>  bs;
+
+      bs[0] = true;
+      bs[11] = true;
+
+      const auto  str( toString( bs));
+
+      BOOST_REQUIRE_EQUAL( str, "100000000001");
+   } // end scope
+
+   // all bits set
+   {
+      std::bitset< 8>  bs;
+
+      bs.flip();
+
+      const auto  str( toString( bs));
+
+      BOOST_REQUIRE_EQUAL( str, "11111111");
+   } // end scope
+
+} // bitset_to_string
+
+
+
+/// Test converting the contents of a tuple.
+///
+/// @since  1.8.0, 05.07.2018
+BOOST_AUTO_TEST_CASE( tuple_to_string)
+{
+
+   // tuple with one value
+   {
+      std::tuple< int>  tpl( 10);
+      const auto        str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "10");
+   } // end scope
+
+   // tuple with two values
+   {
+      std::tuple< int, std::string>  tpl( 10, "hello world");
+      const auto                     str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "10, \"hello world\"");
+   } // end scope
+
+   // tuple with three values
+   {
+      std::tuple< double, int, std::string>  tpl( M_PI, 10, "hello world");
+      const auto                             str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "3.141593, 10, \"hello world\"");
+   } // end scope
+
+} // tuple_to_string
+
+
+
+// =====  END OF test_to_string.cpp  =====
 

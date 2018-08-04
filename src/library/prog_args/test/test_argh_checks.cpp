@@ -1309,5 +1309,42 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
 
 
 
+/// Verify that the "parent directory exists" check work correctly.
+/// @since  1.9.0, 04.08.2018
+BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
+{
+
+   using celma::prog_args::parentDirectoryExists;
+
+   // should throw when the path does not exist
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "f", DEST_VAR( dest), "path and filename")
+         ->addCheck( parentDirectoryExists());
+
+      ArgString2Array  as2a( "-f /home/anyusername/textfile.txt", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+         std::runtime_error);
+   } // end scope
+
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "f", DEST_VAR( dest), "path and filename")
+         ->addCheck( parentDirectoryExists());
+
+      ArgString2Array  as2a( "-f /etc/textfile.txt", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   } // end scope
+
+} // correctly_check_parent_diretory_exists
+
+
+
 // =====  END OF test_argh_checks.cpp  =====
 

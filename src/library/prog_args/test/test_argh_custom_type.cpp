@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -68,6 +68,16 @@ public:
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const;
 
+   /// Writes the contents of the destination variable into the stream.
+   /// @param[in]  os
+   ///    The stream to write into.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
    /// Specifies the list separator character to use for splitting lists of
    /// values.
    /// @param[in]  sep  The character to use to split a list.
@@ -122,7 +132,13 @@ void TypedArgBitset::assign( const string& value)
 bool TypedArgBitset::hasValue() const
 {
    return mDestVar.count() > 0;
-} // end TypedArgBitset::hasValue
+} // TypedArgBitset::hasValue
+
+
+void TypedArgBitset::printValue( std::ostream& os, bool) const
+{
+   os << "[custom]";
+} // TypedArgBitset::printValue
 
 
 TypedArgBase* TypedArgBitset::setListSep( char sep)
@@ -161,5 +177,5 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
 
 
 
-// ====================  END OF test_argh_custom_type.cpp  ====================
+// =====  END OF test_argh_custom_type.cpp  =====
 

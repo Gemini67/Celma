@@ -34,6 +34,7 @@
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
+#include "celma/prog_args/detail/check_parent_directory_exists.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
 #include "celma/prog_args/detail/check_upper.hpp"
 #include "celma/prog_args/detail/check_values.hpp"
@@ -155,6 +156,18 @@ public:
    /// @since
    ///    0.2, 10.04.2016
    virtual bool hasValue() const = 0;
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const = 0;
 
    /// Returns the argument key(s) specified for this argument.
    /// @return
@@ -320,6 +333,23 @@ public:
    /// @since
    ///    1.2.0, 28.12.2017
    virtual TypedArgBase* setClearBeforeAssign() noexcept( false);
+
+   /// Special feature for destination variable type vector:<br>
+   /// Sort the contents of the vector.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setSortData() noexcept( false);
+
+   /// Special feature for destination variable type vector:<br>
+   /// Make sure only unique values are stored in the vector.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      noexcept( false);
 
    /// Calls all check methods defined for this argument. The check methods
    /// throw an exception when a check failed, so: No exception, value can be
@@ -693,6 +723,20 @@ inline TypedArgBase* TypedArgBase::setClearBeforeAssign()
    throw std::invalid_argument( "setting 'clear before assign' is not allowed "
                                 "for variable '" + mVarName + "'");
 } // TypedArgBase::setClearBeforeAssign
+
+
+inline TypedArgBase* TypedArgBase::setSortData()
+{
+   throw std::invalid_argument( "setting 'sort data' is not allowed for "
+      "variable '" + mVarName + "'");
+} // TypedArgBase::setSortData
+
+
+inline TypedArgBase* TypedArgBase::setUniqueData( bool)
+{
+   throw std::invalid_argument( "setting 'unique data' is not allowed for "
+      "variable '" + mVarName + "'");
+} // TypedArgBase::setUniqueData
 
 
 inline bool TypedArgBase::hasCheck() const

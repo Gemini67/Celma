@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -62,6 +62,18 @@ public:
    /// @return  \c true if the destination variable contains a value.
    /// @since  1.1.0, 25.09.2017
    virtual bool hasValue() const override;
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// This type doesn't allow to change the value mode: Throws always.
    /// @param[in]  vm  Ignored.
@@ -132,6 +144,15 @@ template< typename T> bool TypedArgValue< T>::hasValue() const
 
 
 template< typename T>
+   void TypedArgValue< T>::printValue( std::ostream& os, bool print_type) const
+{
+   os << format::toString( mDestVar);
+   if (print_type)
+      os << " [" << type< T>::name() << "]";
+} // TypedArgValue< T>::printValue
+
+
+template< typename T>
    TypedArgBase* TypedArgValue< T>::setValueMode( ValueMode) noexcept( false)
 {
    throw std::logic_error( "cannot change the value mode on variable '"
@@ -182,5 +203,5 @@ template< typename T> void TypedArgValue< T>::assign( const std::string&)
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_VALUE_HPP
 
 
-// =======================  END OF typed_arg_value.hpp  =======================
+// =====  END OF typed_arg_value.hpp  =====
 

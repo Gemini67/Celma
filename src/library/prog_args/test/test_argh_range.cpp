@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
       std::bitset< 1024>  myBitset;
 
 
-      ah.addArgument( "v", DEST_BITSET( myBitset, 1024), "Integer");
+      ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
       ArgString2Array  as2a( "", nullptr);
 
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
       std::bitset< 1024>  myBitset;
 
 
-      ah.addArgument( "v", DEST_BITSET( myBitset, 1024), "Integer");
+      ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
       ArgString2Array  as2a( "-v 10,20,40", nullptr);
 
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
       std::bitset< 1024>  myBitset;
 
 
-      ah.addArgument( "v", DEST_BITSET( myBitset, 1024), "Integer");
+      ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
       ArgString2Array  as2a( "-v 3-9", nullptr);
 
@@ -338,5 +338,5 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
 
 
 
-// =======================  END OF test_argh_range.cpp  =======================
+// =====  END OF test_argh_range.cpp  =====
 

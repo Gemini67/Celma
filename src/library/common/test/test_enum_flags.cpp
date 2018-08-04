@@ -28,6 +28,32 @@
 using celma::common::EnumFlags;
 
 
+namespace {
+
+
+enum class GlobalEnum
+{
+   left,
+   right,
+   top,
+   bottom
+};
+
+
+/// Test function to check that passing (multiple) enum values works.
+///
+/// @param[in]  flag_set  The object with the enum values set.
+/// @return  \c true if the given flag set hast at least one bit set.
+/// @since  1.8.0, 26.07.2018
+bool pass_enum( const EnumFlags< GlobalEnum> flag_set)
+{
+   return flag_set != 0;
+} // pass_enum
+
+
+} // namespace
+
+
 /// Test the different constructors.
 /// @since  0.8, 13.11.2016
 BOOST_AUTO_TEST_CASE( test_constructor)
@@ -355,6 +381,22 @@ BOOST_AUTO_TEST_CASE( test_clear)
 
 
 
+/// Test that passing enum values to a function that expects an enum flag
+/// instance works.
+/// @since  0.8, 14.11.2016
+BOOST_AUTO_TEST_CASE( pass_to_function)
+{
+
+   using celma::common::operator |;
+
+   BOOST_REQUIRE( pass_enum( GlobalEnum::top));
+   BOOST_REQUIRE( pass_enum( GlobalEnum::top | GlobalEnum::left));
+   BOOST_REQUIRE( pass_enum( GlobalEnum::top | GlobalEnum::left | GlobalEnum::bottom));
+
+} // pass_to_function
+
+
+
 /// Enum for insertion operator tests.
 enum class PrintableEnum
 {
@@ -414,5 +456,6 @@ BOOST_AUTO_TEST_CASE( test_insertion_operator)
 } // test_insertion_operator
 
 
-// =======================  END OF test_enum_flags.cpp  =======================
+
+// =====  END OF test_enum_flags.cpp  =====
 

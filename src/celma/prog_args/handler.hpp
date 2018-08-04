@@ -29,6 +29,7 @@
 #include "celma/prog_args/detail/argument_desc.hpp"
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
+#include "celma/prog_args/summary_options.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -544,7 +545,7 @@ public:
    void evalArguments( int argc, char* argv[]) noexcept( false);
 
    /// Same as evalArguments(). Difference is that this method catches
-   /// exceptions, reports them on stderr and then exits the program.<br>
+   /// exceptions, reports them on \c stderr and then exits the program.<br>
    /// In other words: If the function returns, all argument requirements and
    /// constraints were met.
    /// @param[in]  argc    Number of arguments passed to the process.
@@ -555,6 +556,23 @@ public:
    /// @since  0.2, 10.04.2016
    void evalArgumentsErrorExit( int argc, char* argv[],
                                 const std::string& prefix);
+
+   /// After calling evalArguments(), prints the list of arguments that were
+   /// used and the values that were set.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @since 1.8.0, 25.07.2018 (version with less parameters)
+   void printSummary( sumoptset_t contents_set = sumoptset_t(), std::ostream& os = std::cout);
+
+   /// Same as before, but only the output stream to write to can/must be
+   /// specified.
+   ///
+   /// @param[out]  os  The stream to write the summary to.
+   /// @since 1.8.0, 26.07.2018 (version with even less parameters)
+   void printSummary( std::ostream&);
 
    /// Helps to determine if an object is a 'plain' Handler object or a
    /// ValueHandler object.
@@ -577,7 +595,8 @@ public:
                                       noexcept( false);
 
 protected:
-	/// Class needs access to internals.
+	/// Classes need access to internals.
+   friend class detail::ArgumentContainer;
    friend class Groups;
 
    /// Function call result for evalSingleArgument():
@@ -636,6 +655,23 @@ protected:
    /// @return  \c true if the argument is already in use.
    /// @since  0.2, 10.04.2016
    bool argumentExists( const std::string& argString) const;
+
+   /// After calling evalArguments(), prints the list of arguments that were
+   /// used and the values that were set.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @param[in]   standalone
+   ///    If set, prints a title and a line if no arguments were found,
+   ///    otherwise only prints the list of arguments used (or nothing).
+   /// @param[in]   arg_prefix
+   ///    Specifies the prefix for the arguments of this handler. Used when the
+   ///    argument handler handles the arguments of a sub-group.
+   /// @since 1.8.0, 03.07.2018
+   void printSummary( sumoptset_t contents_set, std::ostream& os,
+      bool standalone, const char* arg_prefix) const;
 
    /// Prints the usage of this class.
    /// @param[out]  os  The stream to print to.
@@ -850,6 +886,18 @@ inline void Handler::setIsSubGroupHandler()
 {
    mIsSubGroupHandler = true;
 } // Handler::setIsSubGroupHandler
+
+
+inline void Handler::printSummary( sumoptset_t contents_set, std::ostream& os)
+{
+   printSummary( contents_set, os, true, nullptr);
+} // Handler::printSummary
+
+
+inline void Handler::printSummary( std::ostream& os)
+{
+   printSummary( sumoptset_t(), os, true, nullptr);
+} // Handler::printSummary
 
 
 } // namespace prog_args
