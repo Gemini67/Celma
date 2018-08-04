@@ -46,7 +46,9 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
-     1.9.0  | 2018-08-04        | Added more features on destination type 'vector' in module argument handler.
+     1.9.0  | 2018-08-04        | Added more features on destination type 'vector' in module argument handler.<br>
+                                  Added check "parent directory exists" in argument handler.<br>
+                                  Added function parentDirectory() in module FileInfo.
      1.8.0  | 2018-08-03        | Added feature "print summary" in argument handler. Added function to compare multi-line strings. And improved (and used) module "enum flags".
      1.7.0  | 2018-07-19        | Added bitset iterators.
      1.6.0  | 2018-07-03        | Added new features "deprecated" and "replaced by" to the argument handler library.

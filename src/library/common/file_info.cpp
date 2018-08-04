@@ -23,9 +23,11 @@
 // OS/C library includes
 #include <cerrno>
 #include <cstring>
+#include <libgen.h>
 
 
 // C++ Standard Library includes
+#include <memory>
 #include <stdexcept>
 
 
@@ -53,7 +55,8 @@ FileInfo::FileInfo( const std::string& filename):
 /// @throws  if the given object does not exist or if the statistics could
 ///          not be collected.
 /// @since  1.4.0, 27.02.2018
-FileInfo::FileInfo( const char* filename)
+FileInfo::FileInfo( const char* filename):
+   mEntryName( filename)
 {
 
    if (::stat( filename, &mFileStat) != 0)
@@ -80,7 +83,8 @@ FileInfo::FileInfo( FILE* fp):
 /// @param[in]  fp  The file descriptor to retrieve the statistics from.
 /// @throws  if the statistics could not be collected.
 /// @since  1.4.0, 27.02.2018
-FileInfo::FileInfo( int fd)
+FileInfo::FileInfo( int fd):
+   mEntryName()
 {
 
    if (::fstat( fd, &mFileStat) != 0)
@@ -96,9 +100,31 @@ FileInfo::FileInfo( int fd)
 /// @param[in]  stat_data  The statistics data of a file.
 /// @since  1.4.0, 27.02.2018
 FileInfo::FileInfo( struct stat& stat_data):
+   mEntryName(),
    mFileStat( stat_data)
 {
 } // FileInfo::FileInfo
+
+
+
+/// Returns the path and name of the parent directory of the current entry.
+///
+/// @return  The path and name of the parent directory of the current entry.
+/// @since  1.9.0, 04.08.2018
+std::string FileInfo::parentDirectory() const
+{
+
+   if (mEntryName.empty())
+      throw std::runtime_error( "cannot determine parent directory since path "
+         "and file name are unknown");
+
+   std::unique_ptr< char>  copy( new char[ mEntryName.length()]);
+   ::strcpy( copy.get(), mEntryName.c_str());
+
+   const std::string  result( ::dirname( copy.get()));
+
+   return result;  
+} // FileInfo::parentDirectory
 
 
 
