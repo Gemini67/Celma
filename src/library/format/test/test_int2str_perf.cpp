@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -138,19 +138,22 @@ int main()
 {
 
    ::srand( 102030405);
-   celma::common::measure( 1000000, "int2str", measure_int2str);
+   celma::test::measure( 1000000, "int2str", measure_int2str);
    
    ::srand( 102030405);
-   celma::common::measure( 1000000, "boost::lexical_cast", measure_boost_lexical_cast);
+   celma::test::measure( 1000000, "boost::lexical_cast", measure_boost_lexical_cast);
 
    ::srand( 102030405);
-   celma::common::measure( 1000000, "std::ostringstream", measure_ostringstream);
+   celma::test::measure( 1000000, "std::ostringstream", measure_ostringstream);
 
    ::srand( 102030405);
-   celma::common::measure( 1000000, "sprintf", measure_sprintf);
+   celma::test::measure( 1000000, "sprintf", measure_sprintf);
 
    ::srand( 102030405);
-   celma::common::measure( 1000000, "std::to_string", measure_to_string);
+   celma::test::measure( 1000000, "std::to_string", measure_to_string);
 
 } // main
+
+
+// =====  END OF test_int2str_perf.cpp  =====
 

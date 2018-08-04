@@ -12,9 +12,9 @@ cmake_minimum_required( VERSION 2.8 )
 project( Celma )
 
 set( MAJORVERSION    1 )
-set( MINORVERSION    4 )
-set( RELEASE_VERSION 3 )
-set( PATCHLEVEL      1 )
+set( MINORVERSION    9 )
+set( RELEASE_VERSION 0 )
+set( PATCHLEVEL      0 )
 
 enable_testing()
 include( CTest)

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,28 @@
 /// See documentation of template functions celma::prog_args::destination.<br>
 /// Instead of having multiple addArgument() methods in the
 /// celma::prog_args::Handler class, the destination functions are provided to
-/// create the corresponding typed arg classes/objects.
+/// create the corresponding typed arg classes/objects.<br>
+/// List of the macros provided by this module:
+/// - \c DEST_VAR: Destination is a 'normal' int, string etc., but also a
+///   bitset or a vector.
+/// - \c DEST_VAR_VALUE: Value for the destination variable is provided with
+///   the argument, not on the command line.
+/// - \c DEST_PAIR: Pair of destination variables, the value for the second
+///   variable is specified with the argument.
+/// - \c DEST_RANGE: The argument value is a range string, whose values are
+///   stored in the destination variable.
+/// - \c DEST_RANGE_BITSET: Again, the argument is a range string, but here the
+///   corresponding bits are set in the bitset.
+/// - \c DEST_FUNCTION: The specified function is called when the argument is
+///   used. The function does not accept a valur.
+/// - \c DEST_FUNCTION_VALUE: Here also the specified function is called when
+///   the argument is used, but this time the function requires a value.
+/// - \c DEST_MEMBER_METHOD: Calls a member function of the current object.
+/// - \c DEST_METHOD: Calls a member function of the given object.
+/// - \c DEST_MEMBER_METHOD_VALUE: Calls the member function of the current
+///   object. Passes the value from the cmmand line.
+/// - \c DEST_METHOD_VALUE: Calls the member function of the given object.
+///   Passes the value from the command line.
 
 
 #ifndef CELMA_PROG_ARGS_DESTINATION_HPP
@@ -158,7 +179,7 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @param  n  The destination variable.
 /// @since  0.16.0, 09.11.2017  (adapted for new destination concept)
 /// @since  0.2, 10.04.2016
-#define DEST_VAR( n)  celma::prog_args::destination( n, #n)
+#define  DEST_VAR( n)  celma::prog_args::destination( n, #n)
 
 /// Macro used to call the celma::prog_args::destination() function for a single
 /// destination variable, where the value to set is also specified.
@@ -166,7 +187,7 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @param  v  The value to set on the destinaion variable when the argument is
 ///            used.
 /// @since  1.1.0, 15.11.2017
-#define DEST_VAR_VALUE( n, v)  celma::prog_args::destination( n, #n, v)
+#define  DEST_VAR_VALUE( n, v)  celma::prog_args::destination( n, #n, v)
 
 /// Macro used to call the celma::prog_args::destination() function for a pair
 /// of destination variables.
@@ -175,7 +196,7 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @param  val2  The value to set on the second destination variable when the
 ///               argument is used.
 /// @since  0.16.0, 10.11.2017
-#define DEST_PAIR( dv1, dv2, val2)  \
+#define  DEST_PAIR( dv1, dv2, val2)  \
    celma::prog_args::destination( dv1, #dv1, dv2, #dv2, val2)
 
 /// Macro used to call the celma::prog_args::destination() function for a
@@ -188,7 +209,7 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 ///        set separately.
 /// @since  0.16.0, 10.11.2017  (adapted for new destination concept)
 /// @since  0.2, 10.04.2016
-#define DEST_RANGE( n, t, c)  \
+#define  DEST_RANGE( n, t, c)  \
    celma::prog_args::destination( \
       celma::common::RangeDest< t, c < t > >( n), #n)
 
@@ -197,9 +218,10 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// resulting values in a bitset.
 /// @param  n  The destination variable.
 /// @param  s  The size of the bitset.
+/// @since  1.8.0, 10.07.2018  (renamed from DEST_BITSET)
 /// @since  0.16.0, 10.11.2017  (adapted for new destination concept)
 /// @since  0.2, 10.04.2016
-#define DEST_BITSET( n, s)  \
+#define  DEST_RANGE_BITSET( n, s)  \
    celma::prog_args::destination( \
       celma::common::RangeDest< size_t, std::bitset< s> >( n), #n)
 
@@ -265,5 +287,5 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 #endif   // CELMA_PROG_ARGS_DESTINATION_HPP
 
 
-// =========================  END OF destination.hpp  =========================
+// =====  END OF destination.hpp  =====
 
