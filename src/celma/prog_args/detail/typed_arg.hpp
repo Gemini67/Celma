@@ -40,6 +40,7 @@
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
+#include "celma/prog_args/level_counter.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -534,6 +535,144 @@ private:
 }; // TypedArg< common::CheckAssign< bool>>
 
 
+
+// Template TypedArg< LevelCounter>
+// ================================
+
+
+/// Specialisation of TypedArg<> for a level counter.<br>
+/// It is possible/allowed to increment a level counter multiple times, or a
+/// value can be assigned to it.<br>
+/// Those two features are mutually exclusive: Once the level counter was
+/// incremented, it is not possible to assign a value anymore, and vice versa.
+///
+/// @since  1.10.0, 11.08.2018
+template<> class TypedArg< LevelCounter>: public TypedArgBase
+{
+public:
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  1.10.0, 11.08.2018
+   TypedArg( LevelCounter& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::optional, true),
+      mDestVar( dest)
+   {
+      mpCardinality.reset();
+   } // TypedArg< LevelCounter>::TypedArg
+
+   /// Returns if the destination variable was incremented at least once.
+   ///
+   /// @return
+   ///    \c true if the destination variable was incremented at least once.
+   /// @since  1.10.0, 11.08.2018
+   virtual bool hasValue() const override
+   {
+      return mHasValueSet || mIncremented;
+   } // TypedArg< LevelCounter>::hasValue
+
+   /// Overwrites the 'value mode' which specifies if a value is needed for this
+   /// argument or not.<br>
+   /// Here in the base class, the only value mode that can be set is
+   /// 'required'.
+   ///
+   /// @param[in]  vm  The new value mode.
+   /// @return  Pointer to this object.
+   /// @since  1.10.0, 13.08.2018
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override
+   {
+
+      if ((vm == ValueMode::command) || (vm == ValueMode::unknown))
+         throw std::invalid_argument( std::string( "may not set value mode '") +
+                                      valueMode2str( vm) + "' on variable '" +
+                                      mVarName + "'");
+
+      mValueMode = vm;
+      return this;
+   } // TypedArg< LevelCounter>::setValueMode
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.10.0, 11.08.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << mDestVar.value();
+      if (print_type)
+         os << " [LevelCounter]";
+   } // TypedArg< LevelCounter>::printValue
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   ///
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.10.0, 11.08.2018
+   virtual void dump( std::ostream& os) const override
+   {
+      os << "value type 'LevelCounter', destination variable '" << mVarName
+         << "', current value " << mDestVar.value() << "." << std::endl
+         << "   " << static_cast< const TypedArgBase&>( *this);
+   } // TypedArg< LevelCounter>::dump
+
+   /// Either increment the level counter, or assigns a value to it.
+   ///
+   /// @param[in]  value  Either an empty string, in which case the current
+   ///                    value is incremented, otherwise value to store.
+   /// @since  1.10.0, 11.08.2018
+   virtual void assign( const std::string& value) noexcept( false) override
+   {
+      if (value.empty())
+      {
+         if (mHasValueSet)
+            throw std::runtime_error( "already have a value assigned to "
+               "variable '" + mVarName + "'");
+
+         const int          new_level = mDestVar.value() + 1;
+         const std::string  testval( boost::lexical_cast< std::string>( new_level));
+         check( testval);
+
+         // when we get here, the new value is within the limits
+         ++mDestVar;
+         mIncremented = true;
+      } else
+      {
+         if (mHasValueSet || mIncremented)
+            throw std::runtime_error( "already have a value assigned to "
+               "variable '" + mVarName + "'");
+         check( value);
+         if (!mFormats.empty())
+         {
+            std::string  valCopy( value);
+            format( valCopy);
+            mDestVar = boost::lexical_cast< int>( valCopy);
+         } else
+         {
+            mDestVar = boost::lexical_cast< int>( value);
+         } // end if
+         mHasValueSet = true;
+      } // end if
+   } // TypedArg< LevelCounter>::assign
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   LevelCounter&  mDestVar;
+   /// Flag that is set when the level counter was incremented at least once.
+   bool           mIncremented = false;
+   /// Flag that is set when a vlaue was assigned to the level counter.
+   bool           mHasValueSet = false;
+
+}; // TypedArg< LevelCounter>
+
+
 // Template TypedArg< std::vector< T>>
 // ===================================
 
@@ -562,7 +701,8 @@ public:
 
    /// Returns if the destination has (at least) one value set.
    ///
-   /// @return  \c true if the destination variable contains (at least) on.
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
