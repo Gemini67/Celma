@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE( multi_setter2_check)
    int      var1;
    string   var2;
 
-   typedef  celma::common::MultiSetter2< int, string>  my_setter;
+   using my_setter = celma::common::MultiSetter2< int, string>;
    my_setter  ms( DEST_MULTI_SETTER2( var1, var2, "hello world"));
 
 
@@ -525,7 +525,7 @@ BOOST_AUTO_TEST_CASE( multi_setter3_check)
    int      int_var2;
    string   string_var3;
 
-   typedef  celma::common::MultiSetter3< string, int, string>  my_setter;
+   using my_setter = celma::common::MultiSetter3< string, int, string>;
    my_setter  ms( DEST_MULTI_SETTER3( string_var1, int_var2, 42,
                                       string_var3, "hello world"));
 
@@ -579,5 +579,5 @@ BOOST_AUTO_TEST_CASE( free_value)
 
 
 
-// =====================  END OF test_argh_callables.cpp  =====================
+// =====  END OF test_argh_callables.cpp  =====
 

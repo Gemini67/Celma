@@ -47,7 +47,7 @@ class TypedArgBitset: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef std::bitset< 1024>  type;
+   using type = std::bitset< 1024>;
 
    /// Constructor.
    /// @param[in]  dest   The destination variable to store the values in.

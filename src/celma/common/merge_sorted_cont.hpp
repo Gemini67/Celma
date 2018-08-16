@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,7 +39,7 @@ template< typename T> class GreaterCompareIterators
 {
 public:
    /// Compares two pairs of iterators by the first value.
-   /// @return  }c true if lhs > rhs.
+   /// @return  \c true if lhs \> rhs.
    /// @since  0.10, 14.12.2016
    bool operator ()( const T& lhs, const T& rhs) const
    {
@@ -52,6 +52,7 @@ public:
 
 
 /// Merges values from multiple, sorted containers into a single container.
+///
 /// @tparam  T  The type of the values in the containers.
 /// @tparam  R  The type of the result container to return.
 /// @tparam  I  The type of the input container(s).
@@ -86,13 +87,13 @@ public:
 
 private:
    /// The type of the elements to store in the priority queue.
-   typedef std::pair< typename I::const_iterator, typename I::const_iterator>  elem_t;
+   using elem_t = std::pair< typename I::const_iterator,
+      typename I::const_iterator>;
 
    /// The priority queue with the iterators to the containers. Sorted by the
    /// first value in each container, in ascending order.
-   typedef std::priority_queue< elem_t, std::vector< elem_t>,
-                                GreaterCompareIterators< elem_t>
-                      >  queue_t;
+   using queue_t = std::priority_queue< elem_t, std::vector< elem_t>,
+      GreaterCompareIterators< elem_t>>;
 
    /// The list of containers (begin/end iterators, actually) to sort.
    queue_t  mQueue;
@@ -166,5 +167,5 @@ template< typename T, typename R, typename I>
 #endif   // CELMA_COMMON_MERGE_SORTED_CONT_HPP
 
 
-// ======================  END OF merge_sorted_cont.hpp  ======================
+// =====  END OF merge_sorted_cont.hpp  =====
 

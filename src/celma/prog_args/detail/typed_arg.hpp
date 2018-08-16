@@ -687,7 +687,7 @@ template< typename T> class TypedArg< std::vector< T>>: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef typename std::vector< T>  vector_type;
+   using vector_type = typename std::vector< T>;
 
    /// Constructor.
    ///
@@ -1201,7 +1201,7 @@ template< size_t N> class TypedArg< std::bitset< N>>: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef typename std::bitset< N>  bitset_type;
+   using bitset_type = typename std::bitset< N>;
 
    /// Constructor.
    ///

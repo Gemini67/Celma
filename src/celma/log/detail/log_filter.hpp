@@ -90,7 +90,7 @@ public:
 
 private:
    /// Container type to store the filters.
-   typedef std::vector< ILogFilter*>  FilterCont;
+   using FilterCont = std::vector< ILogFilter*>;
 
    /// All filters should behave the same: duplicate handling policy handler.
    static boost::scoped_ptr< IDuplicatePolicy>  mpDuplicatePolicy;

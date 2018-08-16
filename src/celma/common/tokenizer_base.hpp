@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,15 +29,16 @@ namespace celma { namespace common {
 
 /// Helper class to easily set up a string tokenizer for various separators.
 /// Internally, the Boost.Tokenizer is used.
+///
 /// @tparam  T  The type of the separator to use.
 /// @since  0.2, 04.04.2016
 template< typename T> class TokenizerBase: public ICountResult
 {
 public:
    /// Type of the tokenizer.
-   typedef typename boost::tokenizer< T>      BoostTokenizer;
+   using BoostTokenizer = typename boost::tokenizer< T>;
    /// Type of the iterator.
-   typedef typename BoostTokenizer::iterator  iterator;
+   using iterator = typename BoostTokenizer::iterator;
 
    friend class CountingIterator< typename BoostTokenizer::iterator>;
 
@@ -165,5 +166,5 @@ template< typename T> void TokenizerBase< T>::setCount( int theCount)
 #endif   // CELMA_COMMON_TOKENIZER_BASE_HPP
 
 
-// ========================  END OF tokenizer_base.hpp  ========================
+// =====  END OF tokenizer_base.hpp  =====
 

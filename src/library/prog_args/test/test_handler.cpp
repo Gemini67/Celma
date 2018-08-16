@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -1938,7 +1938,7 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
 BOOST_AUTO_TEST_CASE( test_value_mode)
 {
 
-   typedef TripleLogic< int>  callable_int_t;
+   using callable_int_t = TripleLogic< int>;
 
    // optional int value, argument not used at all
    {
@@ -1985,7 +1985,7 @@ BOOST_AUTO_TEST_CASE( test_value_mode)
       BOOST_REQUIRE_EQUAL( value, 42);
    } // end scope
 
-   typedef TripleLogic< string>  callable_string_t;
+   using callable_string_t = TripleLogic< string>;
 
    // optional string value, argument not used at all
    {
@@ -2742,5 +2742,5 @@ BOOST_AUTO_TEST_CASE( control_args)
 
 
 
-// =========================  END OF test_handler.cpp  =========================
+// =====  END OF test_handler.cpp  =====
 

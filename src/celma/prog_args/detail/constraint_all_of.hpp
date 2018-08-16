@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,7 +30,9 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Global constraint: All of the specified arguments must be used.
-/// @since  0.15.0, 19.07.2017  (use ArgumentKey type to handle keys)
+///
+/// @since  0.15.0, 19.07.2017
+///    (use ArgumentKey type to handle keys)
 /// @since  0.2, 10.04.2016
 class ConstraintAllOf: public IConstraint
 {
@@ -71,7 +73,7 @@ public:
 
 private:
    /// Container for the keys, only keys needed.
-   typedef Storage< std::nullptr_t>  key_cont_t;
+   using key_cont_t = Storage< std::nullptr_t>;
 
    /// The argument specifications of the arguments.<br>
    /// Non-const because non-complete argument specifications may be expanded.
@@ -110,5 +112,5 @@ inline detail::IConstraint* all_of( const std::string& argSpec)
 #endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ALL_OF_HPP
 
 
-// ======================  END OF constraint_all_of.hpp  ======================
+// =====  END OF constraint_all_of.hpp  =====
 

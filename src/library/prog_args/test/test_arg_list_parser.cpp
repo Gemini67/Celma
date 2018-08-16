@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -47,7 +47,7 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( ArgListElement::ElementType)
 
 
 // module definitions
-typedef std::vector< std::string>  StringVec;
+using StringVec = std::vector< std::string>;
 
 
 
@@ -940,4 +940,4 @@ BOOST_AUTO_TEST_CASE( value_after_arg)
 
 
 
-// =====================  END OF test_arg_list_parser.cpp  =====================
+// =====  END OF test_arg_list_parser.cpp  =====

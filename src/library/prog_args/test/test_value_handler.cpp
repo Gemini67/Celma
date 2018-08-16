@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE( test_complex_types)
 
    // test type tuple
    {
-      typedef std::tuple< int, std::string>  tuple_t;
+      using tuple_t = std::tuple< int, std::string>;
 
       ValueHandler  ah( 0);
 
@@ -259,5 +259,5 @@ BOOST_AUTO_TEST_CASE( test_values_groups)
 
 
 
-// =====================  END OF test_handler_values.cpp  =====================
+// =====  END OF test_handler_values.cpp  =====
 

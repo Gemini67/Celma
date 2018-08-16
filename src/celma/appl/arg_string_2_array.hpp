@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -31,6 +31,7 @@ namespace celma { namespace appl {
 /// parameters in the same format as a main() function.<br>
 /// This function does similar processing regarding multi-word strings: Quotes
 /// are removed, but the text within the quotes is passed as one value.
+///
 /// @since  0.2, 05.0.4.2016
 class ArgString2Array
 {
@@ -59,10 +60,10 @@ public:
    ~ArgString2Array();
 
    /// The number of arguments in the string array.
-   int     mArgc;
+   int     mArgc = -1;
    /// The string array with the separated arguments.<br>
    /// The first argument (mpArgs[ 0]) contains the program name.
-   char**  mpArgv;
+   char**  mpArgv = nullptr;
 
 private:
    /// Don't copy.
@@ -79,5 +80,5 @@ private:
 #endif   // CELMA_COMMON_ARG_STRING_2_ARRAY_HPP
 
 
-// ======================  END OF arg_string_2_array.hpp  ======================
+// =====  END OF arg_string_2_array.hpp  =====
 
