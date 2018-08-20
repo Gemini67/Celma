@@ -313,6 +313,12 @@ public:
    ///    0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
 
+   /// Special feature for destination variable type level counter:<br>
+   /// Allow mixing of increment and assignment on the command line.
+   ///
+   /// @since  x.y.z, 20.08.2018
+   virtual TypedArgBase* setAllowMixIncSet() noexcept( false);
+
    /// Specifies the list separator character to use for splitting lists of
    /// values.
    /// @param[in]  sep
@@ -709,6 +715,13 @@ inline bool TypedArgBase::takesMultiValue() const
 {
    return mTakeMultipleValues;
 } // TypedArgBase::takesMultiValue
+
+
+inline TypedArgBase* TypedArgBase::setAllowMixIncSet() noexcept( false)
+{
+   throw std::invalid_argument( "setting \"allow mixing increment and setter\" "
+      "not allowed for variable '" + mVarName + "'");
+} // TypedArgBase::setAllowMixIncSet
 
 
 inline TypedArgBase* TypedArgBase::setListSep( char /* sep */)

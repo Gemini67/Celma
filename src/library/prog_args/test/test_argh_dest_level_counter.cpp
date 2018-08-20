@@ -19,6 +19,10 @@
 #include "celma/prog_args.hpp"
 
 
+// C++ Standard Library includes
+#include <stdexcept>
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ArgHDestLevelCounterTest
 #include <boost/test/unit_test.hpp>
@@ -40,6 +44,20 @@ using celma::prog_args::LevelCounter;
 /// @since  x.y.z, 13.08.2018
 BOOST_AUTO_TEST_CASE( error_cases)
 {
+
+   // trying to set the level-counter specific "allow mixing of increment and
+   // assignment" feature on other data types should throw
+   {
+      Handler       ah( 0);
+      int           int_var;
+      std::string   string_var;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( int_var),
+         "int var")->setAllowMixIncSet(), std::invalid_argument);
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( string_var),
+         "string var")->setAllowMixIncSet(), std::invalid_argument);
+   } // end scope
 
    // mixing increment and assignment should throw
    {
@@ -239,6 +257,55 @@ BOOST_AUTO_TEST_CASE( max_value)
    } // end scope
 
 } // max_value
+
+
+
+/// Check that mixing increment and assignment works when enabled.
+///
+/// @since  x.y.z, 20.08.2018
+BOOST_AUTO_TEST_CASE( mixing_arguments)
+{
+
+   {
+      Handler       ah( 0);
+      LevelCounter  verbose_level;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
+         "verbose level")->setAllowMixIncSet());
+
+      const ArgString2Array  as2a( "-v -v 5", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( verbose_level.value(), 5);
+   } // end scope
+
+   {
+      Handler       ah( 0);
+      LevelCounter  verbose_level;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
+         "verbose level")->setAllowMixIncSet());
+
+      const ArgString2Array  as2a( "-v 5 -vv", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( verbose_level.value(), 7);
+   } // end scope
+
+   {
+      Handler       ah( 0);
+      LevelCounter  verbose_level;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
+         "verbose level")->setAllowMixIncSet());
+
+      const ArgString2Array  as2a( "-v 5 -v 7", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( verbose_level.value(), 7);
+   } // end scope
+
+} // mixing_arguments
 
 
 

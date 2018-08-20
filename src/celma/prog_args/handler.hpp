@@ -87,6 +87,11 @@ class ValueHandler;
 ///     - upper: Upper limit for values to accept (exclusive).
 ///     - range: Range of values for scalar types to accept.
 ///     - values: List of values to accept.
+///     .
+///     It is possible to add multiple checks to the same argument. In this case,
+///     a value must be accepted by all checks. The checks are executed in the
+///     order in which they were added.<br>
+///     Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
 ///   - usetFlag(): For destination variable type boolean: Instead of setting the
 ///     variable to \c true when the argument is used, set it to \c false.
 ///   - setPrintDefault(): Specifies if the default value (of the destination
@@ -125,11 +130,9 @@ class ValueHandler;
 ///     If the argument was mandatory before, remove this flag. Setting a
 ///     deprecated argument to mandatory, or vice versa, will throw in
 ///     addArgument().
+///   - setAllowMixIncSet(): For destination type level counter, allows to mix
+///     arguments that increment the value or assign a new value.
 ///   .
-///   It is possible to add multiple checks to the same argument. In this case,
-///   a value must be accepted by all checks. The checks are executed in the
-///   order in which they were added.<br>
-///   Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
 /// - Finally, when all arguments were specified, call evalArguments() to
 ///   actually evaluate the command line arguments.
 /// - You can use this class to print a list of the arguments and their
