@@ -937,7 +937,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
          continue;   // while
 
       appl::ArgString2Array  as2a( line, nullptr);
-      detail::ArgListParser    alp( as2a.mArgc, as2a.mpArgv);
+      detail::ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
 
       iterateArguments( alp);
    } // end while

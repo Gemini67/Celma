@@ -19,7 +19,7 @@
 #include "celma/appl/arg_string_2_array.hpp"
 
 
-// UNIX/C lib includes
+// OS/C lib includes
 #include <unistd.h>
 #include <cstring>
 
@@ -55,7 +55,7 @@ void copyArguments( int& argc, char* argv[], const StringVec& arguments);
 /// to set a program name before it.
 /// @param[in]  argstring  The argument string to split.
 /// @param[in]  progname   Optional program name to set. If not set,
-///                        'programname' is set as mpArgv[ 0].
+///                        'programname' is set as mpArgV[ 0].
 /// @since  0.2, 05.0.4.2016
 ArgString2Array::ArgString2Array( const std::string& argstring,
    const char* progname)
@@ -66,19 +66,19 @@ ArgString2Array::ArgString2Array( const std::string& argstring,
 
    splitString( arguments, argstring);
 
-   mpArgv = new char*[ arguments.size() + 2];
+   mpArgV = new char*[ arguments.size() + 2];
    if (progname == nullptr)
    {
-      mpArgv[ 0] = new char[ 12];
-      ::strcpy( mpArgv[ 0], "programname");
+      mpArgV[ 0] = new char[ 12];
+      ::strcpy( mpArgV[ 0], "programname");
    } else
    {
-      mpArgv[ 0] = new char[ ::strlen( progname) + 1];
-      ::strcpy( mpArgv[ 0], progname);
+      mpArgV[ 0] = new char[ ::strlen( progname) + 1];
+      ::strcpy( mpArgV[ 0], progname);
    } // end if
 
-   mArgc = 1;
-   copyArguments( mArgc, mpArgv, arguments);
+   mArgC = 1;
+   copyArguments( mArgC, mpArgV, arguments);
 
 } // ArgString2Array::ArgString2Array
 
@@ -97,10 +97,10 @@ ArgString2Array::ArgString2Array( const std::string& cmdLine)
 
    splitString( arguments, cmdLine);
 
-   mpArgv = new char*[ arguments.size() + 1];
+   mpArgV = new char*[ arguments.size() + 1];
 
-   mArgc = 0;
-   copyArguments( mArgc, mpArgv, arguments);
+   mArgC = 0;
+   copyArguments( mArgC, mpArgV, arguments);
 
 } // ArgString2Array::ArgString2Array
 
@@ -111,10 +111,10 @@ ArgString2Array::ArgString2Array( const std::string& cmdLine)
 ArgString2Array::~ArgString2Array()
 {
 
-   for (int i = 0; i < mArgc; ++i)
-      delete [] mpArgv[ i];
+   for (int i = 0; i < mArgC; ++i)
+      delete [] mpArgV[ i];
 
-   delete [] mpArgv;
+   delete [] mpArgV;
 
 } // ArgString2Array::~ArgString2Array
 

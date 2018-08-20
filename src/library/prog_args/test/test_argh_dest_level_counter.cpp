@@ -15,15 +15,18 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ArgHDestLevelCounterTest
 #include <boost/test/unit_test.hpp>
 
 
 // project includes
-#include "celma/prog_args/level_counter.hpp"
-#include "celma/prog_args.hpp"
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/level_counter.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -48,7 +51,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       const ArgString2Array  as2a( "-v -v 5", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 
@@ -62,7 +65,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       const ArgString2Array  as2a( "-v 5 -v", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 
@@ -76,7 +79,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       const ArgString2Array  as2a( "-v 5 -v 7", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 
@@ -90,7 +93,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       const ArgString2Array  as2a( "-v 5", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 
@@ -104,7 +107,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       const ArgString2Array  as2a( "-v", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 
@@ -127,7 +130,7 @@ BOOST_AUTO_TEST_CASE( used_once)
 
    const ArgString2Array  as2a( "-v", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 1);
 
 } // used_once
@@ -150,7 +153,7 @@ BOOST_AUTO_TEST_CASE( multiple_increment_in_one_arg)
 
    const ArgString2Array  as2a( "-vvv", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 3);
 
 } // multiple_increment_in_one_arg
@@ -172,7 +175,7 @@ BOOST_AUTO_TEST_CASE( multiple_increment_args)
 
    const ArgString2Array  as2a( "-v -vv -vvv", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 6);
 
 } // multiple_increment_args
@@ -194,7 +197,7 @@ BOOST_AUTO_TEST_CASE( assign_level)
 
    const ArgString2Array  as2a( "--verbose 4", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 4);
 
 } // assign_level
@@ -218,7 +221,7 @@ BOOST_AUTO_TEST_CASE( max_value)
 
       const ArgString2Array  as2a( "-v -vv -vvv", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 
@@ -231,7 +234,7 @@ BOOST_AUTO_TEST_CASE( max_value)
 
       const ArgString2Array  as2a( "-v 6", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 

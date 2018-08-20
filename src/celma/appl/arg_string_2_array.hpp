@@ -32,7 +32,8 @@ namespace celma { namespace appl {
 /// This function does similar processing regarding multi-word strings: Quotes
 /// are removed, but the text within the quotes is passed as one value.
 ///
-/// @since  0.2, 05.0.4.2016
+/// @since  x.y.z, 16.08.2018  (renamed member variables)
+/// @since  0.2, 05.04.2016
 class ArgString2Array
 {
 public:
@@ -44,7 +45,7 @@ public:
    /// to set a program name before it.
    /// @param[in]  argstring  The argument string to split.
    /// @param[in]  progname   Optional program name to set. If not set,
-   ///                        'programname' is set as mpArgv[ 0].
+   ///                        'programname' is set as mpArgV[ 0].
    /// @since  0.2, 05.0.4.2016
    ArgString2Array( const std::string& argstring, const char* progname);
 
@@ -60,10 +61,10 @@ public:
    ~ArgString2Array();
 
    /// The number of arguments in the string array.
-   int     mArgc = -1;
+   int     mArgC = -1;
    /// The string array with the separated arguments.<br>
-   /// The first argument (mpArgs[ 0]) contains the program name.
-   char**  mpArgv = nullptr;
+   /// The first argument (mpArgV[ 0]) contains the program name.
+   char**  mpArgV = nullptr;
 
 private:
    /// Don't copy.

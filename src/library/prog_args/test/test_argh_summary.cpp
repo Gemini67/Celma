@@ -15,6 +15,10 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ArgPrintSummaryTest
 #include <boost/test/unit_test.hpp>
@@ -149,7 +153,7 @@ BOOST_AUTO_TEST_CASE( no_argument_used)
    oss.str( "");
 
    const ArgString2Array  as2a( "", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( oss);
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
@@ -178,7 +182,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary)
    oss.str( "");
 
    const ArgString2Array  as2a( "-f 34", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( oss);
    BOOST_REQUIRE( oss.str() != empty);
@@ -238,7 +242,7 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types)
       "--void-method --value-method another_value -t 28,unbelievable,12.75 "
       "--void-member --value-member=last_value -vv",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -284,7 +288,7 @@ BOOST_AUTO_TEST_CASE( groups_summary)
 
    const ArgString2Array  as2a( "--input-name source --output-name destination",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
    Groups::instance().printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -325,7 +329,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary)
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -359,7 +363,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_with_type)
    oss.str( "");
 
    const ArgString2Array  as2a( "-f 34", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( oss.str() != empty);
@@ -419,7 +423,7 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_with_type)
       "--void-method --value-method another_value -t 28,unbelievable,12.75 "
       "--void-member --value-member=last_value -v --verbose_level",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -466,7 +470,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_type)
 
    const ArgString2Array  as2a( "--input-name source --output-name destination",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
    Groups::instance().printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -507,7 +511,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_type)
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -541,7 +545,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_with_key)
    oss.str( "");
 
    const ArgString2Array  as2a( "-f 34", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( oss.str() != empty);
@@ -601,7 +605,7 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_with_key)
       "--void-method --value-method another_value -t 28,unbelievable,12.75 "
       "--void-member --value-member=last_value -vv",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -648,7 +652,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_key)
 
    const ArgString2Array  as2a( "--input-name source --output-name destination",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
    Groups::instance().printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -689,7 +693,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_key)
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -722,7 +726,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_full)
    oss.str( "");
 
    const ArgString2Array  as2a( "-f 34", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
    BOOST_REQUIRE( oss.str() != empty);
@@ -781,7 +785,7 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_full)
       "--void-method --value-method another_value -t 28,unbelievable,12.75 "
       "--void-member --value-member=last_value --verbose_level --verbose_level",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -828,7 +832,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_full)
 
    const ArgString2Array  as2a( "--input-name source --output-name destination",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
    Groups::instance().printSummary(
      SummaryOptions::with_type | SummaryOptions::with_key,
@@ -870,7 +874,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());

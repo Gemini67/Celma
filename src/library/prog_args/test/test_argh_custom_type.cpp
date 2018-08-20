@@ -15,6 +15,10 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 // C++ Standard Library includes
 #include <string>
 #include <iostream>
@@ -30,7 +34,6 @@
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/tokenizer.hpp"
-#include "celma/prog_args.hpp"
 
 
 using std::string;
@@ -164,7 +167,7 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
 
    const celma::appl::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( kilobits.count(), 6);
    BOOST_REQUIRE( kilobits[  1]);
    BOOST_REQUIRE( kilobits[  2]);
