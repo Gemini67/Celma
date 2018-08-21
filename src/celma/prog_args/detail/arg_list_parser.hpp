@@ -37,18 +37,21 @@ class ArgListParser
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  argc    Number of argument strings in the array.
    /// @param[in]  argv[]  Array of argument strings.
    /// @since  0.2, 09.04.2016
    ArgListParser( int argc, char* argv[]);
 
    /// Returns the number of argument strings (as passed to the constructor).
+   ///
    /// @return  Number of argument strings.
    /// @since  0.2, 09.04.2016
    int argCount() const;
 
    /// Returns pointer to the array of argument strings (as passed to the
    /// constructor).
+   ///
    /// @return  Pointer to the beginning of the array of argument strings.
    /// @since  0.2, 09.04.2016
    char** argVector() const;
@@ -57,21 +60,25 @@ public:
    using const_iterator = ArgListIterator< ArgListParser, ArgListElement>;
 
    /// Returns the iterator pointing to the first argument.
+   ///
    /// @return  Iterator pointing to the first argument.
    /// @since  0.2, 09.04.2016
    const_iterator begin() const;
 
    /// Returns the iterator pointing behind the last argument.
+   ///
    /// @return  Iterator pointing behind the last argument.
    /// @since  0.2, 09.04.2016
    const_iterator end() const;
 
    /// Returns the iterator pointing to the first argument.
+   ///
    /// @return  Iterator pointing to the first argument.
    /// @since  0.2, 09.04.2016
    const_iterator cbegin() const;
 
    /// Returns the iterator pointing behind the last argument.
+   ///
    /// @return  Iterator pointing behind the last argument.
    /// @since  0.2, 09.04.2016
    const_iterator cend() const;
@@ -92,13 +99,13 @@ private:
 inline int ArgListParser::argCount() const
 {
    return mArgCount;
-} // end ArgListParser::argCount
+} // ArgListParser::argCount
 
 
 inline char** ArgListParser::argVector() const
 {
    return mpArgV;
-} // end ArgListParser::argVector
+} // ArgListParser::argVector
 
 
 } // namespace detail

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,25 +35,29 @@ class CardinalityExact: public ICardinality
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  num_values  The number of calls/values that are expected for
    ///                         the corresponding argument.
    /// @since  0.2, 10.04.2016
    CardinalityExact( int num_values);
 
    /// Virtual, empty destructor.
+   ///
    /// @since  0.2, 10.04.2016
-   virtual ~CardinalityExact() { }
+   virtual ~CardinalityExact() = default;
 
    /// Called by the framework when the argument was detected in the command
    /// line (actually may be without a value).
+   ///
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue() override;
+   virtual void gotValue() noexcept( false) override;
 
    /// Called by the framework at the end of the command line processing.
+   ///
    /// @throw  if not all execpted values were passed.
    /// @since  0.2, 10.04.2016
-   virtual void check() override;
+   virtual void check() noexcept( false) override;
 
 private:
    /// Number of calls/values expected for the corresponding argument.
@@ -71,6 +75,7 @@ private:
 
 /// Helper method to hide the class name from the library users.<br>
 /// Use this function as parameter to TypedArgBase::setCardinality().
+///
 /// @param[in]  num_values  Number of values expected by the corresponding
 ///                         argument.
 /// @return  The newly created object for checking exact cardinality.
@@ -88,5 +93,5 @@ inline detail::ICardinality* cardinality_exact( int num_values)
 #endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
 
 
-// ======================  END OF cardinality_exact.hpp  ======================
+// =====  END OF cardinality_exact.hpp  =====
 
