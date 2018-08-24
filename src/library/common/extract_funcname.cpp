@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,6 +22,7 @@
 // project includes
 #include "celma/common/find_sequence.hpp"
 
+#include <iostream>
 
 using std::string;
 
@@ -31,8 +32,9 @@ namespace celma { namespace common {
 
 
 /// Extracts the function name without return type and parameters.
+///
 /// @param[in]  pretty_funcname  Function prototype as in the macro
-///                              __PRETTY_FUNCTION__.
+///                              \c __PRETTY_FUNCTION__.
 /// @since  0.6, 04.11.2016  (interface changed, simplified algorithm)
 /// @since  0.2, 07.04.2016
 string extractFuncname( const string& pretty_funcname)
@@ -52,12 +54,16 @@ string extractFuncname( const string& pretty_funcname)
              (pretty_funcname[ first_parenthesis + 2] == '(')))
       first_parenthesis += 2;
 
-   // (anonymous namespace)::<funcname>
-   if (pretty_funcname.substr( first_parenthesis + 1, 19) == "anonymous namespace")
+   // {anonymous namespace}::<funcname>(
+   // or {anonymous}::<funcname>(
+   auto const curly_brace_before_paren = pretty_funcname.find_first_of( '{');
+   if ((curly_brace_before_paren != string::npos)
+       && (curly_brace_before_paren < first_parenthesis))
    {
-      auto const  first_char = first_parenthesis;
-      first_parenthesis = pretty_funcname.find_first_of( '(', first_parenthesis + 20);
-      return pretty_funcname.substr( first_char, first_parenthesis - first_char);
+      auto const end_curly_brace = pretty_funcname.find_first_of( '}',
+         curly_brace_before_paren);
+      return pretty_funcname.substr( end_curly_brace + 3,
+         first_parenthesis - end_curly_brace - 3);
    } // end if
 
    auto const  operator_pos = pretty_funcname.find( "operator");
@@ -67,6 +73,9 @@ string extractFuncname( const string& pretty_funcname)
    // search backwards to the first space
    auto  first_space = pretty_funcname.rfind( ' ', start_search_back) + 1;
 
+   // the following block for handling of special return values and/or templates
+   // seems not to be needed (anymore)
+#if NOT_NEEDED
    // e.g. Class& operator+=
    if ((pretty_funcname[ first_space] == '&') ||
        (pretty_funcname[ first_space] == '*'))
@@ -87,6 +96,7 @@ string extractFuncname( const string& pretty_funcname)
       
       return pretty_funcname.substr( first_space, first_parenthesis - first_space);
    } // end if
+#endif
 
    // in between the space and the parenthesis we have our function name
    return pretty_funcname.substr( first_space, first_parenthesis - first_space);
@@ -98,5 +108,5 @@ string extractFuncname( const string& pretty_funcname)
 } // namespace celma
 
 
-// =======================  END OF extract_funcname.cpp  =======================
+// =====  END OF extract_funcname.cpp  =====
 
