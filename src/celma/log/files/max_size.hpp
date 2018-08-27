@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -63,7 +63,7 @@ private:
    /// Called when openCheck() return \c false. Rolls the existing log file
    /// generations.
    /// @since  1.0.0, 13.12.2017
-   virtual void rollFiles();
+   virtual void rollFiles() override;
 
    /// Called to check if the next log message can still be written into the
    /// current log file.<br>
@@ -104,5 +104,5 @@ private:
 #endif   // CELMA_LOG_FILES_MAX_SIZE_HPP
 
 
-// ===========================  END OF max_size.hpp  ===========================
+// =====  END OF max_size.hpp  =====
 
