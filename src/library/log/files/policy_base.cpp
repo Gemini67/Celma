@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -126,10 +126,22 @@ void PolicyBase::reOpenFile()
 
 
 
+/// Returns the current size of the log file.
+///
+/// @return  The current size of the file.
+/// @since  x.y.z, 27.08.2018
+size_t PolicyBase::fileSize()
+{
+
+   return mFile.tellp();
+} // PolicyBase::fileSize
+
+
+
 } // namespace files
 } // namespace log
 } // namespace celma
 
 
-// =========================  END OF policy_base.cpp  =========================
+// =====  END OF policy_base.cpp  =====
 

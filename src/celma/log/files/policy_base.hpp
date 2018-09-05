@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,12 @@
 #define CELMA_LOG_FILES_POLICY_BASE_HPP
 
 
+#ifdef CELMA_LOG_POLICY_BASE_STUB
+#include "celma/test/stubs/policy_base_stub.hpp"
+#define  PolicyBase  PolicyBaseStub
+#else
+
+
 #include <fstream>
 #include <string>
 #include "celma/log/detail/log_msg.hpp"
@@ -30,6 +36,7 @@ namespace celma { namespace log { namespace files {
 
 /// Base class for log file handle policies. Contains the part common to all
 /// policies.
+/// @since  x.y.z, 27.08.2018  (renamed from PolicyBase)
 /// @since  1.0.0, 13.12.2017
 class PolicyBase
 {
@@ -112,6 +119,12 @@ protected:
    /// @since  1.0.0, 13.12.2017
    virtual void reOpenFile();
 
+   /// Returns the current size of the log file.
+   ///
+   /// @return  The current size of the file.
+   /// @since  x.y.z, 27.08.2018
+   size_t fileSize();
+
    /// The definition how to build the file name.
    const filename::Definition  mFilenameDefinition;
    /// The path and filename of the currently open log file.
@@ -137,8 +150,9 @@ inline const std::string& PolicyBase::logFileName() const
 } // namespace celma
 
 
+#endif   // CELMA_LOG_POLICY_BASE_STUB
 #endif   // CELMA_LOG_FILES_POLICY_BASE_HPP
 
 
-// =========================  END OF policy_base.hpp  =========================
+// =====  END OF policy_base.hpp  =====
 
