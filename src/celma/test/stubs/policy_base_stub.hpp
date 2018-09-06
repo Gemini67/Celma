@@ -126,7 +126,7 @@ protected:
    /// closed then, all the function has to do is roll the log file generations.
    ///
    /// @since  x.y.z, 27.08.2018
-   virtual void rollFiles() = 0;
+   virtual void rollFiles();
 
    /// Called to check if the next log message can still be written into the
    /// current log file.
@@ -180,6 +180,9 @@ protected:
    bool                        mReOpenCalled = false;
    /// The current size of the "log file".
    size_t                      mLogFileSize = 0;
+   /// Set this flag if the internal log file size should be reset to 0 when
+   /// 
+///   bool                        mResetFilesizeBe4openCheck = false;
 
 }; // PolicyBaseStub
 
@@ -272,7 +275,10 @@ inline void PolicyBaseStub::writeMessage( const detail::LogMsg& msg,
 {
 
    if (!writeCheck( msg, msg_text))
+   {
+      mReOpenCalled = true;
       reOpenFile();
+   } // end if
 
    mLogFileSize += msg_text.length();
 
@@ -281,11 +287,17 @@ inline void PolicyBaseStub::writeMessage( const detail::LogMsg& msg,
 } // PolicyBaseStub::writeMessage
 
 
+inline void PolicyBaseStub::rollFiles()
+{
+} // PolicyBaseStub::rollFiles
+
+
 inline void PolicyBaseStub::reOpenFile()
 {
 
    rollFiles();
    mRollFilesCalled = true;
+   mLogFileSize = 0;
 
    open();
 

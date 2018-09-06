@@ -27,6 +27,7 @@
 // project includes
 #include "celma/log/filename/creator.hpp"
 #include "celma/log/filename/definition.hpp"
+#include "celma/log/files/counted.hpp"
 #include "celma/log/files/handler.hpp"
 #include "celma/log/files/max_size.hpp"
 #include "celma/log/files/simple.hpp"
@@ -51,7 +52,8 @@ BOOST_AUTO_TEST_CASE( test_errors)
    // log filename definition
    {
       BOOST_REQUIRE_THROW(
-         clf::Handler< clf::MaxSize>  hms( new clf::MaxSize( my_def, 1000000, 10)),
+         clf::Handler< clf::MaxSize>  hms( new clf::MaxSize( my_def, 1'000'000,
+            10)),
          std::runtime_error);
    } // end scope
 
@@ -59,6 +61,14 @@ BOOST_AUTO_TEST_CASE( test_errors)
    {
       BOOST_REQUIRE_THROW(
          clf::Handler< clf::Timestamped>  ht( new clf::Timestamped( my_def)),
+         std::runtime_error);
+   } // end scope
+
+   // log files with number of entries, but no log file generation number in the
+   // log filename definition
+   {
+      BOOST_REQUIRE_THROW(
+         clf::Handler< clf::Counted>  hct( new clf::Counted( my_def, 1'000, 10)),
          std::runtime_error);
    } // end scope
 
@@ -88,7 +98,7 @@ BOOST_AUTO_TEST_CASE( test_one)
       clfn::Creator     format_creator( my_def);
 
       format_creator << "/tmp/logfile_ms." << 2 << clfn::number << ".txt";
-      clf::Handler< clf::MaxSize>  hms( new clf::MaxSize( my_def, 1000000, 10));
+      clf::Handler< clf::MaxSize>  hms( new clf::MaxSize( my_def, 1'000'000, 10));
       hms.setFormatter();
    } // end scope
 
@@ -99,6 +109,15 @@ BOOST_AUTO_TEST_CASE( test_one)
       format_creator << "/tmp/logfile_ts." << clfn::date << ".txt";
       clf::Handler< clf::Timestamped>  ht( new clf::Timestamped( my_def));
       ht.setFormatter();
+   } // end scope
+
+   {
+      clfn::Definition  my_def;
+      clfn::Creator     format_creator( my_def);
+
+      format_creator << "/tmp/logfile_ms." << 2 << clfn::number << ".txt";
+      clf::Handler< clf::Counted>  hct( new clf::Counted( my_def, 1'000, 10));
+      hct.setFormatter();
    } // end scope
 
 } // test_one

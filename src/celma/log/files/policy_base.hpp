@@ -88,9 +88,14 @@ protected:
    virtual bool openCheck() = 0;
 
    /// Called when openCheck() returned \c false. The current file is already
-   /// closed then, all the function has to do is roll the log file generations.
+   /// closed then, all the function has to do is roll the log file
+   /// enerations.<br>
+   /// Empty method provided here in the base class, so it only needs to be
+   /// overwritten when actually used.
+   ///
+   /// @since  x.y.z, 05.09.2018  (not pure virtual anymore)
    /// @since  1.0.0, 13.12.2017
-   virtual void rollFiles() = 0;
+   virtual void rollFiles();
 
    /// Called to check if the next log message can still be written into the
    /// current log file.

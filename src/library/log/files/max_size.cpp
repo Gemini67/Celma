@@ -46,7 +46,6 @@ MaxSize::MaxSize( const filename::Definition& fname_def, size_t max_file_size,
                   int max_gen):
    PolicyBase( fname_def),
    mMaxFileSize( max_file_size),
-   mCurrentFilesize( 0),
    mMaxGenerations( max_gen)
 {
 
@@ -66,7 +65,6 @@ MaxSize::MaxSize( const filename::Definition& fname_def, size_t max_file_size,
 MaxSize::MaxSize( const MaxSize& other):
    PolicyBase( other),
    mMaxFileSize( other.mMaxFileSize),
-   mCurrentFilesize( 0),
    mMaxGenerations( other.mMaxGenerations)
 {
 } // MaxSize::MaxSize

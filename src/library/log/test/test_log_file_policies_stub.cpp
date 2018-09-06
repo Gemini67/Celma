@@ -16,6 +16,7 @@
 
 
 // modules to test header file includes
+#include "celma/log/files/counted.hpp"
 #include "celma/log/files/max_size.hpp"
 #include "celma/log/files/simple.hpp"
 #include "celma/log/files/timestamped.hpp"
@@ -260,7 +261,7 @@ BOOST_AUTO_TEST_CASE( simple)
 
 
 
-/// Write multiple short messages ino the same file (no rolling).
+/// Write multiple short messages into the same file (no rolling).
 ///
 /// @since  x.y.z, 03.09.2018
 BOOST_AUTO_TEST_CASE( max_size_dont_roll)
@@ -362,7 +363,7 @@ BOOST_AUTO_TEST_CASE( max_size_roll_always)
 
    BOOST_REQUIRE( ms.getResetOpenCalled());
    BOOST_REQUIRE( ms.getResetRollFilesCalled());
-   BOOST_REQUIRE( !ms.getResetReOpenCalled());
+   BOOST_REQUIRE( ms.getResetReOpenCalled());
    BOOST_REQUIRE( TestEnvironment::object().fileFuncsObject().allRenameParameters());
    BOOST_REQUIRE_EQUAL( ms.logFileName(), "/tmp/logfile_ms.00.txt");
    BOOST_REQUIRE_EQUAL( ms.logFileSize(), 50'000);
@@ -375,7 +376,7 @@ BOOST_AUTO_TEST_CASE( max_size_roll_always)
 
 
 
-/// Write multiple short messages ino the same file (no rolling).
+/// Write multiple short messages into the same file (no rolling).
 ///
 /// @since  x.y.z, 04.09.2018
 BOOST_AUTO_TEST_CASE( timestamped_dont_roll)
@@ -445,6 +446,90 @@ BOOST_AUTO_TEST_CASE( timestamped_dont_roll)
    BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
 
 } // timestamped_dont_roll
+
+
+
+/// Write messages into a counted log file un til the limit is reached.
+///
+/// @since  x.y.z, 05.09.2018
+BOOST_AUTO_TEST_CASE( counted_rolled)
+{
+
+   using celma::log::files::Counted;
+
+   Definition  my_def;
+   Creator     format_creator( my_def);
+
+
+   format_creator << "/tmp/logfile_ct." << 2 << number << ".txt";
+   Counted  ct( my_def, 5, 3);
+
+   ct.open();
+   BOOST_REQUIRE( ct.getResetOpenCalled());
+   BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
+
+   const int    line_nbr = __LINE__;
+   LogMsg       lm( "test_log_msg.cpp", "test_simple", line_nbr);
+   std::string  text ( 100, '=');
+
+   BOOST_REQUIRE_NO_THROW( ct.writeMessage( lm, text));
+
+   BOOST_REQUIRE( !ct.getResetOpenCalled());
+   BOOST_REQUIRE( !ct.getResetRollFilesCalled());
+   BOOST_REQUIRE( !ct.getResetReOpenCalled());
+   BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
+   BOOST_REQUIRE_EQUAL( ct.logFileSize(), 100);
+
+   BOOST_REQUIRE_NO_THROW( ct.writeMessage( lm, text));
+
+   BOOST_REQUIRE( !ct.getResetOpenCalled());
+   BOOST_REQUIRE( !ct.getResetRollFilesCalled());
+   BOOST_REQUIRE( !ct.getResetReOpenCalled());
+   BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
+   BOOST_REQUIRE_EQUAL( ct.logFileSize(), 200);
+
+   BOOST_REQUIRE_NO_THROW( ct.writeMessage( lm, text));
+
+   BOOST_REQUIRE( !ct.getResetOpenCalled());
+   BOOST_REQUIRE( !ct.getResetRollFilesCalled());
+   BOOST_REQUIRE( !ct.getResetReOpenCalled());
+   BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
+   BOOST_REQUIRE_EQUAL( ct.logFileSize(), 300);
+
+   BOOST_REQUIRE_NO_THROW( ct.writeMessage( lm, text));
+
+   BOOST_REQUIRE( !ct.getResetOpenCalled());
+   BOOST_REQUIRE( !ct.getResetRollFilesCalled());
+   BOOST_REQUIRE( !ct.getResetReOpenCalled());
+   BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
+   BOOST_REQUIRE_EQUAL( ct.logFileSize(), 400);
+
+   BOOST_REQUIRE_NO_THROW( ct.writeMessage( lm, text));
+
+   BOOST_REQUIRE( !ct.getResetOpenCalled());
+   BOOST_REQUIRE( !ct.getResetRollFilesCalled());
+   BOOST_REQUIRE( !ct.getResetReOpenCalled());
+   BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
+   BOOST_REQUIRE_EQUAL( ct.logFileSize(), 500);
+
+   TestEnvironment::object().fileFuncsObject().expectedRenameParameters(
+      "/tmp/logfile_ct.02.txt", "/tmp/logfile_ct.01.txt");
+   TestEnvironment::object().fileFuncsObject().expectedRenameParameters(
+      "/tmp/logfile_ct.01.txt", "/tmp/logfile_ct.00.txt");
+
+   BOOST_REQUIRE_NO_THROW( ct.writeMessage( lm, text));
+
+   BOOST_REQUIRE( ct.getResetOpenCalled());
+   BOOST_REQUIRE( ct.getResetRollFilesCalled());
+   BOOST_REQUIRE( ct.getResetReOpenCalled());
+   BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
+   BOOST_REQUIRE_EQUAL( ct.logFileSize(), 100);
+
+   auto  copy( ct);
+   BOOST_REQUIRE( copy.logFileName().empty());
+   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
+
+} // counted_rolled
 
 
 

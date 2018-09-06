@@ -104,7 +104,7 @@ private:
    /// Maximum size of one logfile.
    size_t  mMaxFileSize;
    /// Size of the current file.
-   size_t  mCurrentFilesize;
+   size_t  mCurrentFilesize = 0;
    /// Maximum number of generations of log files to keep.
    int     mMaxGenerations;
 
