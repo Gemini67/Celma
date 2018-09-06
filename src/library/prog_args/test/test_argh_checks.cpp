@@ -1333,6 +1333,20 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
          std::runtime_error);
    } // end scope
 
+   // should throw when the path does exist but is not a directory
+   { 
+      Handler  ah( 0);
+      string   dest;
+
+      ah.addArgument( "f", DEST_VAR( dest), "path and filename")
+         ->addCheck( parentDirectoryExists());
+
+      const ArgString2Array  as2a( "-f /etc/services/textfile.txt", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
    { 
       Handler  ah( 0);
       string   dest;

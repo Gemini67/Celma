@@ -389,6 +389,10 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
    int             opt_int_arg1 = 42;
    int             opt_int_arg2 = 42;
    int             opt_int_arg3 = 42;
+   std::string     file;
+   std::string     dir;
+   std::string     existing_parent_dir;
+   std::string     absolute_path;
 
 
    ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")
@@ -401,27 +405,47 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
                  ->addConstraint( celma::prog_args::requires( "index3"));
    ah.addArgument( "index3", DEST_VAR( opt_int_arg3), "Integer argument three")
                  ->addCheck( celma::prog_args::range( 20, 100));
+   ah.addArgument( "f,file", DEST_VAR( file), "Existing file")
+                 ->addCheck( celma::prog_args::isFile())
+                 ->setPrintDefault( false);
+   ah.addArgument( "d,dir", DEST_VAR( dir), "Existing directory")
+                 ->addCheck( celma::prog_args::isDirectory())
+                 ->setPrintDefault( false);
+   ah.addArgument( "p", DEST_VAR( existing_parent_dir), "Existing parent directory")
+                 ->addCheck( celma::prog_args::parentDirectoryExists())
+                 ->setPrintDefault( false);
+   ah.addArgument( "absolute", DEST_VAR( absolute_path), "Absolute path required")
+                 ->addCheck( celma::prog_args::isAbsolutePath())
+                 ->setPrintDefault( false);
 
    const ArgString2Array  as2a( "-h", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( multilineStringCompare( std_out.str(),
       "Usage:\nMandatory arguments:\n"
-            "   -s          String argument\n"
-            "               Check: Value in ( \"dragon\", \"tiger\")\n"
+            "   -s           String argument\n"
+            "                Check: Value in ( \"dragon\", \"tiger\")\n"
             "\n"
             "Optional arguments:\n"
-            "   -h,--help   Prints the program usage.\n"
-            "   --index1    Integer argument one\n"
-            "               Default value: 42\n"
-            "               Check: Value >= 20\n"
-            "   --index2    Integer argument two\n"
-            "               Default value: 42\n"
-            "               Check: Value < 100\n"
-            "               Constraint: Requires index3\n"
-            "   --index3    Integer argument three\n"
-            "               Default value: 42\n"
-            "               Check: 20 <= value < 100\n"
+            "   -h,--help    Prints the program usage.\n"
+            "   --index1     Integer argument one\n"
+            "                Default value: 42\n"
+            "                Check: Value >= 20\n"
+            "   --index2     Integer argument two\n"
+            "                Default value: 42\n"
+            "                Check: Value < 100\n"
+            "                Constraint: Requires index3\n"
+            "   --index3     Integer argument three\n"
+            "                Default value: 42\n"
+            "                Check: 20 <= value < 100\n"
+            "   -f,--file    Existing file\n"
+            "                Check: is a file\n"
+            "   -d,--dir     Existing directory\n"
+            "                Check: is a directory\n"
+            "   -p           Existing parent directory\n"
+            "                Check: parent directory exists\n"
+            "   --absolute   Absolute path required\n"
+            "                Check: is an absolute path\n"
             "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
