@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,7 +18,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE ArgString2ArrayTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 using celma::appl::ArgString2Array;
@@ -30,27 +29,27 @@ BOOST_AUTO_TEST_CASE( no_arguments)
 {
 
    {
-      ArgString2Array  as2a( "", nullptr);
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 1);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE( as2a.mpArgv[ 1] == nullptr);
+      const ArgString2Array  as2a( "", nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 1);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE( as2a.mpArgV[ 1] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "", "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 1);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE( as2a.mpArgv[ 1] == nullptr);
+      const ArgString2Array  as2a( "", "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 1);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE( as2a.mpArgV[ 1] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 1);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE( as2a.mpArgv[ 1] == nullptr);
+      const ArgString2Array  as2a( "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 1);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE( as2a.mpArgV[ 1] == nullptr);
    } // end scope
 
-} // end no_arguments
+} // no_arguments
 
 
 
@@ -60,30 +59,30 @@ BOOST_AUTO_TEST_CASE( single_argument)
 {
 
    {
-      ArgString2Array  as2a( "-v", nullptr);
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      const ArgString2Array  as2a( "-v", nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v", "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      const ArgString2Array  as2a( "-v", "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v");
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      const ArgString2Array  as2a( "my_own_program_name -v");
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
-} // end single_argument
+} // single_argument
 
 
 
@@ -93,144 +92,155 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
 {
 
    {
-      ArgString2Array  as2a( "-v 'my multi-word value'", nullptr);
+      const ArgString2Array  as2a( "-v 'my multi-word value'", nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v 'my multi-word value'", "my_own_program_name");
+      const ArgString2Array  as2a( "-v 'my multi-word value'", "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value'");
+      const ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value'");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v \"my multi-word value\"", nullptr);
+      const ArgString2Array  as2a( "-v \"my multi-word value\"", nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v \"my multi-word value\"", "my_own_program_name");
+      const ArgString2Array  as2a( "-v \"my multi-word value\"",
+         "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\"");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "-v \"my multi-word value\"");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "--value='my multi-word value'", nullptr);
+      const ArgString2Array  as2a( "--value='my multi-word value'", nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value=my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value=my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "--value='my multi-word value'", "my_own_program_name");
+      const ArgString2Array  as2a( "--value='my multi-word value'",
+         "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value=my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value=my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name --value='my multi-word value'");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "--value='my multi-word value'");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value=my multi-word value");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value=my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "--value==\"it's my party\"", nullptr);
+      const ArgString2Array  as2a( "--value==\"it's my party\"", nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value==it's my party");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value==it's my party");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "--value==\"it's my party\"", "my_own_program_name");
+      const ArgString2Array  as2a( "--value==\"it's my party\"",
+         "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value==it's my party");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value==it's my party");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name --value==\"it's my party\"");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "--value==\"it's my party\"");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value==it's my party");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value==it's my party");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name --value==\"it's my 'official' party\"");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "--value==\"it's my 'official' party\"");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value==it's my 'official' party");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value==it's my 'official' party");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name --value=='it is my \"official\" party'");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "--value=='it is my \"official\" party'");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value==it is my \"official\" party");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1],
+         "--value==it is my \"official\" party");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name --value=='it\\'s my \"official\" party'");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "--value=='it\\'s my \"official\" party'");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value==it's my \"official\" party");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1],
+         "--value==it's my \"official\" party");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
@@ -252,15 +262,17 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
       //   - source code:      it\\\\\\'s
       //   - string:           it\\\'s
       //   - parsed argument:  it\'s
-      ArgString2Array  as2a( "my_own_program_name --value==\"'it\\\\\\'s my \\\"official\\\" party'\"");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "--value==\"'it\\\\\\'s my \\\"official\\\" party'\"");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "--value=='it\\'s my \"official\" party'");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1],
+         "--value=='it\\'s my \"official\" party'");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
-} // end multi_word_value
+} // multi_word_value
 
 
 
@@ -270,66 +282,68 @@ BOOST_AUTO_TEST_CASE( mixed_quotes)
 {
 
    {
-      ArgString2Array  as2a( "-v \"my child's pet\"", nullptr);
+      const ArgString2Array  as2a( "-v \"my child's pet\"", nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my child's pet");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my child's pet");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v \"my child's pet\"", "my_own_program_name");
+      const ArgString2Array  as2a( "-v \"my child's pet\"",
+         "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my child's pet");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my child's pet");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v \"my child's pet\"");
+      const ArgString2Array  as2a( "my_own_program_name -v \"my child's pet\"");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my child's pet");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my child's pet");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v 'my \"best\" idea'", nullptr);
+      const ArgString2Array  as2a( "-v 'my \"best\" idea'", nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my \"best\" idea");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my \"best\" idea");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v 'my \"best\" idea'", "my_own_program_name");
+      const ArgString2Array  as2a( "-v 'my \"best\" idea'",
+         "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my \"best\" idea");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my \"best\" idea");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v 'my \"best\" idea'");
+      const ArgString2Array  as2a( "my_own_program_name -v 'my \"best\" idea'");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 3);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my \"best\" idea");
-      BOOST_REQUIRE( as2a.mpArgv[ 3] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my \"best\" idea");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
    } // end scope
 
-} // end mixed_quotes
+} // mixed_quotes
 
 
 
@@ -339,158 +353,162 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
 {
 
    {
-      ArgString2Array  as2a( "-v 'my multi-word value' -w 'two words'", nullptr);
+      const ArgString2Array  as2a( "-v 'my multi-word value' -w 'two words'",
+         nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v 'my multi-word value' -w 'two words'",
+      const ArgString2Array  as2a( "-v 'my multi-word value' -w 'two words'",
                                      "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value' "
-                                     "-w 'two words'");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "-v 'my multi-word value' -w 'two words'");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v 'my multi-word value' -w \"two words\"", nullptr);
+      const ArgString2Array  as2a( "-v 'my multi-word value' -w \"two words\"",
+         nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v 'my multi-word value' -w \"two words\"",
+      const ArgString2Array  as2a( "-v 'my multi-word value' -w \"two words\"",
                                      "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value' "
+      const ArgString2Array  as2a( "my_own_program_name -v 'my multi-word value' "
                                      "-w \"two words\"");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v \"my multi-word value\" -w 'two words'", nullptr);
+      const ArgString2Array  as2a( "-v \"my multi-word value\" -w 'two words'",
+         nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v \"my multi-word value\" -w 'two words'",
+      const ArgString2Array  as2a( "-v \"my multi-word value\" -w 'two words'",
                                      "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\" "
-                                     "-w 'two words'");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "-v \"my multi-word value\" -w 'two words'");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v \"my multi-word value\" -w \"two words\"", nullptr);
+      const ArgString2Array  as2a( "-v \"my multi-word value\" -w \"two words\"",
+         nullptr);
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v \"my multi-word value\" -w \"two words\"",
+      const ArgString2Array  as2a( "-v \"my multi-word value\" -w \"two words\"",
                                      "my_own_program_name");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v \"my multi-word value\" "
-                                     "-w \"two words\"");
+      const ArgString2Array  as2a( "my_own_program_name "
+         "-v \"my multi-word value\" -w \"two words\"");
 
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 5);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "my multi-word value");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "-w");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "two words");
-      BOOST_REQUIRE( as2a.mpArgv[ 5] == nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 5);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "-w");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "two words");
+      BOOST_REQUIRE( as2a.mpArgV[ 5] == nullptr);
    } // end scope
 
-} // end multiple_multi_word_value
+} // multiple_multi_word_value
 
 
 
@@ -500,30 +518,33 @@ BOOST_AUTO_TEST_CASE( one_free)
 {
 
    {
-      ArgString2Array  as2a( "my_name", nullptr);
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "my_name");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      const ArgString2Array  as2a( "my_name", nullptr);
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "my_name");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_name", "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "my_name");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      const ArgString2Array  as2a( "my_name", "my_own_program_name");
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "my_name");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name my_name");
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 2);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "my_name");
-      BOOST_REQUIRE( as2a.mpArgv[ 2] == nullptr);
+      const ArgString2Array  as2a( "my_own_program_name my_name");
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "my_name");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
    } // end scope
 
-} // end one_free
+} // one_free
 
 
 
@@ -533,58 +554,62 @@ BOOST_AUTO_TEST_CASE( multiple_arguments)
 {
 
    {
-      ArgString2Array  as2a( "-v -d /tmp --name=proc1 --limit 17 -- -s -5", nullptr);
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 10);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "programname");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "-d");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "/tmp");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "--name=proc1");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 5], "--limit");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 6], "17");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 7], "--");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 8], "-s");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 9], "-5");
-      BOOST_REQUIRE( as2a.mpArgv[ 10] == nullptr);
+      const ArgString2Array  as2a( "-v -d /tmp --name=proc1 --limit 17 -- -s -5",
+         nullptr);
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 10);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "-d");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "/tmp");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "--name=proc1");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 5], "--limit");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 6], "17");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 7], "--");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 8], "-s");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 9], "-5");
+      BOOST_REQUIRE( as2a.mpArgV[ 10] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "-v -d /tmp --name=proc1 --limit 17 -- -s -5",
+      const ArgString2Array  as2a( "-v -d /tmp --name=proc1 --limit 17 -- -s -5",
                                      "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 10);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "-d");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "/tmp");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "--name=proc1");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 5], "--limit");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 6], "17");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 7], "--");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 8], "-s");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 9], "-5");
-      BOOST_REQUIRE( as2a.mpArgv[ 10] == nullptr);
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 10);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "-d");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "/tmp");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "--name=proc1");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 5], "--limit");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 6], "17");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 7], "--");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 8], "-s");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 9], "-5");
+      BOOST_REQUIRE( as2a.mpArgV[ 10] == nullptr);
    } // end scope
 
    {
-      ArgString2Array  as2a( "my_own_program_name -v -d /tmp --name=proc1 "
+      const ArgString2Array  as2a( "my_own_program_name -v -d /tmp --name=proc1 "
                                      "--limit 17 -- -s -5");
-      BOOST_REQUIRE_EQUAL( as2a.mArgc, 10);
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 0], "my_own_program_name");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 1], "-v");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 2], "-d");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 3], "/tmp");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 4], "--name=proc1");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 5], "--limit");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 6], "17");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 7], "--");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 8], "-s");
-      BOOST_REQUIRE_EQUAL( as2a.mpArgv[ 9], "-5");
-      BOOST_REQUIRE( as2a.mpArgv[ 10] == nullptr);
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 10);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "-d");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 3], "/tmp");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 4], "--name=proc1");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 5], "--limit");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 6], "17");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 7], "--");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 8], "-s");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 9], "-5");
+      BOOST_REQUIRE( as2a.mpArgV[ 10] == nullptr);
    } // end scope
 
-} // end multiple_arguments
+} // multiple_arguments
 
 
 
-// ===================  END OF test_arg_string_2_array.cpp  ===================
+// =====  END OF test_arg_string_2_array.cpp  =====
 

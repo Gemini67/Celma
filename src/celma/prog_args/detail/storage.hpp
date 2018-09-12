@@ -161,7 +161,7 @@ public:
       noexcept( false);
 
    /// Storage type for the argument keys and objects.
-   typedef std::vector< Data< T>>  cont_t;
+   using cont_t = std::vector< Data< T>>;
 
    /// Iterator type for accessing the elements in the container.
    using const_iterator = typename cont_t::const_iterator;

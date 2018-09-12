@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,7 +32,7 @@ namespace celma { namespace log {
 
 
 /// Type of log ids.
-typedef unsigned  id_t;
+using id_t = unsigned int;
 
 
 /// List of classes to which a log message can belong:
@@ -172,5 +172,5 @@ inline std::ostream& operator <<( std::ostream& os, const LogClass lc)
 #endif   // CELMA_LOG_DETAIL_LOG_DEFS_HPP
 
 
-// ===========================  END OF log_defs.hpp  ===========================
+// =====  END OF log_defs.hpp  =====
 

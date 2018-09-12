@@ -611,6 +611,16 @@ public:
          os << " [LevelCounter]";
    } // TypedArg< LevelCounter>::printValue
 
+   /// Special feature for destination variable type level counter:<br>
+   /// Allow mixing of increment and assignment on the command line.
+   ///
+   /// @since  1.11.0, 20.08.2018
+   virtual TypedArgBase* setAllowMixIncSet() noexcept( true) override
+   {
+      mAllowMixIncSet = true;
+      return this;
+   } // TypedArg< LevelCounter>::setAllowMixIncSet
+
 protected:
    /// Used for printing an argument and its destination variable.
    ///
@@ -632,7 +642,7 @@ protected:
    {
       if (value.empty())
       {
-         if (mHasValueSet)
+         if (mHasValueSet && !mAllowMixIncSet)
             throw std::runtime_error( "already have a value assigned to "
                "variable '" + mVarName + "'");
 
@@ -645,7 +655,7 @@ protected:
          mIncremented = true;
       } else
       {
-         if (mHasValueSet || mIncremented)
+         if (!mAllowMixIncSet && (mHasValueSet || mIncremented))
             throw std::runtime_error( "already have a value assigned to "
                "variable '" + mVarName + "'");
          check( value);
@@ -669,6 +679,10 @@ private:
    bool           mIncremented = false;
    /// Flag that is set when a vlaue was assigned to the level counter.
    bool           mHasValueSet = false;
+   /// If this flag is set, mixing increment and setting the argument on the
+   /// command line is allowed.
+   bool           mAllowMixIncSet = false;
+
 
 }; // TypedArg< LevelCounter>
 
@@ -687,7 +701,7 @@ template< typename T> class TypedArg< std::vector< T>>: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef typename std::vector< T>  vector_type;
+   using vector_type = typename std::vector< T>;
 
    /// Constructor.
    ///
@@ -1201,7 +1215,7 @@ template< size_t N> class TypedArg< std::bitset< N>>: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef typename std::bitset< N>  bitset_type;
+   using bitset_type = typename std::bitset< N>;
 
    /// Constructor.
    ///
