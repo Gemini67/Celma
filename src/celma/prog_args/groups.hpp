@@ -63,7 +63,7 @@ class Groups: public common::Singleton< Groups>
 
 public:
    /// The type used to store an argument handler object.
-   typedef std::shared_ptr< Handler>  SharedArgHndl;
+   using SharedArgHndl = std::shared_ptr< Handler>;
 
    /// Set of the flags that may be set on the argument groups object, which
    /// will be passed on to each Handler object that is created afterwards.
@@ -234,18 +234,23 @@ public:
 
 protected:
    /// Constructor.
+   ///
    /// @param[in]  flag_set  Set of the flags to pass to all handler objects.
    /// @since  1.8.0, 11.07.2018
-   Groups( int flag_set);
+   explicit Groups( int flag_set);
 
    /// Constructor.
-   /// @param[in]  os        The stream to write normal output to.
-   /// @param[in]  error_os  The stream to write error output to.
-   /// @param[in]  flag_set  Set of the flags to pass to all handler objects.
+   ///
+   /// @param[in]  os
+   ///    The stream to write normal output to.
+   /// @param[in]  error_os
+   ///    The stream to write error output to.
+   /// @param[in]  flag_set
+   ///    Set of the flags to pass to all handler objects.
    /// @since  0.13.0, 05.02.2017  (added parameters)
    /// @since  0.2, 10.04.2016
-   Groups( std::ostream& os = std::cout, std::ostream& error_os = std::cerr,
-           int flag_set = 0);
+   explicit Groups( std::ostream& os = std::cout,
+      std::ostream& error_os = std::cerr, int flag_set = 0);
 
 private:
    /// Internal class used to store an argument handler with its symbolic name.
@@ -277,7 +282,7 @@ private:
    }; // Storage
 
    /// Container to store the argument handlers.
-   typedef std::vector< Storage>  ArgHandlerCont;
+   using ArgHandlerCont = std::vector< Storage>;
 
    /// Stream to write output to.
    std::ostream&                  mOutput;
@@ -288,7 +293,7 @@ private:
    /// The argument handlers.
    ArgHandlerCont                 mArgGroups;
    /// Set to \c true when the method evalArguments() of this class is used.
-   bool                           mEvaluating;
+   bool                           mEvaluating = false;
    /// The line length to use when printing the usage.
    int                            mUsageLineLength;
    /// Defines the contents of the usage.

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,6 +16,10 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 // C++ Standard Library includes
 #include <iostream>
 
@@ -25,15 +29,17 @@
 #include "celma/prog_args.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::appl::ArgString2Array;
+using celma::prog_args::Handler;
+using std::cerr;
+using std::endl;
 
 
 
 int main( int argc, char* argv[])
 {
 
-   appl::ArgString2Array  as2a( "-h", nullptr);
+   const ArgString2Array  as2a( "-h", nullptr);
 
 
    if (argc != 2)
@@ -46,10 +52,10 @@ int main( int argc, char* argv[])
       return EXIT_FAILURE;
    } // end if
 
-   if (atoi( argv[ 1]) == 1)
+   if (::atoi( argv[ 1]) == 1)
    {
-      prog_args::Handler  ah( prog_args::Handler::AllHelp);
-      string              includeName;
+      Handler      ah( Handler::AllHelp);
+      std::string  includeName;
 
       ah.addArgument( "i,include", DEST_VAR( includeName),
                       "Now here we have a parameter with a very long, long, "
@@ -58,24 +64,24 @@ int main( int argc, char* argv[])
                       "be split unto multiple lines in order to get a decent "
                       "output.");
 
-      ah.evalArguments( as2a.mArgc, as2a.mpArgv);
+      ah.evalArguments( as2a.mArgC, as2a.mpArgV);
    } // end if
 
    if (atoi( argv[ 1]) == 2)
    {
-      prog_args::Handler  ah( prog_args::Handler::AllHelp);
-      string              includeName;
+      Handler      ah( Handler::AllHelp);
+      std::string  includeName;
 
       ah.addArgument( "i,include-from-this-absolute-directory-path", DEST_VAR( includeName),
                       "Long parameter");
 
-      ah.evalArguments( as2a.mArgc, as2a.mpArgv);
+      ah.evalArguments( as2a.mArgC, as2a.mpArgV);
    } // end scope
 
-   if (atoi( argv[ 1]) == 3)
+   if (::atoi( argv[ 1]) == 3)
    {
-      prog_args::Handler  ah( prog_args::Handler::AllHelp);
-      string              includeName;
+      Handler      ah( Handler::AllHelp);
+      std::string  includeName;
 
       ah.addArgument( "i,include-from-this-absolute-directory-path", DEST_VAR( includeName),
                       "Now here we have a long parameter with a very long, long, "
@@ -84,13 +90,13 @@ int main( int argc, char* argv[])
                       "be split unto multiple lines in order to get a decent "
                       "output.");
 
-      ah.evalArguments( as2a.mArgc, as2a.mpArgv);
+      ah.evalArguments( as2a.mArgC, as2a.mpArgV);
    } // end scope
 
-   if (atoi( argv[ 1]) == 4)
+   if (::atoi( argv[ 1]) == 4)
    {
-      prog_args::Handler  ah( prog_args::Handler::AllHelp);
-      string              includeName;
+      Handler      ah( Handler::AllHelp);
+      std::string  includeName;
 
       ah.setUsageLineLength( 63);
       ah.addArgument( "i,include-from-this-absolute-directory-path", DEST_VAR( includeName),
@@ -100,15 +106,15 @@ int main( int argc, char* argv[])
                       "be split unto multiple lines in order to get a decent "
                       "output.");
 
-      ah.evalArguments( as2a.mArgc, as2a.mpArgv);
+      ah.evalArguments( as2a.mArgC, as2a.mpArgV);
    } // end scope
 
    cerr << "Invalid value '" << argv[ 1] << "'!" << endl;
 
    return EXIT_FAILURE;
-} // end main
+} // main
 
 
 
-// ======================  END OF test_long_arg_desc.cpp  ======================
+// =====  END OF test_long_arg_desc.cpp  =====
 

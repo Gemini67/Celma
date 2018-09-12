@@ -34,6 +34,7 @@
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
+#include "celma/prog_args/detail/check_parent_directory_exists.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
 #include "celma/prog_args/detail/check_upper.hpp"
 #include "celma/prog_args/detail/check_values.hpp"
@@ -312,6 +313,12 @@ public:
    ///    0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
 
+   /// Special feature for destination variable type level counter:<br>
+   /// Allow mixing of increment and assignment on the command line.
+   ///
+   /// @since  1.11.0, 20.08.2018
+   virtual TypedArgBase* setAllowMixIncSet() noexcept( false);
+
    /// Specifies the list separator character to use for splitting lists of
    /// values.
    /// @param[in]  sep
@@ -332,6 +339,23 @@ public:
    /// @since
    ///    1.2.0, 28.12.2017
    virtual TypedArgBase* setClearBeforeAssign() noexcept( false);
+
+   /// Special feature for destination variable type vector:<br>
+   /// Sort the contents of the vector.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setSortData() noexcept( false);
+
+   /// Special feature for destination variable type vector:<br>
+   /// Make sure only unique values are stored in the vector.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      noexcept( false);
 
    /// Calls all check methods defined for this argument. The check methods
    /// throw an exception when a check failed, so: No exception, value can be
@@ -693,6 +717,13 @@ inline bool TypedArgBase::takesMultiValue() const
 } // TypedArgBase::takesMultiValue
 
 
+inline TypedArgBase* TypedArgBase::setAllowMixIncSet() noexcept( false)
+{
+   throw std::invalid_argument( "setting \"allow mixing increment and setter\" "
+      "not allowed for variable '" + mVarName + "'");
+} // TypedArgBase::setAllowMixIncSet
+
+
 inline TypedArgBase* TypedArgBase::setListSep( char /* sep */)
 {
    throw std::invalid_argument( "setting list separator not allowed for "
@@ -705,6 +736,20 @@ inline TypedArgBase* TypedArgBase::setClearBeforeAssign()
    throw std::invalid_argument( "setting 'clear before assign' is not allowed "
                                 "for variable '" + mVarName + "'");
 } // TypedArgBase::setClearBeforeAssign
+
+
+inline TypedArgBase* TypedArgBase::setSortData()
+{
+   throw std::invalid_argument( "setting 'sort data' is not allowed for "
+      "variable '" + mVarName + "'");
+} // TypedArgBase::setSortData
+
+
+inline TypedArgBase* TypedArgBase::setUniqueData( bool)
+{
+   throw std::invalid_argument( "setting 'unique data' is not allowed for "
+      "variable '" + mVarName + "'");
+} // TypedArgBase::setUniqueData
 
 
 inline bool TypedArgBase::hasCheck() const

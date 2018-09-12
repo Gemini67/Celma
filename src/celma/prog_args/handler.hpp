@@ -69,7 +69,10 @@ class ValueHandler;
 ///   .
 ///   To change this 'value mode', call the function setValueMode() with the
 ///   desired value.<br>
-///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent), "Specifies the verbose level, if set without value default is 'low'")->setValueMode( vmOptional);</code>
+///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent),
+///                               "Specifies the verbose level, if set without "
+///                               "value default is 'low'")
+///                             ->setValueMode( vmOptional);</code>
 /// - The value mode can also be used to flag a parameter that means:
 ///   The remaining command line arguments are not for this program/
 ///   application.<br>
@@ -84,6 +87,11 @@ class ValueHandler;
 ///     - upper: Upper limit for values to accept (exclusive).
 ///     - range: Range of values for scalar types to accept.
 ///     - values: List of values to accept.
+///     .
+///     It is possible to add multiple checks to the same argument. In this case,
+///     a value must be accepted by all checks. The checks are executed in the
+///     order in which they were added.<br>
+///     Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
 ///   - usetFlag(): For destination variable type boolean: Instead of setting the
 ///     variable to \c true when the argument is used, set it to \c false.
 ///   - setPrintDefault(): Specifies if the default value (of the destination
@@ -122,11 +130,9 @@ class ValueHandler;
 ///     If the argument was mandatory before, remove this flag. Setting a
 ///     deprecated argument to mandatory, or vice versa, will throw in
 ///     addArgument().
+///   - setAllowMixIncSet(): For destination type level counter, allows to mix
+///     arguments that increment the value or assign a new value.
 ///   .
-///   It is possible to add multiple checks to the same argument. In this case,
-///   a value must be accepted by all checks. The checks are executed in the
-///   order in which they were added.<br>
-///   Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
 /// - Finally, when all arguments were specified, call evalArguments() to
 ///   actually evaluate the command line arguments.
 /// - You can use this class to print a list of the arguments and their
@@ -230,7 +236,7 @@ class Handler
 public:
    /// Type of the (storage handler of the) functions to call for control
    /// characters.
-   typedef std::function< void()>  HandlerFunc;
+   using HandlerFunc = std::function< void()>;
 
    /// List of flags to control the behaviour of this class:
    enum HandleFlags
@@ -297,7 +303,7 @@ public:
    }; // UsageContents
 
    /// Make the type 'ValueMode' available through this class too.
-   typedef detail::TypedArgBase::ValueMode  ValueMode;
+   using ValueMode = detail::TypedArgBase::ValueMode;
 
    /// Set of all help arguments.
    static const int  AllHelp = hfHelpShort | hfHelpLong;
@@ -322,7 +328,7 @@ public:
    /// @since  0.2, 10.04.2016
    explicit Handler( int flagSet = hfHelpShort | hfHelpLong,
                      IUsageText* txt1 = nullptr,
-                     IUsageText* txt2 = nullptr);
+                     IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor that allows to specify the output streams to write to.
    /// @param[in]  os        The stream to write normal output to.
@@ -338,7 +344,7 @@ public:
    Handler( std::ostream& os, std::ostream& error_os,
             int flag_set = hfHelpShort | hfHelpLong,
             IUsageText* txt1 = nullptr,
-            IUsageText* txt2 = nullptr);
+            IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor to be used by a sub-group. Copies some settings from the main
    /// argument handler object.<br>
@@ -358,7 +364,7 @@ public:
    ///                       additional text for the usage.
    /// @since  1.1.0, 04.12.2017
    Handler( Handler& main_ah, int flag_set, IUsageText* txt1 = nullptr,
-            IUsageText* txt2 = nullptr);
+            IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Don't allow copying.
    Handler( const Handler&) = delete;
@@ -545,7 +551,7 @@ public:
    void evalArguments( int argc, char* argv[]) noexcept( false);
 
    /// Same as evalArguments(). Difference is that this method catches
-   /// exceptions, reports them on \c stderr and then exits the program.<br>
+   /// exceptions, reports them on stderr and then exits the program.<br>
    /// In other words: If the function returns, all argument requirements and
    /// constraints were met.
    /// @param[in]  argc    Number of arguments passed to the process.
@@ -592,7 +598,7 @@ public:
    /// @return  Pointer to the object handling the specified argument.
    /// @since  0.14.0, 16.03.2017
    detail::TypedArgBase* getArgHandler( const std::string& arg_spec)
-                                      noexcept( false);
+      noexcept( false);
 
 protected:
 	/// Classes need access to internals.
@@ -685,15 +691,33 @@ private:
    static const detail::ArgumentKey  mPosKey;
 
    /// Type of the container to store the global constrainst in.
-   typedef std::vector< detail::IConstraint*>  ConstraintCont;
+   using ConstraintCont = std::vector< detail::IConstraint*>;
+
+   /// Called by the constructors to evaluate the set of flags given.
+   ///
+   /// @param[in]  flag_set
+   ///    The set of flags to set.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @since
+   ///    1.11.0, 16.02.2018
+   void handleStartFlags( int flag_set, IUsageText* txt1, IUsageText* txt2)
+      noexcept( false);
 
    /// Function to print the usage of a program (when requested through the
    /// arguments). The additional parameters allow to print additional
    /// information.
-   /// @param[in]  txt1  Pointer to the object that prints the first text.
-   /// @param[in]  txt2  Pointer to the object that prints the second text.
+   ///
+   /// @param[in]  txt1
+   ///    Pointer to the object that prints the first text.
+   /// @param[in]  txt2
+   ///    Pointer to the object that prints the second text.
    /// @since  0.2, 10.04.2016
-   void usage( IUsageText* txt1, IUsageText* txt2);
+   void usage( IUsageText* txt1, IUsageText* txt2) noexcept( false);
 
    /// Sets the flag that this object is used as sub-group handler.
    /// @since  0.2, 10.04.2016

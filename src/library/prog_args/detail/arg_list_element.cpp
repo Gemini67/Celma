@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,14 +23,12 @@
 #include <iostream>
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
 
 /// Constructor.
+///
 /// @since  0.2, 09.04.2016
 ArgListElement::ArgListElement():
    mArgIndex( -1),
@@ -45,6 +43,7 @@ ArgListElement::ArgListElement():
 
 
 /// Stores the data of a single argument character.
+///
 /// @param[in]  argi     The argument string index.
 /// @param[in]  argp     The position of the argument character in the string.
 /// @param[in]  argChar  The argument character.
@@ -65,10 +64,11 @@ void ArgListElement::setArgChar( int argi, int argp, char argChar)
 
 
 /// Stores the data of a long argument.
+///
 /// @param[in]  argi     The argument string index.
 /// @param[in]  argName  The long argument.
 /// @since  0.2, 09.04.2016
-void ArgListElement::setArgString( int argi, const string& argName)
+void ArgListElement::setArgString( int argi, const std::string& argName)
 {
 
    mArgIndex    = argi;
@@ -84,10 +84,11 @@ void ArgListElement::setArgString( int argi, const string& argName)
 
 
 /// Stores a value.
+///
 /// @param[in]  argi   The argument string index.
 /// @param[in]  value  The value (== the argument string).
 /// @since  0.2, 09.04.2016
-void ArgListElement::setValue( int argi, const string& value)
+void ArgListElement::setValue( int argi, const std::string& value)
 {
 
    mArgIndex    = argi;
@@ -103,6 +104,7 @@ void ArgListElement::setValue( int argi, const string& value)
 
 
 /// Stores the data of a control character.
+///
 /// @param[in]  argi      The argument string index.
 /// @param[in]  argp      The position of the control character in the string.
 /// @param[in]  ctrlChar  The control character.
@@ -123,12 +125,15 @@ void ArgListElement::setControl( int argi, int argp, char ctrlChar)
 
 
 /// Prints the contents of an argument list element.
+///
 /// @param[out]  os   The stream to write to.
 /// @param[in]   ale  The object to dump the data of.
 /// @return  The stream.
 /// @since  0.2, 09.04.2016
-ostream& operator <<( ostream& os, const ArgListElement& ale)
+std::ostream& operator <<( std::ostream& os, const ArgListElement& ale)
 {
+
+   using std::endl;
 
    os << "argument index     = " << ale.mArgIndex << endl;
 
@@ -161,5 +166,5 @@ ostream& operator <<( ostream& os, const ArgListElement& ale)
 } // namespace celma
 
 
-// =======================  END OF arg_list_element.cpp  =======================
+// =====  END OF arg_list_element.cpp  =====
 

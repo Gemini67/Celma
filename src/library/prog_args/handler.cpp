@@ -19,10 +19,17 @@
 #include "celma/prog_args/handler.hpp"
 
 
+// OS/C lib includes
+#include <cstdlib>
+#include <cstring>
+#include <libgen.h>
+
+
 // C++ Standard Library includes
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <memory>
 
 
 // project includes
@@ -53,9 +60,6 @@ using std::underflow_error;
 
 // module definitions
 const detail::ArgumentKey  Handler::mPosKey( "-");
-
-#define VAR_NAME( n)  n, #n
-
 
 
 /// Constructor.
@@ -105,50 +109,13 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
-   string  args;
-
-
-   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
-      args = "h,help";
-   else if (flag_set & hfHelpShort)
-      args = "h";
-   else if (flag_set & hfHelpLong)
-      args = "help";
-
-   if (!args.empty())
-      addArgument( args,
-                   new detail::TypedArgCallable(
-                      detail::ArgHandlerCallable(
-                         std::bind( &Handler::usage, this, txt1, txt2)),
-                         "Handler::usage"),
-                   "Prints the program usage.");
+   handleStartFlags( flag_set, txt1, txt2);
 
    if (flag_set & hfUsageHidden)
       mpUsageParams->setPrintHidden();
 
    if (flag_set & hfArgHidden)
       mpUsageParams->addArgumentPrintHidden( *this, "print-hidden");
-
-   if (flag_set & hfUsageDeprecated)
-      mpUsageParams->setPrintDeprecated();
-
-   if (flag_set & hfArgDeprecated)
-      mpUsageParams->addArgumentPrintDeprecated( *this, "print-deprecated");
-
-   if (flag_set & hfUsageShort)
-      mpUsageParams->addArgumentUsageShort( *this, "help-short");
-
-   if (flag_set & hfUsageLong)
-      mpUsageParams->addArgumentUsageLong( *this, "help-long");
-
-   if (flag_set & hfListArgVar)
-      addArgumentListArgVars( "list-arg-vars");
-
-   if (flag_set & hfListArgGroups)
-      addArgumentListArgGroups( "list-arg-groups");
-
-   if (flag_set & hfEndValues)
-      addArgumentEndValues( "endvalues");
 
 } // Handler::Handler
 
@@ -190,38 +157,7 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
-   string  args;
-
-
-   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
-      args = "h,help";
-   else if (flag_set & hfHelpShort)
-      args = "h";
-   else if (flag_set & hfHelpLong)
-      args = "help";
-
-   if (!args.empty())
-      addArgument( args,
-                   new detail::TypedArgCallable(
-                      detail::ArgHandlerCallable(
-                         std::bind( &Handler::usage, this, txt1, txt2)),
-                         "Handler::usage"),
-                   "Prints the program usage.");
-
-   if (flag_set & hfUsageShort)
-      mpUsageParams->addArgumentUsageShort( *this, "help-short");
-
-   if (flag_set & hfUsageLong)
-      mpUsageParams->addArgumentUsageLong( *this, "help-long");
-
-   if (flag_set & hfListArgVar)
-      addArgumentListArgVars( "list-arg-vars");
-
-   if (flag_set & hfListArgGroups)
-      addArgumentListArgGroups( "list-arg-groups");
-
-   if (flag_set & hfEndValues)
-      addArgumentEndValues( "endvalues");
+   handleStartFlags( flag_set, txt1, txt2);
 
 } // Handler::Handler
 
@@ -292,23 +228,10 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
                                                 IUsageText* txt2)
 {
 
-/*
-   return addArgument( key,
-                       detail::ArgHandlerCallable( [](=)
-                          {
-                             usage( txt1, txt2);
-                          }
-                       ),
-                       "Handler::usage",
-                       desc);
-*/
-
    return addArgument( arg_spec,
-                       new detail::TypedArgCallable(
-                          detail::ArgHandlerCallable(
-                             std::bind( &Handler::usage, this, txt1, txt2)),
-                          "Handler::usage"),
-                       desc);
+      new detail::TypedArgCallable( [=]() { usage( txt1, txt2); },
+         "Handler::usage"),
+      desc);
 } // Handler::addHelpArgument
 
 
@@ -334,9 +257,8 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallableValue(
-                      std::bind( &Handler::readArgumentFile,
-                                 this, std::placeholders::_1, true),
-                      "Handler::readArgumentFile");
+      [&](auto const& filename) { this->readArgumentFile( filename, true); },
+      "Handler::readArgumentFile");
 
 
    arg_hdl->setKey( key);
@@ -425,8 +347,7 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallable(
-      detail::ArgHandlerCallable(
-         std::bind( &Handler::listArgVars, this)), "Handler::listArgVars");
+      [&]() { this->listArgVars(); }, "Handler::listArgVars");
 
 
    arg_hdl->setKey( key);
@@ -457,8 +378,7 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallable(
-      detail::ArgHandlerCallable(
-         std::bind( &Handler::listArgGroups, this)), desc);
+      [&]() { this->listArgGroups(); }, desc);
 
    arg_hdl->setKey( key);
    arg_hdl->setCardinality();
@@ -482,9 +402,7 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 
    const detail::ArgumentKey  key( arg_spec);
    detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallable(
-         detail::ArgHandlerCallable(
-            std::bind( &Handler::endValueList, this)), desc);
+      = new detail::TypedArgCallable( [&]() { this->endValueList(); }, desc);
 
 
    arg_hdl->setKey( key);
@@ -971,9 +889,11 @@ bool Handler::argumentExists( const string& argString) const
 void Handler::readEvalFileArguments( const char* arg0)
 {
 
-   const char*  progNameOnly = basename( arg0);
-   const char*  homeDir = getenv( "HOME");
+   // have to copy the path since basename() may want to modify it
+   std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
 
+   const char*  progNameOnly = ::basename( copy.get());
+   const char*  homeDir = ::getenv( "HOME");
 
    if (homeDir == nullptr)
       return;
@@ -1017,7 +937,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
          continue;   // while
 
       appl::ArgString2Array  as2a( line, nullptr);
-      detail::ArgListParser    alp( as2a.mArgc, as2a.mpArgv);
+      detail::ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
 
       iterateArguments( alp);
    } // end while
@@ -1110,24 +1030,80 @@ std::ostream& operator <<( std::ostream& os, const Handler& ah)
 
 
 
+/// Called by the constructors to evaluate the set of flags given.
+///
+/// @param[in]  flag_set
+///    The set of flags to set.
+/// @param[in]  txt1
+///    Optional pointer to the object to provide additional text for the
+///    usage.
+/// @param[in]  txt2
+///    Optional pointer to the object to provide additional text for the
+///    usage.
+/// @since
+///    1.11.0, 16.02.2018
+void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
+   IUsageText* txt2)
+{
+
+   string  args;
+
+
+   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
+      args = "h,help";
+   else if (flag_set & hfHelpShort)
+      args = "h";
+   else if (flag_set & hfHelpLong)
+      args = "help";
+
+   if (!args.empty())
+      addArgument( args, new detail::TypedArgCallable(
+         [=]() { usage( txt1, txt2); }, "Handler::usage"),
+         "Prints the program usage.");
+
+   if (flag_set & hfUsageDeprecated)
+      mpUsageParams->setPrintDeprecated();
+
+   if (flag_set & hfArgDeprecated)
+      mpUsageParams->addArgumentPrintDeprecated( *this, "print-deprecated");
+
+   if (flag_set & hfUsageShort)
+      mpUsageParams->addArgumentUsageShort( *this, "help-short");
+
+   if (flag_set & hfUsageLong)
+      mpUsageParams->addArgumentUsageLong( *this, "help-long");
+
+   if (flag_set & hfListArgVar)
+      addArgumentListArgVars( "list-arg-vars");
+
+   if (flag_set & hfListArgGroups)
+      addArgumentListArgGroups( "list-arg-groups");
+
+   if (flag_set & hfEndValues)
+      addArgumentEndValues( "endvalues");
+
+} // Handler::handleStartFlags
+
+
+
 /// Function to print the usage of a program (when requested through the
 /// arguments). The additional parameters allow to print additional
 /// information.
-/// @param[in]  txt1  Pointer to the object that prints the first text.
-/// @param[in]  txt2  Pointer to the object that prints the second text.
+///
+/// @param[in]  txt1
+///    Pointer to the object that prints the first text.
+/// @param[in]  txt2
+///    Pointer to the object that prints the second text.
 /// @since  0.2, 10.04.2016
 void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 {
 
+   if ((txt2 != nullptr) && (txt1 == nullptr))
+      throw std::invalid_argument( "second usage text can only be used if first"
+         " usage text is used too");
+
    if (Groups::instance().evaluatedByArgGroups() && !mIsSubGroupHandler)
        Groups::instance().displayUsage( txt1, txt2);
-
-   // the second parameter/object can only be used if the first is used too
-   // in other words: usage( NULL, myObj) is invalid
-   assert( (txt2 == nullptr) || (txt1 != nullptr));
-   // if both parameters/objects are used, their position must different
-   assert( (txt1 == nullptr) || (txt2 == nullptr) ||
-           (txt1->usagePos() != txt2->usagePos()));
 
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;

@@ -27,6 +27,7 @@
 
 
 #include <cstring>
+#include <algorithm>
 #include <bitset>
 #include <iomanip>
 #include <iostream>
@@ -39,6 +40,7 @@
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
+#include "celma/prog_args/level_counter.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -533,6 +535,158 @@ private:
 }; // TypedArg< common::CheckAssign< bool>>
 
 
+
+// Template TypedArg< LevelCounter>
+// ================================
+
+
+/// Specialisation of TypedArg<> for a level counter.<br>
+/// It is possible/allowed to increment a level counter multiple times, or a
+/// value can be assigned to it.<br>
+/// Those two features are mutually exclusive: Once the level counter was
+/// incremented, it is not possible to assign a value anymore, and vice versa.
+///
+/// @since  1.10.0, 11.08.2018
+template<> class TypedArg< LevelCounter>: public TypedArgBase
+{
+public:
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  1.10.0, 11.08.2018
+   TypedArg( LevelCounter& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::optional, true),
+      mDestVar( dest)
+   {
+      mpCardinality.reset();
+   } // TypedArg< LevelCounter>::TypedArg
+
+   /// Returns if the destination variable was incremented at least once.
+   ///
+   /// @return
+   ///    \c true if the destination variable was incremented at least once.
+   /// @since  1.10.0, 11.08.2018
+   virtual bool hasValue() const override
+   {
+      return mHasValueSet || mIncremented;
+   } // TypedArg< LevelCounter>::hasValue
+
+   /// Overwrites the 'value mode' which specifies if a value is needed for this
+   /// argument or not.<br>
+   /// Here in the base class, the only value mode that can be set is
+   /// 'required'.
+   ///
+   /// @param[in]  vm  The new value mode.
+   /// @return  Pointer to this object.
+   /// @since  1.10.0, 13.08.2018
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override
+   {
+
+      if ((vm == ValueMode::command) || (vm == ValueMode::unknown))
+         throw std::invalid_argument( std::string( "may not set value mode '") +
+                                      valueMode2str( vm) + "' on variable '" +
+                                      mVarName + "'");
+
+      mValueMode = vm;
+      return this;
+   } // TypedArg< LevelCounter>::setValueMode
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.10.0, 11.08.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << mDestVar.value();
+      if (print_type)
+         os << " [LevelCounter]";
+   } // TypedArg< LevelCounter>::printValue
+
+   /// Special feature for destination variable type level counter:<br>
+   /// Allow mixing of increment and assignment on the command line.
+   ///
+   /// @since  1.11.0, 20.08.2018
+   virtual TypedArgBase* setAllowMixIncSet() noexcept( true) override
+   {
+      mAllowMixIncSet = true;
+      return this;
+   } // TypedArg< LevelCounter>::setAllowMixIncSet
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   ///
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.10.0, 11.08.2018
+   virtual void dump( std::ostream& os) const override
+   {
+      os << "value type 'LevelCounter', destination variable '" << mVarName
+         << "', current value " << mDestVar.value() << "." << std::endl
+         << "   " << static_cast< const TypedArgBase&>( *this);
+   } // TypedArg< LevelCounter>::dump
+
+   /// Either increment the level counter, or assigns a value to it.
+   ///
+   /// @param[in]  value  Either an empty string, in which case the current
+   ///                    value is incremented, otherwise value to store.
+   /// @since  1.10.0, 11.08.2018
+   virtual void assign( const std::string& value) noexcept( false) override
+   {
+      if (value.empty())
+      {
+         if (mHasValueSet && !mAllowMixIncSet)
+            throw std::runtime_error( "already have a value assigned to "
+               "variable '" + mVarName + "'");
+
+         const int          new_level = mDestVar.value() + 1;
+         const std::string  testval( boost::lexical_cast< std::string>( new_level));
+         check( testval);
+
+         // when we get here, the new value is within the limits
+         ++mDestVar;
+         mIncremented = true;
+      } else
+      {
+         if (!mAllowMixIncSet && (mHasValueSet || mIncremented))
+            throw std::runtime_error( "already have a value assigned to "
+               "variable '" + mVarName + "'");
+         check( value);
+         if (!mFormats.empty())
+         {
+            std::string  valCopy( value);
+            format( valCopy);
+            mDestVar = boost::lexical_cast< int>( valCopy);
+         } else
+         {
+            mDestVar = boost::lexical_cast< int>( value);
+         } // end if
+         mHasValueSet = true;
+      } // end if
+   } // TypedArg< LevelCounter>::assign
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   LevelCounter&  mDestVar;
+   /// Flag that is set when the level counter was incremented at least once.
+   bool           mIncremented = false;
+   /// Flag that is set when a vlaue was assigned to the level counter.
+   bool           mHasValueSet = false;
+   /// If this flag is set, mixing increment and setting the argument on the
+   /// command line is allowed.
+   bool           mAllowMixIncSet = false;
+
+
+}; // TypedArg< LevelCounter>
+
+
 // Template TypedArg< std::vector< T>>
 // ===================================
 
@@ -547,7 +701,7 @@ template< typename T> class TypedArg< std::vector< T>>: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef typename std::vector< T>  vector_type;
+   using vector_type = typename std::vector< T>;
 
    /// Constructor.
    ///
@@ -561,7 +715,8 @@ public:
 
    /// Returns if the destination has (at least) one value set.
    ///
-   /// @return  \c true if the destination variable contains (at least) on.
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
@@ -603,6 +758,23 @@ public:
    /// @since  1.2.0, 28.12.2017
    virtual TypedArgBase* setClearBeforeAssign() override;
 
+   /// Special feature for destination variable type vector:<br>
+   /// Sort the contents of the vector.
+   ///
+   /// @since  1.9.0, 04.08.2018
+   virtual TypedArgBase* setSortData() override;
+
+   /// Special feature for destination variable type vector:<br>
+   /// Make sure only unique values are stored in the vector.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      override;
+
 protected:
    /// Used for printing an argument and its destination variable.
    ///
@@ -624,6 +796,13 @@ private:
    /// If set, the contents of the vector are cleared before the first value(s)
    /// from the command line are assigned.
    bool          mClearB4Assign = false;
+   /// If set, the contents of the vector are sorted.
+   bool          mSortData = false;
+   /// If set, makes sure that the data in the vector contains no duplicates.
+   bool          mUniqueData = false;
+   /// If set, trying to add a duplicate value to the vector is treated as an
+   /// error, otherwise (the default) it is silently discarded.
+   bool          mTreatDuplicatesAsErrors = false;
 
 }; // TypedArg< std::vector< T>>
 
@@ -683,6 +862,24 @@ template< typename T>
 
 
 template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::setSortData()
+{
+   mSortData = true;
+   return this;
+} // TypedArg< std::vector< T>>::setSortData
+
+
+template< typename T>
+   TypedArgBase*
+      TypedArg< std::vector< T>>::setUniqueData( bool duplicates_are_errors)
+{
+   mUniqueData = true;
+   mTreatDuplicatesAsErrors = duplicates_are_errors;
+   return this;
+} // TypedArg< std::vector< T>>::setUniqueData
+
+
+template< typename T>
    void TypedArg< std::vector< T>>::dump( std::ostream& os) const
 {
    os << "value type '" << type< vector_type>::name()
@@ -709,20 +906,34 @@ template< typename T>
       if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
          mpCardinality->gotValue();
 
-      auto const&  listVal( *it);
+      auto  listVal( *it);
 
       check( listVal);
 
       if (!mFormats.empty())
       {
-         auto  valCopy( listVal);
-         format( valCopy);
-         mDestVar.push_back( boost::lexical_cast< T>( valCopy));
-      } else
-      {
-         mDestVar.push_back( boost::lexical_cast< T>( listVal));
+         format( listVal);
       } // end if
+
+      auto const  dest_value = boost::lexical_cast< T>( listVal);
+      if (mUniqueData)
+      {
+         if (std::find( mDestVar.begin(), mDestVar.end(), dest_value)
+            != mDestVar.end())
+         {
+            if (mTreatDuplicatesAsErrors)
+               throw std::runtime_error( "refuse to store duplicate values in"
+                  " variable '" + mVarName + "'");
+            continue; // for
+         } // end if
+      } // end if
+
+      mDestVar.push_back( dest_value);
    } // end for
+
+   if (mSortData)
+      std::sort( mDestVar.begin(), mDestVar.end());
+
 } // TypedArg< std::vector< T>>::assign
 
 
@@ -1004,7 +1215,7 @@ template< size_t N> class TypedArg< std::bitset< N>>: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef typename std::bitset< N>  bitset_type;
+   using bitset_type = typename std::bitset< N>;
 
    /// Constructor.
    ///
