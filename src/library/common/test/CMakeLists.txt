@@ -7,7 +7,7 @@
 ##    ####   ######  ######  #    #  #    #
 ##
 
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.5 )
 
 add_definitions( -DBOOST_TEST_DYN_LINK)
 
@@ -17,13 +17,20 @@ celma_add_boost_testprogram( test_bitset_iterator )
 celma_add_boost_testprogram( test_clear_container )
 # celma_add_boost_testprogram( test_constexpr_string_concat )
 # celma_add_boost_testprogram( test_constexpr_string_from )
+celma_add_boost_testprogram( test_contains )
 celma_add_boost_testprogram( test_enum_flags )
 celma_add_boost_testprogram( test_find_sequence )
 celma_add_boost_testprogram( test_first_pass )
+celma_add_boost_testprogram( test_lazy_ptr )
 celma_add_boost_testprogram( test_manipulator )
 celma_add_boost_testprogram( test_merge_sorted_cont )
 celma_add_boost_testprogram( test_multiline_string_compare )
+celma_add_boost_testprogram( test_object_counted_enumerated )
+celma_add_boost_testprogram( test_object_counter )
+celma_add_boost_testprogram( test_object_enumerator )
+celma_add_boost_testprogram( test_rel_ops_from_less )
 celma_add_boost_testprogram( test_reset_at_exit )
+celma_add_boost_testprogram( test_string_util )
 celma_add_boost_testprogram( test_text_file )
 celma_add_boost_testprogram( test_tokenizer )
 celma_add_boost_testprogram( test_tokenizer_base )

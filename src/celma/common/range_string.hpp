@@ -34,7 +34,8 @@ namespace celma { namespace common {
 /// * Ranges with increment: \<start\>-\<end\>[\<increment\>]
 /// * Ranges with values to exclude: \<start\>-\<end\>{\<exclude-range\>}
 ///   The exclude-range can itself be a complex range (with start, end and skip)
-/// * Increment and exclude can be combined: \<start\>-\<end\>[\<increment\>]{\<exclude-range\>}
+/// * Increment and exclude can be combined:
+///   \<start\>-\<end\>[\<increment\>]{\<exclude-range\>}
 /// * Comma-separated list of combinations thereof.
 /// * Note: exclude ranges must immediately follow the range they are related
 ///   to. E.g. the following range string would be invalid:
@@ -52,7 +53,7 @@ public:
    RangeString( const std::string& str);
 
    /// Type of the iterator to use for iterating over the values.
-   typedef detail::RangeStringIterator< const std::string, T>  const_iterator;
+   using const_iterator = detail::RangeStringIterator< const std::string, T>;
 
    /// Returns the iterator with the first value from the range.
    /// @return  The iterator with the first value.

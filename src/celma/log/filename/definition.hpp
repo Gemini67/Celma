@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -79,7 +79,7 @@ protected:
    };
 
    /// Type of the container to store the fields of the format definition.
-   typedef std::vector< Part>  vector_t;
+   using vector_t = std::vector< Part>;
 
    /// The parts of the filename definition.
    vector_t  mParts;
@@ -117,5 +117,5 @@ inline bool Definition::hasDateField() const
 #endif   // CELMA_LOG_FILENAME_DEFINITION_HPP
 
 
-// ==========================  END OF definition.hpp  ==========================
+// =====  END OF definition.hpp  =====
 

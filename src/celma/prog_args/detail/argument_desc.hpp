@@ -35,8 +35,9 @@ class TypedArgBase;
 
 /// Provides storage for all arguments (specifyer plus description).<br>
 /// This is used to print the usage.
-/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
-///                             arguments)
+///
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
 class ArgumentDesc
 {
@@ -140,7 +141,7 @@ private:
    }; // ArgumentDesc::ArgDesc
 
    /// Used to store the arguments.
-   typedef std::vector< ArgDesc>  ArgDescCont;
+   using ArgDescCont = std::vector< ArgDesc>;
 
    /// Prints the contents of the storage to the specified stream.
    /// @param[out]  os  the stream to write to.
@@ -189,5 +190,5 @@ private:
 #endif   // CELMA_PROG_ARGS_DETAIL_ARGUMENT_DESC_HPP
 
 
-// ========================  END OF argument_desc.hpp  ========================
+// =====  END OF argument_desc.hpp  =====
 
