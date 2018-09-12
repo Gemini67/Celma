@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,8 +41,8 @@ public:
    const std::string getPropertyValue( const std::string& property_name) const;
 
 private:
-   typedef std::tuple< std::string, std::string>  property_t;
-   typedef std::vector< property_t>               property_cont_t;
+   using property_t = std::tuple< std::string, std::string>;
+   using property_cont_t = std::vector< property_t>;
 
    property_cont_t  mProperties;
 
@@ -57,5 +57,5 @@ private:
 #endif   // CELMA_LOG_DETAIL_LOG_MSG_PROPERTY_HPP
 
 
-// =======================  END OF log_msg_property.hpp  =======================
+// =====  END OF log_msg_property.hpp  =====
 

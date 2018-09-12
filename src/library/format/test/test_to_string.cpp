@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
 BOOST_AUTO_TEST_CASE( test_list)
 {
 
-   typedef std::pair< int, std::string>  data_t;
+   using data_t = std::pair< int, std::string>;
 
 
    {
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE( test_map)
 BOOST_AUTO_TEST_CASE( test_multimap)
 {
 
-   typedef  std::multimap< int, std::string>  cont_t;
+   using cont_t = std::multimap< int, std::string>;
 
    {
       cont_t  data;

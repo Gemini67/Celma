@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,12 +11,15 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
 #include <string>
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/prog_args.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -46,7 +49,7 @@ int main( int /* argc */, char* argv[])
 
       try
       {
-         ah.evalArguments( as2a.mArgc, as2a.mpArgv);
+         ah.evalArguments( as2a.mArgC, as2a.mpArgV);
          cerr << "*** ERROR: Expected exception for 'unknown argument!" << endl;
          return EXIT_FAILURE;
       } catch (const std::runtime_error& e)
@@ -71,12 +74,12 @@ int main( int /* argc */, char* argv[])
    } // end scope
 
    {
-      Handler          ah( Handler::hfListArgVar);
-      const string     args( "--list-arg-vars --integer 42");
-      ArgString2Array  as2a( args, argv[ 0]);
-      bool             my_flag = false;
-      int              my_int;
-      string           my_string;
+      Handler                ah( Handler::hfListArgVar);
+      const string           args( "--list-arg-vars --integer 42");
+      const ArgString2Array  as2a( args, argv[ 0]);
+      bool                   my_flag = false;
+      int                    my_int;
+      string                 my_string;
 
       try
       {
@@ -85,7 +88,7 @@ int main( int /* argc */, char* argv[])
                        ->setIsMandatory();
          ah.addArgument( "s,string", DEST_VAR( my_string),  "My string.");
 
-         ah.evalArguments( as2a.mArgc, as2a.mpArgv);
+         ah.evalArguments( as2a.mArgC, as2a.mpArgV);
       } catch (const exception& e)
       {
          cerr << "*** ERROR: Caught exception \"" << e.what() << "\"!" << endl;
@@ -103,15 +106,15 @@ int main( int /* argc */, char* argv[])
       Handler  ah( 0);
       ah.addArgumentListArgVars( "V");
 
-      const string          args( "-V --integer 42 --sl schubidu -V");
-      ArgString2Array       as2a( args, argv[ 0]);
-      bool                  my_flag = false;
-      int                   my_int;
-      long                  my_long;
-      uint64_t              my_ulong;
-      string                my_string;
-      CheckAssign< string>  my_ca_string;
-      std::vector< string>  my_string_list;
+      const string           args( "-V --integer 42 --sl schubidu -V");
+      const ArgString2Array  as2a( args, argv[ 0]);
+      bool                   my_flag = false;
+      int                    my_int;
+      long                   my_long;
+      uint64_t               my_ulong;
+      string                 my_string;
+      CheckAssign< string>   my_ca_string;
+      std::vector< string>   my_string_list;
 
       try
       {
@@ -131,7 +134,7 @@ int main( int /* argc */, char* argv[])
          ah.addArgument( "sl",       DEST_VAR( my_string_list),
                          "My string list");
 
-         ah.evalArguments( as2a.mArgc, as2a.mpArgv);
+         ah.evalArguments( as2a.mArgC, as2a.mpArgV);
       } catch (const exception& e)
       {
          cerr << "*** ERROR: Caught exception \"" << e.what() << "\"!" << endl;
@@ -153,5 +156,5 @@ static void callable_function()
 }
 
 
-// ================  END OF test_argh_list_arg_vars_output.cpp  ================
+// =====  END OF test_argh_list_arg_vars_output.cpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,29 +14,20 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test header file include
+#include "celma/common/tokenizer_base.hpp"
 
 
 // Boost includes
 #define BOOST_TEST_MODULE TestTokenizerBase
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
-// project includes
-#include "celma/common/tokenizer_base.hpp"
+using celma::common::TokenizerBase;
 
 
-using namespace std;
-using namespace celma;
-
-
-typedef boost::escaped_list_separator< char>  Separator;
-typedef common::TokenizerBase< Separator>     Tokenizer;
+using Separator = boost::escaped_list_separator< char>;
+using Tokenizer = TokenizerBase< Separator>;
 
 
 
@@ -45,7 +36,7 @@ typedef common::TokenizerBase< Separator>     Tokenizer;
 BOOST_AUTO_TEST_CASE( test_empty)
 {
 
-   const string         str;
+   const std::string    str;
    Separator            sep( '\\', ' ', '"');
    Tokenizer            t( str, sep);
    Tokenizer::iterator  it = t.begin();
@@ -53,7 +44,7 @@ BOOST_AUTO_TEST_CASE( test_empty)
 
    BOOST_REQUIRE( it == t.end());
 
-} // end test_empty
+} // test_empty
 
 
 
@@ -62,7 +53,7 @@ BOOST_AUTO_TEST_CASE( test_empty)
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
-   const string         str( "string_that_does_not_contain_the_token");
+   const std::string    str( "string_that_does_not_contain_the_token");
    Separator            sep( '\\', ' ', '"');
    Tokenizer            t( str, sep);
    Tokenizer::iterator  it = t.begin();
@@ -74,7 +65,7 @@ BOOST_AUTO_TEST_CASE( test_one)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_one
+} // test_one
 
 
 
@@ -83,7 +74,7 @@ BOOST_AUTO_TEST_CASE( test_one)
 BOOST_AUTO_TEST_CASE( test_multi)
 {
 
-   const string         str( "string that does contain one token");
+   const std::string    str( "string that does contain one token");
    Separator            sep( '\\', ' ', '"');
    Tokenizer            t( str, sep);
    Tokenizer::iterator  it = t.begin();
@@ -115,7 +106,7 @@ BOOST_AUTO_TEST_CASE( test_multi)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_multi
+} // test_multi
 
 
 
@@ -125,7 +116,7 @@ BOOST_AUTO_TEST_CASE( test_multi)
 BOOST_AUTO_TEST_CASE( test_double)
 {
 
-   const string         str( "two tokens  directly following");
+   const std::string    str( "two tokens  directly following");
    Separator            sep( '\\', ' ', '"');
    Tokenizer            t( str, sep);
    Tokenizer::iterator  it = t.begin();
@@ -153,7 +144,7 @@ BOOST_AUTO_TEST_CASE( test_double)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_double
+} // test_double
 
 
 
@@ -162,7 +153,7 @@ BOOST_AUTO_TEST_CASE( test_double)
 BOOST_AUTO_TEST_CASE( test_quoted)
 {
 
-   const string         str( "my multi-token string with \"a string within a string\"");
+   const std::string    str( "my multi-token string with \"a string within a string\"");
    Separator            sep( '\\', ' ', '"');
    Tokenizer            t( str, sep);
    Tokenizer::iterator  it = t.begin();
@@ -190,7 +181,7 @@ BOOST_AUTO_TEST_CASE( test_quoted)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_quoted
+} // test_quoted
 
 
 
@@ -199,7 +190,7 @@ BOOST_AUTO_TEST_CASE( test_quoted)
 BOOST_AUTO_TEST_CASE( test_multiply_quoted)
 {
 
-   const string         str( "my 'multi token' \\\"string\\\" with \"a string within a string\", followed by more");
+   const std::string    str( "my 'multi token' \\\"string\\\" with \"a string within a string\", followed by more");
    Separator            sep( "\\", " ,", "\"'");
    Tokenizer            t( str, sep);
    Tokenizer::iterator  it = t.begin();
@@ -244,9 +235,9 @@ BOOST_AUTO_TEST_CASE( test_multiply_quoted)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_multiply_quoted
+} // test_multiply_quoted
 
 
 
-// =========================  END OF test_tokenizer_base.cpp  =========================
+// =====  END OF test_tokenizer_base.cpp  =====
 

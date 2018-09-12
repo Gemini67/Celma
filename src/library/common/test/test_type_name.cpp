@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,7 +26,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE TypeNameTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 #define  BOOST_REQUIRE_EQUAL_STR( a, b) \
@@ -72,7 +71,7 @@ BOOST_AUTO_TEST_CASE( pod_types)
    BOOST_REQUIRE_EQUAL_STR( celma::type< unsigned short>::name(), "unsigned short");
 
    // just to make sure: works also with typedefs
-   typedef bool  my_bool;
+   using my_bool = bool;
    static_assert( celma::type< my_bool>::name()[0] == 'b');
    BOOST_REQUIRE_EQUAL_STR( celma::type< my_bool>::name(), "bool");
 
@@ -173,8 +172,8 @@ BOOST_AUTO_TEST_CASE( stl_types)
 #endif
 
 
-   typedef std::array< int, 10>          int_array;
-   typedef std::array< std::string, 15>  string_array;
+   using int_array = std::array< int, 10>;
+   using string_array = std::array< std::string, 15>;
 
    // static_assert( celma::type< int_array>::name()[5] == 'a');
    // static_assert( celma::type< int_array>::name()[11] == 'i');
@@ -292,35 +291,35 @@ BOOST_AUTO_TEST_CASE( stl_types)
 BOOST_AUTO_TEST_CASE( stl_types_key_value)
 {
 
-   typedef std::map< int, std::string>  int_string_map;
+   using int_string_map = std::map< int, std::string>;
    // static_assert( celma::type< int_string_map>::name()[5] == 'm');
    // static_assert( celma::type< int_string_map>::name()[9] == 'i');
    // static_assert( celma::type< int_string_map>::name()[18] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_map>::name(),
                             "std::map<int,std::string>");
 
-   typedef std::multimap< std::string, long>  string_long_multimap;
+   using string_long_multimap = std::multimap< std::string, long>;
    // static_assert( celma::type< string_long_multimap>::name()[5] == 'm');
    // static_assert( celma::type< string_long_multimap>::name()[19] == 's');
    // static_assert( celma::type< string_long_multimap>::name()[26] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< string_long_multimap>::name(),
                             "std::multimap<std::string,long>");
 
-   typedef std::pair< std::string, std::string>  string_string_pair;
+   using string_string_pair = std::pair< std::string, std::string>;
    // static_assert( celma::type< string_string_pair>::name()[5] == 'p');
    // static_assert( celma::type< string_string_pair>::name()[15] == 's');
    // static_assert( celma::type< string_string_pair>::name()[27] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< string_string_pair>::name(),
                             "std::pair<std::string,std::string>");
 
-   typedef std::tuple< int, std::string>  int_string_tuple;
+   using int_string_tuple = std::tuple< int, std::string>;
    // static_assert( celma::type< int_string_tuple>::name()[5] == 't');
    // static_assert( celma::type< int_string_tuple>::name()[11] == 'i');
    // static_assert( celma::type< int_string_tuple>::name()[20] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_tuple>::name(),
                             "std::tuple<int,std::string>");
 
-   typedef std::unordered_multimap< int, std::string>  int_string_unordered_multimap;
+   using int_string_unordered_multimap = std::unordered_multimap< int, std::string>;
    // static_assert( celma::type< int_string_unordered_multimap>::name()[5] == 'u');
    // static_assert( celma::type< int_string_unordered_multimap>::name()[15] == 'm');
    // static_assert( celma::type< int_string_unordered_multimap>::name()[24] == 'i');
@@ -328,7 +327,7 @@ BOOST_AUTO_TEST_CASE( stl_types_key_value)
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_unordered_multimap>::name(),
                           "std::unordered_multimap<int,std::string>");
 
-   typedef std::unordered_map< std::string, int>  string_int_unordered_map;
+   using string_int_unordered_map = std::unordered_map< std::string, int>;
    // static_assert( celma::type< string_int_unordered_map>::name()[5] == 'u');
    // static_assert( celma::type< string_int_unordered_map>::name()[15] == 'm');
    // static_assert( celma::type< string_int_unordered_map>::name()[24] == 's');
@@ -695,5 +694,5 @@ BOOST_AUTO_TEST_CASE( test_type_from_variable)
 
 
 
-// ========================  END OF test_type_name.cpp  ========================
+// =====  END OF test_type_name.cpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -55,7 +55,7 @@ int main( int argc, char* argv[])
    LOG( log_trace) << "This message too should not appear anywhere.";
 
    exit( EXIT_SUCCESS);
-} // end main
+} // main
 
 
 
@@ -75,8 +75,8 @@ static void do_arguments_first( int argc, char* argv[])
 
       if (argc == 1)
       {
-         celma::appl::ArgString2Array  as2a( "--log-stdout debug", argv[ 0]);
-         celma::prog_args::Groups::instance().evalArguments( as2a.mArgc, as2a.mpArgv);
+         const celma::appl::ArgString2Array  as2a( "--log-stdout debug", argv[ 0]);
+         celma::prog_args::Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV);
       } else
       {
          celma::prog_args::Groups::instance().evalArguments( argc, argv);
@@ -89,9 +89,9 @@ static void do_arguments_first( int argc, char* argv[])
       // silently discard expected exception
    } // end try
 
-} // end do_arguments_first
+} // do_arguments_first
 
 
 
-// ==============  END OF test_log_standard_argument_silent.cpp  ==============
+// =====  END OF test_log_standard_argument_silent.cpp  =====
 
