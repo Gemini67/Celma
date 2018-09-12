@@ -48,7 +48,8 @@
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
      1.11.0 | 2018-09-12        | Added new log file policy counted.<br>
                                   Improved coverage of unit tests.<br>
-                                  Added new module "compare from less".
+                                  Added new module "compare from less".<br>
+                                  Added new module lazy_ptr.
      1.10.0 | 2018-08-14        | Added destination type "level counter" to argument handler.
      1.9.0  | 2018-08-04        | Added more features on destination type 'vector' in module argument handler.<br>
                                   Added check "parent directory exists" in argument handler.<br>

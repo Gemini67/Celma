@@ -30,7 +30,7 @@ namespace celma { namespace test {
 /// A special handling is used for the destructor, since a normal member
 /// variable would of course not work.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 class TestHandling
 {
 public:
@@ -39,26 +39,26 @@ public:
    /// @param[in]  dtor_called_flag
    ///    Pointer to the flag to set when the destructor was called,
    ///    NULL (the default) if no flag needs to be set.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestHandling( bool* dtor_called_flag = nullptr);
 
    /// Copy constructor. Sets the flag #mCopyCtor.<br>
    /// An eventually set #mpDtorCalled pointer is not copied.
    ///
    /// @param[in]  other  Ignored.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestHandling( const TestHandling& other);
 
    /// Move constructor. Sets the flag #mMoveCtor.<br>
    /// An eventually set #mpDtorCalled pointer is not copied/moved.
    ///
    /// @param[in]  other  Ignored.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestHandling( TestHandling&& other);
 
    /// Destructor. Sets the flag that was passed to the constructor, if any.
    ///
-   /// @since  x.y.z, 11.09.2018
+   /// @since  1.11.0, 11.09.2018
    virtual ~TestHandling();
 
    /// For objects that were copy- or move-constructed: Allows to set the
@@ -67,33 +67,33 @@ public:
    /// @param[in]  dtor_called_flag
    ///    Pointer to the flag to set when the destructor is called.
    /// @since
-   ///    x.y.z, 11.09.2018
+   ///    1.11.0, 11.09.2018
    void setDtorFlag( bool& dtor_called_flag);
 
    /// Returns if the default constructor was called/used to create the current
    /// object.
    ///
    /// @return  \c true if the default constructor was called.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    bool defaultCtorCalled() const;
 
    /// Returns if the copy constructor was called/used to create the current
    /// object.
    ///
    /// @return  \c true if the copy constructor was called.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    bool copyCtorCalled() const;
 
    /// Returns if the move constructor was called/used to create the current
    /// object.
    ///
    /// @return  \c true if the move constructor was called.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    bool moveCtorCalled() const;
 
    /// Resets all the internal flags.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    void reset();
 
 private:

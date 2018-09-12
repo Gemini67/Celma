@@ -37,19 +37,19 @@ namespace {
 /// Test class used to test calling the default constructor and a constructor
 /// with an integer parameter.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 class TestClass
 {
 public:
    /// Default constructor.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestClass() = default;
 
    /// Constructor with a single integer parameter.
    ///
    /// @param[in]  value  The value to store internally.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    explicit TestClass( int value):
       mValue( value)
    {
@@ -59,20 +59,20 @@ public:
    /// The value in string is converted to an integer and stored internally.
    ///
    /// @param[in]  value  The string with the value to store internally.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    explicit TestClass( const std::string& value):
       mValue( ::atoi( value.c_str()))
    {
    } // TestClass::TestClass
 
    /// Default copy constructor.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestClass( const TestClass&) = default;
 
    /// Returns the internally stored value.
    ///
    /// @return  The value currently stored internally.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    int value() const
    {
       return mValue;
@@ -88,13 +88,13 @@ private:
 /// Second test class, used to test calling a constructor with more than one
 /// parameter.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 class TestClass2
 {
 public:
    /// Default constructor.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestClass2() = default;
 
    /// Constructor with two parameters.
@@ -104,7 +104,7 @@ public:
    /// @param[in]  name
    ///    The string parameter.
    /// @since
-   ///    x.y.z, 07.09.2018
+   ///    1.11.0, 07.09.2018
    explicit TestClass2( int value, const std::string& name):
       mValue( value),
       mName( name)
@@ -113,13 +113,13 @@ public:
 
    /// Default copy constructor.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestClass2( const TestClass2&) = default;
 
    /// Returns the internally stored integer value.
    ///
    /// @return  The internally stored integer value.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    int value() const
    {
       return mValue;
@@ -128,7 +128,7 @@ public:
    /// Returns the internally stored string value.
    ///
    /// @return  The internally stored string value.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    const std::string& name() const
    {
       return mName;
@@ -146,13 +146,13 @@ private:
 /// Another test class, used to test calling a constructor with more than one
 /// parameter (in reverse order, compared to TestClass2).
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 class TestClass2r
 {
 public:
    /// Default constructor.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestClass2r() = default;
 
    /// Constructor with two parameters.
@@ -162,7 +162,7 @@ public:
    /// @param[in]  value
    ///    The integer parameter.
    /// @since
-   ///    x.y.z, 07.09.2018
+   ///    1.11.0, 07.09.2018
    explicit TestClass2r( const std::string& name, int value):
       mName( name),
       mValue( value)
@@ -171,13 +171,13 @@ public:
 
    /// Default copy constructor.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    TestClass2r( const TestClass2r&) = default;
 
    /// Returns the internally stored integer value.
    ///
    /// @return  The internally stored integer value.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    int value() const
    {
       return mValue;
@@ -186,7 +186,7 @@ public:
    /// Returns the internally stored string value.
    ///
    /// @return  The internally stored string value.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    const std::string& name() const
    {
       return mName;
@@ -204,7 +204,7 @@ private:
 /// Test class that verifies that its parameters were copied (or moved), not
 /// passed by reference.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 class TestClassCopy
 {
 public:
@@ -218,7 +218,7 @@ public:
    /// @throw
    ///    runtime_error when at least one of the two parameters was not copied.
    /// @since
-   ///    x.y.z, 07.09.2018
+   ///    1.11.0, 07.09.2018
    TestClassCopy( const TestHandling& th1, const TestHandling& th2)
    {
       if (!th1.copyCtorCalled() && !th1.moveCtorCalled())
@@ -255,7 +255,7 @@ lazy_ptr< TestClassCopy>&& create_lp()
 
 /// Tests lazy construction of an object with none or one parameter.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( none_or_one)
 {
 
@@ -342,7 +342,7 @@ BOOST_AUTO_TEST_CASE( none_or_one)
 /// Test lazy object creation with a class that takes two parameters on the
 /// constructor.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( two_parameters)
 {
 
@@ -380,7 +380,7 @@ BOOST_AUTO_TEST_CASE( two_parameters)
 /// Test with a class that takes also two parameters for the constructor, but in
 /// reverse order than in the previous example.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( two_parameters_reversed)
 {
 
@@ -404,7 +404,7 @@ BOOST_AUTO_TEST_CASE( two_parameters_reversed)
 
 /// Verify that the parameters are really copied in(to) the lambda.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( parameter_copy)
 {
 
@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_CASE( parameter_copy)
 
 /// Verify that the contents of the lazy_ptr<> object are moved correctly.
 ///
-/// @since  x.y.z, 12.09.2018
+/// @since  1.11.0, 12.09.2018
 BOOST_AUTO_TEST_CASE( move_members)
 {
 
@@ -451,7 +451,7 @@ BOOST_AUTO_TEST_CASE( move_members)
 
 /// Verify that the release operation works correctly.
 ///
-/// @since  x.y.z, 11.09.2018
+/// @since  1.11.0, 11.09.2018
 BOOST_AUTO_TEST_CASE( correctly_released)
 {
 
@@ -479,7 +479,7 @@ BOOST_AUTO_TEST_CASE( correctly_released)
 
 /// Verify that the reset operation works correctly.
 ///
-/// @since  x.y.z, 12.09.2018
+/// @since  1.11.0, 12.09.2018
 BOOST_AUTO_TEST_CASE( correctly_reset)
 {
 

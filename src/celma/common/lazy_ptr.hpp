@@ -43,14 +43,14 @@ namespace celma { namespace common {
 /// the names of the smart pointers in the standard library.
 ///
 /// @tparam  T  the type of the object to create lazily.
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 template< typename T> class lazy_ptr
 {
 public:
    /// Default constructor. Will create the object by calling its default
    /// constructor.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    lazy_ptr():
       mpCreator( []() -> T*
          {
@@ -71,7 +71,7 @@ public:
    ///
    /// @param[in]  other
    ///    The other object to move the data from.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
 //   lazy_ptr( lazy_ptr&& other) = default;
    lazy_ptr( lazy_ptr&& other) = delete;
 
@@ -82,7 +82,7 @@ public:
    ///    The value to pass to the constructor when it is created (later,
    ///    eventually).<br>
    ///    The value is copied internally.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    template< typename F> lazy_ptr( const F& first):
       mpCreator( [=]() -> T*
          {
@@ -107,7 +107,7 @@ public:
    ///    The first value to pass to the object's constructor.
    /// @param[in]  args
    ///    The remaining values to pass to the object's constructor.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    template< typename F, class... Args> lazy_ptr( const F& first, Args&&... args):
       mpCreator( [=]() mutable -> T*
          {
@@ -126,7 +126,7 @@ public:
    /// on one of the constructors.
    ///
    /// @return  Pointer to the object, which was eventually just created now.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    T* get()
    {
       if (mpObject == nullptr)
@@ -139,7 +139,7 @@ public:
    /// on one of the constructors.
    ///
    /// @return  Pointer to the object, which was eventually just created now.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    T* operator ->()
    {
       return mpObject.get();
@@ -148,7 +148,7 @@ public:
    /// Returns if this instance already contains an object.
    ///
    /// @return  \c true if a pointer to an existing object is stored internally.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    operator bool() const
    {
       return static_cast< bool>( mpObject);
@@ -157,7 +157,7 @@ public:
    /// Allows to reset the internally stored object pointer, i.e. the object is
    /// deleted if there is one.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.11.0, 07.09.2018
    void reset()
    {
       mpObject.reset();
@@ -171,7 +171,7 @@ public:
    /// @return
    ///    Pointer to the object that was stored internally. May be NULL.
    /// @since
-   ///    x.y.z, 11.09.2018
+   ///    1.11.0, 11.09.2018
    T* release()
    {
       return mpObject.release();
