@@ -30,12 +30,14 @@ namespace celma { namespace common {
 /// Helper class that provides some file-related operations. By default these
 /// are directly passed on to their OS/C-library counterpart, but a different
 /// file functions implementation can be specified that does something else.
+///
 /// @since  1.4.0, 20.02.2018
 class FileOperations
 {
 public:
    /// Don't need to create object(s) of this class.
    FileOperations() = delete;
+   FileOperations( const FileOperations&) = delete;
 
    /// Sets a new object which implements the file functions to use.
    /// @param[in]  obj  Pointer to the object that implements the file

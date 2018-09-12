@@ -18,7 +18,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE AnyTypeBaseTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 using celma::common::AnyBase;
@@ -284,5 +283,5 @@ BOOST_AUTO_TEST_CASE( test_copy_move)
 
 
 
-// ======================  END OF test_any_type_base.cpp  ======================
+// =====  END OF test_any_type_base.cpp  =====
 

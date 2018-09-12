@@ -64,10 +64,10 @@ public:
 inline void CheckParentDirectoryExists::checkValue( const std::string& val) const
 {
    // cannot use FileInfo here, since the file may not exist
-   std::unique_ptr< char>  copy( new char[ val.length()]);
+   std::unique_ptr< char[]>  copy( new char[ val.length()]);
    ::strcpy( copy.get(), val.c_str());
 
-   const std::string  parentDir( ::dirname( copy.get()));
+   auto const  parentDir( ::dirname( copy.get()));
 
    if (!common::fileInfo( parentDir).isDirectory())
       throw std::runtime_error( std::string( "'") + parentDir

@@ -88,7 +88,7 @@ public:
 
 private:
    /// The type of the range (value) generator used internally.
-   typedef RangeGenerator< int>  Ranger;
+   using Ranger = RangeGenerator< int>;
 
    /// Nice little function that creates the range generator object for the
    /// current range expression.

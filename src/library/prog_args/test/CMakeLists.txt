@@ -7,7 +7,7 @@
 ##    ####   ######  ######  #    #  #    #
 ##
 
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.5 )
 
 add_definitions( -DBOOST_TEST_DYN_LINK)
 
@@ -19,6 +19,7 @@ celma_add_celma_boost_testprogram( test_argh_constraints )
 celma_add_celma_boost_testprogram( test_argh_custom_convert )
 celma_add_celma_boost_testprogram( test_argh_custom_type )
 celma_add_celma_boost_testprogram( test_argh_dest_bitset )
+celma_add_celma_boost_testprogram( test_argh_dest_level_counter )
 celma_add_celma_boost_testprogram( test_argh_dest_pair )
 celma_add_celma_boost_testprogram( test_argh_dest_tuple )
 celma_add_celma_boost_testprogram( test_argh_dest_vector )

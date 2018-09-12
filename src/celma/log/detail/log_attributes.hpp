@@ -43,8 +43,8 @@ public:
    void removeAttribute( const std::string& attr_name);
 
 private:
-   typedef std::pair< std::string, std::string>  AttrPair;
-   typedef std::vector< AttrPair>  AttrCont;
+   using AttrPair = std::pair< std::string, std::string>;
+   using AttrCont = std::vector< AttrPair>;
 
    AttrCont  mAttributes;
 };
@@ -69,5 +69,5 @@ template< typename T>
 #endif   // CELMA_LOG_DETAIL_LOG_ATTRIBUTES_HPP
 
 
-// ========================  END OF log_attributes.hpp  ========================
+// =====  END OF log_attributes.hpp  =====
 

@@ -32,6 +32,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Extracted from ArgumentHandler: Store an argument which may use the short
 /// argument format (character), the long format (string/name) or name.
+///
 /// @since  0.15.0, 05.07.2017  (use container Storage)
 /// @since  0.2, 10.04.2016
 class ArgumentContainer
@@ -113,7 +114,7 @@ public:
 
 private:
    /// Store shared pointers to the handler objects.
-   typedef std::shared_ptr< TypedArgBase>  shared_handler_t;
+   using shared_handler_t = std::shared_ptr< TypedArgBase>;
 
    /// All arguments set.
    Storage< shared_handler_t>  mArguments;

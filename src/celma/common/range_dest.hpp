@@ -86,7 +86,7 @@ template< size_t S> class RangeDest< size_t, std::bitset< S>>
 {
 public:
    /// The container type.
-   typedef std::bitset< S>  dest_type;
+   using dest_type = std::bitset< S>;
 
    /// Constructor.
    /// @param[in]  dest  The bitset to set the flags on.
@@ -136,7 +136,7 @@ template< typename T> class RangeDest< T, std::set< T>>
 {
 public:
    /// The container type.
-   typedef std::set< T>  dest_type;
+   using dest_type = std::set< T>;
 
    /// Constructor.
    /// @param[in]  dest  The set to store the values in.

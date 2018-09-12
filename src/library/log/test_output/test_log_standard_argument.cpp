@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -63,7 +63,7 @@ int main( int argc, char* argv[])
    LOG( log_trace) << "Still, this message should not appear anywhere.";
 
    exit( EXIT_SUCCESS);
-} // end main
+} // main
 
 
 
@@ -84,8 +84,8 @@ static void do_arguments_first( int argc, char* argv[])
 
       if (argc == 1)
       {
-         ArgString2Array  as2a( "--log-stdout debug", argv[ 0]);
-         ArgumentGroups::instance().evalArguments( as2a.mArgc, as2a.mpArgv);
+         const ArgString2Array  as2a( "--log-stdout debug", argv[ 0]);
+         ArgumentGroups::instance().evalArguments( as2a.mArgC, as2a.mpArgV);
       } else
       {
          ArgumentGroups::instance().evalArguments( argc, argv);
@@ -98,7 +98,7 @@ static void do_arguments_first( int argc, char* argv[])
       // silently discard expected exception
    } // end try
 
-} // end do_arguments_first
+} // do_arguments_first
 
 
 
@@ -113,8 +113,8 @@ static void do_arguments_again( int argc, char* argv[])
    {
       if (argc == 1)
       {
-         ArgString2Array  as2a( "--log-stdout debug", argv[ 0]);
-         ArgumentGroups::instance().evalArguments( as2a.mArgc, as2a.mpArgv);
+         const ArgString2Array  as2a( "--log-stdout debug", argv[ 0]);
+         ArgumentGroups::instance().evalArguments( as2a.mArgC, as2a.mpArgV);
       } else
       {
          ArgumentGroups::instance().evalArguments( argc, argv);
@@ -125,9 +125,9 @@ static void do_arguments_again( int argc, char* argv[])
       exit( EXIT_FAILURE);
    } // end try
 
-} // end do_arguments_again
+} // do_arguments_again
 
 
 
-// ==================  END OF test_log_standard_argument.cpp  ==================
+// =====  END OF test_log_standard_argument.cpp  =====
 

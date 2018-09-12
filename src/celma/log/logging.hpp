@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -50,6 +50,7 @@ class LogMsg;
 /// Each of these logs can have zero or multiple destinations. This can be e.g.
 /// a file writer, a communication interface etc. For each destination, filters
 /// can be specified, which messages should be passed to this destination.
+///
 /// @since  0.3, 19.06.2016
 class Logging: public common::Singleton< Logging>
 {
@@ -102,7 +103,7 @@ protected:
 
 private:
    /// Container for the log object(s).
-   typedef std::vector< detail::LogData>  LogCont;
+   using LogCont = std::vector< detail::LogData>;
 
    /// The id to give to the next log.
    id_t     mNextLogId;
@@ -129,5 +130,5 @@ private:
 #endif   // CELMA_LOG_LOGGING_HPP
 
 
-// ===========================  END OF logging.hpp  ===========================
+// =====  END OF logging.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,6 +28,7 @@ namespace celma { namespace log { namespace formatting {
 
 /// Use this class to create a log message format definition using stream
 /// syntax.
+///
 /// @since  1.0.0, 07.12.2016
 class Definition
 {
@@ -79,7 +80,7 @@ protected:
    };
 
    /// Type of the container to store the fields of the format definition.
-   typedef std::vector< Field>  vector_t;
+   using vector_t = std::vector< Field>;
 
    /// The fields of the format definition.
    vector_t  mFields;
@@ -95,5 +96,5 @@ protected:
 #endif   // CELMA_LOG_FORMATTING_DEFINITION_HPP
 
 
-// ==========================  END OF definition.hpp  ==========================
+// =====  END OF definition.hpp  =====
 

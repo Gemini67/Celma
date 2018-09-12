@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,6 +15,10 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ArgHandlerDestTupleTest
 #include <boost/test/unit_test.hpp>
@@ -22,9 +26,9 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/prog_args.hpp"
 
 
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 
 
@@ -42,8 +46,8 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::appl::ArgString2Array  as2a( "-p 3", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      const ArgString2Array  as2a( "-p 3", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
 
@@ -55,8 +59,8 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::appl::ArgString2Array  as2a( "-p 3,4,5", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      const ArgString2Array  as2a( "-p 3,4,5", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
 
@@ -68,8 +72,8 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::appl::ArgString2Array  as2a( "-p 3,hello", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      const ArgString2Array  as2a( "-p 3,hello", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::bad_cast);
    } // end scope
 
@@ -90,8 +94,8 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::appl::ArgString2Array  as2a( "-p 3,9", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      const ArgString2Array  as2a( "-p 3,9", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
    } // end scope
@@ -104,8 +108,8 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::appl::ArgString2Array  as2a( "--pair 4711,foobar", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      const ArgString2Array  as2a( "--pair 4711,foobar", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 4711);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), "foobar");
    } // end scope
@@ -120,13 +124,13 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
                                               "Key and value")
                                             ->setTakesMultiValue());
 
-      celma::appl::ArgString2Array  as2a( "-p 3 9", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      const ArgString2Array  as2a( "-p 3 9", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
    } // end scope
 
-} // end test_tuple_two
+} // test_tuple_two
 
 
 
@@ -143,8 +147,8 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::appl::ArgString2Array  as2a( "-p 3,9,27", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      const ArgString2Array  as2a( "-p 3,9,27", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
       BOOST_REQUIRE_EQUAL( std::get< 2>( myTuple), 27);
@@ -158,8 +162,8 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      celma::appl::ArgString2Array  as2a( "--pair 4711,foobar,42", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      const ArgString2Array  as2a( "--pair 4711,foobar,42", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 4711);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), "foobar");
       BOOST_REQUIRE_EQUAL( std::get< 2>( myTuple), 42);
@@ -175,16 +179,16 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
                                               "Key and value")
                                             ->setTakesMultiValue());
 
-      celma::appl::ArgString2Array  as2a( "-p 3 9 27", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      const ArgString2Array  as2a( "-p 3 9 27", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
       BOOST_REQUIRE_EQUAL( std::get< 2>( myTuple), 27);
    } // end scope
 
-} // end test_tuple_three
+} // test_tuple_three
 
 
 
-// =====================  END OF test_argh_dest_tuple.cpp  =====================
+// =====  END OF test_argh_dest_tuple.cpp  =====
 

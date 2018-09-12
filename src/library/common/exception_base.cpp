@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,13 +27,15 @@
 #include "celma/common/extract_funcname.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace common {
 
 
+using std::string;
+
+
+
 /// Constructor.
+///
 /// @param[in]  filename  The path and file name of the source file.
 /// @param[in]  funcName  The function prototype string.
 /// @param[in]  line_nbr  The line number in the source file.
@@ -49,49 +51,44 @@ ExceptionBase::ExceptionBase( const char* filename, const char* funcName,
 
    buildMsg();
 
-} // end ExceptionBase::ExceptionBase
+} // ExceptionBase::ExceptionBase
 
 
 
-/// Empty, virtual destructor.
-/// @since  0.2, 07.04.2016
-ExceptionBase::~ExceptionBase()
-{
-} // end ExceptionBase::~ExceptionBase
-
-
-
-/// Returns only the name of the file
+/// Returns only the name of the file.
+///
 /// @return  The name of the source file (without path).
 /// @since  0.2, 07.04.2016
 const string ExceptionBase::sourceFilename() const
 {
 
-   const string::size_type  slashPos = mSourceFilename.find_last_of( '/');
-   const string             useFilename( mSourceFilename, slashPos + 1, string::npos);
+   auto const    slashPos = mSourceFilename.find_last_of( '/');
+   const string  useFilename( mSourceFilename, slashPos + 1, string::npos);
 
    return useFilename;
-} // end ExceptionBase::sourceFilename
+} // ExceptionBase::sourceFilename
 
 
 
 /// Returns only the function name.
+///
 /// @return  The pure function name.
 /// @since  0.2, 07.04.2016
 const string ExceptionBase::functionName() const
 {
 
    return extractFuncname( mFunctionName);
-} // end ExceptionBase::functionName
+} // ExceptionBase::functionName
 
 
 
 /// Called by the constructors to build the exception message.
+///
 /// @since  0.2, 07.04.2016
 void ExceptionBase::buildMsg()
 {
 
-   ostringstream  oss;
+   std::ostringstream  oss;
 
 
    oss << functionName() << "@" << sourceFilename() << "[" << mLineNbr << "]: "
@@ -99,7 +96,7 @@ void ExceptionBase::buildMsg()
 
    mExceptionMsg = oss.str();
 
-} // end ExceptionBase::buildMsg
+} // ExceptionBase::buildMsg
 
 
 
@@ -107,5 +104,5 @@ void ExceptionBase::buildMsg()
 } // namespace celma
 
 
-// ========================  END OF exception_base.cpp  ========================
+// =====  END OF exception_base.cpp  =====
 

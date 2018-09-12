@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of class celma::log::files::@@@.
+/// See documentation of class celma::log::files::Timestamped.
 
 
 #ifndef CELMA_LOG_FILES_TIMESTAMPED_HPP
@@ -59,10 +59,6 @@ private:
    /// @since  1.0.0, 13.12.2017
    virtual bool openCheck() override;
 
-   /// Does nothing in this policy.
-   /// @since  1.0.0, 13.12.2017
-   virtual void rollFiles() override;
-
    /// Called to check if the next log message can still be written into the
    /// current log file.<br>
    /// Here, checks if the timestamp of the log message still matches the date
@@ -97,5 +93,5 @@ private:
 #endif   // CELMA_LOG_FILES_TIMESTAMPED_HPP
 
 
-// =========================  END OF timestamped.hpp  =========================
+// =====  END OF timestamped.hpp  =====
 

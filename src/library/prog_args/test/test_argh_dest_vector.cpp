@@ -15,6 +15,10 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ArgHandlerDestVectorTest
 #include <boost/test/unit_test.hpp>
@@ -22,7 +26,6 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/prog_args.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -44,7 +47,7 @@ BOOST_AUTO_TEST_CASE( test_vector_errors)
 
       const ArgString2Array  as2a( "-v this,should,throw", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::bad_cast);
    } // end scope
 
@@ -93,7 +96,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
       const ArgString2Array  as2a( "-v 4,5,6", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 6);
       BOOST_REQUIRE_EQUAL( v[ 3], 4);
       BOOST_REQUIRE_EQUAL( v[ 4], 5);
@@ -110,7 +113,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
       const ArgString2Array  as2a( "-v 4.5.6", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 6);
       BOOST_REQUIRE_EQUAL( v[ 3], 4);
       BOOST_REQUIRE_EQUAL( v[ 4], 5);
@@ -135,7 +138,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       const ArgString2Array  as2a( "-v 4,5,6 7", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 
@@ -151,7 +154,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       const ArgString2Array  as2a( "-v 4,5,6 7", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 6);
       BOOST_REQUIRE_EQUAL( v[ 3], 4);
       BOOST_REQUIRE_EQUAL( v[ 4], 5);
@@ -169,7 +172,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       const ArgString2Array  as2a( "-v 4,5,6 7 8", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 8);
       BOOST_REQUIRE_EQUAL( v[ 3], 4);
       BOOST_REQUIRE_EQUAL( v[ 4], 5);
@@ -190,7 +193,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       const ArgString2Array  as2a( "-v 4,5,6 7 --endvalues 8", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 
@@ -206,7 +209,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       const ArgString2Array  as2a( "-v 4,5,6 7 --endvalues 8", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 7);
       BOOST_REQUIRE_EQUAL( v[ 3], 4);
       BOOST_REQUIRE_EQUAL( v[ 4], 5);
@@ -233,7 +236,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       const ArgString2Array  as2a( "-v 4,5,6", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 6);
       BOOST_REQUIRE_EQUAL( v[ 3], 4);
       BOOST_REQUIRE_EQUAL( v[ 4], 5);
@@ -250,7 +253,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       const ArgString2Array  as2a( "-v 4,5", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 2);
       BOOST_REQUIRE_EQUAL( v[ 0], 4);
       BOOST_REQUIRE_EQUAL( v[ 1], 5);
@@ -267,7 +270,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       const ArgString2Array  as2a( "-v 4,5 6,7,8", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 5);
       BOOST_REQUIRE_EQUAL( v[ 0], 4);
       BOOST_REQUIRE_EQUAL( v[ 1], 5);
@@ -295,7 +298,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
       const ArgString2Array  as2a( "-v 34532,9876,33,6", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 4);
       BOOST_REQUIRE_EQUAL( v[ 0], 34532);
       BOOST_REQUIRE_EQUAL( v[ 1], 9876);
@@ -313,7 +316,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
       const ArgString2Array  as2a( "-v 34532,9876,33,6", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 4);
       BOOST_REQUIRE_EQUAL( v[ 0], 6);
       BOOST_REQUIRE_EQUAL( v[ 1], 33);
@@ -331,7 +334,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
       const ArgString2Array  as2a( "-v 34532,9876,33,6 42,13,4711", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 7);
       BOOST_REQUIRE_EQUAL( v[ 0], 6);
       BOOST_REQUIRE_EQUAL( v[ 1], 13);
@@ -352,7 +355,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
       const ArgString2Array  as2a( "-v 34532,9876,33,6 42,13,4711", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 10);
       BOOST_REQUIRE_EQUAL( v[ 0], 6);
       BOOST_REQUIRE_EQUAL( v[ 1], 11);
@@ -385,7 +388,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       const ArgString2Array  as2a( "-v 2,3,4,4,6,7", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 6);
       BOOST_REQUIRE_EQUAL( v[ 0], 2);
       BOOST_REQUIRE_EQUAL( v[ 1], 3);
@@ -405,7 +408,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       const ArgString2Array  as2a( "-v 2,3,4,4,6,7", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 5);
       BOOST_REQUIRE_EQUAL( v[ 0], 2);
       BOOST_REQUIRE_EQUAL( v[ 1], 3);
@@ -424,7 +427,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       const ArgString2Array  as2a( "-v 2,3,4 3,5,6", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 5);
       BOOST_REQUIRE_EQUAL( v[ 0], 2);
       BOOST_REQUIRE_EQUAL( v[ 1], 3);
@@ -443,7 +446,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       const ArgString2Array  as2a( "-v 2,3,4 3,5,6", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( v.size(), 5);
       BOOST_REQUIRE_EQUAL( v[ 0], 3);
       BOOST_REQUIRE_EQUAL( v[ 1], 5);
@@ -462,7 +465,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       const ArgString2Array  as2a( "-v 2,4 6,7", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
    } // end scope
 

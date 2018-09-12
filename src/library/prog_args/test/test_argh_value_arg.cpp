@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
       const ArgString2Array  as2a( "--left --left", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
 
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
 
       const ArgString2Array  as2a( "--left", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( my_dest, -1);
    } // end scope
 
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
 
       const ArgString2Array  as2a( "--right", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( my_dest, 1);
    } // end scope
 
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
 
       const ArgString2Array  as2a( "--right --left", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
 
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
 
       const ArgString2Array  as2a( "--right --left", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( my_dest, -1);
    } // end scope
 
@@ -153,5 +153,5 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
 
 
 
-// =====================  END OF test_argh_value_arg.cpp  =====================
+// =====  END OF test_argh_value_arg.cpp  =====
 

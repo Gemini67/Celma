@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -54,14 +54,6 @@ bool Simple::openCheck()
 
 
 
-/// Does nothing. And should actually never be called anyway.
-/// @since  1.0.0, 13.12.2017
-void Simple::rollFiles()
-{
-} // Simple::rollFiles
-
-
-
 /// Checks if the next message can still be written into the current file.
 /// @param[in]  msg       The message object. Ignored.
 /// @param[in]  msg_text  The formatted text of the log message. Ignored.
@@ -91,5 +83,5 @@ void Simple::written( const detail::LogMsg&, const std::string&)
 } // namespace celma
 
 
-// ============================  END OF simple.cpp  ============================
+// =====  END OF simple.cpp  =====
 

@@ -31,6 +31,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Helper class to store a destination variable that is a container in which a
 /// range of values can be stored.
+///
 /// @tparam  T  The type of the value(s) to be stored in the container.
 /// @tparam  C  The type of the container to store the values in.
 /// @since  0.2, 10.04.2016
@@ -38,7 +39,7 @@ template< typename T, typename C> class TypedArgRange: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef common::RangeDest< T, C>  dest_type;
+   using dest_type = common::RangeDest< T, C>;
 
    /// Constructor.
    /// @param[in]  dest   The destination variable to store the values in.
@@ -177,5 +178,5 @@ template< typename T, typename C>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_RANGE_HPP
 
 
-// =======================  END OF typed_arg_range.hpp  =======================
+// =====  END OF typed_arg_range.hpp  =====
 

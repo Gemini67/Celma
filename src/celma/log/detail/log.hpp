@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -79,7 +79,7 @@ public:
 
 private:
    /// Container to store all log destinations.
-   typedef std::vector< LogDestData>  log_dest_cont_t;
+   using log_dest_cont_t = std::vector< LogDestData>;
 
    /// Current log destinations.
    log_dest_cont_t  mLoggers;
@@ -95,5 +95,5 @@ private:
 #endif   // CELMA_LOG_DETAIL_LOG_HPP
 
 
-// =============================  END OF log.hpp  =============================
+// =====  END OF log.hpp  =====
 

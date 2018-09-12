@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,22 +34,26 @@ class CardinalityMax: public ICardinality
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  max_values  The maximum number of calls/values allowed for
    ///                         the corresponding argument.
    /// @since  0.2, 10.04.2016
    CardinalityMax( int max_values);
 
-   // Empty, virtual destructor.
+   /// Empty, virtual destructor.
+   ///
    /// @since  0.2, 10.04.2016
-   virtual ~CardinalityMax() { }
+   virtual ~CardinalityMax() = default;
 
    /// Called by the framework when the argument was detected in the command
    /// line (actually may be without a value).
+   ///
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue() override;
+   virtual void gotValue() noexcept( false) override;
 
    /// Called by the framework at the end of the command line processing.
+   ///
    /// @throw  never.
    /// @since  0.2, 10.04.2016
    virtual void check() override;
@@ -70,6 +74,7 @@ private:
 
 /// Helper method to hide the class name from the library users.<br>
 /// Use this function as parameter to TypedArgBase::setCardinality().
+///
 /// @param[in]  max_calls  Maximum number of calls/values for the corresponding
 ///                        argument.
 /// @return  The newly created object for checking maximum cardinality.
@@ -77,7 +82,7 @@ private:
 inline detail::ICardinality* cardinality_max( int max_calls)
 {
    return new detail::CardinalityMax( max_calls);
-} // end cardinality_max
+} // cardinality_max
 
 
 } // namespace prog_args
@@ -87,5 +92,5 @@ inline detail::ICardinality* cardinality_max( int max_calls)
 #endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_MAX_HPP
 
 
-// =======================  END OF cardinality_max.hpp  =======================
+// =====  END OF cardinality_max.hpp  =====
 

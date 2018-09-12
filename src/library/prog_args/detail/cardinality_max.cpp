@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,14 +23,12 @@
 #include <stdexcept>
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
 
 /// Constructor.
+///
 /// @param[in]  max_values  The maximum number of calls/values allowed for
 ///                         the corresponding argument.
 /// @since  0.2, 10.04.2016
@@ -38,30 +36,32 @@ CardinalityMax::CardinalityMax( int max_values):
    ICardinality(),
    mMaxNumAcceptedValues( max_values)
 {
-} // end CardinalityMax::CardinalityMax
+} // CardinalityMax::CardinalityMax
 
 
 
 /// Called by the framework when the argument was detected in the command
 /// line (actually may be without a value).
+///
 /// @throw  when attempting to add too many values.
 /// @since  0.2, 10.04.2016
 void CardinalityMax::gotValue()
 {
 
    if ((mMaxNumAcceptedValues != -1) && (++mNumValues > mMaxNumAcceptedValues))
-      throw runtime_error( "too many values");
+      throw std::runtime_error( "too many values");
 
-} // end CardinalityMax::gotValue
+} // CardinalityMax::gotValue
 
 
 
 /// Called by the framework at the end of the command line processing.
+///
 /// @throw  never.
 /// @since  0.2, 10.04.2016
 void CardinalityMax::check()
 {
-} // end CardinalityMax::check
+} // CardinalityMax::check
 
 
 
@@ -70,5 +70,5 @@ void CardinalityMax::check()
 } // namespace celma
 
 
-// =========================  END OF cardinality_max.cpp  =========================
+// =====  END OF cardinality_max.cpp  =====
 

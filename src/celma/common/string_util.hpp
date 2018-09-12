@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,6 +27,7 @@ namespace celma { namespace common {
 
 
 /// Makes sure that the last character in a non-empty string is \a last_char.
+///
 /// @param[in,out]  str        The string to check.
 /// @param[in]      last_char  The last character that should be set at the end
 ///                            of the string, default set to '/' (for paths).
@@ -42,13 +43,14 @@ inline void ensure_last( std::string& str, char last_char = '/')
       str.append( 1, last_char);
    } // end if
 
-} // end ensure_last
+} // ensure_last
 
 
 /// Removes all leading characters from the string \a str up to and including
 /// the first or last occurrence of the specified predicate \a pred.<br>
 /// If the character \a pred is not found in the string, the contents remain
 /// unchanged.
+///
 /// @param[in,out]  str          The string to remove the leading part
 ///                              eventually.
 /// @param[in]      pred         The character up to which's first or last
@@ -72,7 +74,7 @@ inline void remove_to_if( std::string& str, char pred, bool until_first = false,
    if (pos != std::string::npos)
       str.erase( 0, pos + static_cast< int>( including));
 
-} // end remove_to_if
+} // remove_to_if
 
 
 // shortcut functions
@@ -81,46 +83,50 @@ inline void remove_to_if( std::string& str, char pred, bool until_first = false,
 
 /// Shortcut (less parameters) for calling remove_to_if() to remove up to and
 /// including the first occurence of the predicate.
+///
 /// @param[in,out]  str   The string to remove the leading part eventually.
 /// @param[in]      pred  The character to search for.
 /// @since  0.3, 19.06.2016
 inline void remove_to_if_first_incl( std::string& str, char pred)
 {
    remove_to_if( str, pred, true, true);
-} // end remove_to_if_first_incl
+} // remove_to_if_first_incl
 
 
 /// Shortcut (less parameters) for calling remove_to_if() to remove up to
 /// (excluding) the first occurence of the predicate.
+///
 /// @param[in,out]  str   The string to remove the leading part eventually.
 /// @param[in]      pred  The character to search for.
 /// @since  0.3, 19.06.2016
 inline void remove_to_if_first_excl( std::string& str, char pred)
 {
    remove_to_if( str, pred, true);
-} // end remove_to_if_first_excl
+} // remove_to_if_first_excl
 
 
 /// Shortcut (less parameters) for calling remove_to_if() to remove up to and
 /// including the last occurence of the predicate.
+///
 /// @param[in,out]  str   The string to remove the leading part eventually.
 /// @param[in]      pred  The character to search for.
 /// @since  0.3, 19.06.2016
 inline void remove_to_if_last_incl( std::string& str, char pred)
 {
    remove_to_if( str, pred, false, true);
-} // end remove_to_if_last_incl
+} // remove_to_if_last_incl
 
 
 /// Shortcut (less parameters) for calling remove_to_if() to remove up to
 /// (excluding) the last occurence of the predicate.
+///
 /// @param[in,out]  str   The string to remove the leading part eventually.
 /// @param[in]      pred  The character to search for.
 /// @since  0.3, 19.06.2016
 inline void remove_to_if_last_excl( std::string& str, char pred)
 {
    remove_to_if( str, pred);
-} // end remove_to_if_last_excl
+} // remove_to_if_last_excl
 
 
 } // namespace common
@@ -130,5 +136,5 @@ inline void remove_to_if_last_excl( std::string& str, char pred)
 #endif   // CELMA_COMMON_STRING_UTIL_HPP
 
 
-// =========================  END OF string_util.hpp  =========================
+// =====  END OF string_util.hpp  =====
 

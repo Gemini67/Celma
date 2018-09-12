@@ -11,6 +11,10 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 // C++ Standard Library includes
 #include <stdexcept>
 #include <iostream>
@@ -19,7 +23,6 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/prog_args.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -57,9 +60,9 @@ int main( int argc, char* argv[])
 
    cout << endl << string( 80, '-') << endl << endl;
 
-   ArgString2Array  as2a( "--print-hidden -h", argv[ 0]);
+   const ArgString2Array  as2a( "--print-hidden -h", argv[ 0]);
    printUsage( Handler::hfHelpShort | Handler::hfUsageCont
-      | Handler::hfArgHidden, as2a.mArgc, as2a.mpArgv);
+      | Handler::hfArgHidden, as2a.mArgC, as2a.mpArgV);
 
    exit( EXIT_SUCCESS);
 } // main
