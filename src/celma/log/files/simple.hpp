@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -53,10 +53,6 @@ private:
    /// @since  1.0.0, 13.12.2017
    virtual bool openCheck() override;
 
-   /// Does nothing. And should actually never be called anyway.
-   /// @since  1.0.0, 13.12.2017
-   virtual void rollFiles() override;
-
    /// Checks if the next message can still be written into the current file.
    /// @param[in]  msg       The message object. Ignored.
    /// @param[in]  msg_text  The formatted text of the log message. Ignored.
@@ -84,5 +80,5 @@ private:
 #endif   // CELMA_LOG_FILES_SIMPLE_HPP
 
 
-// ============================  END OF simple.hpp  ============================
+// =====  END OF simple.hpp  =====
 

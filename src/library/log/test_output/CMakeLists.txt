@@ -1,16 +1,14 @@
 
 ##
-##
-##            ####  #  ####    ####
-##           #      #      #  #
-##          #       #       ##         (C) 2015 SIX Group Services
-##         #        #       ##             All rights reserved
-##        #         #      #  #
-##    ####          #  ####    ####
-##
+##    ####   ######  #       #    #   ####
+##   #    #  #       #       ##  ##  #    #
+##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+##   #    #  #       #       #    #  #    #        LGPL
+##    ####   ######  ######  #    #  #    #
 ##
 
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+
+CMAKE_MINIMUM_REQUIRED( VERSION 3.5 )
 
 add_executable( test_log_cout_cerr          test_log_cout_cerr.cpp )
 add_executable( test_log_standard_argument  test_log_standard_argument.cpp )

@@ -448,25 +448,24 @@ void Groups::listArgGroups()
 
 
 /// Constructor.
+///
 /// @param[in]  flag_set  Set of the flags to pass to all handler objects.
 /// @since  1.8.0, 11.07.2018
 Groups::Groups( int flag_set):
-   mOutput( std::cout),
-   mErrorOutput( std::cerr),
-   mHandlerFlags( (flag_set & Groups2HandlerFlags) | Handler::hfInGroup),
-   mArgGroups(),
-   mEvaluating( false),
-   mUsageLineLength( detail::ArgumentDesc::DefaultLineLength),
-   mpUsageParams( new detail::UsageParams())
+   Groups( std::cout, std::cerr, flag_set)
 {
 } // Groups::Groups
 
 
 
 /// Constructor.
-/// @param[in]  os        The stream to write normal output to.
-/// @param[in]  error_os  The stream to write error output to.
-/// @param[in]  flag_set  Set of the flags to pass to all handler objects.
+///
+/// @param[in]  os
+///    The stream to write normal output to.
+/// @param[in]  error_os
+///    The stream to write error output to.
+/// @param[in]  flag_set
+///    Set of the flags to pass to all handler objects.
 /// @since  0.13.0, 05.02.2017  (added parameters)
 /// @since  0.2, 10.04.2016
 Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
@@ -474,7 +473,6 @@ Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
    mErrorOutput( error_os),
    mHandlerFlags( (flag_set & Groups2HandlerFlags) | Handler::hfInGroup),
    mArgGroups(),
-   mEvaluating( false),
    mUsageLineLength( detail::ArgumentDesc::DefaultLineLength),
    mpUsageParams( new detail::UsageParams())
 {

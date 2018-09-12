@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,9 @@
 
 
 /// @file
-/// See documentation of typedef celma::prog_args::detail::ArgHandlerCallable.
+/// See documentation of type definitions
+/// - celma::prog_args::detail::ArgHandlerCallable
+/// - celma::prog_args::detail::ArgHandlerCallableValue.
 
 
 #ifndef CELMA_PROG_ARGS_DETAIL_ARG_HANDLER_CALLABLE_HPP
@@ -28,12 +30,12 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Type of the callables (functions, methods) that can be defined as argument
 /// handlers for arguments without values.
-typedef std::function< void( void)>  ArgHandlerCallable;
+using ArgHandlerCallable = std::function< void( void)>;
 
 
 /// Type of the callables (functions, methods) that can be defined as argument
 /// handlers for arguments with values.
-typedef std::function< void( const std::string&)>  ArgHandlerCallableValue;
+using ArgHandlerCallableValue = std::function< void( const std::string&)>;
 
 
 } // namespace detail
@@ -44,5 +46,5 @@ typedef std::function< void( const std::string&)>  ArgHandlerCallableValue;
 #endif   // CELMA_PROG_ARGS_DETAIL_ARG_HANDLER_CALLABLE_HPP
 
 
-// =====================  END OF arg_handler_callable.hpp  =====================
+// =====  END OF arg_handler_callable.hpp  =====
 
