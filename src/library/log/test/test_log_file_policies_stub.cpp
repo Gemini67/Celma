@@ -51,7 +51,7 @@ namespace {
 
 
 /// Helper class to check that the correct file operations are executed.
-/// @since  x.y.z, 30.08.2018
+/// @since  1.11.0, 30.08.2018
 class TestFileFuncs: public celma::common::detail::FileFuncsBase
 {
 public:
@@ -59,7 +59,7 @@ public:
    TestFileFuncs() = default;
 
    /// Empty, virtual destructor.
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    virtual ~TestFileFuncs() = default;
 
    /// Gets called when a file should be renamed.
@@ -69,7 +69,7 @@ public:
    /// @param[in]  src
    ///    The (path and) name of the existing file that should be renamed.
    /// @return  The result of the %rename operation.
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    virtual int rename( const std::string& dest, const std::string& src) override
    {
       if (mNextRenameParamsIdx >= mRenameParam.size())
@@ -92,7 +92,7 @@ public:
    ///
    /// @param[in]  file  The (path and) name of the file to delete.
    /// @return  The result code of the %remove operation.
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    virtual int remove( const std::string&) override
    {
       // nothing to do here
@@ -106,7 +106,7 @@ public:
    ///    The (path and) name of the destination file.
    /// @param[in]  src
    ///    The (path and) name of the source file.
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    void expectedRenameParameters( const std::string& dest,
       const std::string& src)
    {
@@ -116,7 +116,7 @@ public:
    /// Checks if all expected rename parameters were used.
    ///
    /// @return  \c true if all expected rename parameters were used.
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    bool allRenameParameters() const
    {
       return mNextRenameParamsIdx == mRenameParam.size();
@@ -125,7 +125,7 @@ public:
    /// Resets the container with the expected rename parameters as well as the
    /// index of the next expected parameters.
    ///
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    void resetRenameParameters()
    {
       mRenameParam.clear();
@@ -135,7 +135,7 @@ public:
    /// Resets only the index of the next expected parameters.<br>
    /// Use this function if the same file definition is used for multiple tests.
    ///
-   /// @since  x.y.z, 02.09.2018
+   /// @since  1.11.0, 02.09.2018
    void resetNextRenameIndex()
    {
       mNextRenameParamsIdx = 0;
@@ -159,14 +159,14 @@ private:
 /// Creates a special functions object. Access to this object is provided
 /// through the base class and the method fileFuncsObject.
 ///
-/// @since  x.y.z, 30.08.2018
+/// @since  1.11.0, 30.08.2018
 class TestEnvironment: public celma::test::GlobalFixtureAccess< TestEnvironment>
 {
 public:
    /// Constructor. Creates the file functions object for the test and passes it
    /// to the file operations class.
    ///
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    TestEnvironment():
       celma::test::GlobalFixtureAccess< TestEnvironment>(),
       mpTestFileFunctions( new TestFileFuncs())
@@ -176,7 +176,7 @@ public:
 
    /// Destructor. Don't delete anything, just reset the pointer.
    ///
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    ~TestEnvironment()
    {
       mpTestFileFunctions = nullptr;
@@ -185,7 +185,7 @@ public:
    /// Returns the file functions object used for the tests.
    ///
    /// @return  The file functions object used for the tests.
-   /// @since  x.y.z, 30.08.2018
+   /// @since  1.11.0, 30.08.2018
    TestFileFuncs& fileFuncsObject()
    {
       return *mpTestFileFunctions;
@@ -208,7 +208,7 @@ BOOST_GLOBAL_FIXTURE( TestEnvironment)
 
 /// Test a simple log file without generations, automatic rolling etc.
 ///
-/// @since  x.y.z, 04.09.2018
+/// @since  1.11.0, 04.09.2018
 BOOST_AUTO_TEST_CASE( simple)
 {
 
@@ -263,7 +263,7 @@ BOOST_AUTO_TEST_CASE( simple)
 
 /// Write multiple short messages into the same file (no rolling).
 ///
-/// @since  x.y.z, 03.09.2018
+/// @since  1.11.0, 03.09.2018
 BOOST_AUTO_TEST_CASE( max_size_dont_roll)
 {
 
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE( max_size_dont_roll)
 /// Write very large message, so that each message must be written into a new
 /// file.
 ///
-/// @since  x.y.z, 30.08.2018
+/// @since  1.11.0, 30.08.2018
 BOOST_AUTO_TEST_CASE( max_size_roll_always)
 {
 
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE( max_size_roll_always)
 
 /// Write multiple short messages into the same file (no rolling).
 ///
-/// @since  x.y.z, 04.09.2018
+/// @since  1.11.0, 04.09.2018
 BOOST_AUTO_TEST_CASE( timestamped_dont_roll)
 {
 
@@ -451,7 +451,7 @@ BOOST_AUTO_TEST_CASE( timestamped_dont_roll)
 
 /// Write messages into a counted log file un til the limit is reached.
 ///
-/// @since  x.y.z, 05.09.2018
+/// @since  1.11.0, 05.09.2018
 BOOST_AUTO_TEST_CASE( counted_rolled)
 {
 

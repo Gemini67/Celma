@@ -704,7 +704,7 @@ private:
    ///    Optional pointer to the object to provide additional text for the
    ///    usage.
    /// @since
-   ///    x.y.z, 16.02.2018
+   ///    1.11.0, 16.02.2018
    void handleStartFlags( int flag_set, IUsageText* txt1, IUsageText* txt2)
       noexcept( false);
 

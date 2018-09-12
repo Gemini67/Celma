@@ -36,7 +36,7 @@ namespace celma { namespace log { namespace files {
 
 /// Base class for log file handle policies. Contains the part common to all
 /// policies.
-/// @since  x.y.z, 27.08.2018  (renamed from PolicyBase)
+/// @since  1.11.0, 27.08.2018  (renamed from PolicyBase)
 /// @since  1.0.0, 13.12.2017
 class PolicyBase
 {
@@ -93,7 +93,7 @@ protected:
    /// Empty method provided here in the base class, so it only needs to be
    /// overwritten when actually used.
    ///
-   /// @since  x.y.z, 05.09.2018  (not pure virtual anymore)
+   /// @since  1.11.0, 05.09.2018  (not pure virtual anymore)
    /// @since  1.0.0, 13.12.2017
    virtual void rollFiles();
 
@@ -127,7 +127,7 @@ protected:
    /// Returns the current size of the log file.
    ///
    /// @return  The current size of the file.
-   /// @since  x.y.z, 27.08.2018
+   /// @since  1.11.0, 27.08.2018
    size_t fileSize();
 
    /// The definition how to build the file name.

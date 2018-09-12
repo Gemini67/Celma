@@ -41,7 +41,7 @@ using celma::prog_args::LevelCounter;
 
 /// Verify that errors are detected correctly.
 ///
-/// @since  x.y.z, 13.08.2018
+/// @since  1.11.0, 13.08.2018
 BOOST_AUTO_TEST_CASE( error_cases)
 {
 
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
 /// Increment the level counter just once.
 ///
-/// @since  x.y.z, 13.08.2018
+/// @since  1.11.0, 13.08.2018
 BOOST_AUTO_TEST_CASE( used_once)
 {
 
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE( used_once)
 /// Increment the level counter multiple times through multiple uses of the
 /// single character argument.
 ///
-/// @since  x.y.z, 13.08.2018
+/// @since  1.11.0, 13.08.2018
 BOOST_AUTO_TEST_CASE( multiple_increment_in_one_arg)
 {
 
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE( multiple_increment_in_one_arg)
 
 /// Increment the level by multiple uses of the argument.
 ///
-/// @since  x.y.z, 13.08.2018
+/// @since  1.11.0, 13.08.2018
 BOOST_AUTO_TEST_CASE( multiple_increment_args)
 {
 
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE( multiple_increment_args)
 
 /// Check assigning a new level.
 ///
-/// @since  x.y.z, 13.08.2018
+/// @since  1.11.0, 13.08.2018
 BOOST_AUTO_TEST_CASE( assign_level)
 {
 
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE( assign_level)
 
 /// Check that a defined maximum level is not exceeded.
 ///
-/// @since  x.y.z, 13.08.2018
+/// @since  1.11.0, 13.08.2018
 BOOST_AUTO_TEST_CASE( max_value)
 {
 
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE( max_value)
 
 /// Check that mixing increment and assignment works when enabled.
 ///
-/// @since  x.y.z, 20.08.2018
+/// @since  1.11.0, 20.08.2018
 BOOST_AUTO_TEST_CASE( mixing_arguments)
 {
 

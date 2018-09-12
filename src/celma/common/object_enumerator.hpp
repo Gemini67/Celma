@@ -69,7 +69,7 @@ protected:
    /// Move constructor. Makes sure that move-created object get their own,
    /// unique number.
    ///
-   /// @since  x.y.z, 22.08.2018
+   /// @since  1.11.0, 22.08.2018
    ObjectEnumerator( ObjectEnumerator&& /* other */):
       mObjectNbr( mObjectCounter++)
    {

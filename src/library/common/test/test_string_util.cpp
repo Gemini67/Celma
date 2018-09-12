@@ -23,7 +23,7 @@
 
 /// Test the behaviour of ensure_last().
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( check_ensure_last)
 {
 
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE( check_ensure_last)
 
 /// Verify that remove_to_if() works correctly.
 ///
-/// @since  x.y.z, 23.08.2018
+/// @since  1.11.0, 23.08.2018
 BOOST_AUTO_TEST_CASE( check_remove_to_if)
 {
 
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE( check_remove_to_if)
 
 /// Verify that the shortcuts for remove_to_if() works correctly.
 ///
-/// @since  x.y.z, 23.08.2018
+/// @since  1.11.0, 23.08.2018
 BOOST_AUTO_TEST_CASE( check_remove_to_if_shortcuts)
 {
 

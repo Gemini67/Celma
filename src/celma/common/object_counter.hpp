@@ -67,7 +67,7 @@ protected:
 
    /// Move constructor, also increments the object counter.
    ///
-   /// @since  x.y.z, 22.08.2018
+   /// @since  1.11.0, 22.08.2018
    ObjectCounter( ObjectCounter&& /* other */)
    {
       ++mNumObjects;

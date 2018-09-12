@@ -39,7 +39,7 @@ namespace celma { namespace common {
 /// @return
 ///    \c true if the container contains the given value.
 /// @since
-///    x.y.z, 22.08.2018
+///    1.11.0, 22.08.2018
 template< typename C>
    bool contains( const C& container, const typename C::const_reference v)
 {
@@ -66,7 +66,7 @@ template< typename C>
 /// @return
 ///    \c true if the container contains the given value.
 /// @since
-///    x.y.z, 22.08.2018
+///    1.11.0, 22.08.2018
 template< typename T, typename C, typename A,
    template< typename, typename, typename> class S>
       bool contains( const S< T, C, A>& container, const T& v)
@@ -98,7 +98,7 @@ template< typename T, typename C, typename A,
 /// @return
 ///    \c true if the container contains the given key.
 /// @since
-///    x.y.z, 22.08.2018
+///    1.11.0, 22.08.2018
 template< typename K, typename V, typename C, typename A,
    template< typename, typename, typename, typename> class S>
       bool contains( const S< K, V, C, A>& container, const K& k)
@@ -130,7 +130,7 @@ template< typename K, typename V, typename C, typename A,
 /// @return
 ///    \c true if the container contains the given key.
 /// @since
-///    x.y.z, 22.08.2018
+///    1.11.0, 22.08.2018
 template< typename K, typename V, typename H, typename E, typename A,
    template< typename, typename, typename, typename, typename> class S>
          bool contains( const S< K, V, H, E, A>& container, const K& k)

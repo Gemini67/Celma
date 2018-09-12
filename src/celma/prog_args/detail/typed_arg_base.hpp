@@ -316,7 +316,7 @@ public:
    /// Special feature for destination variable type level counter:<br>
    /// Allow mixing of increment and assignment on the command line.
    ///
-   /// @since  x.y.z, 20.08.2018
+   /// @since  1.11.0, 20.08.2018
    virtual TypedArgBase* setAllowMixIncSet() noexcept( false);
 
    /// Specifies the list separator character to use for splitting lists of

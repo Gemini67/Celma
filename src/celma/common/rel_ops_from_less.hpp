@@ -26,7 +26,7 @@ namespace celma { namespace common {
 /// that only provides the less comparison operator.
 ///
 /// @tparam  T  The type of the class to provide the relational operators for.
-/// @since  x.y.z, 24.08.2018
+/// @since  1.11.0, 24.08.2018
 template< typename T> class RelOpsFromLess
 {
 public:
@@ -37,7 +37,7 @@ public:
    /// @return
    ///    \c true if this object is less than or equal to the \a other object.
    /// @since
-   ///    x.y.z, 24.08.2018
+   ///    1.11.0, 24.08.2018
    bool operator <=( const T& other) const
    {
       auto  self = static_cast< const T&>( *this);
@@ -51,7 +51,7 @@ public:
    /// @return
    ///    \c true if this object is equal to the \a other object.
    /// @since
-   ///    x.y.z, 24.08.2018
+   ///    1.11.0, 24.08.2018
    bool operator ==( const T& other) const
    {
       auto  self = static_cast< const T&>( *this);
@@ -65,7 +65,7 @@ public:
    /// @return
    ///    \c true if this object is not equal to the \a other object.
    /// @since
-   ///    x.y.z, 24.08.2018
+   ///    1.11.0, 24.08.2018
    bool operator !=( const T& other) const
    {
       auto  self = static_cast< const T&>( *this);
@@ -79,7 +79,7 @@ public:
    /// @return
    ///    \c true if this object is greater than or equal to the \a other object.
    /// @since
-   ///    x.y.z, 24.08.2018
+   ///    1.11.0, 24.08.2018
    bool operator >=( const T& other) const
    {
       auto  self = static_cast< const T&>( *this);
@@ -93,7 +93,7 @@ public:
    /// @return
    ///    \c true if this object is greater than the \a other object.
    /// @since
-   ///    x.y.z, 24.08.2018
+   ///    1.11.0, 24.08.2018
    bool operator >( const T& other) const
    {
       auto  self = static_cast< const T&>( *this);

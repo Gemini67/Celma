@@ -36,13 +36,13 @@ namespace celma { namespace test {
 /// So, derive your class from this template here, and then the test functions
 /// can use the object() function to access the (single) object of this class.
 ///
-/// @since  x.y.z, 31.08.2018
+/// @since  1.11.0, 31.08.2018
 template< typename T> class GlobalFixtureAccess
 {
 public:
    /// Returns the global fixture object.
    ///
-   /// @since  x.y.z, 31.08.2018
+   /// @since  1.11.0, 31.08.2018
    static T& object()
    {
       // should never happen, but this way it would be easier to find if ...
@@ -53,7 +53,7 @@ public:
 
    /// Constructor. Initialises the pointer to myself.
    ///
-   /// @since  x.y.z, 31.08.2018
+   /// @since  1.11.0, 31.08.2018
    GlobalFixtureAccess()
    {
       // should never happen, but this way it would be easier to find if ...
@@ -64,7 +64,7 @@ public:
 
    /// Destructor. Don't delete anything, just reset the pointer.
    ///
-   /// @since  x.y.z, 31.08.2018
+   /// @since  1.11.0, 31.08.2018
    ~GlobalFixtureAccess()
    {
       mpMe = nullptr;

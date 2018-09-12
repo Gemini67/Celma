@@ -32,7 +32,7 @@ namespace {
 
 /// Helper class for the test program. Uses enumerated objects.
 ///
-/// @since  x.y.z, 21.08.2018
+/// @since  1.11.0, 21.08.2018
 class CountedOne: public ObjectEnumerator< CountedOne>
 {
 }; // CountedOne
@@ -41,7 +41,7 @@ class CountedOne: public ObjectEnumerator< CountedOne>
 
 /// Second helper class for the test program. Also uses enumerated objects.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 class CountedTwo: public ObjectEnumerator< CountedTwo>
 {
 }; // CountedTwo
@@ -50,7 +50,7 @@ class CountedTwo: public ObjectEnumerator< CountedTwo>
 /// For testing the move constructor: Move-returns a new object.
 ///
 /// @return  A new CountedOne object.
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 CountedOne creator()
 {
    return std::move( CountedOne());
@@ -63,7 +63,7 @@ CountedOne creator()
 
 /// Check for correct object numbers when using just one class.
 ///
-/// @since  x.y.z, 21.08.2018
+/// @since  1.11.0, 21.08.2018
 BOOST_AUTO_TEST_CASE( one_class)
 {
 
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE( one_class)
 
 /// Check that the move constructor is called: Only two new objects are created.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( move_ctor)
 {
 
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE( move_ctor)
 /// Create objects of two different classes and check that their object numbers
 /// are independent.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( classes_independent)
 {
 

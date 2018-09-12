@@ -114,7 +114,7 @@ void PolicyBase::writeMessage( const detail::LogMsg& msg,
 /// Empty method provided here in the base class, so it only needs to be
 /// overwritten when actually used.
 ///
-/// @since  x.y.z, 05.09.2018  (not pure virtual anymore)
+/// @since  1.11.0, 05.09.2018  (not pure virtual anymore)
 /// @since  1.0.0, 13.12.2017
 void PolicyBase::rollFiles()
 {
@@ -143,7 +143,7 @@ void PolicyBase::reOpenFile()
 /// Returns the current size of the log file.
 ///
 /// @return  The current size of the file.
-/// @since  x.y.z, 27.08.2018
+/// @since  1.11.0, 27.08.2018
 size_t PolicyBase::fileSize()
 {
 

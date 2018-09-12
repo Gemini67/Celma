@@ -32,7 +32,7 @@ namespace {
 
 /// Helper class for the test program. Uses counted objects.
 ///
-/// @since  x.y.z, 21.08.2018
+/// @since  1.11.0, 21.08.2018
 class CountedOne: public ObjectCounter< CountedOne>
 {
 }; // CountedOne
@@ -40,7 +40,7 @@ class CountedOne: public ObjectCounter< CountedOne>
 
 /// Second helper class for the test program. Also uses counted objects.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 class CountedTwo: public ObjectCounter< CountedTwo>
 {
 }; // CountedTwo
@@ -49,7 +49,7 @@ class CountedTwo: public ObjectCounter< CountedTwo>
 /// For testing the move constructor: Move-returns a new object.
 ///
 /// @return  A new CountedOne object.
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 CountedOne creator()
 {
    return std::move( CountedOne());
@@ -62,7 +62,7 @@ CountedOne creator()
 
 /// Simple case: Create and delete one single object.
 ///
-/// @since  x.y.z, 21.08.2018
+/// @since  1.11.0, 21.08.2018
 BOOST_AUTO_TEST_CASE( one_object)
 {
 
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE( one_object)
 
 /// Create two objects (of the same class).
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( two_objects)
 {
 
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE( two_objects)
 
 /// Test the move constructor.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( move_ctor)
 {
 
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE( move_ctor)
 /// Create objects of two different classes and make sure that their object
 /// numbers are independent.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( classes_independent)
 {
 

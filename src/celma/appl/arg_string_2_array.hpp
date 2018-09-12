@@ -32,7 +32,7 @@ namespace celma { namespace appl {
 /// This function does similar processing regarding multi-word strings: Quotes
 /// are removed, but the text within the quotes is passed as one value.
 ///
-/// @since  x.y.z, 16.08.2018  (renamed member variables)
+/// @since  1.11.0, 16.08.2018  (renamed member variables)
 /// @since  0.2, 05.04.2016
 class ArgString2Array
 {

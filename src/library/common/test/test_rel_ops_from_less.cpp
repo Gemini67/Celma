@@ -28,13 +28,13 @@ namespace {
 
 
 /// Helper class for the test program. Implemets the less comparison operator.
-/// @since  x.y.z, 24.18.2018
+/// @since  1.11.0, 24.18.2018
 class Comparable: public celma::common::RelOpsFromLess< Comparable>
 {
 public:
    /// Constructor. Stores the value to use for the comparisons.
    /// @param[in]  val  The value to store.
-   /// @since  x.y.z, 24.08.2018
+   /// @since  1.11.0, 24.08.2018
    Comparable( int val):
       mValue( val)
    {
@@ -43,7 +43,7 @@ public:
    /// Less comparison operator.
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this is less than a other.
-   /// @since  x.y.z, 24.08.2018
+   /// @since  1.11.0, 24.08.2018
    bool operator <( const Comparable& other) const
    {
       return mValue < other.mValue;
@@ -61,7 +61,7 @@ private:
 
 
 /// Tries all comparison operations.
-/// @since  x.y.z, 24.18.2018
+/// @since  1.11.0, 24.18.2018
 BOOST_AUTO_TEST_CASE( basic)
 {
 

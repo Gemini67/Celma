@@ -34,7 +34,7 @@ namespace {
 
 /// Helper class for the test program. Uses counted and enumerated objects.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 class CountedOne: public ObjectCounter< CountedOne>,
    public ObjectEnumerator< CountedOne>
 {
@@ -44,7 +44,7 @@ class CountedOne: public ObjectCounter< CountedOne>,
 /// Second helper class for the test program. Also uses counted and enumerated
 /// objects.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 class CountedTwo: public ObjectCounter< CountedTwo>,
    public ObjectEnumerator< CountedTwo>
 {
@@ -57,7 +57,7 @@ class CountedTwo: public ObjectCounter< CountedTwo>,
 
 /// Simple case: Create and delete one single object.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( one_object)
 {
 
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE( one_object)
 
 /// Create two objects (of the same class).
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( two_objects)
 {
 
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE( two_objects)
 /// Create objects of two different classes and make sure that their object
 /// numbers are independent.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( classes_independent)
 {
 

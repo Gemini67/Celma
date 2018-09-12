@@ -34,7 +34,7 @@ using celma::common::contains;
 
 /// Verify that contains() works on containers without find method.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( container_wo_find)
 {
 
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( container_wo_find)
 
 /// Verify that contains() works on containers with a special find method.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( container_with_find)
 {
 
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE( container_with_find)
 
 /// Verify that contains() works on containers using a hash function.
 ///
-/// @since  x.y.z, 22.08.2018
+/// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( hash_container)
 {
 

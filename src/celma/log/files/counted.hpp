@@ -31,7 +31,7 @@ namespace celma { namespace log { namespace files {
 /// Log file policy that rolls a log file when it contains a specified number of
 /// entries.
 ///
-/// @since  x.y.z, 05.09.2018
+/// @since  1.11.0, 05.09.2018
 class Counted: public PolicyBase
 {
 public:
@@ -44,7 +44,7 @@ public:
    ///    The maximum number of entries to write into a log file.
    /// @param[in]  max_gen
    ///    Maximum number of log file generations to keep.
-   /// @since  x.y.z, 05.09.2018
+   /// @since  1.11.0, 05.09.2018
    Counted( const filename::Definition& fname_def, size_t max_entries,
       int max_gen) noexcept( false);
 
@@ -52,12 +52,12 @@ public:
    /// log file.
    ///
    /// @param[in]  other  The other object to copy the data from.
-   /// @since  x.y.z, 05.09.2018
+   /// @since  1.11.0, 05.09.2018
    Counted( const Counted& other);
 
    /// Default destructor.
    ///
-   /// @since  x.y.z, 05.09.2018
+   /// @since  1.11.0, 05.09.2018
    virtual ~Counted() = default;
 
 private:
@@ -66,13 +66,13 @@ private:
    /// @return
    ///    \c true if the current log file can still be used, \c false if the log
    ///    file(s) should be rolled.
-   /// @since  x.y.z, 05.09.2018
+   /// @since  1.11.0, 05.09.2018
    virtual bool openCheck() override;
 
    /// Called when openCheck() return \c false. Rolls the existing log file
    /// generations.
    ///
-   /// @since  x.y.z, 05.09.2018
+   /// @since  1.11.0, 05.09.2018
    virtual void rollFiles() override;
 
    /// Called to check if the next log message can still be written into the
@@ -86,7 +86,7 @@ private:
    /// @return
    ///    \c true if the log message can still be written into the current log
    ///    file.
-   /// @since  x.y.z, 05.09.2018
+   /// @since  1.11.0, 05.09.2018
    virtual bool writeCheck( const detail::LogMsg& msg,
       const std::string& msg_text) override;
 
@@ -97,7 +97,7 @@ private:
    ///    Ignored.
    /// @param[in]  msg_text
    ///    Ignored.
-   /// @since  x.y.z, 05.09.2018
+   /// @since  1.11.0, 05.09.2018
    virtual void written( const detail::LogMsg& msg,
       const std::string& msg_text) override;
 
