@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,8 @@
 /// by the STL.
 
 
-#ifndef CELMA_TUPLE_TYPE_NAME_HPP
-#define CELMA_TUPLE_TYPE_NAME_HPP
+#ifndef CELMA_TYPE_NAME_TUPLE_HPP
+#define CELMA_TYPE_NAME_TUPLE_HPP
 
 
 #include <cstring>
@@ -25,7 +25,7 @@
 #include "celma/common/tuple_at_index.hpp"
 #include "celma/common/tuple_length.hpp"
 #include "celma/common/detail/type_name.hpp"
-#include "celma/common/detail/pod_type_name.hpp"
+#include "celma/common/detail/type_name_pod.hpp"
 
 
 namespace celma {
@@ -109,8 +109,8 @@ template< typename... T> char  type< std::tuple< T...>>::mName[ 256] = { 0 };
 } // namespace celma
 
 
-#endif   // CELMA_TUPLE_TYPE_NAME_HPP
+#endif   // CELMA_TYPE_NAME_TUPLE_HPP
 
 
-// =====================  END OF tuple_type_name.hpp  =====================
+// =====  END OF type_name_tuple.hpp  =====
 

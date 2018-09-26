@@ -14,8 +14,8 @@
 /// Adds partial template specialisations for some types provided by the STL.
 
 
-#ifndef CELMA_STL_TYPE_NAME_HPP
-#define CELMA_STL_TYPE_NAME_HPP
+#ifndef CELMA_TYPE_NAME_STL_HPP
+#define CELMA_TYPE_NAME_STL_HPP
 
 
 #include <cstring>
@@ -221,8 +221,8 @@ PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::unordered_multimap);
 } // namespace celma
 
 
-#endif   // CELMA_STL_TYPE_NAME_HPP
+#endif   // CELMA_TYPE_NAME_STL_HPP
 
 
-// =====  END OF stl_type_name.hpp  =====
+// =====  END OF type_name_stl.hpp  =====
 
