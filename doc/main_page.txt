@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.11.0
+   \mainpage  CELMA v1.12.0
 
    \tableofcontents
 
@@ -46,6 +46,8 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.12.0 | 2018-09-26        | Adapted to newer g++ compiler.<br>
+                                  Type name library almost completely constexpr now.
      1.11.0 | 2018-09-12        | Added new log file policy counted.<br>
                                   Improved coverage of unit tests.<br>
                                   Added new module "compare from less".<br>

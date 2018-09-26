@@ -20,6 +20,7 @@
 
 
 #include <algorithm>
+#include <iterator>
 
 
 namespace celma { namespace common {
