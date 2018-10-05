@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,8 +14,8 @@
 /// Adds partial template specialisations for the 'plain old data types'.
 
 
-#ifndef CELMA_POD_TYPE_NAME_HPP
-#define CELMA_POD_TYPE_NAME_HPP
+#ifndef CELMA_TYPE_NAME_POD_HPP
+#define CELMA_TYPE_NAME_POD_HPP
 
 
 #include "celma/common/detail/provide_simple_type_name.hpp"
@@ -58,8 +58,8 @@ PROVIDE_SIMPLE_TYPE_NAME( wchar_t);
 } // namespace celma
 
 
-#endif   // CELMA_POD_TYPE_NAME_HPP
+#endif   // CELMA_TYPE_NAME_POD_HPP
 
 
-// ========================  END OF pod_type_name.hpp  ========================
+// =====  END OF type_name_pod.hpp  =====
 

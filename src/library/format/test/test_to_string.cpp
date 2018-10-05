@@ -18,6 +18,10 @@
 #include "celma/format/to_string.hpp"
 
 
+// OS/C lib includes
+#include <cmath>
+
+
 // C++ Standard Library includes
 #include <bitset>
 #include <list>

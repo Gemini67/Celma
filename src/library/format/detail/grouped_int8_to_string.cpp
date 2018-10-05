@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,7 +27,7 @@
 #include "celma/format/detail/grouped_int8_to_string.hpp"
 
 
-// C/OS library includes
+// OS/C library includes
 #include <climits>
 
 
@@ -58,8 +58,8 @@ inline void convert( char* buffer, uint8_t value, uint8_t result_len)
 
    switch (result_len)
    {
-   case 3:   *buffer-- = '0' + (value % 10);  value /= 10;
-   case 2:   *buffer-- = '0' + (value % 10);  value /= 10;
+   case 3:   *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 2:   *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
    default:  *buffer-- = '0' + (value % 10);  value /= 10;
    } // end switch
 
@@ -205,5 +205,5 @@ int groupedInt8negToString( char* buffer, int8_t value, char)
 } // namespace celma
 
 
-// ===================  END OF grouped_int8_to_string.cpp  ====================
+// =====  END OF grouped_int8_to_string.cpp  =====
 

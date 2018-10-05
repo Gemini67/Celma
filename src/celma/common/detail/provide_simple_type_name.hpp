@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,6 +22,7 @@
 /// Macro to create the template specialisation for a simple type.
 /// @param  t  The type to create the partial template specialisation of type<>
 ///            for.
+/// @since  1.12.0, 14.09.2018  (now fully constexpr)
 /// @since  0.10, 21.12.2016
 #define  PROVIDE_SIMPLE_TYPE_NAME( t) \
    template<> class type< t> \
@@ -31,11 +32,12 @@
       { \
          return #t ; \
       } \
+      static constexpr char const  mName[] = #t; \
    }
 
 
 #endif   // CELMA_PROVIDE_SIMPLE_TYPE_NAME_HPP
 
 
-// ===================  END OF provide_simple_type_name.hpp  ===================
+// =====  END OF provide_simple_type_name.hpp  =====
 

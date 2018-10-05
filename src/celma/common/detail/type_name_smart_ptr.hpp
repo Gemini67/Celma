@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,8 @@
 /// by the STL.
 
 
-#ifndef CELMA_SMART_PTR_TYPE_NAME_HPP
-#define CELMA_SMART_PTR_TYPE_NAME_HPP
+#ifndef CELMA_TYPE_NAME_SMART_PTR_HPP
+#define CELMA_TYPE_NAME_SMART_PTR_HPP
 
 
 #include <memory>
@@ -34,8 +34,8 @@ PROVIDE_TEMPLATE_TYPE_NAME( std::weak_ptr);
 } // namespace celma
 
 
-#endif   // CELMA_SMART_PTR_TYPE_NAME_HPP
+#endif   // CELMA_TYPE_NAME_SMART_PTR_HPP
 
 
-// =====================  END OF smart_ptr_type_name.hpp  =====================
+// =====  END OF smart_ptr_type_name.hpp  =====
 

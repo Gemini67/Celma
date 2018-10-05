@@ -202,7 +202,7 @@ private:
 } // namespace
 
 
-BOOST_GLOBAL_FIXTURE( TestEnvironment)
+BOOST_GLOBAL_FIXTURE( TestEnvironment);
 
 
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -88,5 +88,5 @@ PROVIDE_SIMPLE_TYPE_NAME( std::wstringstream);
 #endif   // CELMA_IOSTREAM_TYPE_NAME_HPP
 
 
-// ======================  END OF iostream_type_name.hpp  ======================
+// =====  END OF type_name_iostream.hpp  =====
 
