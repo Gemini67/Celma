@@ -20,6 +20,7 @@
 
 
 // C++ Standard Library includes
+#include <sstream>
 #include <stdexcept>
 
 
@@ -66,6 +67,22 @@ void CardinalityExact::check()
       throw std::runtime_error( "not all expected values");
 
 } // CardinalityExact::check
+
+
+
+/// Returns the text description of the cardinality "exact".
+///
+/// @return  String with the text description of the cardinality.
+/// @since  1.14.0, 02.10.2018
+std::string CardinalityExact::cardinalityStr() const
+{
+
+   std::ostringstream  oss;
+
+
+   oss << "exactly " << mNumExpectedValues;
+   return oss.str();
+} // CardinalityExact::cardinalityStr
 
 
 

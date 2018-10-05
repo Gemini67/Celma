@@ -324,8 +324,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary)
    ah_output.addArgument( "f,file", DEST_VAR( output_filename), "output file name");
    ah_output.addArgument( "q,queue", DEST_VAR( output_queuename), "output queue name");
 
-   ah.addArgument( "i,input", &ah_input, "input parameters");
-   ah.addArgument( "o,output", &ah_output, "output parameters");
+   ah.addArgument( "i,input", ah_input, "input parameters");
+   ah.addArgument( "o,output", ah_output, "output parameters");
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
@@ -506,8 +506,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_type)
    ah_output.addArgument( "f,file", DEST_VAR( output_filename), "output file name");
    ah_output.addArgument( "q,queue", DEST_VAR( output_queuename), "output queue name");
 
-   ah.addArgument( "i,input", &ah_input, "input parameters");
-   ah.addArgument( "o,output", &ah_output, "output parameters");
+   ah.addArgument( "i,input", ah_input, "input parameters");
+   ah.addArgument( "o,output", ah_output, "output parameters");
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
@@ -688,8 +688,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_key)
    ah_output.addArgument( "f,file", DEST_VAR( output_filename), "output file name");
    ah_output.addArgument( "q,queue", DEST_VAR( output_queuename), "output queue name");
 
-   ah.addArgument( "i,input", &ah_input, "input parameters");
-   ah.addArgument( "o,output", &ah_output, "output parameters");
+   ah.addArgument( "i,input", ah_input, "input parameters");
+   ah.addArgument( "o,output", ah_output, "output parameters");
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
@@ -869,8 +869,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
    ah_output.addArgument( "f,file", DEST_VAR( output_filename), "output file name");
    ah_output.addArgument( "q,queue", DEST_VAR( output_queuename), "output queue name");
 
-   ah.addArgument( "i,input", &ah_input, "input parameters");
-   ah.addArgument( "o,output", &ah_output, "output parameters");
+   ah.addArgument( "i,input", ah_input, "input parameters");
+   ah.addArgument( "o,output", ah_output, "output parameters");
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);

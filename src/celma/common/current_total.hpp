@@ -33,13 +33,13 @@ namespace celma { namespace common {
 ///
 /// @tparam  N  The number of counters to maintain.
 /// @tparam  T  The type of the counters.
-/// @since  x.y.z, 07.09.2018
+/// @since  1.13.0, 07.09.2018
 template< int N, typename T = int> class CurrentTotal
 {
 public:
    /// Default constructor, sets all values to 0.
    ///
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    CurrentTotal();
 
    /// Increments the current value of the given counter.
@@ -48,7 +48,7 @@ public:
    ///    The index of the counter to increment, in the range 0..N-1.
    /// @param[in]  add
    ///    The value to increment the counter by.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    void inc( int idx, T add = 1);
 
    /// Returns (a const reference of) the current value of the counter with the
@@ -58,7 +58,7 @@ public:
    ///    The index of the counter to return the current value of, in the range
    ///    0..N-1.
    /// @return  The current value of the counter with the given index.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    const T& operator []( int idx) const;
 
    /// Returns (a non-const reference of) the current value of the counter with
@@ -68,7 +68,7 @@ public:
    ///    The index of the counter to return the current value of, in the range
    ///    0..N-1.
    /// @return  The current value of the counter with the given index.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    T& operator []( int idx);
 
    /// Returns the current value of the counter with the given index.
@@ -77,7 +77,7 @@ public:
    ///    The index of the counter to return the current value of, in the range
    ///    0..N-1.
    /// @return  The current value of the counter with the given index.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    T currentValue( int idx) const;
 
    /// Returns the total value of the counter with the given index.
@@ -85,7 +85,7 @@ public:
    /// @param[in]  idx
    ///    The index of the counter to return the total of, in the range 0..N-1.
    /// @return  The total of the counter with the given index.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    T totalValue( int idx) const;
 
    /// Now this is the (only) function where the current values of one or all
@@ -97,7 +97,7 @@ public:
    /// @param[in]  idx
    ///    The index of the value to add to the total in the range 0..N-1, -1 to
    ///    handle all counters.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    void add2Total( bool reset_current = true, int idx = -1);
 
    /// Resets the current value of one or all counters.
@@ -105,7 +105,7 @@ public:
    /// @param[in]  idx
    ///    The index of the counter to reset the current value of in the range
    ///    0..N-1, -1 to reset all current values.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    void resetCurrent( int idx = -1);
 
    /// Resets the total of one or all counters.
@@ -113,7 +113,7 @@ public:
    /// @param[in]  idx
    ///    The index of the counter to reset the total of in the range 0..N-1,
    ///    -1 to reset all totals.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    void resetTotal( int idx = -1);
 
    /// Resets the current value and the total of one or all counters.
@@ -121,7 +121,7 @@ public:
    /// @param[in]  idx
    ///    The index of the counter to reset the current value and the total of
    ///    in the range 0..N-1, -1 to reset all current values and totals.
-   /// @since  x.y.z, 07.09.2018
+   /// @since  1.13.0, 07.09.2018
    void reset( int idx = -1);
 
 private:

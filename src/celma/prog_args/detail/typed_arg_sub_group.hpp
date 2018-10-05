@@ -45,7 +45,13 @@ public:
    ///                     long argument.
    /// @param[in]  ah_obj  The argument handler object.
    /// @since  0.2, 10.04.2016
-   TypedArgSubGroup( const ArgumentKey& key, Handler* ah_obj);
+   TypedArgSubGroup( const ArgumentKey& key, Handler& ah_obj);
+
+   /// Returns "subgroup".
+   ///
+   /// @return  Constant string "subgroup".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Required by framework, does nothing except setting the #mWasCalled flag.
    /// @since  0.2, 10.04.2016
@@ -73,7 +79,7 @@ public:
 
 private:
    /// The argument handler object.
-   Handler*  mpArgHandler;
+   Handler&  mArgHandler;
    /// Flag set when the function is called.
    bool      mWasCalled;
 
@@ -98,7 +104,7 @@ inline void TypedArgSubGroup::printValue( std::ostream& os, bool) const
 
 inline Handler* TypedArgSubGroup::obj() const
 {
-   return mpArgHandler;
+   return &mArgHandler;
 } // TypedArgSubGroup::obj
 
 
