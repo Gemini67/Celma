@@ -96,9 +96,9 @@ inline bool TypedArgSubGroup::hasValue() const
 } // TypedArgSubGroup::hasValue
 
 
-inline void TypedArgSubGroup::printValue( std::ostream& os, bool) const
+inline void TypedArgSubGroup::printValue( std::ostream&, bool) const
 {
-   os << "[subgroup]";
+   // will never be called
 } // TypedArgSubGroup::printValue
 
 
