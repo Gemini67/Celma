@@ -19,7 +19,7 @@
 #include "celma/format/text_block.hpp"
 
 
-// Standard Template Library includes
+// C++ Standard Template Library includes
 #include <iostream>
 
 

@@ -18,21 +18,10 @@
 #include "celma/prog_args/detail/arg_list_parser.hpp"
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
-
-// STL includes
-#include <string>
-#include <iostream>
-
-
 // Boost includes
-#define BOOST_TEST_MODULE ArgumentHandlerTest
+#define BOOST_TEST_MODULE ArgListParserTest
 #include <boost/test/unit_test.hpp>
+
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
@@ -46,8 +35,20 @@ using celma::prog_args::detail::ArgListParser;
 BOOST_TEST_DONT_PRINT_LOG_VALUE( ArgListElement::ElementType)
 
 
-// module definitions
-using StringVec = std::vector< std::string>;
+
+/// Single dash as only argument leads to an error.
+///
+/// @since  1.14.0, 05.10.2018
+BOOST_AUTO_TEST_CASE( error_single_dash_only)
+{
+
+   const ArgString2Array  as2a( "-", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+
+
+   BOOST_REQUIRE_THROW( alp.cbegin(), std::runtime_error);
+
+} // error_single_dash_only
 
 
 
@@ -120,6 +121,26 @@ BOOST_AUTO_TEST_CASE( two_single_char_sep)
    BOOST_REQUIRE( it == alp.cend());
 
 } // two_single_char_sep
+
+
+
+/// A single dash in the argument list leads to an error.
+///
+/// @since  1.14.0, 05.10.2018
+BOOST_AUTO_TEST_CASE( error_single_dash)
+{
+
+   const ArgString2Array  as2a( "-l - -v", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
+
+
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
+
+   BOOST_REQUIRE_THROW( ++it, std::runtime_error);
+
+} // error_single_dash
 
 
 

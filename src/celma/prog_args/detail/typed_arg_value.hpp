@@ -57,6 +57,12 @@ public:
    /// @since  1.1.0, 25.09.2017
    TypedArgValue( T& dest, const std::string& vname, const T& value);
 
+   /// Returns the name of the type of the destination variable.
+   ///
+   /// @return  The type name of the destination variable.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the destination has a value set.<br>
    /// Of course this applies only when the value through the current object.
    /// @return  \c true if the destination variable contains a value.
@@ -137,6 +143,13 @@ template< typename T>
 } // TypedArgValue< T>::TypedArgValue
 
 
+template< typename T>
+   const std::string TypedArgValue< T>::varTypeName() const
+{
+   return type< T>::name();
+} // TypedArgValue< T>::varTypeName
+
+
 template< typename T> bool TypedArgValue< T>::hasValue() const
 {
    return mHasValueSet;
@@ -148,7 +161,7 @@ template< typename T>
 {
    os << format::toString( mDestVar);
    if (print_type)
-      os << " [" << type< T>::name() << "]";
+      os << " [" << varTypeName() << "]";
 } // TypedArgValue< T>::printValue
 
 
@@ -175,7 +188,7 @@ template< typename T>
 
 template< typename T> void TypedArgValue< T>::dump( std::ostream& os) const
 {
-   os << "value type '" << type< T>::name() << "', destination '"
+   os << "value type '" << varTypeName() << "', destination '"
       << mVarName << "', set-value '" << mValue << "', ";
    if (mHasValueSet)
       os << "value = " << mDestVar << "." << std::endl;

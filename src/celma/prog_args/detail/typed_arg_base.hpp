@@ -403,6 +403,12 @@ public:
    ///    0.2, 10.04.2016
    void checkCardinality();
 
+   /// Returns a text description of the cardinality specified for this argument.
+   ///
+   /// @return  A string with the description of the cardinality.
+   /// @since  1.14.0, 02.10.2018
+   std::string cardinalityStr() const;
+
    /// Allows to change the "original value check" mode. This is only applicable
    /// to typed arg value objects.
    /// @param[in]  yesNo
@@ -477,6 +483,12 @@ public:
    /// @since
    ///    0.2, 10.04.2016
    const std::string& varName() const;
+
+   /// Returns the type of the destination variable as string.
+   ///
+   /// @return  String with the type of the destination variable.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const = 0;
 
    /// Should add the value of the destination variable to the string when
    /// called.<br>

@@ -39,22 +39,6 @@ using std::string;
 
 
 
-/// Test adding an invalid sub-group (NULL pointer).
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( invalid_sub_group)
-{
-
-   Handler   masterAH( 0);
-   Handler*  subAH = nullptr;
-
-
-   BOOST_REQUIRE_THROW( masterAH.addArgument( "o", subAH, "output arguments"),
-                        std::runtime_error);
-
-} // invalid_sub_group
-
-
-
 /// Test argument handling with a single sub-group.
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( one_sub_group)
@@ -69,7 +53,7 @@ BOOST_AUTO_TEST_CASE( one_sub_group)
 
    BOOST_REQUIRE_NO_THROW( subAH.addArgument( "c",
       DEST_PAIR( outputName, outputType, 1), "cache name"));
-   BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subAH,
+   BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subAH,
       "output arguments"));
    BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( outputType, 1);
@@ -106,7 +90,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_NO_THROW( subInput.addArgument( "q",
          DEST_PAIR( inputName, inputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( subInputAH = masterAH.addArgument( "i",
-         &subInput, "input arguments"));
+         subInput, "input arguments"));
 
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "c",
          DEST_PAIR( outputName, outputType, 1), "cache name"));
@@ -115,7 +99,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "q",
          DEST_PAIR( outputName, outputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( subOutputAH = masterAH.addArgument( "o",
-         &subOutput, "output arguments"));
+         subOutput, "output arguments"));
 
       const ArgString2Array  as2a( "-oc mycache", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -149,7 +133,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_NO_THROW( subInput.addArgument( "q",
          DEST_PAIR( inputName, inputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( subInputAH = masterAH.addArgument( "i",
-         &subInput, "input arguments"));
+         subInput, "input arguments"));
 
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "c",
          DEST_PAIR( outputName, outputType, 1), "cache name"));
@@ -158,7 +142,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "q",
          DEST_PAIR( outputName, outputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( subOutputAH = masterAH.addArgument( "o",
-         &subOutput, "output arguments"));
+         subOutput, "output arguments"));
 
       const ArgString2Array  as2a( "-if myfile -o -q myqueue", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -209,7 +193,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
          DEST_PAIR( inputName, inputType, 2), "file name"));
       BOOST_REQUIRE_NO_THROW( subInput.addArgument( "q",
          DEST_PAIR( inputName, inputType, 3), "queue name"));
-      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "i", &subInput,
+      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "i", subInput,
          "input arguments"));
 
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "c",
@@ -218,7 +202,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
          DEST_PAIR( outputName, outputType, 2), "file name"));
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "q",
          DEST_PAIR( outputName, outputType, 3), "queue name"));
-      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subOutput,
+      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
       const ArgString2Array  as2a( "-c valc -oc mycache -l last", nullptr);
@@ -260,7 +244,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
          DEST_PAIR( inputName, inputType, 2), "file name"));
       BOOST_REQUIRE_NO_THROW( subInput.addArgument( "q",
          DEST_PAIR( inputName, inputType, 3), "queue name"));
-      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "i", &subInput,
+      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "i", subInput,
          "input arguments"));
 
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "c",
@@ -269,7 +253,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
          DEST_PAIR( outputName, outputType, 2), "file name"));
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "q",
          DEST_PAIR( outputName, outputType, 3), "queue name"));
-      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subOutput,
+      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
       const ArgString2Array  as2a( "-c otherValC -if myfile -a howdy -o "
@@ -328,7 +312,7 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
          "flag 1"));
       BOOST_REQUIRE_NO_THROW( subInput.addArgument( "z", DEST_VAR( inputFlag2),
          "flag 2"));
-      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "i", &subInput,
+      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "i", subInput,
          "input arguments"));
 
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "c",
@@ -341,7 +325,7 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
          "flag 1"));
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "z", DEST_VAR( outputFlag2),
          "flag 2"));
-      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subOutput,
+      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
       const ArgString2Array  as2a( "-c valc -oc mycache -v -l last", nullptr);
@@ -392,7 +376,7 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
          DEST_PAIR( inputName, inputType, 3), "queue name"));
       BOOST_REQUIRE_NO_THROW( subInput.addArgument( "v", DEST_VAR( inputFlag1), "flag 1"));
       BOOST_REQUIRE_NO_THROW( subInput.addArgument( "z", DEST_VAR( inputFlag2), "flag 2"));
-      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "i", &subInput,
+      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "i", subInput,
          "input arguments"));
 
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "c",
@@ -405,7 +389,7 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
          "flag 1"));
       BOOST_REQUIRE_NO_THROW( subOutput.addArgument( "z", DEST_VAR( outputFlag2),
          "flag 2"));
-      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", &subOutput,
+      BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
       const ArgString2Array  as2a( "-c otherValC -if myfile -z -a howdy "

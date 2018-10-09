@@ -19,6 +19,7 @@
 #define CELMA_PROG_ARGS_DETAIL_CARDINALITY_RANGE_HPP
 
 
+#include <string>
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
 
@@ -59,6 +60,12 @@ public:
    /// @throw  if the minimum of calls/values was not reached.
    /// @since  0.2, 10.04.2016
    virtual void check() noexcept( false) override;
+
+   /// Returns the text description of the cardinality "range".
+   ///
+   /// @return  String with the text description of the cardinality.
+   /// @since  1.14.0, 02.10.2018
+   virtual std::string cardinalityStr() const override;
 
 private:
    /// Minimum number of calls/values for the corresponding argument.

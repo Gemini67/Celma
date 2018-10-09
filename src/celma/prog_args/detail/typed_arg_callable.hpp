@@ -43,6 +43,11 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgCallable( ArgHandlerCallable fun, const std::string& fname);
 
+   /// Returns "callable" as type name.
+   /// @return  The string "callable".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
@@ -88,6 +93,12 @@ inline TypedArgCallable::TypedArgCallable( ArgHandlerCallable fun,
    mFun( fun)
 {
 } // TypedArgCallable::TypedArgCallable
+
+
+inline const std::string TypedArgCallable::varTypeName() const
+{
+   return "callable";
+} // TypedArgCallable::varTypeName
 
 
 inline bool TypedArgCallable::hasValue() const

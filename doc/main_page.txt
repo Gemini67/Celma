@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.13.0
+   \mainpage  CELMA v1.14.0
 
    \tableofcontents
 
@@ -46,6 +46,7 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.14.0 | 2018-10-05        | New feature "argument help" in argument handler.
      1.13.0 | 2018-10-05        | Added new module/function "grouped double 2 string".
      1.12.0 | 2018-09-26        | Adapted to newer g++ compiler.<br>
                                   Type name library almost completely constexpr now.

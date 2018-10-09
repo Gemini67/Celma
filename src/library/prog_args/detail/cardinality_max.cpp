@@ -20,6 +20,7 @@
 
 
 // C++ Standard Library includes
+#include <sstream>
 #include <stdexcept>
 
 
@@ -62,6 +63,22 @@ void CardinalityMax::gotValue()
 void CardinalityMax::check()
 {
 } // CardinalityMax::check
+
+
+
+/// Returns the text description of the cardinality "maximum".
+///
+/// @return  String with the text description of the cardinality.
+/// @since  1.14.0, 02.10.2018
+std::string CardinalityMax::cardinalityStr() const
+{
+
+   std::ostringstream  oss;
+
+
+   oss << "at most " << mMaxNumAcceptedValues;
+   return oss.str();
+} // CardinalityMax::cardinalityStr
 
 
 

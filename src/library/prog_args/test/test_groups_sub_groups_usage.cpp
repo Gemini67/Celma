@@ -59,7 +59,7 @@ int main( int argc, char* argv[])
       "specifies to read from a file")->setPrintDefault( false);
    subInput.addArgument( "q", DEST_PAIR( inputName, inputMode, 2),
       "specifies to read from a queue")->setPrintDefault( false);
-   ah1->addArgument( "i", &subInput, "input arguments");
+   ah1->addArgument( "i", subInput, "input arguments");
 
    string  outputName;
    int     outputMode = 0;
@@ -69,7 +69,7 @@ int main( int argc, char* argv[])
       "specifies to write into a file")->setPrintDefault( false);
    subOutput.addArgument( "q", DEST_PAIR( outputName, outputMode, 2),
       "specifies to write into a queue")->setPrintDefault( false);
-   ah1->addArgument( "o", &subOutput, "output arguments");
+   ah1->addArgument( "o", subOutput, "output arguments");
 
    Groups::instance().evalArguments( argc, argv);
 

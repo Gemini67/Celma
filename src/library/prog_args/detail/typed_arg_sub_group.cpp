@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,15 +33,30 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  ah_obj    The argument handler object.
 /// @since  0.2, 10.04.2016
 TypedArgSubGroup::TypedArgSubGroup( const ArgumentKey& key,
-                                    Handler* ah_obj):
+                                    Handler& ah_obj):
    TypedArgBase( "sub-group", ValueMode::none, false),
-   mpArgHandler( ah_obj),
+   mArgHandler( ah_obj),
    mWasCalled( false)
 {
 
    setKey( key);
+   // a sub-group can hold multiple arguments, so it should be possible to call
+   // it multiple times
+   mpCardinality.reset();
 
 } // TypedArgSubGroup::TypedArgSubGroup
+
+
+
+/// Returns "subgroup".
+///
+/// @return  Constant string "subgroup".
+/// @since  1.14.0, 28.09.2018
+const std::string TypedArgSubGroup::varTypeName() const
+{
+
+   return "subgroup";
+} // TypedArgSubGroup::varTypeName
 
 
 
@@ -61,5 +76,5 @@ void TypedArgSubGroup::assign( const std::string& /* value */)
 } // namespace celma
 
 
-// =====================  END OF typed_arg_sub_group.cpp  =====================
+// =====  END OF typed_arg_sub_group.cpp  =====
 

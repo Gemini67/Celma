@@ -19,6 +19,7 @@
 #define CELMA_PROG_ARGS_DETAIL_CARDINALITY_MAX_HPP
 
 
+#include <string>
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
 
@@ -57,6 +58,12 @@ public:
    /// @throw  never.
    /// @since  0.2, 10.04.2016
    virtual void check() override;
+
+   /// Returns the text description of the cardinality "maximum".
+   ///
+   /// @return  String with the text description of the cardinality.
+   /// @since  1.14.0, 02.10.2018
+   virtual std::string cardinalityStr() const override;
 
 private:
    /// Maximum number of calls/values accepted for the corresponding argument.

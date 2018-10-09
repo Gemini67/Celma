@@ -38,6 +38,7 @@
 #include "celma/common/reset_at_exit.hpp"
 #include "celma/common/scoped_value.hpp"
 #include "celma/common/tokenizer.hpp"
+#include "celma/format/text_block.hpp"
 #include "celma/prog_args/destination.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/groups.hpp"
@@ -174,26 +175,24 @@ Handler::~Handler()
 
 
 
-/// Adds a sub-group.<br>
-/// Note: Theoretically we could pass the object by reference, but then the
-/// compiler cannot distinguish anymore between this function and the variant
-/// to add an argument resulting in a function call.
-/// @param[in]  arg_spec  The arguments on the command line to enter/start
-///                       the sub-group.
-/// @param[in]  subGroup  The object to handle the sub-group arguments.
-/// @param[in]  desc      The description of this sub-group argument.
-/// @return  The object managing this argument, may be used to apply further
-///          settings.
+/// Adds a sub-group.
+///
+/// @param[in]  arg_spec
+///    The arguments on the command line to enter/start the sub-group.
+/// @param[in]  subGroup
+///    The object to handle the sub-group arguments.
+/// @param[in]  desc
+///    The description of this sub-group argument.
+/// @return
+///    The object managing this argument, may be used to apply further
+///    settings.
 /// @since  0.2, 10.04.2016
 detail::TypedArgBase*
-   Handler::addArgument( const string& arg_spec, Handler* subGroup,
+   Handler::addArgument( const string& arg_spec, Handler& subGroup,
                          const string& desc)
 {
 
-   if (subGroup == nullptr)
-      throw runtime_error( "Sub-group object pointer is NULL");
-
-   subGroup->setIsSubGroupHandler();
+   subGroup.setIsSubGroupHandler();
 
    const detail::ArgumentKey  key( arg_spec);
    auto  arg_hdl = new detail::TypedArgSubGroup( key, subGroup);
@@ -410,6 +409,39 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentEndValues
+
+
+
+/// Adds an argument that can be used to get the usage for exactly one
+/// argument.
+///
+/// @param[in]  arg_spec
+///    The argument(s) on the command line to request the usage for an
+///    argument.
+/// @param[in]  full
+///    Set this flag if the argument should invoke the function to print the
+///    usage and a complee description of the argument and its destination
+///    variable.
+/// @return
+///    The object managing this argument, may be used to apply further
+///    settings.
+/// @since
+///    1.14.0, 25.09.2018
+detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
+   bool full)
+{
+
+   static const string  desc( "Prints the usage for the given argument.");
+
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+      = new detail::TypedArgCallableValue( [&,full=full]( auto const& help_arg_key)
+        { this->helpArgument( help_arg_key, full); }, desc);
+
+   arg_hdl->setKey( key);
+
+   return internAddArgument( arg_hdl, key, desc);
+} // Handler::addArgumentHelpArgument
 
 
 
@@ -973,7 +1005,8 @@ void Handler::listArgGroups()
 
 
 
-/// Called to mark the end of a value list: Sets mpLastArg to NULL.
+/// Called to mark the end of a value list: Sets #mpLastArg to NULL.
+///
 /// @since  0.2, 10.04.2016
 void Handler::endValueList()
 {
@@ -981,6 +1014,106 @@ void Handler::endValueList()
    mpLastArg = nullptr;
 
 } // Handler::endValueList
+
+
+
+/// Searches if the given argment key belongs to a known argument, and if so
+/// prints its usage.<br>
+/// If the argument key is unknown, an error message is printed.<br>
+/// At the end, the function calls exit(), unless "usage continues" is set.
+///
+/// @param[in]  help_arg_key
+///    The key of the argument to print the usage of.
+/// @param[in]  full
+///    If set, also prints information about the argument and its destination
+///    variable.
+/// @since  1.14.0, 25.09.2018
+void Handler::helpArgument( const string& help_arg_key, bool full)
+{
+
+   auto const  slash_pos = help_arg_key.find( "/");
+
+   if (slash_pos != string::npos)
+   {
+      const detail::ArgumentKey  key( help_arg_key.substr( 0, slash_pos));
+      auto                       p_arg_hdl = mSubGroupArgs.findArg( key);
+
+      if (p_arg_hdl != nullptr)
+      {
+         static_cast< detail::TypedArgSubGroup*>( p_arg_hdl)->obj()->
+            helpArgument( help_arg_key.substr( slash_pos + 1), full);
+         return;
+      } // end if
+
+      mErrorOutput << "*** ERROR: Sub-group argument '" << help_arg_key
+         << "' is unknown!" << std::endl;
+
+      mUsagePrinted = true;
+
+      if (!mUsageContinues)
+        ::exit( EXIT_SUCCESS);
+      return;
+   } // end if
+
+   const detail::ArgumentKey  key( help_arg_key);
+   auto                       p_arg_hdl = mArguments.findArg( key);
+
+   if (p_arg_hdl == nullptr)
+   {
+      p_arg_hdl = mSubGroupArgs.findArg( key);
+   } // end if
+
+   if (p_arg_hdl != nullptr)
+   {
+      mOutput << "Argument '" << key << "', usage:" << std::endl;
+
+      auto const  desc = mDescription.getArgDesc( key);
+      format::TextBlock  tb( 3, 80, true);
+      tb.format(  mOutput, desc);
+
+      mOutput << std::endl;
+
+      if (full)
+      {
+         mOutput << "Properties:" << std::endl
+                 << "   destination variable name:  "
+                 << p_arg_hdl->varName() << std::endl
+                 << "   destination variable type:  "
+                 << p_arg_hdl->varTypeName() << std::endl
+                 << "   is mandatory:               "
+                 << std::boolalpha << p_arg_hdl->isMandatory() << std::endl
+                 << "   value mode:                 "
+                 << p_arg_hdl->valueMode() << std::endl
+                 << "   cardinality:                "
+                 << p_arg_hdl->cardinalityStr() << std::endl
+                 << "   checks:                     "
+                 << p_arg_hdl->checkStr() << std::endl
+                 << "   constraints:                "
+                 << p_arg_hdl->constraintStr() << std::endl
+                 << "   is hidden:                  "
+                 << std::boolalpha << p_arg_hdl->isHidden() << std::endl
+                 << "   takes multiple values:      "
+                 << std::boolalpha << p_arg_hdl->takesMultiValue() << std::endl
+                 << "   is deprecated:              "
+                 << std::boolalpha << p_arg_hdl->isDeprecated() << std::endl
+                 << "   is replaced:                "
+                 << std::boolalpha << p_arg_hdl->isReplaced() << std::endl;
+         if (!p_arg_hdl->replacedBy().empty())
+            mOutput << "   replaced by:                "
+                    << p_arg_hdl->replacedBy() << std::endl;
+      } // end if
+   } else
+   {
+      mErrorOutput << "*** ERROR: Argument '" << help_arg_key << "' is unknown!"
+         << std::endl;
+   } // end if
+
+   mUsagePrinted = true;
+
+   if (!mUsageContinues)
+      ::exit( EXIT_SUCCESS);
+
+} // Handler::helpArgument
 
 
 
@@ -1060,6 +1193,12 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
       addArgument( args, new detail::TypedArgCallable(
          [=]() { usage( txt1, txt2); }, "Handler::usage"),
          "Prints the program usage.");
+
+   if (flag_set & hfHelpArg)
+      addArgumentHelpArgument( "help-arg");
+
+   if (flag_set & hfHelpArgFull)
+      addArgumentHelpArgument( "help-arg-full", true);
 
    if (flag_set & hfUsageDeprecated)
       mpUsageParams->setPrintDeprecated();
