@@ -44,6 +44,10 @@ using celma::prog_args::Handler;
 
 // module definitions
 
+
+namespace {
+
+
 /// Custom type: set flags in a bitset.
 /// @since  0.2, 10.04.2016
 class TypedArgBitset: public TypedArgBase
@@ -59,6 +63,12 @@ public:
    /// @since  0.16.0, 13.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArgBitset( type& dest, const string& vname);
+
+   /// Returns the name of the destination type as string.
+   ///
+   /// @return  String with the name of the destination type.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
@@ -109,6 +119,12 @@ TypedArgBitset::TypedArgBitset( type& dest, const string& vname):
 } // TypedArgBitset::TypedArgBitset
 
 
+const std::string TypedArgBitset::varTypeName() const
+{
+   return "custom";
+} // TypedArgBitset::varTypeName
+
+
 void TypedArgBitset::assign( const string& value)
 {
 
@@ -149,6 +165,9 @@ TypedArgBase* TypedArgBitset::setListSep( char sep)
    mListSep = sep;
    return this;
 } // TypedArgBitset::setListSep
+
+
+} // namespace
 
 
 

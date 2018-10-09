@@ -56,7 +56,7 @@ int main( int argc, char* argv[])
       "specifies to read from a file")->setPrintDefault( false);
    subInput.addArgument( "q", DEST_PAIR( inputName, inputMode, 2),
       "specifies to read from a queue")->setPrintDefault( false);
-   ah.addArgument( "i", &subInput, "input arguments");
+   ah.addArgument( "i", subInput, "input arguments");
 
    std::string  outputName;
    int          outputMode = 0;
@@ -66,12 +66,12 @@ int main( int argc, char* argv[])
       "specifies to write into a file")->setPrintDefault( false);
    subOutput.addArgument( "q", DEST_PAIR( outputName, outputMode, 2),
       "specifies to write into a queue")->setPrintDefault( false);
-   ah.addArgument( "o", &subOutput, "output arguments");
+   ah.addArgument( "o", subOutput, "output arguments");
 
    ah.evalArguments( argc, argv);
 
    return EXIT_SUCCESS;
-} // end main
+} // main
 
 
 

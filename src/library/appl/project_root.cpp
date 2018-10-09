@@ -19,7 +19,7 @@
 #include "celma/appl/project_root.hpp"
 
 
-// C/OS library includes
+// OS/C library includes
 #include <unistd.h>
 #include <cstdlib>
 #include <cstring>
@@ -98,7 +98,7 @@ void ProjectRoot::setProjectRoot( ProjRootSrc srcType, const char* source)
          mProjectRoot.assign( source, 0, pos - source); 
          break;   // switch
       } // end if
-      // intentionally no break here!
+      [[fallthrough]];  // intentionally no break here!
    case ProjRootSrc::cwd:
       if (char* currWD = ::get_current_dir_name())
       {

@@ -14,8 +14,8 @@
 /// Adds partial template specialisations for some types provided by the STL.
 
 
-#ifndef CELMA_STL_TYPE_NAME_HPP
-#define CELMA_STL_TYPE_NAME_HPP
+#ifndef CELMA_TYPE_NAME_STL_HPP
+#define CELMA_TYPE_NAME_STL_HPP
 
 
 #include <cstring>
@@ -39,7 +39,6 @@
 #include "celma/common/detail/type_name.hpp"
 
 #ifdef __has_include
-/*
 #   if __has_include(<any>)
 #      include <any>
 #      define have_any 1
@@ -50,7 +49,6 @@
 #   else
 #      define have_any 0
 #   endif
-*/
 #   if __has_include(<optional>)
 #      include <optional>
 #      define have_optional 1
@@ -87,7 +85,6 @@
 namespace celma {
 
 
-/*
 #if have_any
 #   ifdef experimental_any
 PROVIDE_SIMPLE_TYPE_NAME( std::experimental::any);
@@ -95,7 +92,6 @@ PROVIDE_SIMPLE_TYPE_NAME( std::experimental::any);
 PROVIDE_SIMPLE_TYPE_NAME( std::any);
 #   endif
 #endif
-*/
 
 
 /// Specialisation for type 'std::string'.
@@ -124,99 +120,54 @@ PROVIDE_SIMPLE_TYPE_NAME( std::wstring_view);
 
 
 /// Specialisation for type 'std::array<>'.
+///
 /// @tparam  T  The type of the data stored in the array.
 /// @tparam  N  The number of values stored in the array.
+/// @since  1.12.0, 14.09.2018  (now fully constexpr)
 /// @since  0.10, 25.12.2016
 template< typename T, std::size_t N> class type< std::array< T, N>>
 {
 public:
    /// Returns the name of the type.
+   ///
    /// @return  'std::array<type,n>'.
    /// @since  0.10, 25.12.2016
    static constexpr const char* name()
    {
-      if (mName[ 0] == 0)
-      {
-         ::memcpy( mName, "std::array<", 11);
-         ::strcat( &mName[ 11], type< T>::name());
-         ::strcat( mName, ",");
-         ::strcat( mName, common::string_from< std::size_t, N>::value);
-         ::strcat( mName, ">");
-      } // end if
-      return mName;
-   } // end type< std::array< T>>::name
+      return &mName[ 0];
+   } // type< std::array< T>>::name
 
-private:
    /// Used to store the name of the type persistently.
-   static char  mName[ 128];
+   /// Is public to build nested container names, don't access for printing.
+   static constexpr auto const  mName =
+      common::string_concat( "std::array<", type< T>::mName, ",",
+         common::string_from< std::size_t, N>::value, ">");
 
 }; // type< std::array< T, N>>
 
-template< typename T, std::size_t N> char  type< std::array< T, N>>::mName[ 128] = { 0 };
-
-
-#if 1
-
 
 /// Specialisation for type 'std::bitset<>'.
 /// @tparam  N  The number of values stored in the bitset.
+/// @since  1.12.0, 14.09.2018  (now fully constexpr)
 /// @since  0.1, 15.03.2016
 template< std::size_t N> class type< std::bitset< N>>
 {
 public:
    /// Returns the name of the type.
-   /// @return  'std::bitset<n>'.
-   /// @since  0.1, 15.03.2016
-   static constexpr const char* name()
-   {
-      if (mName[ 0] == 0)
-      {
-         ::memcpy( mName, "std::bitset<", 12);
-         ::strcpy( &mName[ 12], common::string_from< std::size_t, N>::value);
-         ::strcat( mName, ">");
-      } // end if
-      return mName;
-   } // end type< std::bitset< T>>::name
-
-private:
-   /// Used to store the name of the type persistently.
-   static char  mName[ 128];
-
-}; // type< std::bitset< T>>
-
-template< std::size_t N> char  type< std::bitset< N>>::mName[ 128] = { 0 };
-
-
-#else
-
-
-/// Specialisation for type 'std::bitset<>'.
-/// @tparam  N  The number of values stored in the bitset.
-/// @since  0.1, 15.03.2016
-template< std::size_t N> class type< std::bitset< N>>
-{
-public:
-   /// Returns the name of the type.
-   /// @return  'std::bitset<n>'.
+   /// @return  'std::bitset< <number> >' (without the spaces).
    /// @since  0.1, 15.03.2016
    static constexpr const char* name()
    {
       return &mName[ 0];
-   } // end type< std::bitset< T>>::name
+   } // type< std::bitset< T>>::name
 
-private:
-   /// Used to store the name of the type persistently.
+   /// Used to store the name of the type persistently.<br>
+   /// Is public to build nested container names, don't access for printing.
    static constexpr auto const  mName =
       common::string_concat( "std::bitset<",
-                             common::string_from< std::size_t, N>::value, ">");
+         common::string_from< std::size_t, N>::value, ">");
 
 }; // type< std::bitset< T>>
-
-
-template< std::size_t N> constexpr auto const  type< std::bitset< N>>::mName;
-
-
-#endif
 
 
 PROVIDE_TEMPLATE_TYPE_NAME( std::deque);
@@ -244,6 +195,7 @@ PROVIDE_TEMPLATE_TYPE_NAME( std::optional);
 
 /// Macro to create the specialisation of type<> for an STL container.
 /// @param  c  The type of the container to create the specialisation for.
+/// @since  1.12.0, 14.09.2018  (now fully constexpr)
 /// @since  0.1, 15.03.2016  (macro-isation of multiple template specialisations).
 #define  PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( c) \
    template< typename K, typename V> class type< c< K, V>> \
@@ -251,21 +203,12 @@ PROVIDE_TEMPLATE_TYPE_NAME( std::optional);
    public: \
       static constexpr const char* name() \
       { \
-         if (mName[ 0] == 0) \
-         { \
-            ::strcpy( mName, # c); \
-            ::strcat( mName, "<"); \
-            ::strcat( mName, type< K>::name()); \
-            ::strcat( mName, ","); \
-            ::strcat( mName, type< V>::name()); \
-            ::strcat( mName, ">"); \
-         } \
-         return mName; \
+         return &mName[ 0]; \
       } \
-   private: \
-      static char  mName[ 128]; \
-   }; \
-   template< typename K, typename V> char  type< c< K, V>>::mName[ 128] = { 0 }
+      static constexpr auto const  mName = \
+         common::string_concat( # c, "<", type< K>::mName, ",", \
+            type< V>::mName, ">"); \
+   }
 
 
 PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::map);
@@ -278,8 +221,8 @@ PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::unordered_multimap);
 } // namespace celma
 
 
-#endif   // CELMA_STL_TYPE_NAME_HPP
+#endif   // CELMA_TYPE_NAME_STL_HPP
 
 
-// =====  END OF stl_type_name.hpp  =====
+// =====  END OF type_name_stl.hpp  =====
 
