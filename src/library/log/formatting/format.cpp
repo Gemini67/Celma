@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,6 +30,7 @@
 
 // project includes
 #include "celma/log/detail/log_msg.hpp"
+#include "celma/log/logging.hpp"
 
 
 namespace celma { namespace log { namespace formatting {
@@ -37,6 +38,7 @@ namespace celma { namespace log { namespace formatting {
 
 
 /// Constructor.
+///
 /// @param[in]  def  The object with the format definition.
 /// @since  1.0.0, 07.12.2016
 Format::Format( const Definition& def):
@@ -48,9 +50,11 @@ Format::Format( const Definition& def):
 
 /// Formats the data of the log messagr object according to the format
 /// definition passed into the constructor.
-/// @param[out]  dest  The destination stream to write the formatted log
-///                    message data into.
-/// @param[in]   msg   The log message whose data should be formatted.
+///
+/// @param[out]  dest
+///    The destination stream to write the formatted log message data into.
+/// @param[in]   msg
+///    The log message whose data should be formatted.
 /// @since  1.0.0, 07.12.2016
 void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
 {
@@ -101,6 +105,10 @@ void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
       case FieldTypes::customProperty:
          append( dest, field_def, msg.getPropertyValue( field_def.mConstant));
          break;
+      case FieldTypes::attribute:
+         append( dest, field_def, Logging::instance().getAttribute(
+            field_def.mConstant));
+         break;
       } // end switch
    } // end for
 
@@ -109,12 +117,16 @@ void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
 
 
 /// Formats a date, time or timestamp.
-/// @param[out]  dest        The stream to write into.
-/// @param[in]   field_def   The object with may contain the custom format
-///                          string.
-/// @param[in]   format_str  The default format string, used when no custom
-///                          format string is available.
-/// @param[in]   timestamp   The timestamp to format.
+///
+/// @param[out]  dest
+///    The stream to write into.
+/// @param[in]   field_def
+///    The object with may contain the custom format string.
+/// @param[in]   format_str
+///    The default format string, used when no custom format string is
+///    available.
+/// @param[in]   timestamp
+///    The timestamp to format.
 /// @since  1.0.0, 11.12.2016
 void Format::formatDateTime( std::ostream& dest, const Field& field_def,
                              const char* format_str, time_t timestamp) const
@@ -136,9 +148,13 @@ void Format::formatDateTime( std::ostream& dest, const Field& field_def,
 
 /// Write a field into the output stream, including width and alignment
 /// settings.
-/// @param[out]  dest  The destination stream to write into.
-/// @param[in]   def   The object with the width and alignment settings.
-/// @param[in]   str   The string to write.
+///
+/// @param[out]  dest
+///    The destination stream to write into.
+/// @param[in]   def
+///    The object with the width and alignment settings.
+/// @param[in]   str
+///    The string to write.
 /// @since  1.0.0, 07.12.2016
 void Format::append( std::ostream& dest, const Field& def,
                      const std::string& str) const
@@ -164,5 +180,5 @@ void Format::append( std::ostream& dest, const Field& def,
 } // namespace celma
 
 
-// ============================  END OF format.cpp  ============================
+// =====  END OF format.cpp  =====
 

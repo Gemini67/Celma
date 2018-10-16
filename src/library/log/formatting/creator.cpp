@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,10 +23,12 @@ namespace celma { namespace log { namespace formatting {
 
 
 /// Constructor.
-/// @param[in]  dest_def  The format definition object to store the log
-///                       format definition in.
-/// @param[in]  auto_sep  If set, this string is used as separator between
-///                       two fields and is added automatically.
+///
+/// @param[in]  dest_def
+///    The format definition object to store the log format definition in.
+/// @param[in]  auto_sep
+///    If set, this string is used as separator between two fields and is
+///    added automatically.
 /// @since  1.0.0, 13.12.2016
 Creator::Creator( Definition& dest_def, const char* auto_sep):
    mDefs( dest_def),
@@ -42,6 +44,7 @@ Creator::Creator( Definition& dest_def, const char* auto_sep):
 /// Sets a new auto separator string or deletes the existing one (the
 /// default).<br>
 /// The new separator will be used for the next field that is added.
+///
 /// @param[in]  sep  The new separator to use, NULL to turn the feature off.
 /// @since  1.0.0, 29.09.2017
 void Creator::setAutoSep( const char* sep)
@@ -58,6 +61,7 @@ void Creator::setAutoSep( const char* sep)
 
 /// Adds a field with the given type. Remaining parameters must be set
 /// before and are stored in the member variables.
+///
 /// @param[in]  field_type  The type of the field to add.
 /// @since  1.0.0, 13.12.2016
 void Creator::field( Definition::FieldTypes field_type)
@@ -78,6 +82,7 @@ void Creator::field( Definition::FieldTypes field_type)
 
 
 /// Sets a fixed width for the next field.
+///
 /// @param[in]  fixed_width  he fixed width to use for the next field.
 /// @since  1.0.0, 13.12.2016
 void Creator::setFixedWidth( int fixed_width)
@@ -90,6 +95,7 @@ void Creator::setFixedWidth( int fixed_width)
 
 
 /// Sets the flag that the output of the next field should be left-aligned.
+///
 /// @since  1.0.0, 13.12.2016
 void Creator::alignLeft()
 {
@@ -101,6 +107,7 @@ void Creator::alignLeft()
 
 
 /// Operator to handle manipulators.
+///
 /// @param[in]  m  The manipulator to call.
 /// @return  This object.
 /// @since  1.0.0, 13.12.2016
@@ -114,9 +121,30 @@ Creator& Creator::operator <<( Creator&( *m)( Creator&))
 
 
 
+/// Operator to store the data of an 'attribute' in a creator object.
+///
+/// @param[in]  c
+///    The object to pass the attribute to.
+/// @param[in]  attr
+///    The attribute to store.
+/// @return  The same object as passed in \a c.
+/// @since  x.y.z, 11.10.2018
+Creator& operator <<( Creator& c, const attribute& attr)
+{
+
+   c.attribute( attr.value());
+
+   return c;
+} // operator <<
+
+
+
 /// Operator to store the data of a 'custom property' in a creator object.
-/// @param[in]  c   The object to pass the custom property to.
-/// @param[in]  cp  The custom property to store.
+///
+/// @param[in]  c
+///    The object to pass the custom property to.
+/// @param[in]  cp
+///    The custom property to store.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 13.12.2016
 Creator& operator <<( Creator& c, const customProperty& cp)
@@ -131,8 +159,11 @@ Creator& operator <<( Creator& c, const customProperty& cp)
 
 /// Operator to store a constant string in a creator object. This may later
 /// be used as constant string, or as format string e.g. for a date field.
-/// @param[in]  c           The object to pass the constant string to.
-/// @param[in]  const_text  The custom property to store.
+///
+/// @param[in]  c
+///    The object to pass the constant string to.
+/// @param[in]  const_text
+///    The custom property to store.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 13.12.2016
 Creator& operator <<( Creator& c, const std::string& const_text)
@@ -146,8 +177,11 @@ Creator& operator <<( Creator& c, const std::string& const_text)
 
 
 /// Operator to store a fixed width setting in a creator object.
-/// @param[in]  c            The object to pass the fixed width to.
-/// @param[in]  fixed_width  The fixed width to store.
+///
+/// @param[in]  c
+///    The object to pass the fixed width to.
+/// @param[in]  fixed_width
+///    The fixed width to store.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 13.12.2016
 Creator& operator <<( Creator& c, int fixed_width)
@@ -160,8 +194,11 @@ Creator& operator <<( Creator& c, int fixed_width)
 
 
 /// Operator to store the data of a 'format string' in a creator object.
-/// @param[in]  c   The object to pass the format string to.
-/// @param[in]  fs  The format string to store.
+///
+/// @param[in]  c
+///    The object to pass the format string to.
+/// @param[in]  fs
+///    The format string to store.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 26.09.2017
 Creator& operator <<( Creator& c, const formatString& fs)
@@ -174,9 +211,11 @@ Creator& operator <<( Creator& c, const formatString& fs)
 
 
 
-/// Operator to change the separator sring to use from now on.
-/// @param[in]  c    The object to change the eparator string in.
-/// @param[in]  sep  The separator string to set.
+/// Operator to change the separator string to use from now on.
+/// @param[in]  c
+///    The object to change the eparator string in.
+/// @param[in]  sep
+///    The separator string to set.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 02.10..2017
 Creator& operator <<( Creator& c, const separator& sep)
@@ -190,6 +229,7 @@ Creator& operator <<( Creator& c, const separator& sep)
 
 
 /// Called by the operator to actually store the constant text.
+///
 /// @param[in]  const_text  The constant text to store.
 /// @since  1.0.0, 13.12.2016
 void Creator::addConstantText( const std::string& const_text)
@@ -209,7 +249,29 @@ void Creator::addConstantText( const std::string& const_text)
 
 
 
+/// Adds a field with type attribute.
+///
+/// @param[in]  attr_name  The name of the attribute to add the value of.
+/// @since  x.y.z, 11.10.2018
+void Creator::attribute( const std::string& attr_name)
+{
+
+   Definition::Field  attribute_field;
+
+
+   attribute_field.mType       = Definition::FieldTypes::attribute;
+   attribute_field.mConstant   = attr_name;
+   attribute_field.mFixedWidth = mFixedWidth;
+   attribute_field.mAlignLeft  = mAlignLeft;
+
+   addField( attribute_field);
+
+} // Creator::attribute
+
+
+
 /// Adds a field with type custom property.
+///
 /// @param[in]  property_name  The name of the property to add the value of.
 /// @since  1.0.0, 13.12.2016
 void Creator::customProperty( const std::string& property_name)
@@ -230,6 +292,7 @@ void Creator::customProperty( const std::string& property_name)
 
 
 /// Stores a format string that can be used by the next field.
+///
 /// @param[in]  fmt  The format string to store.
 /// @since  1.0.0, 26.09.2017
 void Creator::formatString( const std::string& fmt)
@@ -244,6 +307,7 @@ void Creator::formatString( const std::string& fmt)
 /// Checks if an auto-separator must be added first, and then adds the field
 /// to the definition.<br>
 /// And while we're at it, prepare for the next field.
+///
 /// @param[in]  field  The field to add.
 /// @since  1.0.0, 29.09.2017
 void Creator::addField( const Definition::Field& field)
@@ -276,5 +340,5 @@ void Creator::addField( const Definition::Field& field)
 } // namespace celma
 
 
-// ===========================  END OF creator.cpp  ===========================
+// =====  END OF creator.cpp  =====
 

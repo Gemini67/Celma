@@ -22,6 +22,7 @@
 #include <iosfwd>
 #include <vector>
 #include "celma/common/singleton.hpp"
+#include "celma/log/detail/log_attributes_container.hpp"
 #include "celma/log/detail/log_data.hpp"
 #include "celma/log/detail/log_defs.hpp"
 
@@ -49,13 +50,32 @@ class LogMsg;
 /// log-ids).<br>
 /// Each of these logs can have zero or multiple destinations. This can be e.g.
 /// a file writer, a communication interface etc. For each destination, filters
-/// can be specified, which messages should be passed to this destination.
+/// can be specified, which messages should be passed to this destination.<br>
+/// The most convenient way to create a log message is by using one of the
+/// provided macros.<br>
+/// For each log destination a specific output format can be specified. There
+/// are predefined columns like the date, time, process id etc. that use can
+/// use, plus the text of the log message of course.<br>
+/// You can store values that are added to each log message, either in a
+/// separate column or in the text of the log message, the log attributes.<br>
+/// Each log attribute has a specific scope, the default is "process", meaning
+/// the attribute is visible everywhere in the process. Another scope is
+/// "function", such an attrbute can only be used from within this function (or
+/// by functions called from this function).
 ///
 /// @since  0.3, 19.06.2016
 class Logging: public common::Singleton< Logging>
 {
 public:
    friend class common::Singleton< Logging>;
+
+   enum class AttributeScope
+   {
+      process,
+      thread,
+      class_or_struct,
+      function
+   };
 
    /// Checks if there already exists a log with the specified name. If not, a
    /// new log is created.
@@ -89,6 +109,34 @@ public:
    /// @since  0.3, 19.06.2016
    void log( const std::string& log_name, const detail::LogMsg& msg);
 
+   /// 
+   /// @param[in]  name
+   ///    .
+   /// @param[in]  value
+   ///    .
+   /// @param[in]  scope
+   ///    .
+   /// @since
+   ///    x.y.z, 10.10.2018
+   void addAttribute( const std::string& name, const std::string& value,
+      AttributeScope scope = AttributeScope::process);
+
+   /// 
+   /// @param[in]  attr_name
+   ///    .
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 11.10.2018
+   std::string getAttribute( const std::string& attr_name) const;
+
+   /// 
+   /// @param[in]  attr_name
+   ///    .
+   /// @since
+   ///    x.y.z, 11.10.2018
+   void removeAttribute( const std::string& attr_name);
+
    /// Dumps information about the logging framework.
    /// @param[in]  os  The stream to write into.
    /// @param[in]  lg  The object to dump.
@@ -99,18 +147,30 @@ public:
 protected:
    /// Constructor.
    /// @since  0.3, 19.06.2016
-   Logging();
+   Logging() = default;
 
 private:
    /// Container for the log object(s).
    using LogCont = std::vector< detail::LogData>;
 
    /// The id to give to the next log.
-   id_t     mNextLogId;
+   id_t                            mNextLogId = 0x01;
    /// The data of the existing log(s).
-   LogCont  mLogs;
+   LogCont                         mLogs;
+   /// Store for the current log attributes.
+   detail::LogAttributesContainer  mAttributes;
 
 }; // Logging
+
+
+// inlined methods
+// ===============
+
+
+inline std::string Logging::getAttribute( const std::string& attr_name) const
+{
+   return mAttributes.getAttribute( attr_name);
+} // Logging::getAtribute
 
 
 } // namespace log

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,6 +29,8 @@
 
 
 // project includes
+#include "celma/log/logging.hpp"
+#include "celma/log/log_macros.hpp"
 #include "celma/log/formatting/creator.hpp"
 
 
@@ -102,7 +104,7 @@ BOOST_AUTO_TEST_CASE( test_fields)
       BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp|test_one");
    } // end scope
 
-} // end test_fields
+} // test_fields
 
 
 
@@ -127,7 +129,7 @@ BOOST_AUTO_TEST_CASE( test_align_fixedwidth)
 
    BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp        :  1234");
 
-} // end test_align_fixedwidth
+} // test_align_fixedwidth
 
 
 
@@ -243,7 +245,85 @@ BOOST_AUTO_TEST_CASE( test_date_time)
 } // test_date_time
 
 
+
+/// Create a log message that contains an attribute.
+///
+/// @since  x.y.z, 12.10.2018
+BOOST_AUTO_TEST_CASE( text_with_attribute)
+{
+
+   namespace clf = celma::log::formatting;
+
+   DefinitionAccess  my_def;
+   Creator           format_creator( my_def);
+
+   format_creator << 20 << clf::left << clf::filename << ":"
+                  << 6 << clf::line_nbr << " | "
+                  << clf::attribute( "shade") << "-"
+                  << clf::attribute( "color");
+
+   LogMsg              msg( "filename.cpp", "test_one", 1234);
+   std::ostringstream  oss;
+   Format              log_format( my_def);
+
+   celma::log::Logging::instance().addAttribute( "shade", "light");
+   celma::log::Logging::instance().addAttribute( "color", "blue");
+
+   log_format.format( oss, msg);
+
+   BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp        :  1234 | light-blue");
+
+} // text_with_attribute
+
+
+
+/// Create a log message that contains an attribute.
+///
+/// @since  x.y.z, 12.10.2018
+BOOST_AUTO_TEST_CASE( text_with_attribute_scoped)
+{
+
+   namespace clf = celma::log::formatting;
+
+   DefinitionAccess  my_def;
+   Creator           format_creator( my_def);
+
+   format_creator << 20 << clf::left << clf::filename << ":"
+                  << 6 << clf::line_nbr << " | "
+                  << clf::attribute( "shade") << "-"
+                  << clf::attribute( "color");
+
+   LogMsg              msg( "filename.cpp", "test_one", 1234);
+   std::ostringstream  oss;
+   Format              log_format( my_def);
+
+   celma::log::Logging::instance().addAttribute( "shade", "light");
+   celma::log::Logging::instance().addAttribute( "color", "blue");
+
+   log_format.format( oss, msg);
+
+   BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp        :  1234 | light-blue");
+
+   {
+      LOG_ATTRIBUTE( "shade", "dark");
+
+      oss.str( "");
+      log_format.format( oss, msg);
+
+      BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp        :  1234 | dark-blue");
+   } // end scope
+
+   oss.str( "");
+   log_format.format( oss, msg);
+
+   BOOST_REQUIRE_EQUAL( oss.str(), "filename.cpp        :  1234 | light-blue");
+
+} // text_with_attribute_scoped
+
+
+
 // all fields
 
 
-// =======================  END OF test_log_format.cpp  =======================
+// =====  END OF test_log_format.cpp  =====
+

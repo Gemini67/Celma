@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,20 +18,23 @@
 // include of the tested module's header file
 #include "celma/log/formatting/creator.hpp"
 
+
+// OS/C lib includes
 #include <iostream>
 
 
 // Boost includes
-#define BOOST_TEST_MODULE LogCreatorTest
+#define BOOST_TEST_MODULE LogFormatCreatorTest
 #include <boost/test/unit_test.hpp>
 
 
+namespace clf = celma::log::formatting;
 using celma::log::formatting::Creator;
 
 
 /// Helper class used to check the contents of the created format.
 /// @since  1.0.0, 07.12.2016
-class DefinitionAccess: public celma::log::formatting::Definition
+class DefinitionAccess: public clf::Definition
 {
 public:
    /// Returns the stored size, i.e. number of format entries.
@@ -90,12 +93,11 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( DefinitionAccess)
 BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::log::formatting::Definition::FieldTypes)
 
 
+
 /// First simple tests.
 /// @since  1.0.0, 07.12.2016
 BOOST_AUTO_TEST_CASE( test_one)
 {
-
-   namespace clf = celma::log::formatting;
 
    {
       DefinitionAccess  my_def;
@@ -150,8 +152,6 @@ BOOST_AUTO_TEST_CASE( test_one)
 BOOST_AUTO_TEST_CASE( test_two)
 {
 
-   namespace clf = celma::log::formatting;
-
    {
       DefinitionAccess  my_def;
       Creator           format_creator( my_def);
@@ -183,8 +183,6 @@ BOOST_AUTO_TEST_CASE( test_two)
 /// @since  1.0.0, 07.12.2016
 BOOST_AUTO_TEST_CASE( test_three)
 {
-
-   namespace clf = celma::log::formatting;
 
    {
       DefinitionAccess  my_def;
@@ -218,8 +216,6 @@ BOOST_AUTO_TEST_CASE( test_three)
 /// @since  1.0.0, 20.09.2017
 BOOST_AUTO_TEST_CASE( test_all_fields)
 {
-
-   namespace clf = celma::log::formatting;
 
    DefinitionAccess  my_def;
    Creator           format_creator( my_def);
@@ -299,8 +295,6 @@ BOOST_AUTO_TEST_CASE( test_all_fields)
 BOOST_AUTO_TEST_CASE( test_custom_property)
 {
 
-   namespace clf = celma::log::formatting;
-
    DefinitionAccess  my_def;
    Creator           format_creator( my_def);
 
@@ -323,12 +317,45 @@ BOOST_AUTO_TEST_CASE( test_custom_property)
 
 
 
+/// Test using attributes.
+///
+/// @since  x.y.z, 12.10.2018
+BOOST_AUTO_TEST_CASE( format_with_attributes)
+{
+
+   DefinitionAccess  my_def;
+   Creator           format_creator( my_def);
+
+
+   BOOST_REQUIRE_EQUAL( my_def.size(), 0);
+
+   format_creator << clf::time << "|"
+                  << clf::left << 13 << clf::attribute( "attr1")
+                  << "|" << clf::attribute( "attr2")
+                  << "|" << clf::text;
+
+   BOOST_REQUIRE_EQUAL( my_def.size(), 7);
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 2),
+                        clf::Definition::FieldTypes::attribute);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 2),   "attr1");
+   BOOST_REQUIRE_EQUAL( my_def.fixedWidth( 2), 13);
+   BOOST_REQUIRE_EQUAL( my_def.alignLeft( 2), true);
+
+   BOOST_REQUIRE_EQUAL( my_def.fieldType( 4),
+                        clf::Definition::FieldTypes::attribute);
+   BOOST_REQUIRE_EQUAL( my_def.constant( 4),   "attr2");
+   BOOST_REQUIRE_EQUAL( my_def.fixedWidth( 4), 0);
+   BOOST_REQUIRE_EQUAL( my_def.alignLeft( 4), false);
+
+} // format_with_attributes
+
+
+
 /// Test date, time and timestamp format string handling.
 /// @since  1.0.0, 26.09.2017
 BOOST_AUTO_TEST_CASE( test_format_string)
 {
-
-   namespace clf = celma::log::formatting;
 
    {
       DefinitionAccess  my_def;
@@ -387,8 +414,6 @@ BOOST_AUTO_TEST_CASE( test_format_string)
 BOOST_AUTO_TEST_CASE( test_change_sep)
 {
 
-   namespace clf = celma::log::formatting;
-
    DefinitionAccess  my_def;
    Creator  format_creator( my_def, "|");
 
@@ -438,4 +463,5 @@ BOOST_AUTO_TEST_CASE( test_change_sep)
 
 
 
-// ===================  END OF test_log_format_creator.cpp  ===================
+// =====  END OF test_log_format_creator.cpp  =====
+

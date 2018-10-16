@@ -51,7 +51,8 @@ public:
       msgClass,        //!< The log class that the message belongs to. 
       errorNbr,        //!< The error number.
       text,            //!< The text of the og message.
-      customProperty   //!< A custom property.
+      customProperty,  //!< A custom property.
+      attribute        //!< A log attribute.
    };
 
    // Default constructor, copy constructor and destructor are fine.
