@@ -55,6 +55,26 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
 
 
+/// Default path should be returned when nothing else was set.
+///
+/// @since  x.y.z, 19.10.2018
+BOOST_AUTO_TEST_CASE( default_path)
+{
+
+   string  home( ::getenv( "HOME"));
+
+   ensure_last( home);
+   // initialisation through constructor
+   ProjectRoot::reset();
+
+   // set project root
+   BOOST_REQUIRE_NO_THROW( ProjectRoot::instance().path());
+   BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), home);
+
+} // default_path
+
+
+
 /// Test path creation based upon the value of the environment variable $HOME.
 /// @since  1.0.0, 11.01.2017
 BOOST_AUTO_TEST_CASE( test_home)
