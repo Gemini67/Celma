@@ -102,12 +102,13 @@ void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
       case FieldTypes::text:
          append( dest, field_def, msg.getText());
          break;
-      case FieldTypes::customProperty:
-         append( dest, field_def, msg.getPropertyValue( field_def.mConstant));
-         break;
       case FieldTypes::attribute:
-         append( dest, field_def, Logging::instance().getAttribute(
-            field_def.mConstant));
+         {
+            auto  attr_value( msg.getAttributeValue( field_def.mConstant));
+            if (attr_value.empty())
+               attr_value = Logging::instance().getAttribute( field_def.mConstant);
+            append( dest, field_def, attr_value);
+         } // end scope
          break;
       } // end switch
    } // end for

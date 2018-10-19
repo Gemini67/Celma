@@ -54,28 +54,34 @@ class LogMsg;
 /// The most convenient way to create a log message is by using one of the
 /// provided macros.<br>
 /// For each log destination a specific output format can be specified. There
-/// are predefined columns like the date, time, process id etc. that use can
+/// are predefined columns like the date, time, process id etc. that you can
 /// use, plus the text of the log message of course.<br>
 /// You can store values that are added to each log message, either in a
 /// separate column or in the text of the log message, the log attributes.<br>
-/// Each log attribute has a specific scope, the default is "process", meaning
-/// the attribute is visible everywhere in the process. Another scope is
-/// "function", such an attrbute can only be used from within this function (or
-/// by functions called from this function).
+/// There are several ways to define a log attribute, related to the scope of an
+/// attribute:
+/// - Global:<br>
+///   You can add attributes to the singleton object of this class, resulting in
+///   an attribute that is visible "everywhere".
+/// - Scoped:<br>
+///   With the macro \c LOG_ATTRIBUTE a scoped attribute is created, that is
+///   visible as long as the scope of the internally used variable exists.<br>
+///   This includes functions called from within the scope etc.
+/// - Variable:<br>
+///   With the class celma::log::LogAttributes you can manage the scope of
+///   attributes yourself. For example, use an object of this class as a member
+///   variable of your class to define class-specific attributes.<br>
+///   You just have to pass the log attribute object to the log message
+///   afterwards. See the description of the class.
+/// You can always define multiple attributes with the same name (and, most
+/// likely, different values). When searching for the value of an attribute, the
+/// value of the attribute that was added last is used.
 ///
 /// @since  0.3, 19.06.2016
 class Logging: public common::Singleton< Logging>
 {
 public:
    friend class common::Singleton< Logging>;
-
-   enum class AttributeScope
-   {
-      process,
-      thread,
-      class_or_struct,
-      function
-   };
 
    /// Checks if there already exists a log with the specified name. If not, a
    /// new log is created.
@@ -109,32 +115,33 @@ public:
    /// @since  0.3, 19.06.2016
    void log( const std::string& log_name, const detail::LogMsg& msg);
 
-   /// 
+   /// Add an attribute which is later used for log messages.
+   ///
    /// @param[in]  name
-   ///    .
+   ///    The name of the attribute.
    /// @param[in]  value
-   ///    .
-   /// @param[in]  scope
-   ///    .
+   ///    The value for the attribute.
    /// @since
    ///    x.y.z, 10.10.2018
-   void addAttribute( const std::string& name, const std::string& value,
-      AttributeScope scope = AttributeScope::process);
+   void addAttribute( const std::string& name, const std::string& value);
 
-   /// 
-   /// @param[in]  attr_name
-   ///    .
+   /// Returns the value for an attribute.<br>
+   /// If multiple attributes with the same name exist, the values of the last
+   /// attribute is returned (i.e. the one that was added last).
+   ///
+   /// @param[in]  attr_name  The name of the attribute to return the value of.
    /// @return
-   ///    .
+   ///    The (last) value of the attribute or an empty string when not found.
    /// @since
    ///    x.y.z, 11.10.2018
    std::string getAttribute( const std::string& attr_name) const;
 
+   /// Removes an attribute.<br>
+   /// If multiple attributes with the same name exist, the attribute that was
+   /// added last is removed.
    /// 
-   /// @param[in]  attr_name
-   ///    .
-   /// @since
-   ///    x.y.z, 11.10.2018
+   /// @param[in]  attr_name  The name of the attribute to remove.
+   /// @since  x.y.z, 11.10.2018
    void removeAttribute( const std::string& attr_name);
 
    /// Dumps information about the logging framework.

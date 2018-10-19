@@ -29,9 +29,8 @@ namespace celma { namespace log { namespace formatting {
 
 // bring helper classes into the same namespace
 using attribute = common::Manipulator< std::string, 10>;
-using customProperty = common::Manipulator< std::string, 11>;
-using formatString = common::Manipulator< std::string, 12>;
-using separator = common::Manipulator< const char*, 13>;
+using formatString = common::Manipulator< std::string, 11>;
+using separator = common::Manipulator< const char*, 12>;
 
 
 /// Creates a log message format definition using stream-like syntax.<br>
@@ -113,23 +112,13 @@ public:
    /// @since  x.y.z, 11.10.2018
    friend Creator& operator <<( Creator& c, const attribute& attr);
 
-   /// Operator to store the data of a 'custom property' in a creator object.
-   ///
-   /// @param[in]  c
-   ///    The object to pass the custom property to.
-   /// @param[in]  cp
-   ///    The custom property to store.
-   /// @return  The same object as passed in \a c.
-   /// @since  1.0.0, 13.12.2016
-   friend Creator& operator <<( Creator& c, const customProperty& cp);
-
    /// Operator to store a constant string in a creator object. This may later
    /// be used as constant string, or as format string e.g. for a date field.
    ///
    /// @param[in]  c
    ///    The object to pass the constant string to.
    /// @param[in]  const_text
-   ///    The custom property to store.
+   ///    The text to store.
    /// @return  The same object as passed in \a c.
    /// @since  1.0.0, 13.12.2016
    friend Creator& operator <<( Creator& c, const std::string& const_text);
@@ -177,12 +166,6 @@ private:
    /// @since  x.y.z, 11.10.2018
    void attribute( const std::string& attr_name);
 
-   /// Adds a field with type custom property.
-   ///
-   /// @param[in]  property_name  The name of the property to add the value of.
-   /// @since  1.0.0, 13.12.2016
-   void customProperty( const std::string& property_name);
-
    /// Stores a format string that can be used by the next field.
    ///
    /// @param[in]  fmt  The format string to store.
@@ -204,9 +187,9 @@ private:
    /// Format string for the next date, time or datetime field.
    std::string  mFormatString;
    /// Value set for the 'fixed width', will be stored in the next field.
-   int          mFixedWidth;
+   int          mFixedWidth = 0;
    /// Contains the value of the 'align left' flag to store in the next field.
-   bool         mAlignLeft;
+   bool         mAlignLeft = false;
 
 }; // Creator
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -24,13 +24,15 @@
 #include <string>
 #include "celma/common/exception_base.hpp"
 #include "celma/log/detail/log_defs.hpp"
-#include "celma/log/detail/log_msg_property.hpp"
+#include "celma/log/log_attributes.hpp"
 
 
 namespace celma { namespace log { namespace detail {
 
 
 /// Class to store all the data of a log message.
+/// @since  x.y.z, 17.10.2018
+///    (removed properties, added support for attributes)
 /// @since  1.0.0, 19.06.2016
 class LogMsg
 {
@@ -69,13 +71,6 @@ public:
    /// @param[in]  text  The text to log.
    /// @since  1.0.0, 19.06.2016
    void setText( const std::string& text);
-
-   /// Stores a custom property to be used for this log message.
-   /// @param[in]  property_name   The name of the property.
-   /// @param[in]  property_value  The value of the property.
-   /// @since  1.0.0, 11.12.2016
-   void setCustomProperty( const std::string& property_name,
-                           const std::string& property_value);
 
    /// Sets the timestamp for the log message.
    /// @param[in]  ts  The timestamp to store.
@@ -133,35 +128,44 @@ public:
    /// @since  1.0.0, 19.06.2016
    const std::string& getText() const;
 
-   /// Returns the value of a custom property.
-   /// @param[in]  property_name  The name of the property to return the value of.
-   /// @return  The value of the property, empty string if the property is unknown.
-   /// @since  1.0.0, 12.12.2016
-   const std::string getPropertyValue( const std::string& property_name) const;
+   /// Adds (a pointer to) an attribute container.
+   ///
+   /// @param[in]  attr_cont  The attribute container.
+   /// @since  x.y.z, 17.10.2018
+   void setAttributes( const LogAttributes& attr_cont);
+
+   /// Returns the value of the attribute with the given name.
+   ///
+   /// @param[in]  attr_name  The name of the attribute to return the value of.
+   /// @return
+   ///    The value of the attribute or an empty string when not found.
+   /// @since
+   ///    x.y.z, 17.10.2018
+   std::string getAttributeValue( const std::string& attr_name) const;
 
 private:
    /// Time stamp when the log message (i.e., this object) was created.
-   time_t          mTimestamp;
+   time_t                mTimestamp;
    /// The id of the process that created the log message.
-   pid_t           mProcessId;
+   pid_t                 mProcessId;
    /// The id the thread that created the message.
-   pthread_t       mThreadId;
+   pthread_t             mThreadId;
    /// The name of the source file.
-   std::string     mFileName;
+   std::string           mFileName;
    /// The name of the function.
-   std::string     mFunctionName;
+   std::string           mFunctionName;
    /// The line number in the source file.
-   int             mLineNbr;
+   int                   mLineNbr;
    /// The classification of the log message.
-   LogClass        mClass;
+   LogClass              mClass = LogClass::undefined;
    /// The severity level of the log message.
-   LogLevel        mLevel;
+   LogLevel              mLevel = LogLevel::undefined;
    /// The error number for this log message.
-   int             mErrNbr;
+   int                   mErrNbr = 0;
    /// The text of the log message.
-   std::string     mText;
-   /// Stores custom-set properties of the log message.
-   LogMsgProperty  mCustomProperty;
+   std::string           mText;
+   /// Pointer to the optional object to get the log attributes from.
+   const LogAttributes*  mpAttributes = nullptr;
 
 }; // LogMsg
 
@@ -260,11 +264,17 @@ inline const std::string& LogMsg::getText() const
 } // LogMsg::getText
 
 
-inline const std::string
-   LogMsg::getPropertyValue( const std::string& property_name) const
+inline void LogMsg::setAttributes( const LogAttributes& attr_cont)
 {
-   return mCustomProperty.getPropertyValue( property_name);
-} // LogMsg::getPropertyValue
+  mpAttributes = &attr_cont;
+} // LogMsg::setAttributes
+
+
+inline std::string LogMsg::getAttributeValue( const std::string& attr_name) const
+{
+   return (mpAttributes == nullptr) ? std::string()
+      : mpAttributes->getAttribute( attr_name);
+} // LogMsg::getAttributeValue
 
 
 // macros
@@ -287,5 +297,5 @@ inline const std::string
 #endif   // CELMA_LOG_DETAIL_LOG_MSG_HPP
 
 
-// ===========================  END OF log_msg.hpp  ===========================
+// =====  END OF log_msg.hpp  =====
 

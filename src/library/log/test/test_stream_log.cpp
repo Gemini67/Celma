@@ -41,8 +41,8 @@ using celma::log::Logging;
 
 
 /// Adds a log message as destination.
-/// @since
-///    0.11, 12.12.2016
+///
+/// @since  0.11, 12.12.2016
 BOOST_AUTO_TEST_CASE( test_default)
 {
 
@@ -61,57 +61,6 @@ BOOST_AUTO_TEST_CASE( test_default)
    Logging::instance().getLog( my_log)->removeDestination( "msg");
 
 } // test_default
-
-
-
-/// Checks that a custom property is correctly stored in the log message object.
-///
-/// @since  0.11, 12.12.2016
-BOOST_AUTO_TEST_CASE( test_one_custom_property)
-{
-
-   const auto                  my_log = Logging::instance().findCreateLog( "mine");
-   celma::log::detail::LogMsg  msg( LOG_MSG_OBJECT_INIT);
-
-   Logging::instance().getLog( my_log)
-      ->addDestination( "msg", new celma::log::test::LogDestMsg( msg));
-
-   LOG( my_log) << "custom property 'color' = "
-                << celma::log::customProperty( "color") << "cyan";
-
-   BOOST_REQUIRE_EQUAL( msg.getPropertyValue( "color"), "cyan");
-
-   // have to remove this log destination again
-   Logging::instance().getLog( my_log)->removeDestination( "msg");
-
-} // test_one_custom_property
-
-
-
-/// Two custom properties msut be stored in the log message.
-///
-/// @since  0.11, 12.12.2016
-BOOST_AUTO_TEST_CASE( test_two_custom_properties)
-{
-
-   const auto                  my_log = Logging::instance().findCreateLog( "mine");
-   celma::log::detail::LogMsg  msg( LOG_MSG_OBJECT_INIT);
-
-   Logging::instance().getLog( my_log)
-      ->addDestination( "msg", new celma::log::test::LogDestMsg( msg));
-
-   LOG( my_log) << "custom properties 'color' and 'price'"
-                << celma::log::customProperty( "color") << "cyan"
-                << "< test >"
-                << celma::log::customProperty( "price") << 45.2;
-
-   BOOST_REQUIRE_EQUAL( msg.getPropertyValue( "color"), "cyan");
-   BOOST_REQUIRE_EQUAL( msg.getPropertyValue( "price"), "45.2");
-
-   // have to remove this log destination again
-   Logging::instance().getLog( my_log)->removeDestination( "msg");
-
-} // test_two_custom_properties
 
 
 
@@ -148,7 +97,7 @@ BOOST_AUTO_TEST_CASE( add_stream_to_log)
 /// Add the value of an attribute to the text of the log message.
 ///
 /// @since  x.y.z, 12.10.2018
-BOOST_AUTO_TEST_CASE( add_attribute_to_log)
+BOOST_AUTO_TEST_CASE( add_attribute_to_log_msg_text)
 {
 
    const auto                  my_log = Logging::instance().findCreateLog( "mine");
@@ -170,7 +119,109 @@ BOOST_AUTO_TEST_CASE( add_attribute_to_log)
    // have to remove this log destination again
    Logging::instance().getLog( my_log)->removeDestination( "msg");
 
-} // add_attribute_to_log
+} // add_attribute_to_log_msg_text
+
+
+
+/// Add the value of an attribute to the text of the log message using a log
+/// attributes container.
+///
+/// @since  x.y.z, 18.10.2018
+BOOST_AUTO_TEST_CASE( add_attribute_from_container)
+{
+
+   const auto                  my_log = Logging::instance().findCreateLog( "mine");
+   celma::log::detail::LogMsg  msg( LOG_MSG_OBJECT_INIT);
+
+   Logging::instance().getLog( my_log)
+      ->addDestination( "msg", new celma::log::test::LogDestMsg( msg));
+
+   celma::log::LogAttributes  la( "color", "blue");
+
+   LOG_ATTR( my_log, la) << "value of attribute 'color' is '"
+      << celma::log::attributeValue( "color") << "'.";
+
+   const std::string  exp_result( "value of attribute 'color' is 'blue'.");
+   auto               log_text( msg.getText());
+
+   BOOST_REQUIRE_EQUAL( log_text, exp_result);
+
+   // have to remove this log destination again
+   Logging::instance().getLog( my_log)->removeDestination( "msg");
+
+} // add_attribute_from_container
+
+
+
+/// Add the value of an attribute to the text of the log message using a log
+/// attributes container which should override the scoped attribute.
+///
+/// @since  x.y.z, 18.10.2018
+BOOST_AUTO_TEST_CASE( add_attribute_from_container_precedence)
+{
+
+   const auto                  my_log = Logging::instance().findCreateLog( "mine");
+   celma::log::detail::LogMsg  msg( LOG_MSG_OBJECT_INIT);
+
+   Logging::instance().getLog( my_log)
+      ->addDestination( "msg", new celma::log::test::LogDestMsg( msg));
+
+   celma::log::LogAttributes  la( "color", "blue");
+
+   LOG_ATTRIBUTE( "color", "green");
+
+   LOG_ATTR( my_log, la) << "value of attribute 'color' is '"
+      << celma::log::attributeValue( "color") << "'.";
+
+   const std::string  exp_result( "value of attribute 'color' is 'blue'.");
+   auto               log_text( msg.getText());
+
+   BOOST_REQUIRE_EQUAL( log_text, exp_result);
+
+   // have to remove this log destination again
+   Logging::instance().getLog( my_log)->removeDestination( "msg");
+
+} // add_attribute_from_container_precedence
+
+
+
+/// Add the values of multiple, different attributes:
+/// - One scoped.
+/// - One from a log attributes container.
+/// - One from a sub log attributes container.
+///
+/// @since  x.y.z, 18.10.2018
+BOOST_AUTO_TEST_CASE( add_different_attributes)
+{
+
+   const auto                  my_log = Logging::instance().findCreateLog( "mine");
+   celma::log::detail::LogMsg  msg( LOG_MSG_OBJECT_INIT);
+
+   Logging::instance().getLog( my_log)
+      ->addDestination( "msg", new celma::log::test::LogDestMsg( msg));
+
+   celma::log::LogAttributes  la( "color", "blue");
+
+   celma::log::LogAttributes  sub_la( &la);
+   sub_la.addAttribute( "weight",  "bold");
+
+   LOG_ATTRIBUTE( "shade", "dark");
+
+   LOG_ATTR( my_log, sub_la) << "use font weight '"
+      << celma::log::attributeValue( "weight")
+      << "', color '" 
+      << celma::log::attributeValue( "shade") << "-"
+      << celma::log::attributeValue( "color") << "'.";
+
+   const std::string  exp_result( "use font weight 'bold', color 'dark-blue'.");
+   auto               log_text( msg.getText());
+
+   BOOST_REQUIRE_EQUAL( log_text, exp_result);
+
+   // have to remove this log destination again
+   Logging::instance().getLog( my_log)->removeDestination( "msg");
+
+} // add_different_attributes
 
 
 

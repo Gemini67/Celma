@@ -290,33 +290,6 @@ BOOST_AUTO_TEST_CASE( test_all_fields)
 
 
 
-/// Test with a custom property.
-/// @since  0.11, 13.12.2016
-BOOST_AUTO_TEST_CASE( test_custom_property)
-{
-
-   DefinitionAccess  my_def;
-   Creator           format_creator( my_def);
-
-
-   BOOST_REQUIRE_EQUAL( my_def.size(), 0);
-
-   format_creator << clf::time << "|"
-                  << clf::left << 13 << clf::customProperty( "color")
-                  << "|" << clf::text;
-
-   BOOST_REQUIRE_EQUAL( my_def.size(), 5);
-
-   BOOST_REQUIRE_EQUAL( my_def.fieldType( 2),
-                        clf::Definition::FieldTypes::customProperty);
-   BOOST_REQUIRE_EQUAL( my_def.constant( 2),   "color");
-   BOOST_REQUIRE_EQUAL( my_def.fixedWidth( 2), 13);
-   BOOST_REQUIRE_EQUAL( my_def.alignLeft( 2), true);
-
-} // test_custom_property
-
-
-
 /// Test using attributes.
 ///
 /// @since  x.y.z, 12.10.2018

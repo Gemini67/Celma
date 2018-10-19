@@ -44,9 +44,7 @@ StreamLog::StreamLog( id_t log_ids, const std::string filename,
                       const char* const function_name, int line_nbr) noexcept( false):
    mLogIds( log_ids),
    mLogName(),
-   mErrNbrNext( false),
    mStrStream(),
-   mPropertyName(),
    mLogMsg( filename, function_name, line_nbr)
 {
 
@@ -72,9 +70,7 @@ StreamLog::StreamLog( id_t log_ids, const std::string filename,
 /// @since  1.0.0, 19.06.2016
 StreamLog::StreamLog( const std::string& log_name, const std::string filename,
                       const char* const function_name, int line_nbr) noexcept( false):
-   mLogIds( 0),
    mLogName( log_name),
-   mErrNbrNext( false),
    mStrStream(),
    mLogMsg( filename, function_name, line_nbr)
 {
@@ -128,47 +124,6 @@ void StreamLog::storeException( const common::ExceptionBase& eb)
 
 
 
-/// Returns if a property name is stored in this object.
-///
-/// @return  \c true if a property name is stored.
-/// @since  1.0.0, 12.12.2016
-bool StreamLog::hasPropertyName() const
-{
-
-   return !mPropertyName.empty();
-} // StreamLog::hasPropertyName
-
-
-
-/// Stores a property name.
-///
-/// @param[in]  property_name  The property name to store.
-/// @since  1.0.0, 12.12.2016
-void StreamLog::storePropertyName( const std::string& property_name)
-{
-
-   mPropertyName = property_name;
-
-} // StreamLog::storePropertyName
-
-
-
-/// Stores the value of a property with the previously given property name.
-///
-/// @param[in]  property_value
-///    The value to store for the property with the previously given name.
-/// @since  1.0.0, 12.12.2016
-void StreamLog::storeProperty( const std::string& property_value)
-{
-
-   mLogMsg.setCustomProperty( mPropertyName, property_value);
-
-   mPropertyName.clear();
-
-} // StreamLog::storeProperty
-
-
-
 /// Adds the value of the given attribute to the log message text.
 ///
 /// @param[in]  attr_name  The name of the attribute to add the value of.
@@ -176,9 +131,31 @@ void StreamLog::storeProperty( const std::string& property_value)
 void StreamLog::addAttribute( const std::string& attr_name)
 {
 
-   mStrStream << Logging::instance().getAttribute( attr_name);
+   auto  attr_value = mLogMsg.getAttributeValue( attr_name);
+
+
+   if (attr_value.empty())
+      attr_value = Logging::instance().getAttribute( attr_name);
+
+   mStrStream << attr_value;
 
 } // StreamLog::addAttribute
+
+
+
+/// Stores (the pointer to) an additional attributes container in the log
+/// message. The values for the attributes can be used in the log format or
+/// in the log message text and take precedence over the attributes stored in
+/// the global log object.
+///
+/// @param[in]  attr_cont  The container with the attributes.
+/// @since  x.y.z, 17.10.2018
+void StreamLog::setAttributes( const LogAttributes& attr_cont)
+{
+
+   mLogMsg.setAttributes( attr_cont);
+
+} // StreamLog::setAttributes
 
 
 

@@ -26,13 +26,13 @@
 #include "celma/common/manipulator.hpp"
 #include "celma/log/detail/log_defs.hpp"
 #include "celma/log/detail/log_msg.hpp"
+#include "celma/log/log_attributes.hpp"
 
 
 namespace celma { namespace log {
 
 
-using customProperty = common::Manipulator< std::string, 20>;
-using attributeValue = common::Manipulator< std::string, 21>;
+using attributeValue = common::Manipulator< std::string, 20>;
 
 
 namespace detail {
@@ -137,6 +137,21 @@ public:
       return so;
    } // operator <<
 
+   /// Adds a log attributes object that will be used first to get te value(s)
+   /// for log attribute(s).
+   ///
+   /// @param[in]  so
+   ///    Me.
+   /// @param[in]  attr
+   ///    The log attributes object to store.
+   /// @return  Myself.
+   /// @since  x.y.z, 16.10.2018
+   friend StreamLog& operator <<( StreamLog& so, const LogAttributes& attr)
+   {
+      so.setAttributes( attr);
+      return so;
+   } // operator <<
+
    /// Logs an exception of type 'Celma runtime error'.<br>
    /// If the log level and class are not already set, they are set to
    /// \a error and \a lcSysCall, respectively. Of course they can also be set
@@ -192,21 +207,6 @@ public:
       return so;
    } // operator <<
 
-   /// Adds the value of a custom property to the log message object.<br>
-   /// The property name must have been set before.
-   ///
-   /// @param[in]  so
-   ///    Me.
-   /// @param[in]  cp
-   ///    The custom property value to add.
-   /// @return  Myself.
-   /// @since  0.11, 12.12.2016
-   friend StreamLog& operator <<( StreamLog& so, const customProperty& cp)
-   {
-      so.storePropertyName( cp.value());
-      return so;
-   } // operator <<
-
    /// Adds the value of the given attribute to the log message text.
    ///
    /// @param[in]  so
@@ -253,11 +253,6 @@ public:
       {
          so.mLogMsg.setErrorNumber( boost::lexical_cast< int>( value));
          so.mErrNbrNext = false;
-      } else if (so.hasPropertyName())
-      {
-         std::ostringstream  oss;
-         oss << value;
-         so.storeProperty( oss.str());
       } else
       {
          so.mStrStream << value;
@@ -319,43 +314,30 @@ private:
    /// @since  1.0.0, 19.06.2016
    void storeException( const common::ExceptionBase& eb);
 
-   /// Returns if a property name is stored in this object.
-   ///
-   /// @return  \c true if a property name is stored.
-   /// @since  1.0.0, 12.12.2016
-   bool hasPropertyName() const;
-
-   /// Stores a property name.
-   ///
-   /// @param[in]  property_name  The property name to store.
-   /// @since  1.0.0, 12.12.2016
-   void storePropertyName( const std::string& property_name);
-
-   /// Stores the value of a property with the previously given property name.
-   ///
-   /// @param[in]  property_value
-   ///    The value to store for the property with the previously given name.
-   /// @since  1.0.0, 12.12.2016
-   void storeProperty( const std::string& property_value);
-
    /// Adds the value of the given attribute to the log message text.
    ///
    /// @param[in]  attr_name  The name of the attribute to add the value of.
    /// @since  x.y.z, 12.10.2018
    void addAttribute( const std::string& attr_name);
 
+   /// Stores (the pointer to) an additional attributes container in the log
+   /// message. The values for the attributes can be used in the log format or
+   /// in the log message text and take precedence over the attributes stored in
+   /// the global log object.
+   ///
+   /// @param[in]  attr_cont  The container with the attributes.
+   /// @since  x.y.z, 17.10.2018
+   void setAttributes( const LogAttributes& attr_cont);
+
    /// The set of log ids to which the log message should be sent.
-   const id_t          mLogIds;
+   const id_t          mLogIds = 0;
    /// The name of the log to sent the log message to (if no log ids are set).
    const std::string   mLogName;
    /// Internal processing flag: The next call of the insertion operator will
    /// give the error number.
-   bool                mErrNbrNext;
+   bool                mErrNbrNext = false;
    /// Internal stringstream object used to build the text of the log message.
    std::ostringstream  mStrStream;
-   /// Name of a custom property, when set the next value is stored as property
-   /// value.
-   std::string         mPropertyName;
    /// The log message we are about to fill with data.
    LogMsg              mLogMsg;
 

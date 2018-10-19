@@ -111,7 +111,7 @@ detail::Log* Logging::getLog( const std::string& log_name)
 void Logging::log( id_t logs, const detail::LogMsg& msg)
 {
 
-   for (auto it : mLogs)
+   for (auto & it : mLogs)
    {
       if (logs & it.mLogId)
       {
@@ -147,17 +147,15 @@ void Logging::log( const std::string& log_name, const detail::LogMsg& msg)
 
 
 
-/// 
+/// Add an attribute which is later used for log messages.
+///
 /// @param[in]  name
-///    .
+///    The name of the attribute.
 /// @param[in]  value
-///    .
-/// @param[in]  scope
-///    .
+///    The value for the attribute.
 /// @since
 ///    x.y.z, 10.10.2018
-void Logging::addAttribute( const std::string& name, const std::string& value,
-   AttributeScope scope)
+void Logging::addAttribute( const std::string& name, const std::string& value)
 {
 
    mAttributes.addAttribute( name, value);
@@ -166,11 +164,12 @@ void Logging::addAttribute( const std::string& name, const std::string& value,
 
 
 
+/// Removes an attribute.<br>
+/// If multiple attributes with the same name exist, the attribute that was
+/// added last is removed.
 /// 
-/// @param[in]  attr_name
-///    .
-/// @since
-///    x.y.z, 11.10.2018
+/// @param[in]  attr_name  The name of the attribute to remove.
+/// @since  x.y.z, 11.10.2018
 void Logging::removeAttribute( const std::string& attr_name)
 {
 

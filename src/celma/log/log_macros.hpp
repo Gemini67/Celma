@@ -27,6 +27,7 @@
 #include "celma/log/detail/log_printf.hpp"
 #include "celma/log/detail/log_scoped_attribute.hpp"
 #include "celma/log/detail/stream_log.hpp"
+#include "celma/log/log_attributes.hpp"
 #include "celma/log/logging.hpp"
 
 
@@ -39,11 +40,25 @@
 
 /// Macro to prepare the build of a log message. Sets the values that are taken
 /// from other macros, compiler values etc.
+///
 /// @param  a  The id(s) of the log(s) to send the message to.<br>
 ///            May be a single log id, a set of log ids or the symbolic name of
 ///            a log.
 #define  LOG( a) \
    celma::log::detail::StreamLog( a, LOG_MSG_OBJECT_INIT).self()
+
+
+/// Macro to prepare the build of a log message with additional log attributes.
+/// Sets the values that are taken from other macros, compiler values etc.
+///
+/// @param  ids
+///    The id(s) of the log(s) to send the message to.<br>
+///    May be a single log id, a set of log ids or the symbolic name of a log.
+/// @param  attr
+///    The log attributes object to use for gettings the values of additional
+///    log attributes.
+#define  LOG_ATTR( ids, attr) \
+   celma::log::detail::StreamLog( ids, LOG_MSG_OBJECT_INIT).self() << attr
 
 
 /// Macro that checks if a log message will be processed depending on its
@@ -61,6 +76,30 @@
    else \
       celma::log::detail::StreamLog( a, LOG_MSG_OBJECT_INIT).self() \
          << celma::log::LogLevel::l
+
+
+/// Macro that checks if a log message will be processed depending on its
+/// level.<br>
+/// Use this macro to prevent costly creation of log messages that would be
+/// discarded afterwards.<br>
+/// This can only be used with a single log id/name, not with a set of log
+/// ids.<br>
+/// This macro also allows to specify a log attribute object that will be used
+/// to get the values for log attributes.
+///
+/// @param  ids
+///    The single log id or name of the log to send the message to.
+/// @param  lvl
+///    The log level of the message, is already set on the log message too.
+/// @param  attr
+///    The log attributes object to use for gettings the values of additional
+///    log attributes.
+#define  LOG_LEVEL_ATTR( ids, lvl, attr) \
+   if (celma::log::detail::discard_by_level( ids, celma::log::LogLevel::lvl)) \
+   { } \
+   else \
+      celma::log::detail::StreamLog( ids, LOG_MSG_OBJECT_INIT).self() \
+         << celma::log::LogLevel::lvl << attr
 
 
 /// Macro to create a log message using a printf()-like format string with the
