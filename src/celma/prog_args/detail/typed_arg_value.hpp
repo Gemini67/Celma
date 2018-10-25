@@ -173,8 +173,10 @@ template< typename T>
 } // TypedArgValue< T>::setValueMode
 
 
-template< typename T> void TypedArgValue< T>::defaultValue( std::string&) const
+template< typename T>
+   void TypedArgValue< T>::defaultValue( std::string& dest) const
 {
+   dest.append( boost::lexical_cast< std::string>( mDestVar));
 } // TypedArgValue< T>::defaultValue
 
 

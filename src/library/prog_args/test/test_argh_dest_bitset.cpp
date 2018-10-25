@@ -19,6 +19,10 @@
 #include "celma/prog_args.hpp"
 
 
+// C++ Standard Library includes
+#include <sstream>
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ArgHandlerDestBitsetTest
 #include <boost/test/unit_test.hpp>
@@ -26,6 +30,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -323,6 +328,50 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
    } // end scope
 
 } // test_list_sep
+
+
+
+/// Print information about the argument.
+///
+/// @since  x.y.z, 25.10.2018
+BOOST_AUTO_TEST_CASE( list_var)
+{
+
+   std::ostringstream  oss_std;
+   std::ostringstream  oss_err;
+   Handler             ah( oss_std, oss_err, Handler::hfListArgVar
+      | Handler::hfHelpShort | Handler::hfUsageCont);
+   std::bitset< 10>    b;
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
+
+   const ArgString2Array  as2a( "--list-arg-var -b 4,5,6 --list-arg-var",
+      nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+   BOOST_REQUIRE( oss_err.str().empty());
+   // std::cerr << "\n" << oss_std.str() << std::endl;
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      "Arguments:\n"
+      "'-h' calls function/method 'Handler::usage'.\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'-b' value type 'std::bitset<10>', destination bitset 'b', currently no values.\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "\n"
+      "Arguments:\n"
+      "'-h' calls function/method 'Handler::usage'.\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'-b' value type 'std::bitset<10>', destination bitset 'b', currently 3 values.\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "\n"));
+
+} // list_var
 
 
 

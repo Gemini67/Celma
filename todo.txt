@@ -19,22 +19,6 @@ Handler:
 - Generell: 'Manual' Pages in Markdown?
 
 
-Es gibt Tools, die folgende Logik verwenden:
-
--v: Verbose
--vv: More Verbose
--vvv: Even more verbose
-
-etc.
-
-Wie setzt man das mit dem Handler um?
-
-1. Hilfsklasse die die Ziel-Variable bei jedem Aufruf hochzaehlt.
-   Vorteil: Keine Änderung am Handler.
-2. Im Handler, neue Eigenschaft
-
-Analog Punkt 2:
-
 Man koennte auch noch den Spezialfall 'zwei Ziel-Variablen' aus dem Handler
 raus nehmen und ueber eine Hilfsklasse loesen. Generell koennte man die drei
 Klassen (triple logic, two dest, increment dest) zusammenfassen in einem
@@ -73,7 +57,7 @@ Handler:
 
 
 MultiValueAssign als variadic template
-
+MultiValueAssign loeschen, nur noch tuple verwenden?
  
 
 Applikations-Kommunikations-Framework
@@ -99,23 +83,9 @@ LoadBalancer
   suchen (via LB)
 
 
-Ein Log Filename muss verschiedene Komponenten enthalten (koennen):
-- Verzeichnis
-- Konstante Teile
-- Wert von Umgebungs-Variablen
-- Datum, Uhrzeit in Format xxx
-- Log File Nummer
-- User-Definierte Attribute
-
-Also braucht es ein Set von Klassen, analog den Klassen fuer das Format der Log
-Meldungen, um eben
-- Das Format des Filenamen zu definieren.
-- Die Format-Definition des Filenamens zu speichern.
-- Einen Filenamen anhand der Definition und zusaetzlichen Parametern (Datum,
-  Uhrzeit, File-Nummer etc.) zu erzeugen.
-
-Diese Klassen, sowie die Klasse/Funktion, um bestehende Log Files zu rollen,
-koennte getrennt vom Rest der Log-Library zur Verfuegung gestellt werden.
+Die Klassen, um eine (Log) Filenamen mit Pfad etc. zu definieren/erzeugen, sowie
+die Klasse/Funktion, um bestehende Log Files zu rollen, koennte getrennt vom
+Rest der Log-Library zur Verfuegung gestellt werden?
 
 
 Attribut 'log-type' fuer Log-Destinations.
@@ -124,36 +94,16 @@ Koennte in Libraries verwendet werden, um eine Log-Meldung zu einem Log (einer
 Log-Destination) mit einem bestimmten Typ zu schicken.
 
 
-Principles:
-- No error when used without initialization (log message silently discarded)
-- Log string not built when not used
-- Macro to send log message to all log destinations (all bits set)
+Handler:
+- Destination IP Adresse? IPv4? IPv8?
+- Destination Mail Adresse?
+- Destination Webseite?
 
 
-Loesung fuer das 'lokale log Properties' Problem:
-
-Klasse LogPrefix
-
-Wird verwendet um einen Prefix-String zu definieren, der bei jeder Log Meldung
-vor den Text eingefuegt werden soll.
-Dann kann z.B. eine Member-Variable von diesem Typ definiert werden, welche den
-Namen der Klasse enthaelt.
-Anschliessend wird dieses Objekt verwendet, um Log-Meldungen zu erzeugen,
-entweder mit print() oder Stream-Operatoren.
-
-Konstruktoren:
-- LogPrefix( const std::string& str);
-- LogPrefix( const char* format, …);
-- LogPrefix( const LogPrefix& base_prefix, const std::string& str);
-- LogPrefix( const LogPrefix& base_prefix, const char* format, …);
-
-Diese Klasse koennte auch verwendet werden um Properties zu speichern. Dann
-muesste aber ein anderer Name gesucht werden.
-
-Und/Oder es gibt 3 Klassen:
-- Eine nur fuer Prefixes.
-- Eine nur fuer Properties.
-- Eine fuer beides.
-
-Jede dieser Klassen muesste natuerlich das gleiche Interface haben um Log
-Meldungen zu erzeugen.
+Log:
+- Titelzeile?
+- Summary?
+- Automatische Index-Erzeugung fuer
+  - Zeit (Granularitaet?)
+  - Woerter
+  - Felder aus dem Log Format?
