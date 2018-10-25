@@ -120,7 +120,7 @@ void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
             + "' has been replaced by '" + mReplacedBy + "'!");
    } // end if
 
-   if (!ignore_cardinality && (mpCardinality.get() != nullptr))
+   if (!ignore_cardinality && mpCardinality)
       mpCardinality->gotValue();
 
    assign( value);
