@@ -40,7 +40,7 @@ namespace detail {
 
 /// Helper class to create a log message using C++ streams syntax.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 ///    (added log attributes and std::ostringstream as elements to add)
 /// @since  1.0.0, 19.06.2016
 class StreamLog
@@ -145,7 +145,7 @@ public:
    /// @param[in]  attr
    ///    The log attributes object to store.
    /// @return  Myself.
-   /// @since  x.y.z, 16.10.2018
+   /// @since  1.15.0, 16.10.2018
    friend StreamLog& operator <<( StreamLog& so, const LogAttributes& attr)
    {
       so.setAttributes( attr);
@@ -214,7 +214,7 @@ public:
    /// @param[in]  attr_name
    ///    The name of the attribute to add the value of.
    /// @return  Myself.
-   /// @since  x.y.z, 12.10.2018
+   /// @since  1.15.0, 12.10.2018
    friend StreamLog& operator <<( StreamLog& so, const attributeValue& attr_name)
    {
       so.addAttribute( attr_name.value());
@@ -229,7 +229,7 @@ public:
    /// @param[in]  oss
    ///    The output string stream variable to add the contents of.
    /// @return  Myself.
-   /// @since  x.y.z, 12.10.2018
+   /// @since  1.15.0, 12.10.2018
    friend StreamLog& operator <<( StreamLog& so, const std::ostringstream& oss)
    {
       so.mStrStream << oss.str();
@@ -317,7 +317,7 @@ private:
    /// Adds the value of the given attribute to the log message text.
    ///
    /// @param[in]  attr_name  The name of the attribute to add the value of.
-   /// @since  x.y.z, 12.10.2018
+   /// @since  1.15.0, 12.10.2018
    void addAttribute( const std::string& attr_name);
 
    /// Stores (the pointer to) an additional attributes container in the log
@@ -326,7 +326,7 @@ private:
    /// the global log object.
    ///
    /// @param[in]  attr_cont  The container with the attributes.
-   /// @since  x.y.z, 17.10.2018
+   /// @since  1.15.0, 17.10.2018
    void setAttributes( const LogAttributes& attr_cont);
 
    /// The set of log ids to which the log message should be sent.

@@ -30,7 +30,7 @@ namespace celma { namespace log { namespace detail {
 /// When the object is ceated, the log attribute is added, and when the object
 /// is deleted, the log attribute is removed again.
 ///
-/// @since  x.y.z, 11.10.2018  (redesigned)
+/// @since  1.15.0, 11.10.2018  (redesigned)
 class ScopedAttribute
 {
 public:
@@ -41,12 +41,12 @@ public:
    /// @param[in]  value
    ///    The value to insert for this attribute.
    /// @since
-   ///    x.y.z, 11.10.2018
+   ///    1.15.0, 11.10.2018
    ScopedAttribute( const std::string& name, const std::string& value);
 
    /// Destructor, removes the attribute again.
    ///
-   /// @since  x.y.z, 11.10.2018
+   /// @since  1.15.0, 11.10.2018
    ~ScopedAttribute();
 
 private:

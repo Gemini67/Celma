@@ -154,7 +154,7 @@ void Logging::log( const std::string& log_name, const detail::LogMsg& msg)
 /// @param[in]  value
 ///    The value for the attribute.
 /// @since
-///    x.y.z, 10.10.2018
+///    1.15.0, 10.10.2018
 void Logging::addAttribute( const std::string& name, const std::string& value)
 {
 
@@ -169,7 +169,7 @@ void Logging::addAttribute( const std::string& name, const std::string& value)
 /// added last is removed.
 /// 
 /// @param[in]  attr_name  The name of the attribute to remove.
-/// @since  x.y.z, 11.10.2018
+/// @since  1.15.0, 11.10.2018
 void Logging::removeAttribute( const std::string& attr_name)
 {
 

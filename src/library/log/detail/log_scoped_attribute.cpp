@@ -34,7 +34,7 @@ namespace celma { namespace log { namespace detail {
 /// @param[in]  value
 ///    The value to insert for this attribute.
 /// @since
-///    x.y.z, 11.10.2018
+///    1.15.0, 11.10.2018
 ScopedAttribute::ScopedAttribute( const std::string& name,
    const std::string& value):
       mAttributeName( name)
@@ -47,7 +47,7 @@ ScopedAttribute::ScopedAttribute( const std::string& name,
 
 /// Destructor, removes the attribute again.
 ///
-/// @since  x.y.z, 11.10.2018
+/// @since  1.15.0, 11.10.2018
 ScopedAttribute::~ScopedAttribute()
 {
 

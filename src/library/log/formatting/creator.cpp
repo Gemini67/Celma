@@ -126,7 +126,7 @@ Creator& Creator::operator <<( Creator&( *m)( Creator&))
 /// @param[in]  attr
 ///    The attribute to store.
 /// @return  The same object as passed in \a c.
-/// @since  x.y.z, 11.10.2018
+/// @since  1.15.0, 11.10.2018
 Creator& operator <<( Creator& c, const attribute& attr)
 {
 
@@ -232,7 +232,7 @@ void Creator::addConstantText( const std::string& const_text)
 /// Adds a field with type attribute.
 ///
 /// @param[in]  attr_name  The name of the attribute to add the value of.
-/// @since  x.y.z, 11.10.2018
+/// @since  1.15.0, 11.10.2018
 void Creator::attribute( const std::string& attr_name)
 {
 

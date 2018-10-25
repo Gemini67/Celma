@@ -127,7 +127,7 @@ void StreamLog::storeException( const common::ExceptionBase& eb)
 /// Adds the value of the given attribute to the log message text.
 ///
 /// @param[in]  attr_name  The name of the attribute to add the value of.
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 void StreamLog::addAttribute( const std::string& attr_name)
 {
 
@@ -149,7 +149,7 @@ void StreamLog::addAttribute( const std::string& attr_name)
 /// the global log object.
 ///
 /// @param[in]  attr_cont  The container with the attributes.
-/// @since  x.y.z, 17.10.2018
+/// @since  1.15.0, 17.10.2018
 void StreamLog::setAttributes( const LogAttributes& attr_cont)
 {
 

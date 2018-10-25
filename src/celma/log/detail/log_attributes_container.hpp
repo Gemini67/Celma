@@ -34,11 +34,11 @@ namespace celma { namespace log { namespace detail {
 /// When the value of an attribute is requested, the value of the latest added
 /// attribute with the given name is returned.
 ///
-/// @since  x.y.z, 10.10.2018  (new attempt to integrate into the library)
-/// @since  x.y.z, 16.03.2018
+/// @since  1.15.0, 10.10.2018  (new attempt to integrate into the library)
+/// @since  1.15.0, 16.03.2018
 ///    (completed functionality, renamed from LogAttributes, no singleton
 ///    anymore)
-/// @since  x.y.z, 19.06.2016
+/// @since  1.15.0, 19.06.2016
 class LogAttributesContainer
 {
 public:
@@ -51,7 +51,7 @@ public:
 
    /// Default destructor.
    ///
-   /// @since  x.y.z, 21.03.2018
+   /// @since  1.15.0, 21.03.2018
    ~LogAttributesContainer() = default;
 
    /// Adds an attribute with type string to the internal list of attributes.
@@ -60,7 +60,7 @@ public:
    ///    The name of the attribute.
    /// @param[in]  attr_value
    ///    The value of the attribute.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.15.0, 19.06.2016
    void addAttribute( const std::string& attr_name, const std::string& attr_value);
 
    /// Adds an attribute with "any" type to the internal list of attributes.<br>
@@ -72,7 +72,7 @@ public:
    ///    The name of the attribute.
    /// @param[in]  attr_value
    ///    The value of the attribute.
-   /// @since  x.y.z, 19.06.2016
+   /// @since  1.15.0, 19.06.2016
    template< typename T>
       void addAttribute( const std::string& attr_name, T value);
 
@@ -85,18 +85,18 @@ public:
    /// @param[in]  attr_name  The name of the attribute to return the value of.
    /// @return
    //     The value of the requested attribute, an empty string when not found.
-   /// @since  x.y.z, 16.03.2018
+   /// @since  1.15.0, 16.03.2018
    std::string getAttribute( const std::string& attr_name) const;
 
    /// Removes the atribute that was added last.
    ///
-   /// @since  x.y.z, 16.03.2018
+   /// @since  1.15.0, 16.03.2018
    void removeAttribute();
 
    /// Removes the latest added attribute with the given name.
    ///
    /// @param[in]  attr_name  The name of the attribute to erase.
-   /// @since  x.y.z, 20.03.2018
+   /// @since  1.15.0, 20.03.2018
    void removeAttribute( const std::string& attr_name);
 
 private:

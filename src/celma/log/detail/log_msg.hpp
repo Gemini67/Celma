@@ -31,7 +31,7 @@ namespace celma { namespace log { namespace detail {
 
 
 /// Class to store all the data of a log message.
-/// @since  x.y.z, 17.10.2018
+/// @since  1.15.0, 17.10.2018
 ///    (removed properties, added support for attributes)
 /// @since  1.0.0, 19.06.2016
 class LogMsg
@@ -131,7 +131,7 @@ public:
    /// Adds (a pointer to) an attribute container.
    ///
    /// @param[in]  attr_cont  The attribute container.
-   /// @since  x.y.z, 17.10.2018
+   /// @since  1.15.0, 17.10.2018
    void setAttributes( const LogAttributes& attr_cont);
 
    /// Returns the value of the attribute with the given name.
@@ -140,7 +140,7 @@ public:
    /// @return
    ///    The value of the attribute or an empty string when not found.
    /// @since
-   ///    x.y.z, 17.10.2018
+   ///    1.15.0, 17.10.2018
    std::string getAttributeValue( const std::string& attr_name) const;
 
 private:

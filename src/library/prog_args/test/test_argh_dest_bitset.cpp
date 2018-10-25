@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
 
 /// Print information about the argument.
 ///
-/// @since  x.y.z, 25.10.2018
+/// @since  1.15.0, 25.10.2018
 BOOST_AUTO_TEST_CASE( list_var)
 {
 

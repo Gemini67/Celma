@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE( test_date_time)
 
 /// Create a log message that contains an attribute.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( text_with_attribute)
 {
 
@@ -279,7 +279,7 @@ BOOST_AUTO_TEST_CASE( text_with_attribute)
 
 /// Create a log message that contains an attribute.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( text_with_attribute_scoped)
 {
 

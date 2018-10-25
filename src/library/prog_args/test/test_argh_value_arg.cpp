@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
 
 /// Usage and other outputs.
 ///
-/// @since  x.y.z, 19.10.2018
+/// @since  1.15.0, 19.10.2018
 BOOST_AUTO_TEST_CASE( usage_and_info)
 {
 

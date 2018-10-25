@@ -109,7 +109,7 @@ public:
    /// @param[in]  attr
    ///    The attribute to store.
    /// @return  The same object as passed in \a c.
-   /// @since  x.y.z, 11.10.2018
+   /// @since  1.15.0, 11.10.2018
    friend Creator& operator <<( Creator& c, const attribute& attr);
 
    /// Operator to store a constant string in a creator object. This may later
@@ -163,7 +163,7 @@ private:
    /// Adds a field with type attribute.
    ///
    /// @param[in]  attr_name  The name of the attribute to add the value of.
-   /// @since  x.y.z, 11.10.2018
+   /// @since  1.15.0, 11.10.2018
    void attribute( const std::string& attr_name);
 
    /// Stores a format string that can be used by the next field.

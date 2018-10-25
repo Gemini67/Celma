@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( test_default)
 
 /// Check that the contents of a stream are added to the log message.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( add_stream_to_log)
 {
 
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( add_stream_to_log)
 
 /// Add the value of an attribute to the text of the log message.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( add_attribute_to_log_msg_text)
 {
 
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE( add_attribute_to_log_msg_text)
 /// Add the value of an attribute to the text of the log message using a log
 /// attributes container.
 ///
-/// @since  x.y.z, 18.10.2018
+/// @since  1.15.0, 18.10.2018
 BOOST_AUTO_TEST_CASE( add_attribute_from_container)
 {
 
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE( add_attribute_from_container)
 /// Add the value of an attribute to the text of the log message using a log
 /// attributes container which should override the scoped attribute.
 ///
-/// @since  x.y.z, 18.10.2018
+/// @since  1.15.0, 18.10.2018
 BOOST_AUTO_TEST_CASE( add_attribute_from_container_precedence)
 {
 
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE( add_attribute_from_container_precedence)
 /// - One from a log attributes container.
 /// - One from a sub log attributes container.
 ///
-/// @since  x.y.z, 18.10.2018
+/// @since  1.15.0, 18.10.2018
 BOOST_AUTO_TEST_CASE( add_different_attributes)
 {
 

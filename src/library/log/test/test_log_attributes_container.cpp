@@ -33,7 +33,7 @@ using celma::log::detail::LogAttributesContainer;
 
 /// Test with an empty container.
 ///
-/// @since  x.y.z, 11.10.2018
+/// @since  1.15.0, 11.10.2018
 BOOST_AUTO_TEST_CASE( empty_container)
 {
 
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( empty_container)
 
 /// Test with one attribute in the container.
 ///
-/// @since  x.y.z, 11.10.2018
+/// @since  1.15.0, 11.10.2018
 BOOST_AUTO_TEST_CASE( one_attribute)
 {
 
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE( one_attribute)
 /// Test with one attribute in the container, delete it by usin the "delete
 /// last" function.
 ///
-/// @since  x.y.z, 11.10.2018
+/// @since  1.15.0, 11.10.2018
 BOOST_AUTO_TEST_CASE( one_attribute_delete_last)
 {
 
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE( one_attribute_delete_last)
 
 /// Add one attribute, delete it, add it again.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( one_attribute_readded)
 {
 
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE( one_attribute_readded)
 
 /// Test with two different attributes in the container.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( two_attributes)
 {
 
@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE( two_attributes)
 /// Test with two different attributes in the container, delete the second
 /// attribute first using the "delete last" function.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( two_attributes_delete_last)
 {
 
@@ -319,7 +319,7 @@ BOOST_AUTO_TEST_CASE( two_attributes_delete_last)
 /// Add three attributes, whereof the first and last are the same attribute with
 /// different values.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( three_attributes_two_same)
 {
 

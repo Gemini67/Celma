@@ -37,7 +37,7 @@ using std::string;
 ///    The name of the attribute.
 /// @param[in]  attr_value
 ///    The value of the attribute.
-/// @since  x.y.z, 19.06.2016
+/// @since  1.15.0, 19.06.2016
 void LogAttributesContainer::addAttribute( const string& attr_name,
    const string& attr_value)
 {
@@ -57,7 +57,7 @@ void LogAttributesContainer::addAttribute( const string& attr_name,
 /// @param[in]  attr_name  The name of the attribute to return the value of.
 /// @return
 //     The value of the requested attribute, an empty string when not found.
-/// @since  x.y.z, 16.03.2018
+/// @since  1.15.0, 16.03.2018
 string LogAttributesContainer::getAttribute( const string& attr_name) const
 {
 
@@ -75,7 +75,7 @@ string LogAttributesContainer::getAttribute( const string& attr_name) const
 
 /// Removes the atribute that was added last.
 ///
-/// @since  x.y.z, 16.03.2018
+/// @since  1.15.0, 16.03.2018
 void LogAttributesContainer::removeAttribute()
 {
 
@@ -95,7 +95,7 @@ void LogAttributesContainer::removeAttribute()
 /// Removes the latest added attribute with the given name.
 ///
 /// @param[in]  attr_name  The name of the attribute to erase.
-/// @since  x.y.z, 20.03.2018
+/// @since  1.15.0, 20.03.2018
 void LogAttributesContainer::removeAttribute( const string& attr_name)
 {
 

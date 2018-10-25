@@ -292,7 +292,7 @@ BOOST_AUTO_TEST_CASE( test_all_fields)
 
 /// Test using attributes.
 ///
-/// @since  x.y.z, 12.10.2018
+/// @since  1.15.0, 12.10.2018
 BOOST_AUTO_TEST_CASE( format_with_attributes)
 {
 

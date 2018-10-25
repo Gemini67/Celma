@@ -46,14 +46,14 @@ namespace celma { namespace log {
 ///   objects, then in the parent object(s), and finally in the global logging
 ///   object (last step does not happen here).
 ///
-/// @since  x.y.z, 16.10.2018
+/// @since  1.15.0, 16.10.2018
 class LogAttributes: public detail::LogAttributesContainer
 {
 public:
    /// Default constructor, initialises an empty attribute container and no
    /// parent object.
    ///
-   /// @since  x.y.z, 16.10.2018
+   /// @since  1.15.0, 16.10.2018
    LogAttributes() = default;
 
    /// Constructor, immediately adds the attribute value to the internal
@@ -61,14 +61,14 @@ public:
    ///
    /// @param[in] attr_name  The name of the attribute.
    /// @param[in] attr_value The value for the attribute.
-   /// @since  x.y.z, 16.10.2018
+   /// @since  1.15.0, 16.10.2018
    LogAttributes( const std::string& attr_name, const std::string& attr_value);
 
    /// Not the copy constructor, but a destructor that stores the pointer to a
    /// parent/master log attributes object.
    ///
    /// @param[in]  outer  Pointer to the parent/master log attributes object.
-   /// @since  x.y.z, 16.10.2018
+   /// @since  1.15.0, 16.10.2018
    explicit LogAttributes( const LogAttributes* outer);
 
    /// Returns the value for the given attribute.<br>
@@ -80,7 +80,7 @@ public:
    /// @param[in]  attr_name  The name of the attribute to return the value of.
    /// @return
    ///    The value of the requested attribute, an empty string when not found.
-   /// @since  x.y.z, 16.10.2018
+   /// @since  1.15.0, 16.10.2018
    std::string getAttribute( const std::string& attr_name) const;
 
 private:

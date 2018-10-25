@@ -122,7 +122,7 @@ public:
    /// @param[in]  value
    ///    The value for the attribute.
    /// @since
-   ///    x.y.z, 10.10.2018
+   ///    1.15.0, 10.10.2018
    void addAttribute( const std::string& name, const std::string& value);
 
    /// Returns the value for an attribute.<br>
@@ -133,7 +133,7 @@ public:
    /// @return
    ///    The (last) value of the attribute or an empty string when not found.
    /// @since
-   ///    x.y.z, 11.10.2018
+   ///    1.15.0, 11.10.2018
    std::string getAttribute( const std::string& attr_name) const;
 
    /// Removes an attribute.<br>
@@ -141,7 +141,7 @@ public:
    /// added last is removed.
    /// 
    /// @param[in]  attr_name  The name of the attribute to remove.
-   /// @since  x.y.z, 11.10.2018
+   /// @since  1.15.0, 11.10.2018
    void removeAttribute( const std::string& attr_name);
 
    /// Dumps information about the logging framework.

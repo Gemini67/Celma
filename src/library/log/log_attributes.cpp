@@ -31,7 +31,7 @@ namespace celma { namespace log {
 ///
 /// @param[in] attr_name  The name of the attribute.
 /// @param[in] attr_value The value for the attribute.
-/// @since  x.y.z, 16.10.2018
+/// @since  1.15.0, 16.10.2018
 LogAttributes::LogAttributes( const string& attr_name, const string& attr_value):
    detail::LogAttributesContainer()
 {
@@ -46,7 +46,7 @@ LogAttributes::LogAttributes( const string& attr_name, const string& attr_value)
 /// parent/master log attributes object.
 ///
 /// @param[in]  outer  Pointer to the parent/master log attributes object.
-/// @since  x.y.z, 16.10.2018
+/// @since  1.15.0, 16.10.2018
 LogAttributes::LogAttributes( const LogAttributes* outer):
    detail::LogAttributesContainer(),
    mpOuter( outer)
@@ -64,7 +64,7 @@ LogAttributes::LogAttributes( const LogAttributes* outer):
 /// @param[in]  attr_name  The name of the attribute to return the value of.
 /// @return
 //     The value of the requested attribute, an empty string when not found.
-/// @since  x.y.z, 16.10.2018
+/// @since  1.15.0, 16.10.2018
 string LogAttributes::getAttribute( const string& attr_name) const
 {
 
