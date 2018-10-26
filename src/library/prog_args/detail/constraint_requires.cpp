@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,8 +34,9 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Constructor, stores the argument specification of the other, requried
 /// argument.
-/// @param[in]  reqArgSpec  The argument specification of the required
-///                         argument.
+///
+/// @param[in]  reqArgSpec
+///    The argument specification of the required argument.
 /// @since  0.2, 10.04.2016
 ConstraintRequires::ConstraintRequires( const std::string& reqArgSpec):
    mRequiredArgSpec( reqArgSpec)
@@ -45,6 +46,7 @@ ConstraintRequires::ConstraintRequires( const std::string& reqArgSpec):
 
 
 /// Adds the 'required' constraint to the current argument handler.
+///
 /// @param[in]  key  The argument that sets this constraint.
 /// @since  0.2, 10.04.2016
 void ConstraintRequires::executeConstraint( const ArgumentKey& key)
@@ -61,6 +63,7 @@ void ConstraintRequires::executeConstraint( const ArgumentKey& key)
 
 
 /// Returns a text description of the constraint.
+///
 /// @return  A string with the text description of the constraint.
 /// @since  0.16.0, 15.08.2017
 std::string ConstraintRequires::toString() const
@@ -80,5 +83,5 @@ std::string ConstraintRequires::toString() const
 } // namespace celma
 
 
-// =====================  END OF constraint_requires.cpp  =====================
+// =====  END OF constraint_requires.cpp  =====
 

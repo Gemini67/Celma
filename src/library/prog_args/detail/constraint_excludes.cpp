@@ -19,7 +19,7 @@
 #include "celma/prog_args/detail/constraint_excludes.hpp"
 
 
-// C/OS lib includes
+// OS/C lib includes
 #include <cassert>
 
 
@@ -37,8 +37,9 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Constructor, stores the argument specification of the other, forbidden
 /// argument(s).
-/// @param[in]  reqArgSpec  The argument specification of the forbidden
-///                         argument(s).
+///
+/// @param[in]  reqArgSpec
+///    The argument specification of the forbidden argument(s).
 /// @since  0.2, 10.04.2016
 ConstraintExcludes::ConstraintExcludes( const std::string& reqArgSpec):
    mExcludedArgSpec( reqArgSpec)
@@ -48,6 +49,7 @@ ConstraintExcludes::ConstraintExcludes( const std::string& reqArgSpec):
 
 
 /// Adds the 'exludes' constraint to the current argument handler.
+///
 /// @param[in]  key  The argument that sets this constraint.
 /// @since  0.2, 10.04.2016
 void ConstraintExcludes::executeConstraint( const ArgumentKey& key)
@@ -64,6 +66,7 @@ void ConstraintExcludes::executeConstraint( const ArgumentKey& key)
 
 
 /// Returns a text description of the constraint.
+///
 /// @return  A string with the text description of the constraint.
 /// @since  0.16.0, 15.08.2017
 std::string ConstraintExcludes::toString() const
