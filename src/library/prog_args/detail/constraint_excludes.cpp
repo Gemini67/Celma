@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -21,6 +21,10 @@
 
 // C/OS lib includes
 #include <cassert>
+
+
+// C++ Standard Library includes
+#include <sstream>
 
 
 // project includes
@@ -67,7 +71,8 @@ std::string ConstraintExcludes::toString() const
 
    std::ostringstream  oss;
 
-   oss << "Excludes ( " << mExcludedArgSpec << ")";
+
+   oss << "excludes (" << mExcludedArgSpec << ")";
 
    return oss.str();
 } // ConstraintExcludes::toString
@@ -79,5 +84,5 @@ std::string ConstraintExcludes::toString() const
 } // namespace celma
 
 
-// =====================  END OF constraint_excludes.cpp  =====================
+// =====  END OF constraint_excludes.cpp  =====
 

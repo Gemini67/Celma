@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,16 +20,16 @@
 
 
 // C++ Standard Library includes
+#include <sstream>
 #include <stdexcept>
-
-
-using namespace std;
 
 
 namespace celma { namespace prog_args { namespace detail {
 
 
+
 /// Constructor.
+///
 /// @param[in]  min_num_values  Minimum number of calls/values for the
 ///                             corresponding argument.
 /// @param[in]  max_num_values  Maximum number of calls/values for the
@@ -39,34 +39,52 @@ CardinalityRange::CardinalityRange( int min_num_values, int max_num_values):
    mMinNumValues( min_num_values),
    mMaxNumValues( max_num_values)
 {
-} // end CardinalityRange::CardinalityRange
+} // CardinalityRange::CardinalityRange
 
 
 
 /// Called by the framework when the argument was detected in the command
 /// line (actually may be without a value).
+///
 /// @throw  when attempting to add too many values.
 /// @since  0.2, 10.04.2016
 void CardinalityRange::gotValue()
 {
 
    if ((mMaxNumValues != -1) && (++mNumValues > mMaxNumValues))
-      throw runtime_error( "too many values");
+      throw std::runtime_error( "too many values");
 
-} // end CardinalityRange::gotValue
+} // CardinalityRange::gotValue
 
 
 
 /// Called by the framework at the end of the command line processing.
+///
 /// @throw  if the minimum of calls/values was not reached.
 /// @since  0.2, 10.04.2016
 void CardinalityRange::check()
 {
 
    if (mNumValues < mMinNumValues)
-      throw runtime_error( "not all expected values");
+      throw std::runtime_error( "not all expected values");
 
-} // end CardinalityRange::check
+} // CardinalityRange::check
+
+
+
+/// Returns the text description of the cardinality "range".
+///
+/// @return  String with the text description of the cardinality.
+/// @since  1.14.0, 02.10.2018
+std::string CardinalityRange::cardinalityStr() const
+{
+
+   std::ostringstream  oss;
+
+
+   oss << "between " << mMinNumValues << " and " << mMaxNumValues;
+   return oss.str();
+} // CardinalityRange::cardinalityStr
 
 
 
@@ -75,5 +93,5 @@ void CardinalityRange::check()
 } // namespace celma
 
 
-// =========================  END OF cardinality_range.cpp  =========================
+// =====  END OF cardinality_range.cpp  =====
 

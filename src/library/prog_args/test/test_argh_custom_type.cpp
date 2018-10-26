@@ -15,6 +15,10 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
 // C++ Standard Library includes
 #include <string>
 #include <iostream>
@@ -30,7 +34,6 @@
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/tokenizer.hpp"
-#include "celma/prog_args.hpp"
 
 
 using std::string;
@@ -41,13 +44,17 @@ using celma::prog_args::Handler;
 
 // module definitions
 
+
+namespace {
+
+
 /// Custom type: set flags in a bitset.
 /// @since  0.2, 10.04.2016
 class TypedArgBitset: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef std::bitset< 1024>  type;
+   using type = std::bitset< 1024>;
 
    /// Constructor.
    /// @param[in]  dest   The destination variable to store the values in.
@@ -56,6 +63,12 @@ public:
    /// @since  0.16.0, 13.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArgBitset( type& dest, const string& vname);
+
+   /// Returns the name of the destination type as string.
+   ///
+   /// @return  String with the name of the destination type.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
@@ -106,6 +119,12 @@ TypedArgBitset::TypedArgBitset( type& dest, const string& vname):
 } // TypedArgBitset::TypedArgBitset
 
 
+const std::string TypedArgBitset::varTypeName() const
+{
+   return "custom";
+} // TypedArgBitset::varTypeName
+
+
 void TypedArgBitset::assign( const string& value)
 {
 
@@ -148,6 +167,9 @@ TypedArgBase* TypedArgBitset::setListSep( char sep)
 } // TypedArgBitset::setListSep
 
 
+} // namespace
+
+
 
 /// Check if adding a custom destination type for argument handling works.
 /// @since  0.2, 10.04.2016
@@ -164,7 +186,7 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
 
    const celma::appl::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( kilobits.count(), 6);
    BOOST_REQUIRE( kilobits[  1]);
    BOOST_REQUIRE( kilobits[  2]);

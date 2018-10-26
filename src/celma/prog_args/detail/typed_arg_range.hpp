@@ -31,6 +31,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Helper class to store a destination variable that is a container in which a
 /// range of values can be stored.
+///
 /// @tparam  T  The type of the value(s) to be stored in the container.
 /// @tparam  C  The type of the container to store the values in.
 /// @since  0.2, 10.04.2016
@@ -38,7 +39,7 @@ template< typename T, typename C> class TypedArgRange: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef common::RangeDest< T, C>  dest_type;
+   using dest_type = common::RangeDest< T, C>;
 
    /// Constructor.
    /// @param[in]  dest   The destination variable to store the values in.
@@ -47,6 +48,12 @@ public:
    /// @since  0.16.0, 13.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArgRange( const dest_type& dest, const std::string& vname);
+
+   /// Returns the name of the type of the destination container.
+   ///
+   /// @return  The destination container's type name.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
@@ -109,6 +116,13 @@ template< typename T, typename C>
 } // TypedArgRange< T, C>::TypedArgRange
 
 
+template< typename T, typename C>
+   const std::string TypedArgRange< T, C>::varTypeName() const
+{
+   return type< C>::name();
+} // TypedArgRange< T, C>::varTypeName
+
+
 template< typename T, typename C> bool TypedArgRange< T, C>::hasValue() const
 {
    return !mDestVar.empty();
@@ -121,7 +135,7 @@ template< typename T, typename C>
 {
    os << format::toString( mDestVar);
    if (print_type)
-      os << " [" << type< C>::name() << "]";
+      os << " [" << varTypeName() << "]";
 } // TypedArgRange< T, C>::printValue
 
 
@@ -177,5 +191,5 @@ template< typename T, typename C>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_RANGE_HPP
 
 
-// =======================  END OF typed_arg_range.hpp  =======================
+// =====  END OF typed_arg_range.hpp  =====
 

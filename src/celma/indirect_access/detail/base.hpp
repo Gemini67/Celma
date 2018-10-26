@@ -41,8 +41,11 @@ namespace detail {
 
 
 /// Base class for a class that provides indirect access to its member variables.
-/// @since  1.2.1, 08.01.2018  (renamed to Base)
-/// @since  0.5, 03.11.2016  (feature renamed to 'indirect access')
+///
+/// @since  1.2.1, 08.01.2018
+///    (renamed to Base)
+/// @since  0.5, 03.11.2016
+///    (feature renamed to 'indirect access')
 /// @since  0.4, 02.05.2016
 class Base
 {
@@ -136,11 +139,11 @@ protected:
 
 private:
    /// Shared pointer type to store.
-   typedef std::shared_ptr< IField>                     field_ptr;
+   using field_ptr = std::shared_ptr< IField>;
    /// Vector type for storing the fields and access them by id.
-   typedef std::vector< field_ptr>                      id_cont_t;
+   using id_cont_t = std::vector< field_ptr>;
    /// Container type for accessing the fields by name.
-   typedef std::unordered_map< std::string, field_ptr>  name_cont_t;
+   using name_cont_t = std::unordered_map< std::string, field_ptr>;
 
    /// Primary container, access by field id.
    id_cont_t    mId2Field;

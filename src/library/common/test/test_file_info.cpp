@@ -105,5 +105,19 @@ BOOST_AUTO_TEST_CASE( test_one_off)
 
 
 
+/// Test retrieving the parent directory from a FileInfo object.
+///
+/// @since  1.9.0, 04.08.2018
+BOOST_AUTO_TEST_CASE( parent_directory)
+{
+
+   BOOST_REQUIRE_EQUAL( fileInfo( "/").parentDirectory(), "/");
+   BOOST_REQUIRE_EQUAL( fileInfo( "/etc").parentDirectory(), "/");
+   BOOST_REQUIRE_EQUAL( fileInfo( "/etc/passwd").parentDirectory(), "/etc");
+
+} // parent_directory
+
+
+
 // =====  END OF test_file_info.cpp  =====
 

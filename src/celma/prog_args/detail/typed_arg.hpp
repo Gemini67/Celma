@@ -15,7 +15,7 @@
 /// See documentation of template celma::prog_args::detail::TypedArg.<br>
 /// This file contains the base template plus all specialisations:
 /// - TypedArg< bool>
-/// - TypedArg< CheckAssign< T> >
+/// - TypedArg< CheckAssign< T>>
 /// - TypedArg< CheckAssign< bool> >
 /// - TypedArg< std::bitset< T...>>
 /// - TypedArg< std::tuple< T...>>
@@ -27,6 +27,7 @@
 
 
 #include <cstring>
+#include <algorithm>
 #include <bitset>
 #include <iomanip>
 #include <iostream>
@@ -39,6 +40,7 @@
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
+#include "celma/prog_args/level_counter.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -66,6 +68,12 @@ public:
    /// @since  0.16.0, 10.11.2017 (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( T& dest, const std::string& vname);
+
+   /// Returns the type of the destination variable as string.
+   ///
+   /// @return  String with the type of the destination variable.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has a value set.
    ///
@@ -133,6 +141,12 @@ template< typename T>
 {
    mpCardinality.reset( new CardinalityMax( 1));
 } // TypedArg< T>::TypedArg
+
+
+template< typename T> const std::string TypedArg< T>::varTypeName() const
+{
+   return type< T>::name();
+} // TypedArg< T>::varTypeName
 
 
 template< typename T> bool TypedArg< T>::hasValue() const
@@ -229,6 +243,14 @@ public:
    {
       mpCardinality.reset( new CardinalityMax( 1));
    } // TypedArg< bool>::TypedArg
+
+   /// Returns "bool".
+   /// @return  The string "bool".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override
+   {
+      return "bool";
+   } // TypedArg< bool>::varTypeName
 
    /// Returns if the destination has a value set.
    ///
@@ -335,6 +357,13 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArg( common::CheckAssign< T>& dest, const std::string& vname);
 
+   /// Returns the name of the type of the variable handled by the CheckAssign<>
+   /// object.
+   ///
+   /// @return  The name of the type of the destination variable.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the destination has a value set.
    ///
    /// @return  \c true if the destination variable contains a value.
@@ -386,6 +415,13 @@ template< typename T>
 } // TypedArg< common::CheckAssign< T>>::TypedArg
 
 
+template< typename T>
+   const std::string TypedArg< common::CheckAssign< T>>::varTypeName() const
+{
+   return type< T>::name();
+} // TypedArg< common::CheckAssign< T>>::varTypeName
+
+
 template< typename T> bool TypedArg< common::CheckAssign< T>>::hasValue() const
 {
    return mDestVar.hasValue();
@@ -398,7 +434,7 @@ template< typename T>
 {
    os << format::toString( static_cast< T>( mDestVar));
    if (print_type)
-      os << " [" << type< T>::name() << "]";
+      os << " [" << varTypeName() << "]";
 } // TypedArg< common::CheckAssign< T>>::printValue
 
 
@@ -407,7 +443,7 @@ template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostrea
    os << "value type '" << type< T>::name()
       << "', destination 'CheckAssign< " << mVarName << ">', value ";
    if (mDestVar.hasValue())
-      os << " = " << static_cast< T>( mDestVar) << "." << std::endl;
+      os << "= " << static_cast< T>( mDestVar) << "." << std::endl;
    else
       os << "not set." << std::endl;
    os << "   " << static_cast< const TypedArgBase&>( *this);
@@ -427,14 +463,14 @@ template< typename T>
    {
       mDestVar = boost::lexical_cast< T>( value);
    } // end if
-} // TypedArg< CheckAssign< T> >::assign
+} // TypedArg< CheckAssign< T>>::assign
 
 
 // Template TypedArg< common::CheckAssign< bool>>
 // ==============================================
 
 
-/// Specialization of the TypedArg< CheckAssign< T> > template for boolean flags.
+/// Specialization of the TypedArg< CheckAssign< T>> template for boolean flags.
 ///
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
@@ -456,6 +492,14 @@ public:
       mValue2Set( true)
    {
    } // TypedArg< common::CheckAssign< bool>>::TypedArg
+
+   /// Always returns "bool".
+   /// @return  The string "bool".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override
+   {
+      return "bool";
+   } // TypedArg< common::CheckAssign< bool>>::varTypeName
 
    /// Returns if the destination has a value set.
    ///
@@ -480,7 +524,7 @@ public:
    {
       os << std::boolalpha << static_cast< bool>( mDestVar);
       if (print_type)
-         os << " [bool]";
+         os << " [" << varTypeName() << "]";
    } // TypedArg< common::CheckAssign< bool>>::printValue
 
    /// Would specify that the argument is mandatory (required). This does not
@@ -533,6 +577,167 @@ private:
 }; // TypedArg< common::CheckAssign< bool>>
 
 
+
+// Template TypedArg< LevelCounter>
+// ================================
+
+
+/// Specialisation of TypedArg<> for a level counter.<br>
+/// It is possible/allowed to increment a level counter multiple times, or a
+/// value can be assigned to it.<br>
+/// Those two features are mutually exclusive: Once the level counter was
+/// incremented, it is not possible to assign a value anymore, and vice versa.
+///
+/// @since  1.10.0, 11.08.2018
+template<> class TypedArg< LevelCounter>: public TypedArgBase
+{
+public:
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  1.10.0, 11.08.2018
+   TypedArg( LevelCounter& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::optional, true),
+      mDestVar( dest)
+   {
+      mpCardinality.reset();
+   } // TypedArg< LevelCounter>::TypedArg
+
+   /// Always returns "LevelCounter".
+   /// @return  The string "LevelCounter".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override
+   {
+      return "LevelCounter";
+   } // TypedArg< LevelCounter>::varTypeName
+
+   /// Returns if the destination variable was incremented at least once.
+   ///
+   /// @return
+   ///    \c true if the destination variable was incremented at least once.
+   /// @since  1.10.0, 11.08.2018
+   virtual bool hasValue() const override
+   {
+      return mHasValueSet || mIncremented;
+   } // TypedArg< LevelCounter>::hasValue
+
+   /// Overwrites the 'value mode' which specifies if a value is needed for this
+   /// argument or not.<br>
+   /// Here in the base class, the only value mode that can be set is
+   /// 'required'.
+   ///
+   /// @param[in]  vm  The new value mode.
+   /// @return  Pointer to this object.
+   /// @since  1.10.0, 13.08.2018
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override
+   {
+
+      if ((vm == ValueMode::command) || (vm == ValueMode::unknown))
+         throw std::invalid_argument( std::string( "may not set value mode '") +
+                                      valueMode2str( vm) + "' on variable '" +
+                                      mVarName + "'");
+
+      mValueMode = vm;
+      return this;
+   } // TypedArg< LevelCounter>::setValueMode
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.10.0, 11.08.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << mDestVar.value();
+      if (print_type)
+         os << " [" << varTypeName() << "]";
+   } // TypedArg< LevelCounter>::printValue
+
+   /// Special feature for destination variable type level counter:<br>
+   /// Allow mixing of increment and assignment on the command line.
+   ///
+   /// @since  1.11.0, 20.08.2018
+   virtual TypedArgBase* setAllowMixIncSet() noexcept( true) override
+   {
+      mAllowMixIncSet = true;
+      return this;
+   } // TypedArg< LevelCounter>::setAllowMixIncSet
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   ///
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.10.0, 11.08.2018
+   virtual void dump( std::ostream& os) const override
+   {
+      os << "value type 'LevelCounter', destination variable '" << mVarName
+         << "', current value " << mDestVar.value() << "." << std::endl
+         << "   " << static_cast< const TypedArgBase&>( *this);
+   } // TypedArg< LevelCounter>::dump
+
+   /// Either increments the level counter, or assigns a value to it.
+   ///
+   /// @param[in]  value
+   ///    Either an empty string, in which case the current value is
+   ///    incremented, otherwise value to store/assign.
+   /// @since  1.10.0, 11.08.2018
+   virtual void assign( const std::string& value) noexcept( false) override
+   {
+      if (value.empty())
+      {
+         if (mHasValueSet && !mAllowMixIncSet)
+            throw std::runtime_error( "already have a value assigned to "
+               "variable '" + mVarName + "'");
+
+         const int          new_level = mDestVar.value() + 1;
+         const std::string  testval( boost::lexical_cast< std::string>( new_level));
+         check( testval);
+
+         // when we get here, the new value is within the limits
+         ++mDestVar;
+         mIncremented = true;
+      } else
+      {
+         if (!mAllowMixIncSet && (mHasValueSet || mIncremented))
+            throw std::runtime_error( "already have a value assigned to "
+               "variable '" + mVarName + "'");
+         check( value);
+         if (!mFormats.empty())
+         {
+            std::string  valCopy( value);
+            format( valCopy);
+            mDestVar = boost::lexical_cast< int>( valCopy);
+         } else
+         {
+            mDestVar = boost::lexical_cast< int>( value);
+         } // end if
+         mHasValueSet = true;
+      } // end if
+   } // TypedArg< LevelCounter>::assign
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   LevelCounter&  mDestVar;
+   /// Flag that is set when the level counter was incremented at least once.
+   bool           mIncremented = false;
+   /// Flag that is set when a vlaue was assigned to the level counter.
+   bool           mHasValueSet = false;
+   /// If this flag is set, mixing increment and setting the argument on the
+   /// command line is allowed.
+   bool           mAllowMixIncSet = false;
+
+
+}; // TypedArg< LevelCounter>
+
+
 // Template TypedArg< std::vector< T>>
 // ===================================
 
@@ -547,7 +752,7 @@ template< typename T> class TypedArg< std::vector< T>>: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef typename std::vector< T>  vector_type;
+   using vector_type = typename std::vector< T>;
 
    /// Constructor.
    ///
@@ -559,9 +764,17 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArg( vector_type& dest, const std::string& vname);
 
+   /// Returns the name of the type of the destination variable (vector of
+   /// something).
+   ///
+   /// @return  The name of the type of the destination variable/vector.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the destination has (at least) one value set.
    ///
-   /// @return  \c true if the destination variable contains (at least) on.
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
@@ -603,6 +816,23 @@ public:
    /// @since  1.2.0, 28.12.2017
    virtual TypedArgBase* setClearBeforeAssign() override;
 
+   /// Special feature for destination variable type vector:<br>
+   /// Sort the contents of the vector.
+   ///
+   /// @since  1.9.0, 04.08.2018
+   virtual TypedArgBase* setSortData() override;
+
+   /// Special feature for destination variable type vector:<br>
+   /// Make sure only unique values are stored in the vector.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      override;
+
 protected:
    /// Used for printing an argument and its destination variable.
    ///
@@ -624,6 +854,13 @@ private:
    /// If set, the contents of the vector are cleared before the first value(s)
    /// from the command line are assigned.
    bool          mClearB4Assign = false;
+   /// If set, the contents of the vector are sorted.
+   bool          mSortData = false;
+   /// If set, makes sure that the data in the vector contains no duplicates.
+   bool          mUniqueData = false;
+   /// If set, trying to add a duplicate value to the vector is treated as an
+   /// error, otherwise (the default) it is silently discarded.
+   bool          mTreatDuplicatesAsErrors = false;
 
 }; // TypedArg< std::vector< T>>
 
@@ -642,6 +879,13 @@ template< typename T>
 } // TypedArg< std::vector< T>>::TypedArg
 
 
+template< typename T>
+   const std::string TypedArg< std::vector< T>>::varTypeName() const
+{
+   return type< std::vector< T>>::name();
+} // TypedArg< std::vector< T>>::varTypeName
+
+
 template< typename T> bool TypedArg< std::vector< T>>::hasValue() const
 {
    return !mDestVar.empty();
@@ -654,7 +898,7 @@ template< typename T>
 {
    os << format::toString( mDestVar.begin(), mDestVar.end());
    if (print_type)
-      os << " [" << type< std::vector< T>>::name() << "]";
+      os << " [" << varTypeName() << "]";
 } // TypedArg< std::vector< T>>::printValue
 
 
@@ -680,6 +924,24 @@ template< typename T>
    mClearB4Assign = true;
    return this;
 } // TypedArg< std::vector< T>>::setClearBeforeAssign
+
+
+template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::setSortData()
+{
+   mSortData = true;
+   return this;
+} // TypedArg< std::vector< T>>::setSortData
+
+
+template< typename T>
+   TypedArgBase*
+      TypedArg< std::vector< T>>::setUniqueData( bool duplicates_are_errors)
+{
+   mUniqueData = true;
+   mTreatDuplicatesAsErrors = duplicates_are_errors;
+   return this;
+} // TypedArg< std::vector< T>>::setUniqueData
 
 
 template< typename T>
@@ -709,20 +971,34 @@ template< typename T>
       if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
          mpCardinality->gotValue();
 
-      auto const&  listVal( *it);
+      auto  listVal( *it);
 
       check( listVal);
 
       if (!mFormats.empty())
       {
-         auto  valCopy( listVal);
-         format( valCopy);
-         mDestVar.push_back( boost::lexical_cast< T>( valCopy));
-      } else
-      {
-         mDestVar.push_back( boost::lexical_cast< T>( listVal));
+         format( listVal);
       } // end if
+
+      auto const  dest_value = boost::lexical_cast< T>( listVal);
+      if (mUniqueData)
+      {
+         if (std::find( mDestVar.begin(), mDestVar.end(), dest_value)
+            != mDestVar.end())
+         {
+            if (mTreatDuplicatesAsErrors)
+               throw std::runtime_error( "refuse to store duplicate values in"
+                  " variable '" + mVarName + "'");
+            continue; // for
+         } // end if
+      } // end if
+
+      mDestVar.push_back( dest_value);
    } // end for
+
+   if (mSortData)
+      std::sort( mDestVar.begin(), mDestVar.end());
+
 } // TypedArg< std::vector< T>>::assign
 
 
@@ -795,6 +1071,12 @@ public:
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.11, 19.12.2016
    TypedArg( std::tuple< T...>& dest, const std::string& vname);
+
+   /// Returns the name of the type of the destination variable, the tuple.
+   ///
+   /// @return  String with the name of the complete type.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has a value set.
    ///
@@ -876,6 +1158,13 @@ template< typename... T>
 } // TypedArg< std::tuple< T...>>::TypedArg
 
 
+template< typename... T>
+   const std::string TypedArg< std::tuple< T...>>::varTypeName() const
+{
+   return type< std::tuple< T...>>::name();
+} // TypedArg< std::tuple< T...>>::varTypeName
+
+
 template< typename... T> bool TypedArg< std::tuple< T...>>::hasValue() const
 {
    return mNumValuesSet == mTupleLength;
@@ -888,7 +1177,7 @@ template< typename... T>
 {
    os << format::toString( mDestVar);
    if (print_type)
-      os << " [" << type< std::tuple< T...>>::name() << "]";
+      os << " [" << varTypeName() << "]";
 } // TypedArg< std::tuple< T...>>::printValue
 
 
@@ -930,8 +1219,8 @@ template< typename... T>
 template< typename... T>
    void TypedArg< std::tuple< T...>>::dump( std::ostream& os) const
 {
-   os << "value type '" << type< decltype( mDestVar)>::name()
-      << "', destination '" << mVarName << "', ";
+   os << "value type '" << varTypeName() << "', destination '" << mVarName
+      << "', ";
    if (hasValue())
    {
       os << "value = <";
@@ -1004,7 +1293,7 @@ template< size_t N> class TypedArg< std::bitset< N>>: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef typename std::bitset< N>  bitset_type;
+   using bitset_type = typename std::bitset< N>;
 
    /// Constructor.
    ///
@@ -1014,6 +1303,12 @@ public:
    ///    The name of the destination variable to store the value in.
    /// @since  1.4.3, 29.04.2018
    TypedArg( bitset_type& dest, const std::string& vname);
+
+   /// Returns the type of the destination variable.
+   ///
+   /// @return  The name of the destination variable's type.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
    /// @return
@@ -1106,6 +1401,13 @@ template< size_t N>
 } // TypedArg< std::bitset< N>>::TypedArg
 
 
+template< size_t N>
+   const std::string TypedArg< std::bitset< N>>::varTypeName() const
+{
+   return type< bitset_type>::name();
+} // TypedArg< std::bitset< N>>::varTypeName
+
+
 template< size_t N> bool TypedArg< std::bitset< N>>::hasValue() const
 {
    return mDestVar.any();
@@ -1118,7 +1420,7 @@ template< size_t N>
 {
    os << format::toString( mDestVar);
    if (print_type)
-      os << " [" << type< std::bitset< N>>::name() << "]";
+      os << " [" << varTypeName() << "]";
 } // TypedArg< std::bitset< N>>::printValue
 
 
@@ -1156,7 +1458,7 @@ template< size_t N> TypedArgBase* TypedArg< std::bitset< N>>::unsetFlag()
 template< size_t N>
    void TypedArg< std::bitset< N>>::dump( std::ostream& os) const
 {
-   os << "value type '" << type< bitset_type>::name()
+   os << "value type '" << varTypeName()
       << "', destination bitset '" << mVarName << "', currently "
       << (mDestVar.none() ? "no" : boost::lexical_cast< std::string>( mDestVar.count()))
       << " values." << std::endl

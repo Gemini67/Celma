@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,7 +26,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE TypeNameTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 #define  BOOST_REQUIRE_EQUAL_STR( a, b) \
@@ -72,7 +71,7 @@ BOOST_AUTO_TEST_CASE( pod_types)
    BOOST_REQUIRE_EQUAL_STR( celma::type< unsigned short>::name(), "unsigned short");
 
    // just to make sure: works also with typedefs
-   typedef bool  my_bool;
+   using my_bool = bool;
    static_assert( celma::type< my_bool>::name()[0] == 'b');
    BOOST_REQUIRE_EQUAL_STR( celma::type< my_bool>::name(), "bool");
 
@@ -96,7 +95,6 @@ BOOST_AUTO_TEST_CASE( pod_types)
 BOOST_AUTO_TEST_CASE( stl_types)
 {
 
-/*
 #if have_any == 1
 #   ifdef experimental_any
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::any>::name(),
@@ -105,13 +103,11 @@ BOOST_AUTO_TEST_CASE( stl_types)
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::any>::name(), "std::any");
 #   endif
 #endif
-*/
 
-/*
    static_assert( celma::type< std::bitset< 128>>::name()[0] == 's');
    static_assert( celma::type< std::bitset< 128>>::name()[5] == 'b');
    static_assert( celma::type< std::bitset< 128>>::name()[12] == '1');
-*/
+
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::bitset< 128>>::name(),
                           "std::bitset<128>");
 
@@ -173,41 +169,41 @@ BOOST_AUTO_TEST_CASE( stl_types)
 #endif
 
 
-   typedef std::array< int, 10>          int_array;
-   typedef std::array< std::string, 15>  string_array;
+   using int_array = std::array< int, 10>;
+   using string_array = std::array< std::string, 15>;
 
-   // static_assert( celma::type< int_array>::name()[5] == 'a');
-   // static_assert( celma::type< int_array>::name()[11] == 'i');
-   // static_assert( celma::type< int_array>::name()[15] == '1');
-   // static_assert( celma::type< int_array>::name()[16] == '0');
+   static_assert( celma::type< int_array>::name()[5] == 'a');
+   static_assert( celma::type< int_array>::name()[11] == 'i');
+   static_assert( celma::type< int_array>::name()[15] == '1');
+   static_assert( celma::type< int_array>::name()[16] == '0');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_array>::name(),
                             "std::array<int,10>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< string_array>::name(),
                             "std::array<std::string,15>");
 
-   // static_assert( celma::type< std::deque< long>>::name()[5] == 'd');
-   // static_assert( celma::type< std::deque< long>>::name()[11] == 'l');
+   static_assert( celma::type< std::deque< long>>::name()[5] == 'd');
+   static_assert( celma::type< std::deque< long>>::name()[11] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::deque< long>>::name(),
                           "std::deque<long>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::deque< std::string>>::name(),
                           "std::deque<std::string>");
 
-   // static_assert( celma::type< std::forward_list< long>>::name()[5] == 'f');
-   // static_assert( celma::type< std::forward_list< long>>::name()[18] == 'l');
+   static_assert( celma::type< std::forward_list< long>>::name()[5] == 'f');
+   static_assert( celma::type< std::forward_list< long>>::name()[18] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::forward_list< long>>::name(),
                           "std::forward_list<long>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::forward_list< std::string>>::name(),
                           "std::forward_list<std::string>");
 
-   // static_assert( celma::type< std::list< long>>::name()[5] == 'l');
-   // static_assert( celma::type< std::list< long>>::name()[10] == 'l');
+   static_assert( celma::type< std::list< long>>::name()[5] == 'l');
+   static_assert( celma::type< std::list< long>>::name()[10] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::list< long>>::name(),
                           "std::list<long>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::list< std::string>>::name(),
                           "std::list<std::string>");
 
-   // static_assert( celma::type< std::multiset< long>>::name()[5] == 'm');
-   // static_assert( celma::type< std::multiset< long>>::name()[14] == 'l');
+   static_assert( celma::type< std::multiset< long>>::name()[5] == 'm');
+   static_assert( celma::type< std::multiset< long>>::name()[14] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::multiset< long>>::name(),
                           "std::multiset<long>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::multiset< std::string>>::name(),
@@ -215,69 +211,69 @@ BOOST_AUTO_TEST_CASE( stl_types)
 
 #if have_optional
 #   ifdef experimental_optional
-   // static_assert( celma::type< std::experimental::optional< std::string>>::name()[5] == 'e');
-   // static_assert( celma::type< std::experimental::optional< std::string>>::name()[19] == 'o');
-   // static_assert( celma::type< std::experimental::optional< std::string>>::name()[33] == 's');
+   static_assert( celma::type< std::experimental::optional< std::string>>::name()[5] == 'e');
+   static_assert( celma::type< std::experimental::optional< std::string>>::name()[19] == 'o');
+   static_assert( celma::type< std::experimental::optional< std::string>>::name()[33] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::optional< std::string>>::name(),
                           "std::experimental::optional<std::string>");
 #   else
-   // static_assert( celma::type< std::optional< std::string>>::name()[5] == 'o');
-   // static_assert( celma::type< std::optional< std::string>>::name()[19] == 's');
+   static_assert( celma::type< std::optional< std::string>>::name()[5] == 'o');
+   static_assert( celma::type< std::optional< std::string>>::name()[19] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::optional< std::string>>::name(),
                           "std::optional<std::string>");
 #   endif
 #endif
 
-   // static_assert( celma::type< std::priority_queue< long>>::name()[5] == 'p');
-   // static_assert( celma::type< std::priority_queue< long>>::name()[20] == 'l');
+   static_assert( celma::type< std::priority_queue< long>>::name()[5] == 'p');
+   static_assert( celma::type< std::priority_queue< long>>::name()[20] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::priority_queue< long>>::name(),
                           "std::priority_queue<long>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::priority_queue< std::string>>::name(),
                           "std::priority_queue<std::string>");
 
-   // static_assert( celma::type< std::queue< long>>::name()[5] == 'q');
-   // static_assert( celma::type< std::queue< long>>::name()[11] == 'l');
+   static_assert( celma::type< std::queue< long>>::name()[5] == 'q');
+   static_assert( celma::type< std::queue< long>>::name()[11] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::queue< long>>::name(),
                           "std::queue<long>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::queue< std::string>>::name(),
                           "std::queue<std::string>");
 
-   // static_assert( celma::type< std::set< long>>::name()[5] == 's');
-   // static_assert( celma::type< std::set< long>>::name()[9] == 'l');
+   static_assert( celma::type< std::set< long>>::name()[5] == 's');
+   static_assert( celma::type< std::set< long>>::name()[9] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::set< long>>::name(),
                           "std::set<long>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::set< std::string>>::name(),
                           "std::set<std::string>");
 
-   // static_assert( celma::type< std::stack< long>>::name()[5] == 's');
-   // static_assert( celma::type< std::stack< long>>::name()[11] == 'l');
+   static_assert( celma::type< std::stack< long>>::name()[5] == 's');
+   static_assert( celma::type< std::stack< long>>::name()[11] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::stack< int>>::name(),
                           "std::stack<int>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::stack< std::string>>::name(),
                           "std::stack<std::string>");
 
-   // static_assert( celma::type< std::unordered_multiset< long>>::name()[5] == 'u');
-   // static_assert( celma::type< std::unordered_multiset< long>>::name()[24] == 'l');
+   static_assert( celma::type< std::unordered_multiset< long>>::name()[5] == 'u');
+   static_assert( celma::type< std::unordered_multiset< long>>::name()[24] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::unordered_multiset< int>>::name(),
                           "std::unordered_multiset<int>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::unordered_multiset< std::string>>::name(),
                           "std::unordered_multiset<std::string>");
 
-   // static_assert( celma::type< std::unordered_set< long>>::name()[5] == 'u');
-   // static_assert( celma::type< std::unordered_set< long>>::name()[19] == 'l');
+   static_assert( celma::type< std::unordered_set< long>>::name()[5] == 'u');
+   static_assert( celma::type< std::unordered_set< long>>::name()[19] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::unordered_set< int>>::name(),
                           "std::unordered_set<int>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::unordered_set< std::string>>::name(),
                           "std::unordered_set<std::string>");
 
-   // static_assert( celma::type< std::valarray< uint64_t>>::name()[5] == 'v');
-   // static_assert( celma::type< std::valarray< uint64_t>>::name()[14] == 'u');
-   // static_assert( celma::type< std::valarray< uint64_t>>::name()[23] == 'l');
+   static_assert( celma::type< std::valarray< uint64_t>>::name()[5] == 'v');
+   static_assert( celma::type< std::valarray< uint64_t>>::name()[14] == 'u');
+   static_assert( celma::type< std::valarray< uint64_t>>::name()[23] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::valarray< uint64_t>>::name(),
                           "std::valarray<unsigned long>");
 
-   // static_assert( celma::type< std::vector< int>>::name()[5] == 'v');
-   // static_assert( celma::type< std::vector< int>>::name()[12] == 'i');
+   static_assert( celma::type< std::vector< int>>::name()[5] == 'v');
+   static_assert( celma::type< std::vector< int>>::name()[12] == 'i');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::vector< int>>::name(),
                           "std::vector<int>");
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::vector< std::string>>::name(),
@@ -292,47 +288,54 @@ BOOST_AUTO_TEST_CASE( stl_types)
 BOOST_AUTO_TEST_CASE( stl_types_key_value)
 {
 
-   typedef std::map< int, std::string>  int_string_map;
-   // static_assert( celma::type< int_string_map>::name()[5] == 'm');
-   // static_assert( celma::type< int_string_map>::name()[9] == 'i');
-   // static_assert( celma::type< int_string_map>::name()[18] == 's');
+   using int_string_map = std::map< int, std::string>;
+   static_assert( celma::type< int_string_map>::name()[5] == 'm');
+   static_assert( celma::type< int_string_map>::name()[9] == 'i');
+   static_assert( celma::type< int_string_map>::name()[18] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_map>::name(),
                             "std::map<int,std::string>");
 
-   typedef std::multimap< std::string, long>  string_long_multimap;
-   // static_assert( celma::type< string_long_multimap>::name()[5] == 'm');
-   // static_assert( celma::type< string_long_multimap>::name()[19] == 's');
-   // static_assert( celma::type< string_long_multimap>::name()[26] == 'l');
+   using string_long_multimap = std::multimap< std::string, long>;
+   static_assert( celma::type< string_long_multimap>::name()[5] == 'm');
+   static_assert( celma::type< string_long_multimap>::name()[19] == 's');
+   static_assert( celma::type< string_long_multimap>::name()[26] == 'l');
    BOOST_REQUIRE_EQUAL_STR( celma::type< string_long_multimap>::name(),
                             "std::multimap<std::string,long>");
 
-   typedef std::pair< std::string, std::string>  string_string_pair;
-   // static_assert( celma::type< string_string_pair>::name()[5] == 'p');
-   // static_assert( celma::type< string_string_pair>::name()[15] == 's');
-   // static_assert( celma::type< string_string_pair>::name()[27] == 's');
+   using string_string_pair = std::pair< std::string, std::string>;
+   static_assert( celma::type< string_string_pair>::name()[5] == 'p');
+   static_assert( celma::type< string_string_pair>::name()[15] == 's');
+   static_assert( celma::type< string_string_pair>::name()[27] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< string_string_pair>::name(),
                             "std::pair<std::string,std::string>");
 
-   typedef std::tuple< int, std::string>  int_string_tuple;
+   using int_string_tuple = std::tuple< int, std::string>;
    // static_assert( celma::type< int_string_tuple>::name()[5] == 't');
    // static_assert( celma::type< int_string_tuple>::name()[11] == 'i');
    // static_assert( celma::type< int_string_tuple>::name()[20] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_tuple>::name(),
                             "std::tuple<int,std::string>");
 
-   typedef std::unordered_multimap< int, std::string>  int_string_unordered_multimap;
-   // static_assert( celma::type< int_string_unordered_multimap>::name()[5] == 'u');
-   // static_assert( celma::type< int_string_unordered_multimap>::name()[15] == 'm');
-   // static_assert( celma::type< int_string_unordered_multimap>::name()[24] == 'i');
-   // static_assert( celma::type< int_string_unordered_multimap>::name()[33] == 's');
+   using int_string_int_tuple = std::tuple< int, std::string, int>;
+   // static_assert( celma::type< int_string_tuple>::name()[5] == 't');
+   // static_assert( celma::type< int_string_tuple>::name()[11] == 'i');
+   // static_assert( celma::type< int_string_tuple>::name()[20] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_int_tuple>::name(),
+                            "std::tuple<int,std::string,int>");
+
+   using int_string_unordered_multimap = std::unordered_multimap< int, std::string>;
+   static_assert( celma::type< int_string_unordered_multimap>::name()[5] == 'u');
+   static_assert( celma::type< int_string_unordered_multimap>::name()[15] == 'm');
+   static_assert( celma::type< int_string_unordered_multimap>::name()[24] == 'i');
+   static_assert( celma::type< int_string_unordered_multimap>::name()[33] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_unordered_multimap>::name(),
                           "std::unordered_multimap<int,std::string>");
 
-   typedef std::unordered_map< std::string, int>  string_int_unordered_map;
-   // static_assert( celma::type< string_int_unordered_map>::name()[5] == 'u');
-   // static_assert( celma::type< string_int_unordered_map>::name()[15] == 'm');
-   // static_assert( celma::type< string_int_unordered_map>::name()[24] == 's');
-   // static_assert( celma::type< string_int_unordered_map>::name()[31] == 'i');
+   using string_int_unordered_map = std::unordered_map< std::string, int>;
+   static_assert( celma::type< string_int_unordered_map>::name()[5] == 'u');
+   static_assert( celma::type< string_int_unordered_map>::name()[15] == 'm');
+   static_assert( celma::type< string_int_unordered_map>::name()[24] == 's');
+   static_assert( celma::type< string_int_unordered_map>::name()[31] == 'i');
    BOOST_REQUIRE_EQUAL_STR( celma::type< string_int_unordered_map>::name(),
                           "std::unordered_map<std::string,int>");
 
@@ -507,18 +510,21 @@ BOOST_AUTO_TEST_CASE( test_iostream_types)
 BOOST_AUTO_TEST_CASE( test_smart_pointers)
 {
 
-   // static_assert( celma::type< std::unique_ptr< std::string>::name()[5] == 'u');
-   // static_assert( celma::type< std::unique_ptr< std::string>::name()[21] == 's');
+   using  unique_string_t = std::unique_ptr< std::string>;
+   static_assert( celma::type< unique_string_t>::name()[5] == 'u');
+   static_assert( celma::type< unique_string_t>::name()[21] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::unique_ptr< std::string>>::name(),
                             "std::unique_ptr<std::string>");
 
-   // static_assert( celma::type< std::shared_ptr< double>::name()[5] == 's');
-   // static_assert( celma::type< std::shared_ptr< double>::name()[16] == 'd');
+   using  shared_double_t = std::shared_ptr< double>;
+   static_assert( celma::type< shared_double_t>::name()[5] == 's');
+   static_assert( celma::type< shared_double_t>::name()[16] == 'd');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::shared_ptr< double>>::name(),
                             "std::shared_ptr<double>");
 
-   // static_assert( celma::type< std::weak_ptr< int>::name()[5] == 'w');
-   // static_assert( celma::type< std::weak_ptr< int>::name()[14] == 'i');
+   using  weak_int = std::weak_ptr< int>;
+   static_assert( celma::type< weak_int>::name()[5] == 'w');
+   static_assert( celma::type< weak_int>::name()[14] == 'i');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::weak_ptr< int>>::name(),
                             "std::weak_ptr<int>");
 
@@ -571,7 +577,9 @@ public:
       return "UserDefinedType";
    } // celma::type< UserDefinedType>::name
 
-}; // type<  UserDefinedType>
+   static constexpr char const  mName[] = "UserDefinedType";
+
+}; // type< UserDefinedType>
 
 
 
@@ -588,8 +596,8 @@ BOOST_AUTO_TEST_CASE( user_defined_type)
    BOOST_REQUIRE_EQUAL_STR( celma::type< UserDefinedType>::name(),
                             "UserDefinedType");
 
-   // static_assert( celma::type< std::vector< UserDefinedType>>::name()[5] == 'v');
-   // static_assert( celma::type< std::vector< UserDefinedType>>::name()[12] == 'U');
+   static_assert( celma::type< std::vector< UserDefinedType>>::name()[5] == 'v');
+   static_assert( celma::type< std::vector< UserDefinedType>>::name()[12] == 'U');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::vector< UserDefinedType>>::name(),
                             "std::vector<UserDefinedType>");
 
@@ -627,9 +635,9 @@ BOOST_AUTO_TEST_CASE( user_defined_type_macro)
    BOOST_REQUIRE_EQUAL_STR( celma::type< UserDefinedTypeMacro>::name(),
                             "UserDefinedTypeMacro");
 
-   // static_assert( celma::type< std::list< UserDefinedTypeMacro>>::name()[5] == 'l');
-   // static_assert( celma::type< std::list< UserDefinedTypeMacro>>::name()[10] == 'U');
-   // static_assert( celma::type< std::list< UserDefinedTypeMacro>>::name()[25] == 'M');
+   static_assert( celma::type< std::list< UserDefinedTypeMacro>>::name()[5] == 'l');
+   static_assert( celma::type< std::list< UserDefinedTypeMacro>>::name()[10] == 'U');
+   static_assert( celma::type< std::list< UserDefinedTypeMacro>>::name()[25] == 'M');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::list< UserDefinedTypeMacro>>::name(),
                             "std::list<UserDefinedTypeMacro>");
 
@@ -665,8 +673,8 @@ BOOST_AUTO_TEST_CASE( user_defined_enum)
    static_assert( celma::type< EnumType>::name()[0] == 'E');
    BOOST_REQUIRE_EQUAL_STR( celma::type< EnumType>::name(), "EnumType");
 
-   // static_assert( celma::type< std::set< EnumType>>::name()[5] == 's');
-   // static_assert( celma::type< std::set< EnumType>>::name()[9] == 'E');
+   static_assert( celma::type< std::set< EnumType>>::name()[5] == 's');
+   static_assert( celma::type< std::set< EnumType>>::name()[9] == 'E');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::set< EnumType>>::name(),
                             "std::set<EnumType>");
 
@@ -695,5 +703,28 @@ BOOST_AUTO_TEST_CASE( test_type_from_variable)
 
 
 
-// ========================  END OF test_type_name.cpp  ========================
+/// Check the names of nested STL container types.
+/// @since  1.12.0, 24.09.2018
+BOOST_AUTO_TEST_CASE( nested_containers)
+{
+
+   using  map_of_vector_t = std::map< std::string, std::vector< int>>;
+
+   static_assert( celma::type< map_of_vector_t>::name()[ 5] == 'm');
+   static_assert( celma::type< map_of_vector_t>::name()[ 14] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< map_of_vector_t>::name(),
+                            "std::map<std::string,std::vector<int>>");
+
+   using  vector_of_sets_t = std::vector< std::set< int>>;
+
+   static_assert( celma::type< vector_of_sets_t>::name()[  5] == 'v');
+   static_assert( celma::type< vector_of_sets_t>::name()[ 18] == 'e');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< vector_of_sets_t>::name(),
+                            "std::vector<std::set<int>>");
+
+} // nested_containers
+
+
+
+// =====  END OF test_type_name.cpp  =====
 

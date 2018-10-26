@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.8.0
+   \mainpage  CELMA v1.15.0
 
    \tableofcontents
 
@@ -46,6 +46,19 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.15.0 | 2018-10-25        | Addec "atributes" in log library.
+     1.14.0 | 2018-10-05        | New feature "argument help" in argument handler.
+     1.13.0 | 2018-10-05        | Added new module/function "grouped double 2 string".
+     1.12.0 | 2018-09-26        | Adapted to newer g++ compiler.<br>
+                                  Type name library almost completely constexpr now.
+     1.11.0 | 2018-09-12        | Added new log file policy counted.<br>
+                                  Improved coverage of unit tests.<br>
+                                  Added new module "compare from less".<br>
+                                  Added new module lazy_ptr.
+     1.10.0 | 2018-08-14        | Added destination type "level counter" to argument handler.
+     1.9.0  | 2018-08-04        | Added more features on destination type 'vector' in module argument handler.<br>
+                                  Added check "parent directory exists" in argument handler.<br>
+                                  Added function parentDirectory() in module FileInfo.
      1.8.0  | 2018-08-03        | Added feature "print summary" in argument handler. Added function to compare multi-line strings. And improved (and used) module "enum flags".
      1.7.0  | 2018-07-19        | Added bitset iterators.
      1.6.0  | 2018-07-03        | Added new features "deprecated" and "replaced by" to the argument handler library.
