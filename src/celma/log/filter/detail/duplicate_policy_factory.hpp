@@ -30,7 +30,7 @@ class IDuplicatePolicy;
 
 /// Factory class that creates the duplicate policy handler object for the
 /// specified policy.
-/// @since  x.y.z, 09.01.2018  (moved into namespace log::filter)
+/// @since  1.15.1, 09.01.2018  (moved into namespace log::filter)
 /// @since  0.3, 19.06.2016
 class DuplicatePolicyFactory
 {

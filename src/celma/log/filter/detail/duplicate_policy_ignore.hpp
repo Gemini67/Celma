@@ -27,7 +27,7 @@ namespace celma { namespace log { namespace filter { namespace detail {
 
 /// Implementation of the duplicate handler policy 'ignore': Leave existing
 /// filter unchanged.
-/// @since  x.y.z, 09.01.2018  (moved into namespace log::filter)
+/// @since  1.15.1, 09.01.2018  (moved into namespace log::filter)
 /// @since  0.3, 19.06.2016
 class DuplicatePolicyIgnore: public IDuplicatePolicy
 {

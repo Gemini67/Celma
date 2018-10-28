@@ -24,25 +24,25 @@ namespace celma { namespace common {
 
 /// Provides a 'no lock' behaviour for places where a lock object is required
 /// but no real locking is needed.
-/// @since  x.y.z, 01.01.2018
+/// @since  1.15.1, 01.01.2018
 class NoLock
 {
 public:
    /// Does nothing.
-   /// @since  x.y.z, 01.01.2018
+   /// @since  1.15.1, 01.01.2018
    inline void lock() const noexcept( true)
    {
    } // NoLock::lock
 
    /// Does nothing.
-   /// @since  x.y.z, 01.01.2018
+   /// @since  1.15.1, 01.01.2018
    inline void unlock() const noexcept( true)
    {
    } // NoLock::unlock
 
    /// Does more of nothing.
    /// @return  Always \c true.
-   /// @since  x.y.z, 01.01.2018
+   /// @since  1.15.1, 01.01.2018
    inline bool try_lock() const noexcept( true)
    {
       return true;

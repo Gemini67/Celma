@@ -31,7 +31,7 @@ namespace filter { namespace detail {
 
 
 /// Interface definition of log filters.
-/// @since  x.y.z, 09.01.2018  (moved and renamed)
+/// @since  1.15.1, 09.01.2018  (moved and renamed)
 /// @since  0.3, 19.06.2016
 class IFilter
 {

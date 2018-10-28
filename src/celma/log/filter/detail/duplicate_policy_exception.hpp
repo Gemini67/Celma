@@ -29,7 +29,7 @@ namespace celma { namespace log { namespace filter { namespace detail {
 
 /// Implementation of the duplicate handler policy 'exception': Throw an
 /// exception.
-/// @since  x.y.z, 09.01.2018  (moved into namespace log::filter)
+/// @since  1.15.1, 09.01.2018  (moved into namespace log::filter)
 /// @since  0.11, 06.12.2016  (renamed from DuplicatePolicyThrow)
 /// @since  0.3, 19.06.2016
 class DuplicatePolicyException: public IDuplicatePolicy

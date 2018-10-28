@@ -45,7 +45,7 @@ namespace celma { namespace log { namespace files {
 ///             The default \a NoLock type provides no real locking. If multiple
 ///             threads write into the logfile, provide an appropriate locking
 ///             mechanism (i.e. a mutex).
-/// @since  x.y.z, 01.01.2018  (added lock policy for writing into the file)
+/// @since  1.15.1, 01.01.2018  (added lock policy for writing into the file)
 /// @since  1.0.0, 13.12.2017
 template< typename P, typename L = common::NoLock> class Handler:
    public detail::ILogDest
