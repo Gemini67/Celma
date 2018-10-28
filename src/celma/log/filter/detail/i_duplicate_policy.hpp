@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,27 +12,28 @@
 
 
 /// @file
-/// See documentation of class celma::log::detail::IDuplicatePolicy.
+/// See documentation of class celma::log::filter::detail::IDuplicatePolicy.
 
 
-#ifndef CELMA_LOG_DETAIL_I_DUPLICATE_POLICY_HPP
-#define CELMA_LOG_DETAIL_I_DUPLICATE_POLICY_HPP
+#ifndef CELMA_LOG_FILTER_DETAIL_I_DUPLICATE_POLICY_HPP
+#define CELMA_LOG_FILTER_DETAIL_I_DUPLICATE_POLICY_HPP
 
 
-#include "celma/log/detail/duplicate_policy.hpp"
+#include "celma/log/filter/detail/duplicate_policy.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma { namespace log { namespace filter { namespace detail {
 
 
 /// Interface definition class for duplicate (filter) handling policies.
+/// @since  x.y.z, 09.01.2018  (moved into namespace log::filter)
 /// @since  0.3, 19.06.2016
 class IDuplicatePolicy
 {
 public:
    /// Virtual, empty destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~IDuplicatePolicy() { }
+   virtual ~IDuplicatePolicy() = default;
 
    /// Must be implemented by derived classes: Return the policy type.
    /// @return  In derived classes: The policy implemented by this object.
@@ -50,12 +51,13 @@ public:
 
 
 } // namespace detail
+} // namespace filter
 } // namespace log
 } // namespace celma
 
 
-#endif   // CELMA_LOG_DETAIL_I_DUPLICATE_POLICY_HPP
+#endif   // CELMA_LOG_FILTER_DETAIL_I_DUPLICATE_POLICY_HPP
 
 
-// ======================  END OF i_duplicate_policy.hpp  ======================
+// =====  END OF i_duplicate_policy.hpp  =====
 

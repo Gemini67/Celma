@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,22 +12,28 @@
 
 
 /// @file
-/// See documentation of class celma::log::detail::ILogFilter.
+/// See documentation of class celma::log::filter::detail::IFilter.
 
 
-#ifndef CELMA_LOG_DETAIL_I_LOG_FILTER_HPP
-#define CELMA_LOG_DETAIL_I_LOG_FILTER_HPP
+#ifndef CELMA_LOG_FILTER_DETAIL_I_FILTER_HPP
+#define CELMA_LOG_FILTER_DETAIL_I_FILTER_HPP
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma { namespace log {
 
 
+namespace detail {
 class LogMsg;
+}
+
+
+namespace filter { namespace detail {
 
 
 /// Interface definition of log filters.
+/// @since  x.y.z, 09.01.2018  (moved and renamed)
 /// @since  0.3, 19.06.2016
-class ILogFilter
+class IFilter
 {
 public:
    /// List of filter types:
@@ -51,11 +57,11 @@ public:
    /// Constructor, stores the filter type.
    /// @param[in]  ft  The type of the filter.
    /// @since  0.3, 19.06.2016
-   ILogFilter( FilterTypes ft);
+   IFilter( FilterTypes ft);
 
    /// Empty, virtual destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~ILogFilter() { };
+   virtual ~IFilter() { };
 
    /// Returns the type of this filter.
    /// @return  The type of this filter.
@@ -68,7 +74,7 @@ public:
    /// @param[in]  msg  The message to check.
    /// @return  \c true if the message is accepted.
    /// @since  0.3, 19.06.2016
-   bool passFilter( const LogMsg& msg) const;
+   bool passFilter( const log::detail::LogMsg& msg) const;
 
 protected:
    /// The type of the filter.
@@ -80,47 +86,48 @@ private:
    /// @param[in]  msg  The message to check.
    /// @return  \c true if the message is accepted by the filter.
    /// @since  0.3, 19.06.2016
-   virtual bool pass( const LogMsg& msg) const = 0;
+   virtual bool pass( const log::detail::LogMsg& msg) const = 0;
 
-}; // ILogFilter
+}; // IFilter
 
 
 // inlined methods
 // ===============
 
 
-inline bool ILogFilter::isLevelFilter( FilterTypes ft)
+inline bool IFilter::isLevelFilter( FilterTypes ft)
 {
   return (ft == FilterTypes::maxLevel) || (ft == FilterTypes::minLevel) ||
          (ft == FilterTypes::level);
-} // end ILogFilter::isLevelFilter
+} // IFilter::isLevelFilter
 
 
-inline ILogFilter::ILogFilter( FilterTypes ft):
+inline IFilter::IFilter( FilterTypes ft):
    mFilterType( ft)
 {
-} // end ILogFilter::ILogFilter
+} // IFilter::IFilter
 
 
-inline ILogFilter::FilterTypes ILogFilter::filterType() const
+inline IFilter::FilterTypes IFilter::filterType() const
 {
    return mFilterType;
-} // end ILogFilter::filterType
+} // IFilter::filterType
 
 
-inline bool ILogFilter::passFilter( const LogMsg& msg) const
+inline bool IFilter::passFilter( const log::detail::LogMsg& msg) const
 {
    return pass( msg);
-} // end ILogFilter::passFilter
+} // IFilter::passFilter
 
 
 } // namespace detail
+} // namespace filter
 } // namespace log
 } // namespace celma
 
 
-#endif   // CELMA_LOG_DETAIL_I_LOG_FILTER_HPP
+#endif   // CELMA_LOG_FILTER_DETAIL_I_FILTER_HPP
 
 
-// =========================  END OF i_log_filter.hpp  =========================
+// =====  END OF i_log_filter.hpp  =====
 
