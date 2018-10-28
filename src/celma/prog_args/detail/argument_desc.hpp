@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,8 +35,11 @@ class TypedArgBase;
 
 /// Provides storage for all arguments (specifyer plus description).<br>
 /// This is used to print the usage.
-/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
-///                             arguments)
+///
+/// @since  1.1.0, 04.12.2017
+///    (use new class to store the argument dexcriptions)
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
 class ArgumentDesc
 {
@@ -82,6 +85,16 @@ public:
    /// @since  0.2, 10.04.2016
    void setLineLength( int useLen);
 
+   /// Returns the description (usage) text for the given argument.
+   ///
+   /// @param[in]  arg_key
+   ///    The short and/or long argument to return the description for.
+   /// @return
+   ///    Either the description or an empty string.
+   /// @since
+   ///    1.14.0, 01.10.2018
+   const std::string getArgDesc( const ArgumentKey& arg_key) const;
+
    /// Prints the contents of the storage to the specified stream.
    /// @param[out]  os  the stream to write to.
    /// @param[in]   ad  The object to dump the contents of the storage of.
@@ -109,19 +122,22 @@ private:
       ArgDesc& operator =( const ArgDesc&) = default;
 
       /// Returns if this entry should be printed in the usage now.
-      /// @param[in]  printIsMandatory  Specifies if only mandatory (\c true)
-      ///                               parameters should be printed or all.
-      /// @param[in]  printHidden       Specifies if hidden parameters should be
-      ///                               printed or not.
-      /// @param[in]  usage_contents    Specifies which arguments to print.
-      /// @return  \c true if mandatory parameters are requested and this
-      ///          parameter is mandatory, or if non-mandatory (optional)
-      ///          parameters are requested and this parameter is not mandatory,
-      ///          and when hidden parameters may be printed or this parameter
-      ///          is not hidden.
-      /// @since  0.2, 10.04.2016
+      /// @param[in]  printIsMandatory
+      ///    Specifies if only mandatory (\c true) parameters should be printed
+      ///    or all.
+      /// @param[in]  printHidden
+      ///    Specifies if hidden parameters should be printed or not.
+      /// @param[in]  print_deprecated
+      ///    Specifies if deprecated parameters should be printed or not.
+      /// @param[in]  usage_contents
+      ///    Specifies which arguments to print.
+      /// @return
+      ///    \c true if the current argument should be printed in the usage with
+      ///    the given parameters.
+      /// @since
+      ///    0.2, 10.04.2016
       bool doPrint( bool printIsMandatory, bool printHidden,
-         UsageParams::Contents usage_contents) const;
+         bool print_deprecated, UsageParams::Contents usage_contents) const;
 
       /// Returns the key string of the argument with the specified contents.
       /// @param[in]  usage_contents  Contents of the key string to return.
@@ -137,7 +153,7 @@ private:
    }; // ArgumentDesc::ArgDesc
 
    /// Used to store the arguments.
-   typedef std::vector< ArgDesc>  ArgDescCont;
+   using ArgDescCont = std::vector< ArgDesc>;
 
    /// Prints the contents of the storage to the specified stream.
    /// @param[out]  os  the stream to write to.
@@ -186,5 +202,5 @@ private:
 #endif   // CELMA_PROG_ARGS_DETAIL_ARGUMENT_DESC_HPP
 
 
-// ========================  END OF argument_desc.hpp  ========================
+// =====  END OF argument_desc.hpp  =====
 

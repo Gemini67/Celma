@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,7 @@ namespace celma { namespace common {
 /// index is greater than the number of elements in the tuple.
 template< std::size_t I = 0, typename FuncT, typename... Tp>
    inline typename std::enable_if< sizeof...( Tp) < I, void>::type
-      tuple_at_index( int, std::tuple< Tp...>&, FuncT) noexcept( false)
+      tuple_at_index( int, const std::tuple< Tp...>&, FuncT) noexcept( false)
 {
    throw std::range_error( "index exceeds number of elements in tuple");
 } // tuple_at_index
@@ -45,7 +45,7 @@ template< std::size_t I = 0, typename FuncT, typename... Tp>
 /// iteration.
 template< std::size_t I = 0, typename FuncT, typename... Tp>
    inline typename std::enable_if< I == sizeof...( Tp), void>::type
-      tuple_at_index( int index, std::tuple< Tp...>&, FuncT) noexcept( false)
+      tuple_at_index( int index, const std::tuple< Tp...>&, FuncT) noexcept( false)
 {
    if (index >= 0)
       throw std::range_error( "index exceeds number of elements in tuple");
@@ -53,19 +53,57 @@ template< std::size_t I = 0, typename FuncT, typename... Tp>
  
 
 /// Access the nth value of a tuple, when n is only known at runtime.
-/// @tparam  I      The current element number of the tuple to investigate.
-/// @tparam  FuncT  The type of the functor to call when the requested element
-///                 is found.
-/// @tparam  Tp     The template parameter pack, i.e. the tuple.
-/// @param[in]  index  The number of the element in the tuple to search for.<br>
-///                    The first element has number 0.
-/// @param[in]  t      The tuple.
-/// @param[in]  f      The functor to call.
-/// @return  The (reference of) the element at the specified position, when found.
-/// @since  0.5, 27.09.2016
+///
+/// @tparam  I
+///   The current element number of the tuple to investigate.
+/// @tparam  FuncT
+///    The type of the functor to call when the requested element is found.
+/// @tparam  Tp
+///    The template parameter pack, i.e. the tuple.
+/// @param[in]  index
+///    The number of the element in the tuple to search for.<br>
+///    The first element has number 0.
+/// @param[in]  t
+///    The tuple.
+/// @param[in]  f
+///    The functor to call.
+/// @return
+///    The (reference of) the element at the specified position, when found.
+/// @since
+///    0.5, 27.09.2016
 template< std::size_t I = 0, typename FuncT, typename... Tp>
    inline typename std::enable_if< I < sizeof...( Tp), void>::type
       tuple_at_index( int index, std::tuple< Tp...>& t, FuncT f) noexcept( false)
+{
+   if (index == 0)
+      f( std::get< I>( t));
+   tuple_at_index< I + 1, FuncT, Tp...>( index - 1, t, f);
+} // tuple_at_index
+
+
+/// Access the nth value of a tuple, when n is only known at runtime.<br>
+/// Same as before, but with a const reference of the tuple.
+///
+/// @tparam  I
+///   The current element number of the tuple to investigate.
+/// @tparam  FuncT
+///    The type of the functor to call when the requested element is found.
+/// @tparam  Tp
+///    The template parameter pack, i.e. the tuple.
+/// @param[in]  index
+///    The number of the element in the tuple to search for.<br>
+///    The first element has number 0.
+/// @param[in]  t
+///    The tuple.
+/// @param[in]  f
+///    The functor to call.
+/// @return
+///    The (reference of) the element at the specified position, when found.
+/// @since
+///    1.8.0, 05.07.2018
+template< std::size_t I = 0, typename FuncT, typename... Tp>
+   inline typename std::enable_if< I < sizeof...( Tp), void>::type
+      tuple_at_index( int index, const std::tuple< Tp...>& t, FuncT f) noexcept( false)
 {
    if (index == 0)
       f( std::get< I>( t));
@@ -80,5 +118,5 @@ template< std::size_t I = 0, typename FuncT, typename... Tp>
 #endif   // CELMA_COMMON_TUPLE_AT_INDEX_HPP
 
 
-// ========================  END OF tuple_at_index.hpp  ========================
+// =====  END OF tuple_at_index.hpp  =====
 

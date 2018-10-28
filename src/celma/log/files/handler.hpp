@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,7 +20,9 @@
 
 
 #include <memory>
+#include <mutex>
 #include <sstream>
+#include "celma/common/no_lock.hpp"
 #include "celma/log/detail/format_stream_default.hpp"
 #include "celma/log/detail/i_format_base.hpp"
 #include "celma/log/detail/i_log_dest.hpp"
@@ -38,8 +40,15 @@ namespace celma { namespace log { namespace files {
 /// The formatting for the log messages is defined through classes that
 /// implement the IFormatBase interfac.<br>
 /// This class finally brings all this together.
+/// @tparam  P  The policy used to generate and handle the log files.
+/// @tparam  L  The lock type to use when writing into the logfile.<br>
+///             The default \a NoLock type provides no real locking. If multiple
+///             threads write into the logfile, provide an appropriate locking
+///             mechanism (i.e. a mutex).
+/// @since  1.15.1, 01.01.2018  (added lock policy for writing into the file)
 /// @since  1.0.0, 13.12.2017
-template< typename P> class Handler: public detail::ILogDest
+template< typename P, typename L = common::NoLock> class Handler:
+   public detail::ILogDest
 {
 public:
    /// Constructor. Tries to open the current log file according to the given
@@ -71,40 +80,47 @@ private:
    virtual void message( const detail::LogMsg& msg) override;
 
    /// The policy object to handle the log file(s).
-   std::unique_ptr< P>                      mpFilePolicy;
+   std::unique_ptr< P>  mpFilePolicy;
    /// The object used for formatting stream output.
    std::unique_ptr< detail::IFormatStream>  mpFormatter;
+   /// The lock to use for writing into the logfile.
+   L  mLockType;
 
-}; // Handler< P>
+}; // Handler< P, L>
 
 
 // inlined methods
 // ===============
 
 
-template< typename P> Handler< P>::Handler( P* file_policy):
-   mpFilePolicy( file_policy)
+template< typename P, typename L> Handler< P, L>::Handler( P* file_policy):
+   mpFilePolicy( file_policy),
+   mpFormatter( new detail::FormatStreamDefault()),
+   mLockType()
 {
    mpFilePolicy->open();
-} // Handler< P>::Handler
+} // Handler< P, L>::Handler
 
 
-template< typename P>
-   void Handler< P>::setFormatter( detail::IFormatBase* formatter)
+template< typename P, typename L>
+   void Handler< P, L>::setFormatter( detail::IFormatBase* formatter)
 {
    mpFormatter.reset(
       (formatter == nullptr) ? new detail::FormatStreamDefault() :
                                static_cast< detail::IFormatStream*>( formatter));
-} // Handler< P>::setFormatter
+} // Handler< P, L>::setFormatter
 
 
-template< typename P> void Handler< P>::message( const detail::LogMsg& msg)
+template< typename P, typename L>
+   void Handler< P, L>::message( const detail::LogMsg& msg)
 {
    std::ostringstream  msg_text;
 
    mpFormatter->formatMsg( msg_text, msg);
+
+   const std::lock_guard< L>  lock( mLockType);
    mpFilePolicy->writeMessage( msg, msg_text.str());
-} // Handler< P>::message
+} // Handler< P, L>::message
 
 
 } // namespace files

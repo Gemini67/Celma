@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,6 +12,14 @@
 **    Defines to enable additional test functions in a Boost.Test module.
 **
 --*/
+
+
+/// @file
+/// See documentation of the macros CHECK_RETURN and CHECK_EQUAL_RETURN.<br>
+/// This file does not include the necessary Boost.Test include files, since
+/// the "test module" must be defined first.<br>
+/// So, define the test module, include the Boost.Test include file(s), and then
+/// include this file.
 
 
 #ifndef CELMA_TEST_CHECK_RETURN_HPP

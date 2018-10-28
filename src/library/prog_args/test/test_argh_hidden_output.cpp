@@ -3,12 +3,16 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 --*/
+
+
+// module to test header file include
+#include "celma/prog_args.hpp"
 
 
 // C++ Standard Library includes
@@ -19,7 +23,6 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/prog_args.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -57,9 +60,9 @@ int main( int argc, char* argv[])
 
    cout << endl << string( 80, '-') << endl << endl;
 
-   ArgString2Array  as2a( "--print-hidden -h", argv[ 0]);
+   const ArgString2Array  as2a( "--print-hidden -h", argv[ 0]);
    printUsage( Handler::hfHelpShort | Handler::hfUsageCont
-      | Handler::hfArgHidden, as2a.mArgc, as2a.mpArgv);
+      | Handler::hfArgHidden, as2a.mArgC, as2a.mpArgV);
 
    exit( EXIT_SUCCESS);
 } // main
@@ -115,6 +118,7 @@ void printUsage( int flags, int argc, char* argv[])
       ah.evalArguments( argc, argv);
    } catch (const std::exception& e)
    {
+      std::cerr << "*** ERROR: caught exception: " << e.what() << endl;
    } // end try
 
 } // printUsage
@@ -124,5 +128,5 @@ void printUsage( int flags, int argc, char* argv[])
 } // namespace
 
 
-// ===================  END OF test_argh_hidden_output.cpp  ===================
+// =====  END OF test_argh_hidden_output.cpp  =====
 

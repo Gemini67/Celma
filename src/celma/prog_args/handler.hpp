@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,6 +29,7 @@
 #include "celma/prog_args/detail/argument_desc.hpp"
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
+#include "celma/prog_args/summary_options.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -68,7 +69,10 @@ class ValueHandler;
 ///   .
 ///   To change this 'value mode', call the function setValueMode() with the
 ///   desired value.<br>
-///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent), "Specifies the verbose level, if set without value default is 'low'")->setValueMode( vmOptional);</code>
+///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent),
+///                               "Specifies the verbose level, if set without "
+///                               "value default is 'low'")
+///                             ->setValueMode( vmOptional);</code>
 /// - The value mode can also be used to flag a parameter that means:
 ///   The remaining command line arguments are not for this program/
 ///   application.<br>
@@ -83,6 +87,11 @@ class ValueHandler;
 ///     - upper: Upper limit for values to accept (exclusive).
 ///     - range: Range of values for scalar types to accept.
 ///     - values: List of values to accept.
+///     .
+///     It is possible to add multiple checks to the same argument. In this case,
+///     a value must be accepted by all checks. The checks are executed in the
+///     order in which they were added.<br>
+///     Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
 ///   - usetFlag(): For destination variable type boolean: Instead of setting the
 ///     variable to \c true when the argument is used, set it to \c false.
 ///   - setPrintDefault(): Specifies if the default value (of the destination
@@ -102,11 +111,28 @@ class ValueHandler;
 ///     itself, multiple changes to the same destination variable are prevented
 ///     by checking the original value before changing it. Set
 ///     checkOriginalValue() to \c false to allow multiple changes.
+///   - setIsDeprecated(): When an argument is no longer available, you may want
+///     to give the user this information instead of just saying "unknown
+///     argument". So, just mark an argument as deprecated, then it will no
+///     longer appear in the usage, and if the argument is used on the command
+///     line, the proper error message is printed.<br>
+///     If the argument was mandatory before, remove this flag. Setting a
+///     deprecated argument to mandatory, or vice versa, will throw in
+///     addArgument().
+///   - setReplacedBy(): When an argument is replaced by another, you may want
+///     to give the user this information instead of just saying "unknown
+///     argument". So, just mark an argument as "replaced by", then it will no
+///     longer appear in the usage, and if the argument is used on the command
+///     line, the proper error message is printed.<br>
+///     Internally the argument is handled like a deprecated argument, so
+///     features related to deprecated arguments apply to replaced arguments
+///     too.<br>
+///     If the argument was mandatory before, remove this flag. Setting a
+///     deprecated argument to mandatory, or vice versa, will throw in
+///     addArgument().
+///   - setAllowMixIncSet(): For destination type level counter, allows to mix
+///     arguments that increment the value or assign a new value.
 ///   .
-///   It is possible to add multiple checks to the same argument. In this case,
-///   a value must be accepted by all checks. The checks are executed in the
-///   order in which they were added.<br>
-///   Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
 /// - Finally, when all arguments were specified, call evalArguments() to
 ///   actually evaluate the command line arguments.
 /// - You can use this class to print a list of the arguments and their
@@ -198,7 +224,6 @@ class ValueHandler;
 ///        multiple times (and cardinality is 1):<br>
 ///        Error/Exception (as is), store the first value (ignore additional
 ///        calls), store the last value.
-/// @todo  Add test-feature: Process all arguments, print all errors.
 /// @todo  Use different exit codes from evalArgumentErrorExit(), depending on
 ///        the type of the exception that was called.
 /// @todo  Add pre- and post-argument list help texts also to argument handlers
@@ -211,48 +236,60 @@ class Handler
 public:
    /// Type of the (storage handler of the) functions to call for control
    /// characters.
-   typedef std::function< void()>  HandlerFunc;
+   using HandlerFunc = std::function< void()>;
 
    /// List of flags to control the behaviour of this class:
    enum HandleFlags
    {
       /// Allows the argument '-h' to print the usage of the program.
-      hfHelpShort     = 0x01,
+      hfHelpShort       = 0x01,
       /// Allows the argument '--help' to print the usage of the program.
-      hfHelpLong      = hfHelpShort << 1,
+      hfHelpLong        = hfHelpShort << 1,
+      /// Allows the argument "--help-arg=<arg>" to get the usage of one
+      /// specific argument.
+      hfHelpArg         = hfHelpLong << 1,
+      /// Allows the argument "--help-arg-full=<arg>" to get the usage of one
+      /// specific argument, plus a description of all properties of the
+      /// argument and its destination variable.
+      hfHelpArgFull     = hfHelpArg << 1,
       /// Specifies to read arguments from the optional program arguments file
       /// before parsing the command line arguments.<br>
       /// File: $HOME/.progargs/\<progfilename\>.pa
-      hfReadProgArg   = hfHelpLong  << 1,
+      hfReadProgArg     = hfHelpArgFull  << 1,
       /// Produces verbose output when a value is assigned to a variable.
-      hfVerboseArgs   = hfReadProgArg << 1,
+      hfVerboseArgs     = hfReadProgArg << 1,
       /// Specifies that hidden arguments should be printed too in the usage.
-      hfUsageHidden   = hfVerboseArgs << 1,
+      hfUsageHidden     = hfVerboseArgs << 1,
       /// Allows the argument '--print-hidden' to print the hidden arguments in
       /// the usage.
-      hfArgHidden     = hfUsageHidden << 1,
+      hfArgHidden       = hfUsageHidden << 1,
+      /// Specifies that deprecated arguments should be printed too in the usage.
+      hfUsageDeprecated =  hfArgHidden << 1,
+      /// Allows the argument '--print-deprecated' to print the deprecated
+      /// arguments in he usage.
+      hfArgDeprecated   = hfUsageDeprecated << 1,
       /// Only print the arguments with their short argument in the usage.
-      hfUsageShort    = hfArgHidden << 1,
+      hfUsageShort      = hfArgDeprecated << 1,
       /// Only print the arguments with their long argument in the usage.
-      hfUsageLong     = hfUsageShort << 1,
+      hfUsageLong       = hfUsageShort << 1,
       /// Adds the argument '--list-arg-vars' which, when used, prints the list
       /// of arguments and the names of the destination variables and their
       /// values.
-      hfListArgVar    = hfUsageLong << 1,
+      hfListArgVar      = hfUsageLong << 1,
       /// Special flag originally for testing: Don't exit after printing the
       /// usage.
-      hfUsageCont     = hfListArgVar << 1,
+      hfUsageCont       = hfListArgVar << 1,
       /// Activates the argument '--endvalues' that is used to signal the end of
       /// a separate value list.
-      hfEndValues     = hfUsageCont << 1,
+      hfEndValues       = hfUsageCont << 1,
       /// Activates the argument '--list-arg-groups' which lists the names of
       /// all known argument groups.<br>
       /// If argument groups are used, set this argument when creating the
       /// Groups singleton object.
-      hfListArgGroups = hfEndValues << 1,
+      hfListArgGroups   = hfEndValues << 1,
       /// This flag is set by the Groups class when it creates a Handler object.
       /// Don't use otherwise!
-      hfInGroup       = hfListArgGroups << 1
+      hfInGroup         = hfListArgGroups << 1
    }; // HandleFlags
 
    /// List of possible positions for the additional output.
@@ -273,18 +310,19 @@ public:
    }; // UsageContents
 
    /// Make the type 'ValueMode' available through this class too.
-   typedef detail::TypedArgBase::ValueMode  ValueMode;
+   using ValueMode = detail::TypedArgBase::ValueMode;
 
    /// Set of all help arguments.
-   static const int  AllHelp = hfHelpShort | hfHelpLong;
+   static const int  AllHelp = hfHelpShort | hfHelpLong | hfHelpArg;
    /// Set of available standard/commonly used arguments.
    static const int  AllFlags = hfHelpShort | hfHelpLong | hfReadProgArg;
    /// Flags for testing/debugging the module itself.
    static const int  DebugFlags = hfVerboseArgs | hfListArgVar;
    /// Complete set of all available arguments.
-   static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfReadProgArg |
-                                   hfVerboseArgs | hfUsageHidden | hfArgHidden |
-                                   hfListArgVar | hfUsageCont;
+   static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfHelpArg
+                                   | hfReadProgArg | hfVerboseArgs
+                                   | hfUsageHidden | hfArgHidden | hfListArgVar
+                                   | hfUsageCont;
 
    /// (Default) Constructor.
    /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
@@ -298,7 +336,7 @@ public:
    /// @since  0.2, 10.04.2016
    explicit Handler( int flagSet = hfHelpShort | hfHelpLong,
                      IUsageText* txt1 = nullptr,
-                     IUsageText* txt2 = nullptr);
+                     IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor that allows to specify the output streams to write to.
    /// @param[in]  os        The stream to write normal output to.
@@ -314,7 +352,7 @@ public:
    Handler( std::ostream& os, std::ostream& error_os,
             int flag_set = hfHelpShort | hfHelpLong,
             IUsageText* txt1 = nullptr,
-            IUsageText* txt2 = nullptr);
+            IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor to be used by a sub-group. Copies some settings from the main
    /// argument handler object.<br>
@@ -334,7 +372,7 @@ public:
    ///                       additional text for the usage.
    /// @since  1.1.0, 04.12.2017
    Handler( Handler& main_ah, int flag_set, IUsageText* txt1 = nullptr,
-            IUsageText* txt2 = nullptr);
+            IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Don't allow copying.
    Handler( const Handler&) = delete;
@@ -360,19 +398,20 @@ public:
                                       detail::TypedArgBase* dest,
                                       const std::string& desc);
 
-   /// Adds a sub-group.<br>
-   /// Note: Theoretically we could pass the object by reference, but then the
-   /// compiler cannot distinguish anymore between this function and the variant
-   /// to add an argument resulting in a function call.
-   /// @param[in]  arg_spec  The arguments on the command line to enter/start
-   ///                       the sub-group.
-   /// @param[in]  subGroup  The object to handle the sub-group arguments.
-   /// @param[in]  desc      The description of this sub-group argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// Adds a sub-group.
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line to enter/start the sub-group.
+   /// @param[in]  subGroup
+   ///    The object to handle the sub-group arguments.
+   /// @param[in]  desc
+   ///    The description of this sub-group argument.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      Handler* subGroup,
+                                      Handler& subGroup,
                                       const std::string& desc);
 
    /// Adds an argument that behaves like the -h/--help arguments. Use this if
@@ -481,6 +520,24 @@ public:
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentEndValues( const std::string& arg_spec);
 
+   /// Adds an argument that can be used to get the usage for exactly one
+   /// argument.
+   ///
+   /// @param[in]  arg_spec
+   ///    The argument(s) on the command line to request the usage for an
+   ///    argument.
+   /// @param[in]  full
+   ///    Set this flag if the argument should invoke the function to print the
+   ///    usage and a complee description of the argument and its destination
+   ///    variable.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
+   /// @since
+   ///    1.14.0, 25.09.2018
+   detail::TypedArgBase* addArgumentHelpArgument( const std::string& arg_spec,
+      bool full = false);
+
    /// Specifies the callback function for a control argument.<br>
    /// If no handler is defined for a control character, it is treated as error
    /// when found in an argument list.
@@ -533,6 +590,23 @@ public:
    void evalArgumentsErrorExit( int argc, char* argv[],
                                 const std::string& prefix);
 
+   /// After calling evalArguments(), prints the list of arguments that were
+   /// used and the values that were set.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @since 1.8.0, 25.07.2018 (version with less parameters)
+   void printSummary( sumoptset_t contents_set = sumoptset_t(), std::ostream& os = std::cout);
+
+   /// Same as before, but only the output stream to write to can/must be
+   /// specified.
+   ///
+   /// @param[out]  os  The stream to write the summary to.
+   /// @since 1.8.0, 26.07.2018 (version with even less parameters)
+   void printSummary( std::ostream&);
+
    /// Helps to determine if an object is a 'plain' Handler object or a
    /// ValueHandler object.
    /// @return  Always \c false for objects of this class.
@@ -551,10 +625,11 @@ public:
    /// @return  Pointer to the object handling the specified argument.
    /// @since  0.14.0, 16.03.2017
    detail::TypedArgBase* getArgHandler( const std::string& arg_spec)
-                                      noexcept( false);
+      noexcept( false);
 
 protected:
-	/// Class needs access to internals.
+	/// Classes need access to internals.
+   friend class detail::ArgumentContainer;
    friend class Groups;
 
    /// Function call result for evalSingleArgument():
@@ -614,6 +689,23 @@ protected:
    /// @since  0.2, 10.04.2016
    bool argumentExists( const std::string& argString) const;
 
+   /// After calling evalArguments(), prints the list of arguments that were
+   /// used and the values that were set.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @param[in]   standalone
+   ///    If set, prints a title and a line if no arguments were found,
+   ///    otherwise only prints the list of arguments used (or nothing).
+   /// @param[in]   arg_prefix
+   ///    Specifies the prefix for the arguments of this handler. Used when the
+   ///    argument handler handles the arguments of a sub-group.
+   /// @since 1.8.0, 03.07.2018
+   void printSummary( sumoptset_t contents_set, std::ostream& os,
+      bool standalone, const char* arg_prefix) const;
+
    /// Prints the usage of this class.
    /// @param[out]  os  The stream to print to.
    /// @param[in]   ah  The object to print the data of.
@@ -626,15 +718,33 @@ private:
    static const detail::ArgumentKey  mPosKey;
 
    /// Type of the container to store the global constrainst in.
-   typedef std::vector< detail::IConstraint*>  ConstraintCont;
+   using ConstraintCont = std::vector< detail::IConstraint*>;
+
+   /// Called by the constructors to evaluate the set of flags given.
+   ///
+   /// @param[in]  flag_set
+   ///    The set of flags to set.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @since
+   ///    1.11.0, 16.02.2018
+   void handleStartFlags( int flag_set, IUsageText* txt1, IUsageText* txt2)
+      noexcept( false);
 
    /// Function to print the usage of a program (when requested through the
    /// arguments). The additional parameters allow to print additional
    /// information.
-   /// @param[in]  txt1  Pointer to the object that prints the first text.
-   /// @param[in]  txt2  Pointer to the object that prints the second text.
+   ///
+   /// @param[in]  txt1
+   ///    Pointer to the object that prints the first text.
+   /// @param[in]  txt2
+   ///    Pointer to the object that prints the second text.
    /// @since  0.2, 10.04.2016
-   void usage( IUsageText* txt1, IUsageText* txt2);
+   void usage( IUsageText* txt1, IUsageText* txt2) noexcept( false);
 
    /// Sets the flag that this object is used as sub-group handler.
    /// @since  0.2, 10.04.2016
@@ -676,9 +786,23 @@ private:
    /// @since  0.13.1, 07.02.2017
    void listArgGroups();
 
-   /// Called to mark the end of a value list: Sets mpLastArg to NULL.
+   /// Called to mark the end of a value list: Sets #mpLastArg to NULL.
+   ///
    /// @since  0.2, 10.04.2016
    void endValueList();
+
+   /// Searches if the given argment key belongs to a known argument, and if so
+   /// prints its usage.<br>
+   /// If the argument key is unknown, an error message is printed.<br>
+   /// At the end, the function calls exit(), unless "usage continues" is set.
+   ///
+   /// @param[in]  help_arg_key
+   ///    The key of the argument to print the usage of.
+   /// @param[in]  full
+   ///    If set, also prints information about the argument and its destination
+   ///    variable.
+   /// @since  1.14.0, 25.09.2018
+   void helpArgument( const std::string& help_arg_key, bool full);
 
    /// Iterates over the arguments and evaluates them.
    /// @param[in]  alp  The parser object used to access the arguments.
@@ -730,7 +854,7 @@ private:
    /// - Check argument constraints.
    /// - Check global constraints.
    /// - Produce verbose output if required.
-   /// - Finally call calledAssign() for this argument.
+   /// - Finally call assignValue() for this argument.
    ///
    /// @param[in]  hdl    Pointer to the object that handles this argument.
    /// @param[in]  key    The short and/or long argument keys.
@@ -829,6 +953,18 @@ inline void Handler::setIsSubGroupHandler()
 } // Handler::setIsSubGroupHandler
 
 
+inline void Handler::printSummary( sumoptset_t contents_set, std::ostream& os)
+{
+   printSummary( contents_set, os, true, nullptr);
+} // Handler::printSummary
+
+
+inline void Handler::printSummary( std::ostream& os)
+{
+   printSummary( sumoptset_t(), os, true, nullptr);
+} // Handler::printSummary
+
+
 } // namespace prog_args
 } // namespace celma
 
@@ -836,5 +972,5 @@ inline void Handler::setIsSubGroupHandler()
 #endif   // CELMA_PROG_ARGS_HANDLER_HPP
 
 
-// ===========================  END OF handler.hpp  ===========================
+// =====  END OF handler.hpp  =====
 

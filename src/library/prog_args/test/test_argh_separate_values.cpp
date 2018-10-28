@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,8 +38,6 @@ using std::string;
 using std::vector;
 
 
-// module definitions
-
 
 /// Check attempted wrong usage of feature.
 /// @since  0.2, 10.04.2016
@@ -71,9 +69,9 @@ BOOST_AUTO_TEST_CASE( feature_unused)
                                            "multiple integers allowed")->
                                          setTakesMultiValue());
 
-   ArgString2Array  as2a( "-v 1,2,3", nullptr);
+   const ArgString2Array  as2a( "-v 1,2,3", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !dest.empty());
    BOOST_REQUIRE_EQUAL( dest.size(), 3);
    BOOST_REQUIRE_EQUAL( dest[ 0], 1);
@@ -97,9 +95,9 @@ BOOST_AUTO_TEST_CASE( feature_used_once)
                                            "multiple integers allowed")->
                                          setTakesMultiValue());
 
-   ArgString2Array  as2a( "-v 1,2 3", nullptr);
+   const ArgString2Array  as2a( "-v 1,2 3", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !dest.empty());
    BOOST_REQUIRE_EQUAL( dest.size(), 3);
    BOOST_REQUIRE_EQUAL( dest[ 0], 1);
@@ -123,9 +121,9 @@ BOOST_AUTO_TEST_CASE( feature_used_often)
                                            "multiple integers allowed")->
                                          setTakesMultiValue());
 
-   ArgString2Array  as2a( "-v 1,2 3 4,5,6 7 8 9", nullptr);
+   const ArgString2Array  as2a( "-v 1,2 3 4,5,6 7 8 9", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !dest.empty());
    BOOST_REQUIRE_EQUAL( dest.size(), 9);
    BOOST_REQUIRE_EQUAL( dest[ 0], 1);
@@ -153,7 +151,6 @@ BOOST_AUTO_TEST_CASE( two_destinations)
       vector< int>     dest1;
       vector< string>  dest2;
 
-
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( dest1),
                                               "multiple integers allowed")->
                                             setTakesMultiValue());
@@ -161,9 +158,9 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      ArgString2Array  as2a( "-i 1,2,3", nullptr);
+      const ArgString2Array  as2a( "-i 1,2,3", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !dest1.empty());
       BOOST_REQUIRE_EQUAL( dest1.size(), 3);
       BOOST_REQUIRE_EQUAL( dest1[ 0], 1);
@@ -179,7 +176,6 @@ BOOST_AUTO_TEST_CASE( two_destinations)
       vector< int>     dest1;
       vector< string>  dest2;
 
-
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( dest1),
                                               "multiple integers allowed")->
                                             setTakesMultiValue());
@@ -187,9 +183,9 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      ArgString2Array  as2a( "-s hello,world", nullptr);
+      const ArgString2Array  as2a( "-s hello,world", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( dest1.empty());
 
       BOOST_REQUIRE( !dest2.empty());
@@ -204,7 +200,6 @@ BOOST_AUTO_TEST_CASE( two_destinations)
       vector< int>     dest1;
       vector< string>  dest2;
 
-
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( dest1),
                                               "multiple integers allowed")->
                                             setTakesMultiValue());
@@ -212,9 +207,9 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      ArgString2Array  as2a( "-i 1,2,3 4 5 6", nullptr);
+      const ArgString2Array  as2a( "-i 1,2,3 4 5 6", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !dest1.empty());
       BOOST_REQUIRE_EQUAL( dest1.size(), 6);
       BOOST_REQUIRE_EQUAL( dest1[ 0], 1);
@@ -233,7 +228,6 @@ BOOST_AUTO_TEST_CASE( two_destinations)
       vector< int>     dest1;
       vector< string>  dest2;
 
-
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( dest1),
                                               "multiple integers allowed")->
                                             setTakesMultiValue());
@@ -241,9 +235,9 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      ArgString2Array  as2a( "-s hello,world nice to meet you", nullptr);
+      const ArgString2Array  as2a( "-s hello,world nice to meet you", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( dest1.empty());
 
       BOOST_REQUIRE( !dest2.empty());
@@ -262,7 +256,6 @@ BOOST_AUTO_TEST_CASE( two_destinations)
       vector< int>     dest1;
       vector< string>  dest2;
 
-
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( dest1),
                                               "multiple integers allowed")->
                                             setTakesMultiValue());
@@ -270,10 +263,10 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      ArgString2Array  as2a( "-i 1,2,3 4 5 6 -s hello,world nice to meet you",
+      const ArgString2Array  as2a( "-i 1,2,3 4 5 6 -s hello,world nice to meet you",
                              nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !dest1.empty());
       BOOST_REQUIRE_EQUAL( dest1.size(), 6);
       BOOST_REQUIRE_EQUAL( dest1[ 0], 1);
@@ -330,25 +323,24 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      Handler          ah;
+      Handler                ah;
       /// Destination variable.
-      vector< int>     dest_vec;
+      vector< int>           dest_vec;
       /// Destination variable.
-      int              dest_i1;   // l
+      int                    dest_i1;   // l
       /// Destination variable.
-      int              dest_i2;   // r
+      int                    dest_i2;   // r
       /// Destination variable.
-      int              dest_free;
+      int                    dest_free;
       /// Argument string split into argc, argv.
-      ArgString2Array  as2a;
+      const ArgString2Array  as2a;
 
    }; // TestData
 
    {
       TestData  td( "4711");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_i1, -1);
       BOOST_REQUIRE_EQUAL( td.dest_i2, -1);
@@ -358,8 +350,7 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
    {
       TestData  td( "-v 1 2 3");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -373,8 +364,7 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
    {
       TestData  td( "4711 -v 1 2 3");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -388,8 +378,7 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
    {
       TestData  td( "-v 1 2 3 -l 13 -r 42 4711");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -403,8 +392,7 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
    {
       TestData  td( "-v 1 2 3 --endvalues 4711");
 
-
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            std::runtime_error);
    } // end scope
 
@@ -412,10 +400,9 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
    {
       TestData  td( "-v 1 2 3 --endvalues 4711");
 
-
       td.ah.addArgumentEndValues( "endvalues");
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -465,25 +452,24 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      Handler          ah;
+      Handler                ah;
       /// Destination variable.
-      vector< int>     dest_vec;
+      vector< int>           dest_vec;
       /// Destination variable.
-      int              dest_i1;   // l
+      int                    dest_i1;   // l
       /// Destination variable.
-      int              dest_i2;   // r
+      int                    dest_i2;   // r
       /// Destination variable.
-      vector< int>     dest_free;
+      vector< int>           dest_free;
       /// Argument string split into argc, argv.
-      ArgString2Array  as2a;
+      const ArgString2Array  as2a;
 
    }; // TestData
 
    {
       TestData  td( "4711");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_i1, -1);
       BOOST_REQUIRE_EQUAL( td.dest_i2, -1);
@@ -495,8 +481,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
    {
       TestData  td( "4711 90125");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_i1, -1);
       BOOST_REQUIRE_EQUAL( td.dest_i2, -1);
@@ -509,8 +494,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
    {
       TestData  td( "-v 1 2 3");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -524,8 +508,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
    {
       TestData  td( "4711 -v 1 2 3");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -541,8 +524,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
    {
       TestData  td( "4711 90125 -v 1 2 3");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -559,8 +541,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
    {
       TestData  td( "-v 1 2 3 -l 13 -r 42 4711");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -576,8 +557,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
    {
       TestData  td( "-v 1 2 3 -l 13 -r 42 4711 90125");
 
-
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -594,18 +574,16 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
    {
       TestData  td( "-v 1 2 3 --endvalues 4711");
 
-
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            std::runtime_error);
    } // end scope
 
    {
       TestData  td( "-v 1 2 3 --endvalues 4711");
 
-
       td.ah.addArgumentEndValues( "endvalues");
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -621,10 +599,9 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
    {
       TestData  td( "-v 1 2 3 --endvalues 4711 90125");
 
-
       td.ah.addArgumentEndValues( "endvalues");
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
       BOOST_REQUIRE( !td.dest_vec.empty());
       BOOST_REQUIRE_EQUAL( td.dest_vec.size(), 3);
       BOOST_REQUIRE_EQUAL( td.dest_vec[ 0], 1);
@@ -642,5 +619,5 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
 
 
 
-// ==================  END OF test_argh_separate_values.cpp  ==================
+// =====  END OF test_argh_separate_values.cpp  =====
 

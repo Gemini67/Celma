@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -57,11 +57,29 @@ public:
    /// @since  1.1.0, 25.09.2017
    TypedArgValue( T& dest, const std::string& vname, const T& value);
 
+   /// Returns the name of the type of the destination variable.
+   ///
+   /// @return  The type name of the destination variable.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the destination has a value set.<br>
    /// Of course this applies only when the value through the current object.
    /// @return  \c true if the destination variable contains a value.
    /// @since  1.1.0, 25.09.2017
    virtual bool hasValue() const override;
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// This type doesn't allow to change the value mode: Throws always.
    /// @param[in]  vm  Ignored.
@@ -125,10 +143,26 @@ template< typename T>
 } // TypedArgValue< T>::TypedArgValue
 
 
+template< typename T>
+   const std::string TypedArgValue< T>::varTypeName() const
+{
+   return type< T>::name();
+} // TypedArgValue< T>::varTypeName
+
+
 template< typename T> bool TypedArgValue< T>::hasValue() const
 {
    return mHasValueSet;
 } // TypedArgValue< T>::hasValue
+
+
+template< typename T>
+   void TypedArgValue< T>::printValue( std::ostream& os, bool print_type) const
+{
+   os << format::toString( mDestVar);
+   if (print_type)
+      os << " [" << varTypeName() << "]";
+} // TypedArgValue< T>::printValue
 
 
 template< typename T>
@@ -139,8 +173,10 @@ template< typename T>
 } // TypedArgValue< T>::setValueMode
 
 
-template< typename T> void TypedArgValue< T>::defaultValue( std::string&) const
+template< typename T>
+   void TypedArgValue< T>::defaultValue( std::string& dest) const
 {
+   dest.append( boost::lexical_cast< std::string>( mDestVar));
 } // TypedArgValue< T>::defaultValue
 
 
@@ -154,7 +190,7 @@ template< typename T>
 
 template< typename T> void TypedArgValue< T>::dump( std::ostream& os) const
 {
-   os << "value type '" << type< T>::name() << "', destination '"
+   os << "value type '" << varTypeName() << "', destination '"
       << mVarName << "', set-value '" << mValue << "', ";
    if (mHasValueSet)
       os << "value = " << mDestVar << "." << std::endl;
@@ -182,5 +218,5 @@ template< typename T> void TypedArgValue< T>::assign( const std::string&)
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_VALUE_HPP
 
 
-// =======================  END OF typed_arg_value.hpp  =======================
+// =====  END OF typed_arg_value.hpp  =====
 

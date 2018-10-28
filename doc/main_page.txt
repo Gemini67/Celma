@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.2.0
+   \mainpage  CELMA v1.15.1
 
    \tableofcontents
 
@@ -46,6 +46,31 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.15.1 | 2018-10-28        | Moved log filters into separate directory/namespace.
+     1.15.0 | 2018-10-25        | Addec "atributes" in log library.
+     1.14.0 | 2018-10-05        | New feature "argument help" in argument handler.
+     1.13.0 | 2018-10-05        | Added new module/function "grouped double 2 string".
+     1.12.0 | 2018-09-26        | Adapted to newer g++ compiler.<br>
+                                  Type name library almost completely constexpr now.
+     1.11.0 | 2018-09-12        | Added new log file policy counted.<br>
+                                  Improved coverage of unit tests.<br>
+                                  Added new module "compare from less".<br>
+                                  Added new module lazy_ptr.
+     1.10.0 | 2018-08-14        | Added destination type "level counter" to argument handler.
+     1.9.0  | 2018-08-04        | Added more features on destination type 'vector' in module argument handler.<br>
+                                  Added check "parent directory exists" in argument handler.<br>
+                                  Added function parentDirectory() in module FileInfo.
+     1.8.0  | 2018-08-03        | Added feature "print summary" in argument handler. Added function to compare multi-line strings. And improved (and used) module "enum flags".
+     1.7.0  | 2018-07-19        | Added bitset iterators.
+     1.6.0  | 2018-07-03        | Added new features "deprecated" and "replaced by" to the argument handler library.
+     1.5.0  | 2018-06-28        | Added more macros for controlling when log messages should be generated. Changed argument class handling pairs for improved functionality.
+     1.4.3  | 2018-05-06        | Patch 1: Improved directory structure of range generator modules.
+     1.4.3  | 2018-04-29        | Added destination value type "bitset" to argument handler.
+     1.4.2  | 2018-04-12        | Added value-checks "is absolute path" in argument handler.
+     1.4.1  | 2018-03-05        | Added value-checks "is file" and "is directory" in argument handler.
+     1.4.0  | 2018-03-01        | Added classes FileInfo and FileOperations.
+     1.3.0  | 2018-02-15        | Added class TextFile.
+     1.2.1  | 2018-01-08        | Updated files/classes of "indirect access".
      1.2.0  | 2017-12-28        | Added feature 'clear vector before assigning values' in argument handling.
      1.1.0  | 2017-12-28        | Implemented 'usage parameters' module for handling the parameters for the usage.
      1.0.0  | 2017-12-28        | Added modules for logging.

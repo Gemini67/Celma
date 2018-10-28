@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -56,20 +56,20 @@ int main( int argc, char* argv[])
 
    Handler  subInput( Handler::hfHelpShort | Handler::hfHelpLong);
    subInput.addArgument( "f", DEST_PAIR( inputName, inputMode, 1),
-                         "specifies to read from a file");
+      "specifies to read from a file")->setPrintDefault( false);
    subInput.addArgument( "q", DEST_PAIR( inputName, inputMode, 2),
-                         "specifies to read from a queue");
-   ah1->addArgument( "i", &subInput, "input arguments");
+      "specifies to read from a queue")->setPrintDefault( false);
+   ah1->addArgument( "i", subInput, "input arguments");
 
    string  outputName;
    int     outputMode = 0;
 
    Handler  subOutput( Handler::hfHelpShort | Handler::hfHelpLong);
    subOutput.addArgument( "f", DEST_PAIR( outputName, outputMode, 1),
-                          "specifies to write into a file");
+      "specifies to write into a file")->setPrintDefault( false);
    subOutput.addArgument( "q", DEST_PAIR( outputName, outputMode, 2),
-                          "specifies to write into a queue");
-   ah1->addArgument( "o", &subOutput, "output arguments");
+      "specifies to write into a queue")->setPrintDefault( false);
+   ah1->addArgument( "o", subOutput, "output arguments");
 
    Groups::instance().evalArguments( argc, argv);
 
@@ -78,4 +78,4 @@ int main( int argc, char* argv[])
 
 
 
-// =================  END OF test_groups_sub_groups_usage.cpp  =================
+// =====  END OF test_groups_sub_groups_usage.cpp  =====

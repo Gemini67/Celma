@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,11 +38,7 @@ public:
    /// Default constructor. The internal value is not initialised (default
    /// constructed), the 'is assigned' flag is set to \c false.
    /// @since  0.2, 10.04.2016
-   CheckAssign():
-      mValue(),
-      mIsAssigned( false)
-   {
-   } // end CheckAssign< T>::CheckAssign
+   CheckAssign() = default;
 
    /// Constructor that allows to set a default value for the variable.<br>
    /// This means that afterwards the value() can always be used since it should
@@ -51,20 +47,15 @@ public:
    /// @param[in]  defVal  The default value to set.
    /// @since  0.2, 10.04.2016
    explicit CheckAssign( const T& defVal):
-      mValue( defVal),
-      mIsAssigned( false)
+      mValue( defVal)
    {
-   } // end CheckAssign< T>::CheckAssign
+   } // CheckAssign< T>::CheckAssign
 
    /// Copy constructor.
    /// @param[in]  other  The other check-assign object to copy the value (and
    ///                    flag) from.
    /// @since  0.2, 10.04.2016
-   CheckAssign( const CheckAssign& other):
-      mValue( other.mValue),
-      mIsAssigned( other.mIsAssigned)
-   {
-   } // end CheckAssign< T>::CheckAssign
+   CheckAssign( const CheckAssign& other) = default;
 
    /// Assignes a value.
    /// @param[in]  newValue  The value to assign.
@@ -73,7 +64,7 @@ public:
    {
       mValue      = newValue;
       mIsAssigned = true;
-   } // end CheckAssign< T>::assign
+   } // CheckAssign< T>::assign
 
    /// Returns if a value was assigned or not.
    /// @return  \c true if a value was assigned.
@@ -81,7 +72,7 @@ public:
    bool hasValue() const
    {
       return mIsAssigned;
-   } // end CheckAssign< T>::hasValue
+   } // CheckAssign< T>::hasValue
 
    /// Returns the value that was assigned.
    /// @return  The value that was assigned.
@@ -92,14 +83,14 @@ public:
       if (!mIsAssigned)
          throw std::runtime_error( "value not assigned!");
       return mValue;
-   } // end CheckAssign< T>::value
+   } // CheckAssign< T>::value
 
    /// Resets the 'is assign' flag, but does *not* change the internal value.
    /// @since  0.2, 10.04.2016
    void reset()
    {
       mIsAssigned = false;
-   } // end CheckAssign< T>::reset
+   } // CheckAssign< T>::reset
 
    /// Assignment operator.
    /// @param[in]  new_value  The value to assign.
@@ -110,7 +101,7 @@ public:
       mValue      = new_value;
       mIsAssigned = true;
       return *this;
-   } // end CheckAssign< T>::operator =
+   } // CheckAssign< T>::operator =
 
    /// Assignment operator, copies the values from another check-assign object.
    /// @param[in]  other  The other check-assign object to copy the value (and
@@ -125,7 +116,7 @@ public:
             mValue = other.mValue;
       } // end if
       return *this;
-   } // end CheckAssign< T>::operator =
+   } // CheckAssign< T>::operator =
 
    /// Typecast operator.
    /// @return  The internally stored value.
@@ -136,7 +127,7 @@ public:
       if (!mIsAssigned)
          throw std::runtime_error( "value not assigned!");
       return mValue;
-   } // end CheckAssign< T>::operator T
+   } // CheckAssign< T>::operator T
 
    /// Typecast operator.
    /// @return  The internally stored value.
@@ -147,13 +138,13 @@ public:
       if (!mIsAssigned)
          throw std::runtime_error( "value not assigned!");
       return mValue;
-   } // end CheckAssign< T>::operator T
+   } // CheckAssign< T>::operator T
 
 private:
    /// The value.
    T     mValue;
    /// Flag if the value was set or not.
-   bool  mIsAssigned;
+   bool  mIsAssigned = false;
 
 }; // CheckAssign< T>
 
@@ -165,5 +156,5 @@ private:
 #endif   // CELMA_COMMON_CHECK_ASSIGN_HPP
 
 
-// =========================  END OF check_assign.hpp  =========================
+// =====  END OF check_assign.hpp  =====
 

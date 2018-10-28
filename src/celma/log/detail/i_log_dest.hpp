@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,7 +19,7 @@
 #define CELMA_LOG_DETAIL_I_LOG_DEST_HPP
 
 
-#include "celma/log/detail/log_filter.hpp"
+#include "celma/log/filter/filters.hpp"
 
 
 namespace celma { namespace log { namespace detail {
@@ -33,7 +33,7 @@ class LogMsg;
 /// ILogDest::handleMessage() is public and internally calls
 /// ILogDest::message(), which is implemented by the derived class(es).
 /// @since  1.0.0, 19.06.2016
-class ILogDest: public LogFilter
+class ILogDest: public filter::Filters
 {
 public:
    /// Empty, virtual destructor.
@@ -70,5 +70,5 @@ private:
 #endif   // CELMA_LOG_DETAIL_I_LOG_DEST_HPP
 
 
-// ==========================  END OF i_log_dest.hpp  ==========================
+// =====  END OF i_log_dest.hpp  =====
 
