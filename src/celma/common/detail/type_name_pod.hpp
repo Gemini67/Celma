@@ -42,10 +42,16 @@ PROVIDE_SIMPLE_TYPE_NAME( unsigned int);
 PROVIDE_SIMPLE_TYPE_NAME( long);
 /// Provides the name of the type 'unsigned long'.
 PROVIDE_SIMPLE_TYPE_NAME( unsigned long);
+/// Provides the name of the type 'long long'.
+PROVIDE_SIMPLE_TYPE_NAME( long long);
+/// Provides the name of the type 'unsigned long long'.
+PROVIDE_SIMPLE_TYPE_NAME( unsigned long long);
 /// Provides the name of the type 'float'.
 PROVIDE_SIMPLE_TYPE_NAME( float);
 /// Provides the name of the type 'double'.
 PROVIDE_SIMPLE_TYPE_NAME( double);
+/// Provides the name of the type 'double'.
+PROVIDE_SIMPLE_TYPE_NAME( long double);
 
 /// Provides the name of the type 'char16_t'.
 PROVIDE_SIMPLE_TYPE_NAME( char16_t);
