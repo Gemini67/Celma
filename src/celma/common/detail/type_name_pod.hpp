@@ -18,6 +18,8 @@
 #define CELMA_TYPE_NAME_POD_HPP
 
 
+#include "celma/common/constexpr_string_concat.hpp"
+#include "celma/common/constexpr_string_from.hpp"
 #include "celma/common/detail/provide_simple_type_name.hpp"
 
 

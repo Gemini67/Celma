@@ -22,47 +22,47 @@
 #include <cstring>
 #include <functional>
 #include <tuple>
-#include "celma/common/tuple_at_index.hpp"
-#include "celma/common/tuple_length.hpp"
-#include "celma/common/detail/type_name.hpp"
-#include "celma/common/detail/type_name_pod.hpp"
 
 
 namespace celma {
 
 
-namespace {
+namespace detail {
 
 
-/// Helper class to append the name of the type of the next element of the tuple
-/// to the destination string.
-/// @since  0.10, 25.12.2016
-class TypeHandler
+/// Special case for single or last type of a tuple.<br>
+/// Returns the name of the single type.
+///
+/// @tparam  T  The type to return the name of.
+/// @return  The name of the given type, using the corresponding type<> template.
+/// @since  x.y.z, 01.11.2018
+template< class T> constexpr const auto tuple_type_names()
 {
-public:
-   /// Constructor.
-   /// @param[in]  dest  Pointer to the string to append the element type name
-   ///                   to.
-   /// @since  0.10, 25.12.2016
-   constexpr TypeHandler( char* dest):
-      mpDest( dest)
-   {
-   } // TypeHandler::TypeHandler
+   return type< T>::mName;
+} // tuple_type_names
 
-   /// Called by common::tuple_at_index() for the next element of the tuple.
-   /// @tparam  U  The type of the next element in the tuple.
-   /// @param[in]  The next element of the tuple, value not needed.
-   /// @since  0.10, 25.12.2016
-   template< typename U> void operator()( U&)
-   {
-      ::strcat( mpDest, type< U>::name());
-   } // TypeHandler::operator ()
 
-private:
-   /// Pointer to the string to append the type name to.
-   char*   mpDest;
-
-}; // TypeHandler
+/// Returns the concatenated names of all the types passed in here.<br>
+/// Special case of single/last type is handled in template above.<br>
+/// This function handles the cases of 2, 3, ... etc. types, since \a Tp can be
+/// empty.<br>
+/// Here we actually create the string for the name of the first type, then call
+/// tuple_type_names<> again with the remaining types (must be at least 1:
+/// \a T1).
+///
+/// @tparam  T0
+///    The first type to create the name string for.
+/// @tparam  T1
+///    The second type name, will be handled in the next function call.
+/// @tparam  Tp
+///    List of the remaining types, may be empty.
+/// @return  The string with the comma separated list of all type names.
+/// @since  x.y.z, 01.11.2018
+template< typename T0, typename T1, typename... Tp>
+   constexpr const auto tuple_type_names()
+{
+   return common::string_concat( type< T0>::mName, ",", tuple_type_names< T1, Tp...>());
+} // tuple_type_names
 
 
 } // namespace
@@ -79,31 +79,15 @@ public:
    /// @since  0.10, 25.12.2016
    static constexpr const char* name()
    {
-      if (mName[ 0] == 0)
-      {
-         std::tuple< T...>  tmp;
-         ::memcpy( mName, "std::tuple<", 11);
-         for (size_t i = 0; i < common::tuple_length( tmp); ++i)
-         {
-            if (i > 0)
-               ::strcat( mName, ",");
-
-            TypeHandler  th( mName);
-            common::tuple_at_index( i, tmp, th);
-         } // end for
-         ::strcat( mName, ">");
-      } // end if
-      return mName;
+      return &mName[ 0];
    } // end type< std::tuple< T...>>::name
 
-private:
    /// Used to store the name of the type persistently.
-   static char  mName[ 256];
+   static constexpr auto const  mName =
+      common::string_concat( "std::tuple<",
+         detail::tuple_type_names< T...>(), ">");
 
 }; // type< std::tuple< T...>>
-
-
-template< typename... T> char  type< std::tuple< T...>>::mName[ 256] = { 0 };
 
 
 } // namespace celma
