@@ -74,16 +74,6 @@
 #   else
 #      define have_string_view 0
 #   endif
-#   if __has_include(<variant>)
-#      include <variant>
-#      define have_variant 1
-#   elif __has_include(<experimental/variant>)
-#      include <experimental/variant>
-#      define have_variant 1
-#      define experimental_variant
-#   else
-#      define have_variant 0
-#   endif
 #endif   // has_include
 
 

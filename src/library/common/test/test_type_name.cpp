@@ -320,25 +320,13 @@ BOOST_AUTO_TEST_CASE( stl_types)
 } // stl_types
 
 
-
-/// Test for STL data types with more than one template parameter.
+/// STL value storage types (not containers).
+///
+/// @since  x.y.z, 02.11.2018
+///    (moved into separate test function, added variant)
 /// @since  0.1, 15.03.2016
-BOOST_AUTO_TEST_CASE( stl_types_key_value)
+BOOST_AUTO_TEST_CASE( stl_value_storage)
 {
-
-   using int_string_map = std::map< int, std::string>;
-   static_assert( celma::type< int_string_map>::name()[ 5] == 'm');
-   static_assert( celma::type< int_string_map>::name()[ 9] == 'i');
-   static_assert( celma::type< int_string_map>::name()[ 18] == 's');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_map>::name(),
-                            "std::map<int,std::string>");
-
-   using string_long_multimap = std::multimap< std::string, long>;
-   static_assert( celma::type< string_long_multimap>::name()[ 5] == 'm');
-   static_assert( celma::type< string_long_multimap>::name()[ 19] == 's');
-   static_assert( celma::type< string_long_multimap>::name()[ 26] == 'l');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< string_long_multimap>::name(),
-                            "std::multimap<std::string,long>");
 
    using string_string_pair = std::pair< std::string, std::string>;
    static_assert( celma::type< string_string_pair>::name()[ 5] == 'p');
@@ -367,6 +355,37 @@ BOOST_AUTO_TEST_CASE( stl_types_key_value)
    static_assert( celma::type< int_string_tuple>::name()[20] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_int_tuple>::name(),
                             "std::tuple<int,std::string,int>");
+
+   using string_int_double_variant = std::variant< std::string, double, int>;
+   static_assert( celma::type< string_int_double_variant>::name()[ 5] == 'v');
+   static_assert( celma::type< string_int_double_variant>::name()[ 18] == 's');
+   static_assert( celma::type< string_int_double_variant>::name()[ 25] == 'd');
+   static_assert( celma::type< string_int_double_variant>::name()[ 32] == 'i');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< string_int_double_variant>::name(),
+                            "std::variant<std::string,double,int>");
+
+} // stl_value_storage
+
+
+
+/// Test for STL data types with more than one template parameter.
+/// @since  0.1, 15.03.2016
+BOOST_AUTO_TEST_CASE( stl_types_key_value)
+{
+
+   using int_string_map = std::map< int, std::string>;
+   static_assert( celma::type< int_string_map>::name()[ 5] == 'm');
+   static_assert( celma::type< int_string_map>::name()[ 9] == 'i');
+   static_assert( celma::type< int_string_map>::name()[ 18] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_map>::name(),
+                            "std::map<int,std::string>");
+
+   using string_long_multimap = std::multimap< std::string, long>;
+   static_assert( celma::type< string_long_multimap>::name()[ 5] == 'm');
+   static_assert( celma::type< string_long_multimap>::name()[ 19] == 's');
+   static_assert( celma::type< string_long_multimap>::name()[ 26] == 'l');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< string_long_multimap>::name(),
+                            "std::multimap<std::string,long>");
 
    using int_string_unordered_multimap = std::unordered_multimap< int, std::string>;
    static_assert( celma::type< int_string_unordered_multimap>::name()[ 5] == 'u');
@@ -656,6 +675,7 @@ BOOST_AUTO_TEST_CASE( error_information)
 
 
 /// User defined class for which we won't provide the name.
+///
 /// @since  0.1, 15.03.2016
 class UnknownUserDefinedType
 {
@@ -663,19 +683,32 @@ class UnknownUserDefinedType
 
 
 
-/// Test for unknown user defined type.
+/// Test for unknown user defined type.<br>
+/// Verifies that "unknown" is \c constexpr too.
+///
 /// @since  1.0, 28.07.2015
 BOOST_AUTO_TEST_CASE( unknown_user_defined_type)
 {
 
+   static_assert( celma::type< UnknownUserDefinedType>::name()[ 0] == 'u');
+   static_assert( celma::type< UnknownUserDefinedType>::name()[ 7] == '\0');
    BOOST_REQUIRE_EQUAL_STR( celma::type< UnknownUserDefinedType>::name(),
                             "unknown");
+
+   using cont_t = std::vector< UnknownUserDefinedType>;
+   static_assert( celma::type< cont_t>::name()[ 0] == 's');
+   static_assert( celma::type< cont_t>::name()[ 5] == 'v');
+   static_assert( celma::type< cont_t>::name()[ 12] == 'u');
+   static_assert( celma::type< cont_t>::name()[ 19] == '>');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< cont_t>::name(),
+      "std::vector<unknown>");
 
 } // unknown_user_defined_type
 
 
 
-/// User defined class for which we provide the name.
+/// User defined class for which we will provide the name.
+///
 /// @since  0.1, 15.03.2016
 class UserDefinedType
 {
@@ -711,6 +744,7 @@ public:
 
 
 /// Test for user defined type.
+///
 /// @since  0.1, 15.03.2016
 BOOST_AUTO_TEST_CASE( user_defined_type)
 {
@@ -721,6 +755,7 @@ BOOST_AUTO_TEST_CASE( user_defined_type)
 
    static_assert( celma::type< std::vector< UserDefinedType>>::name()[ 5] == 'v');
    static_assert( celma::type< std::vector< UserDefinedType>>::name()[ 12] == 'U');
+   static_assert( celma::type< std::vector< UserDefinedType>>::name()[ 16] == 'D');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::vector< UserDefinedType>>::name(),
                             "std::vector<UserDefinedType>");
 
@@ -739,9 +774,7 @@ class UserDefinedTypeMacro
 namespace celma {
 
 
-
 PROVIDE_SIMPLE_TYPE_NAME( UserDefinedTypeMacro);
-
 
 
 } // namespace celma
@@ -749,6 +782,7 @@ PROVIDE_SIMPLE_TYPE_NAME( UserDefinedTypeMacro);
 
 
 /// Test for user defined type.
+///
 /// @since  0.1, 15.03.2016
 BOOST_AUTO_TEST_CASE( user_defined_type_macro)
 {
@@ -789,6 +823,7 @@ PROVIDE_SIMPLE_TYPE_NAME( EnumType);
 
 
 /// Test for user defined enum.
+///
 /// @since  0.1, 15.03.2016
 BOOST_AUTO_TEST_CASE( user_defined_enum)
 {
@@ -806,6 +841,7 @@ BOOST_AUTO_TEST_CASE( user_defined_enum)
 
 
 /// Test printing the type name of variable.
+///
 /// @since  0.11, 07.01.2017
 BOOST_AUTO_TEST_CASE( test_type_from_variable)
 {
@@ -827,6 +863,7 @@ BOOST_AUTO_TEST_CASE( test_type_from_variable)
 
 
 /// Check the names of nested STL container types.
+///
 /// @since  1.12.0, 24.09.2018
 BOOST_AUTO_TEST_CASE( nested_containers)
 {

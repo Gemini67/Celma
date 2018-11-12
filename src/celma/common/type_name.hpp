@@ -20,7 +20,7 @@
 #include "celma/common/detail/type_name_exceptions.hpp"
 #include "celma/common/detail/type_name_iostream.hpp"
 #include "celma/common/detail/type_name_smart_ptr.hpp"
-#include "celma/common/detail/type_name_tuple.hpp"
+#include "celma/common/detail/type_name_stl_store.hpp"
 
 
 // =====  END OF type_name.hpp  =====
