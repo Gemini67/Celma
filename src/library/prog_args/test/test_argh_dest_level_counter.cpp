@@ -129,6 +129,16 @@ BOOST_AUTO_TEST_CASE( error_cases)
          std::runtime_error);
    } // end scope
 
+   // try to set value mode "command" on a level counter
+   {
+      Handler       ah( 0);
+      LevelCounter  verbose_level;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
+         "verbose level")->setValueMode( Handler::ValueMode::command),
+         std::invalid_argument);
+   } // end scope
+
 } // error_cases
 
 

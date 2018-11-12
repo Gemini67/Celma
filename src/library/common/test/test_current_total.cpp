@@ -24,8 +24,9 @@ using celma::common::CurrentTotal;
 
 
 
-/// 
-/// @since  x.y.z, 07.09.2018
+/// Verify that counters are 0 after initialisation.
+///
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( init)
 {
 
@@ -42,7 +43,7 @@ BOOST_AUTO_TEST_CASE( init)
 
 /// Check that using only one statistic value does not affect the others.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( only_one)
 {
 
@@ -83,7 +84,7 @@ BOOST_AUTO_TEST_CASE( only_one)
 
 /// Check that updating the total of a single value works correctly.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( one_total)
 {
 
@@ -117,7 +118,7 @@ BOOST_AUTO_TEST_CASE( one_total)
 
 /// Update the total multiple times.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( multiple_total)
 {
 
@@ -162,7 +163,7 @@ BOOST_AUTO_TEST_CASE( multiple_total)
 
 /// Check resetting current values and totals.
 ///
-/// @since  x.y.z, 07.09.2018
+/// @since  1.11.0, 07.09.2018
 BOOST_AUTO_TEST_CASE( resetting)
 {
 

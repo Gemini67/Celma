@@ -13,6 +13,7 @@ add_definitions( -DBOOST_TEST_DYN_LINK)
 
 celma_add_celma_boost_testprogram( test_ascii_table )
 celma_add_celma_boost_testprogram( test_auto_sprintf )
+celma_add_celma_boost_testprogram( test_grouped_double2string )
 celma_add_celma_boost_testprogram( test_grouped_int16_to_string )
 celma_add_celma_boost_testprogram( test_grouped_int2string_16 )
 celma_add_celma_boost_testprogram( test_grouped_int2string_32 )

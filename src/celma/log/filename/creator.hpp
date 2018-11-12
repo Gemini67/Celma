@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,8 +28,8 @@ namespace celma { namespace log { namespace filename {
 
 
 // bring helper classes into the same namespace
-using formatString = common::Manipulator< std::string>;
-using env_var = common::Manipulator< std::string, 1>;
+using formatString = common::Manipulator< std::string, 30>;
+using env_var = common::Manipulator< std::string, 31>;
 
 
 /// Creates a log filename format definition using stream-like syntax.<br>
@@ -244,5 +244,5 @@ inline Creator& path_sep( Creator& in)
 #endif   // CELMA_LOG_FILENAME_CREATOR_HPP
 
 
-// ===========================  END OF creator.hpp  ===========================
+// =====  END OF creator.hpp  =====
 

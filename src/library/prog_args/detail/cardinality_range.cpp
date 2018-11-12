@@ -20,6 +20,7 @@
 
 
 // C++ Standard Library includes
+#include <sstream>
 #include <stdexcept>
 
 
@@ -68,6 +69,22 @@ void CardinalityRange::check()
       throw std::runtime_error( "not all expected values");
 
 } // CardinalityRange::check
+
+
+
+/// Returns the text description of the cardinality "range".
+///
+/// @return  String with the text description of the cardinality.
+/// @since  1.14.0, 02.10.2018
+std::string CardinalityRange::cardinalityStr() const
+{
+
+   std::ostringstream  oss;
+
+
+   oss << "between " << mMinNumValues << " and " << mMaxNumValues;
+   return oss.str();
+} // CardinalityRange::cardinalityStr
 
 
 

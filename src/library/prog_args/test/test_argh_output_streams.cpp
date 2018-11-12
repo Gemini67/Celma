@@ -59,7 +59,8 @@ BOOST_AUTO_TEST_CASE( help_usage)
    BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
       "Usage:\n"
       "Optional arguments:\n"
-      "   -h,--help   Prints the program usage.\n"
+      "   -h,--help    Prints the program usage.\n"
+      "   --help-arg   Prints the usage for the given argument.\n"
       "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
@@ -118,6 +119,7 @@ BOOST_AUTO_TEST_CASE( argument_output)
                         "\n"
                         "Optional arguments:\n"
                         "   -h,--help    Prints the program usage.\n"
+                        "   --help-arg   Prints the usage for the given argument.\n"
                         "   -i,--index   Integer argument\n"
                         "                Default value: 42\n"
                         "\n"));
@@ -198,6 +200,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
          "\n"
          "Optional arguments:\n"
          "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
          "   -i,--index   Integer argument\n"
          "                Default value: 42\n"
          "\n"));
@@ -215,6 +218,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
          "\n"
          "Optional arguments:\n"
          "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
          "   -i,--index   Integer argument\n"
          "                Default value: 42\n"
          "   --hidden     Hidden boolean argument\n"
@@ -234,6 +238,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
          "\n"
          "Optional arguments:\n"
          "   -h,--help      Prints the program usage.\n"
+         "   --help-arg     Prints the usage for the given argument.\n"
          "   -i,--index     Integer argument\n"
          "                  Default value: 42\n"
          "   --deprecated   Deprecated argument, don't use anymore\n"
@@ -255,6 +260,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
          "\n"
          "Optional arguments:\n"
          "   -h,--help      Prints the program usage.\n"
+         "   --help-arg     Prints the usage for the given argument.\n"
          "   -i,--index     Integer argument\n"
          "                  Default value: 42\n"
          "   --hidden       Hidden boolean argument\n"
@@ -278,6 +284,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
          "\n"
          "Optional arguments:\n"
          "   -h,--help        Prints the program usage.\n"
+         "   --help-arg       Prints the usage for the given argument.\n"
          "   --print-hidden   Also print hidden arguments in the usage.\n"
          "   -i,--index       Integer argument\n"
          "                    Default value: 42\n"
@@ -298,6 +305,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
          "\n"
          "Optional arguments:\n"
          "   -h,--help            Prints the program usage.\n"
+         "   --help-arg           Prints the usage for the given argument.\n"
          "   --print-deprecated   Also print deprecated and replaced arguments in the\n"
          "                        usage.\n"
          "   -i,--index           Integer argument\n"
@@ -322,6 +330,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
          "\n"
          "Optional arguments:\n"
          "   -h,--help            Prints the program usage.\n"
+         "   --help-arg           Prints the usage for the given argument.\n"
          "   --print-deprecated   Also print deprecated and replaced arguments in the\n"
          "                        usage.\n"
          "   --print-hidden       Also print hidden arguments in the usage.\n"
@@ -367,6 +376,7 @@ BOOST_AUTO_TEST_CASE( argument_output_custom_help)
       "\n"
       "Optional arguments:\n"
       "   -h,--help    Prints the program usage.\n"
+      "   --help-arg   Prints the usage for the given argument.\n"
       "   -u,--usage   Custom arguments for help\n"
       "   -i,--index   Integer argument\n"
       "                Default value: 42\n"
@@ -428,6 +438,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
             "\n"
             "Optional arguments:\n"
             "   -h,--help    Prints the program usage.\n"
+            "   --help-arg   Prints the usage for the given argument.\n"
             "   --index1     Integer argument one\n"
             "                Default value: 42\n"
             "                Check: Value >= 20\n"
@@ -453,40 +464,84 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
 
 
 
-/// Two arguments, values assigned.
+/// Multiple arguments, values assigned.
+///
 /// @since  0.3, 04.06.2016
 BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
 {
 
-   ostringstream   std_out;
-   ostringstream   err_out;
-   Handler         ah( std_out, err_out,
-                       Handler::AllHelp | Handler::hfUsageCont |
-                       Handler::hfListArgVar | Handler::hfVerboseArgs);
-   string          string_arg;
-   int             opt_int_arg = 42;
+   using celma::common::CheckAssign;
+   using celma::prog_args::LevelCounter;
+
+   ostringstream       std_out;
+   ostringstream       err_out;
+   Handler             ah( std_out, err_out,
+                           Handler::AllHelp | Handler::hfUsageCont |
+                           Handler::hfListArgVar | Handler::hfVerboseArgs);
+   string              string_arg;
+   int                 opt_int_arg = 42;
+   CheckAssign< int>   optional_int;
+   CheckAssign< bool>  optional_bool;
+   LevelCounter        verbose_level;
 
 
-   ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")->setIsMandatory();
-   ah.addArgument( "i,index", DEST_VAR( opt_int_arg), "Integer argument");
+   ah.addArgument( "s",          DEST_VAR( string_arg),    "String argument")
+      ->setIsMandatory();
+   ah.addArgument( "i,index",    DEST_VAR( opt_int_arg),   "Integer argument");
+   ah.addArgument( "o,opt-int",  DEST_VAR( optional_int),  "Optional integer argument");
+   ah.addArgument( "opt-bool",   DEST_VAR( optional_bool), "Optional boolean argument");
+   ah.addArgument( "v,verbose",  DEST_VAR( verbose_level), "Verbose level counter");
 
-   const ArgString2Array  as2a( "-s text --list-arg-vars --index 4711", nullptr);
+   const ArgString2Array  as2a( "-s text --list-arg-vars --index 4711 -o 13 --opt-bool -vv --list-arg-vars",
+      nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   // std::cerr << std::endl << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out.str(),
       "string_arg: value 'text' is assigned\n"
       "Handler::listArgVars: is set\n"
       "Arguments:\n"
       "'-h,--help' calls function/method 'Handler::usage'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
       "'-s' value type 'std::string', destination 'string_arg', value = text.\n"
       "   value 'required' (2), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
       "'-i,--index' value type 'int', destination 'opt_int_arg', value not set.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+      "'-o,--opt-int' value type 'int', destination 'CheckAssign< optional_int>', value not set.\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'--opt-bool' sets boolean flag on 'CheckAssign< optional_bool>'.\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'-v,--verbose' value type 'LevelCounter', destination variable 'verbose_level', current value 0.\n"
+      "   value 'optional' (1), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
       "\n"
-      "opt_int_arg: value '4711' is assigned\n"));
+      "opt_int_arg: value '4711' is assigned\n"
+      "optional_int: value '13' is assigned\n"
+      "optional_bool: is set\n"
+      "verbose_level: is set\n"
+      "verbose_level: is set\n"
+      "Handler::listArgVars: is set\n"
+      "Arguments:\n"
+      "'-h,--help' calls function/method 'Handler::usage'.\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'-s' value type 'std::string', destination 'string_arg', value = text.\n"
+      "   value 'required' (2), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
+      "'-i,--index' value type 'int', destination 'opt_int_arg', value = 4711.\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+      "'-o,--opt-int' value type 'int', destination 'CheckAssign< optional_int>', value = 13.\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'--opt-bool' sets boolean flag on 'CheckAssign< optional_bool>'.\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "'-v,--verbose' value type 'LevelCounter', destination variable 'verbose_level', current value 2.\n"
+      "   value 'optional' (1), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+      "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // argument_verbose_assignment
@@ -518,6 +573,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help      Prints the program usage.\n"
+         "   --help-arg     Prints the usage for the given argument.\n"
          "   --help-short   Only print arguments with their short key in the usage.\n"
          "   -f             The first argument.\n"
          "                  Default value: 0\n"
@@ -586,6 +642,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help     Prints the program usage.\n"
+         "   --help-arg    Prints the usage for the given argument.\n"
          "   --help-long   Only print arguments with their long key in the usage.\n"
          "   -f            The first argument.\n"
          "                 Default value: 0\n"
@@ -617,6 +674,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
          "Usage:\n"
          "Optional arguments:\n"
          "   --help        Prints the program usage.\n"
+         "   --help-arg    Prints the usage for the given argument.\n"
          "   --help-long   Only print arguments with their long key in the usage.\n"
          "   --second      The second argument.\n"
          "                 Default value: 0\n"
@@ -655,7 +713,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "file name")->setPrintDefault( false);
       subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
          "queue name")->setPrintDefault( false);
-      masterAH.addArgument( "i", &subInput, "input arguments");
+      masterAH.addArgument( "i", subInput, "input arguments");
 
       subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
          "cache name")->setPrintDefault( false);
@@ -663,7 +721,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "file name")->setPrintDefault( false);
       subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
          "queue name")->setPrintDefault( false);
-      masterAH.addArgument( "o", &subOutput, "output arguments");
+      masterAH.addArgument( "o", subOutput, "output arguments");
 
       const ArgString2Array  as2a( "-h", nullptr);
 
@@ -672,6 +730,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help      Prints the program usage.\n"
+         "   --help-arg     Prints the usage for the given argument.\n"
          "   --help-short   Only print arguments with their short key in the usage.\n"
          "   -i             input arguments\n"
          "   -o             output arguments\n"
@@ -700,7 +759,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "file name")->setPrintDefault( false);
       subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
          "queue name")->setPrintDefault( false);
-      masterAH.addArgument( "i", &subInput, "input arguments");
+      masterAH.addArgument( "i", subInput, "input arguments");
 
       subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
          "cache name")->setPrintDefault( false);
@@ -708,7 +767,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "file name")->setPrintDefault( false);
       subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
          "queue name")->setPrintDefault( false);
-      masterAH.addArgument( "o", &subOutput, "output arguments");
+      masterAH.addArgument( "o", subOutput, "output arguments");
 
       const ArgString2Array  as2a( "-ih", nullptr);
 
@@ -716,10 +775,11 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
          "Usage:\n"
          "Optional arguments:\n"
-         "   -h,--help   Prints the program usage.\n"
-         "   -c          cache name\n"
-         "   -f,--file   file name\n"
-         "   --queue     queue name\n"
+         "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
+         "   -c           cache name\n"
+         "   -f,--file    file name\n"
+         "   --queue      queue name\n"
          "\n"));
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
@@ -745,7 +805,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "file name")->setPrintDefault( false);
       subInput.addArgument( "queue", DEST_PAIR( inputName, inputType, 3),
          "queue name")->setPrintDefault( false);
-      masterAH.addArgument( "i", &subInput, "input arguments");
+      masterAH.addArgument( "i", subInput, "input arguments");
 
       subOutput.addArgument( "cache", DEST_PAIR( outputName, outputType, 1),
          "cache name")->setPrintDefault( false);
@@ -753,7 +813,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "file name")->setPrintDefault( false);
       subOutput.addArgument( "q,queue", DEST_PAIR( outputName, outputType, 3),
          "queue name")->setPrintDefault( false);
-      masterAH.addArgument( "o", &subOutput, "output arguments");
+      masterAH.addArgument( "o", subOutput, "output arguments");
 
       const ArgString2Array  as2a( "--help-short -ih", nullptr);
 

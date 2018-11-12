@@ -25,7 +25,6 @@ ENDFOREACH()
 add_executable( test_log_file_policies_stub
    test_log_file_policies_stub.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/../detail/log_msg.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/../detail/log_msg_property.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/../files/counted.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/../files/max_size.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/../files/simple.cpp

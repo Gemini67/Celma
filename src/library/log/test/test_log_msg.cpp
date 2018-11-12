@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -97,14 +97,8 @@ BOOST_AUTO_TEST_CASE( test_setters)
    lm.setText( "the text of the log message");
    BOOST_REQUIRE_EQUAL( lm.getText(), "the text of the log message");
 
-   lm.setCustomProperty( "prop_name1", "the first property");
-   lm.setCustomProperty( "prop_name2", "the second property");
-   BOOST_REQUIRE_EQUAL( lm.getPropertyValue( "prop_name1"), "the first property");
-   BOOST_REQUIRE_EQUAL( lm.getPropertyValue( "prop_name2"), "the second property");
-   BOOST_REQUIRE( lm.getPropertyValue( "prop_name3").empty());
-
 } // test_setters
 
 
 
-// =========================  END OF test_log_msg.cpp  =========================
+// =====  END OF test_log_msg.cpp  =====

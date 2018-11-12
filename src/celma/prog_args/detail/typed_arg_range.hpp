@@ -49,6 +49,12 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgRange( const dest_type& dest, const std::string& vname);
 
+   /// Returns the name of the type of the destination container.
+   ///
+   /// @return  The destination container's type name.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
    ///          value, \c false otherwise.
@@ -110,6 +116,13 @@ template< typename T, typename C>
 } // TypedArgRange< T, C>::TypedArgRange
 
 
+template< typename T, typename C>
+   const std::string TypedArgRange< T, C>::varTypeName() const
+{
+   return type< C>::name();
+} // TypedArgRange< T, C>::varTypeName
+
+
 template< typename T, typename C> bool TypedArgRange< T, C>::hasValue() const
 {
    return !mDestVar.empty();
@@ -122,7 +135,7 @@ template< typename T, typename C>
 {
    os << format::toString( mDestVar);
    if (print_type)
-      os << " [" << type< C>::name() << "]";
+      os << " [" << varTypeName() << "]";
 } // TypedArgRange< T, C>::printValue
 
 

@@ -36,6 +36,8 @@ class TypedArgBase;
 /// Provides storage for all arguments (specifyer plus description).<br>
 /// This is used to print the usage.
 ///
+/// @since  1.1.0, 04.12.2017
+///    (use new class to store the argument dexcriptions)
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
@@ -82,6 +84,16 @@ public:
    ///                     The value must be in the range 60 <= useLen < 240.
    /// @since  0.2, 10.04.2016
    void setLineLength( int useLen);
+
+   /// Returns the description (usage) text for the given argument.
+   ///
+   /// @param[in]  arg_key
+   ///    The short and/or long argument to return the description for.
+   /// @return
+   ///    Either the description or an empty string.
+   /// @since
+   ///    1.14.0, 01.10.2018
+   const std::string getArgDesc( const ArgumentKey& arg_key) const;
 
    /// Prints the contents of the storage to the specified stream.
    /// @param[out]  os  the stream to write to.

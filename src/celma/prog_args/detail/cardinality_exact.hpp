@@ -19,6 +19,7 @@
 #define CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
 
 
+#include <string>
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
 
@@ -59,6 +60,12 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void check() noexcept( false) override;
 
+   /// Returns the text description of the cardinality "exact".
+   ///
+   /// @return  String with the text description of the cardinality.
+   /// @since  1.14.0, 02.10.2018
+   virtual std::string cardinalityStr() const override;
+
 private:
    /// Number of calls/values expected for the corresponding argument.
    const int  mNumExpectedValues;
@@ -83,7 +90,7 @@ private:
 inline detail::ICardinality* cardinality_exact( int num_values)
 {
    return new detail::CardinalityExact( num_values);
-} // end cardinality_exact
+} // cardinality_exact
 
 
 } // namespace prog_args

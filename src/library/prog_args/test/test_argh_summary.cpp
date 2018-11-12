@@ -45,23 +45,27 @@ namespace {
 
 
 /// Helper class to provide callback member functions.
+///
 /// @since  1.8.0, 11.07.2018
 class TestCallbacks
 {
 public:
    /// Callback function without value.
+   ///
    /// @since  1.8.0, 11.07.2018
    void void_method()
    {
    } // TestCallbacks::void_method
 
    /// Callback function with (unused) value.
+   ///
    /// @since  1.8.0, 11.07.2018
    void value_method( const std::string&)
    {
    } // TestCallbacks::value_method
 
    /// Used to a callback as 'member function of the current object'.
+   ///
    /// @param[out]  ah  The argument handler to add the argument to.
    /// @since  1.8.0, 11.07.2018
    void addVoidMember( Handler& ah)
@@ -72,6 +76,7 @@ public:
    } // TestCallbacks::addVoidMember
 
    /// Used to a callback as 'member function of the current object'.
+   ///
    /// @param[out]  ah  The argument handler to add the argument to.
    /// @since  1.8.0, 11.07.2018
    void addValueMember( Handler& ah)
@@ -82,12 +87,14 @@ public:
    } // TestCallbacks::addValueMember
 
    /// Callback member function without value.
+   ///
    /// @since  1.8.0, 11.07.2018
    void void_member()
    {
    } // TestCallbacks::void_member
 
    /// Callback member function with (unused) value.
+   ///
    /// @since  1.8.0, 11.07.2018
    void value_member( const std::string&)
    {
@@ -105,6 +112,7 @@ std::string  func_value;
 
 
 /// Callback function without a value.
+///
 /// @since  1.8.0, 11.07.2018
 void void_func()
 {
@@ -115,6 +123,7 @@ void void_func()
 
 
 /// Callback function with a value.
+///
 /// @param[in]  value  The value from the command line.
 /// @since  1.8.0, 11.07.2018
 void value_func( const std::string& value)
@@ -126,11 +135,92 @@ void value_func( const std::string& value)
 } // value_func
 
 
+/// Helper class for the test cases with all possible destination types.
+/// Defines the variables and the arguments in the argument handler.
+///
+/// @since  1.14.0, 08.10.2018
+class AllTypesFixture
+{
+public:
+   /// Constructor, does the complete initialisation.
+   ///
+   /// @since  1.14.0, 08.10.2018
+   AllTypesFixture():
+      ah( 0),
+      oss(),
+      bit_set(),
+      names(),
+      range_dest(),
+      range_bit_set(),
+      tcb(),
+      verbose_level(),
+      pair_first_arg(),
+      optional_int(),
+      optional_bool(),
+      tuple_dest()
+   {
+
+      ah.addArgument( "i,integer", DEST_VAR( int1), "numerical");
+      ah.addArgument( "f,flag", DEST_VAR( flag1), "boolean flag");
+      ah.addArgument( "b,bitset", DEST_VAR( bit_set), "bitset");
+      ah.addArgument( "n,names", DEST_VAR( names), "list of names");
+      ah.addArgument( "r,range", DEST_RANGE( range_dest, int, std::vector),
+         "range");
+      ah.addArgument( "d,double", DEST_VAR_VALUE( dbl_value, 3.1415), "double");
+      ah.addArgument( "range-bitset", DEST_RANGE_BITSET( range_bit_set, 10),
+         "range bitset");
+      ah.addArgument( "t,tuple", DEST_VAR( tuple_dest), "tuple");
+      ah.addArgument( "void-func", DEST_FUNCTION( void_func), "void function");
+      ah.addArgument( "value-func", DEST_FUNCTION_VALUE( value_func),
+         "value function");
+      ah.addArgument( "void-method", DEST_METHOD( TestCallbacks, void_method, tcb),
+         "void method");
+      ah.addArgument( "value-method", DEST_METHOD_VALUE( TestCallbacks, value_method, tcb),
+         "value method");
+      ah.addArgument( "v,verbose_level", DEST_VAR( verbose_level), "verbose level");
+      ah.addArgument( "p,pair", DEST_PAIR( pair_first_arg, pair_second_arg, 42),
+         "a pair of string and integer");
+      ah.addArgument( "o,opt-int", DEST_VAR( optional_int), "an optional integer");
+      ah.addArgument( "opt-bool", DEST_VAR( optional_bool), "an optional boolean");
+
+      tcb.addVoidMember( ah);
+      tcb.addValueMember( ah);
+
+      const ArgString2Array  as2a( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
+         "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
+         "--void-method --value-method another_value -t 28,unbelievable,12.75 "
+         "--void-member --value-member=last_value -vv --pair juhu -o 0 --opt-bool",
+         nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // AllTypesFixture::AllTypesFixture
+
+   Handler                            ah;
+   std::ostringstream                 oss;
+   int                                int1 = 0;
+   bool                               flag1 = false;
+   std::bitset< 10>                   bit_set;
+   std::vector< std::string>          names;
+   std::vector< int>                  range_dest;
+   double                             dbl_value = 0.0;
+   std::bitset< 10>                   range_bit_set;
+   TestCallbacks                      tcb;
+   celma::prog_args::LevelCounter     verbose_level;
+   std::string                        pair_first_arg;
+   int                                pair_second_arg = -1;
+   celma::common::CheckAssign< int>   optional_int;
+   celma::common::CheckAssign< bool>  optional_bool;
+
+   std::tuple< int, std::string, double>  tuple_dest;
+
+}; // AllTypesFixture
+
+
 } // namespce
 
 
 
 /// Check that we get an empty summary when no argument is used.
+///
 /// @since  1.8.0, 10.07.2018
 BOOST_AUTO_TEST_CASE( no_argument_used)
 {
@@ -164,6 +254,7 @@ BOOST_AUTO_TEST_CASE( no_argument_used)
 
 /// Start testing the summary feature with just one argument, with default
 /// (minimal) content.
+///
 /// @since  1.8.0, 26.07.2018
 BOOST_AUTO_TEST_CASE( one_argument_summary)
 {
@@ -196,56 +287,14 @@ BOOST_AUTO_TEST_CASE( one_argument_summary)
 
 /// Test the summary output with all the different destination types, with
 /// default (minimal) content.
+///
 /// @since  1.8.0, 26.07.2018
-BOOST_AUTO_TEST_CASE( summary_with_all_destination_types)
+BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types, AllTypesFixture)
 {
-
-   Handler                         ah( 0);
-   std::ostringstream              oss;
-   int                             int1 = 0;
-   bool                            flag1 = false;
-   std::bitset< 10>                bit_set;
-   std::vector< std::string>       names;
-   std::vector< int>               range_dest;
-   double                          dbl_value = 0.0;
-   std::bitset< 10>                range_bit_set;
-   TestCallbacks                   tcb;
-   celma::prog_args::LevelCounter  verbose_level;
-
-   std::tuple< int, std::string, double>  tuple_dest;
-
-
-   ah.addArgument( "i,integer", DEST_VAR( int1), "numerical");
-   ah.addArgument( "f,flag", DEST_VAR( flag1), "boolean flag");
-   ah.addArgument( "b,bitset", DEST_VAR( bit_set), "bitset");
-   ah.addArgument( "n,names", DEST_VAR( names), "list of names");
-   ah.addArgument( "r,range", DEST_RANGE( range_dest, int, std::vector),
-      "range");
-   ah.addArgument( "d,double", DEST_VAR_VALUE( dbl_value, 3.1415), "double");
-   ah.addArgument( "range-bitset", DEST_RANGE_BITSET( range_bit_set, 10),
-      "range bitset");
-   ah.addArgument( "t,tuple", DEST_VAR( tuple_dest), "tuple");
-   ah.addArgument( "void-func", DEST_FUNCTION( void_func), "void function");
-   ah.addArgument( "value-func", DEST_FUNCTION_VALUE( value_func),
-      "value function");
-   ah.addArgument( "void-method", DEST_METHOD( TestCallbacks, void_method, tcb),
-      "void method");
-   ah.addArgument( "value-method", DEST_METHOD_VALUE( TestCallbacks, value_method, tcb),
-      "value method");
-   ah.addArgument( "v,verbose_level", DEST_VAR( verbose_level), "verbose level");
-
-   tcb.addVoidMember( ah);
-   tcb.addValueMember( ah);
-
-   const ArgString2Array  as2a( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
-      "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
-      "--void-method --value-method another_value -t 28,unbelievable,12.75 "
-      "--void-member --value-member=last_value -vv",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
+   // std::cerr << "\n" << oss.str() << std::endl;
    BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
       "Argument summary:\n"
       "   Value <42> set on variable 'int1'.\n"
@@ -261,6 +310,9 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types)
       "   Value <[callable]> set on variable 'TestCallbacks::void_method'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_method'.\n"
       "   Value <2> set on variable 'verbose_level'.\n"
+      "   Value <\"juhu\", destination 2 = 42> set on variable 'pair_first_arg'.\n"
+      "   Value <0> set on variable 'optional_int'.\n"
+      "   Value <true> set on variable 'optional_bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -271,6 +323,7 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types)
 
 /// Test the summary output for argument groups, with default (minimal)
 /// content.
+///
 /// @since  1.8.0, 26.07.2018
 BOOST_AUTO_TEST_CASE( groups_summary)
 {
@@ -304,6 +357,7 @@ BOOST_AUTO_TEST_CASE( groups_summary)
 
 /// Test the summary output for an argument handler ith sub-groups, with
 /// default (minimal) content.
+///
 /// @since  1.8.0, 26.07.2018
 BOOST_AUTO_TEST_CASE( subgroups_summary)
 {
@@ -324,8 +378,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary)
    ah_output.addArgument( "f,file", DEST_VAR( output_filename), "output file name");
    ah_output.addArgument( "q,queue", DEST_VAR( output_queuename), "output queue name");
 
-   ah.addArgument( "i,input", &ah_input, "input parameters");
-   ah.addArgument( "o,output", &ah_output, "output parameters");
+   ah.addArgument( "i,input", ah_input, "input parameters");
+   ah.addArgument( "o,output", ah_output, "output parameters");
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
@@ -345,6 +399,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary)
 
 /// Start testing the summary feature with just one argument, with type
 /// information.
+///
 /// @since  1.8.0, 27.07.2018
 BOOST_AUTO_TEST_CASE( one_argument_summary_with_type)
 {
@@ -377,56 +432,15 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_with_type)
 
 /// Test the summary output with all the different destination types, with type
 /// inormation.
+///
 /// @since  1.8.0, 27.07.2018
-BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_with_type)
+BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_type,
+   AllTypesFixture)
 {
-
-   Handler                         ah( 0);
-   std::ostringstream              oss;
-   int                             int1 = 0;
-   bool                            flag1 = false;
-   std::bitset< 10>                bit_set;
-   std::vector< std::string>       names;
-   std::vector< int>               range_dest;
-   double                          dbl_value = 0.0;
-   std::bitset< 10>                range_bit_set;
-   TestCallbacks                   tcb;
-   celma::prog_args::LevelCounter  verbose_level;
-
-   std::tuple< int, std::string, double>  tuple_dest;
-
-
-   ah.addArgument( "i,integer", DEST_VAR( int1), "numerical");
-   ah.addArgument( "f,flag", DEST_VAR( flag1), "boolean flag");
-   ah.addArgument( "b,bitset", DEST_VAR( bit_set), "bitset");
-   ah.addArgument( "n,names", DEST_VAR( names), "list of names");
-   ah.addArgument( "r,range", DEST_RANGE( range_dest, int, std::vector),
-      "range");
-   ah.addArgument( "d,double", DEST_VAR_VALUE( dbl_value, 3.1415), "double");
-   ah.addArgument( "range-bitset", DEST_RANGE_BITSET( range_bit_set, 10),
-      "range bitset");
-   ah.addArgument( "t,tuple", DEST_VAR( tuple_dest), "tuple");
-   ah.addArgument( "void-func", DEST_FUNCTION( void_func), "void function");
-   ah.addArgument( "value-func", DEST_FUNCTION_VALUE( value_func),
-      "value function");
-   ah.addArgument( "void-method", DEST_METHOD( TestCallbacks, void_method, tcb),
-      "void method");
-   ah.addArgument( "value-method", DEST_METHOD_VALUE( TestCallbacks, value_method, tcb),
-      "value method");
-   ah.addArgument( "v,verbose_level", DEST_VAR( verbose_level), "verbose level");
-
-   tcb.addVoidMember( ah);
-   tcb.addValueMember( ah);
-
-   const ArgString2Array  as2a( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
-      "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
-      "--void-method --value-method another_value -t 28,unbelievable,12.75 "
-      "--void-member --value-member=last_value -v --verbose_level",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
+   // std::cerr << std::endl << oss.str() << std::endl;
    BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
       "Argument summary:\n"
       "   Value <42 [int]> set on variable 'int1'.\n"
@@ -442,6 +456,9 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_with_type)
       "   Value <[callable]> set on variable 'TestCallbacks::void_method'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_method'.\n"
       "   Value <2 [LevelCounter]> set on variable 'verbose_level'.\n"
+      "   Value <\"juhu\" [std::string], destination 2 = 42 [int]> set on variable 'pair_first_arg'.\n"
+      "   Value <0 [int]> set on variable 'optional_int'.\n"
+      "   Value <true [bool]> set on variable 'optional_bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -451,6 +468,7 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_with_type)
 
 
 /// Test the summary output for argument groups, with type information.
+///
 /// @since  1.8.0, 27.07.2018
 BOOST_AUTO_TEST_CASE( groups_summary_with_type)
 {
@@ -486,6 +504,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_type)
 
 /// Test the summary output for an argument handler ith sub-groups, with type
 /// information.
+///
 /// @since  1.8.0, 27.07.2018
 BOOST_AUTO_TEST_CASE( subgroups_summary_with_type)
 {
@@ -506,8 +525,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_type)
    ah_output.addArgument( "f,file", DEST_VAR( output_filename), "output file name");
    ah_output.addArgument( "q,queue", DEST_VAR( output_queuename), "output queue name");
 
-   ah.addArgument( "i,input", &ah_input, "input parameters");
-   ah.addArgument( "o,output", &ah_output, "output parameters");
+   ah.addArgument( "i,input", ah_input, "input parameters");
+   ah.addArgument( "o,output", ah_output, "output parameters");
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
@@ -527,6 +546,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_type)
 
 /// Start testing the summary feature with just one argument, including the
 /// argument key.
+///
 /// @since  1.8.0, 27.07.2018
 BOOST_AUTO_TEST_CASE( one_argument_summary_with_key)
 {
@@ -559,56 +579,15 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_with_key)
 
 /// Test the summary output with all the different destination types, including
 /// the argument key.
+///
 /// @since  1.8.0, 27.07.2018
-BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_with_key)
+BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_key,
+   AllTypesFixture)
 {
-
-   Handler                         ah( 0);
-   std::ostringstream              oss;
-   int                             int1 = 0;
-   bool                            flag1 = false;
-   std::bitset< 10>                bit_set;
-   std::vector< std::string>       names;
-   std::vector< int>               range_dest;
-   double                          dbl_value = 0.0;
-   std::bitset< 10>                range_bit_set;
-   TestCallbacks                   tcb;
-   celma::prog_args::LevelCounter  verbose_level;
-
-   std::tuple< int, std::string, double>  tuple_dest;
-
-
-   ah.addArgument( "i,integer", DEST_VAR( int1), "numerical");
-   ah.addArgument( "f,flag", DEST_VAR( flag1), "boolean flag");
-   ah.addArgument( "b,bitset", DEST_VAR( bit_set), "bitset");
-   ah.addArgument( "n,names", DEST_VAR( names), "list of names");
-   ah.addArgument( "r,range", DEST_RANGE( range_dest, int, std::vector),
-      "range");
-   ah.addArgument( "d,double", DEST_VAR_VALUE( dbl_value, 3.1415), "double");
-   ah.addArgument( "range-bitset", DEST_RANGE_BITSET( range_bit_set, 10),
-      "range bitset");
-   ah.addArgument( "t,tuple", DEST_VAR( tuple_dest), "tuple");
-   ah.addArgument( "void-func", DEST_FUNCTION( void_func), "void function");
-   ah.addArgument( "value-func", DEST_FUNCTION_VALUE( value_func),
-      "value function");
-   ah.addArgument( "void-method", DEST_METHOD( TestCallbacks, void_method, tcb),
-      "void method");
-   ah.addArgument( "value-method", DEST_METHOD_VALUE( TestCallbacks, value_method, tcb),
-      "value method");
-   ah.addArgument( "v,verbose_level", DEST_VAR( verbose_level), "verbose level");
-
-   tcb.addVoidMember( ah);
-   tcb.addValueMember( ah);
-
-   const ArgString2Array  as2a( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
-      "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
-      "--void-method --value-method another_value -t 28,unbelievable,12.75 "
-      "--void-member --value-member=last_value -vv",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
+   // std::cerr << std::endl << oss.str() << std::endl;
    BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
       "Argument summary:\n"
       "   Value <42> set on variable 'int1' by argument '-i,--integer'.\n"
@@ -624,6 +603,9 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_with_key)
       "   Value <[callable]> set on variable 'TestCallbacks::void_method' by argument '--void-method'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_method' by argument '--value-method'.\n"
       "   Value <2> set on variable 'verbose_level' by argument '-v,--verbose_level'.\n"
+      "   Value <\"juhu\", destination 2 = 42> set on variable 'pair_first_arg' by argument '-p,--pair'.\n"
+      "   Value <0> set on variable 'optional_int' by argument '-o,--opt-int'.\n"
+      "   Value <true> set on variable 'optional_bool' by argument '--opt-bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));
@@ -633,6 +615,7 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_with_key)
 
 
 /// Test the summary output for argument groups, including the argument key.
+///
 /// @since  1.8.0, 27.07.2018
 BOOST_AUTO_TEST_CASE( groups_summary_with_key)
 {
@@ -668,6 +651,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_key)
 
 /// Test the summary output for an argument handler ith sub-groups, including
 /// the argument key
+///
 /// @since  1.8.0, 27.07.2018
 BOOST_AUTO_TEST_CASE( subgroups_summary_with_key)
 {
@@ -688,8 +672,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_key)
    ah_output.addArgument( "f,file", DEST_VAR( output_filename), "output file name");
    ah_output.addArgument( "q,queue", DEST_VAR( output_queuename), "output queue name");
 
-   ah.addArgument( "i,input", &ah_input, "input parameters");
-   ah.addArgument( "o,output", &ah_output, "output parameters");
+   ah.addArgument( "i,input", ah_input, "input parameters");
+   ah.addArgument( "o,output", ah_output, "output parameters");
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);
@@ -708,6 +692,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_key)
 
 
 /// Start testing the full summary feature with just one argument.
+///
 /// @since  1.8.0, 04.07.2018
 BOOST_AUTO_TEST_CASE( one_argument_summary_full)
 {
@@ -739,56 +724,15 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_full)
 
 
 /// Test the full summary output with all the different destination types.
+///
 /// @since  1.8.0, 10.07.2018
-BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_full)
+BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_full,
+   AllTypesFixture)
 {
-
-   Handler                         ah( 0);
-   std::ostringstream              oss;
-   int                             int1 = 0;
-   bool                            flag1 = false;
-   std::bitset< 10>                bit_set;
-   std::vector< std::string>       names;
-   std::vector< int>               range_dest;
-   double                          dbl_value = 0.0;
-   std::bitset< 10>                range_bit_set;
-   TestCallbacks                   tcb;
-   celma::prog_args::LevelCounter  verbose_level;
-
-   std::tuple< int, std::string, double>  tuple_dest;
-
-
-   ah.addArgument( "i,integer", DEST_VAR( int1), "numerical");
-   ah.addArgument( "f,flag", DEST_VAR( flag1), "boolean flag");
-   ah.addArgument( "b,bitset", DEST_VAR( bit_set), "bitset");
-   ah.addArgument( "n,names", DEST_VAR( names), "list of names");
-   ah.addArgument( "r,range", DEST_RANGE( range_dest, int, std::vector),
-      "range");
-   ah.addArgument( "d,double", DEST_VAR_VALUE( dbl_value, 3.1415), "double");
-   ah.addArgument( "range-bitset", DEST_RANGE_BITSET( range_bit_set, 10),
-      "range bitset");
-   ah.addArgument( "t,tuple", DEST_VAR( tuple_dest), "tuple");
-   ah.addArgument( "void-func", DEST_FUNCTION( void_func), "void function");
-   ah.addArgument( "value-func", DEST_FUNCTION_VALUE( value_func),
-      "value function");
-   ah.addArgument( "void-method", DEST_METHOD( TestCallbacks, void_method, tcb),
-      "void method");
-   ah.addArgument( "value-method", DEST_METHOD_VALUE( TestCallbacks, value_method, tcb),
-      "value method");
-   ah.addArgument( "v,verbose_level", DEST_VAR( verbose_level), "verbose level");
-
-   tcb.addVoidMember( ah);
-   tcb.addValueMember( ah);
-
-   const ArgString2Array  as2a( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
-      "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
-      "--void-method --value-method another_value -t 28,unbelievable,12.75 "
-      "--void-member --value-member=last_value --verbose_level --verbose_level",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
+   // std::cerr << std::endl << oss.str() << std::endl;
    BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
       "Argument summary:\n"
       "   Value <42 [int]> set on variable 'int1' by argument '-i,--integer'.\n"
@@ -804,6 +748,9 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_full)
       "   Value <[callable]> set on variable 'TestCallbacks::void_method' by argument '--void-method'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_method' by argument '--value-method'.\n"
       "   Value <2 [LevelCounter]> set on variable 'verbose_level' by argument '-v,--verbose_level'.\n"
+      "   Value <\"juhu\" [std::string], destination 2 = 42 [int]> set on variable 'pair_first_arg' by argument '-p,--pair'.\n"
+      "   Value <0 [int]> set on variable 'optional_int' by argument '-o,--opt-int'.\n"
+      "   Value <true [bool]> set on variable 'optional_bool' by argument '--opt-bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));
@@ -813,6 +760,7 @@ BOOST_AUTO_TEST_CASE( summary_with_all_destination_types_full)
 
 
 /// Test the full summary output for argument groups.
+///
 /// @since  1.8.0, 11.07.2018
 BOOST_AUTO_TEST_CASE( groups_summary_full)
 {
@@ -848,7 +796,8 @@ BOOST_AUTO_TEST_CASE( groups_summary_full)
 
 
 
-/// Test the full summary output for an argument handler ith sub-groups.
+/// Test the full summary output for an argument handler with sub-groups.
+///
 /// @since  1.8.0, 12.07.2018
 BOOST_AUTO_TEST_CASE( subgroups_summary_full)
 {
@@ -869,8 +818,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
    ah_output.addArgument( "f,file", DEST_VAR( output_filename), "output file name");
    ah_output.addArgument( "q,queue", DEST_VAR( output_queuename), "output queue name");
 
-   ah.addArgument( "i,input", &ah_input, "input parameters");
-   ah.addArgument( "o,output", &ah_output, "output parameters");
+   ah.addArgument( "i,input", ah_input, "input parameters");
+   ah.addArgument( "o,output", ah_output, "output parameters");
 
    const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
       nullptr);

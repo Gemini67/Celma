@@ -245,10 +245,17 @@ public:
       hfHelpShort       = 0x01,
       /// Allows the argument '--help' to print the usage of the program.
       hfHelpLong        = hfHelpShort << 1,
+      /// Allows the argument "--help-arg=<arg>" to get the usage of one
+      /// specific argument.
+      hfHelpArg         = hfHelpLong << 1,
+      /// Allows the argument "--help-arg-full=<arg>" to get the usage of one
+      /// specific argument, plus a description of all properties of the
+      /// argument and its destination variable.
+      hfHelpArgFull     = hfHelpArg << 1,
       /// Specifies to read arguments from the optional program arguments file
       /// before parsing the command line arguments.<br>
       /// File: $HOME/.progargs/\<progfilename\>.pa
-      hfReadProgArg     = hfHelpLong  << 1,
+      hfReadProgArg     = hfHelpArgFull  << 1,
       /// Produces verbose output when a value is assigned to a variable.
       hfVerboseArgs     = hfReadProgArg << 1,
       /// Specifies that hidden arguments should be printed too in the usage.
@@ -306,15 +313,16 @@ public:
    using ValueMode = detail::TypedArgBase::ValueMode;
 
    /// Set of all help arguments.
-   static const int  AllHelp = hfHelpShort | hfHelpLong;
+   static const int  AllHelp = hfHelpShort | hfHelpLong | hfHelpArg;
    /// Set of available standard/commonly used arguments.
    static const int  AllFlags = hfHelpShort | hfHelpLong | hfReadProgArg;
    /// Flags for testing/debugging the module itself.
    static const int  DebugFlags = hfVerboseArgs | hfListArgVar;
    /// Complete set of all available arguments.
-   static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfReadProgArg |
-                                   hfVerboseArgs | hfUsageHidden | hfArgHidden |
-                                   hfListArgVar | hfUsageCont;
+   static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfHelpArg
+                                   | hfReadProgArg | hfVerboseArgs
+                                   | hfUsageHidden | hfArgHidden | hfListArgVar
+                                   | hfUsageCont;
 
    /// (Default) Constructor.
    /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
@@ -390,19 +398,20 @@ public:
                                       detail::TypedArgBase* dest,
                                       const std::string& desc);
 
-   /// Adds a sub-group.<br>
-   /// Note: Theoretically we could pass the object by reference, but then the
-   /// compiler cannot distinguish anymore between this function and the variant
-   /// to add an argument resulting in a function call.
-   /// @param[in]  arg_spec  The arguments on the command line to enter/start
-   ///                       the sub-group.
-   /// @param[in]  subGroup  The object to handle the sub-group arguments.
-   /// @param[in]  desc      The description of this sub-group argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// Adds a sub-group.
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line to enter/start the sub-group.
+   /// @param[in]  subGroup
+   ///    The object to handle the sub-group arguments.
+   /// @param[in]  desc
+   ///    The description of this sub-group argument.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      Handler* subGroup,
+                                      Handler& subGroup,
                                       const std::string& desc);
 
    /// Adds an argument that behaves like the -h/--help arguments. Use this if
@@ -510,6 +519,24 @@ public:
    ///          settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentEndValues( const std::string& arg_spec);
+
+   /// Adds an argument that can be used to get the usage for exactly one
+   /// argument.
+   ///
+   /// @param[in]  arg_spec
+   ///    The argument(s) on the command line to request the usage for an
+   ///    argument.
+   /// @param[in]  full
+   ///    Set this flag if the argument should invoke the function to print the
+   ///    usage and a complee description of the argument and its destination
+   ///    variable.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
+   /// @since
+   ///    1.14.0, 25.09.2018
+   detail::TypedArgBase* addArgumentHelpArgument( const std::string& arg_spec,
+      bool full = false);
 
    /// Specifies the callback function for a control argument.<br>
    /// If no handler is defined for a control character, it is treated as error
@@ -759,9 +786,23 @@ private:
    /// @since  0.13.1, 07.02.2017
    void listArgGroups();
 
-   /// Called to mark the end of a value list: Sets mpLastArg to NULL.
+   /// Called to mark the end of a value list: Sets #mpLastArg to NULL.
+   ///
    /// @since  0.2, 10.04.2016
    void endValueList();
+
+   /// Searches if the given argment key belongs to a known argument, and if so
+   /// prints its usage.<br>
+   /// If the argument key is unknown, an error message is printed.<br>
+   /// At the end, the function calls exit(), unless "usage continues" is set.
+   ///
+   /// @param[in]  help_arg_key
+   ///    The key of the argument to print the usage of.
+   /// @param[in]  full
+   ///    If set, also prints information about the argument and its destination
+   ///    variable.
+   /// @since  1.14.0, 25.09.2018
+   void helpArgument( const std::string& help_arg_key, bool full);
 
    /// Iterates over the arguments and evaluates them.
    /// @param[in]  alp  The parser object used to access the arguments.
