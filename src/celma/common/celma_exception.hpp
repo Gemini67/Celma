@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,6 +32,7 @@ namespace celma { namespace common {
 
 /// Extension of the standard exception classes: Provides more information
 /// about the location where the exception was thrown.
+///
 /// @tparam  BE  The Base Exception class to use (e.g. runtime_error,
 ///              logic_error etc.)
 /// @since  0.2, 07.04.2016
@@ -182,9 +183,9 @@ template< typename BE> const char* CelmaException< BE>::what() const noexcept
 
 
 /// Convenience: Typedef for the 'Celma logic error'.
-typedef CelmaException< std::logic_error>    CelmaLogicError;
+using CelmaLogicError = CelmaException< std::logic_error>;
 /// Convenience: Typedef for the 'Celma runtime error'.
-typedef CelmaException< std::runtime_error>  CelmaRuntimeError;
+using CelmaRuntimeError = CelmaException< std::runtime_error>;
 
 
 } // namespace common
@@ -209,5 +210,5 @@ typedef CelmaException< std::runtime_error>  CelmaRuntimeError;
 #endif   // CELMA_COMMON_CELMA_EXCEPTION_HPP
 
 
-// =======================  END OF celma_exception.hpp  =======================
+// =====  END OF celma_exception.hpp  =====
 

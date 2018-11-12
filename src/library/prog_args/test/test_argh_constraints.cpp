@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,16 +29,14 @@
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::common::ArgString2Array;
+using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::runtime_error;
 using std::string;
 
-
-// module definitions
 
 
 /// Check the argument-constraint 'requires'.
@@ -52,45 +50,45 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
 
    // constraint is not activated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint error: second argument not used/set
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1", nullptr);
 
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv),
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            runtime_error);
    } // end scope
 
    // constraint met, no error
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 5", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 5", nullptr);
 
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-} // end constraint_requires
+} // constraint_requires
 
 
 
@@ -107,8 +105,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 
    // constraint is not activated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -116,13 +114,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint error: second argument not used/set
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -130,13 +128,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // constraint error: third argument not used/set
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 5", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 5", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -144,13 +142,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // constraint met with character argument, no error
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 5 -o all", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 5 -o all", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -158,13 +156,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint met with log argument, no error
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 5 --opt all", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 5 --opt all", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -172,13 +170,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint met with character argument, no error, different argument order
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -o all -i 5", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -o all -i 5", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -186,13 +184,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint met with log argument, no error, different argument order
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 --opt all -i 5", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 --opt all -i 5", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -200,10 +198,10 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-} // end constraint_requires_two
+} // constraint_requires_two
 
 
 
@@ -222,8 +220,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 
    // constraint is not activated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -232,13 +230,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint error: second argument not used/set
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -247,13 +245,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // constraint error: third argument not used/set
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 5", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 5", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -262,13 +260,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // constraint met with character argument, no error
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 5 -o all", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 5 -o all", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -277,13 +275,13 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint met with log argument, no error
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 5 --opt all", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 5 --opt all", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -292,10 +290,10 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-} // end constraint_requires_chaining
+} // constraint_requires_chaining
 
 
 
@@ -312,8 +310,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint is not activated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -322,13 +320,13 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint required once, first arg
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -337,13 +335,13 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // constraint required once, second arg
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-i 56", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-i 56", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -352,13 +350,13 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // constraint required twice
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 56", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 56", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -367,13 +365,13 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // constraint required once, fulfilled, short arg
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -o 1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -o 1", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -382,13 +380,13 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint required once, fulfilled, short arg
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-i 56 -o 1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-i 56 -o 1", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -397,13 +395,13 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint required twice, fulfilled, short arg
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 56 -o 1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 56 -o 1", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -412,13 +410,13 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint required twice, fulfilled, long arg
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 56 --opt=1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 56 --opt=1", nullptr);
 
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
@@ -427,10 +425,10 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-} // end constraint_required_twice
+} // constraint_required_twice
 
 
 
@@ -445,60 +443,60 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
 
    // constraint is not activated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint not activated, use now not forbidden argument
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-i 5", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-i 5", nullptr);
 
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // constraint error: try to use excluded argument
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n name1 -i 5", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n name1 -i 5", nullptr);
 
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // constraint not activated yet ...
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-i 7 -n name1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-i 7 -n name1", nullptr);
 
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // both arguments exclude each other
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-i 7 -n name1", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-i 7 -n name1", nullptr);
 
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
@@ -506,10 +504,10 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
       ah.addArgument( "i", DEST_VAR( idx),  "Index")
                     ->addConstraint( celma::prog_args::excludes( "n"));;
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
-} // end constraint_excludes
+} // constraint_excludes
 
 
 
@@ -525,8 +523,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // invalid list of arguments: unknown argument
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -538,21 +536,23 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // invalid list of arguments: short/long mixed
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i,name;r")), runtime_error);
+      BOOST_REQUIRE_THROW( ah.addConstraint(
+                              celma::prog_args::all_of( "n;i,name;r")),
+                           runtime_error);
    } // end scope
 
    // none of the specified arguments used: constraint is not fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -560,15 +560,15 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // none of the specified arguments used, only another/not relevant:
    // constraint is not fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-a 7", nullptr);
-      int              valueA;
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a 7", nullptr);
+      int                    valueA;
       
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value A");
@@ -577,13 +577,13 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // one of the specified arguments used: constraint is not fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n myname", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n myname", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -591,13 +591,13 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // not all of the specified arguments used: constraint is not fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-i 5 -r 17", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-i 5 -r 17", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -605,13 +605,13 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // all of the specified arguments used: constraint is fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n myname -i 5 -r 17", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n myname -i 5 -r 17", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -619,13 +619,13 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // same but: specify mix of argument specs
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n myname -i 5 -r 17", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n myname -i 5 -r 17", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -633,13 +633,13 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;index;r,rate")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // same but: use combination of short and long arguments
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "--name myname -i 5 --rate 17", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "--name myname -i 5 --rate 17", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -648,16 +648,16 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
       // specify mix of argument specs
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;index;r,rate")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // same but: mixed in other arguments not relevant for the constraint
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-a 5 -b 7 -n myname -i 5 -c 5 -r 17", nullptr);
-      int                      valueA;
-      int                      valueB;
-      int                      valueC;
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a 5 -b 7 -n myname -i 5 -c 5 -r 17", nullptr);
+      int                    valueA;
+      int                    valueB;
+      int                    valueC;
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value a");
       ah.addArgument( "b",       DEST_VAR( valueB), "Value b");
@@ -668,10 +668,10 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
       // specify mix of argument specs
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;index;r,rate")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-} // end constraint_all_of
+} // constraint_all_of
 
 
 
@@ -687,8 +687,8 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
 
    // none of the arguments is used: constraint is fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -696,15 +696,15 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;i;r")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // none of the arguments is used, only another/not relevant argument:
    // constraint is fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-a 756", nullptr);
-      int                      valueA;
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a 756", nullptr);
+      int                    valueA;
 
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value a");
@@ -713,13 +713,13 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;i;r")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // one of the arguments is used: constraint is fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n myname", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n myname", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -727,13 +727,13 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;i;r")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // try to use two of the specified arguments: constraint is violated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n myname -i 7", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n myname -i 7", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -741,13 +741,13 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // try to use two of the specified arguments: constraint is violated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-i 7 -r 545", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-i 7 -r 545", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -755,14 +755,14 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;index;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // try to use two of the specified arguments: constraint is violated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "--rate 5 -a 77 -i 7", nullptr);
-      int                      valueA;
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "--rate 5 -a 77 -i 7", nullptr);
+      int                    valueA;
 
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value a");
@@ -771,10 +771,10 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;index;rate")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
-} // end constraint_any_of
+} // constraint_any_of
 
 
 
@@ -790,8 +790,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
 
    // no argument used: constraint is not fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
@@ -799,14 +799,14 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // no/another argument used: constraint is not fulfilled
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-a 6", nullptr);
-      int                      valueA;
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a 6", nullptr);
+      int                    valueA;
 
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value a");
@@ -815,13 +815,13 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
    // use one of the arguments: constraint is met
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n myname", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n myname", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
@@ -829,13 +829,13 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "n;i;r")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // use one of the arguments: constraint is met
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "--index 5", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "--index 5", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
@@ -843,13 +843,13 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "name;i;rate")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // use one of the arguments: constraint is met
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-i 17", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-i 17", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
@@ -857,13 +857,13 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "n;index;r")));
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // try to use two of the arguments: constraint violated
    {
-      Handler          ah( 0);
-      ArgString2Array  as2a( "-n myname --index=8", nullptr);
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n myname --index=8", nullptr);
 
 
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
@@ -871,10 +871,10 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
    } // end scope
 
-} // end constraint_one_of
+} // constraint_one_of
 
 
 
@@ -914,15 +914,15 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
 
       } // end TestData::TestData
 
-      Handler          ah;
-      ArgString2Array  as2a;
-      string           name;
-      string           input_name;
-      string           path;
-      string           format_name;
-      bool             display;
-      bool             do_write;
-      bool             do_store;
+      Handler                ah;
+      const ArgString2Array  as2a;
+      string                 name;
+      string                 input_name;
+      string                 path;
+      string                 format_name;
+      bool                   display;
+      bool                   do_write;
+      bool                   do_store;
 
    }; // TestData
 
@@ -930,7 +930,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
    {
       TestData  td( "");
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
@@ -938,7 +938,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
    {
       TestData  td( "--name myname");
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
@@ -946,21 +946,21 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
    {
       TestData  td( "--name myname -i input_source");
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    // minimum set of arguments, okay
    {
       TestData  td( "--name myname --input=input_source");
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    // both of mutually exlusive arguments set, contraint violated
    {
       TestData  td( "--name myname --input input_source --path=my_path");
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
@@ -968,7 +968,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
    {
       TestData  td( "--name myname -p from_path");
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
@@ -976,34 +976,34 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
    {
       TestData  td( "--name myname -p from_path --format=formatname");
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    // all necessary arguments set plus one of the optional group
    {
       TestData  td( "--name myname -p from_path --format=formatname -d");
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    // all necessary arguments set plus one of the optional group
    {
       TestData  td( "--name myname -p from_path --format=formatname -w");
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    // attempt to set two arguments from the optional group: constraint violated
    {
       TestData  td( "--name myname -p from_path --format=formatname -w -s");
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
-} // end constraint_mix
+} // constraint_mix
 
 
 
-// ====================  END OF test_argh_constraints.cpp  ====================
+// =====  END OF test_argh_constraints.cpp  =====
 

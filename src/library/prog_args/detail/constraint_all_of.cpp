@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,7 +23,13 @@
 #include <stdexcept>
 
 
-using namespace std;
+// project includes
+#include "celma/common/tokenizer.hpp"
+#include "celma/format/to_string.hpp"
+
+
+using std::runtime_error;
+using std::string;
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -35,7 +41,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @since  0.2, 10.04.2016
 ConstraintAllOf::ConstraintAllOf( const string& reqArgSpec):
    mArgSpecList( reqArgSpec),
-   mRemainingArguments( "uninitialized")
+   mRemainingArguments()
 {
 
    if (mArgSpecList.empty())
@@ -46,7 +52,7 @@ ConstraintAllOf::ConstraintAllOf( const string& reqArgSpec):
       throw runtime_error( "List of needed arguments for constraint 'all of' "
                            "must contain at least two arguments separated by ';'");
 
-} // end ConstraintAllOf::ConstraintAllOf
+} // ConstraintAllOf::ConstraintAllOf
 
 
 
@@ -56,25 +62,27 @@ ConstraintAllOf::ConstraintAllOf( const string& reqArgSpec):
 /// - If so, verify that this argument was not already used before and then
 ///   remove it from the list of remaining arguments.
 ///
-/// @param[in]  sourceArg  The current argument that was identified.
+/// @param[in]  key  The current argument that was identified.
 /// @since  0.2, 10.04.2016
-void ConstraintAllOf::executeConstraint( const string& sourceArg)
+void ConstraintAllOf::executeConstraint( const ArgumentKey& key)
 {
 
-   if (!isConstraintArgument( mArgSpecList, sourceArg))
+   if (!isConstraintArgument( mArgSpecList, key))
       return;
 
    if (mRemainingArguments.empty())
-      throw runtime_error( "Argument '" + sourceArg + "' was already used");
+      throw runtime_error( "Argument '" + format::toString( key)
+                           + "' was already used");
 
-   const string::size_type  argpos = mRemainingArguments.find( sourceArg);
+   auto  argpos = mRemainingArguments.find( key);
 
-   if (argpos == string::npos)
-      throw runtime_error( "Argument '" + sourceArg + "' was already used");
+   if (argpos == mRemainingArguments.end())
+      throw runtime_error( "Argument '" + format::toString( key)
+                           + "' was already used");
 
-   mRemainingArguments.erase( argpos, sourceArg.length() + 1);
+   mRemainingArguments.erase( argpos);
 
-} // end ConstraintAllOf::executeConstraint
+} // ConstraintAllOf::executeConstraint
 
 
 
@@ -85,7 +93,7 @@ string& ConstraintAllOf::argumentList()
 {
 
    return mArgSpecList;
-} // end ConstraintAllOf::argumentList
+} // ConstraintAllOf::argumentList
 
 
 
@@ -94,9 +102,12 @@ string& ConstraintAllOf::argumentList()
 void ConstraintAllOf::validated()
 {
 
-   mRemainingArguments = mArgSpecList;
+   common::Tokenizer  tok( mArgSpecList, ';');
 
-} // end ConstraintAllOf::validated
+
+   mRemainingArguments.insert( tok.begin(), tok.end(), nullptr);
+
+} // ConstraintAllOf::validated
 
 
 
@@ -107,10 +118,34 @@ void ConstraintAllOf::checkEndCondition() const
 {
 
    if (!mRemainingArguments.empty())
-      throw runtime_error( "Argument(s) '" + mRemainingArguments +
-                           "' required but missing");
+   {
+      string  remaining;
+      for (auto const& arg : mRemainingArguments)
+      {
+         if (!remaining.empty())
+            remaining.append( ", ");
+         remaining.append( format::toString( arg.key()));
+      } // end for
 
-} // end ConstraintAllOf::checkEndCondition
+      throw runtime_error( "Argument(s) '" + remaining + "' required but missing");
+   } // end if
+
+} // ConstraintAllOf::checkEndCondition
+
+
+
+/// Returns a text description of the constraint.
+/// @return  A string with the text description of the constraint.
+/// @since  0.16.0, 15.08.2017
+string ConstraintAllOf::toString() const
+{
+
+   std::ostringstream  oss;
+
+   oss << "All of ( " << mArgSpecList << ")";
+
+   return oss.str();
+} // ConstraintAllOf::toString
 
 
 
@@ -119,5 +154,5 @@ void ConstraintAllOf::checkEndCondition() const
 } // namespace celma
 
 
-// =========================  END OF constraint_all_of.cpp  =========================
+// ======================  END OF constraint_all_of.cpp  ======================
 

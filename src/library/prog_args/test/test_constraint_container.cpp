@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,16 +15,15 @@
 --*/
 
 
+// module to test header file include
+#include "celma/prog_args/detail/constraint_container.hpp"
+
+
 // OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
 
 
-// STL includes
-#include <string>
-#include <iostream>
+// C++ Standard Library includes
+#include <stdexcept>
 
 
 // Boost includes
@@ -33,16 +32,38 @@
 
 
 // project includes
-#define  protected  public
-#define  private    public
-#include "celma/prog_args/detail/constraint_container.hpp"
+#include "celma/prog_args/detail/argument_key.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::prog_args::detail::ArgumentKey;
+using celma::prog_args::detail::ConstraintContainer;
+using std::runtime_error;
 
 
 // module definitions
+
+
+namespace {
+
+
+/// Helper class to access private members the class ConstraintContainer.
+/// @since  0.15.0, 27.06.2017
+class ConstraintAccess: public ConstraintContainer
+{
+public:
+   /// Returns the size of the constraint container.
+   /// @return  Size of the constraint container, i,e. number of constraints
+   ///          stored.
+   /// @since  0.15.0, 27.06.2017
+   size_t size() const
+   {
+      return mConstraints.size();
+   } // ConstraintAccess::size
+
+}; // ConstraintAccess
+
+
+} // namespace
 
 
 /// Check that an constraint container does nothing.
@@ -50,13 +71,13 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( empty_constraints)
 {
 
-   prog_args::detail::ConstraintContainer  constraints;
+   ConstraintContainer  constraints;
 
 
-   BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( "a"));
+   BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( ArgumentKey( "a")));
    BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
 
-} // end empty_constraints
+} // empty_constraints
 
 
 
@@ -66,48 +87,54 @@ BOOST_AUTO_TEST_CASE( duplicate_constraint)
 {
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "a;b;a", "s");
-      BOOST_REQUIRE_EQUAL( constraints.mConstraints.size(), 2);
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "a;b;a", "s");
+      BOOST_REQUIRE_EQUAL( constraints.size(), 2);
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "n,name;b;n", "s");
-      BOOST_REQUIRE_EQUAL( constraints.mConstraints.size(), 2);
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "n,name;b;n", "s");
+      BOOST_REQUIRE_EQUAL( constraints.size(), 2);
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "n,name;b;name", "s");
-      BOOST_REQUIRE_EQUAL( constraints.mConstraints.size(), 2);
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "n,name;b;name", "s");
+      BOOST_REQUIRE_EQUAL( constraints.size(), 2);
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "n,name;b;n,name", "s");
-      BOOST_REQUIRE_EQUAL( constraints.mConstraints.size(), 2);
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "n,name;b;n,name", "s");
+      BOOST_REQUIRE_EQUAL( constraints.size(), 2);
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "n;b;n,name", "s");
-      BOOST_REQUIRE_EQUAL( constraints.mConstraints.size(), 2);
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "n;b;n,name", "s");
+      BOOST_REQUIRE_EQUAL( constraints.size(), 2);
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "name;b;n,name", "s");
-      BOOST_REQUIRE_EQUAL( constraints.mConstraints.size(), 2);
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "name;b;n,name", "s");
+      BOOST_REQUIRE_EQUAL( constraints.size(), 2);
    } // end scope
 
-} // end duplicate_constraint
+} // duplicate_constraint
 
 
 
@@ -119,25 +146,28 @@ BOOST_AUTO_TEST_CASE( one_requires_constraint)
    // argument with 'required' constraint added, not found
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintContainer  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "o", "i,input");
-
-      BOOST_REQUIRE_THROW( constraints.checkRequired(), runtime_error);
-   } // end scope
-
-   {
-      prog_args::detail::ConstraintContainer  constraints;
-
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "output", "i,input");
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "o", "i,input");
 
       BOOST_REQUIRE_THROW( constraints.checkRequired(), runtime_error);
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintContainer  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "o,output", "i,input");
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "output", "i,input");
+
+      BOOST_REQUIRE_THROW( constraints.checkRequired(), runtime_error);
+   } // end scope
+
+   {
+      ConstraintContainer  constraints;
+
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "o,output", "i,input");
 
       BOOST_REQUIRE_THROW( constraints.checkRequired(), runtime_error);
    } // end scope
@@ -145,33 +175,36 @@ BOOST_AUTO_TEST_CASE( one_requires_constraint)
    // argument with 'required' constraint added, found
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintContainer  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "o", "i,input");
-      constraints.argumentIdentified( "o,output");
-
-      BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
-   } // end scope
-
-   {
-      prog_args::detail::ConstraintContainer  constraints;
-
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "output", "i,input");
-      constraints.argumentIdentified( "o,output");
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "o", "i,input");
+      constraints.argumentIdentified( ArgumentKey( "o,output"));
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintContainer  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "o,output", "i,input");
-      constraints.argumentIdentified( "o,output");
+      constraints.addConstraint( ConstraintContainer::Constraint::required, 
+                                 "output", "i,input");
+      constraints.argumentIdentified( ArgumentKey( "o,output"));
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
 
-} // end one_requires_constraint
+   {
+      ConstraintContainer  constraints;
+
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "o,output", "i,input");
+      constraints.argumentIdentified( ArgumentKey( "o,output"));
+
+      BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
+   } // end scope
+
+} // one_requires_constraint
 
 
 
@@ -183,25 +216,28 @@ BOOST_AUTO_TEST_CASE( one_excludes_constraint)
    // argument with 'exclude' constraint added, not used
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintContainer  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "o", "i,input");
-
-      BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
-   } // end scope
-
-   {
-      prog_args::detail::ConstraintContainer  constraints;
-
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "output", "i,input");
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "o", "i,input");
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "o,output", "i,input");
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "output", "i,input");
+
+      BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
+   } // end scope
+
+   {
+      ConstraintAccess  constraints;
+
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "o,output", "i,input");
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
@@ -210,33 +246,42 @@ BOOST_AUTO_TEST_CASE( one_excludes_constraint)
    // argument with 'excluded' constraint added, found
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "o", "i,input");
-      BOOST_REQUIRE_THROW( constraints.argumentIdentified( "o,output"), runtime_error);
-
-      BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
-   } // end scope
-
-   {
-      prog_args::detail::ConstraintContainer  constraints;
-
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "output", "i,input");
-      BOOST_REQUIRE_THROW( constraints.argumentIdentified( "o,output"), runtime_error);
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "o", "i,input");
+      BOOST_REQUIRE_THROW( constraints.argumentIdentified(
+                              ArgumentKey( "o,output")),
+                           runtime_error);
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "o,output", "i,input");
-      BOOST_REQUIRE_THROW( constraints.argumentIdentified( "o,output"), runtime_error);
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "output", "i,input");
+      BOOST_REQUIRE_THROW( constraints.argumentIdentified(
+                              ArgumentKey( "o,output")),
+                           runtime_error);
 
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
 
-} // end one_excludes_constraint
+   {
+      ConstraintAccess  constraints;
+
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "o,output", "i,input");
+      BOOST_REQUIRE_THROW( constraints.argumentIdentified(
+                              ArgumentKey( "o,output")),
+                           runtime_error);
+
+      BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
+   } // end scope
+
+} // one_excludes_constraint
 
 
 
@@ -248,10 +293,12 @@ BOOST_AUTO_TEST_CASE( combinations)
    // arguments with 'exclude' and 'required' constraint added, required not used
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "o", "i,input");
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "p", "o,output");
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "o", "i,input");
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "p", "o,output");
 
       // required argument not found
       BOOST_REQUIRE_THROW( constraints.checkRequired(), runtime_error);
@@ -260,24 +307,30 @@ BOOST_AUTO_TEST_CASE( combinations)
    // arguments with 'exclude' and 'required' constraint added, required used
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "o", "i,input");
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "p", "o,output");
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "o", "i,input");
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "p", "o,output");
 
-      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( "p,port"));
+      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified(
+                                 ArgumentKey( "p,port")));
 
       // required argument not found
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
    } // end scope
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "o", "i,input");
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "p,port", "o,output");
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "o", "i,input");
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "p,port", "o,output");
 
-      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( "port"));
+      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified(
+                                 ArgumentKey( "port")));
 
       // required argument not found
       BOOST_REQUIRE_NO_THROW( constraints.checkRequired());
@@ -287,18 +340,22 @@ BOOST_AUTO_TEST_CASE( combinations)
    // excluded used
 
    {
-      prog_args::detail::ConstraintContainer  constraints;
+      ConstraintAccess  constraints;
 
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cExcluded, "o", "i,input");
-      constraints.addConstraint( prog_args::detail::ConstraintContainer::cRequired, "p", "o,output");
+      constraints.addConstraint( ConstraintContainer::Constraint::excluded,
+                                 "o", "i,input");
+      constraints.addConstraint( ConstraintContainer::Constraint::required,
+                                 "p", "o,output");
 
-      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified( "p,port"));
-      BOOST_REQUIRE_THROW( constraints.argumentIdentified( "o"), runtime_error);
+      BOOST_REQUIRE_NO_THROW( constraints.argumentIdentified(
+                                 ArgumentKey( "p,port")));
+      BOOST_REQUIRE_THROW( constraints.argumentIdentified(
+                              ArgumentKey( "o")), runtime_error);
    } // end scope
 
-} // end combinations
+} // combinations
 
 
 
-// =========================  END OF test_constraint_container.cpp  =========================
+// ==================  END OF test_constraint_container.cpp  ==================
 

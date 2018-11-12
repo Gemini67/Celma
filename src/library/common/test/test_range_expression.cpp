@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,13 +14,12 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
+// module to test header file include
+#include "celma/common/detail/range_expression.hpp"
 
 
 // C++ Standard Library includes
-#include <iostream>
+#include <string>
 
 
 // Boost includes
@@ -28,12 +27,8 @@
 #include <boost/test/unit_test.hpp>
 
 
-// project includes
-#include "celma/common/range_expression.hpp"
-
-
-using namespace std;
-using namespace celma;
+using celma::common::detail::RangeExpression;
+using std::string;
 
 
 
@@ -42,7 +37,7 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( test_single_values)
 {
 
-   common::RangeExpression  re;
+   RangeExpression  re;
 
 
    re.parseString( "2");
@@ -73,7 +68,7 @@ BOOST_AUTO_TEST_CASE( test_single_values)
    BOOST_REQUIRE( !re.hasIncrement());
    BOOST_REQUIRE( !re.hasExcludeExpr());
 
-} // end test_single_values
+} // test_single_values
 
 
 
@@ -82,7 +77,7 @@ BOOST_AUTO_TEST_CASE( test_single_values)
 BOOST_AUTO_TEST_CASE( test_simple_range)
 {
 
-   common::RangeExpression  re;
+   RangeExpression  re;
 
 
    re.parseString( "2-5");
@@ -117,7 +112,7 @@ BOOST_AUTO_TEST_CASE( test_simple_range)
    BOOST_REQUIRE( !re.hasIncrement());
    BOOST_REQUIRE( !re.hasExcludeExpr());
 
-} // end test_simple_range
+} // test_simple_range
 
 
 
@@ -126,7 +121,7 @@ BOOST_AUTO_TEST_CASE( test_simple_range)
 BOOST_AUTO_TEST_CASE( test_range_increment)
 {
 
-   common::RangeExpression  re;
+   RangeExpression  re;
 
 
    re.parseString( "1-99[2]");
@@ -165,7 +160,7 @@ BOOST_AUTO_TEST_CASE( test_range_increment)
    BOOST_REQUIRE_EQUAL( re.incrementValue(),    2);
    BOOST_REQUIRE( !re.hasExcludeExpr());
 
-} // end test_range_increment
+} // test_range_increment
 
 
 
@@ -174,7 +169,7 @@ BOOST_AUTO_TEST_CASE( test_range_increment)
 BOOST_AUTO_TEST_CASE( test_range_exclude)
 {
 
-   common::RangeExpression  re;
+   RangeExpression  re;
 
 
    re.parseString( "256-300{280}");
@@ -213,7 +208,7 @@ BOOST_AUTO_TEST_CASE( test_range_exclude)
    BOOST_REQUIRE( re.hasExcludeExpr());
    BOOST_REQUIRE_EQUAL( re.excludeExpression(), string( "400-600[2]"));
 
-} // end test_range_exclude
+} // test_range_exclude
 
 
 
@@ -222,7 +217,7 @@ BOOST_AUTO_TEST_CASE( test_range_exclude)
 BOOST_AUTO_TEST_CASE( test_range_increment_exclude)
 {
 
-   common::RangeExpression  re;
+   RangeExpression  re;
 
 
    re.parseString( "256-300[3]{280}");
@@ -235,7 +230,7 @@ BOOST_AUTO_TEST_CASE( test_range_increment_exclude)
    BOOST_REQUIRE( re.hasExcludeExpr());
    BOOST_REQUIRE_EQUAL( re.excludeExpression(), string( "280"));
 
-} // end test_range_increment_exclude
+} // test_range_increment_exclude
 
 
 
@@ -244,8 +239,8 @@ BOOST_AUTO_TEST_CASE( test_range_increment_exclude)
 BOOST_AUTO_TEST_CASE( multiple_ranges)
 {
 
-   common::RangeExpression  re;
-   string                   input( "22-30[2],33-39[2]{37},45");
+   RangeExpression  re;
+   string           input( "22-30[2],33-39[2]{37},45");
 
 
    re.parseString( input);
@@ -259,9 +254,9 @@ BOOST_AUTO_TEST_CASE( multiple_ranges)
    re.parseString( last_input);
    BOOST_REQUIRE_EQUAL( re.matchedExpression(), string( "45"));
 
-} // end multiple_ranges
+} // multiple_ranges
 
 
 
-// =========================  END OF test_project_path.cpp  =========================
+// =====  END OF test_range_expression.cpp  =====
 

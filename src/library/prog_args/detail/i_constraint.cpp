@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,24 +25,24 @@
 
 // project includes
 #include "celma/common/tokenizer.hpp"
-
-
-using namespace std;
+#include "celma/prog_args/detail/argument_key.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
 
+
+using std::runtime_error;
 
 
 /// Needed on global constraints: The list of arguments for which the
 /// constraint is defined.
 /// @return  The list arguments affected by the constraint.
 /// @since  0.2, 10.04.2016
-string& IConstraint::argumentList()
+std::string& IConstraint::argumentList()
 {
 
-   throw std::runtime_error( "should not be called");
-} // end IConstraint::argumentList
+   throw runtime_error( "should not be called");
+} // IConstraint::argumentList
 
 
 
@@ -51,8 +51,8 @@ string& IConstraint::argumentList()
 void IConstraint::validated()
 {
 
-   throw std::runtime_error( "should not be called");
-} // end IConstraint::validated
+   throw runtime_error( "should not be called");
+} // IConstraint::validated
 
 
 
@@ -62,8 +62,8 @@ void IConstraint::validated()
 void IConstraint::checkEndCondition() const
 {
 
-   throw std::runtime_error( "should not be called");
-} // end IConstraint::checkEndCondition
+   throw runtime_error( "should not be called");
+} // IConstraint::checkEndCondition
 
 
 
@@ -74,26 +74,27 @@ void IConstraint::checkEndCondition() const
 /// found on the command line.
 /// @param[in]  constraint_arg_list  The list of argument(s) for which the
 ///                                  constraint is defined.
-/// @param[in]  arg_spec             The specification of the argument just
+/// @param[in]  key                  The specification of the argument just
 ///                                  found in the argument string.
 /// @return  \c true if the specified argument is in the list of constrained
 ///          arguments.
+/// @since  0.15.0, 18.07.2017  (use ArgumentKey as parameter type)
 /// @since  0.2, 10.04.2016
-bool IConstraint::isConstraintArgument( const string& constraint_arg_list,
-                                        const string& arg_spec)
+bool IConstraint::isConstraintArgument( const std::string& constraint_arg_list,
+                                        const ArgumentKey& key)
 {
 
    common::Tokenizer  tok( constraint_arg_list, ';');
 
 
-   for (auto it : tok)
+   for (auto const& it : tok)
    {
-      if (it == arg_spec)
+      if (ArgumentKey( it) == key)
          return true;
    } // end for
 
    return false;
-} // end IConstraint::isConstraintArgument
+} // IConstraint::isConstraintArgument
 
 
 

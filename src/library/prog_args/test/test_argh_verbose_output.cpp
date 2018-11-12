@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,9 +46,9 @@ int main( int argc, char* argv[])
    } // end try
 
    exit( EXIT_SUCCESS);
-} // end main
+} // main
 
 
 
-// =========================  END OF test_argh_verbose_output.cpp  =========================
+// ===================  END OF test_argh_verbose_output.cpp  ===================
 

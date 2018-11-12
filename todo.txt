@@ -19,22 +19,6 @@ Handler:
 - Generell: 'Manual' Pages in Markdown?
 
 
-Es gibt Tools, die folgende Logik verwenden:
-
--v: Verbose
--vv: More Verbose
--vvv: Even more verbose
-
-etc.
-
-Wie setzt man das mit dem Handler um?
-
-1. Hilfsklasse die die Ziel-Variable bei jedem Aufruf hochzaehlt.
-   Vorteil: Keine Änderung am Handler.
-2. Im Handler, neue Eigenschaft
-
-Analog Punkt 2:
-
 Man koennte auch noch den Spezialfall 'zwei Ziel-Variablen' aus dem Handler
 raus nehmen und ueber eine Hilfsklasse loesen. Generell koennte man die drei
 Klassen (triple logic, two dest, increment dest) zusammenfassen in einem
@@ -57,29 +41,12 @@ Console:
 
 
 Handler:
-- In Klasse Groups eine Konstante mit dem Set der Flags, die an alle
-  prog_args::Handler uebergeben werden duerfen.
-- Wenn Argument Gruppen verwendet werden, duerfen die Destination-Variablen
-  nicht 'out of scope' gehen.
-  Idee: Klasse implementieren, die eine Variable vom entsprechenden Typ
-        speichern kann, dann dieses Object (bzw. dessen Wert) als Ziel-Variable
-        an den Gruppen-Argument-Handler uebergeben. Dann braucht es natuerlich
-        eine Klasse, die alle diese Werte-Halter speichert
-  Idee: Klasse Groups bekommt eine Methode getValueHandler()
-        (statt getArgHandler()), diese liefert ein Objekt zurueck mit
-        addArgument() Methoden, die eben keine Ziel-Variable benoetigen. Name
-        der Neuen Klasse: HandlerValues. Diese ist abgeleitet von Handler, kann
-        also von Groups gespeichert und verwendet werden. Zusaetzlich braucht
-        die Klasse auch Methoden um die Werte zu den Argumenten zurueck zu
-        geben.
-
-
-Handler:
 - Statt explizit einen Vektor fuer mehrfache Werte zu handeln, entweder den Typ
   als nicht-template Typ, aber Container, speichern, oder einen back_inserter
   als Parameter angeben
 - Bei Typen mit mehreren Werten: Test dass der gleiche Wert nicht mehrfach
   vorkommt.
+  Parameter um zu definieren dass Wiederholungen erlaubt sind?
 - In der Basisklasse TypeBase muessen alle Features, die von den verschiedenen
   Typen verwendet werden koennen, entweder als rein virtuelle Methode oder als
   virtuelle Methode die eine Exception schmeisst, vorhanden sein. Schoener waere
@@ -89,26 +56,8 @@ Handler:
 - Werte von Programm-Argumenten via Reflection in einer Struktur speichern?
 
 
-Um Tools wie z.B. das cmd Tool unterstuetzen zu koennen:
-
-Syntax:
-   cmd [options] servername [command and options]
-
-Alles nach Servername sollte fuer das Argument-Handling von 'cmd' selber
-ignoriert werden.
-
-Loesung:
-- Bei einem Argument kann 'ignore trailing arguments' gesetzt werden. Wenn
-  dieses Argument dann verwendet wird, wird der Rest der Argument-Zeile in einem
-  String gespeichert und die Iteration abgebrochen.
-- Der Argument-List-Iterator braucht eine zusaetzliche Methode: Remaining
-  Arguments, die eben die restlichen Argumente ab der Iterator-Position als
-  String zurueck gibt. Dieser String muss im geeigneten Moment abgefragt werden
-  und im Argument-Handler gespeichert werden.
-
-
 MultiValueAssign als variadic template
-
+MultiValueAssign loeschen, nur noch tuple verwenden?
  
 
 Applikations-Kommunikations-Framework
@@ -134,23 +83,9 @@ LoadBalancer
   suchen (via LB)
 
 
-Ein Log Filename muss verschiedene Komponenten enthalten (koennen):
-- Verzeichnis
-- Konstante Teile
-- Wert von Umgebungs-Variablen
-- Datum, Uhrzeit in Format xxx
-- Log File Nummer
-- User-Definierte Attribute
-
-Also braucht es ein Set von Klassen, analog den Klassen fuer das Format der Log
-Meldungen, um eben
-- Das Format des Filenamen zu definieren.
-- Die Format-Definition des Filenamens zu speichern.
-- Einen Filenamen anhand der Definition und zusaetzlichen Parametern (Datum,
-  Uhrzeit, File-Nummer etc.) zu erzeugen.
-
-Diese Klassen, sowie die Klasse/Funktion, um bestehende Log Files zu rollen,
-koennte getrennt vom Rest der Log-Library zur Verfuegung gestellt werden.
+Die Klassen, um eine (Log) Filenamen mit Pfad etc. zu definieren/erzeugen, sowie
+die Klasse/Funktion, um bestehende Log Files zu rollen, koennte getrennt vom
+Rest der Log-Library zur Verfuegung gestellt werden?
 
 
 Attribut 'log-type' fuer Log-Destinations.
@@ -159,36 +94,45 @@ Koennte in Libraries verwendet werden, um eine Log-Meldung zu einem Log (einer
 Log-Destination) mit einem bestimmten Typ zu schicken.
 
 
-Principles:
-- No error when used without initialization (log message silently discarded)
-- Log string not built when not used
-- Macro to send log message to all log destinations (all bits set)
+Handler:
+- Destination IP Adresse? IPv4? IPv8?
+- Destination Mail Adresse?
+- Destination Webseite?
 
 
-Loesung fuer das 'lokale log Properties' Problem:
+Log:
+- Titelzeile?
+- Summary?
+- Automatische Index-Erzeugung fuer
+  - Zeit (Granularitaet?)
+  - Woerter
+  - Felder aus dem Log Format?
 
-Klasse LogPrefix
 
-Wird verwendet um einen Prefix-String zu definieren, der bei jeder Log Meldung
-vor den Text eingefuegt werden soll.
-Dann kann z.B. eine Member-Variable von diesem Typ definiert werden, welche den
-Namen der Klasse enthaelt.
-Anschliessend wird dieses Objekt verwendet, um Log-Meldungen zu erzeugen,
-entweder mit print() oder Stream-Operatoren.
+Handler, Values formatieren:
+Variante 1:
+- Nur noch 1 Format pro Value Type moeglich.
+- D.h., Normale Typen, Vector etc. akzeptieren nur 1 Format
+- Tuple akzeptiert 1 Format pro Typ
+- Beim addFormat() muss der Index des Typs angegeben werden, auf den das Format
+  angewendet werden soll. Default: 0 (1. Typ/alle Typen)
 
-Konstruktoren:
-- LogPrefix( const std::string& str);
-- LogPrefix( const char* format, …);
-- LogPrefix( const LogPrefix& base_prefix, const std::string& str);
-- LogPrefix( const LogPrefix& base_prefix, const char* format, …);
+Variante 2:
+- Weiterhin mehrere Formate pro Typ moeglich
+- Statt Format-Pointer Vektor muesste ein Vektor von Vektoren von Formaten
+  verwendet werden
 
-Diese Klasse koennte auch verwendet werden um Properties zu speichern. Dann
-muesste aber ein anderer Name gesucht werden.
+Fragen:
+- Braucht es mehrere Format-Handler fuer einen Typ?
+- Oder reicht einer, und es wird eine andere Moeglichkeit geboten, mehrere
+  Format-Handler zu kombinieren?
 
-Und/Oder es gibt 3 Klassen:
-- Eine nur fuer Prefixes.
-- Eine nur fuer Properties.
-- Eine fuer beides.
 
-Jede dieser Klassen muesste natuerlich das gleiche Interface haben um Log
-Meldungen zu erzeugen.
+Handler, Constraints:
+Basisklasse IConstraint aufteilen in 2 Klassen, 1 fuer Constraints die durch die
+Verwendung eines Arguments gesetzt werden, und 1 fuer Constraints die im Handler
+gesetzt werden.
+Namen?
+- IArgConstraint
+- IHandlerConstraint
+

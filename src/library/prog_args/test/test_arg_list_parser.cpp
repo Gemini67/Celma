@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,34 +14,41 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
-
-// STL includes
-#include <string>
-#include <iostream>
+// module to test header file include
+#include "celma/prog_args/detail/arg_list_parser.hpp"
 
 
 // Boost includes
-#define BOOST_TEST_MODULE ArgumentHandlerTest
+#define BOOST_TEST_MODULE ArgListParserTest
 #include <boost/test/unit_test.hpp>
 
 
 // project includes
-#include "celma/prog_args/detail/arg_list_parser.hpp"
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::appl::ArgString2Array;
+using celma::prog_args::detail::ArgListElement;
+using celma::prog_args::detail::ArgListParser;
 
 
-// module definitions
-typedef std::vector< std::string>  StringVec;
+BOOST_TEST_DONT_PRINT_LOG_VALUE( ArgListElement::ElementType)
+
+
+
+/// Single dash as only argument leads to an error.
+///
+/// @since  1.14.0, 05.10.2018
+BOOST_AUTO_TEST_CASE( error_single_dash_only)
+{
+
+   const ArgString2Array  as2a( "-", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+
+
+   BOOST_REQUIRE_THROW( alp.cbegin(), std::runtime_error);
+
+} // error_single_dash_only
 
 
 
@@ -50,18 +57,18 @@ typedef std::vector< std::string>  StringVec;
 BOOST_AUTO_TEST_CASE( single_char)
 {
 
-   common::ArgString2Array           as2a( "-v", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-v", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end single_char
+} // single_char
 
 
 
@@ -70,24 +77,24 @@ BOOST_AUTO_TEST_CASE( single_char)
 BOOST_AUTO_TEST_CASE( two_single_char)
 {
 
-   common::ArgString2Array           as2a( "-lv", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-lv", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end two_single_char
+} // two_single_char
 
 
 
@@ -96,24 +103,44 @@ BOOST_AUTO_TEST_CASE( two_single_char)
 BOOST_AUTO_TEST_CASE( two_single_char_sep)
 {
 
-   common::ArgString2Array           as2a( "-l -v", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-l -v", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end two_single_char_sep
+} // two_single_char_sep
+
+
+
+/// A single dash in the argument list leads to an error.
+///
+/// @since  1.14.0, 05.10.2018
+BOOST_AUTO_TEST_CASE( error_single_dash)
+{
+
+   const ArgString2Array  as2a( "-l - -v", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
+
+
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
+
+   BOOST_REQUIRE_THROW( ++it, std::runtime_error);
+
+} // error_single_dash
 
 
 
@@ -122,30 +149,30 @@ BOOST_AUTO_TEST_CASE( two_single_char_sep)
 BOOST_AUTO_TEST_CASE( three_single_char)
 {
 
-   common::ArgString2Array           as2a( "-lva", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-lva", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end three_single_char
+} // three_single_char
 
 
 
@@ -154,30 +181,30 @@ BOOST_AUTO_TEST_CASE( three_single_char)
 BOOST_AUTO_TEST_CASE( three_single_char_sep)
 {
 
-   common::ArgString2Array           as2a( "-l -v -a", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-l -v -a", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end three_single_char_sep
+} // three_single_char_sep
 
 
 
@@ -186,30 +213,30 @@ BOOST_AUTO_TEST_CASE( three_single_char_sep)
 BOOST_AUTO_TEST_CASE( three_single_char_mixed1)
 {
 
-   common::ArgString2Array           as2a( "-lv -a", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-lv -a", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end three_single_char_mixed1
+} // three_single_char_mixed1
 
 
 
@@ -218,24 +245,24 @@ BOOST_AUTO_TEST_CASE( three_single_char_mixed1)
 BOOST_AUTO_TEST_CASE( three_single_char_mixed2)
 {
 
-   common::ArgString2Array           as2a( "-l -va", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-l -va", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
@@ -250,18 +277,18 @@ BOOST_AUTO_TEST_CASE( three_single_char_mixed2)
 BOOST_AUTO_TEST_CASE( single_long)
 {
 
-   common::ArgString2Array           as2a( "--verbose", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--verbose", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verbose");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end single_long
+} // single_long
 
 
 
@@ -270,24 +297,24 @@ BOOST_AUTO_TEST_CASE( single_long)
 BOOST_AUTO_TEST_CASE( two_long)
 {
 
-   common::ArgString2Array           as2a( "--verbose --careful", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--verbose --careful", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verbose");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "careful");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end two_long
+} // two_long
 
 
 
@@ -296,54 +323,54 @@ BOOST_AUTO_TEST_CASE( two_long)
 BOOST_AUTO_TEST_CASE( short_long)
 {
 
-   common::ArgString2Array           as2a( "-v --verbose -s0l --careful -x", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-v --verbose -s0l --careful -x", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verbose");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 's');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, '0');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "careful");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'x');
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end two_long
+} // two_long
 
 
 
@@ -352,24 +379,24 @@ BOOST_AUTO_TEST_CASE( short_long)
 BOOST_AUTO_TEST_CASE( short_value)
 {
 
-   common::ArgString2Array           as2a( "-f filename", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-f filename", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end short_value
+} // short_value
 
 
 
@@ -378,24 +405,24 @@ BOOST_AUTO_TEST_CASE( short_value)
 BOOST_AUTO_TEST_CASE( long_value)
 {
 
-   common::ArgString2Array           as2a( "--inputfile filename", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--inputfile filename", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end long_value
+} // long_value
 
 
 
@@ -404,36 +431,36 @@ BOOST_AUTO_TEST_CASE( long_value)
 BOOST_AUTO_TEST_CASE( two_long_value)
 {
 
-   common::ArgString2Array           as2a( "--verboselevel 8 --inputfile=filename", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--verboselevel 8 --inputfile=filename", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verboselevel");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "8");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end two_long_value
+} // two_long_value
 
 
 
@@ -442,48 +469,48 @@ BOOST_AUTO_TEST_CASE( two_long_value)
 BOOST_AUTO_TEST_CASE( three_long_value)
 {
 
-   common::ArgString2Array           as2a( "--verboselevel 8 --inputfile=filename --another=attempt", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--verboselevel 8 --inputfile=filename --another=attempt", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verboselevel");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "8");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "another");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "attempt");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end three_long_value
+} // three_long_value
 
 
 
@@ -492,60 +519,60 @@ BOOST_AUTO_TEST_CASE( three_long_value)
 BOOST_AUTO_TEST_CASE( short_long_long_short)
 {
 
-   common::ArgString2Array           as2a( "-i input --outputfile filename --filter=everything -q always", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-i input --outputfile filename --filter=everything -q always", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'i');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "input");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "outputfile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filter");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "everything");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'q');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "always");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end short_long_long_short
+} // short_long_long_short
 
 
 
@@ -554,18 +581,18 @@ BOOST_AUTO_TEST_CASE( short_long_long_short)
 BOOST_AUTO_TEST_CASE( single_value)
 {
 
-   common::ArgString2Array           as2a( "my_value", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "my_value", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "my_value");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end single_value
+} // single_value
 
 
 
@@ -574,30 +601,30 @@ BOOST_AUTO_TEST_CASE( single_value)
 BOOST_AUTO_TEST_CASE( short_value_value)
 {
 
-   common::ArgString2Array           as2a( "-f value my_value", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-f value my_value", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "value");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "my_value");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end short_value_value
+} // short_value_value
 
 
 
@@ -607,30 +634,30 @@ BOOST_AUTO_TEST_CASE( short_value_value)
 BOOST_AUTO_TEST_CASE( long_eq_value_value)
 {
 
-   common::ArgString2Array           as2a( "--longarg=value my_value", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--longarg=value my_value", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "longarg");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "value");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "my_value");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end long_eq_value_value
+} // long_eq_value_value
 
 
 
@@ -639,24 +666,24 @@ BOOST_AUTO_TEST_CASE( long_eq_value_value)
 BOOST_AUTO_TEST_CASE( multiple_pos_values)
 {
 
-   common::ArgString2Array           as2a( "my_value other_value", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "my_value other_value", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "my_value");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "other_value");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end multiple_pos_values
+} // multiple_pos_values
 
 
 
@@ -665,29 +692,29 @@ BOOST_AUTO_TEST_CASE( multiple_pos_values)
 BOOST_AUTO_TEST_CASE( multiple_pos_values_numbers)
 {
 
-   common::ArgString2Array           as2a( "42 4711 90125", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "42 4711 90125", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "42");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "4711");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "90125");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end multiple_pos_values_numbers
+} // multiple_pos_values_numbers
 
 
 
@@ -696,24 +723,24 @@ BOOST_AUTO_TEST_CASE( multiple_pos_values_numbers)
 BOOST_AUTO_TEST_CASE( short_dashed_value)
 {
 
-   common::ArgString2Array           as2a( "-f -- -minusfile", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-f -- -minusfile", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "-minusfile");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end short_dashed_value
+} // short_dashed_value
 
 
 
@@ -722,24 +749,24 @@ BOOST_AUTO_TEST_CASE( short_dashed_value)
 BOOST_AUTO_TEST_CASE( long_dashed_value)
 {
 
-   common::ArgString2Array           as2a( "--filename -- -minusfile", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--filename -- -minusfile", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "-minusfile");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end long_dashed_value
+} // long_dashed_value
 
 
 
@@ -749,24 +776,24 @@ BOOST_AUTO_TEST_CASE( long_dashed_value)
 BOOST_AUTO_TEST_CASE( long_equal_dashed_value)
 {
 
-   common::ArgString2Array           as2a( "--filename=-minusfile", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--filename=-minusfile", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "-minusfile");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end long_equal_dashed_value
+} // long_equal_dashed_value
 
 
 
@@ -775,54 +802,54 @@ BOOST_AUTO_TEST_CASE( long_equal_dashed_value)
 BOOST_AUTO_TEST_CASE( control)
 {
 
-   common::ArgString2Array           as2a( "--filter plus ( ! --filter minus )", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "--filter plus ( ! --filter minus )", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filter");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "plus");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etControl);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::control);
    BOOST_REQUIRE_EQUAL( it->mArgChar, '(');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etControl);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::control);
    BOOST_REQUIRE_EQUAL( it->mArgChar, '!');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filter");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "minus");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etControl);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::control);
    BOOST_REQUIRE_EQUAL( it->mArgChar, ')');
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end control
+} // control
 
 
 
@@ -832,22 +859,22 @@ BOOST_AUTO_TEST_CASE( control)
 BOOST_AUTO_TEST_CASE( multiple_iterators)
 {
 
-   common::ArgString2Array           as2a( "-a --long1 -b value --long2=value -c -def value --extra value value", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   int                               numArgs = 0;
+   const ArgString2Array  as2a( "-a --long1 -b value --long2=value -c -def value --extra value value", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   int                    numArgs = 0;
 
 
    for (auto it = alp.cbegin(); it != alp.cend(); ++it)
    {
       int  numArgs2 = numArgs;
-      for (prog_args::detail::ArgListParser::const_iterator it2 = it; it2 != alp.cend(); ++it2)
+      for (ArgListParser::const_iterator it2 = it; it2 != alp.cend(); ++it2)
       {
          ++numArgs2;
       } // end for
       BOOST_REQUIRE_EQUAL( numArgs2, 14);
 
       int  numArgs3 = 0;
-      for (prog_args::detail::ArgListParser::const_iterator it3 = alp.cbegin(); it3 != alp.cend(); it3++)
+      for (ArgListParser::const_iterator it3 = alp.cbegin(); it3 != alp.cend(); it3++)
       {
          ++numArgs3;
       } // end for
@@ -858,7 +885,7 @@ BOOST_AUTO_TEST_CASE( multiple_iterators)
 
    BOOST_REQUIRE_EQUAL( numArgs, 14);
 
-} // end multiple_iterators
+} // multiple_iterators
 
 
 
@@ -867,71 +894,71 @@ BOOST_AUTO_TEST_CASE( multiple_iterators)
 BOOST_AUTO_TEST_CASE( value_after_arg)
 {
 
-   common::ArgString2Array           as2a( "-ffilename -f filename -f --nofile -affilename", nullptr);
-   prog_args::detail::ArgListParser  alp( as2a.mArgc, as2a.mpArgv);
-   auto                              it = alp.cbegin();
+   const ArgString2Array  as2a( "-ffilename -f filename -f --nofile -affilename", nullptr);
+   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto                   it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    it.remArgStrAsVal();
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    it.remArgStrAsVal();
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    it.remArgStrAsVal();
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etStringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "nofile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etSingleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    it.remArgStrAsVal();
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, prog_args::detail::ArgListElement::etValue);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it == alp.cend());
 
-} // end value_after_arg
+} // value_after_arg
 
 
 
-// =========================  END OF test_arg_list_parser.cpp  =========================
+// =====  END OF test_arg_list_parser.cpp  =====

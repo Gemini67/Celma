@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,46 +28,54 @@ namespace celma { namespace format {
 
 /// Helper class for using vasprintf() and make sure that the buffer is always
 /// deallocated again.
+///
 /// @since  0.2, 08.04.2016
 class AutoSprintf
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  format  The format string.
    /// @param[in]  ...     Additional parameters for the string formatting.
    /// @throw  CelmaRuntimeError when the string formatting failed.
    /// @since  0.2, 08.04.2016
-   AutoSprintf( const char* format, ...);
+   AutoSprintf( const char* format, ...) noexcept( false);
 
    /// Constructor for passing a pre-processed argument list.<br>
    /// Make sure that the format string is a std::string object to make sure
    /// this constructor is called.
+   ///
    /// @param[in]  format  The format string as std::string object.
    /// @param[in]  ap      Additional parameters for the string formatting.
    /// @throw  SixRuntimeError when the string formatting failed.
    /// @since  0.7, 08.11.2016
-   AutoSprintf( const std::string& format, va_list ap);
+   AutoSprintf( const std::string& format, va_list ap) noexcept( false);
 
    /// Destructor, ensures that the buffer is free'd again.
+   ///
    /// @since  0.2, 08.04.2016
    ~AutoSprintf();
 
    /// Returns the formatted string.
+   ///
    /// @return  The formatted string.
    /// @since  0.2, 08.04.2016
    operator const char*() const;
 
    /// Returns the formatted string.
+   ///
    /// @return  The formatted string.
    /// @since  0.2, 08.04.2016
    const char* c_str() const;
 
    /// Returns the length of the formatted string.
+   ///
    /// @return  The length of the string.
    /// @since  0.2, 08.04.2016
    operator int() const;
 
    /// Returns the length of the formatted string.
+   ///
    /// @return  The length of the string.
    /// @since  0.2, 08.04.2016
    int length() const;
@@ -124,5 +132,5 @@ inline int AutoSprintf::length() const
 #endif   // CELMA_FORMAT_AUTO_SPRINTF_HPP
 
 
-// =========================  END OF auto_sprintf.hpp  =========================
+// =====  END OF auto_sprintf.hpp  =====
 

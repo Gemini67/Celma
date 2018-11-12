@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,16 +34,24 @@ namespace detail {
 
 /// Helper class to store an argument handler object that handles a sub-group of
 /// arguments.
+/// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
+///                             arguments)
 /// @since  0.2, 10.04.2016
 class TypedArgSubGroup: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  arg_spec  The complete argument specification with short and/
-   ///                       or long argument.
-   /// @param[in]  ah_obj    The argument handler object.
+   /// @param[in]  key     The complete argument specification with short and/or
+   ///                     long argument.
+   /// @param[in]  ah_obj  The argument handler object.
    /// @since  0.2, 10.04.2016
-   TypedArgSubGroup( const std::string& arg_spec, Handler* ah_obj);
+   TypedArgSubGroup( const ArgumentKey& key, Handler& ah_obj);
+
+   /// Returns "subgroup".
+   ///
+   /// @return  Constant string "subgroup".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Required by framework, does nothing except setting the #mWasCalled flag.
    /// @since  0.2, 10.04.2016
@@ -54,6 +62,16 @@ public:
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
+   /// Should not be called. Prints the text "subgroup".
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
    /// Returns the argument handler object.
    /// @return  The object stored internally.
    /// @since  0.2, 10.04.2016
@@ -61,7 +79,7 @@ public:
 
 private:
    /// The argument handler object.
-   Handler*  mpArgHandler;
+   Handler&  mArgHandler;
    /// Flag set when the function is called.
    bool      mWasCalled;
 
@@ -75,13 +93,19 @@ private:
 inline bool TypedArgSubGroup::hasValue() const
 {
    return mWasCalled;
-} // end TypedArgSubGroup::hasValue
+} // TypedArgSubGroup::hasValue
+
+
+inline void TypedArgSubGroup::printValue( std::ostream&, bool) const
+{
+   // will never be called
+} // TypedArgSubGroup::printValue
 
 
 inline Handler* TypedArgSubGroup::obj() const
 {
-   return mpArgHandler;
-} // end TypedArgSubGroup::obj
+   return &mArgHandler;
+} // TypedArgSubGroup::obj
 
 
 } // namespace detail
@@ -92,5 +116,5 @@ inline Handler* TypedArgSubGroup::obj() const
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_SUB_GROUP_HPP
 
 
-// =====================  END OF typed_arg_sub_group.hpp  =====================
+// =====  END OF typed_arg_sub_group.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,68 +22,53 @@
 // STL includes
 #include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 
 // project includes
 #include "celma/format/text_block.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
-
-
-using namespace std;
 
 
 namespace celma { namespace prog_args { namespace detail {
 
 
+using std::string;
+
+
+
 /// Constructor.
+/// @param[in]  usage_params  The object that contains the parameters for
+///                           printing the usage.
+/// @since  1.1.0, 21.11.2017  (added paramater arg_desc_params)
 /// @since  0.2, 10.04.2016
-ArgumentDesc::ArgumentDesc():
+ArgumentDesc::ArgumentDesc( shared_usage_params_t& usage_params):
+   mpUsageParams( usage_params),
    mIndention( IndentLength, ' '),
    mArguments(),
-   mMaxArgLen( 0),
    mCaptionMandatory( "Mandatory arguments:"),
-   mCaptionOptional( "Optional arguments:"),
-   mLineLength( DefaultLineLength),
-   mPrintHidden( false)
+   mCaptionOptional( "Optional arguments:")
 {
-} // end ArgumentDesc::ArgumentDesc
+} // ArgumentDesc::ArgumentDesc
 
 
 
 /// Adds an argument.
-/// @param[in]  argSpec  The string with the arguments (character, long
-///                      format).
-/// @param[in]  argDesc  The string with the description.
-/// @param[in]  argObj   Pointer to the object that handles this argument.
+/// @param[in]  arg_desc  The string with the description.
+/// @param[in]  arg_obj   Pointer to the object that handles this argument.
+/// @since  1.1.0, 17.11.2017  (removed key parameter, object may not be NULL
+///         anymore)
 /// @since  0.2, 10.04.2016
-void ArgumentDesc::addArgument( const string& argSpec, const string& argDesc,
-                                TypedArgBase* argObj)
+void ArgumentDesc::addArgument( const string& arg_desc, TypedArgBase* arg_obj)
 {
 
-   string             argSpecDashed( argSpec);
-   string::size_type  pos = argSpecDashed.find_first_of( ',');
+   assert( arg_obj != nullptr);
 
+   mArguments.push_back( ArgDesc( arg_desc, arg_obj));
 
-   if (pos == string::npos)
-   {
-      // no comma: short or long?
-      if (argSpecDashed.length() == 1)  argSpecDashed.insert( 0, "-");
-      else                              argSpecDashed.insert( 0, "--");
-   } else
-   {
-      // with comma: short and long
-      argSpecDashed.insert( pos + 1, "--");
-      argSpecDashed.insert( 0,       "-");
-   } // end if
-
-   if (argSpecDashed.length() > mMaxArgLen)
-      mMaxArgLen = argSpecDashed.length();
-
-   ArgDesc  ad( argSpecDashed, argDesc, argObj);
-
-   mArguments.push_back( ad);
-
-} // end ArgumentDesc::addArgument
+} // ArgumentDesc::addArgument
 
 
 
@@ -104,7 +89,7 @@ void ArgumentDesc::setCaption( const char* mandatory, const char* optional)
    if (optional != nullptr)
       mCaptionOptional.assign( optional);
 
-} // end ArgumentDesc::setCaption
+} // ArgumentDesc::setCaption
 
 
 
@@ -116,46 +101,62 @@ void ArgumentDesc::setLineLength( int useLen)
 {
 
    if ((useLen < 60) || (useLen >= 240))
-      throw runtime_error( "Line length must be in the range 60..240");
+      throw std::runtime_error( "Line length must be in the range 60..240");
 
    mLineLength = useLen;
 
-} // end ArgumentDesc::setLineLength
+} // ArgumentDesc::setLineLength
 
 
 
 /// Prints the contents of the storage to the specified stream.
 /// @param[out]  os  the stream to write to.
 /// @since  0.2, 10.04.2016
-void ArgumentDesc::print( ostream& os) const
+void ArgumentDesc::print( std::ostream& os) const
 {
+
+   size_t  max_length = 0;
+
+
+   for (auto const& arg_desc : mArguments)
+   {
+      if (!arg_desc.doPrint( true, mpUsageParams->printHidden(),
+                             mpUsageParams->printDeprecated(),
+                             mpUsageParams->contents())
+          && !arg_desc.doPrint( false, mpUsageParams->printHidden(),
+                                mpUsageParams->printDeprecated(),
+                                mpUsageParams->contents()))
+         continue;  // for
+
+      max_length = std::max( max_length, arg_desc.key( mpUsageParams->contents()).length());
+   } // end for
 
    bool  printIsMandatory = true;
    int   printed[ 2] = { 0, 0};
 
-
    for (int printLoop = 0; printLoop < 2; ++printLoop)
    {
-      if (mMaxArgLen < MaxNameLength)
+      if (max_length < MaxNameLength)
       {
-         format::TextBlock  tb( 2 * IndentLength + mMaxArgLen, mLineLength, false);
+         format::TextBlock  tb( 2 * IndentLength + max_length, mLineLength, false);
 
-         printArguments( tb, printIsMandatory, printed, true, os);
+         printArguments( os, tb, printIsMandatory, printed, true, max_length);
       } else
       {
          format::TextBlock  tb( 2 * IndentLength, mLineLength, true);
 
-         printArguments( tb, printIsMandatory, printed, false, os);
+         printArguments( os, tb, printIsMandatory, printed, false, max_length);
       } // end if
 
       printIsMandatory = !printIsMandatory;
    } // end for
 
-} // end ArgumentDesc::print
+} // ArgumentDesc::print
 
 
 
 /// Finally prints the arguments.
+/// @param[out]  os                The stream to write to.
 /// @param[in]   tb                The object used to format the description
 ///                                of the parameters.
 /// @param[in]   printIsMandatory  Specifies if the mandatory (\c true) or
@@ -167,15 +168,20 @@ void ArgumentDesc::print( ostream& os) const
 ///                                description should be printed on the same
 ///                                line, \c false otherwise (printed on two
 ///                                lines).
-/// @param[out]  os                The stream to write to.
+/// @param[in]   max_length        The maximum length of all arguments.
 /// @since  0.2, 10.04.2016
-void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
-                                   int* printed, bool sameLine, ostream& os) const
+void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
+   bool printIsMandatory, int* printed, bool sameLine, int max_length) const
 {
+
+   using std::endl;
 
    for (size_t i = 0; i < mArguments.size(); ++i)
    {
-      if (!mArguments[ i].doPrint( printIsMandatory, mPrintHidden))
+      if (!mArguments[ i].doPrint( printIsMandatory,
+          mpUsageParams->printHidden(),
+          mpUsageParams->printDeprecated(),
+          mpUsageParams->contents()))
          continue;   // for
 
       if (printed[ printIsMandatory] == 0)
@@ -192,31 +198,73 @@ void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
       } // end if
 
       if (sameLine)
-         os << mIndention << setw( mMaxArgLen) << left
-            << mArguments[ i].mArgSpec << mIndention;
+         os << mIndention << std::setw( max_length) << std::left
+            << mArguments[ i].key( mpUsageParams->contents()) << mIndention;
       else
-         os << mIndention << left << mArguments[ i].mArgSpec << endl;
+         os << mIndention << std::left
+            << mArguments[ i].key( mpUsageParams->contents())
+            << endl;
 
       // if the destination variable contains the default value for an optional
       // argument, add this to the usage
-      if ((mArguments[ i].mpArgObj != nullptr) &&
-          !mArguments[ i].mpArgObj->isMandatory() &&
-          mArguments[ i].mpArgObj->printDefault())
+      auto  descCopy( mArguments[ i].mDescription);
+      if (!mArguments[ i].mpArgObj->isMandatory()
+          && mArguments[ i].mpArgObj->printDefault())
       {
-         string  descCopy( mArguments[ i].mDescription);
          descCopy.append( "\nDefault value: ");
-         mArguments[ i].mpArgObj->defaultValue( descCopy);
-         tb.format( os, descCopy);
-      } else
-      {
-         tb.format( os, mArguments[ i].mDescription);
+         mArguments[ i].mpArgObj->defaultValue(descCopy);
       } // end if
+      if (mArguments[ i].mpArgObj->hasCheck())
+      {
+         descCopy.append( "\nCheck: ")
+            .append( mArguments[ i].mpArgObj->checkStr());
+      } // end if
+      if (mArguments[ i].mpArgObj->hasConstraint())
+      {
+         descCopy.append( "\nConstraint: ")
+            .append( mArguments[ i].mpArgObj->constraintStr());
+      } // end if
+
+      if (mArguments[ i].mpArgObj->isDeprecated())
+      {
+         if (mArguments[ i].mpArgObj->isReplaced())
+            descCopy.append( "\n[replaced by '")
+               .append( mArguments[ i].mpArgObj->replacedBy()).append( "']");
+         else
+            descCopy.append( "\n[deprecated]");
+      } // end if
+      if (mArguments[ i].mpArgObj->isHidden())
+         descCopy.append( "\n[hidden]");
+
+      tb.format( os, descCopy);
       os  << endl;
 
       ++printed[ printIsMandatory];
    } // end for
 
-} // end ArgumentDesc::printArguments
+} // ArgumentDesc::printArguments
+
+
+
+/// Returns the description (usage) text for the given argument.
+///
+/// @param[in]  arg_key
+///    The short and/or long argument to return the description for.
+/// @return
+///    Either the description or an empty string.
+/// @since
+///    1.14.0, 01.10.2018
+const string ArgumentDesc::getArgDesc( const ArgumentKey& arg_key) const
+{
+
+   for (auto const& entry : mArguments)
+   {
+      if (entry.mpArgObj->key() == arg_key)
+         return entry.mDescription;
+   } // end for
+
+   return string();
+} // ArgumentDesc::getArgDesc
 
 
 
@@ -225,33 +273,72 @@ void ArgumentDesc::printArguments( format::TextBlock& tb, bool printIsMandatory,
 /// @param[in]   ad  The object to dump the contents of the storage of.
 /// @return  The stream as passed as parameter.
 /// @since  0.2, 10.04.2016
-ostream& operator <<( ostream& os, const ArgumentDesc& ad)
+std::ostream& operator <<( std::ostream& os, const ArgumentDesc& ad)
 {
 
    ad.print( os);
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
 /// Returns if this entry should be printed in the usage now.
-/// @param[in]  printIsMandatory  Specifies if only mandatory (\c true)
-///                               parameters should be printed or all.
-/// @param[in]  printHidden       Specifies if hidden parameters should be
-///                               printed or not.
-/// @return  \c true if mandatory parameters are requested and this
-///          parameter is mandatory, or if non-mandatory (optional)
-///          parameters are requested and this parameter is not mandatory,
-///          and when hidden parameters may be printed or this parameter is
-///          is not hidden.
-/// @since  0.2, 10.04.2016
-bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden) const
+/// @param[in]  printIsMandatory
+///    Specifies if only mandatory (\c true) parameters should be printed
+///    or all.
+/// @param[in]  printHidden
+///    Specifies if hidden parameters should be printed or not.
+/// @param[in]  print_deprecated
+///    Specifies if deprecated parameters should be printed or not.
+/// @param[in]  usage_contents
+///    Specifies which arguments to print.
+/// @return
+///    \c true if the current argument should be printed in the usage with
+///    the given parameters.
+/// @since
+///    0.2, 10.04.2016
+bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden,
+   bool print_deprecated, UsageParams::Contents usage_contents) const
 {
-   return ((printIsMandatory  && (mpArgObj != nullptr) && mpArgObj->isMandatory()) ||
-           (!printIsMandatory && ((mpArgObj == nullptr) || !mpArgObj->isMandatory()))) &&
-          (printHidden || (mpArgObj == nullptr) || !mpArgObj->isHidden());
-} // end ArgumentDesc::ArgDesc::doPrint
+
+   return (printIsMandatory == mpArgObj->isMandatory())
+          && (printHidden || !mpArgObj->isHidden())
+          && (print_deprecated || !mpArgObj->isDeprecated())
+          && ((usage_contents == UsageParams::Contents::all)
+              || ((usage_contents == UsageParams::Contents::shortOnly)
+                  && mpArgObj->key().hasCharArg())
+              || ((usage_contents == UsageParams::Contents::longOnly)
+                  && mpArgObj->key().hasStringArg()));
+} // ArgumentDesc::ArgDesc::doPrint
+
+
+
+/// Returns the key string of the argument with the specified contents.
+/// @param[in]  usage_contents  Contents of the key string to return.
+/// @return  The key string with the given contents.
+/// @since  1.1.0, 20.11.2017
+string ArgumentDesc::ArgDesc::key( UsageParams::Contents usage_contents) const
+{
+
+   if (usage_contents == UsageParams::Contents::all)
+   {
+      std::ostringstream  os;
+      os << format::toString( mpArgObj->key());
+      return os.str();
+   } // end if
+
+   if (usage_contents == UsageParams::Contents::shortOnly)
+   {
+      string  result( "-");
+      result.append( 1, mpArgObj->key().argChar());
+      return result;
+   } // end if
+
+   string  result( "--");
+   result.append( mpArgObj->key().argString());
+   return result;
+} // ArgumentDesc::ArgDesc::key
 
 
 
@@ -260,5 +347,5 @@ bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden) co
 } // namespace celma
 
 
-// =========================  END OF argument_desc.cpp  =========================
+// =====  END OF argument_desc.cpp  =====
 

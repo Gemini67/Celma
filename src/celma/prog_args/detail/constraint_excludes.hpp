@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,6 +27,8 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Constraint: Argument forbids to use some other argument(s).
+/// @since  0.15.0, 05.07.2017  (use Storage<> internally, pass argument keys as
+///                             ArgumentKey objects)
 /// @since  0.2, 10.04.2016
 class ConstraintExcludes: public IConstraint
 {
@@ -37,11 +39,20 @@ public:
    ///                         argument(s).
    /// @since  0.2, 10.04.2016
    explicit ConstraintExcludes( const std::string& reqArgSpec);
+
+   /// Empty, virtual destructor.
+   /// @since  1.14.0, 02.10.2018
+   virtual ~ConstraintExcludes() = default;
    
    /// Adds the 'exludes' constraint to the current argument handler.
-   /// @param[in]  sourceArg  The argument that sets this constraint.
+   /// @param[in]  key  The argument that sets this constraint.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg) override;
+   virtual void executeConstraint( const ArgumentKey& key) override;
+
+   /// Returns a text description of the constraint.
+   /// @return  A string with the text description of the constraint.
+   /// @since  0.16.0, 15.08.2017
+   virtual std::string toString() const override;
 
 private:
    /// The argument specification of the other, forbidden argument(s).
@@ -66,7 +77,7 @@ private:
 inline detail::IConstraint* excludes( const std::string& argSpec)
 {
    return new detail::ConstraintExcludes( argSpec);
-} // end excludes
+} // excludes
 
 
 } // namespace prog_args
@@ -76,5 +87,5 @@ inline detail::IConstraint* excludes( const std::string& argSpec)
 #endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_EXCLUDES_HPP
 
 
-// =====================  END OF constraint_excludes.hpp  =====================
+// =====  END OF constraint_excludes.hpp  =====
 

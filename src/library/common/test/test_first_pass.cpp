@@ -14,6 +14,10 @@
 --*/
 
 
+// module to test header file include
+#include "celma/common/first_pass.hpp"
+
+
 // OS/C lib includes
 #include <unistd.h>
 #include <cstdlib>
@@ -28,15 +32,9 @@
 // Boost includes
 #define BOOST_TEST_MODULE FirstPassTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
-// project includes
-#include "celma/common/first_pass.hpp"
-
-
-using namespace std;
-using namespace celma;
+using celma::common::FirstPass;
 
 
 /// All tests for the class FirstPass.
@@ -46,7 +44,7 @@ BOOST_AUTO_TEST_CASE( first_pass)
 
    
    {
-      common::FirstPass  first;
+      FirstPass  first;
 
       // first the value is true
       BOOST_REQUIRE( static_cast< bool>( first));
@@ -57,7 +55,7 @@ BOOST_AUTO_TEST_CASE( first_pass)
    } // end scope
 
    {
-      common::FirstPass  first;
+      FirstPass  first;
 
       // first the value is true
       BOOST_REQUIRE( !first == false);
@@ -68,8 +66,8 @@ BOOST_AUTO_TEST_CASE( first_pass)
    } // end scope
 
    {
-      common::FirstPass  first;
-      ostringstream      oss;
+      FirstPass           first;
+      std::ostringstream  oss;
 
       oss << first;
       BOOST_REQUIRE_EQUAL( oss.str(), "true");

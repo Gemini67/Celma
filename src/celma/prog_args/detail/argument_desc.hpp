@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 #include "celma/format/text_block_fwd.hpp"
+#include "celma/prog_args/detail/argument_key.hpp"
+#include "celma/prog_args/detail/usage_params.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -33,6 +35,11 @@ class TypedArgBase;
 
 /// Provides storage for all arguments (specifyer plus description).<br>
 /// This is used to print the usage.
+///
+/// @since  1.1.0, 04.12.2017
+///    (use new class to store the argument dexcriptions)
+/// @since  0.15.0, 17.07.2017
+///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
 class ArgumentDesc
 {
@@ -48,29 +55,19 @@ public:
    static const unsigned int  IndentLength = 3;
 
    /// Constructor.
+   /// @param[in]  usage_params  The object that contains the parameters for
+   ///                           printing the usage.
+   /// @since  1.1.0, 21.11.2017  (added paramater arg_desc_params)
    /// @since  0.2, 10.04.2016
-   ArgumentDesc();
+   ArgumentDesc( shared_usage_params_t& usage_params);
 
    /// Adds an argument.
-   /// @param[in]  argSpec  The string with the arguments (character, long
-   ///                      format).
-   /// @param[in]  argDesc  The string with the description.
-   /// @param[in]  argObj   Pointer to the object that handles this argument.
+   /// @param[in]  arg_desc  The string with the description.
+   /// @param[in]  arg_obj   Pointer to the object that handles this argument.
+   /// @since  1.1.0, 17.11.2017  (removed key parameter, object may not be NULL
+   ///         anymore)
    /// @since  0.2, 10.04.2016
-   void addArgument( const std::string& argSpec, const std::string& argDesc,
-                     TypedArgBase* argObj = nullptr);
-
-   /// Makes sure that the argument specification length (in #mMaxArgLen) is at
-   /// least \a minLen characters.
-   /// @param[in]  minLen  Minimum number of characters to set as arg spec len.
-   /// @since  0.2, 10.04.2016
-   void setMinArgLen( size_t minLen);
-
-   /// Returns the argument specification length as stored in #mMaxArgLen.
-   /// @return  The maximum argument specification length to use for formatting
-   ///          the output.
-   /// @since  0.2, 10.04.2016
-   size_t maxArgLen() const;
+   void addArgument( const std::string& argDesc, TypedArgBase* argObj);
 
    /// Can be used to modify the captions (titel) written before the
    /// mandatory and/or optional arguments.<br>
@@ -88,10 +85,15 @@ public:
    /// @since  0.2, 10.04.2016
    void setLineLength( int useLen);
 
-   /// Specifies if hidden arguments should be printed or not.
-   /// @param[in]  do_print  \c true = print hidden arguments.
-   /// @since  0.2, 10.04.2016
-   void setPrintHidden( bool do_print);
+   /// Returns the description (usage) text for the given argument.
+   ///
+   /// @param[in]  arg_key
+   ///    The short and/or long argument to return the description for.
+   /// @return
+   ///    Either the description or an empty string.
+   /// @since
+   ///    1.14.0, 01.10.2018
+   const std::string getArgDesc( const ArgumentKey& arg_key) const;
 
    /// Prints the contents of the storage to the specified stream.
    /// @param[out]  os  the stream to write to.
@@ -107,36 +109,42 @@ private:
    {
    public:
       /// Constructor.
-      /// @param[in]  argSpec  The string with the arguments (character, long format).
-      /// @param[in]  argDesc  The string with the description.
-      /// @param[in]  argObj   Pointer to the object that handles this argument.
+      /// @param[in]  arg_desc  The string with the description.
+      /// @param[in]  arg_obj   Pointer to the object that handles this argument.
       /// @since  0.2, 10.04.2016
-      ArgDesc( const std::string& argSpec, const std::string& argDesc,
-               TypedArgBase* argObj):
-         mArgSpec( argSpec),
-         mDescription( argDesc),
-         mpArgObj( argObj)
+      ArgDesc( const std::string& arg_desc, TypedArgBase* arg_obj):
+         mDescription( arg_desc),
+         mpArgObj( arg_obj)
       {
-      } // end ArgumentDesc::ArgDesc::ArgDesc
+      } // ArgumentDesc::ArgDesc::ArgDesc
 
       ArgDesc( const ArgDesc&) = default;
       ArgDesc& operator =( const ArgDesc&) = default;
 
       /// Returns if this entry should be printed in the usage now.
-      /// @param[in]  printIsMandatory  Specifies if only mandatory (\c true)
-      ///                               parameters should be printed or all.
-      /// @param[in]  printHidden       Specifies if hidden parameters should be
-      ///                               printed or not.
-      /// @return  \c true if mandatory parameters are requested and this
-      ///          parameter is mandatory, or if non-mandatory (optional)
-      ///          parameters are requested and this parameter is not mandatory,
-      ///          and when hidden parameters may be printed or this parameter
-      ///          is not hidden.
-      /// @since  0.2, 10.04.2016
-      bool doPrint( bool printIsMandatory, bool printHidden) const;
+      /// @param[in]  printIsMandatory
+      ///    Specifies if only mandatory (\c true) parameters should be printed
+      ///    or all.
+      /// @param[in]  printHidden
+      ///    Specifies if hidden parameters should be printed or not.
+      /// @param[in]  print_deprecated
+      ///    Specifies if deprecated parameters should be printed or not.
+      /// @param[in]  usage_contents
+      ///    Specifies which arguments to print.
+      /// @return
+      ///    \c true if the current argument should be printed in the usage with
+      ///    the given parameters.
+      /// @since
+      ///    0.2, 10.04.2016
+      bool doPrint( bool printIsMandatory, bool printHidden,
+         bool print_deprecated, UsageParams::Contents usage_contents) const;
 
-      /// The argument specification (character and/or long format).
-      std::string    mArgSpec;
+      /// Returns the key string of the argument with the specified contents.
+      /// @param[in]  usage_contents  Contents of the key string to return.
+      /// @return  The key string with the given contents.
+      /// @since  1.1.0, 20.11.2017
+      std::string key( UsageParams::Contents usage_contents) const;
+
       /// The description of the argument.
       std::string    mDescription;
       /// Pointer to the object that handles this argument.
@@ -145,7 +153,7 @@ private:
    }; // ArgumentDesc::ArgDesc
 
    /// Used to store the arguments.
-   typedef std::vector< ArgDesc>  ArgDescCont;
+   using ArgDescCont = std::vector< ArgDesc>;
 
    /// Prints the contents of the storage to the specified stream.
    /// @param[out]  os  the stream to write to.
@@ -153,6 +161,7 @@ private:
    void print( std::ostream& os) const;
 
    /// Finally prints the arguments.
+   /// @param[out]  os                The stream to write to.
    /// @param[in]   tb                The object used to format the description
    ///                                of the parameters.
    /// @param[in]   printIsMandatory  Specifies if the mandatory (\c true) or
@@ -164,51 +173,25 @@ private:
    ///                                description should be printed on the same
    ///                                line, \c false otherwise (printed on two
    ///                                lines).
-   /// @param[out]  os                The stream to write to.
+   /// @param[in]   max_length        The maximum length of all arguments.
    /// @since  0.2, 10.04.2016
-   void printArguments( format::TextBlock& tb, bool printIsMandatory, int* printed,
-                        bool sameLine, std::ostream& os) const;
+   void printArguments( std::ostream& os, format::TextBlock& tb,
+      bool printIsMandatory, int* printed, bool sameLine, int max_length) const;
 
+   /// The parameters for printing the usage.
+   shared_usage_params_t  mpUsageParams;
    /// The string with the spaces to use for indention.
-   const std::string  mIndention;
+   const std::string      mIndention;
    /// All defined arguments.
-   ArgDescCont        mArguments;
-   /// The length of the longest argument specification (used to format the
-   /// output).
-   size_t             mMaxArgLen;
+   ArgDescCont            mArguments;
    /// The caption to print before mandatory arguments.
-   std::string        mCaptionMandatory;
+   std::string            mCaptionMandatory;
    /// The caption to print before optional arguments.
-   std::string        mCaptionOptional;
+   std::string            mCaptionOptional;
    /// The line length used when printing the usage.
-   int                mLineLength;
-   /// Specifies if hidden arguments should be printed or not.
-   bool               mPrintHidden;
+   int                    mLineLength = DefaultLineLength;
 
 }; // ArgumentDesc
-
-
-// inlined methods
-// ===============
-
-
-inline void ArgumentDesc::setMinArgLen( size_t minLen)
-{
-   if (minLen > mMaxArgLen)
-      mMaxArgLen = minLen;
-} // end ArgumentDesc::setMinArgLen
-
-
-inline size_t ArgumentDesc::maxArgLen() const
-{
-   return mMaxArgLen;
-} // end ArgumentDesc::maxArgLen
-
-
-inline void ArgumentDesc::setPrintHidden( bool do_print)
-{
-   mPrintHidden = do_print;
-} // end ArgumentDesc::setPrintHidden
 
 
 } // namespace detail
@@ -219,5 +202,5 @@ inline void ArgumentDesc::setPrintHidden( bool do_print)
 #endif   // CELMA_PROG_ARGS_DETAIL_ARGUMENT_DESC_HPP
 
 
-// =========================  END OF argument_desc.hpp  =========================
+// =====  END OF argument_desc.hpp  =====
 

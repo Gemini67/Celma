@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,9 +23,9 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include "celma/prog_args/handler.hpp"
-#include "celma/prog_args/detail/value_storage.hpp"
+#include "celma/prog_args.hpp"
 #include "celma/prog_args/detail/argument_value.hpp"
+#include "celma/prog_args/detail/value_storage.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -181,9 +181,9 @@ public:
 
 private:
    /// Type used to store the destination variables.
-   typedef std::shared_ptr< common::AnyBase>  shared_value_storage_t;
+   using shared_value_storage_t = std::shared_ptr< common::AnyBase>;
    /// Container used to store the destination variables.
-   typedef std::map< detail::ArgumentKey, shared_value_storage_t>  container_t;
+   using container_t = std::map< detail::ArgumentKey, shared_value_storage_t>;
 
    /// Hidden when value handler is used.
    template< typename T>
@@ -193,55 +193,9 @@ private:
                                          const std::string&);
 
    /// Hidden when value handler is used.
-   template< typename T1, typename T2>
-      detail::TypedArgBase* addArgument( const std::string&,
-                                         T1&, const std::string,
-                                         T2&, const std::string,
-                                         const T2&,
-                                         const std::string&);
-
-   /// Hidden when value handler is used.
-   template< typename T>
-      detail::TypedArgBase* addArgument( T&,
-                                         const std::string,
-                                         const std::string&);
-
-   /// Hidden when value handler is used.
-   template< typename T, typename C>
-      detail::TypedArgBase* addArgument( const std::string&,
-                                         const common::RangeDest< T, C>&,
-                                         const std::string,
-                                         const std::string&);
-
-   /// Hidden when value handler is used.
-   template< typename T, typename C>
-      detail::TypedArgBase* addArgument( const common::RangeDest< T, C>&,
-                                         const std::string,
-                                         const std::string&);
-
-   /// Hidden when value handler is used.
-   detail::TypedArgBase* addArgument( const std::string&z,
-                                      detail::ArgHandlerCallable,
-                                      const std::string,
-                                      const std::string&);
-
-   /// Hidden when value handler is used.
-   detail::TypedArgBase* addArgument( const std::string&,
-                                      detail::ArgHandlerCallableValue,
-                                      const std::string,
-                                      bool,
-                                      const std::string&);
-   /// Hidden when value handler is used.
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
                                       Handler* subGroup,
                                       const std::string& desc);
-
-   /// Hidden when value handler is used.
-   template< typename C, typename T>
-      detail::TypedArgBase* addCustomArgument( const std::string&,
-                                               T&,
-                                               const std::string,
-                                               const std::string&);
 
    /// The container with the destination variables.
    container_t  mValues;
@@ -262,7 +216,8 @@ template< typename T>
    auto  value = std::make_shared< detail::ArgumentValue< T>>();
 
    mValues.insert( container_t::value_type( detail::ArgumentKey( args), value));
-   return Handler::addArgument( args, (*value)(), "unnamed", desc);
+   return Handler::addArgument(
+      args, new detail::TypedArg< T>( (*value)(), "unnamed"), desc);
 } // ValueHandler::addValueArgument
 
 
@@ -284,7 +239,10 @@ template< typename T, typename C>
    auto  value = std::make_shared< detail::ArgumentValue< C>>();
 
    mValues.insert( container_t::value_type( detail::ArgumentKey( args), value));
-   return Handler::addArgument( args, common::RangeDest< T, C>((*value)()), "unnamed", desc);
+   return Handler::addArgument(
+      args,
+      new detail::TypedArgRange< T, C>( common::RangeDest< T, C>( (*value)()),
+         "unnamed"), desc);
 } // ValueHandler::addRangeValueArgument
 
 
@@ -331,5 +289,5 @@ template< typename T> void ValueHandler::getValue( T& dest) const noexcept( fals
 #endif   // CELMA_PROG_ARGS_VALUE_HANDLER_HPP
 
 
-// ========================  END OF value_handler.hpp  ========================
+// =====  END OF value_handler.hpp  =====
 

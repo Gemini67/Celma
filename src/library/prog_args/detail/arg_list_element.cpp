@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,28 +23,27 @@
 #include <iostream>
 
 
-using namespace std;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
 
 /// Constructor.
+///
 /// @since  0.2, 09.04.2016
 ArgListElement::ArgListElement():
    mArgIndex( -1),
    mArgCharPos( -1),
-   mElementType( etInvalid),
+   mElementType( ElementType::invalid),
    mArgChar( '-'),
    mArgString(),
    mValue()
 {
-} // end ArgListElement::ArgListElement
+} // ArgListElement::ArgListElement
 
 
 
 /// Stores the data of a single argument character.
+///
 /// @param[in]  argi     The argument string index.
 /// @param[in]  argp     The position of the argument character in the string.
 /// @param[in]  argChar  The argument character.
@@ -54,55 +53,58 @@ void ArgListElement::setArgChar( int argi, int argp, char argChar)
 
    mArgIndex    = argi;
    mArgCharPos  = argp;
-   mElementType = etSingleCharArg;
+   mElementType = ElementType::singleCharArg;
    mArgChar     = argChar;
 
    mArgString.clear();
    mValue.clear();
 
-} // end ArgListElement::setArgChar
+} // ArgListElement::setArgChar
 
 
 
 /// Stores the data of a long argument.
+///
 /// @param[in]  argi     The argument string index.
 /// @param[in]  argName  The long argument.
 /// @since  0.2, 09.04.2016
-void ArgListElement::setArgString( int argi, const string& argName)
+void ArgListElement::setArgString( int argi, const std::string& argName)
 {
 
    mArgIndex    = argi;
    mArgCharPos  = -1;
-   mElementType = etStringArg;
+   mElementType = ElementType::stringArg;
    mArgChar     = '-';
    mArgString   = argName;
 
    mValue.clear();
 
-} // end ArgListElement::setArgString
+} // ArgListElement::setArgString
 
 
 
 /// Stores a value.
+///
 /// @param[in]  argi   The argument string index.
 /// @param[in]  value  The value (== the argument string).
 /// @since  0.2, 09.04.2016
-void ArgListElement::setValue( int argi, const string& value)
+void ArgListElement::setValue( int argi, const std::string& value)
 {
 
    mArgIndex    = argi;
    mArgCharPos  = -1;
-   mElementType = etValue;
+   mElementType = ElementType::value;
    mArgChar     = '-';
    mValue       = value;
 
    mArgString.clear();
 
-} // end ArgListElement::setValue
+} // ArgListElement::setValue
 
 
 
 /// Stores the data of a control character.
+///
 /// @param[in]  argi      The argument string index.
 /// @param[in]  argp      The position of the control character in the string.
 /// @param[in]  ctrlChar  The control character.
@@ -112,38 +114,41 @@ void ArgListElement::setControl( int argi, int argp, char ctrlChar)
 
    mArgIndex    = argi;
    mArgCharPos  = argp;
-   mElementType = etControl;
+   mElementType = ElementType::control;
    mArgChar     = ctrlChar;
 
    mArgString.clear();
    mValue.clear();
 
-} // end ArgListElement::setControl
+} // ArgListElement::setControl
 
 
 
 /// Prints the contents of an argument list element.
+///
 /// @param[out]  os   The stream to write to.
 /// @param[in]   ale  The object to dump the data of.
 /// @return  The stream.
 /// @since  0.2, 09.04.2016
-ostream& operator <<( ostream& os, const ArgListElement& ale)
+std::ostream& operator <<( std::ostream& os, const ArgListElement& ale)
 {
+
+   using std::endl;
 
    os << "argument index     = " << ale.mArgIndex << endl;
 
-   if (ale.mElementType == ArgListElement::etValue)
+   if (ale.mElementType == ArgListElement::ElementType::value)
    {
       os << "free value         = " << ale.mValue << endl;
-   } else if (ale.mElementType == ArgListElement::etSingleCharArg)
+   } else if (ale.mElementType == ArgListElement::ElementType::singleCharArg)
    {
       os << "character position = " << ale.mArgCharPos << endl
          << "argument character = " << ale.mArgChar << endl;
-   } else if (ale.mElementType == ArgListElement::etControl)
+   } else if (ale.mElementType == ArgListElement::ElementType::control)
    {
       os << "ctrl char position = " << ale.mArgCharPos << endl
          << "control character  = " << ale.mArgChar << endl;
-   } else if (ale.mElementType == ArgListElement::etStringArg)
+   } else if (ale.mElementType == ArgListElement::ElementType::stringArg)
    {
       os << "argument string    = " << ale.mArgString << endl;
    } else
@@ -152,7 +157,7 @@ ostream& operator <<( ostream& os, const ArgListElement& ale)
    } // end if
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
@@ -161,5 +166,5 @@ ostream& operator <<( ostream& os, const ArgListElement& ale)
 } // namespace celma
 
 
-// =========================  END OF arg_list_element.cpp  =========================
+// =====  END OF arg_list_element.cpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,18 +19,28 @@
 #include "celma/prog_args/handler.hpp"
 
 
+// OS/C lib includes
+#include <cstdlib>
+#include <cstring>
+#include <libgen.h>
+
+
 // C++ Standard Library includes
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <memory>
 
 
 // project includes
-#include "celma/common/arg_string_2_array.hpp"
+#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/clear_container.hpp"
 #include "celma/common/reset_at_exit.hpp"
 #include "celma/common/scoped_value.hpp"
 #include "celma/common/tokenizer.hpp"
+#include "celma/format/text_block.hpp"
+#include "celma/prog_args/destination.hpp"
+#include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
 
@@ -48,6 +58,9 @@ using std::runtime_error;
 using std::string;
 using std::underflow_error;
 
+
+// module definitions
+const detail::ArgumentKey  Handler::mPosKey( "-");
 
 
 /// Constructor.
@@ -84,8 +97,11 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mErrorOutput( error_os),
    mReadProgramArguments( (flag_set & hfReadProgArg) != 0),
    mVerbose( (flag_set & hfVerboseArgs) != 0),
-   mPrintHidden( (flag_set & hfUsageHidden) != 0),
    mUsageContinues( (flag_set & hfUsageCont) != 0),
+   mpUsageParams( new detail::UsageParams()),
+   mArguments(),
+   mSubGroupArgs( true),
+   mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
    mpExclamationMarkHdlr(),
@@ -94,32 +110,55 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
-   string  args;
+   handleStartFlags( flag_set, txt1, txt2);
 
-
-   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
-      args = "h,help";
-   else if (flag_set & hfHelpShort)
-      args = "h";
-   else if (flag_set & hfHelpLong)
-      args = "help";
-
-   if (!args.empty())
-      addArgument( args, detail::ArgHandlerCallable( std::bind( &Handler::usage, this, txt1, txt2)),
-                   "Handler::usage",
-                   "Prints the program usage");
+   if (flag_set & hfUsageHidden)
+      mpUsageParams->setPrintHidden();
 
    if (flag_set & hfArgHidden)
-      addArgumentPrintHidden( "print-hidden");
+      mpUsageParams->addArgumentPrintHidden( *this, "print-hidden");
 
-   if (flag_set & hfListArgVar)
-      addArgumentListArgVars( "list-arg-vars");
+} // Handler::Handler
 
-   if (flag_set & hfListArgGroups)
-      addArgumentListArgGroups( "list-arg-groups");
 
-   if (flag_set & hfEndValues)
-      addArgumentEndValues( "endvalues");
+
+/// Constructor to be used by a sub-group. Copies some settings from the main
+/// argument handler object.<br>
+/// It is possible to create a sub-group argument handler using one of the
+/// other constructors, but then the settings are of course not copied.<br>
+/// The following flags are ignored, the settings are taken from the main
+/// argument handler:<br>
+/// #hfReadProgArg, #hfVerboseArgs, #hfUsageHidden, #hfUsageShort,
+/// #hfUsageLong and #hfUsageCont.
+/// @param[in]  main_ah   The main argument handler to copy the settings
+///                       from.
+/// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
+///                       of possible values.
+/// @param[in]  txt1      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @param[in]  txt2      Optional pointer to the object to provide
+///                       additional text for the usage.
+/// @since  1.1.0, 04.12.2017
+Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
+                  IUsageText* txt2):
+   mOutput( main_ah.mOutput),
+   mErrorOutput( main_ah.mErrorOutput),
+   mReadProgramArguments( false),
+   mVerbose( main_ah.mVerbose),
+   mUsageContinues( main_ah.mUsageContinues),
+   mpUsageParams( main_ah.mpUsageParams),
+   mArguments(),
+   mSubGroupArgs(),
+   mDescription( mpUsageParams),
+   mpOpeningBracketHdlr(),
+   mpClosingBracketHdlr(),
+   mpExclamationMarkHdlr(),
+   mConstraints(),
+   mGlobalConstraints(),
+   mUsedByGroup( (flag_set & hfInGroup) != 0)
+{
+
+   handleStartFlags( flag_set, txt1, txt2);
 
 } // Handler::Handler
 
@@ -133,6 +172,38 @@ Handler::~Handler()
    common::Vector::clear( mGlobalConstraints);
 
 } // Handler::~Handler
+
+
+
+/// Adds a sub-group.
+///
+/// @param[in]  arg_spec
+///    The arguments on the command line to enter/start the sub-group.
+/// @param[in]  subGroup
+///    The object to handle the sub-group arguments.
+/// @param[in]  desc
+///    The description of this sub-group argument.
+/// @return
+///    The object managing this argument, may be used to apply further
+///    settings.
+/// @since  0.2, 10.04.2016
+detail::TypedArgBase*
+   Handler::addArgument( const string& arg_spec, Handler& subGroup,
+                         const string& desc)
+{
+
+   subGroup.setIsSubGroupHandler();
+
+   const detail::ArgumentKey  key( arg_spec);
+   auto  arg_hdl = new detail::TypedArgSubGroup( key, subGroup);
+
+   arg_hdl->setKey( key);
+
+   mSubGroupArgs.addArgument( arg_hdl, key);
+   mDescription.addArgument( desc, arg_hdl);
+
+   return arg_hdl;
+} // Handler::addArgument
 
 
 
@@ -157,54 +228,104 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 {
 
    return addArgument( arg_spec,
-                       detail::ArgHandlerCallable(
-                          std::bind( &Handler::usage, this, txt1, txt2)
-                       ),
-                       "Handler::usage",
-                       desc);
+      new detail::TypedArgCallable( [=]() { usage( txt1, txt2); },
+         "Handler::usage"),
+      desc);
 } // Handler::addHelpArgument
 
 
 
 /// Adds an argument that takes the path/filename of an argument file as
-/// parameter.
-/// @param[in]  arg_spec  The arguments on the command line for specifying the
-///                       file with the arguments.
+/// parameter.<br>
+/// When the flag #hfReadProgArg is passed to the constructor, the program
+/// arguments file with the predefined name is always read if it exists.<br>
+/// With the method it is possible to specify an argument with which the
+/// (path and) name of the arguments file can be specified. Only if this
+/// given argument is then used on the command line, the argument file is
+/// read.
+/// @param[in]  arg_spec  The arguments on the command line for specifying
+///                       the file with the arguments.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
 /// @since  0.2, 10.04.2016
 detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 {
 
-   auto  arg_hdl = new detail::TypedArgCallableValue( arg_spec,
-                                                      std::bind( &Handler::readArgumentFile,
-                                                                 this, std::placeholders::_1, true),
-                                                                 "Handler::readArgumentFile");
+   static const string        desc( "Specifies the (path and) file name of the "
+                                    "file with the program arguments to read.");
+   const detail::ArgumentKey  key( arg_spec);
+
+   auto  arg_hdl = new detail::TypedArgCallableValue(
+      [&](auto const& filename) { this->readArgumentFile( filename, true); },
+      "Handler::readArgumentFile");
 
 
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Specifies the (path and) file name of the "
-                             "file with the program arguments to read.");
+   arg_hdl->setKey( key);
+
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentFile
 
 
 
-/// Adds an argument that activates printing of hidden arguments in the usage.
+/// Adds an argument that activates printing of hidden arguments in the
+/// usage.<br>
+/// Same as setting the flag #hfArgHidden, but allows to specify the
+/// argument and its description.
 /// @param[in]  arg_spec  The argument(s) on the command line for activating
 ///                       printing the hidden arguments.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
 /// @return  The object managing this argument, may be used to apply further
 ///          settings.
+/// @since  1.1.0, 06.12.2017  (adapted to using usage parameters object)
 /// @since  0.2, 10.04.2016
-detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
+detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec,
+   const char* desc)
 {
 
-   auto  arg_hdl = new detail::TypedArg< bool>( arg_spec,
-                                                DEST_VAR( mPrintHidden));
-
-
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Also print hidden arguments in the usage.");
+   return mpUsageParams->addArgumentPrintHidden( *this, arg_spec, desc);
 } // Handler::addArgumentPrintHidden
+
+
+
+/// Adds an argument that activates printing of usage with arguments with
+/// short argument key only.
+/// @param[in]  arg_spec  The argument(s) on the command line for activating
+///                       printing the usage with short arguments only.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  1.1.0, 25.09.2017
+detail::TypedArgBase*
+   Handler::addArgumentUsageShort( const std::string& arg_spec,
+      const char* desc)
+{
+
+   return mpUsageParams->addArgumentUsageShort( *this, arg_spec, desc);
+} // Handler::addArgumentUsageShort
+
+
+
+/// Adds an argument that activates printing of usage with arguments with
+/// long argument key only.
+/// @param[in]  arg_spec  The argument(s) on the command line for activating
+///                       printing the usage with long arguments only.
+/// @param[in]  desc      Optional text for the description of the argument
+///                       in the usage. If not set, the default description
+///                       is used.
+/// @return  The object managing this argument, may be used to apply further
+///          settings.
+/// @since  1.1.0, 25.09.2017
+detail::TypedArgBase*
+   Handler::addArgumentUsageLong( const std::string& arg_spec,
+      const char* desc)
+{
+
+   return mpUsageParams->addArgumentUsageLong( *this, arg_spec, desc);
+} // Handler::addArgumentUsageLong
 
 
 
@@ -220,15 +341,18 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 {
 
-   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
-                                                 DEST_MEMBER_METHOD( Handler,
-                                                                     listArgVars));
+   static const string  desc( "Prints the list of arguments and their destination "
+                              "variables.");
+   const detail::ArgumentKey  key( arg_spec);
+
+   auto  arg_hdl = new detail::TypedArgCallable(
+      [&]() { this->listArgVars(); }, "Handler::listArgVars");
 
 
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Prints the list of arguments and their destination "
-                             "variables.");
+
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentListArgVars
 
 
@@ -244,18 +368,21 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
 {
 
+   static const string  desc( "Prints the list of argument groups.");
+
    if (!mUsedByGroup)
       throw invalid_argument( "Standard argument 'list argument groups' can"
-                              " only be set when argument groups are used!"); 
+                              " only be set when argument groups are used!");
 
-   auto  arg_hdl = new detail::TypedArgCallable( arg_spec,
-                                                 DEST_MEMBER_METHOD( Handler,
-                                                                     listArgGroups));
+   const detail::ArgumentKey  key( arg_spec);
 
+   auto  arg_hdl = new detail::TypedArgCallable(
+      [&]() { this->listArgGroups(); }, desc);
 
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Prints the list of argument groups.");
+
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentListArgGroups
 
 
@@ -270,13 +397,51 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
 detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 {
 
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArgCallable( arg_spec, DEST_METHOD( Handler, endValueList, *this));
+   static const string  desc( "Marks the end of a multiple, separate value list.");
+
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+      = new detail::TypedArgCallable( [&]() { this->endValueList(); }, desc);
 
 
+   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
-   return internAddArgument( arg_hdl, arg_spec,
-                             "Marks the end of a multiple, separate value list.");
+
+   return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentEndValues
+
+
+
+/// Adds an argument that can be used to get the usage for exactly one
+/// argument.
+///
+/// @param[in]  arg_spec
+///    The argument(s) on the command line to request the usage for an
+///    argument.
+/// @param[in]  full
+///    Set this flag if the argument should invoke the function to print the
+///    usage and a complee description of the argument and its destination
+///    variable.
+/// @return
+///    The object managing this argument, may be used to apply further
+///    settings.
+/// @since
+///    1.14.0, 25.09.2018
+detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
+   bool full)
+{
+
+   static const string  desc( "Prints the usage for the given argument.");
+
+   const detail::ArgumentKey  key( arg_spec);
+   detail::TypedArgBase*      arg_hdl
+      = new detail::TypedArgCallableValue( [&,full=full]( auto const& help_arg_key)
+        { this->helpArgument( help_arg_key, full); }, desc);
+
+   arg_hdl->setKey( key);
+
+   return internAddArgument( arg_hdl, key, desc);
+} // Handler::addArgumentHelpArgument
 
 
 
@@ -375,7 +540,7 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
 
 
 /// Same as evalArguments(). Difference is that this method catches
-/// exceptions, reports them on stderr and then exits the program.<br>
+/// exceptions, reports them on \c stderr and then exits the program.<br>
 /// In other words: If the function returns, all argument requirements and
 /// constraints were met.
 /// @param[in]  argc    Number of arguments passed to the process.
@@ -425,6 +590,46 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
 
 
 
+/// After calling evalArguments(), prints the list of arguments that were
+/// used and the values that were set.
+///
+/// @param[in]  contents_set
+///    Set of flags that specify the contents of the summary to print.
+/// @param[out]  os
+///    The stream to write the summary to.
+/// @param[in]   standalone
+///    If set, prints a title and a line if no arguments were found,
+///    otherwise only prints the list of arguments used.
+/// @param[in]   arg_prefix
+///    Specifies the prefix for the arguments of this handler. Used when the
+///    argument handler handles the arguments of a sub-group.
+/// @since 1.8.0, 03.07.2018
+void Handler::printSummary( sumoptset_t contents_set, std::ostream& os,
+   bool standalone, const char* arg_prefix) const
+{
+
+   if (standalone)
+      os << "Argument summary:" << std::endl;
+
+   // collect the summary in a stream, so we can check if anything was found
+   std::ostringstream  oss;
+
+   mArguments.printSummary( contents_set, oss, arg_prefix);
+   mSubGroupArgs.printSummary( contents_set, oss, arg_prefix);
+
+   if (oss.str().empty())
+   {
+      if (standalone)
+         os << "   No arguments used/values set." << std::endl;
+   } else
+   {
+      os << oss.str();
+   } // end if
+
+} // Handler::printSummary
+
+
+
 /// Helps to determine if an object is a 'plain' Handler object or a
 /// ValueHandler object.
 /// @return  Always \c false for objects of this class.
@@ -456,13 +661,7 @@ detail::TypedArgBase* Handler::getArgHandler( const string& arg_spec)
                                             noexcept( false)
 {
 
-   const detail::ArgumentKey  arg_key( arg_spec);
-
-
-   if (arg_key.hasCharArg())
-      return mArguments.findArg( arg_key.argChar());
-
-   return mArguments.findArg( arg_key.argString());
+   return mArguments.findArg( detail::ArgumentKey( arg_spec));
 } // Handler::getArgHandler
 
 
@@ -505,34 +704,29 @@ void Handler::crossCheckArguments( const string ownName,
 
 
 
-/// The handling of single character arguments and argument strings/names is
-/// of course completely the same, except for the argument and its type.<br>
-/// So, this template handles both types of arguments. Needed only in the
-/// implementation, so the template definition is in the source file too.
-/// @tparam  T  The type of the argument (character or string).
-/// @param[in]      arg         The argument (character/short or long).
-/// @param[in]      arg_string  The argument character or string always in
-///                             string format.
-/// @param[in,out]  ai          The iterator pointing to the current argument.
-///                             May be increased here (for values or argument
-///                             groups).
-/// @param[in]      end         Iterator pointing to the end of the argument
-///                             list.
+/// Finally: Handle an identified argument from the command line.
+/// @param[in]      key  The argument (character/short or long).
+/// @param[in,out]  ai   The iterator pointing to the current argument.<br>
+///                      May be increased here (for values or argument
+///                      groups).
+/// @param[in]      end  Iterator pointing to the end of the argument list.
 /// @return  Result of handling the current argument.
+/// @since  0.15.0, 17.07.2017  (only ArgumentKey as parameter, no template
+///                             anymore)
 /// @since  0.2, 10.04.2016
-template< typename T>
-   Handler::ArgResult Handler::processArg( const T& arg,
-                                           const string& arg_string,
-                                           detail::ArgListParser::const_iterator& ai,
-                                           const detail::ArgListParser::const_iterator& end)
+Handler::ArgResult
+   Handler::processArg( const detail::ArgumentKey& key,
+                        detail::ArgListParser::const_iterator& ai,
+                        const detail::ArgListParser::const_iterator& end)
+                       noexcept( false)
 {
 
-   auto  p_arg_hdl = mSubGroupArgs.findArg( arg);
+   auto  p_arg_hdl = mSubGroupArgs.findArg( key);
 
 
    if (p_arg_hdl != nullptr)
    {
-      handleIdentifiedArg( p_arg_hdl, arg_string);
+      handleIdentifiedArg( p_arg_hdl, key);
 
       auto  subArgHandler = static_cast< detail::TypedArgSubGroup*>( p_arg_hdl)->obj();
       ++ai;
@@ -543,27 +737,34 @@ template< typename T>
       while ((subAI != end) &&
              (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
       {
-         ai = subAI;
-         ++subAI;
+         ai = subAI++;
       } // end while
 
       mpLastArg = nullptr;
       return ArgResult::consumed;
    } // end if
 
-   mpLastArg = p_arg_hdl = mArguments.findArg( arg);
+   mpLastArg = p_arg_hdl = mArguments.findArg( key);
    if (p_arg_hdl == nullptr)
       return ArgResult::unknown;
 
    // an argument that we know
-   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::unknown)
-      throw runtime_error( "Value mode not set for argument '" + arg_string + "'");
+   if (p_arg_hdl->valueMode() == ValueMode::unknown)
+      throw runtime_error( "Value mode not set for argument '"
+                           + format::toString( key) + "'");
 
-   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::none)
+   if (p_arg_hdl->valueMode() == ValueMode::none)
    {
       // no value needed
-      handleIdentifiedArg( p_arg_hdl, arg_string);
+      handleIdentifiedArg( p_arg_hdl, key);
       return ArgResult::consumed;
+   } // end if
+
+   if (p_arg_hdl->valueMode() == ValueMode::command)
+   {
+      // found last argument/value for me, rest for another object/tool
+      handleIdentifiedArg( p_arg_hdl, key, ai.argsAsString( false));
+      return ArgResult::last;
    } // end if
 
    // check if the next element in the list is a value
@@ -571,24 +772,26 @@ template< typename T>
    // if the value mode of this argument is optional, we don't allow values to
    // directly follow the argument, because then we cannot distinguish if it's
    // a value or the next argument
-   if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::required)
+   if (p_arg_hdl->valueMode() == ValueMode::required)
       ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((ait2 == end) || (ait2->mElementType != detail::ArgListElement::etValue))
+   if ((ait2 == end) ||
+       (ait2->mElementType != detail::ArgListElement::ElementType::value))
    {
       // no next value
-      if (p_arg_hdl->valueMode() == detail::TypedArgBase::ValueMode::optional)
-         handleIdentifiedArg( p_arg_hdl, arg_string);
+      if (p_arg_hdl->valueMode() == ValueMode::optional)
+         handleIdentifiedArg( p_arg_hdl, key);
       else
-         throw runtime_error( "Argument '" + arg_string + "' requires value(s)");
+         throw runtime_error( "Argument '" + format::toString( key)
+                              + "' requires value(s)");
    } else
    {
       // have a next value, and value mode can only be 'optional' or 'required'
       // first process the argument, *then* assign ait2 to ai
       // reason: arg and arg_string are references of ai->, so if we change ai
       // the references are still on the old value(s)
-      handleIdentifiedArg( p_arg_hdl, arg_string, ait2->mValue);
+      handleIdentifiedArg( p_arg_hdl, key, ait2->mValue);
       ai = ait2;
    } // end if
 
@@ -618,25 +821,33 @@ Handler::ArgResult
 
    switch (ai->mElementType)
    {
-   case detail::ArgListElement::etValue:
+   case detail::ArgListElement::ElementType::value:
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
-         mpLastArg->calledAssign( mReadingArgumentFile, ai->mValue);
+         mpLastArg->assignValue( mReadingArgumentFile, ai->mValue);
          return ArgResult::consumed;
-      } else if (detail::TypedArgBase* hdl = mArguments.findArg( '-'))
+      } // end if
+      if (detail::TypedArgBase* hdl = mArguments.findArg( mPosKey))
       {
-         handleIdentifiedArg( hdl, string( "-"), ai->mValue);
+         if (hdl->valueMode() == ValueMode::command)
+         {
+            // this and the following arguments/values are not for me
+            handleIdentifiedArg( hdl, mPosKey, ai.argsAsString());
+            return ArgResult::last;
+         } // end if
+
+         handleIdentifiedArg( hdl, mPosKey, ai->mValue);
          return ArgResult::consumed;
       } // end if
       break;
 
-   case detail::ArgListElement::etSingleCharArg:
-      return processArg( ai->mArgChar, string( 1, ai->mArgChar), ai, end);
+   case detail::ArgListElement::ElementType::singleCharArg:
+      return processArg( detail::ArgumentKey( ai->mArgChar), ai, end);
 
-   case detail::ArgListElement::etStringArg:
-      return processArg( ai->mArgString, ai->mArgString, ai, end);
+   case detail::ArgListElement::ElementType::stringArg:
+      return processArg( detail::ArgumentKey( ai->mArgString), ai, end);
 
-   case detail::ArgListElement::etControl:
+   case detail::ArgListElement::ElementType::control:
       if (ai->mArgChar == '(')
       {
          if (!mpOpeningBracketHdlr)
@@ -679,24 +890,6 @@ void Handler::checkMissingMandatoryCardinality() const
 
 
 
-/// Checks and sets the maximum argument length, needed to format the usage.
-/// @param[in,out]  maxArgLen  Maximum argument length as needed so far, may
-///                            be increased if this class contains longer
-///                            arguments.
-/// @since  0.2, 10.04.2016
-void Handler::checkMaxArgLen( size_t& maxArgLen) const
-{
-
-   size_t  myArgLength = 0;
-
-
-   myArgLength = std::max( myArgLength, mDescription.maxArgLen());
-   maxArgLen   = std::max( myArgLength, maxArgLen);
-
-} // Handler::checkMaxArgLen
-
-
-
 /// Checks if the specified argument is already used.
 /// @param[in]  argChar  The argument character to check.
 /// @return  \c true if the argument is already in use.
@@ -704,7 +897,7 @@ void Handler::checkMaxArgLen( size_t& maxArgLen) const
 bool Handler::argumentExists( char argChar) const
 {
 
-   return mArguments.findArg( argChar) != nullptr;
+   return mArguments.findArg( detail::ArgumentKey( argChar)) != nullptr;
 } // Handler::argumentExists
 
 
@@ -716,7 +909,7 @@ bool Handler::argumentExists( char argChar) const
 bool Handler::argumentExists( const string& argString) const
 {
 
-   return mArguments.findArg( argString) != nullptr;
+   return mArguments.findArg( detail::ArgumentKey( argString)) != nullptr;
 } // Handler::argumentExists
 
 
@@ -728,9 +921,11 @@ bool Handler::argumentExists( const string& argString) const
 void Handler::readEvalFileArguments( const char* arg0)
 {
 
-   const char*  progNameOnly = basename( arg0);
-   const char*  homeDir = getenv( "HOME");
+   // have to copy the path since basename() may want to modify it
+   std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
 
+   const char*  progNameOnly = ::basename( copy.get());
+   const char*  homeDir = ::getenv( "HOME");
 
    if (homeDir == nullptr)
       return;
@@ -773,8 +968,8 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       if (line.empty() || (line[ 0] == '#'))
          continue;   // while
 
-      common::ArgString2Array  as2a( line, nullptr);
-      detail::ArgListParser    alp( as2a.mArgc, as2a.mpArgv);
+      appl::ArgString2Array  as2a( line, nullptr);
+      detail::ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
 
       iterateArguments( alp);
    } // end while
@@ -810,7 +1005,8 @@ void Handler::listArgGroups()
 
 
 
-/// Called to mark the end of a value list: Sets mpLastArg to NULL.
+/// Called to mark the end of a value list: Sets #mpLastArg to NULL.
+///
 /// @since  0.2, 10.04.2016
 void Handler::endValueList()
 {
@@ -818,6 +1014,106 @@ void Handler::endValueList()
    mpLastArg = nullptr;
 
 } // Handler::endValueList
+
+
+
+/// Searches if the given argment key belongs to a known argument, and if so
+/// prints its usage.<br>
+/// If the argument key is unknown, an error message is printed.<br>
+/// At the end, the function calls exit(), unless "usage continues" is set.
+///
+/// @param[in]  help_arg_key
+///    The key of the argument to print the usage of.
+/// @param[in]  full
+///    If set, also prints information about the argument and its destination
+///    variable.
+/// @since  1.14.0, 25.09.2018
+void Handler::helpArgument( const string& help_arg_key, bool full)
+{
+
+   auto const  slash_pos = help_arg_key.find( "/");
+
+   if (slash_pos != string::npos)
+   {
+      const detail::ArgumentKey  key( help_arg_key.substr( 0, slash_pos));
+      auto                       p_arg_hdl = mSubGroupArgs.findArg( key);
+
+      if (p_arg_hdl != nullptr)
+      {
+         static_cast< detail::TypedArgSubGroup*>( p_arg_hdl)->obj()->
+            helpArgument( help_arg_key.substr( slash_pos + 1), full);
+         return;
+      } // end if
+
+      mErrorOutput << "*** ERROR: Sub-group argument '" << help_arg_key
+         << "' is unknown!" << std::endl;
+
+      mUsagePrinted = true;
+
+      if (!mUsageContinues)
+        ::exit( EXIT_SUCCESS);
+      return;
+   } // end if
+
+   const detail::ArgumentKey  key( help_arg_key);
+   auto                       p_arg_hdl = mArguments.findArg( key);
+
+   if (p_arg_hdl == nullptr)
+   {
+      p_arg_hdl = mSubGroupArgs.findArg( key);
+   } // end if
+
+   if (p_arg_hdl != nullptr)
+   {
+      mOutput << "Argument '" << key << "', usage:" << std::endl;
+
+      auto const  desc = mDescription.getArgDesc( key);
+      format::TextBlock  tb( 3, 80, true);
+      tb.format(  mOutput, desc);
+
+      mOutput << std::endl;
+
+      if (full)
+      {
+         mOutput << "Properties:" << std::endl
+                 << "   destination variable name:  "
+                 << p_arg_hdl->varName() << std::endl
+                 << "   destination variable type:  "
+                 << p_arg_hdl->varTypeName() << std::endl
+                 << "   is mandatory:               "
+                 << std::boolalpha << p_arg_hdl->isMandatory() << std::endl
+                 << "   value mode:                 "
+                 << p_arg_hdl->valueMode() << std::endl
+                 << "   cardinality:                "
+                 << p_arg_hdl->cardinalityStr() << std::endl
+                 << "   checks:                     "
+                 << p_arg_hdl->checkStr() << std::endl
+                 << "   constraints:                "
+                 << p_arg_hdl->constraintStr() << std::endl
+                 << "   is hidden:                  "
+                 << std::boolalpha << p_arg_hdl->isHidden() << std::endl
+                 << "   takes multiple values:      "
+                 << std::boolalpha << p_arg_hdl->takesMultiValue() << std::endl
+                 << "   is deprecated:              "
+                 << std::boolalpha << p_arg_hdl->isDeprecated() << std::endl
+                 << "   is replaced:                "
+                 << std::boolalpha << p_arg_hdl->isReplaced() << std::endl;
+         if (!p_arg_hdl->replacedBy().empty())
+            mOutput << "   replaced by:                "
+                    << p_arg_hdl->replacedBy() << std::endl;
+      } // end if
+   } else
+   {
+      mErrorOutput << "*** ERROR: Argument '" << help_arg_key << "' is unknown!"
+         << std::endl;
+   } // end if
+
+   mUsagePrinted = true;
+
+   if (!mUsageContinues)
+      ::exit( EXIT_SUCCESS);
+
+} // Handler::helpArgument
 
 
 
@@ -838,14 +1134,17 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
       auto const  result = evalSingleArgument( ai, alp.end());
       if (result == ArgResult::unknown)
       {
-         if (ai->mElementType == detail::ArgListElement::etValue)
+         if (ai->mElementType == detail::ArgListElement::ElementType::value)
             throw runtime_error( "Unknown argument '" + ai->mValue + "'");
-         if ((ai->mElementType == detail::ArgListElement::etSingleCharArg) ||
-             (ai->mElementType == detail::ArgListElement::etControl))
+         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg) ||
+             (ai->mElementType == detail::ArgListElement::ElementType::control))
             throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
          throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
       } // end if
+
+      if (result == ArgResult::last)
+         break;   // for
    } // end for
 
 } // Handler::iterateArguments
@@ -864,36 +1163,92 @@ std::ostream& operator <<( std::ostream& os, const Handler& ah)
 
 
 
+/// Called by the constructors to evaluate the set of flags given.
+///
+/// @param[in]  flag_set
+///    The set of flags to set.
+/// @param[in]  txt1
+///    Optional pointer to the object to provide additional text for the
+///    usage.
+/// @param[in]  txt2
+///    Optional pointer to the object to provide additional text for the
+///    usage.
+/// @since
+///    1.11.0, 16.02.2018
+void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
+   IUsageText* txt2)
+{
+
+   string  args;
+
+
+   if ((flag_set & hfHelpShort) && (flag_set & hfHelpLong))
+      args = "h,help";
+   else if (flag_set & hfHelpShort)
+      args = "h";
+   else if (flag_set & hfHelpLong)
+      args = "help";
+
+   if (!args.empty())
+      addArgument( args, new detail::TypedArgCallable(
+         [=]() { usage( txt1, txt2); }, "Handler::usage"),
+         "Prints the program usage.");
+
+   if (flag_set & hfHelpArg)
+      addArgumentHelpArgument( "help-arg");
+
+   if (flag_set & hfHelpArgFull)
+      addArgumentHelpArgument( "help-arg-full", true);
+
+   if (flag_set & hfUsageDeprecated)
+      mpUsageParams->setPrintDeprecated();
+
+   if (flag_set & hfArgDeprecated)
+      mpUsageParams->addArgumentPrintDeprecated( *this, "print-deprecated");
+
+   if (flag_set & hfUsageShort)
+      mpUsageParams->addArgumentUsageShort( *this, "help-short");
+
+   if (flag_set & hfUsageLong)
+      mpUsageParams->addArgumentUsageLong( *this, "help-long");
+
+   if (flag_set & hfListArgVar)
+      addArgumentListArgVars( "list-arg-vars");
+
+   if (flag_set & hfListArgGroups)
+      addArgumentListArgGroups( "list-arg-groups");
+
+   if (flag_set & hfEndValues)
+      addArgumentEndValues( "endvalues");
+
+} // Handler::handleStartFlags
+
+
+
 /// Function to print the usage of a program (when requested through the
 /// arguments). The additional parameters allow to print additional
 /// information.
-/// @param[in]  txt1  Pointer to the object that prints the first text.
-/// @param[in]  txt2  Pointer to the object that prints the second text.
+///
+/// @param[in]  txt1
+///    Pointer to the object that prints the first text.
+/// @param[in]  txt2
+///    Pointer to the object that prints the second text.
 /// @since  0.2, 10.04.2016
 void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 {
 
+   if ((txt2 != nullptr) && (txt1 == nullptr))
+      throw std::invalid_argument( "second usage text can only be used if first"
+         " usage text is used too");
+
    if (Groups::instance().evaluatedByArgGroups() && !mIsSubGroupHandler)
        Groups::instance().displayUsage( txt1, txt2);
-
-   // the second parameter/object can only be used if the first is used too
-   // in other words: usage( NULL, myObj) is invalid
-   assert( (txt2 == nullptr) || (txt1 != nullptr));
-   // if both parameters/objects are used, their position must different
-   assert( (txt1 == nullptr) || (txt2 == nullptr) ||
-           (txt1->usagePos() != txt2->usagePos()));
 
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
 
-   size_t  stdArgLength = 0;
-
-   mDescription.setMinArgLen( stdArgLength);
-
-   mOutput << "Usage:" << endl;
-
-   mDescription.setPrintHidden( mPrintHidden);
-   mOutput << mDescription << endl;
+   mOutput << "Usage:" << endl
+           << mDescription << endl;
 
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::afterArgs))
       mOutput << txt1 << endl << endl;
@@ -910,18 +1265,19 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 
 
 /// Standard procedure for adding an argument handling object.
-/// @param[in]  ah_obj    Pointer to the object that handles the argument.
-/// @param[in]  arg_spec  The specification of the argument.
-/// @param[in]  desc      The description of the argument.
+/// @param[in]  ah_obj  Pointer to the object that handles the argument.
+/// @param[in]  key     The argument key: short and/or long argument.
+/// @param[in]  desc    The description of the argument.
 /// @return  Pointer to the passed argument handling object.
+/// @since  0.15.0, 13.07.2017  (take ArgumentKey instead of string)
 /// @since  0.2, 10.04.2016
 detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
-                                                  const string& arg_spec,
+                                                  const detail::ArgumentKey& key,
                                                   const string& desc)
 {
 
-   mArguments.addArgument( ah_obj, arg_spec);
-   mDescription.addArgument( arg_spec, desc, ah_obj);
+   mArguments.addArgument( ah_obj, key);
+   mDescription.addArgument( desc, ah_obj);
 
    if (mUsedByGroup)
       Groups::instance().crossCheckArguments( this);
@@ -935,8 +1291,8 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
 /// If the argument specification in the list does not match the original
 /// specification of the argument (short and/or long), it is replaced in the
 /// \a constraint_arg_list.
-/// @param[in]  constraint_arg_list  .
-/// @return  .
+/// @param[in]  constraint_arg_list  The list of arguments to check.
+/// @return  \c true if all arguments in the list are valid.
 /// @since  0.2, 10.04.2016
 bool Handler::validArguments( string& constraint_arg_list) const
 {
@@ -947,61 +1303,20 @@ bool Handler::validArguments( string& constraint_arg_list) const
 
    for (auto const& it : tok)
    {
-      const auto  comma_pos = it.find( ',');
-      string      current_arg;
-      if (comma_pos == string::npos)
+      const detail::ArgumentKey  key( it);
+      if (detail::TypedArgBase* arg = mArguments.findArg( key))
       {
-         detail::TypedArgBase*  arg = nullptr;
-         if (it.length() == 1)
-         {
-            // only a short argument
-            arg = mArguments.findArg( it[ 0]);
-         } else
-         {
-            // only a long argument
-            arg = mArguments.findArg( it);
-         } // end if
+         if (invalidCombination( key))
+            throw runtime_error( "Combination '" + it + "' is invalid");
 
-         // found the handler for this argument?
-         if (arg == nullptr)
-            return false;
-
-         // argument is valid but may use both short and long format
-         current_arg = arg->argSpec();
+         // argument from the list is valid
+         if (!new_constraint_arg_list.empty())
+            new_constraint_arg_list.append( ";");
+         new_constraint_arg_list.append( format::toString( arg->key()));
       } else
       {
-         // both short and long argument
-         const string           first(  it, 0, comma_pos);
-         const string           second( it, comma_pos + 1, string::npos);
-         detail::TypedArgBase*  arg_short = nullptr;
-         detail::TypedArgBase*  arg_long  = nullptr;
-
-         if (first.length() == 1)
-         {
-            arg_short = mArguments.findArg( first[ 0]);
-            arg_long  = mArguments.findArg( second);
-         } else
-         {
-            arg_short = mArguments.findArg( second[ 0]);
-            arg_long  = mArguments.findArg( first);
-         } // end if
-
-         // found both the short and long argument?
-         if ((arg_short == nullptr) || (arg_long == nullptr))
-            return false;
-
-         // do the short and long format (from the constraint string) really
-         // belong to the same handler?
-         if (arg_short != arg_long)
-            throw runtime_error( "argument short/long mismatch");
-
-         current_arg = arg_short->argSpec();
+         return false;
       } // end if
-
-      // argument from the list is valid
-      if (!new_constraint_arg_list.empty())
-         new_constraint_arg_list.append( ";");
-      new_constraint_arg_list.append( current_arg);
    } // end for
 
    // when we get here, all the arguments in the constraint string were valid
@@ -1013,16 +1328,50 @@ bool Handler::validArguments( string& constraint_arg_list) const
 
 
 
+/// Checks if the provided argument specification contains an invalid
+/// combination, i.e. a short and a long argument that are already used on
+/// two different, existing arguments.
+/// @param[in]  key  The argument specification to test.
+/// @return  \c true if the given combination is invalid.
+/// @since  0.15.0, 06.08.2017
+bool Handler::invalidCombination( const detail::ArgumentKey& key) const
+{
+
+   // if the argument is provided with short and long argument:
+   // search for both separately to make sure there is no mismatch
+   detail::TypedArgBase*  short_arg = nullptr;
+   detail::TypedArgBase*  long_arg = nullptr;
+
+
+   if (key.hasCharArg())
+   {
+      if ((short_arg = mArguments.findArg( detail::ArgumentKey( key.argChar()))) == nullptr)
+         throw runtime_error( "unknown argument '" + string( 1, key.argChar())
+                              + "'");
+   } // end if
+
+   if (key.hasStringArg())
+   {
+      if ((long_arg = mArguments.findArg( detail::ArgumentKey( key.argString()))) == nullptr)
+         throw runtime_error( "unknown argument '" + key.argString() + "'");
+   } // end if
+
+   return (short_arg != nullptr) && (long_arg != nullptr) &&
+          (short_arg != long_arg);
+} // Handler::invalidCombination
+
+
+
 /// When an argument was identified, passes the argument specification to all
 /// global constraint objects to check if a constraint is violated.
-/// @param[in]  arg_spec  The argument specification.
+/// @param[in]  key  The argument specification.
 /// @since  0.2, 10.04.2016
-void Handler::executeGlobalConstraints( const string& arg_spec)
+void Handler::executeGlobalConstraints( const detail::ArgumentKey& key)
 {
 
    for (auto & current_constraint : mGlobalConstraints)
    {
-      current_constraint->executeConstraint( arg_spec);
+      current_constraint->executeConstraint( key);
    } // end for
 
 } // Handler::executeGlobalConstraints
@@ -1035,7 +1384,7 @@ void Handler::executeGlobalConstraints( const string& arg_spec)
 void Handler::checkGlobalConstraints() const
 {
 
-   for (auto cit : mGlobalConstraints)
+   for (auto const& cit : mGlobalConstraints)
    {
       cit->checkEndCondition();
    } // end for
@@ -1049,29 +1398,30 @@ void Handler::checkGlobalConstraints() const
 /// - Check argument constraints.
 /// - Check global constraints.
 /// - Produce verbose output if required.
-/// - Finally call calledAssign() for this argument.
+/// - Finally call assignValue() for this argument.
 ///
-/// @param[in]  hdl       Pointer to the object that handles this argument.
-/// @param[in]  arg_spec  The argument specification.
-/// @param[in]  value     The value for the argument, empty string if not set.
+/// @param[in]  hdl    Pointer to the object that handles this argument.
+/// @param[in]  key    The short and/or long argument keys.
+/// @param[in]  value  The value for the argument, empty string if not set.
 /// @since  0.2, 10.04.2016
 void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
-                                   const string& arg_spec,
+                                   const detail::ArgumentKey& key,
                                    const string& value)
 {
 
-   mConstraints.argumentIdentified( arg_spec);
-   executeGlobalConstraints( hdl->argSpec());
+   mConstraints.argumentIdentified( key);
+   executeGlobalConstraints( hdl->key());
 
    if (mVerbose)
    {
       if (value.empty())
          mOutput << hdl->varName() << ": is set" << endl;
       else
-         mOutput << hdl->varName() << ": value '" << value << "' is assigned" << endl;
+         mOutput << hdl->varName() << ": value '" << value << "' is assigned"
+                 << endl;
    } // end if
 
-   hdl->calledAssign( mReadingArgumentFile, value);
+   hdl->assignValue( mReadingArgumentFile, value);
 
 } // Handler::handleIdentifiedArg
 
@@ -1081,5 +1431,5 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
 } // namespace celma
 
 
-// ===========================  END OF handler.cpp  ===========================
+// =====  END OF handler.cpp  =====
 
