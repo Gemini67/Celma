@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,14 +12,14 @@
 
 
 /// @file
-/// See documentation of enum celma::log::detail::DuplicatePolicy.
+/// See documentation of enum celma::log::filter::detail::DuplicatePolicy.
 
 
-#ifndef CELMA_LOG_DETAIL_DUPLICATE_POLICY_HPP
-#define CELMA_LOG_DETAIL_DUPLICATE_POLICY_HPP
+#ifndef CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_HPP
+#define CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_HPP
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma { namespace log { namespace filter { namespace detail {
 
 
 /// List of ways how duplicate filter entries should be handled.<br>
@@ -35,12 +35,13 @@ enum class DuplicatePolicy
 
 
 } // namespace detail
+} // namespace filter
 } // namespace log
 } // namespace celma
 
 
-#endif   // CELMA_LOG_DETAIL_DUPLICATE_POLICY_HPP
+#endif   // CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_HPP
 
 
-// =======================  END OF duplicate_policy.hpp  =======================
+// =====  END OF duplicate_policy.hpp  =====
 

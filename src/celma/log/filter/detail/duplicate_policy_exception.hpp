@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,23 +12,24 @@
 
 
 /// @file
-/// See documentation of class celma::log::detail::DuplicatePolicyException.
+/// See documentation of class celma::log::filter::detail::DuplicatePolicyException.
 
 
-#ifndef CELMA_LOG_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
-#define CELMA_LOG_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
+#ifndef CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
+#define CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
 
 
 #include <stdexcept>
 #include "celma/common/celma_exception.hpp"
-#include "celma/log/detail/i_duplicate_policy.hpp"
+#include "celma/log/filter/detail/i_duplicate_policy.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma { namespace log { namespace filter { namespace detail {
 
 
 /// Implementation of the duplicate handler policy 'exception': Throw an
 /// exception.
+/// @since  1.15.1, 09.01.2018  (moved into namespace log::filter)
 /// @since  0.11, 06.12.2016  (renamed from DuplicatePolicyThrow)
 /// @since  0.3, 19.06.2016
 class DuplicatePolicyException: public IDuplicatePolicy
@@ -36,7 +37,7 @@ class DuplicatePolicyException: public IDuplicatePolicy
 public:
    /// Virtual, empty destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~DuplicatePolicyException() { }
+   virtual ~DuplicatePolicyException() = default;
 
    /// Returns the policy type.
    /// @return  Policy \a dpThrow.
@@ -44,7 +45,7 @@ public:
    virtual DuplicatePolicy policy() const override
    {
       return DuplicatePolicy::exception;
-   } // end DuplicatePolicyException::policy
+   } // DuplicatePolicyException::policy
 
    /// Policy: Always throws.
    /// @return  Nothing, actually.
@@ -53,18 +54,19 @@ public:
    virtual bool acceptNew() const noexcept( false) override
    {
       throw CELMA_RuntimeError( "filter already defined");
-   } // endDuplicatePolicyException::acceptNew
+   } // DuplicatePolicyException::acceptNew
 
 }; // DuplicatePolicyException
 
 
 } // namespace detail
+} // namespace filer
 } // namespace log
 } // namespace celma
 
 
-#endif   // CELMA_LOG_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
+#endif   // CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_EXCEPTION_HPP
 
 
-// ==================  END OF duplicate_policy_exception.hpp  ==================
+// =====  END OF duplicate_policy_exception.hpp  =====
 

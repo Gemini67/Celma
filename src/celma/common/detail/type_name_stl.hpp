@@ -21,14 +21,19 @@
 #include <cstring>
 #include <array>
 #include <bitset>
+#include <complex>
 #include <deque>
 #include <forward_list>
+#include <limits>
 #include <list>
 #include <map>
 #include <queue>
+#include <ratio>
 #include <set>
 #include <stack>
 #include <string>
+#include <system_error>
+#include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -69,16 +74,6 @@
 #   else
 #      define have_string_view 0
 #   endif
-#   if __has_include(<variant>)
-#      include <variant>
-#      define have_variant 1
-#   elif __has_include(<experimental/variant>)
-#      include <experimental/variant>
-#      define have_variant 1
-#      define experimental_variant
-#   else
-#      define have_variant 0
-#   endif
 #endif   // has_include
 
 
@@ -93,6 +88,20 @@ PROVIDE_SIMPLE_TYPE_NAME( std::any);
 #   endif
 #endif
 
+
+/// Specialisation for type 'std::nullptr_t'.
+PROVIDE_SIMPLE_TYPE_NAME( std::nullptr_t);
+/// Specialisation for type 'std::thread'.
+PROVIDE_SIMPLE_TYPE_NAME( std::thread);
+
+/// Specialisation for type 'std::error_category'.
+PROVIDE_SIMPLE_TYPE_NAME( std::error_category);
+/// Specialisation for type 'std::error_code'.
+PROVIDE_SIMPLE_TYPE_NAME( std::error_code);
+/// Specialisation for type 'std::error_condition'.
+PROVIDE_SIMPLE_TYPE_NAME( std::error_condition);
+/// Specialisation for type 'std::system_error'.
+PROVIDE_SIMPLE_TYPE_NAME( std::system_error);
 
 /// Specialisation for type 'std::string'.
 PROVIDE_SIMPLE_TYPE_NAME( std::string);
@@ -170,10 +179,38 @@ public:
 }; // type< std::bitset< T>>
 
 
+/// Specialisation for type 'std::ratio<>'.
+///
+/// @tparam  N  The numerator of the ratio.
+/// @tparam  D  The denominator of the ratio.
+/// @since  1.16.0, 03.10.2018
+template< intmax_t N, intmax_t D> class type< std::ratio< N, D>>
+{
+public:
+   /// Returns the name of the type.
+   /// @return  'std::ratio< <numerator>, <denominator> >' (without the spaces).
+   /// @since  1.16.0, 03.10.2018
+   static constexpr const char* name()
+   {
+      return &mName[ 0];
+   } // type< std::ratio< N, D>>::name
+
+   /// Used to store the name of the type persistently.<br>
+   /// Is public to build nested container names, don't access for printing.
+   static constexpr auto const  mName =
+      common::string_concat( "std::ratio<",
+         common::string_from< std::intmax_t, N>::value, ",",
+         common::string_from< std::intmax_t, D>::value, ">");
+
+}; // type< std::ratio< N, D>>
+
+
+PROVIDE_TEMPLATE_TYPE_NAME( std::complex);
 PROVIDE_TEMPLATE_TYPE_NAME( std::deque);
 PROVIDE_TEMPLATE_TYPE_NAME( std::forward_list);
 PROVIDE_TEMPLATE_TYPE_NAME( std::list);
 PROVIDE_TEMPLATE_TYPE_NAME( std::multiset);
+PROVIDE_TEMPLATE_TYPE_NAME( std::numeric_limits);
 PROVIDE_TEMPLATE_TYPE_NAME( std::priority_queue);
 PROVIDE_TEMPLATE_TYPE_NAME( std::queue);
 PROVIDE_TEMPLATE_TYPE_NAME( std::set);

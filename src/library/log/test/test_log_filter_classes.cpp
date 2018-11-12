@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,13 +15,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-
-
-// C++ Standard Library includes
-#include <iostream>
+// module to test header file 
+#include "celma/log/filter/detail/log_filter_classes.hpp"
 
 
 // Boost includes
@@ -30,8 +25,11 @@
 
 
 // project includes
-#include "celma/log/detail/log_filter_classes.hpp"
 #include "celma/log/detail/log_msg.hpp"
+
+
+using celma::log::detail::LogMsg;
+using celma::log::filter::detail::LogFilterClasses;
 
 
 
@@ -40,8 +38,8 @@
 BOOST_AUTO_TEST_CASE( single_class)
 {
 
-   celma::log::detail::LogFilterClasses  classFilter( "Communication");
-   celma::log::detail::LogMsg            msg( LOG_MSG_OBJECT_INIT);
+   LogFilterClasses  classFilter( "Communication");
+   LogMsg            msg( LOG_MSG_OBJECT_INIT);
 
 
    msg.setClass( celma::log::LogClass::sysCall);
@@ -62,7 +60,7 @@ BOOST_AUTO_TEST_CASE( single_class)
    msg.setClass( celma::log::LogClass::operatorAction);
    BOOST_REQUIRE( !classFilter.passFilter( msg));
 
-} // end single_class
+} // single_class
 
 
 
@@ -71,8 +69,8 @@ BOOST_AUTO_TEST_CASE( single_class)
 BOOST_AUTO_TEST_CASE( alternating)
 {
 
-   celma::log::detail::LogFilterClasses  classFilter( "SysCall,Communication,Accounting");
-   celma::log::detail::LogMsg            msg( LOG_MSG_OBJECT_INIT);
+   LogFilterClasses  classFilter( "SysCall,Communication,Accounting");
+   LogMsg            msg( LOG_MSG_OBJECT_INIT);
 
 
    msg.setClass( celma::log::LogClass::sysCall);
@@ -93,8 +91,8 @@ BOOST_AUTO_TEST_CASE( alternating)
    msg.setClass( celma::log::LogClass::operatorAction);
    BOOST_REQUIRE( !classFilter.passFilter( msg));
 
-} // end alternating
+} // alternating
 
 
 
-// ===================  END OF test_log_filter_classes.cpp  ===================
+// =====  END OF test_log_filter_classes.cpp  =====

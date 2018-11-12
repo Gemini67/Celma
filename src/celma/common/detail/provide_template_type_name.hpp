@@ -19,9 +19,6 @@
 #define CELMA_PROVIDE_TEMPLATE_TYPE_NAME_HPP
 
 
-#include <cstring>
-
-
 /// Macro to create the specialisation of type<> for an STL container.
 /// @param  c  The type of the container to create the specialisation for.
 /// @since  1.12.0, 14.09.2018  (now fully constexpr)

@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 #include "celma/log/detail/log_dest_data.hpp"
-#include "celma/log/detail/log_filter.hpp"
+#include "celma/log/filter/filters.hpp"
 
 
 namespace celma { namespace log { namespace detail {
@@ -35,7 +35,7 @@ class LogMsg;
 
 /// Log manager. Handles settings, destinations etc. of one log (type).
 /// @since  1.0.0, 19.06.2016
-class Log: public LogFilter
+class Log: public filter::Filters
 {
 public:
    /// Constructor.

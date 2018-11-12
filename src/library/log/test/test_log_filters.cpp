@@ -3,21 +3,20 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
-**    Test program for the functions of the module LogFilter, using the
-**    Boost.Test framework.
+**    Test program for the functions of the module celma::log::filter::Filters,
+**    using the Boost.Test framework.
 **
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
+// project includes
+#include "celma/log/filter/filters.hpp"
 
 
 // C++ Standard Library includes
@@ -25,15 +24,11 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE LogFilterTest
+#define BOOST_TEST_MODULE LogFiltersTest
 #include <boost/test/unit_test.hpp>
 
 
-// project includes
-#include "celma/log/detail/log_filter.hpp"
-
-
-using celma::log::detail::LogFilter;
+using celma::log::filter::Filters;
 using celma::log::LogLevel;
 
 
@@ -43,13 +38,13 @@ using celma::log::LogLevel;
 BOOST_AUTO_TEST_CASE( empty)
 {
 
-   LogFilter  filters;
+   Filters  filters;
 
 
    BOOST_REQUIRE( filters.processLevel( LogLevel::fatal));
    BOOST_REQUIRE( filters.processLevel( LogLevel::fullDebug));
 
-} // end empty
+} // empty
 
 
 
@@ -58,7 +53,7 @@ BOOST_AUTO_TEST_CASE( empty)
 BOOST_AUTO_TEST_CASE( max_level)
 {
 
-   LogFilter  filters;
+   Filters  filters;
 
 
    filters.maxLevel( LogLevel::warning);
@@ -75,8 +70,8 @@ BOOST_AUTO_TEST_CASE( max_level)
    BOOST_REQUIRE( filters.processLevel( LogLevel::warning));
    BOOST_REQUIRE( !filters.processLevel( LogLevel::info));
 
-} // end max_level
+} // max_level
 
 
 
-// =======================  END OF test_log_filter.cpp  =======================
+// =====  END OF test_log_filters.cpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,23 +19,25 @@
 #define CELMA_LOG_DETAIL_LOG_FILTER_LEVEL_HPP
 
 
-#include "i_log_filter.hpp"
-#include "log_defs.hpp"
-#include "log_msg.hpp"
+#include "celma/log/filter/detail/i_filter.hpp"
+#include "celma/log/detail/log_defs.hpp"
+#include "celma/log/detail/log_msg.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma { namespace log { namespace filter { namespace detail {
 
 
 /// Filter for a specific log level.
 /// @since  0.3, 19.06.2016
-class LogFilterLevel: public ILogFilter
+class LogFilterLevel: public IFilter
 {
 public:
    /// Constructor.
    /// @param[in]  ll  The log level to filter for.
    /// @since  0.3, 19.06.2016
    LogFilterLevel( LogLevel ll);
+
+   virtual ~LogFilterLevel() = default;
 
    /// Fast check: Returns if the specified log level may be processed.
    /// @param[in]  l  The log level to check.
@@ -49,7 +51,7 @@ private:
    /// @param[in]  msg  The message to check the log level of.
    /// @return  \c true if the log level of the message is accepted.
    /// @since  0.3, 19.06.2016
-   virtual bool pass( const LogMsg& msg) const override;
+   virtual bool pass( const log::detail::LogMsg& msg) const override;
 
    /// The log level to filter.
    const LogLevel  mLevel;
@@ -62,25 +64,26 @@ private:
 
 
 inline LogFilterLevel::LogFilterLevel( LogLevel ll):
-   ILogFilter( FilterTypes::level),
+   IFilter( FilterTypes::level),
    mLevel( ll)
 {
-} // end LogFilterLevel::LogFilterLevel
+} // LogFilterLevel::LogFilterLevel
 
 
 inline bool LogFilterLevel::processLevel( LogLevel l) const
 {
    return l == mLevel;
-} // end LogFilterLevel::processLevel
+} // LogFilterLevel::processLevel
 
 
-inline bool LogFilterLevel::pass( const LogMsg& msg) const
+inline bool LogFilterLevel::pass( const log::detail::LogMsg& msg) const
 {
    return msg.getLevel() == mLevel;
-} // end LogFilterLevel::pass
+} // LogFilterLevel::pass
 
 
 } // namespace detail
+} // namespace filter
 } // namespace log
 } // namespace celma
 
@@ -88,5 +91,5 @@ inline bool LogFilterLevel::pass( const LogMsg& msg) const
 #endif   // CELMA_LOG_DETAIL_LOG_FILTER_LEVEL_HPP
 
 
-// =======================  END OF log_filter_level.hpp  =======================
+// =====  END OF log_filter_level.hpp  =====
 

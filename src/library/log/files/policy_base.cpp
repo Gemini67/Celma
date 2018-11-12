@@ -19,6 +19,11 @@
 #include "celma/log/files/policy_base.hpp"
 
 
+// OS/C lib includes
+#include <cerrno>
+#include <cstring>
+
+
 // C++ Standard Library includes
 #include <stdexcept>
 #include <string>
@@ -74,7 +79,7 @@ void PolicyBase::open()
 
    if (!mFile || !mFile.is_open())
       throw std::runtime_error( "could not open file '" + filename
-         + "': " /* + error_reason @@@ */);
+         + "': " + ::strerror( errno));
 
    mCurrentLogfileName = filename;
 
