@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -57,7 +57,7 @@ id_t Logging::findCreateLog( const std::string& name)
    mNextLogId <<= 1;
 
    return log_id;
-} // end Logging::findCreateLog
+} // Logging::findCreateLog
 
 
 
@@ -81,7 +81,7 @@ detail::Log* Logging::getLog( id_t log_id)
    } // end for
 
    return nullptr;
-} // end Logging::getLog
+} // Logging::getLog
 
 
 
@@ -100,7 +100,7 @@ detail::Log* Logging::getLog( const std::string& log_name)
    } // end for
 
    return nullptr;
-} // end Logging::getLog
+} // Logging::getLog
 
 
 
@@ -111,7 +111,7 @@ detail::Log* Logging::getLog( const std::string& log_name)
 void Logging::log( id_t logs, const detail::LogMsg& msg)
 {
 
-   for (auto it : mLogs)
+   for (auto & it : mLogs)
    {
       if (logs & it.mLogId)
       {
@@ -123,7 +123,7 @@ void Logging::log( id_t logs, const detail::LogMsg& msg)
       } // end if
    } // end for
 
-} // end Logging::log
+} // Logging::log
 
 
 
@@ -143,7 +143,39 @@ void Logging::log( const std::string& log_name, const detail::LogMsg& msg)
       } // end if
    } // end for
 
-} // end Logging::log
+} // Logging::log
+
+
+
+/// Add an attribute which is later used for log messages.
+///
+/// @param[in]  name
+///    The name of the attribute.
+/// @param[in]  value
+///    The value for the attribute.
+/// @since
+///    1.15.0, 10.10.2018
+void Logging::addAttribute( const std::string& name, const std::string& value)
+{
+
+   mAttributes.addAttribute( name, value);
+
+} // Logging::addAttribute
+
+
+
+/// Removes an attribute.<br>
+/// If multiple attributes with the same name exist, the attribute that was
+/// added last is removed.
+/// 
+/// @param[in]  attr_name  The name of the attribute to remove.
+/// @since  1.15.0, 11.10.2018
+void Logging::removeAttribute( const std::string& attr_name)
+{
+
+   mAttributes.removeAttribute( attr_name);
+
+} // Logging::removeAttribute
 
 
 
@@ -163,17 +195,7 @@ std::ostream& operator <<( std::ostream& os, const Logging& lg)
    } // end for
 
    return os;
-} // end  operator <<
-
-
-
-/// Constructor.
-/// @since  0.3, 19.06.2016
-Logging::Logging():
-   mNextLogId( 0x01),
-   mLogs()
-{
-} // end Logging::Logging
+} // operator <<
 
 
 
@@ -181,5 +203,5 @@ Logging::Logging():
 } // namespace celma
 
 
-// ===========================  END OF logging.cpp  ===========================
+// =====  END OF logging.cpp  =====
 

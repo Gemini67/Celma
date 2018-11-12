@@ -155,6 +155,8 @@ public:
       tcb(),
       verbose_level(),
       pair_first_arg(),
+      optional_int(),
+      optional_bool(),
       tuple_dest()
    {
 
@@ -178,6 +180,8 @@ public:
       ah.addArgument( "v,verbose_level", DEST_VAR( verbose_level), "verbose level");
       ah.addArgument( "p,pair", DEST_PAIR( pair_first_arg, pair_second_arg, 42),
          "a pair of string and integer");
+      ah.addArgument( "o,opt-int", DEST_VAR( optional_int), "an optional integer");
+      ah.addArgument( "opt-bool", DEST_VAR( optional_bool), "an optional boolean");
 
       tcb.addVoidMember( ah);
       tcb.addValueMember( ah);
@@ -185,24 +189,26 @@ public:
       const ArgString2Array  as2a( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
          "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
          "--void-method --value-method another_value -t 28,unbelievable,12.75 "
-         "--void-member --value-member=last_value -vv --pair juhu",
+         "--void-member --value-member=last_value -vv --pair juhu -o 0 --opt-bool",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // AllTypesFixture::AllTypesFixture
 
-   Handler                         ah;
-   std::ostringstream              oss;
-   int                             int1 = 0;
-   bool                            flag1 = false;
-   std::bitset< 10>                bit_set;
-   std::vector< std::string>       names;
-   std::vector< int>               range_dest;
-   double                          dbl_value = 0.0;
-   std::bitset< 10>                range_bit_set;
-   TestCallbacks                   tcb;
-   celma::prog_args::LevelCounter  verbose_level;
-   std::string                     pair_first_arg;
-   int                             pair_second_arg = -1;
+   Handler                            ah;
+   std::ostringstream                 oss;
+   int                                int1 = 0;
+   bool                               flag1 = false;
+   std::bitset< 10>                   bit_set;
+   std::vector< std::string>          names;
+   std::vector< int>                  range_dest;
+   double                             dbl_value = 0.0;
+   std::bitset< 10>                   range_bit_set;
+   TestCallbacks                      tcb;
+   celma::prog_args::LevelCounter     verbose_level;
+   std::string                        pair_first_arg;
+   int                                pair_second_arg = -1;
+   celma::common::CheckAssign< int>   optional_int;
+   celma::common::CheckAssign< bool>  optional_bool;
 
    std::tuple< int, std::string, double>  tuple_dest;
 
@@ -288,6 +294,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types, AllTypesFixture)
 
    ah.printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
+   // std::cerr << "\n" << oss.str() << std::endl;
    BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
       "Argument summary:\n"
       "   Value <42> set on variable 'int1'.\n"
@@ -304,6 +311,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types, AllTypesFixture)
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_method'.\n"
       "   Value <2> set on variable 'verbose_level'.\n"
       "   Value <\"juhu\", destination 2 = 42> set on variable 'pair_first_arg'.\n"
+      "   Value <0> set on variable 'optional_int'.\n"
+      "   Value <true> set on variable 'optional_bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -448,6 +457,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_type,
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_method'.\n"
       "   Value <2 [LevelCounter]> set on variable 'verbose_level'.\n"
       "   Value <\"juhu\" [std::string], destination 2 = 42 [int]> set on variable 'pair_first_arg'.\n"
+      "   Value <0 [int]> set on variable 'optional_int'.\n"
+      "   Value <true [bool]> set on variable 'optional_bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -593,6 +604,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_key,
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_method' by argument '--value-method'.\n"
       "   Value <2> set on variable 'verbose_level' by argument '-v,--verbose_level'.\n"
       "   Value <\"juhu\", destination 2 = 42> set on variable 'pair_first_arg' by argument '-p,--pair'.\n"
+      "   Value <0> set on variable 'optional_int' by argument '-o,--opt-int'.\n"
+      "   Value <true> set on variable 'optional_bool' by argument '--opt-bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));
@@ -736,6 +749,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_full,
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_method' by argument '--value-method'.\n"
       "   Value <2 [LevelCounter]> set on variable 'verbose_level' by argument '-v,--verbose_level'.\n"
       "   Value <\"juhu\" [std::string], destination 2 = 42 [int]> set on variable 'pair_first_arg' by argument '-p,--pair'.\n"
+      "   Value <0 [int]> set on variable 'optional_int' by argument '-o,--opt-int'.\n"
+      "   Value <true [bool]> set on variable 'optional_bool' by argument '--opt-bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));
@@ -781,7 +796,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_full)
 
 
 
-/// Test the full summary output for an argument handler ith sub-groups.
+/// Test the full summary output for an argument handler with sub-groups.
 ///
 /// @since  1.8.0, 12.07.2018
 BOOST_AUTO_TEST_CASE( subgroups_summary_full)

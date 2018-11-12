@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -47,11 +47,7 @@ LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_
    mFileName( file_name),
    mFunctionName( common::extractFuncname( pretty_function_name)),
    mLineNbr( line_nbr),
-   mClass( LogClass::undefined),
-   mLevel( LogLevel::undefined),
-   mErrNbr( 0),
-   mText(),
-   mCustomProperty()
+   mText()
 {
 
    common::remove_to_if_last_incl( mFileName, '/');
@@ -77,24 +73,10 @@ void LogMsg::assign( const common::ExceptionBase& eb)
 
 
 
-/// Stores a custom property to be used for this log message.
-/// @param[in]  property_name   The name of the property.
-/// @param[in]  property_value  The value of the property.
-/// @since  1.0.0, 11.12.2016
-void LogMsg::setCustomProperty( const std::string& property_name,
-                                const std::string& property_value)
-{
-
-   mCustomProperty.addProperty( property_name, property_value);
-
-} // LogMsg::setCustomProperty
-
-
-
 } // namespace detail
 } // namespace log
 } // namespace celma
 
 
-// ===========================  END OF log_msg.cpp  ===========================
+// =====  END OF log_msg.cpp  =====
 

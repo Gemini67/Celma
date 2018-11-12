@@ -15,7 +15,7 @@
 /// See documentation of template celma::prog_args::detail::TypedArg.<br>
 /// This file contains the base template plus all specialisations:
 /// - TypedArg< bool>
-/// - TypedArg< CheckAssign< T> >
+/// - TypedArg< CheckAssign< T>>
 /// - TypedArg< CheckAssign< bool> >
 /// - TypedArg< std::bitset< T...>>
 /// - TypedArg< std::tuple< T...>>
@@ -443,7 +443,7 @@ template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostrea
    os << "value type '" << type< T>::name()
       << "', destination 'CheckAssign< " << mVarName << ">', value ";
    if (mDestVar.hasValue())
-      os << " = " << static_cast< T>( mDestVar) << "." << std::endl;
+      os << "= " << static_cast< T>( mDestVar) << "." << std::endl;
    else
       os << "not set." << std::endl;
    os << "   " << static_cast< const TypedArgBase&>( *this);
@@ -463,14 +463,14 @@ template< typename T>
    {
       mDestVar = boost::lexical_cast< T>( value);
    } // end if
-} // TypedArg< CheckAssign< T> >::assign
+} // TypedArg< CheckAssign< T>>::assign
 
 
 // Template TypedArg< common::CheckAssign< bool>>
 // ==============================================
 
 
-/// Specialization of the TypedArg< CheckAssign< T> > template for boolean flags.
+/// Specialization of the TypedArg< CheckAssign< T>> template for boolean flags.
 ///
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
@@ -524,7 +524,7 @@ public:
    {
       os << std::boolalpha << static_cast< bool>( mDestVar);
       if (print_type)
-         os << " [bool]";
+         os << " [" << varTypeName() << "]";
    } // TypedArg< common::CheckAssign< bool>>::printValue
 
    /// Would specify that the argument is mandatory (required). This does not
@@ -658,7 +658,7 @@ public:
    {
       os << mDestVar.value();
       if (print_type)
-         os << " [LevelCounter]";
+         os << " [" << varTypeName() << "]";
    } // TypedArg< LevelCounter>::printValue
 
    /// Special feature for destination variable type level counter:<br>
@@ -683,10 +683,11 @@ protected:
          << "   " << static_cast< const TypedArgBase&>( *this);
    } // TypedArg< LevelCounter>::dump
 
-   /// Either increment the level counter, or assigns a value to it.
+   /// Either increments the level counter, or assigns a value to it.
    ///
-   /// @param[in]  value  Either an empty string, in which case the current
-   ///                    value is incremented, otherwise value to store.
+   /// @param[in]  value
+   ///    Either an empty string, in which case the current value is
+   ///    incremented, otherwise value to store/assign.
    /// @since  1.10.0, 11.08.2018
    virtual void assign( const std::string& value) noexcept( false) override
    {
@@ -1218,8 +1219,8 @@ template< typename... T>
 template< typename... T>
    void TypedArg< std::tuple< T...>>::dump( std::ostream& os) const
 {
-   os << "value type '" << type< decltype( mDestVar)>::name()
-      << "', destination '" << mVarName << "', ";
+   os << "value type '" << varTypeName() << "', destination '" << mVarName
+      << "', ";
    if (hasValue())
    {
       os << "value = <";

@@ -316,6 +316,13 @@ BOOST_AUTO_TEST_CASE( stl_types_key_value)
    BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_tuple>::name(),
                             "std::tuple<int,std::string>");
 
+   using int_string_int_tuple = std::tuple< int, std::string, int>;
+   // static_assert( celma::type< int_string_tuple>::name()[5] == 't');
+   // static_assert( celma::type< int_string_tuple>::name()[11] == 'i');
+   // static_assert( celma::type< int_string_tuple>::name()[20] == 's');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< int_string_int_tuple>::name(),
+                            "std::tuple<int,std::string,int>");
+
    using int_string_unordered_multimap = std::unordered_multimap< int, std::string>;
    static_assert( celma::type< int_string_unordered_multimap>::name()[5] == 'u');
    static_assert( celma::type< int_string_unordered_multimap>::name()[15] == 'm');
