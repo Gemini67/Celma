@@ -31,7 +31,7 @@ namespace celma { namespace detail {
 ///
 /// @tparam  T  The type to return the name of.
 /// @return  The name of the given type, using the corresponding type<> template.
-/// @since  x.y.z, 01.11.2018
+/// @since  1.16.0, 01.11.2018
 template< class T> constexpr const auto typeNameList()
 {
    return type< T>::mName;
@@ -52,7 +52,7 @@ template< class T> constexpr const auto typeNameList()
 /// @tparam  Tp
 ///    List of the remaining types, may be empty.
 /// @return  The string with the comma separated list of all type names.
-/// @since  x.y.z, 01.11.2018
+/// @since  1.16.0, 01.11.2018
 template< typename T0, typename T1, typename... Tp>
    constexpr const auto typeNameList()
 {
@@ -89,14 +89,14 @@ public:
 /// Specialisation for type 'std::variant<>'.
 ///
 /// @tparam  T  The types of the elements stored in the variant.
-/// @since  x.y.z, 02.11.2018
+/// @since  1.16.0, 02.11.2018
 template< typename... T> class type< std::variant< T...>>
 {
 public:
    /// Returns the name of the variant type.
    ///
    /// @return  'std::variant<types...>'.
-   /// @since  x.y.z, 02.11.2018
+   /// @since  1.16.0, 02.11.2018
    static constexpr const char* name()
    {
       return &mName[ 0];

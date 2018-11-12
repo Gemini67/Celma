@@ -183,13 +183,13 @@ public:
 ///
 /// @tparam  N  The numerator of the ratio.
 /// @tparam  D  The denominator of the ratio.
-/// @since  x.y.z, 03.10.2018
+/// @since  1.16.0, 03.10.2018
 template< intmax_t N, intmax_t D> class type< std::ratio< N, D>>
 {
 public:
    /// Returns the name of the type.
    /// @return  'std::ratio< <numerator>, <denominator> >' (without the spaces).
-   /// @since  x.y.z, 03.10.2018
+   /// @since  1.16.0, 03.10.2018
    static constexpr const char* name()
    {
       return &mName[ 0];

@@ -320,9 +320,10 @@ BOOST_AUTO_TEST_CASE( stl_types)
 } // stl_types
 
 
+
 /// STL value storage types (not containers).
 ///
-/// @since  x.y.z, 02.11.2018
+/// @since  1.16.0, 02.11.2018
 ///    (moved into separate test function, added variant)
 /// @since  0.1, 15.03.2016
 BOOST_AUTO_TEST_CASE( stl_value_storage)
@@ -598,7 +599,7 @@ BOOST_AUTO_TEST_CASE( test_smart_pointers)
 
 /// Test for exception types.
 ///
-/// @since  x.y.z, 03.10.2018
+/// @since  1.16.0, 03.10.2018
 BOOST_AUTO_TEST_CASE( exceptions)
 {
 
@@ -650,7 +651,7 @@ BOOST_AUTO_TEST_CASE( exceptions)
 
 /// Test the type names of the error information types.
 ///
-/// @since  x.y.z, 03.10.2018
+/// @since  1.16.0, 03.10.2018
 BOOST_AUTO_TEST_CASE( error_information)
 {
 
