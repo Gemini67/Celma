@@ -47,6 +47,7 @@
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
      1.16.0 | 2018-11-12        | Type name library is 100 % constexpr. Plus more classes/type names added.
+     1.15.1 | 2018-10-28        | Moved log filters into separate directory/namespace.
      1.15.0 | 2018-10-25        | Addec "atributes" in log library.
      1.14.0 | 2018-10-05        | New feature "argument help" in argument handler.
      1.13.0 | 2018-10-05        | Added new module/function "grouped double 2 string".

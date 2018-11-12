@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,17 +12,17 @@
 
 
 /// @file
-/// See documentation of class celma::log::detail::DuplicatePolicyFactory.
+/// See documentation of class celma::log::filer::detail::DuplicatePolicyFactory.
 
 
-#ifndef CELMA_LOG_DETAIL_DUPLICATE_POLICY_FACTORY_HPP
-#define CELMA_LOG_DETAIL_DUPLICATE_POLICY_FACTORY_HPP
+#ifndef CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_FACTORY_HPP
+#define CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_FACTORY_HPP
 
 
-#include "celma/log/detail/duplicate_policy.hpp"
+#include "celma/log/filter/detail/duplicate_policy.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma { namespace log { namespace filter { namespace detail {
 
 
 class IDuplicatePolicy;
@@ -30,6 +30,7 @@ class IDuplicatePolicy;
 
 /// Factory class that creates the duplicate policy handler object for the
 /// specified policy.
+/// @since  1.15.1, 09.01.2018  (moved into namespace log::filter)
 /// @since  0.3, 19.06.2016
 class DuplicatePolicyFactory
 {
@@ -48,12 +49,13 @@ private:
 
 
 } // namespace detail
+} // namespace filter
 } // namespace log
 } // namespace celma
 
 
-#endif   // CELMA_LOG_DETAIL_DUPLICATE_POLICY_FACTORY_HPP
+#endif   // CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_FACTORY_HPP
 
 
-// ===================  END OF duplicate_policy_factory.hpp  ===================
+// =====  END OF duplicate_policy_factory.hpp  =====
 

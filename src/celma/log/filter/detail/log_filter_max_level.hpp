@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,22 +19,24 @@
 #define CELMA_LOG_DETAIL_LOG_FILTER_MAX_LEVEL_HPP
 
 
-#include "i_log_filter.hpp"
-#include "log_msg.hpp"
+#include "celma/log/filter/detail/i_filter.hpp"
+#include "celma/log/detail/log_msg.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma { namespace log { namespace filter { namespace detail {
 
 
 /// Filter with a maximum log level.
 /// @since  0.3, 19.06.2016
-class LogFilterMaxLevel: public ILogFilter
+class LogFilterMaxLevel: public IFilter
 {
 public:
    /// Constructor.
    /// @param[in]  max_level  The maximum log level that is accepted.
    /// @since  0.3, 19.06.2016
    LogFilterMaxLevel( LogLevel max_level);
+
+   virtual ~LogFilterMaxLevel() = default;
 
    /// Fast check: Returns if the specified log level may be processed.
    /// @param[in]  l  The log level to check.
@@ -48,7 +50,7 @@ private:
    /// @param[in]  msg  The message to check the log level of.
    /// @return  \c true if the log level of the message is accepted.
    /// @since  0.3, 19.06.2016
-   virtual bool pass( const LogMsg& msg) const override;
+   virtual bool pass( const log::detail::LogMsg& msg) const override;
 
    /// The maximum log level.
    const LogLevel  mMaxLevel;
@@ -61,25 +63,26 @@ private:
 
 
 inline LogFilterMaxLevel::LogFilterMaxLevel( LogLevel max_level):
-   ILogFilter( FilterTypes::maxLevel),
+   IFilter( FilterTypes::maxLevel),
    mMaxLevel( max_level)
 {
-} // end LogFilterMaxLevel::LogFilterMaxLevel
+} // LogFilterMaxLevel::LogFilterMaxLevel
 
 
 bool LogFilterMaxLevel::processLevel( LogLevel l) const
 {
    return l <= mMaxLevel;
-} // end LogFilterMaxLevel::processLevel
+} // LogFilterMaxLevel::processLevel
 
 
-inline bool LogFilterMaxLevel::pass( const LogMsg& msg) const
+inline bool LogFilterMaxLevel::pass( const log::detail::LogMsg& msg) const
 {
    return processLevel( msg.getLevel());
-} // end LogFilterMaxLevel::pass
+} // LogFilterMaxLevel::pass
 
 
 } // namespace detail
+} // namespace filter
 } // namespace log
 } // namespace celma
 

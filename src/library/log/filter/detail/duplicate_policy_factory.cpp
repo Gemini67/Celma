@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,20 +12,21 @@
 
 
 /// @file
-/// See documentation of class celma::log::detail::DuplicatePolicyFactory.
+/// See documentation of class celma::log::filter::detail::DuplicatePolicyFactory.
 
 
 // module header file include
-#include "celma/log/detail/duplicate_policy_factory.hpp"
+#include "celma/log/filter/detail/duplicate_policy_factory.hpp"
 
 
+// project includes
 #include "celma/common/celma_exception.hpp"
-#include "celma/log/detail/duplicate_policy_ignore.hpp"
-#include "celma/log/detail/duplicate_policy_replace.hpp"
-#include "celma/log/detail/duplicate_policy_exception.hpp"
+#include "celma/log/filter/detail/duplicate_policy_ignore.hpp"
+#include "celma/log/filter/detail/duplicate_policy_replace.hpp"
+#include "celma/log/filter/detail/duplicate_policy_exception.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma { namespace log { namespace filter { namespace detail {
 
 
 
@@ -44,14 +45,15 @@ IDuplicatePolicy* DuplicatePolicyFactory::createPolicy( DuplicatePolicy policy)
    default:
       throw CELMA_RuntimeError( "invalid value for duplicate policy");
    } // end switch
-} // end DuplicatePolicyFactory::createPolicy
+} // DuplicatePolicyFactory::createPolicy
 
 
 
 } // namespace detail
+} // namespace filter
 } // namespace log
 } // namespace celma
 
 
-// ===================  END OF duplicate_policy_factory.cpp  ===================
+// =====  END OF duplicate_policy_factory.cpp  =====
 
