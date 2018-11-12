@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,13 +15,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-
-
-// C++ Standard Library includes
-#include <iostream>
+// module to test header file include
+#include "celma/log/filter/detail/log_filter_max_level.hpp"
 
 
 // Boost includes
@@ -30,10 +25,11 @@
 
 
 // project includes
-#include "celma/log/detail/log_filter_max_level.hpp"
+#include "celma/log/detail/log_msg.hpp"
 
 
 using celma::log::LogLevel;
+using celma::log::filter::detail::LogFilterMaxLevel;
 
 
 
@@ -42,7 +38,7 @@ using celma::log::LogLevel;
 BOOST_AUTO_TEST_CASE( max_level)
 {
 
-   celma::log::detail::LogFilterMaxLevel  maxFilter( LogLevel::warning);
+   LogFilterMaxLevel  maxFilter( LogLevel::warning);
 
    BOOST_REQUIRE( maxFilter.processLevel( LogLevel::fatal));
    BOOST_REQUIRE( maxFilter.processLevel( LogLevel::error));
@@ -51,7 +47,7 @@ BOOST_AUTO_TEST_CASE( max_level)
    BOOST_REQUIRE( !maxFilter.processLevel( LogLevel::debug));
    BOOST_REQUIRE( !maxFilter.processLevel( LogLevel::fullDebug));
 
-} // end max_level
+} // max_level
 
 
 
@@ -60,8 +56,8 @@ BOOST_AUTO_TEST_CASE( max_level)
 BOOST_AUTO_TEST_CASE( max_level_pass_filter)
 {
 
-   celma::log::detail::LogFilterMaxLevel  maxFilter( LogLevel::warning);
-   celma::log::detail::LogMsg             msg( LOG_MSG_OBJECT_INIT);
+   LogFilterMaxLevel           maxFilter( LogLevel::warning);
+   celma::log::detail::LogMsg  msg( LOG_MSG_OBJECT_INIT);
 
 
    msg.setLevel( LogLevel::fatal);
@@ -82,8 +78,8 @@ BOOST_AUTO_TEST_CASE( max_level_pass_filter)
    msg.setLevel( LogLevel::fullDebug);
    BOOST_REQUIRE( !maxFilter.passFilter( msg));
 
-} // end max_level_pass_filter
+} // max_level_pass_filter
 
 
 
-// ==================  END OF test_log_filter_max_level.cpp  ==================
+// ====  END OF test_log_filter_max_level.cpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -53,5 +53,5 @@ void ILogDest::setFormatter( IFormatBase*)
 } // namespace celma
 
 
-// ==========================  END OF i_log_dest.cpp  ==========================
+// =====  END OF i_log_dest.cpp  =====
 
