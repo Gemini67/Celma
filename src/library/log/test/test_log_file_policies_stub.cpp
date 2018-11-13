@@ -122,25 +122,6 @@ public:
       return mNextRenameParamsIdx == mRenameParam.size();
    } // TestFileFuncs::allRenameParameters
 
-   /// Resets the container with the expected rename parameters as well as the
-   /// index of the next expected parameters.
-   ///
-   /// @since  1.11.0, 30.08.2018
-   void resetRenameParameters()
-   {
-      mRenameParam.clear();
-      mNextRenameParamsIdx = 0;
-   } // TestFileFuncs::resetRenameParameters
-
-   /// Resets only the index of the next expected parameters.<br>
-   /// Use this function if the same file definition is used for multiple tests.
-   ///
-   /// @since  1.11.0, 02.09.2018
-   void resetNextRenameIndex()
-   {
-      mNextRenameParamsIdx = 0;
-   } // TestFileFuncs::resetNextRenameIndex
-
 private:
    /// Type of the expected rename parameters.
    using names_t = std::pair< std::string, std::string>;

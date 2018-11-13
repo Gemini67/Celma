@@ -1109,7 +1109,7 @@ BOOST_AUTO_TEST_CASE( two_flags)
       /// @param[in]  argstring  The argument string to pass to
       ///                        \c ArgString2Array.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const string& argstring):
          ah( 0),
          as2a( argstring, nullptr)
       {
@@ -1241,7 +1241,7 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       /// @param[in]  argstring  The argument string to pass to
       ///                        \c ArgString2Array.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const string& argstring):
          ah( 0),
          as2a( argstring, nullptr)
       {
@@ -1376,7 +1376,7 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const string& argstring):
          ah( 0),
          maxValue(),
          name(),
@@ -1654,7 +1654,7 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const string& argstring):
          ah( 0),
          maxValue(),
          name(),
@@ -2040,7 +2040,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const string& argstring):
          ah( 0),
          name(),
          minVal(),
@@ -2157,7 +2157,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const string& argstring):
          ah( 0),
          iarg(),
          name(),
@@ -2212,7 +2212,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData2( const string& argstring):
+      explicit TestData2( const string& argstring):
          TestData( argstring),
          iarg2()
       {

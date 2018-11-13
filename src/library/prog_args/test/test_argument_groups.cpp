@@ -251,6 +251,7 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       secondFlag = false;
       BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( firstFlag);
+      // cppcheck-suppress knownConditionTrueFalse
       BOOST_REQUIRE( !secondFlag);
 
       // singleton Groups: have to clean up
@@ -278,6 +279,7 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       firstFlag  = false;
       secondFlag = false;
       BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+      // cppcheck-suppress knownConditionTrueFalse
       BOOST_REQUIRE( !firstFlag);
       BOOST_REQUIRE( secondFlag);
 
@@ -383,7 +385,9 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
 
       const ArgString2Array  as2a( "-f", nullptr);
 
+      // cppcheck-suppress unreadVariable
       firstFlag = false;
+      // cppcheck-suppress unreadVariable
       secondArg = -1;
       BOOST_REQUIRE_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV),
                            runtime_error);
@@ -406,6 +410,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       firstFlag = false;
       secondArg = -1;
       BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+      // cppcheck-suppress knownConditionTrueFalse
       BOOST_REQUIRE( !firstFlag);
       BOOST_REQUIRE_EQUAL( secondArg, 5);
 

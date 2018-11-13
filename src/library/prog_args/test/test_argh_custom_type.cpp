@@ -154,6 +154,7 @@ bool TypedArgBitset::hasValue() const
 } // TypedArgBitset::hasValue
 
 
+// cppcheck-suppress unusedFunction
 void TypedArgBitset::printValue( std::ostream& os, bool) const
 {
    os << "[custom]";
