@@ -1,6 +1,8 @@
 # Celma
 C++ Extension Library Modules for Application
 
+![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Gemini67_Celma&metric=alert_status)
+
 This library offers a collection of modules that are often needed in developping applications on UNIX.
 The main modules are:
 
