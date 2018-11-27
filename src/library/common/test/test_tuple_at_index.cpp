@@ -105,14 +105,14 @@ BOOST_AUTO_TEST_CASE( single_element)
    {
       std::tuple< int>  tup( 42);
       int               idx = 1;
-      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( 42)), std::range_error);
+      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( 42)), std::out_of_range);
    } // end scope
 
    // totally wrong index
    {
       std::tuple< int>  tup( 42);
       int               idx = 2;
-      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( 42)), std::range_error);
+      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( 42)), std::out_of_range);
    } // end scope
 
 } // single_element
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE( three_elements)
    {
       std::tuple< int, int, int>  tup( 13, 42, 4711);
       int                         idx = 3;
-      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( -1)), std::range_error);
+      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( -1)), std::out_of_range);
    } // end scope
 
    // loop access
