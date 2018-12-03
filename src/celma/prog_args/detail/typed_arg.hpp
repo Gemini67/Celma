@@ -239,7 +239,8 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArg( bool& dest, const std::string& vname):
       TypedArgBase( vname, ValueMode::none, false),
-      mDestVar( dest)
+      mDestVar( dest),
+      mValue2Set( !mDestVar)
    {
       mpCardinality.reset( new CardinalityMax( 1));
    } // TypedArg< bool>::TypedArg
@@ -289,17 +290,6 @@ public:
                               mVarName + "' mandatory");
    } // TypedArg< bool>::setIsMandatory
 
-   /// Unset the flag (set to \c false) when the argument is detected, instead
-   /// of setting it (the default).
-   ///
-   /// @return  Pointer to this object.
-   /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* unsetFlag() override
-   {
-      mValue2Set = false;
-      return this;
-   } // TypedArg< bool>::unsetFlag
-
 protected:
    /// Used for printing an argument and its destination variable.
    ///
@@ -327,8 +317,8 @@ private:
    bool&  mDestVar;
    /// Flag set when a value was assigned through an argument.
    bool   mHasValueSet = false;
-   /// The value to set when assign is called. Default = \c true.
-   bool   mValue2Set = true;
+   /// The value to set when assign is called.
+   bool   mValue2Set;
 
 }; // TypedArg< bool>
 
@@ -488,8 +478,7 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArg( common::CheckAssign< bool>& dest, const std::string& vname):
       TypedArgBase( vname, ValueMode::none, false),
-      mDestVar( dest),
-      mValue2Set( true)
+      mDestVar( dest)
    {
    } // TypedArg< common::CheckAssign< bool>>::TypedArg
 
@@ -572,7 +561,7 @@ private:
    /// Reference of the destination variable to store the value in.
    common::CheckAssign< bool>&  mDestVar;
    /// The value to set when assign is called. Default = \c true.
-   bool                         mValue2Set;
+   bool                         mValue2Set = true;
 
 }; // TypedArg< common::CheckAssign< bool>>
 
