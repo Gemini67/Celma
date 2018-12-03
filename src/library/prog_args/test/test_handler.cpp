@@ -171,6 +171,15 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    // Ensure that calling unsetFlag() on a wrong type throws.
    {
       Handler  ah( 0);
+      bool     flag = false;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
+                                         ->unsetFlag(),
+                           logic_error);
+   } // end scope
+
+   {
+      Handler  ah( 0);
       int      i = -1;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i), "int")
@@ -508,8 +517,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag_unset)
    bool     flag = true;
 
 
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag")
-                                         ->unsetFlag());
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag"));
 
    const ArgString2Array  as2a( "-f", nullptr);
 
@@ -531,7 +539,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag")
-                                         ->unsetFlag());
+      ->unsetFlag());
 
    const ArgString2Array  as2a( "-f", nullptr);
 
