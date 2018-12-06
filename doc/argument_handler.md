@@ -2,7 +2,7 @@
 
 ## Concepts
 
-The following concepts lead to the design of the argument handler library as it is today:
+The following concepts led to the design of the argument handler library as it is today:
 
 - Once the command line has been evaluated, everything argument-handling related is done.
 - The key of an argument must be specified only once (as opposed to e.g. `getopt()`).
