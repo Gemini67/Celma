@@ -57,11 +57,11 @@ public:
    /// Constructor, stores the filter type.
    /// @param[in]  ft  The type of the filter.
    /// @since  0.3, 19.06.2016
-   IFilter( FilterTypes ft);
+   explicit IFilter( FilterTypes ft);
 
    /// Empty, virtual destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~IFilter() { };
+   virtual ~IFilter() = default;
 
    /// Returns the type of this filter.
    /// @return  The type of this filter.

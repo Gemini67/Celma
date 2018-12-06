@@ -234,10 +234,6 @@ BOOST_AUTO_TEST_CASE( simple)
    BOOST_REQUIRE_EQUAL( s.logFileName(), "/tmp/logfile_simple.txt");
    BOOST_REQUIRE_EQUAL( s.logFileSize(), 30'000);
 
-   auto  copy( s);
-   BOOST_REQUIRE( copy.logFileName().empty());
-   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
-
 } // simple
 
 
@@ -349,10 +345,6 @@ BOOST_AUTO_TEST_CASE( max_size_roll_always)
    BOOST_REQUIRE_EQUAL( ms.logFileName(), "/tmp/logfile_ms.00.txt");
    BOOST_REQUIRE_EQUAL( ms.logFileSize(), 50'000);
 
-   auto  copy( ms);
-   BOOST_REQUIRE( copy.logFileName().empty());
-   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
-
 } // max_size_roll_always
 
 
@@ -421,10 +413,6 @@ BOOST_AUTO_TEST_CASE( timestamped_dont_roll)
    BOOST_REQUIRE_EQUAL( ts.logFileSize(), 40'000);
 
    BOOST_REQUIRE_NO_THROW( ts.writeMessage( lm, text));
-
-   auto  copy( ts);
-   BOOST_REQUIRE( copy.logFileName().empty());
-   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
 
 } // timestamped_dont_roll
 
@@ -505,10 +493,6 @@ BOOST_AUTO_TEST_CASE( counted_rolled)
    BOOST_REQUIRE( ct.getResetReOpenCalled());
    BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
    BOOST_REQUIRE_EQUAL( ct.logFileSize(), 100);
-
-   auto  copy( ct);
-   BOOST_REQUIRE( copy.logFileName().empty());
-   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
 
 } // counted_rolled
 

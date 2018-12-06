@@ -47,16 +47,19 @@ public:
    MaxSize( const filename::Definition& fname_def, size_t max_file_size,
       int max_gen) noexcept( false);
 
-   /// Copy constructor. Copies only the settings but not any eventually open
-   /// log file.
-   ///
-   /// @param[in]  other  The other object to copy the data from.
+   /// Copying and moving not needed.
+   /// @since  x.y.z, 06.12.2018  (deleted)
    /// @since  1.0.0, 13.12.2017
-   MaxSize( const MaxSize& other);
+   MaxSize( const MaxSize&) = delete;
+   MaxSize( MaxSize&&) = delete;
 
    /// Default destructor.
    /// @since  1.0.0, 13.12.2017
    virtual ~MaxSize() = default;
+
+   /// Copying and moving not needed.
+   MaxSize& operator =( const MaxSize&) = delete;
+   MaxSize& operator =( MaxSize&&) = delete;
 
 private:
    /// Checks the currently open file if the file limit is reached.
