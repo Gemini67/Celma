@@ -1,5 +1,8 @@
 # Celma
-C++ Extension Library Modules for Application
+C++ Extension Library Modules for Application<br>
+Version: 1.18.0
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Gemini67_Celma&metric=alert_status)](https://sonarcloud.io/dashboard?id=Gemini67_Celma)
 
 This library offers a collection of modules that are often needed in developping applications on UNIX.
 The main modules are:
@@ -12,7 +15,7 @@ The main modules are:
 
   Easy to use logging library.
 
-- Type name
+- [Type name](doc/type_name.md)
 
   Gives the type name as string.
 
@@ -26,5 +29,5 @@ The main modules are:
 
 Requirements:
 - Boost library
-- C++ 14 compliant compiler
+- C++ 17 compliant compiler
 

@@ -874,6 +874,7 @@ BOOST_AUTO_TEST_CASE( multiple_iterators)
       BOOST_REQUIRE_EQUAL( numArgs2, 14);
 
       int  numArgs3 = 0;
+      // cppcheck-suppress postfixOperator
       for (ArgListParser::const_iterator it3 = alp.cbegin(); it3 != alp.cend(); it3++)
       {
          ++numArgs3;

@@ -179,6 +179,7 @@ BOOST_FIXTURE_TEST_CASE( default_policies_set_const, TestFixture)
 
 
 /// Read the text file but ignore empty lines.
+///
 /// @since  1.3.0, 13.04.2016
 BOOST_FIXTURE_TEST_CASE( no_empty_lines, TestFixture)
 {
@@ -196,6 +197,7 @@ BOOST_FIXTURE_TEST_CASE( no_empty_lines, TestFixture)
    } // end for
 
    BOOST_REQUIRE_EQUAL( num_lines, NumTextLines);
+   BOOST_REQUIRE_EQUAL( num_empty_lines, 0);
 
 } // no_empty_lines
 
@@ -253,6 +255,7 @@ BOOST_FIXTURE_TEST_CASE( statistics_no_empty_lines, TestFixture)
    BOOST_REQUIRE_EQUAL( fls.linesRead,      NumLines);
    BOOST_REQUIRE_EQUAL( fls.linesFiltered,  NumEmptyLines);
    BOOST_REQUIRE_EQUAL( fls.linesProcessed, NumTextLines);
+   BOOST_REQUIRE_EQUAL( num_lines, NumTextLines);
 
 } // statistics_no_empty_lines
 

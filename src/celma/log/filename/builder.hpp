@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -59,7 +59,7 @@ public:
    /// Constructor.
    /// @param[in]  def  The object with the format definition.
    /// @since  1.0.0, 16.10.2017
-   Builder( const Definition& def);
+   explicit Builder( const Definition& def);
 
    /// Creates a log file number according to the format definition given in the
    /// constructor.
@@ -104,5 +104,5 @@ private:
 #endif   // CELMA_LOG_FILENAME_BUILDER_HPP
 
 
-// ===========================  END OF builder.hpp  ===========================
+// =====  END OF builder.hpp  =====
 

@@ -36,7 +36,9 @@ public:
    /// Constructor.
    /// @param[in]  valueList  The list of allowed values in string format.
    /// @since  0.2, 10.04.2016
-   CheckValues( const std::string& valueList) noexcept( false);
+   explicit CheckValues( const std::string& valueList) noexcept( false);
+
+   virtual ~CheckValues() = default;
 
    /// Checks if the value in \a val exists in the set of allowed values.
    /// @param[in]  val  The value to check in string format.

@@ -37,7 +37,7 @@ public:
    /// Constructor, initialises the set of log classes to accept.
    /// @param[in]  class_list  The list of log class names to filter for.
    /// @since  0.3, 19.06.2016
-   LogFilterClasses( const std::string& class_list) noexcept( false);
+   explicit LogFilterClasses( const std::string& class_list) noexcept( false);
 
    virtual ~LogFilterClasses() = default;
 

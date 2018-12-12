@@ -50,19 +50,6 @@ PolicyBase::PolicyBase( const filename::Definition& fname_def):
 
 
 
-/// Copy constructor. Only copies the log filename definition, not any
-/// eventually open log file.
-/// @param[in]  other  The other object to copy the data from.
-/// @since  1.0.0, 13.12.2017
-PolicyBase::PolicyBase( const PolicyBase& other):
-   mFilenameDefinition( other.mFilenameDefinition),
-   mCurrentLogfileName(),
-   mFile()
-{
-} // PolicyBase::PolicyBase
-
-
-
 /// Opens the current log file, checks if it still is okay to use the file,
 /// if not closes the file again, rolls the log file generations and opens
 /// a new file.<br>

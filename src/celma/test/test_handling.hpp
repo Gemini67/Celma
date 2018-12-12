@@ -40,14 +40,14 @@ public:
    ///    Pointer to the flag to set when the destructor was called,
    ///    NULL (the default) if no flag needs to be set.
    /// @since  1.11.0, 07.09.2018
-   TestHandling( bool* dtor_called_flag = nullptr);
+   explicit TestHandling( bool* dtor_called_flag = nullptr);
 
    /// Copy constructor. Sets the flag #mCopyCtor.<br>
    /// An eventually set #mpDtorCalled pointer is not copied.
    ///
    /// @param[in]  other  Ignored.
    /// @since  1.11.0, 07.09.2018
-   TestHandling( const TestHandling& other);
+   explicit TestHandling( const TestHandling& other);
 
    /// Move constructor. Sets the flag #mMoveCtor.<br>
    /// An eventually set #mpDtorCalled pointer is not copied/moved.

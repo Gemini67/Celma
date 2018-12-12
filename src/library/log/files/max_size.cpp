@@ -57,20 +57,6 @@ MaxSize::MaxSize( const filename::Definition& fname_def, size_t max_file_size,
 
 
 
-/// Copy constructor. Copies only the settings but not any eventually open
-/// log file.
-///
-/// @param[in]  other  The other object to copy the data from.
-/// @since  1.0.0, 13.12.2017
-MaxSize::MaxSize( const MaxSize& other):
-   PolicyBase( other),
-   mMaxFileSize( other.mMaxFileSize),
-   mMaxGenerations( other.mMaxGenerations)
-{
-} // MaxSize::MaxSize
-
-
-
 /// Checks the currently open file if the file limit is reached.
 ///
 /// @return

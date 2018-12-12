@@ -57,20 +57,6 @@ Counted::Counted( const filename::Definition& fname_def, size_t max_entries,
 
 
 
-/// Copy constructor. Copies only the settings but not any eventually open
-/// log file.
-///
-/// @param[in]  other  The other object to copy the data from.
-/// @since  1.11.0, 05.09.2018
-Counted::Counted( const Counted& other):
-   PolicyBase( other),
-   mMaxEntries( other.mMaxEntries),
-   mMaxGenerations( other.mMaxGenerations)
-{
-} // Counted::Counted
-
-
-
 /// Checks the currently open file if it can still be used, i.e. it is empty.
 ///
 /// @return

@@ -303,7 +303,7 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& arguments):
+      explicit TestData( const string& arguments):
          ah( 0),
          dest_vec(),
          dest_i1( -1),
@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& arguments):
+      explicit TestData( const string& arguments):
          ah( 0),
          dest_vec(),
          dest_i1( -1),

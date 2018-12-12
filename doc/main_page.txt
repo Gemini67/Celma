@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.16.0
+   \mainpage  CELMA v1.18.0
 
    \tableofcontents
 
@@ -46,6 +46,10 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.18.0 | 2018-12-12        | Added module enum array.
+     1.17.2 | 2018-12-03        | Feature "unset flag" in argument handler is now automatic, where possible.
+     1.17.1 | 2018-11-27        | Replaced exception 'range_error' by 'out_of_range'.
+     1.17.0 | 2018-11-24        | Added module string_to and more ways to convert and integer to a grouped integer string.
      1.16.0 | 2018-11-12        | Type name library is 100 % constexpr. Plus more classes/type names added.
      1.15.1 | 2018-10-28        | Moved log filters into separate directory/namespace.
      1.15.0 | 2018-10-25        | Addec "atributes" in log library.

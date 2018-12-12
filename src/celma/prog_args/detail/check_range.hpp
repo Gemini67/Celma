@@ -79,10 +79,10 @@ template< typename T> void CheckRange< T>::checkValue( const std::string& val) c
 {
    T  native = boost::lexical_cast< T>( val);
    if (native < mLower)
-      throw std::range_error( "Value " + val + " is below limit " +
+      throw std::out_of_range( "Value " + val + " is below limit " +
                               boost::lexical_cast< std::string>( mLower));
    if (native >= mUpper)
-      throw std::range_error( "Value " + val + " is above or equal to limit " +
+      throw std::out_of_range( "Value " + val + " is above or equal to limit " +
                               boost::lexical_cast< std::string>( mUpper));
 } // CheckRange< T>::checkValue
 

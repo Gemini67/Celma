@@ -887,7 +887,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
    class TestData
    {
    public:
-      TestData( const string& prog_args):
+      explicit TestData( const string& prog_args):
          ah( 0),
          as2a( prog_args, nullptr),
          name(),

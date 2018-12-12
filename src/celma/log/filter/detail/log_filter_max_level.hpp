@@ -34,7 +34,7 @@ public:
    /// Constructor.
    /// @param[in]  max_level  The maximum log level that is accepted.
    /// @since  0.3, 19.06.2016
-   LogFilterMaxLevel( LogLevel max_level);
+   explicit LogFilterMaxLevel( LogLevel max_level);
 
    virtual ~LogFilterMaxLevel() = default;
 
@@ -90,5 +90,5 @@ inline bool LogFilterMaxLevel::pass( const log::detail::LogMsg& msg) const
 #endif   // CELMA_LOG_DETAIL_LOG_FILTER_MAX_LEVEL_HPP
 
 
-// =====================  END OF log_filter_max_level.hpp  =====================
+// =====  END OF log_filter_max_level.hpp  =====
 

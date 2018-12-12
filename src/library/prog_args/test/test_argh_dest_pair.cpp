@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( destination_bool)
       bool     second_flag = false;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
-         DEST_PAIR( dest_flag, second_flag, true), "two flags")->unsetFlag());
+         DEST_PAIR( dest_flag, second_flag, true), "two flags"));
 
       const ArgString2Array  as2a( "-f", nullptr);
 

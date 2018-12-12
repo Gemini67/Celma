@@ -37,7 +37,7 @@ template< std::size_t I = 0, typename FuncT, typename... Tp>
    inline typename std::enable_if< sizeof...( Tp) < I, void>::type
       tuple_at_index( int, const std::tuple< Tp...>&, FuncT) noexcept( false)
 {
-   throw std::range_error( "index exceeds number of elements in tuple");
+   throw std::out_of_range( "index exceeds number of elements in tuple");
 } // tuple_at_index
 
 
@@ -48,7 +48,7 @@ template< std::size_t I = 0, typename FuncT, typename... Tp>
       tuple_at_index( int index, const std::tuple< Tp...>&, FuncT) noexcept( false)
 {
    if (index >= 0)
-      throw std::range_error( "index exceeds number of elements in tuple");
+      throw std::out_of_range( "index exceeds number of elements in tuple");
 } // tuple_at_index
  
 

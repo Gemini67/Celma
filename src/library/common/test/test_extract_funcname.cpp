@@ -117,7 +117,7 @@ public:
       result = extractFuncname( __PRETTY_FUNCTION__);
    }
 
-   TestClass( string& result)
+   explicit TestClass( string& result)
    {
       result = extractFuncname( __PRETTY_FUNCTION__);
    }
@@ -173,7 +173,7 @@ string  TestClass::mLastFuncName;
 template< typename T> class TemplateTestClass
 {
 public:
-   TemplateTestClass( string& result)
+   explicit TemplateTestClass( string& result)
    {
       result = extractFuncname( __PRETTY_FUNCTION__);
    }
@@ -241,7 +241,7 @@ public:
       result = extractFuncname( __PRETTY_FUNCTION__);
    }
 
-   TestClassProject( string& result)
+   explicit TestClassProject( string& result)
    {
       result = extractFuncname( __PRETTY_FUNCTION__);
    }
@@ -297,7 +297,7 @@ string  TestClassProject::mLastFuncName;
 template< typename T> class TemplateTestClassProject
 {
 public:
-   TemplateTestClassProject( string& result)
+   explicit TemplateTestClassProject( string& result)
    {
       result = extractFuncname( __PRETTY_FUNCTION__);
    }

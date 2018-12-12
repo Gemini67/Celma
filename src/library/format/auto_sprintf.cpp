@@ -49,13 +49,14 @@ AutoSprintf::AutoSprintf( const char* format, ...):
 
    ::va_start( ap, format);
 
-   if ((mLength = ::vasprintf( &mpString, format, ap)) == -1)
+   mLength = ::vasprintf( &mpString, format, ap);
+   ::va_end( ap);
+
+   if (mLength == -1)
    {
       mpString = nullptr;
       throw CELMA_RuntimeError( "could not format text");
    } // end if
-
-   ::va_end( ap);
 
 } // AutoSprintf::AutoSprintf
 

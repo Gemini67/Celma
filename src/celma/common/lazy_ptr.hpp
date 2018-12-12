@@ -83,7 +83,7 @@ public:
    ///    eventually).<br>
    ///    The value is copied internally.
    /// @since  1.11.0, 07.09.2018
-   template< typename F> lazy_ptr( const F& first):
+   template< typename F> explicit lazy_ptr( const F& first):
       mpCreator( [=]() -> T*
          {
             return new T( first);

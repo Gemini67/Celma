@@ -53,11 +53,12 @@ template< typename P, typename L = common::NoLock> class Handler:
 public:
    /// Constructor. Tries to open the current log file according to the given
    /// policy.
+   ///
    /// @param[in]  file_policy  Pointer to the policy for handling the log
    ///                          file(s). This class takes ownership of the
    ///                          object.
    /// @since  1.0.0, 13.12.2017
-   Handler( P* file_policy);
+   explicit Handler( P* file_policy);
 
    Handler( const Handler&) = delete;
    virtual ~Handler() = default;
@@ -131,5 +132,5 @@ template< typename P, typename L>
 #endif   // CELMA_LOG_FILES_HANDLER_HPP
 
 
-// ===========================  END OF handler.hpp  ===========================
+// =====  END OF handler.hpp  =====
 

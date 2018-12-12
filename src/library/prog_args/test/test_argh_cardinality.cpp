@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE( vector_max_3)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const std::string& argstring):
+      explicit TestData( const std::string& argstring):
          ah( 0),
          values(),
          as2a( argstring, nullptr)
@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE( vector_exact_3)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const std::string& argstring):
+      explicit TestData( const std::string& argstring):
          ah( 0),
          values(),
          as2a( argstring, nullptr)
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const std::string& argstring):
+      explicit TestData( const std::string& argstring):
          ah( 0),
          values(),
          as2a( argstring, nullptr)

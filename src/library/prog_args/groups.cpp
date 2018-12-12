@@ -222,15 +222,15 @@ void Groups::evalArgumentsErrorExit( int argc, char* argv[],
    } catch (const std::invalid_argument& ia)
    {
       mErrorOutput << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
+   } catch (const std::out_of_range& re)
+   {
+      mErrorOutput << prefix << "Caught 'out of range error' exception: " << re.what() << "!" << endl;
    } catch (const std::logic_error& le)
    {
       mErrorOutput << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
    } catch (const std::overflow_error& oe)
    {
       mErrorOutput << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
-   } catch (const std::range_error& re)
-   {
-      mErrorOutput << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
    } catch (const std::underflow_error& ue)
    {
       mErrorOutput << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;

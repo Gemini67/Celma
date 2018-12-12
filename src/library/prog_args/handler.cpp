@@ -53,7 +53,7 @@ using std::exception;
 using std::invalid_argument;
 using std::logic_error;
 using std::overflow_error;
-using std::range_error;
+using std::out_of_range;
 using std::runtime_error;
 using std::string;
 using std::underflow_error;
@@ -562,15 +562,15 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
    } catch (const invalid_argument& ia)
    {
       mErrorOutput << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
+   } catch (const out_of_range& re)
+   {
+      mErrorOutput << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
    } catch (const logic_error& le)
    {
       mErrorOutput << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
    } catch (const overflow_error& oe)
    {
       mErrorOutput << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
-   } catch (const range_error& re)
-   {
-      mErrorOutput << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
    } catch (const underflow_error& ue)
    {
       mErrorOutput << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;

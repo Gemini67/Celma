@@ -48,18 +48,6 @@ Timestamped::Timestamped( const filename::Definition& fname_def):
 
 
 
-/// Copy constructor. Copies only the settings but not any eventually open
-/// log file.
-/// @param[in]  other  The other object to copy the data from.
-/// @since  1.0.0, 13.12.2017
-Timestamped::Timestamped( const Timestamped& other):
-   PolicyBase( other),
-   mTimestampLast( 0)
-{
-} // Timestamped::Timestamped
-
-
-
 /// Returns \c true for this policy.<br>
 /// Also calculates the maximum timestamp for log messages to be written into
 /// this file.

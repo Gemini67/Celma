@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,7 @@ using celma::common::tuple_at_index;
 template< typename T> class ResultCheck
 {
 public:
-   ResultCheck( const T& exp_value):
+   explicit ResultCheck( const T& exp_value):
       mExpectedValue( exp_value),
       mWasCalled( false)
    {
@@ -105,17 +105,17 @@ BOOST_AUTO_TEST_CASE( single_element)
    {
       std::tuple< int>  tup( 42);
       int               idx = 1;
-      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( 42)), std::range_error);
+      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( 42)), std::out_of_range);
    } // end scope
 
    // totally wrong index
    {
       std::tuple< int>  tup( 42);
       int               idx = 2;
-      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( 42)), std::range_error);
+      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( 42)), std::out_of_range);
    } // end scope
 
-} // end single_element
+} // single_element
 
 
 
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE( three_elements)
    {
       std::tuple< int, int, int>  tup( 13, 42, 4711);
       int                         idx = 3;
-      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( -1)), std::range_error);
+      BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, ResultCheck< int>( -1)), std::out_of_range);
    } // end scope
 
    // loop access
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE( three_elements)
       } // end if
    } // end for
 
-} // end three_elements
+} // three_elements
 
 
 
@@ -233,9 +233,9 @@ BOOST_AUTO_TEST_CASE( mixed_types)
       BOOST_REQUIRE_THROW( tuple_at_index( idx, tup, std::ref( rc)), std::invalid_argument);
    } // end scope
 
-} // end mixed_types
+} // mixed_types
 
 
 
-// =====================  END OF test_tuple_at_index.cpp  =====================
+// =====  END OF test_tuple_at_index.cpp  =====
 

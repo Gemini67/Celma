@@ -291,11 +291,6 @@ public:
       mBoolValue = true;
    } // TestArgFunc::boolFunc
 
-   void resetBool()
-   {
-      mBoolValue = false;
-   } // TestArgFunc::resetBool
-
    const string& value() const
    {
       return mValue;

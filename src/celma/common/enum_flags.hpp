@@ -72,6 +72,7 @@ public:
    ///
    /// @param[in]  start_value  The bit/flag to set.
    /// @since 0.8, 11.11.2016
+   // cppcheck-suppress noExplicitConstructor
    EnumFlags( E start_value) noexcept;
 
    /// Constructor with an initializer list of enum values, i.e. multiple bits/

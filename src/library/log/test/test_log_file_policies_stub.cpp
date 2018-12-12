@@ -122,25 +122,6 @@ public:
       return mNextRenameParamsIdx == mRenameParam.size();
    } // TestFileFuncs::allRenameParameters
 
-   /// Resets the container with the expected rename parameters as well as the
-   /// index of the next expected parameters.
-   ///
-   /// @since  1.11.0, 30.08.2018
-   void resetRenameParameters()
-   {
-      mRenameParam.clear();
-      mNextRenameParamsIdx = 0;
-   } // TestFileFuncs::resetRenameParameters
-
-   /// Resets only the index of the next expected parameters.<br>
-   /// Use this function if the same file definition is used for multiple tests.
-   ///
-   /// @since  1.11.0, 02.09.2018
-   void resetNextRenameIndex()
-   {
-      mNextRenameParamsIdx = 0;
-   } // TestFileFuncs::resetNextRenameIndex
-
 private:
    /// Type of the expected rename parameters.
    using names_t = std::pair< std::string, std::string>;
@@ -253,10 +234,6 @@ BOOST_AUTO_TEST_CASE( simple)
    BOOST_REQUIRE_EQUAL( s.logFileName(), "/tmp/logfile_simple.txt");
    BOOST_REQUIRE_EQUAL( s.logFileSize(), 30'000);
 
-   auto  copy( s);
-   BOOST_REQUIRE( copy.logFileName().empty());
-   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
-
 } // simple
 
 
@@ -368,10 +345,6 @@ BOOST_AUTO_TEST_CASE( max_size_roll_always)
    BOOST_REQUIRE_EQUAL( ms.logFileName(), "/tmp/logfile_ms.00.txt");
    BOOST_REQUIRE_EQUAL( ms.logFileSize(), 50'000);
 
-   auto  copy( ms);
-   BOOST_REQUIRE( copy.logFileName().empty());
-   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
-
 } // max_size_roll_always
 
 
@@ -440,10 +413,6 @@ BOOST_AUTO_TEST_CASE( timestamped_dont_roll)
    BOOST_REQUIRE_EQUAL( ts.logFileSize(), 40'000);
 
    BOOST_REQUIRE_NO_THROW( ts.writeMessage( lm, text));
-
-   auto  copy( ts);
-   BOOST_REQUIRE( copy.logFileName().empty());
-   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
 
 } // timestamped_dont_roll
 
@@ -524,10 +493,6 @@ BOOST_AUTO_TEST_CASE( counted_rolled)
    BOOST_REQUIRE( ct.getResetReOpenCalled());
    BOOST_REQUIRE_EQUAL( ct.logFileName(), "/tmp/logfile_ct.00.txt");
    BOOST_REQUIRE_EQUAL( ct.logFileSize(), 100);
-
-   auto  copy( ct);
-   BOOST_REQUIRE( copy.logFileName().empty());
-   BOOST_REQUIRE_EQUAL( copy.logFileSize(), 0);
 
 } // counted_rolled
 

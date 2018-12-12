@@ -50,7 +50,7 @@ public:
    /// Constructor.
    /// @param[in]  str  The range string to evaluate.
    /// @since  0.2, 07.04.2016
-   RangeString( const std::string& str);
+   explicit RangeString( const std::string& str);
 
    /// Type of the iterator to use for iterating over the values.
    using const_iterator = detail::RangeStringIterator< const std::string, T>;

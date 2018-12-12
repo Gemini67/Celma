@@ -35,7 +35,7 @@ public:
    /// Constructor.
    /// @param[in]  ll  The log level to filter for.
    /// @since  0.3, 19.06.2016
-   LogFilterLevel( LogLevel ll);
+   explicit LogFilterLevel( LogLevel ll);
 
    virtual ~LogFilterLevel() = default;
 

@@ -61,7 +61,7 @@ void CheckValues::checkValue( const std::string& val) const
 {
 
    if (mValues.find( val)== mValues.end())
-      throw std::range_error( "Value '" + val + "' is not in the list of allowed values");
+      throw std::out_of_range( "Value '" + val + "' is not in the list of allowed values");
 
 } // CheckValues::checkValue
 

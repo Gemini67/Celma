@@ -59,7 +59,7 @@ public:
    ///                           printing the usage.
    /// @since  1.1.0, 21.11.2017  (added paramater arg_desc_params)
    /// @since  0.2, 10.04.2016
-   ArgumentDesc( shared_usage_params_t& usage_params);
+   explicit ArgumentDesc( shared_usage_params_t& usage_params);
 
    /// Adds an argument.
    /// @param[in]  arg_desc  The string with the description.
