@@ -35,7 +35,7 @@ public:
    /// Constructor. Stores the value to use for the comparisons.
    /// @param[in]  val  The value to store.
    /// @since  1.11.0, 24.08.2018
-   Comparable( int val):
+   explicit Comparable( int val):
       mValue( val)
    {
    } // Comparable::Comparable

@@ -63,6 +63,9 @@ analyze:
 	cd build/analyze; \
 	make -j${CPUS};
 
+cppcheck:
+	cppcheck --enable=all --quiet --inline-suppr --force --std=c++11 -I src src
+
 test:	test-release test-debug
 
 test-debug:

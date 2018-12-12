@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of class celma::prog_args::detail::@@@.
+/// See documentation of class celma::prog_args::detail::ValueStorage.
 
 
 #ifndef CELMA_PROG_ARGS_DETAIL_VALUE_STORAGE_HPP
@@ -30,7 +30,7 @@ class ValueStorage
 {
 public:
    /// @since  0.15.0, 10.02.2017
-   ValueStorage( const std::string& type_name);
+   explicit ValueStorage( const std::string& type_name);
 
    ~ValueStorage() = default;
 
@@ -51,5 +51,5 @@ protected:
 #endif   // CELMA_PROG_ARGS_DETAIL_VALUE_STORAGE_HPP
 
 
-// ========================  END OF value_storage.hpp  ========================
+// =====  END OF value_storage.hpp  =====
 

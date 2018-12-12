@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -66,7 +66,7 @@ protected:
 
    /// Constructor. Should be called only exactly once.
    /// @since  0.2, 10.04.2016
-   TestSingleton( int new_value):
+   explicit TestSingleton( int new_value):
       Singleton< TestSingleton>(),
       celma::common::ObjectEnumerator< TestSingleton>(),
       mValue( new_value)
@@ -125,4 +125,5 @@ BOOST_AUTO_TEST_CASE( test_reset)
 
 
 
-// ========================  END OF test_singleton.cpp  ========================
+// =====  END OF test_singleton.cpp  =====
+

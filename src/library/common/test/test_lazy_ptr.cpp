@@ -300,6 +300,7 @@ BOOST_AUTO_TEST_CASE( none_or_one)
       int                   my_int = 42;
       lazy_ptr< TestClass>  lp_test_class( my_int);
 
+      // cppcheck-suppress unreadVariable
       my_int = 4711;
 
       BOOST_REQUIRE( !lp_test_class);

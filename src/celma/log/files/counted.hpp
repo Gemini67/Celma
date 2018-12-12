@@ -48,17 +48,20 @@ public:
    Counted( const filename::Definition& fname_def, size_t max_entries,
       int max_gen) noexcept( false);
 
-   /// Copy constructor. Copies only the settings but not any eventually open
-   /// log file.
-   ///
-   /// @param[in]  other  The other object to copy the data from.
+   /// Copying and moving not needed.
+   /// @since  x.y.z, 06.12.2018  (deleted)
    /// @since  1.11.0, 05.09.2018
-   Counted( const Counted& other);
+   Counted( const Counted&) = delete;
+   Counted( Counted&&) = delete;
 
    /// Default destructor.
    ///
    /// @since  1.11.0, 05.09.2018
    virtual ~Counted() = default;
+
+   /// Copying and moving not needed.
+   Counted& operator =( const Counted&) = delete;
+   Counted& operator =( Counted&&) = delete;
 
 private:
    /// Checks the currently open file if it can still be used, i.e. it is empty.

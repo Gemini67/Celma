@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,6 +16,10 @@
 
 // module to test header file include
 #include "celma/appl/project_path.hpp"
+
+
+// C++ Standard Library includes
+#include <sstream>
 
 
 // Boost includes
@@ -89,6 +93,11 @@ BOOST_AUTO_TEST_CASE( test_home)
       expResult.append( ".cshrc");
 
       BOOST_REQUIRE_EQUAL( pp.str(), expResult);
+
+      std::ostringstream  oss;
+      oss << pp;
+
+      BOOST_REQUIRE_EQUAL( oss.str(), expResult);
    } // end scope
 
    {
@@ -276,5 +285,5 @@ BOOST_AUTO_TEST_CASE( test_prog_path)
 
 
 
-// ======================  END OF test_project_path.cpp  ======================
+// =====  END OF test_project_path.cpp  =====
 
