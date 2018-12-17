@@ -15,21 +15,24 @@
 --*/
 
 
-// Boost includes
-#define BOOST_TEST_MODULE TupleLengthBase
-#include <boost/test/unit_test.hpp>
-#include <utility>
+// module to test header file include
+#include "celma/common/tuple_at_index.hpp"
 
 
+// C++ Standard Library includes
 #include <stdexcept>
 #include <type_traits>
 
 
-// project includes
-#include "celma/common/tuple_at_index.hpp"
+// Boost includes
+#define BOOST_TEST_MODULE TupleLengthBase
+#include <boost/test/unit_test.hpp>
 
 
 using celma::common::tuple_at_index;
+
+
+namespace {
 
 
 template< typename T> class ResultCheck
@@ -57,7 +60,7 @@ private:
    const T  mExpectedValue;
    bool     mWasCalled;
 
-};
+}; // ResultCheck< T>
 
 
 template< typename T> class MixedTypeResultCheck
@@ -84,10 +87,15 @@ public:
 private:
    bool  mWasCalled;
 
-};
+}; // MixedTypeResultCheck< T>
+
+
+} // namespace
+
 
 
 /// Test with a tuple with one single element.
+///
 /// @since  0.5, 27.09.2016
 BOOST_AUTO_TEST_CASE( single_element)
 {
@@ -120,6 +128,7 @@ BOOST_AUTO_TEST_CASE( single_element)
 
 
 /// Test with a tuple with 3 elements.
+///
 /// @since  0.5, 29.09.2016
 BOOST_AUTO_TEST_CASE( three_elements)
 {
@@ -195,6 +204,7 @@ BOOST_AUTO_TEST_CASE( three_elements)
 
 
 /// Test access of a tuple with mixed types.
+///
 /// @since  0.5, 29.09.2016
 BOOST_AUTO_TEST_CASE( mixed_types)
 {

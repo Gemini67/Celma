@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,13 +14,13 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
+// module to test header file include
+#include "celma/common/celma_exception.hpp"
 
 
 // C++ Standard Library includes
 #include <iostream>
+#include <stdexcept>
 
 
 // Boost includes
@@ -30,65 +30,68 @@
 
 // project includes
 #include "celma/format/auto_sprintf.hpp"
-#include "celma/common/celma_exception.hpp"
 
 
-using namespace std;
-using namespace celma;
-
+namespace {
 
 
 /// Throw a Celma runtime error.
+///
 /// @since  0.2, 07.04.2016
-static void throwRuntimeError()
+void throwRuntimeError()
 {
 
    throw CELMA_RuntimeError( "my fault ;-)");
-} // end throwRuntimeError
-
+} // throwRuntimeError
 
 
 /// Throw a Celma logic error.
+///
 /// @since  0.2, 07.04.2016
-static void throwLogicError()
+void throwLogicError()
 {
 
    throw CELMA_LogicError( "your fault ;-)");
-} // end throwLogicError
-
+} // throwLogicError
 
 
 /// Throw a logic error, use AutoSprintf to create the exception text.
+///
 /// @since  0.2, 07.04.2016
-static void throwLogicErrorPrintf()
+void throwLogicErrorPrintf()
 {
 
-   throw CELMA_LogicError( format::AutoSprintf( "text with %d parameters in %d %s formats",
-                                                3, 2, "different"));
-} // end throwLogicErrorPrintf
-
+   throw CELMA_LogicError(
+      celma::format::AutoSprintf( "text with %d parameters in %d %s formats",
+         3, 2, "different"));
+} // throwLogicErrorPrintf
 
 
 /// Catch an exception, re-throw it in another exception.
+///
 /// @since  0.2, 07.04.2016
-static void catchRethrow()
+void catchRethrow()
 {
 
    try
    {
       throwRuntimeError();
-   } catch (const common::ExceptionBase& eb)
+   } catch (const celma::common::ExceptionBase& eb)
    {
       throw CELMA_LogicError( eb);
    } // end try
 
    throw CELMA_RuntimeError( "should not get here!");
 
-} // end catchRethrow
+} // catchRethrow
+
+
+} // namespace
 
 
 
 /// Check catching logic errors.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_logic_error)
 {
@@ -97,21 +100,9 @@ BOOST_AUTO_TEST_CASE( test_logic_error)
    {
       throwLogicError();
       BOOST_FAIL( "exception not thrown");
-   } catch (const exception& e)
+   } catch (const std::exception& e)
    {
-      cout << "caught exception: << " << e.what() << endl;
-   } catch (...)
-   {
-      BOOST_FAIL( "caught exception with wrong type");
-   } // end try
-
-   try
-   {
-      throwLogicError();
-     BOOST_FAIL( "exception not thrown");
-   } catch (const logic_error& e)
-   {
-      cout << "caught logic error: << " << e.what() << endl;
+      std::cout << "caught exception: << " << e.what() << std::endl;
    } catch (...)
    {
       BOOST_FAIL( "caught exception with wrong type");
@@ -121,19 +112,32 @@ BOOST_AUTO_TEST_CASE( test_logic_error)
    {
       throwLogicError();
       BOOST_FAIL( "exception not thrown");
-   } catch (const common::CelmaLogicError& e)
+   } catch (const std::logic_error& e)
    {
-      cout << "caught Celma logic error: << " << e.what() << endl;
+      std::cout << "caught logic error: << " << e.what() << std::endl;
    } catch (...)
    {
       BOOST_FAIL( "caught exception with wrong type");
    } // end try
 
-} // end test_logic_error
+   try
+   {
+      throwLogicError();
+      BOOST_FAIL( "exception not thrown");
+   } catch (const celma::common::CelmaLogicError& e)
+   {
+      std::cout << "caught Celma logic error: << " << e.what() << std::endl;
+   } catch (...)
+   {
+      BOOST_FAIL( "caught exception with wrong type");
+   } // end try
+
+} // test_logic_error
 
 
 
 /// Check catching runtime errors.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_runtime_error)
 {
@@ -142,9 +146,9 @@ BOOST_AUTO_TEST_CASE( test_runtime_error)
    {
       throwRuntimeError();
       BOOST_FAIL( "exception not thrown");
-   } catch (const exception& e)
+   } catch (const std::exception& e)
    {
-      cout << "caught exception: << " << e.what() << endl;
+      std::cout << "caught exception: << " << e.what() << std::endl;
    } catch (...)
    {
       BOOST_FAIL( "caught exception with wrong type");
@@ -154,9 +158,9 @@ BOOST_AUTO_TEST_CASE( test_runtime_error)
    {
       throwRuntimeError();
       BOOST_FAIL( "exception not thrown");
-   } catch (const runtime_error& e)
+   } catch (const std::runtime_error& e)
    {
-      cout << "caught runtime error: << " << e.what() << endl;
+      std::cout << "caught runtime error: << " << e.what() << std::endl;
    } catch (...)
    {
       BOOST_FAIL( "caught exception with wrong type");
@@ -166,19 +170,20 @@ BOOST_AUTO_TEST_CASE( test_runtime_error)
    {
       throwRuntimeError();
       BOOST_FAIL( "exception not thrown");
-   } catch (const common::CelmaRuntimeError& e)
+   } catch (const celma::common::CelmaRuntimeError& e)
    {
-      cout << "caught Celma runtime error: << " << e.what() << endl;
+      std::cout << "caught Celma runtime error: << " << e.what() << std::endl;
    } catch (...)
    {
       BOOST_FAIL( "caught exception with wrong type");
    } // end try
 
-} // end test_runtime_error
+} // test_runtime_error
 
 
 
 /// Check catching errors with special formatted text.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_logic_error_printf)
 {
@@ -187,9 +192,9 @@ BOOST_AUTO_TEST_CASE( test_logic_error_printf)
    {
       throwLogicErrorPrintf();
       BOOST_FAIL( "exception not thrown");
-   } catch (const exception& e)
+   } catch (const std::exception& e)
    {
-      cout << "caught exception: << " << e.what() << endl;
+      std::cout << "caught exception: << " << e.what() << std::endl;
    } catch (...)
    {
       BOOST_FAIL( "caught exception with wrong type");
@@ -199,9 +204,9 @@ BOOST_AUTO_TEST_CASE( test_logic_error_printf)
    {
       throwLogicErrorPrintf();
       BOOST_FAIL( "exception not thrown");
-   } catch (const logic_error& e)
+   } catch (const std::logic_error& e)
    {
-      cout << "caught logic error: << " << e.what() << endl;
+      std::cout << "caught logic error: << " << e.what() << std::endl;
    } catch (...)
    {
       BOOST_FAIL( "caught exception with wrong type");
@@ -211,19 +216,20 @@ BOOST_AUTO_TEST_CASE( test_logic_error_printf)
    {
       throwLogicErrorPrintf();
       BOOST_FAIL( "exception not thrown");
-   } catch (const common::CelmaLogicError& e)
+   } catch (const celma::common::CelmaLogicError& e)
    {
-      cout << "caught Celma logic error: << " << e.what() << endl;
+      std::cout << "caught Celma logic error: << " << e.what() << std::endl;
    } catch (...)
    {
       BOOST_FAIL( "caught exception with wrong type");
    } // end try
 
-} // end test_logic_error_printf
+} // test_logic_error_printf
 
 
 
 /// Check catching errors that were re-thrown.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_rethrow)
 {
@@ -232,13 +238,13 @@ BOOST_AUTO_TEST_CASE( test_rethrow)
    {
       catchRethrow();
       BOOST_FAIL( "exception not thrown");
-   } catch (const common::CelmaLogicError& e)
+   } catch (const celma::common::CelmaLogicError& e)
    {
-      cout << "caught expected exception: << " << e.what() << endl;
-   } catch (const common::CelmaRuntimeError& e)
+      std::cout << "caught expected exception: << " << e.what() << std::endl;
+   } catch (const celma::common::CelmaRuntimeError& e)
    {
       BOOST_FAIL( "caught runtime error, expected logic error");
-   } catch (const exception& e)
+   } catch (const std::exception& e)
    {
       BOOST_FAIL( "caught exception with wrong type");
    } catch (...)
@@ -246,9 +252,9 @@ BOOST_AUTO_TEST_CASE( test_rethrow)
       BOOST_FAIL( "caught exception with wrong type");
    } // end try
 
-} // end test_rethrow
+} // test_rethrow
 
 
 
-// =========================  END OF test_exception.cpp  =========================
+// =====  END OF test_exception.cpp  =====
 

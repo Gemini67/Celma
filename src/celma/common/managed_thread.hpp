@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -102,5 +102,5 @@ inline bool ManagedThread::isActive() const noexcept
 #endif   // CELMA_COMMON_MANAGED_THREAD_HPP
 
 
-// ========================  END OF managed_thread.hpp  ========================
+// =====  END OF managed_thread.hpp  =====
 

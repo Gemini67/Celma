@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,14 +11,13 @@
 --*/
 
 
+// module to test header file include
+#include "celma/common/constexpr_string_concat.hpp"
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ConstexprStringConcatTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
-
-
-// project includes
-#include "celma/common/constexpr_string_concat.hpp"
 
 
 using celma::common::string_concat;
@@ -27,6 +26,7 @@ using celma::common::string_concat;
 
 /// Test that the string concatenation functions are really constexpr and
 /// correct.
+///
 /// @since  0.10, 02.01.2017
 BOOST_AUTO_TEST_CASE( test_constexpr_concat)
 {
@@ -48,9 +48,9 @@ BOOST_AUTO_TEST_CASE( test_constexpr_concat)
    // not really necessary anymore, but hey:
    BOOST_REQUIRE( ::strcmp( str2.data(), "hello world, how are you") == 0);
 
-} // end test_constexpr_concat
+} // test_constexpr_concat
 
 
 
-// =================  END OF test_constexpr_string_concat.cpp  =================
+// =====  END OF test_constexpr_string_concat.cpp  =====
 
