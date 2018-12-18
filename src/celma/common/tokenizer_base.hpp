@@ -63,7 +63,7 @@ public:
    iterator end();
 
    /// Type of the counting iterator.
-   typedef CountingIterator< typename BoostTokenizer::iterator>  counting_iterator;
+   using counting_iterator = CountingIterator< typename BoostTokenizer::iterator>;
 
    /// Returns a counting iterator that points to the first token.
    /// @return  Counting iterator that points to the first token.
@@ -118,45 +118,45 @@ template< typename T> TokenizerBase< T>::TokenizerBase( const std::string& s,
    mTokenizer( mStringCopy, separator),
    mNumTokens( 0)
 {
-} // end TokenizerBase< T>::TokenizerBase
+} // TokenizerBase< T>::TokenizerBase
 
 
 template< typename T> typename TokenizerBase< T>::iterator TokenizerBase< T>::begin()
 {
    return mTokenizer.begin();
-} // end TokenizerBase< T>::begin
+} // TokenizerBase< T>::begin
 
 
 template< typename T> typename TokenizerBase< T>::iterator TokenizerBase< T>::end()
 {
    return mTokenizer.end();
-} // end TokenizerBase> T>::end
+} // TokenizerBase< T>::end
 
 
 template< typename T> typename TokenizerBase< T>::counting_iterator TokenizerBase< T>::begin_counting()
 {
    counting_iterator  ci( this, mTokenizer.begin());
    return ci;
-} // end TokenizerBase< T>::begin_counting
+} // TokenizerBase< T>::begin_counting
 
 
 template< typename T> typename TokenizerBase< T>::counting_iterator TokenizerBase< T>::end_counting()
 {
    counting_iterator  ci( this, mTokenizer.end());
    return ci;
-} // end TokenizerBase< T>::end_counting
+} // TokenizerBase< T>::end_counting
 
 
 template< typename T> int TokenizerBase< T>::numTokens() const
 {
    return mNumTokens;
-} // end TokenizerBase< T>::numTokens
+} // TokenizerBase< T>::numTokens
 
 
 template< typename T> void TokenizerBase< T>::setCount( int theCount)
 {
    mNumTokens = theCount;
-} // end TokenizerBase< T>::setCount
+} // TokenizerBase< T>::setCount
 
 
 } // namespace common
