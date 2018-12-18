@@ -109,5 +109,5 @@ sonar:
 	   -Dsonar.sources=. \
 	   -Dsonar.cfamily.build-wrapper-output=bw-output \
 	   -Dsonar.host.url=https://sonarcloud.io \
-	   -Dsonar.login=4ab969e5c744a5b2f2e7e31f290d2576d532e8a4
+	   -Dsonar.login=$(SONAR_LOGIN)
 
