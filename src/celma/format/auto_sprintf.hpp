@@ -51,10 +51,26 @@ public:
    /// @since  0.7, 08.11.2016
    AutoSprintf( const std::string& format, va_list ap) noexcept( false);
 
+   /// Don't copy.
+   /// @since  0.2, 08.04.2016
+   AutoSprintf( const AutoSprintf&) = delete;
+
+   /// Don't move.
+   /// @since  x.y.z, 25.12.2018
+   AutoSprintf( AutoSprintf&&) = delete;
+
    /// Destructor, ensures that the buffer is free'd again.
    ///
    /// @since  0.2, 08.04.2016
    ~AutoSprintf();
+
+   /// Don't assign.
+   /// @since  0.2, 08.04.2016
+   AutoSprintf& operator =( const AutoSprintf&) = delete;
+
+   /// Don't move-assign.
+   /// @since  x.y.z, 25.12.2018
+   AutoSprintf& operator =( AutoSprintf&&) = delete;
 
    /// Returns the formatted string.
    ///
@@ -81,14 +97,6 @@ public:
    int length() const;
 
 private:
-   /// Don't copy.
-   /// @since  0.2, 08.04.2016
-   AutoSprintf( const AutoSprintf&) = delete;
-
-   /// Don't assign.
-   /// @since  0.2, 08.04.2016
-   AutoSprintf& operator =( const AutoSprintf&) = delete;
-
    /// Pointer to the dynamically allocated string buffer.
    char*  mpString;
    /// The length of the string in the buffer.

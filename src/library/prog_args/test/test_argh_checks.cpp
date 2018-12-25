@@ -1313,6 +1313,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
 
 
 /// Verify that the "parent directory exists" check work correctly.
+///
 /// @since  1.9.0, 04.08.2018
 BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
 {
@@ -1360,6 +1361,73 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
    } // end scope
 
 } // correctly_check_parent_diretory_exists
+
+
+
+/// Verify the "pattern" check.
+///
+/// @since  x.y.z, 25.12.2018
+BOOST_AUTO_TEST_CASE( pattern_check)
+{
+
+   using celma::prog_args::pattern;
+
+   // check against a pattern for a name: one word starting with an uppercase
+   { 
+      Handler  ah( 0);
+      string   name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n Peter", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // check against a pattern for a name: one word starting with an uppercase
+   { 
+      Handler  ah( 0);
+      string   name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n HansPeter", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::out_of_range);
+   } // end scope
+
+   // check against a pattern for a name: one word starting with an uppercase
+   { 
+      Handler  ah( 0);
+      string   name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n peter", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::out_of_range);
+   } // end scope
+
+   // check against a pattern for a name: one word starting with an uppercase
+   { 
+      Handler  ah( 0);
+      string   name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n Peter123", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::out_of_range);
+   } // end scope
+
+} // pattern_check
 
 
 
