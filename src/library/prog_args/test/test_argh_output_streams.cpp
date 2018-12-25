@@ -462,7 +462,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
             "   --absolute   Absolute path required\n"
             "                Check: is an absolute path\n"
             "   -n           A name\n"
-            "                Check: value matches '^[A-Z][a-z]+'\n"
+            "                Check: Value matches '^[A-Z][a-z]+'\n"
             "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 

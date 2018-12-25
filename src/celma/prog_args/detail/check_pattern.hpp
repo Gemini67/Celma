@@ -29,7 +29,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Checks a value if it matches a set of specified, allowed values.
 ///
-/// @since  x.y.z, 27.11.2018
+/// @since  1.19.0, 27.11.2018
 class CheckPattern: public ICheck
 {
 public:
@@ -37,13 +37,13 @@ public:
    ///
    /// @param[in]  pattern_str
    ///    The pattern/regular expression to use for the check.
-   /// @since  x.y.z, 27.11.2018
+   /// @since  1.19.0, 27.11.2018
    explicit CheckPattern( const std::string& pattern_str) noexcept( false);
 
    /// Constructor that takes a regular expression.
    ///
    /// @param[in]  reg_ex  The regular expression to use for the check.
-   /// @since  x.y.z, 27.11.2018
+   /// @since  1.19.0, 27.11.2018
    explicit CheckPattern( const std::regex& reg_ex);
 
    virtual ~CheckPattern() = default;
@@ -52,13 +52,13 @@ public:
    /// constructor.
    ///
    /// @param[in]  val  The value to check in string format.
-   /// @since  x.y.z, 27.11.2018
+   /// @since  1.19.0, 27.11.2018
    virtual void checkValue( const std::string& val) const noexcept( false) override;
 
    /// Returns a text description of the check.
    ///
    /// @return  A string with the text description of the check.
-   /// @since  x.y.z, 27.11.2018
+   /// @since  1.19.0, 27.11.2018
    virtual std::string toString() const override;
 
 private:
@@ -83,7 +83,7 @@ private:
 ///
 /// @param[in]  pattern_str  The regular expression pattern string.
 /// @return  The newly created CheckPattern object.
-/// @since  x.y.z, 27.11.2018
+/// @since  1.19.0, 27.11.2018
 inline detail::ICheck* pattern( const std::string& pattern_str)
 {
    return new detail::CheckPattern( pattern_str);
@@ -96,7 +96,7 @@ inline detail::ICheck* pattern( const std::string& pattern_str)
 ///
 /// @param[in]  reg_ex  The regular expression.
 /// @return  The newly created CheckPattern object.
-/// @since  x.y.z, 27.11.2018
+/// @since  1.19.0, 27.11.2018
 inline detail::ICheck* pattern( const std::regex& reg_ex)
 {
    return new detail::CheckPattern( reg_ex);

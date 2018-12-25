@@ -35,7 +35,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///
 /// @param[in]  pattern_str
 ///    The pattern/regular expression to use for the check.
-/// @since  x.y.z, 27.11.2018
+/// @since  1.19.0, 27.11.2018
 CheckPattern::CheckPattern( const std::string& pattern_str):
    mRegExStr( pattern_str),
    mRegEx( pattern_str)
@@ -47,7 +47,7 @@ CheckPattern::CheckPattern( const std::string& pattern_str):
 /// Constructor that takes a regular expression.
 ///
 /// @param[in]  reg_ex  The regular expression to use for the check.
-/// @since  x.y.z, 27.11.2018
+/// @since  1.19.0, 27.11.2018
 CheckPattern::CheckPattern( const std::regex& reg_ex):
    mRegExStr( "unknown"),
    mRegEx( reg_ex)
@@ -60,7 +60,7 @@ CheckPattern::CheckPattern( const std::regex& reg_ex):
 /// constructor.
 ///
 /// @param[in]  val  The value to check in string format.
-/// @since  x.y.z, 27.11.2018
+/// @since  1.19.0, 27.11.2018
 void CheckPattern::checkValue( const std::string& val) const
 {
 
@@ -75,7 +75,7 @@ void CheckPattern::checkValue( const std::string& val) const
 /// Returns a text description of the check.
 ///
 /// @return  A string with the text description of the check.
-/// @since  x.y.z, 27.11.2018
+/// @since  1.19.0, 27.11.2018
 std::string CheckPattern::toString() const
 {
 

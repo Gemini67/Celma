@@ -1366,7 +1366,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
 
 /// Verify the "pattern" check.
 ///
-/// @since  x.y.z, 25.12.2018
+/// @since  1.19.0, 25.12.2018
 BOOST_AUTO_TEST_CASE( pattern_check)
 {
 

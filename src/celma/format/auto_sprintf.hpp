@@ -56,7 +56,7 @@ public:
    AutoSprintf( const AutoSprintf&) = delete;
 
    /// Don't move.
-   /// @since  x.y.z, 25.12.2018
+   /// @since  1.19.0, 25.12.2018
    AutoSprintf( AutoSprintf&&) = delete;
 
    /// Destructor, ensures that the buffer is free'd again.
@@ -69,7 +69,7 @@ public:
    AutoSprintf& operator =( const AutoSprintf&) = delete;
 
    /// Don't move-assign.
-   /// @since  x.y.z, 25.12.2018
+   /// @since  1.19.0, 25.12.2018
    AutoSprintf& operator =( AutoSprintf&&) = delete;
 
    /// Returns the formatted string.

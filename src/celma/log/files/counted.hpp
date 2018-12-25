@@ -49,7 +49,7 @@ public:
       int max_gen) noexcept( false);
 
    /// Copying and moving not needed.
-   /// @since  x.y.z, 06.12.2018  (deleted)
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.11.0, 05.09.2018
    Counted( const Counted&) = delete;
    Counted( Counted&&) = delete;

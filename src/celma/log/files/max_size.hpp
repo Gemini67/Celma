@@ -48,7 +48,7 @@ public:
       int max_gen) noexcept( false);
 
    /// Copying and moving not needed.
-   /// @since  x.y.z, 06.12.2018  (deleted)
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.0.0, 13.12.2017
    MaxSize( const MaxSize&) = delete;
    MaxSize( MaxSize&&) = delete;
