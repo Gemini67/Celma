@@ -41,7 +41,8 @@ public:
    /// Constructor.
    /// @param[in]  dest  The container to store the values in.
    /// @since  0.2, 07.04.2016
-   RangeDest( C& dest):
+   // cppcheck-suppress uninitMemberVar
+   explicit RangeDest( C& dest):
       mDestination( dest)
    {
    } // RangeDest< T, C>::RangeDest
@@ -91,7 +92,8 @@ public:
    /// Constructor.
    /// @param[in]  dest  The bitset to set the flags on.
    /// @since  0.2, 07.04.2016
-   RangeDest( dest_type& dest):
+   // cppcheck-suppress uninitMemberVar
+   explicit RangeDest( dest_type& dest):
       mDestination( dest)
    {
    } // RangeDest< size_t, std::bitset< S> >::RangeDest
@@ -141,7 +143,7 @@ public:
    /// Constructor.
    /// @param[in]  dest  The set to store the values in.
    /// @since  0.2, 07.04.2016
-   RangeDest( dest_type& dest):
+   explicit RangeDest( dest_type& dest):
       mDestination( dest)
    {
    } // RangeDest< T, std::set< T> >::RangeDest

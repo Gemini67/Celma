@@ -74,7 +74,6 @@ static MyEnum string2enum( const std::string& enumText)
 /// @param[out]  me      The enum variable to store the value in.
 /// @return  The stream as passed as input parameter.
 /// @since  0.2, 10.04.2016
-// cppcheck-suppress unusedFunction
 static std::istream& operator >>( std::istream& source, MyEnum& me)
 {
 

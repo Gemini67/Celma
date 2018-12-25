@@ -37,7 +37,7 @@ using celma::appl::ArgString2Array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 using std::overflow_error;
-using std::range_error;
+using std::out_of_range;
 using std::runtime_error;
 using std::string;
 using std::underflow_error;
@@ -608,7 +608,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       const ArgString2Array  as2a( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -650,7 +650,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       const ArgString2Array  as2a( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -664,7 +664,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       const ArgString2Array  as2a( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -702,7 +702,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       const ArgString2Array  as2a( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -746,7 +746,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       const ArgString2Array  as2a( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -760,7 +760,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       const ArgString2Array  as2a( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -774,7 +774,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       const ArgString2Array  as2a( "-i 10,200", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 10);
@@ -790,7 +790,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       const ArgString2Array  as2a( "-i 20,5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 20);
@@ -830,7 +830,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       const ArgString2Array  as2a( "-n peter", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !name.hasValue());
    } // end scope
 
@@ -844,7 +844,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       const ArgString2Array  as2a( "-n Paule", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !name.hasValue());
    } // end scope
 
@@ -858,7 +858,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       const ArgString2Array  as2a( "-n Pete", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !name.hasValue());
    } // end scope
 
@@ -940,7 +940,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       const ArgString2Array  as2a( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -955,7 +955,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       const ArgString2Array  as2a( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -1040,7 +1040,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       const ArgString2Array  as2a( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -1055,7 +1055,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       const ArgString2Array  as2a( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -1118,7 +1118,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       const ArgString2Array  as2a( "-i 11,1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         range_error);
+         out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 11);
@@ -1313,6 +1313,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
 
 
 /// Verify that the "parent directory exists" check work correctly.
+///
 /// @since  1.9.0, 04.08.2018
 BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
 {
@@ -1360,6 +1361,73 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
    } // end scope
 
 } // correctly_check_parent_diretory_exists
+
+
+
+/// Verify the "pattern" check.
+///
+/// @since  1.19.0, 25.12.2018
+BOOST_AUTO_TEST_CASE( pattern_check)
+{
+
+   using celma::prog_args::pattern;
+
+   // check against a pattern for a name: one word starting with an uppercase
+   { 
+      Handler  ah( 0);
+      string   name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n Peter", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // check against a pattern for a name: one word starting with an uppercase
+   { 
+      Handler  ah( 0);
+      string   name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n HansPeter", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::out_of_range);
+   } // end scope
+
+   // check against a pattern for a name: one word starting with an uppercase
+   { 
+      Handler  ah( 0);
+      string   name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n peter", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::out_of_range);
+   } // end scope
+
+   // check against a pattern for a name: one word starting with an uppercase
+   { 
+      Handler  ah( 0);
+      string   name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n Peter123", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::out_of_range);
+   } // end scope
+
+} // pattern_check
 
 
 

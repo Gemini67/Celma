@@ -43,7 +43,7 @@ public:
    /// Constructor.
    /// @param[in]  single_value  Single value to handle.
    /// @since  0.2, 07.04.2016
-   RangeGenerator( T single_value):
+   explicit RangeGenerator( T single_value):
       mStartValue( single_value),
       mEndValue(),
       mIncrement(),

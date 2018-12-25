@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,11 +17,11 @@
 #include "log_dest_stream.hpp"
 
 
-using namespace celma::log::Logging;
-
 
 int main()
 {
+
+   using namespace celma::log::Logging;
 
    auto const log_console = Logging::instance().findCreateLog( "console");
    Logging::instance().getLog( log_console)
@@ -49,5 +49,5 @@ int main()
 }
 
 
-// ======================  END OF test_log_cout_cerr.cpp  ======================
+// =====  END OF test_log_cout_cerr.cpp  =====
 

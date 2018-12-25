@@ -39,17 +39,21 @@ public:
    /// field.
    /// @param[in]  fname_def  The definition of the log file path and namees.
    /// @since  1.0.0, 13.12.2017
-   Timestamped( const filename::Definition& fname_def) noexcept( false);
+   explicit Timestamped( const filename::Definition& fname_def) noexcept( false);
 
-   /// Copy constructor. Copies only the settings but not any eventually open
-   /// log file.
-   /// @param[in]  other  The other object to copy the data from.
+   /// Copying and moving not needed.
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.0.0, 13.12.2017
-   Timestamped( const Timestamped& other);
+   Timestamped( const Timestamped&) = delete;
+   Timestamped( Timestamped&&) = delete;
 
    /// Default destructor.
    /// @since  1.0.0, 13.12.2017
    virtual ~Timestamped() = default;
+
+   /// Copying and moving not needed.
+   Timestamped& operator =( const Timestamped&) = delete;
+   Timestamped& operator =( Timestamped&&) = delete;
 
 private:
    /// Returns \c true for this policy.<br>

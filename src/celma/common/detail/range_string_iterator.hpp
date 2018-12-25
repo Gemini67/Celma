@@ -80,6 +80,13 @@ public:
    /// @since  0.2, 07.04.2016
    bool operator !=( const RangeStringIterator& other) const;
 
+   /// Assignment operator.
+   ///
+   /// @param[in]  other  The other object to copy the data from.
+   /// @return  This object.
+   /// @since  1.19.0, 29.11.2018
+   RangeStringIterator& operator =( const RangeStringIterator& other);
+
    /// Instead of de-referencing the iterator: Use a typecast to the field/
    /// value type to get the current value.
    /// @return  The current value.
@@ -215,6 +222,25 @@ template< typename T, typename TF>
 {
    return mPos != other.mPos;
 } // RangeStringIterator< T, TF>::operator !=
+
+
+template< typename T, typename TF>
+   RangeStringIterator< T, TF>&
+      RangeStringIterator< T, TF>::operator =( const RangeStringIterator& other)
+{
+   if (this != &other)
+   {
+      mSource = other.mSource;
+      mPos = other.mPos;
+      mMainExpression = RangeExpression();
+      if (other.mpRanger.get() != nullptr)
+         mpRanger.reset( new Ranger( *other.mpRanger.get()));
+      else
+         mpRanger.reset();
+      mCurrentValue = other.mCurrentValue;
+   } // end if
+   return *this;
+} // RangeStringIterator< T, TF>::operator =
 
 
 template< typename T, typename TF>

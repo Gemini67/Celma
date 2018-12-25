@@ -1,5 +1,13 @@
 # Argument Handler
 
+## Concepts
+
+The following concepts led to the design of the argument handler library as it is today:
+
+- Once the command line has been evaluated, everything argument-handling related is done.
+- The key of an argument must be specified only once (as opposed to e.g. `getopt()`).
+- Reasonable default behaviour depending on the type of the destination variable.
+
 ## Features
 
 Here is a list of the features provided by the sub-library for argument handling in Celma:

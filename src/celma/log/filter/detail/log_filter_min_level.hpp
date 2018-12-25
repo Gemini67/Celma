@@ -34,7 +34,7 @@ public:
    /// Constructor.
    /// @param[in]  min_level  The minimum log level that is accepted.
    /// @since  0.3, 19.06.2016
-   LogFilterMinLevel( LogLevel min_level);
+   explicit LogFilterMinLevel( LogLevel min_level);
 
    virtual ~LogFilterMinLevel() = default;
 
@@ -90,5 +90,5 @@ inline bool LogFilterMinLevel::pass( const log::detail::LogMsg& msg) const
 #endif   // CELMA_LOG_DETAIL_LOG_FILTER_MIN_LEVEL_HPP
 
 
-// =====================  END OF log_filter_min_level.hpp  =====================
+// =====  END OF log_filter_min_level.hpp  =====
 

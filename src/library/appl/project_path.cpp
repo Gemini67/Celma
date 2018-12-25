@@ -121,7 +121,6 @@ ProjectPath::ProjectPath( const char* filename)
 /// @param[in]   pp  The object to stream the path/filename of.
 /// @return  The stream as passed in \a os.
 /// @since  1.0.0, 11.01.2017
-// cppcheck-suppress unusedFunction
 std::ostream& operator <<( std::ostream& os, const ProjectPath& pp)
 {
 

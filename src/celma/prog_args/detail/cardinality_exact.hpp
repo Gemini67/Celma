@@ -40,7 +40,7 @@ public:
    /// @param[in]  num_values  The number of calls/values that are expected for
    ///                         the corresponding argument.
    /// @since  0.2, 10.04.2016
-   CardinalityExact( int num_values);
+   explicit CardinalityExact( int num_values);
 
    /// Virtual, empty destructor.
    ///

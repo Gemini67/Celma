@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,12 +22,12 @@
 // Boost includes
 #define BOOST_TEST_MODULE FindSequenceTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 using celma::common::find_sequence_end;
 using celma::common::find_sequence_start;
 using std::string;
+
 
 
 /// Find the end of a simple sequence.
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( test_simple_sequence)
       BOOST_REQUIRE_EQUAL( seq_end - begin( seq), seq.find( ')'));
    } // end scope
 
-} // end test_simple_sequence
+} // test_simple_sequence
 
 
 
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE( test_nested_sequences)
       BOOST_REQUIRE_EQUAL( seq2_end - begin( seq2), seq.find_last_of( ')'));
    } // end scope
 
-} // end test_nested_sequences
+} // test_nested_sequences
 
 
 
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE( test_simple_sequence_backward)
       BOOST_REQUIRE_EQUAL( seq_start - begin( seq), 10L);
    } // end scope
 
-} // end test_simple_sequence_backward
+} // test_simple_sequence_backward
 
 
 
@@ -223,8 +223,9 @@ BOOST_AUTO_TEST_CASE( test_nested_sequences_backward)
       BOOST_REQUIRE_EQUAL( seq2_start - begin( seq2), 10L);
    } // end scope
 
-} // end test_nested_sequences_backward
+} // test_nested_sequences_backward
 
 
-// ======================  END OF test_find_sequence.cpp  ======================
+
+// =====  END OF test_find_sequence.cpp  =====
 
