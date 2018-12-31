@@ -80,7 +80,7 @@
    class IndirectAccess_ ## n : public celma::indirect_access::detail::Base \
    { \
    public: \
-      IndirectAccess_ ## n( n& dest): \
+      explicit IndirectAccess_ ## n( n& dest): \
          Base(), \
          mDestination( dest) \
       { \

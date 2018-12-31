@@ -2,12 +2,12 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
 
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.5 )
 
 # list of files to add to the library
 # use GLOB (instead of GLOB_RECURSE) so we can exclude the test directory
@@ -16,6 +16,8 @@ file( GLOB log_sources
       "detail/*.cpp"
       "filename/*.cpp"
       "files/*.cpp"
+      "filter/*.cpp"
+      "filter/detail/*.cpp"
       "formatting/*.cpp"
 )
 

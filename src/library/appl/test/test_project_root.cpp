@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -52,6 +52,26 @@ BOOST_AUTO_TEST_CASE( test_errors)
                         runtime_error);
 
 } // test_errors
+
+
+
+/// Default path should be returned when nothing else was set.
+///
+/// @since  1.15.0, 19.10.2018
+BOOST_AUTO_TEST_CASE( default_path)
+{
+
+   string  home( ::getenv( "HOME"));
+
+   ensure_last( home);
+   // initialisation through constructor
+   ProjectRoot::reset();
+
+   // set project root
+   BOOST_REQUIRE_NO_THROW( ProjectRoot::instance().path());
+   BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), home);
+
+} // default_path
 
 
 

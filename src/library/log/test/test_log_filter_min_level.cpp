@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,13 +15,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-
-
-// C++ Standard Library includes
-#include <iostream>
+// module to test header file include
+#include "celma/log/filter/detail/log_filter_min_level.hpp"
 
 
 // Boost includes
@@ -30,9 +25,10 @@
 
 
 // project includes
-#include "celma/log/detail/log_filter_min_level.hpp"
+#include "celma/log/detail/log_msg.hpp"
 
 
+using celma::log::filter::detail::LogFilterMinLevel;
 using celma::log::LogLevel;
 
 
@@ -42,7 +38,8 @@ using celma::log::LogLevel;
 BOOST_AUTO_TEST_CASE( min_level)
 {
 
-   celma::log::detail::LogFilterMinLevel  minFilter( LogLevel::warning);
+   LogFilterMinLevel  minFilter( LogLevel::warning);
+
 
    BOOST_REQUIRE( !minFilter.processLevel( LogLevel::fatal));
    BOOST_REQUIRE( !minFilter.processLevel( LogLevel::error));
@@ -51,7 +48,7 @@ BOOST_AUTO_TEST_CASE( min_level)
    BOOST_REQUIRE( minFilter.processLevel( LogLevel::debug));
    BOOST_REQUIRE( minFilter.processLevel( LogLevel::fullDebug));
 
-} // end min_level
+} // min_level
 
 
 
@@ -60,8 +57,8 @@ BOOST_AUTO_TEST_CASE( min_level)
 BOOST_AUTO_TEST_CASE( min_level_pass_filter)
 {
 
-   celma::log::detail::LogFilterMinLevel  minFilter( LogLevel::warning);
-   celma::log::detail::LogMsg             msg( LOG_MSG_OBJECT_INIT);
+   LogFilterMinLevel           minFilter( LogLevel::warning);
+   celma::log::detail::LogMsg  msg( LOG_MSG_OBJECT_INIT);
 
 
    msg.setLevel( LogLevel::fatal);
@@ -82,8 +79,8 @@ BOOST_AUTO_TEST_CASE( min_level_pass_filter)
    msg.setLevel( LogLevel::fullDebug);
    BOOST_REQUIRE( minFilter.passFilter( msg));
 
-} // end min_level_pass_filter
+} // min_level_pass_filter
 
 
 
-// ==================  END OF test_log_filter_min_level.cpp  ==================
+// =====  END OF test_log_filter_min_level.cpp  =====

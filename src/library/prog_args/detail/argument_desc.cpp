@@ -246,6 +246,28 @@ void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
 
 
 
+/// Returns the description (usage) text for the given argument.
+///
+/// @param[in]  arg_key
+///    The short and/or long argument to return the description for.
+/// @return
+///    Either the description or an empty string.
+/// @since
+///    1.14.0, 01.10.2018
+const string ArgumentDesc::getArgDesc( const ArgumentKey& arg_key) const
+{
+
+   for (auto const& entry : mArguments)
+   {
+      if (entry.mpArgObj->key() == arg_key)
+         return entry.mDescription;
+   } // end for
+
+   return string();
+} // ArgumentDesc::getArgDesc
+
+
+
 /// Prints the contents of the storage to the specified stream.
 /// @param[out]  os  the stream to write to.
 /// @param[in]   ad  The object to dump the contents of the storage of.

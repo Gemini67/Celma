@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,6 +41,9 @@ using celma::log::filename::Definition;
 using celma::log::filename::Builder;
 
 
+namespace {
+
+
 class DefinitionAccess: public Definition
 {
 public:
@@ -49,7 +52,10 @@ public:
       return mParts.size();
    } // size
    
-};
+}; // DefinitionAccess
+
+
+} // namespace
 
 
 
@@ -58,10 +64,9 @@ public:
 BOOST_AUTO_TEST_CASE( test_empty)
 {
 
-   DefinitionAccess    my_def;
-   std::ostringstream  oss;
-   Builder             log_filename( my_def);
-   std::string         filename;
+   DefinitionAccess  my_def;
+   Builder           log_filename( my_def);
+   std::string       filename;
 
 
    BOOST_REQUIRE_THROW( log_filename.filename( filename, 13, ::time( nullptr)),
@@ -165,4 +170,5 @@ BOOST_AUTO_TEST_CASE( test_parts)
 
 
 
-// ==================  END OF test_log_filename_builder.cpp  ==================
+// =====  END OF test_log_filename_builder.cpp  =====
+

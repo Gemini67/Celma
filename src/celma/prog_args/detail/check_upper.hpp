@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,7 +38,9 @@ public:
    /// Constructor.
    /// @param[in]  value  The upper limit to check against.
    /// @since  0.2, 10.04.2016
-   CheckUpper( T value);
+   explicit CheckUpper( T value);
+
+   virtual ~CheckUpper() = default;
 
    /// Checks if the value in \a val is less-than the stored limit.
    /// @param[in]  val    The value to check in string format.
@@ -112,5 +114,5 @@ template< typename T> detail::ICheck* upper( T value)
 #endif   // CELMA_PROG_ARGS_DETAIL_CHECK_UPPER_HPP
 
 
-// =========================  END OF check_upper.hpp  =========================
+// =====  END OF check_upper.hpp  =====
 

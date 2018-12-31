@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -52,7 +52,7 @@ public:
    /// @param[in,out]  pnext  Pointer to the starting position of the next
    ///                        column specification.
    /// @since  0.7, 07.11.2016
-   EvalColumn( const char*& pnext):
+   explicit EvalColumn( const char*& pnext):
       mTitle(),
       mSeparator(),
       mLength(),
@@ -348,18 +348,17 @@ AsciiTable::AsciiTable( const string& table_spec, char dash_char):
 /// Use this version of the constructor if the table specification string
 /// should be created using a printf() like format string. This may be used
 /// e.g. when the column is set through a constant.
-/// @param[in]  dash_char          The character to use to create the dash
-///                                line.<br>
-///                                Pass a 0 character here if the default
-///                                dash character should be used.
-/// @param[in]  table_spec_format  The string that specifies the columns,
-///                                widths, formats etc. as described in the
-///                                class header.<br>
-///                                This string is passed to printf() to
-///                                create the final table specification
-///                                string using the additional parameters.
-/// @param[in]  ...                Additional parameters to create the table
-///                                specification string.
+///
+/// @param[in]  dash_char
+///   The character to use to create the dash line.<br>
+///   Pass a 0 character here if the default dash character should be used.
+/// @param[in]  table_spec_format
+///    The string that specifies the columns, widths, formats etc. as
+///    described in the class header.<br>
+///    This string is passed to printf() to create the final table
+///    specification string using the additional parameters.
+/// @param[in]  ...
+///    Additional parameters to create the table specification string.
 /// @since  0.7, 07.11.2016
 AsciiTable::AsciiTable( char dash_char, const char* table_spec_format, ...):
    mCurrentDashChar( mDashChar),
@@ -458,5 +457,5 @@ void AsciiTable::processSpec( const char* pnext)
 } // namespace celma
 
 
-// =========================  END OF ascii_table.cpp  =========================
+// =====  END OF ascii_table.cpp  =====
 

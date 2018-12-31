@@ -19,82 +19,178 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE TestStringUtil
+#define BOOST_TEST_MODULE StringUtilTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
-
-
-using celma::common::ensure_last;
-using std::string;
 
 
 
-/// Test the function ensure_last().
-/// @since  0.12, 11.01.2017
-BOOST_AUTO_TEST_CASE( test_ensure_last)
+/// Test the behaviour of ensure_last().
+///
+/// @since  1.11.0, 22.08.2018
+BOOST_AUTO_TEST_CASE( check_ensure_last)
 {
 
+   using celma::common::ensure_last;
+
+   // should not modify empty path
    {
-      string  str;
+      std::string  path;
 
-      ensure_last( str);
+      ensure_last( path);
 
-      BOOST_REQUIRE( str.empty());
+      BOOST_REQUIRE( path.empty());
    } // end scope
 
+   // append at most one slash
    {
-      string  str( "s");
+      std::string  path( "/usr/include");
 
-      ensure_last( str);
+      ensure_last( path);
 
-      BOOST_REQUIRE( !str.empty());
-      BOOST_REQUIRE_EQUAL( str.length(), 2);
-      BOOST_REQUIRE_EQUAL( str[ 1], '/');
+      BOOST_REQUIRE_EQUAL( path, "/usr/include/");
+
+      ensure_last( path);
+
+      BOOST_REQUIRE_EQUAL( path, "/usr/include/");
    } // end scope
 
+   // use with other character
    {
-      string  str( "/");
+      std::string  title( "Hallo");
 
-      ensure_last( str);
+      ensure_last( title, '!');
 
-      BOOST_REQUIRE( !str.empty());
-      BOOST_REQUIRE_EQUAL( str.length(), 1);
-      BOOST_REQUIRE_EQUAL( str[ 0], '/');
+      BOOST_REQUIRE_EQUAL( title, "Hallo!");
+
+      ensure_last( title, '!');
+
+      BOOST_REQUIRE_EQUAL( title, "Hallo!");
    } // end scope
 
+} // check_ensure_last
+
+
+
+/// Verify that remove_to_if() works correctly.
+///
+/// @since  1.11.0, 23.08.2018
+BOOST_AUTO_TEST_CASE( check_remove_to_if)
+{
+
+   using celma::common::remove_to_if;
+
+   // should not modify empty string
    {
-      string  str( "s");
+      std::string  path;
 
-      ensure_last( str, '.');
+      remove_to_if( path, 'w');
 
-      BOOST_REQUIRE( !str.empty());
-      BOOST_REQUIRE_EQUAL( str.length(), 2);
-      BOOST_REQUIRE_EQUAL( str[ 1], '.');
+      BOOST_REQUIRE( path.empty());
    } // end scope
 
+   // check character not found
    {
-      string  str( "hello world");
+      std::string  str( "hello world");
 
-      ensure_last( str, '.');
+      remove_to_if( str, 'p');
 
-      BOOST_REQUIRE( !str.empty());
-      BOOST_REQUIRE_EQUAL( str.length(), 12);
-      BOOST_REQUIRE_EQUAL( str[ 11], '.');
+      BOOST_REQUIRE_EQUAL( str, "hello world");
    } // end scope
 
+   // check character not found
    {
-      string  str( "hello world.");
+      std::string  str( "hello world");
 
-      ensure_last( str, '.');
+      remove_to_if( str, 'p', true);
 
-      BOOST_REQUIRE( !str.empty());
-      BOOST_REQUIRE_EQUAL( str.length(), 12);
-      BOOST_REQUIRE_EQUAL( str[ 11], '.');
+      BOOST_REQUIRE_EQUAL( str, "hello world");
    } // end scope
 
-} // end test_ensure_last
+   // character found in middle of string
+   {
+      std::string  str( "hello world");
+
+      remove_to_if( str, 'o');
+
+      BOOST_REQUIRE_EQUAL( str, "orld");
+   } // end scope
+
+   // second character found in middle of string
+   {
+      std::string  str( "hello world");
+
+      remove_to_if( str, 'o', true);
+
+      BOOST_REQUIRE_EQUAL( str, "o world");
+   } // end scope
+
+   // character found in middle of string, not including
+   {
+      std::string  str( "hello world");
+
+      remove_to_if( str, 'o', false, true);
+
+      BOOST_REQUIRE_EQUAL( str, "rld");
+   } // end scope
+
+   // check character not found
+   {
+      std::string  str( "hello world");
+
+      remove_to_if( str, 'o', true, true);
+
+      BOOST_REQUIRE_EQUAL( str, " world");
+   } // end scope
+
+} // check_remove_to_if
 
 
 
-// =======================  END OF test_string_util.cpp  =======================
+/// Verify that the shortcuts for remove_to_if() works correctly.
+///
+/// @since  1.11.0, 23.08.2018
+BOOST_AUTO_TEST_CASE( check_remove_to_if_shortcuts)
+{
+
+   // character found in middle of string
+   {
+      std::string  str( "hello world");
+
+      celma::common::remove_to_if_last_excl( str, 'o');
+
+      BOOST_REQUIRE_EQUAL( str, "orld");
+   } // end scope
+
+   // second character found in middle of string
+   {
+      std::string  str( "hello world");
+
+      celma::common::remove_to_if_first_excl( str, 'o');
+
+      BOOST_REQUIRE_EQUAL( str, "o world");
+   } // end scope
+
+   // character found in middle of string, not including
+   {
+      std::string  str( "hello world");
+
+      celma::common::remove_to_if_last_incl( str, 'o');
+
+      BOOST_REQUIRE_EQUAL( str, "rld");
+   } // end scope
+
+   // check character not found
+   {
+      std::string  str( "hello world");
+
+      celma::common::remove_to_if_first_incl( str, 'o');
+
+      BOOST_REQUIRE_EQUAL( str, " world");
+   } // end scope
+
+} // check_remove_to_if_shortcuts
+
+
+
+// =====  END OF test_string_util.cpp  =====
 

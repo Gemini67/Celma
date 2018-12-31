@@ -2,12 +2,12 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
 
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.5 )
 
 add_subdirectory( appl )
 get_directory_property( appl_sources DIRECTORY ./appl
@@ -48,11 +48,25 @@ set( celma_lib_sources
    ${indirect_access_sources}
 )
 
+add_library( celma-common SHARED
+   ${common_sources}
+)
+add_library( celma-common-static STATIC
+   ${common_sources}
+)
+
 add_library( celma SHARED
    ${celma_lib_sources}
 )
 add_library( celma-static STATIC
    ${celma_lib_sources}
+)
+
+set_target_properties( celma-common
+   PROPERTIES VERSION ${MAJORVERSION}.${MINORVERSION}
+)
+set_target_properties( celma-common-static
+   PROPERTIES OUTPUT_NAME celma-common
 )
 
 set_target_properties( celma
@@ -62,7 +76,7 @@ set_target_properties( celma-static
    PROPERTIES OUTPUT_NAME celma
 )
 
-install( TARGETS celma celma-static
+install( TARGETS celma-common celma-common-static celma celma-static
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib64
    ARCHIVE DESTINATION lib64

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,6 +22,7 @@
 #include <iosfwd>
 #include <vector>
 #include "celma/common/singleton.hpp"
+#include "celma/log/detail/log_attributes_container.hpp"
 #include "celma/log/detail/log_data.hpp"
 #include "celma/log/detail/log_defs.hpp"
 
@@ -49,7 +50,33 @@ class LogMsg;
 /// log-ids).<br>
 /// Each of these logs can have zero or multiple destinations. This can be e.g.
 /// a file writer, a communication interface etc. For each destination, filters
-/// can be specified, which messages should be passed to this destination.
+/// can be specified, which messages should be passed to this destination.<br>
+/// The most convenient way to create a log message is by using one of the
+/// provided macros.<br>
+/// For each log destination a specific output format can be specified. There
+/// are predefined columns like the date, time, process id etc. that you can
+/// use, plus the text of the log message of course.<br>
+/// You can store values that are added to each log message, either in a
+/// separate column or in the text of the log message, the log attributes.<br>
+/// There are several ways to define a log attribute, related to the scope of an
+/// attribute:
+/// - Global:<br>
+///   You can add attributes to the singleton object of this class, resulting in
+///   an attribute that is visible "everywhere".
+/// - Scoped:<br>
+///   With the macro \c LOG_ATTRIBUTE a scoped attribute is created, that is
+///   visible as long as the scope of the internally used variable exists.<br>
+///   This includes functions called from within the scope etc.
+/// - Variable:<br>
+///   With the class celma::log::LogAttributes you can manage the scope of
+///   attributes yourself. For example, use an object of this class as a member
+///   variable of your class to define class-specific attributes.<br>
+///   You just have to pass the log attribute object to the log message
+///   afterwards. See the description of the class.
+/// You can always define multiple attributes with the same name (and, most
+/// likely, different values). When searching for the value of an attribute, the
+/// value of the attribute that was added last is used.
+///
 /// @since  0.3, 19.06.2016
 class Logging: public common::Singleton< Logging>
 {
@@ -88,6 +115,35 @@ public:
    /// @since  0.3, 19.06.2016
    void log( const std::string& log_name, const detail::LogMsg& msg);
 
+   /// Add an attribute which is later used for log messages.
+   ///
+   /// @param[in]  name
+   ///    The name of the attribute.
+   /// @param[in]  value
+   ///    The value for the attribute.
+   /// @since
+   ///    1.15.0, 10.10.2018
+   void addAttribute( const std::string& name, const std::string& value);
+
+   /// Returns the value for an attribute.<br>
+   /// If multiple attributes with the same name exist, the values of the last
+   /// attribute is returned (i.e. the one that was added last).
+   ///
+   /// @param[in]  attr_name  The name of the attribute to return the value of.
+   /// @return
+   ///    The (last) value of the attribute or an empty string when not found.
+   /// @since
+   ///    1.15.0, 11.10.2018
+   std::string getAttribute( const std::string& attr_name) const;
+
+   /// Removes an attribute.<br>
+   /// If multiple attributes with the same name exist, the attribute that was
+   /// added last is removed.
+   /// 
+   /// @param[in]  attr_name  The name of the attribute to remove.
+   /// @since  1.15.0, 11.10.2018
+   void removeAttribute( const std::string& attr_name);
+
    /// Dumps information about the logging framework.
    /// @param[in]  os  The stream to write into.
    /// @param[in]  lg  The object to dump.
@@ -98,18 +154,30 @@ public:
 protected:
    /// Constructor.
    /// @since  0.3, 19.06.2016
-   Logging();
+   Logging() = default;
 
 private:
    /// Container for the log object(s).
-   typedef std::vector< detail::LogData>  LogCont;
+   using LogCont = std::vector< detail::LogData>;
 
    /// The id to give to the next log.
-   id_t     mNextLogId;
+   id_t                            mNextLogId = 0x01;
    /// The data of the existing log(s).
-   LogCont  mLogs;
+   LogCont                         mLogs;
+   /// Store for the current log attributes.
+   detail::LogAttributesContainer  mAttributes;
 
 }; // Logging
+
+
+// inlined methods
+// ===============
+
+
+inline std::string Logging::getAttribute( const std::string& attr_name) const
+{
+   return mAttributes.getAttribute( attr_name);
+} // Logging::getAtribute
 
 
 } // namespace log
@@ -129,5 +197,5 @@ private:
 #endif   // CELMA_LOG_LOGGING_HPP
 
 
-// ===========================  END OF logging.hpp  ===========================
+// =====  END OF logging.hpp  =====
 

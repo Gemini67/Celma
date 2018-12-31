@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -181,9 +181,9 @@ public:
 
 private:
    /// Type used to store the destination variables.
-   typedef std::shared_ptr< common::AnyBase>  shared_value_storage_t;
+   using shared_value_storage_t = std::shared_ptr< common::AnyBase>;
    /// Container used to store the destination variables.
-   typedef std::map< detail::ArgumentKey, shared_value_storage_t>  container_t;
+   using container_t = std::map< detail::ArgumentKey, shared_value_storage_t>;
 
    /// Hidden when value handler is used.
    template< typename T>
@@ -289,5 +289,5 @@ template< typename T> void ValueHandler::getValue( T& dest) const noexcept( fals
 #endif   // CELMA_PROG_ARGS_VALUE_HANDLER_HPP
 
 
-// ========================  END OF value_handler.hpp  ========================
+// =====  END OF value_handler.hpp  =====
 

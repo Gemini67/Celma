@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,26 +36,27 @@ public:
    /// Constructor.
    /// @param[in]  fname_def  The object used to create the file name.
    /// @since  1.0.0, 13.12.2017
-   Simple( const filename::Definition& fname_def);
+   explicit Simple( const filename::Definition& fname_def);
 
-   /// Copy constructor. Copies onle the definition.
-   /// @param[in]  fname_def  The object used to create the file name.
+   /// Copying and moving not needed.
+   /// @since  1.19.0, 06.12.2018  (not needed)
    /// @since  1.0.0, 13.12.2017
-   Simple( const Simple& other);
+   Simple( const Simple&) = delete;
+   Simple( Simple&&) = delete;
 
    /// Default destructor.
    /// @since  1.0.0, 13.12.2017
    virtual ~Simple() = default;
+
+   /// Copying and moving not needed.
+   Simple& operator =( const Simple&) = delete;
+   Simple& operator =( Simple&&) = delete;
 
 private:
    /// Check if the currently opened file is valid for writing into.
    /// @return  Always \c true.
    /// @since  1.0.0, 13.12.2017
    virtual bool openCheck() override;
-
-   /// Does nothing. And should actually never be called anyway.
-   /// @since  1.0.0, 13.12.2017
-   virtual void rollFiles() override;
 
    /// Checks if the next message can still be written into the current file.
    /// @param[in]  msg       The message object. Ignored.
@@ -84,5 +85,5 @@ private:
 #endif   // CELMA_LOG_FILES_SIMPLE_HPP
 
 
-// ============================  END OF simple.hpp  ============================
+// =====  END OF simple.hpp  =====
 

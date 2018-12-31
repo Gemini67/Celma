@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,12 @@
 #define CELMA_LOG_FILES_POLICY_BASE_HPP
 
 
+#ifdef CELMA_LOG_POLICY_BASE_STUB
+#include "celma/test/stubs/policy_base_stub.hpp"
+#define  PolicyBase  PolicyBaseStub
+#else
+
+
 #include <fstream>
 #include <string>
 #include "celma/log/detail/log_msg.hpp"
@@ -30,6 +36,7 @@ namespace celma { namespace log { namespace files {
 
 /// Base class for log file handle policies. Contains the part common to all
 /// policies.
+/// @since  1.11.0, 27.08.2018  (renamed from PolicyBase)
 /// @since  1.0.0, 13.12.2017
 class PolicyBase
 {
@@ -37,17 +44,22 @@ public:
    /// Constructor. Stores the object to use to create the log file names.
    /// @param[in]  fname_def  Log filename definition.
    /// @since  1.0.0, 13.12.2017
-   PolicyBase( const filename::Definition& fname_def);
+   explicit PolicyBase( const filename::Definition& fname_def);
 
-   /// Copy constructor. Only copies the log filename definition, not any
-   /// eventually open log file.
-   /// @param[in]  other  The other object to copy the data from.
+   /// Copying and moving not allowed/needed.
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.0.0, 13.12.2017
-   PolicyBase( const PolicyBase& other);
+   PolicyBase( const PolicyBase&) = delete;
+   PolicyBase( PolicyBase&&) = delete;
 
    /// Default, virtual destructor.
    /// @since  1.0.0, 13.12.2017
    virtual ~PolicyBase() = default;
+
+   /// Copying and moving not allowed/needed.
+   /// @since  1.19.0, 06.12.2018
+   PolicyBase& operator =( const PolicyBase&) = delete;
+   PolicyBase& operator =( PolicyBase&&) = delete;
 
    /// Opens the current log file, checks if it still is okay to use the file,
    /// if not closes the file again, rolls the log file generations and opens
@@ -81,9 +93,14 @@ protected:
    virtual bool openCheck() = 0;
 
    /// Called when openCheck() returned \c false. The current file is already
-   /// closed then, all the function has to do is roll the log file generations.
+   /// closed then, all the function has to do is roll the log file
+   /// enerations.<br>
+   /// Empty method provided here in the base class, so it only needs to be
+   /// overwritten when actually used.
+   ///
+   /// @since  1.11.0, 05.09.2018  (not pure virtual anymore)
    /// @since  1.0.0, 13.12.2017
-   virtual void rollFiles() = 0;
+   virtual void rollFiles();
 
    /// Called to check if the next log message can still be written into the
    /// current log file.
@@ -112,6 +129,12 @@ protected:
    /// @since  1.0.0, 13.12.2017
    virtual void reOpenFile();
 
+   /// Returns the current size of the log file.
+   ///
+   /// @return  The current size of the file.
+   /// @since  1.11.0, 27.08.2018
+   size_t fileSize();
+
    /// The definition how to build the file name.
    const filename::Definition  mFilenameDefinition;
    /// The path and filename of the currently open log file.
@@ -137,8 +160,9 @@ inline const std::string& PolicyBase::logFileName() const
 } // namespace celma
 
 
+#endif   // CELMA_LOG_POLICY_BASE_STUB
 #endif   // CELMA_LOG_FILES_POLICY_BASE_HPP
 
 
-// =========================  END OF policy_base.hpp  =========================
+// =====  END OF policy_base.hpp  =====
 

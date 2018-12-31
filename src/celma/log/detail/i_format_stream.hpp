@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,7 +34,7 @@ class IFormatStream: public IFormatBase
 public:
    /// Empty, virtual destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~IFormatStream() { }
+   virtual ~IFormatStream() = default;
 
    /// Visible interface. Calls format() (from the derived classes).
    /// @param[out]  out  The stream to write into.
@@ -59,7 +59,7 @@ private:
 inline void IFormatStream::formatMsg( std::ostream& out, const LogMsg& msg) const
 {
    format( out, msg);
-} // end IFormatStream::formatMsg
+} // IFormatStream::formatMsg
 
 
 } // namespace detail
@@ -70,5 +70,5 @@ inline void IFormatStream::formatMsg( std::ostream& out, const LogMsg& msg) cons
 #endif   // CELMA_LOG_DETAIL_I_FORMAT_STREAM_HPP
 
 
-// =======================  END OF i_format_stream.hpp  =======================
+// =====  END OF i_format_stream.hpp  =====
 

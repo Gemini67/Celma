@@ -63,6 +63,9 @@ analyze:
 	cd build/analyze; \
 	make -j${CPUS};
 
+cppcheck:
+	cppcheck --enable=all --quiet --inline-suppr --force --std=c++11 -I src src
+
 test:	test-release test-debug
 
 test-debug:
@@ -98,4 +101,13 @@ coverage:
 	cd build/coverage; \
 	/usr/bin/time --format="-- Build Duration: %E" make -j${CPUS} install; \
 	/usr/bin/time --format="-- Build Duration: %E" make Celma_coverage
+
+sonar:
+	sonar-scanner \
+	   -Dsonar.projectKey=Gemini67_Celma \
+	   -Dsonar.organization=gemini67-github \
+	   -Dsonar.sources=src \
+	   -Dsonar.cfamily.build-wrapper-output=bw-output \
+	   -Dsonar.host.url=https://sonarcloud.io \
+	   -Dsonar.login=$(SONAR_LOGIN)
 

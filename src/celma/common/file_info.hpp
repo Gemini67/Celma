@@ -76,6 +76,13 @@ public:
    FileInfo( const FileInfo& other) = default;
    FileInfo( FileInfo&& other) = default;
 
+   /// Returns the path and name of the parent directory of the current entry.
+   ///
+   /// @return  The path and name of the parent directory of the current entry.
+   /// @throws  If the current object was not created with a file path and name.
+   /// @since  1.9.0, 04.08.2018
+   std::string parentDirectory() const noexcept( false);
+
    /// Returns the size of the file.
    /// @return  The size of the file in bytes.
    /// @since  1.4.0, 27.02.2018
@@ -92,6 +99,9 @@ public:
    bool isDirectory() const;
 
 private:
+   /// The path and name of the file, as given to the constructor.<br>
+   /// Needed for the function parentDirectory(), not const to allow copying.
+   std::string  mEntryName;
    /// The data of the file.
    struct stat  mFileStat;
 

@@ -34,6 +34,8 @@
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
+#include "celma/prog_args/detail/check_parent_directory_exists.hpp"
+#include "celma/prog_args/detail/check_pattern.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
 #include "celma/prog_args/detail/check_upper.hpp"
 #include "celma/prog_args/detail/check_values.hpp"
@@ -156,6 +158,18 @@ public:
    ///    0.2, 10.04.2016
    virtual bool hasValue() const = 0;
 
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 04.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const = 0;
+
    /// Returns the argument key(s) specified for this argument.
    /// @return
    ///    The short and/or long argument specified for this argument.
@@ -165,14 +179,13 @@ public:
    ///    0.2, 10.04.2016
    const ArgumentKey& key() const;
 
-   /// For boolean arguments: Unset the flag (set to \c false) instead of
-   /// setting it (the default).<br>
+   /// For bitset destinations and boolean within a check-assign: Unset the bits
+   /// instead of setting them.<br>
    /// Throws an exception here, must be implemented by the partial
-   /// specialisation for type \c bool.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   /// specialisation for type \c std::bitset.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* unsetFlag() noexcept( false);
 
    /// Specifies that the argument is mandatory (required). By default, all
@@ -300,6 +313,12 @@ public:
    ///    0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
 
+   /// Special feature for destination variable type level counter:<br>
+   /// Allow mixing of increment and assignment on the command line.
+   ///
+   /// @since  1.11.0, 20.08.2018
+   virtual TypedArgBase* setAllowMixIncSet() noexcept( false);
+
    /// Specifies the list separator character to use for splitting lists of
    /// values.
    /// @param[in]  sep
@@ -320,6 +339,23 @@ public:
    /// @since
    ///    1.2.0, 28.12.2017
    virtual TypedArgBase* setClearBeforeAssign() noexcept( false);
+
+   /// Special feature for destination variable type vector:<br>
+   /// Sort the contents of the vector.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setSortData() noexcept( false);
+
+   /// Special feature for destination variable type vector:<br>
+   /// Make sure only unique values are stored in the vector.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since
+   ///    1.9.0, 04.08.2018
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      noexcept( false);
 
    /// Calls all check methods defined for this argument. The check methods
    /// throw an exception when a check failed, so: No exception, value can be
@@ -366,6 +402,12 @@ public:
    /// @since
    ///    0.2, 10.04.2016
    void checkCardinality();
+
+   /// Returns a text description of the cardinality specified for this argument.
+   ///
+   /// @return  A string with the description of the cardinality.
+   /// @since  1.14.0, 02.10.2018
+   std::string cardinalityStr() const;
 
    /// Allows to change the "original value check" mode. This is only applicable
    /// to typed arg value objects.
@@ -441,6 +483,12 @@ public:
    /// @since
    ///    0.2, 10.04.2016
    const std::string& varName() const;
+
+   /// Returns the type of the destination variable as string.
+   ///
+   /// @return  String with the type of the destination variable.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const = 0;
 
    /// Should add the value of the destination variable to the string when
    /// called.<br>
@@ -681,6 +729,13 @@ inline bool TypedArgBase::takesMultiValue() const
 } // TypedArgBase::takesMultiValue
 
 
+inline TypedArgBase* TypedArgBase::setAllowMixIncSet() noexcept( false)
+{
+   throw std::invalid_argument( "setting \"allow mixing increment and setter\" "
+      "not allowed for variable '" + mVarName + "'");
+} // TypedArgBase::setAllowMixIncSet
+
+
 inline TypedArgBase* TypedArgBase::setListSep( char /* sep */)
 {
    throw std::invalid_argument( "setting list separator not allowed for "
@@ -693,6 +748,20 @@ inline TypedArgBase* TypedArgBase::setClearBeforeAssign()
    throw std::invalid_argument( "setting 'clear before assign' is not allowed "
                                 "for variable '" + mVarName + "'");
 } // TypedArgBase::setClearBeforeAssign
+
+
+inline TypedArgBase* TypedArgBase::setSortData()
+{
+   throw std::invalid_argument( "setting 'sort data' is not allowed for "
+      "variable '" + mVarName + "'");
+} // TypedArgBase::setSortData
+
+
+inline TypedArgBase* TypedArgBase::setUniqueData( bool)
+{
+   throw std::invalid_argument( "setting 'unique data' is not allowed for "
+      "variable '" + mVarName + "'");
+} // TypedArgBase::setUniqueData
 
 
 inline bool TypedArgBase::hasCheck() const

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,27 +16,24 @@
 #include "celma/prog_args.hpp"
 
 
-using namespace std;
-using namespace celma;
-
 
 /// Test program for generating usage output with default values of optional
 /// arguments.
+///
 /// @since  0.2, 10.04.2016
 int main( int argc, char* argv[])
 {
 
-   prog_args::Handler         ah( prog_args::Handler::AllHelp);
-   bool                       flagArg;
-   int                        intArgMandatory;
-   int                        intArgOptDef = 4711;
-   string                     stringArgOptDef( "hello world");
-   vector< int>               vectorArgOpt;
-   common::CheckAssign< int>  intArgOptDef2;
-
-
    try
    {
+      celma::prog_args::Handler         ah( celma::prog_args::Handler::AllHelp);
+      bool                              flagArg;
+      int                               intArgMandatory;
+      int                               intArgOptDef = 4711;
+      std::string                       stringArgOptDef( "hello world");
+      std::vector< int>                 vectorArgOpt;
+      celma::common::CheckAssign< int>  intArgOptDef2;
+
       ah.addArgument( "f,flag",      DEST_VAR( flagArg),
                       "Boolean flag, no default");
       ah.addArgument( "m,mandatory", DEST_VAR( intArgMandatory),
@@ -51,16 +48,16 @@ int main( int argc, char* argv[])
                       "Optional integer argument, using CheckAssign<>, *with* default");
 
       ah.evalArguments( argc, argv);
-   } catch (const exception& e)
+   } catch (const std::exception& e)
    {
-      cerr << "caught exception: " << e.what() << endl;
-      exit( EXIT_FAILURE);
+      std::cerr << "caught exception: " << e.what() << std::endl;
+      ::exit( EXIT_FAILURE);
    } // end try
 
-   exit( EXIT_SUCCESS);
-}
+   ::exit( EXIT_SUCCESS);
+} // main
 
 
 
-// =========================  END OF test_argh_print_def.cpp  =========================
+// =====  END OF test_argh_print_def.cpp  =====
 

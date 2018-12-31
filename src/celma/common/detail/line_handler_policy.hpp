@@ -65,7 +65,7 @@ public:
    /// If no object pointer is passed (NULL), no statistic is calculated.
    /// @param[in]  stat_obj  Pointer to the statistic object to use.
    /// @since  1.3.0, 13.04.2016
-   StatLineHandler( FileLineStat* stat_obj = nullptr):
+   explicit StatLineHandler( FileLineStat* stat_obj = nullptr):
       mpFileLineStat( stat_obj)
    {
    } // StatLineHandler::StatLineHandler

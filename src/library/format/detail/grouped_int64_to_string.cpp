@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,7 +25,7 @@
 #include "celma/format/detail/grouped_int64_to_string.hpp"
 
 
-// C/OS library includes
+// OS/C library includes
 #include <climits>
 
 
@@ -81,42 +81,61 @@ inline void convert( char* buffer, uint64_t value, uint8_t result_len,
    {
    case 20:  *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
+             [[fallthrough]];
    case 19:  *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
+             [[fallthrough]];
    case 18:  *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
+             [[fallthrough]];
    case 17:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case 16:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case 15:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case 14:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case 13:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case 12:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case 11:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case 10:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case  9:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case  8:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case  7:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case  6:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case  5:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case  4:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case  3:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    case  2:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    default:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer   = '0' + value;
    } // end switch
@@ -267,5 +286,5 @@ int groupedInt64negToString( char* buffer, int64_t value, char group_char)
 } // namespace celma
 
 
-// ===================  END OF grouped_int64_to_string.cpp  ===================
+// =====  END OF grouped_int64_to_string.cpp  =====
 

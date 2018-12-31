@@ -19,7 +19,7 @@
 #include "celma/appl/project_root.hpp"
 
 
-// C/OS library includes
+// OS/C library includes
 #include <unistd.h>
 #include <cstdlib>
 #include <cstring>
@@ -39,11 +39,11 @@ namespace celma { namespace appl {
 namespace {
 
 
-
 /// Tries to determine the value of the environment variable \a envName, throws
 /// an exception if it is unknown.
-/// @param[in]  envName  The name of the environment variable to return the
-///                      value of.
+///
+/// @param[in]  envName
+///    The name of the environment variable to return the value of.
 /// @return  The value of the environment variable.
 /// @since  1.0.0, 11.01.2017
 inline const char* checkGetEnv( const char* envName) noexcept( false)
@@ -60,7 +60,6 @@ inline const char* checkGetEnv( const char* envName) noexcept( false)
 } // checkGetEnv
 
 
-
 } // namespace
 
 
@@ -68,11 +67,13 @@ inline const char* checkGetEnv( const char* envName) noexcept( false)
 /// Initialise the 'project root' directory.<br>
 /// If this method is not called explicitly, it is called when the singleton
 /// object is created.
-/// @param[in]  srcType  Base to use to determine the root of the project.
-/// @param[in]  source   If \a srcType ProjRootSrc::env or ProjRootSrc::bin
-///                      are used, the corresponding value (name of the
-///                      environment variable or the program start path,
-///                      respectively) must be passed here.
+///
+/// @param[in]  srcType
+///    Base to use to determine the root of the project.
+/// @param[in]  source
+///    If \a srcType ProjRootSrc::env or ProjRootSrc::bin are used, the
+///    corresponding value (name of the environment variable or the program
+///    start path, respectively) must be passed here.
 /// @since  1.0.0, 11.01.2017
 void ProjectRoot::setProjectRoot( ProjRootSrc srcType, const char* source)
 {
@@ -98,7 +99,7 @@ void ProjectRoot::setProjectRoot( ProjRootSrc srcType, const char* source)
          mProjectRoot.assign( source, 0, pos - source); 
          break;   // switch
       } // end if
-      // intentionally no break here!
+      [[fallthrough]];  // intentionally no break here!
    case ProjRootSrc::cwd:
       if (char* currWD = ::get_current_dir_name())
       {
@@ -142,16 +143,24 @@ bool ProjectRoot::isOnProject( const std::string& path_file_name)
 
 
 
+/// Default constructor, sets the home directory as project root.
+///
+/// @since  1.0.0, 18.10.2017
 ProjectRoot::ProjectRoot():
-   mProjectRoot()
+   ProjectRoot( ProjRootSrc::home)
 {
-
-   setProjectRoot( ProjRootSrc::home);
-
 } // ProjectRoot::ProjectRoot
 
 
 
+/// Constructor, initialises the project root path with the given parameters.
+///
+/// @param[in]  srcType
+///    The type of initialisation to use for the project root.
+/// @param[in]  source
+///    For some initialisation types, additional value (e.g. name of
+///    environment variable).
+/// @since  1.0.0, 18.10.2017
 ProjectRoot::ProjectRoot( ProjRootSrc srcType, const char* source):
    mProjectRoot()
 {
@@ -166,5 +175,5 @@ ProjectRoot::ProjectRoot( ProjRootSrc srcType, const char* source):
 } // namespace celma
 
 
-// =========================  END OF project_root.cpp  =========================
+// =====  END OF project_root.cpp  =====
 

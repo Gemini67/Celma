@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,6 +27,7 @@
 #define CELMA_FORMAT_GROUPED_INT2STRING_HPP
 
 
+#include <iostream>
 #include <string>
 #include <type_traits>
 #include "celma/format/detail/grouped_int8_to_string.hpp"
@@ -40,8 +41,8 @@ namespace celma { namespace format {
 
 #define  TEMPLATE_ENABLE_IF( b, s, r) \
    template< typename T> \
-      std::enable_if_t< std::is_integral< T>::value && (sizeof( T) == b) && \
-                        std::is_signed< T>::value == s, \
+      std::enable_if_t< std::is_integral< T>::value && (sizeof( T) == b) \
+                        && std::is_signed< T>::value == s, \
                         r>
 
 #define  FUNCTION_ENABLED( b, s, f) \
@@ -77,9 +78,98 @@ SIGNED_FUNCTIONS( 8, groupedInt64toString)
 UNSIGNED_FUNCTIONS( 8, groupedUint64toString)
 
 
-#undef  SIGNED_FUNCTIONS
 #undef  UNSIGNED_FUNCTIONS
+#undef  SIGNED_FUNCTIONS
+#undef  BUFFER_FUNCTION_ENABLED
+#undef  FUNCTION_ENABLED
 #undef  TEMPLATE_ENABLE_IF
+
+
+/// Helper class that makes sure that an integer value is printed as grouped
+/// integer.
+///
+/// @tparam  T  The type of the value.
+/// @tparam  S  The separator character to use for the grouping.
+/// @since  1.17.0, 22.11.2018
+template< typename T = int32_t, char S = '\''> class GroupedInt
+{
+public:
+   /// Constructor, stores the given value.
+   ///
+   /// @param[in]  init_val  The initial value to store.
+   /// @since  1.17.0, 22.11.2018
+   explicit GroupedInt( T init_val = 0):
+      mValue( init_val)
+   {
+   } // GroupedInt< T, S>::GroupedInt
+
+   GroupedInt( const GroupedInt&) = default;
+   ~GroupedInt() = default;
+
+   GroupedInt& operator =( const GroupedInt& other) = default;
+
+   /// Assigns a new value.
+   /// 
+   /// @param[in]  value  The new value sto store.
+   /// @return  This object.
+   /// @since  1.17.0, 22.11.2018
+   GroupedInt& operator =( T value)
+   {
+      mValue = value;
+      return *this;
+   } // GroupedInt< T, S>::operator =
+
+   /// Returns the internally stored value by const reference.
+   ///
+   /// @return  The (const reference to the) internally stored value.
+   /// @since  1.17.0, 24.11.2018
+   operator const T&() const
+   {
+      return mValue;
+   } // GroupedInt< T, S>::operator const T&
+
+   /// Returns the internally stored value by reference.
+   ///
+   /// @return  The (reference to the) internally stored value.
+   /// @since  1.17.0, 22.11.2018
+   operator T&()
+   {
+      return mValue;
+   } // GroupedInt< T, S>::operator T&
+
+   /// Print the internally stored value as grouped integer.
+   ///
+   /// @param[in]  os
+   ///    The stream to print to.
+   /// @param[in]  gi
+   ///    The object to print the value of.
+   /// @return
+   ///    The stream as passed in.
+   /// @since
+   ///    1.17.0, 22.11.2018
+   friend inline std::ostream& operator <<( std::ostream& os, const GroupedInt& gi)
+   {
+      return os << grouped_int2string( gi.mValue, S);
+   } // operator <<
+
+private:
+   /// The value.
+   T  mValue;
+
+}; // GroupedInt< T, S>
+
+
+/// Stream manipulator function that returns a grouped int object, when then
+/// prints the integer value as grouped integer.
+///
+/// @tparam  T  The type of the integer.
+/// @param[in]  value  The value to print.
+/// @return  Grouped int object that holds the integer value.
+/// @since  1.17.0, 24.11.2018
+template< typename T> GroupedInt< T> groupedInt( T value)
+{
+  return GroupedInt< T>( value);
+} // groupedInt
 
 
 } // namespace format
@@ -89,5 +179,5 @@ UNSIGNED_FUNCTIONS( 8, groupedUint64toString)
 #endif   // CELMA_FORMAT_GROUPED_INT2STRING_HPP
 
 
-// ======================  END OF grouped_int2string.hpp  ======================
+// =====  END OF grouped_int2string.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,15 +29,16 @@ namespace celma { namespace common {
 
 /// Helper class to easily set up a string tokenizer for various separators.
 /// Internally, the Boost.Tokenizer is used.
+///
 /// @tparam  T  The type of the separator to use.
 /// @since  0.2, 04.04.2016
 template< typename T> class TokenizerBase: public ICountResult
 {
 public:
    /// Type of the tokenizer.
-   typedef typename boost::tokenizer< T>      BoostTokenizer;
+   using BoostTokenizer = typename boost::tokenizer< T>;
    /// Type of the iterator.
-   typedef typename BoostTokenizer::iterator  iterator;
+   using iterator = typename BoostTokenizer::iterator;
 
    friend class CountingIterator< typename BoostTokenizer::iterator>;
 
@@ -62,7 +63,7 @@ public:
    iterator end();
 
    /// Type of the counting iterator.
-   typedef CountingIterator< typename BoostTokenizer::iterator>  counting_iterator;
+   using counting_iterator = CountingIterator< typename BoostTokenizer::iterator>;
 
    /// Returns a counting iterator that points to the first token.
    /// @return  Counting iterator that points to the first token.
@@ -117,45 +118,45 @@ template< typename T> TokenizerBase< T>::TokenizerBase( const std::string& s,
    mTokenizer( mStringCopy, separator),
    mNumTokens( 0)
 {
-} // end TokenizerBase< T>::TokenizerBase
+} // TokenizerBase< T>::TokenizerBase
 
 
 template< typename T> typename TokenizerBase< T>::iterator TokenizerBase< T>::begin()
 {
    return mTokenizer.begin();
-} // end TokenizerBase< T>::begin
+} // TokenizerBase< T>::begin
 
 
 template< typename T> typename TokenizerBase< T>::iterator TokenizerBase< T>::end()
 {
    return mTokenizer.end();
-} // end TokenizerBase> T>::end
+} // TokenizerBase< T>::end
 
 
 template< typename T> typename TokenizerBase< T>::counting_iterator TokenizerBase< T>::begin_counting()
 {
    counting_iterator  ci( this, mTokenizer.begin());
    return ci;
-} // end TokenizerBase< T>::begin_counting
+} // TokenizerBase< T>::begin_counting
 
 
 template< typename T> typename TokenizerBase< T>::counting_iterator TokenizerBase< T>::end_counting()
 {
    counting_iterator  ci( this, mTokenizer.end());
    return ci;
-} // end TokenizerBase< T>::end_counting
+} // TokenizerBase< T>::end_counting
 
 
 template< typename T> int TokenizerBase< T>::numTokens() const
 {
    return mNumTokens;
-} // end TokenizerBase< T>::numTokens
+} // TokenizerBase< T>::numTokens
 
 
 template< typename T> void TokenizerBase< T>::setCount( int theCount)
 {
    mNumTokens = theCount;
-} // end TokenizerBase< T>::setCount
+} // TokenizerBase< T>::setCount
 
 
 } // namespace common
@@ -165,5 +166,5 @@ template< typename T> void TokenizerBase< T>::setCount( int theCount)
 #endif   // CELMA_COMMON_TOKENIZER_BASE_HPP
 
 
-// ========================  END OF tokenizer_base.hpp  ========================
+// =====  END OF tokenizer_base.hpp  =====
 

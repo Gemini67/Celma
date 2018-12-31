@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,7 +32,7 @@ class IFormat
 public:
    /// Empty, virtual destructor.
    /// @since  0.2, 10.04.2016
-   virtual ~IFormat() { }
+   virtual ~IFormat() = default;
 
    /// The method that must be implemented by the derived classes: May change
    /// the formatting of the passed value, e.g. change capitalization etc.
@@ -51,5 +51,5 @@ public:
 #endif   // CELMA_PROG_ARGS_DETAIL_IFORMAT_HPP
 
 
-// ===========================  END OF i_format.hpp  ===========================
+// =====  END OF i_format.hpp  =====
 

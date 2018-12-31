@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,7 +19,7 @@
 #include "celma/appl/arg_string_2_array.hpp"
 
 
-// UNIX/C lib includes
+// OS/C lib includes
 #include <unistd.h>
 #include <cstring>
 
@@ -29,9 +29,6 @@
 #include <vector>
 
 
-using namespace std;
-
-
 namespace celma { namespace appl {
 
 
@@ -39,11 +36,11 @@ namespace {
 
 
 /// Container type used to store the arguments: vector of strings.
-typedef vector< string>  StringVec;
+using StringVec = std::vector< std::string>;
 
 
 // functions prototypes
-void splitString( StringVec& arguments, const string& argstring);
+void splitString( StringVec& arguments, const std::string& argstring);
 void copyArguments( int& argc, char* argv[], const StringVec& arguments);
 
 
@@ -58,11 +55,10 @@ void copyArguments( int& argc, char* argv[], const StringVec& arguments);
 /// to set a program name before it.
 /// @param[in]  argstring  The argument string to split.
 /// @param[in]  progname   Optional program name to set. If not set,
-///                        'programname' is set as mpArgv[ 0].
+///                        'programname' is set as mpArgV[ 0].
 /// @since  0.2, 05.0.4.2016
-ArgString2Array::ArgString2Array( const string& argstring, const char* progname):
-   mArgc( -1),
-   mpArgv( nullptr)
+ArgString2Array::ArgString2Array( const std::string& argstring,
+   const char* progname)
 {
 
    StringVec  arguments;
@@ -70,21 +66,21 @@ ArgString2Array::ArgString2Array( const string& argstring, const char* progname)
 
    splitString( arguments, argstring);
 
-   mpArgv = new char*[ arguments.size() + 2];
+   mpArgV = new char*[ arguments.size() + 2];
    if (progname == nullptr)
    {
-      mpArgv[ 0] = new char[ 12];
-      ::strcpy( mpArgv[ 0], "programname");
+      mpArgV[ 0] = new char[ 12];
+      ::strcpy( mpArgV[ 0], "programname");
    } else
    {
-      mpArgv[ 0] = new char[ ::strlen( progname) + 1];
-      ::strcpy( mpArgv[ 0], progname);
+      mpArgV[ 0] = new char[ ::strlen( progname) + 1];
+      ::strcpy( mpArgV[ 0], progname);
    } // end if
 
-   mArgc = 1;
-   copyArguments( mArgc, mpArgv, arguments);
+   mArgC = 1;
+   copyArguments( mArgC, mpArgV, arguments);
 
-} // end ArgString2Array::ArgString2Array
+} // ArgString2Array::ArgString2Array
 
 
 
@@ -93,9 +89,7 @@ ArgString2Array::ArgString2Array( const string& argstring, const char* progname)
 /// otherwise you should use the constructor with two parameters.
 /// @param[in]  cmdLine  The argument string to split.
 /// @since  0.2, 05.0.4.2016
-ArgString2Array::ArgString2Array( const string& cmdLine):
-   mArgc( -1),
-   mpArgv( nullptr)
+ArgString2Array::ArgString2Array( const std::string& cmdLine)
 {
 
    StringVec  arguments;
@@ -103,12 +97,12 @@ ArgString2Array::ArgString2Array( const string& cmdLine):
 
    splitString( arguments, cmdLine);
 
-   mpArgv = new char*[ arguments.size() + 1];
+   mpArgV = new char*[ arguments.size() + 1];
 
-   mArgc = 0;
-   copyArguments( mArgc, mpArgv, arguments);
+   mArgC = 0;
+   copyArguments( mArgC, mpArgV, arguments);
 
-} // end ArgString2Array::ArgString2Array
+} // ArgString2Array::ArgString2Array
 
 
 
@@ -117,12 +111,12 @@ ArgString2Array::ArgString2Array( const string& cmdLine):
 ArgString2Array::~ArgString2Array()
 {
 
-   for (int i = 0; i < mArgc; ++i)
-      delete [] mpArgv[ i];
+   for (int i = 0; i < mArgC; ++i)
+      delete [] mpArgV[ i];
 
-   delete [] mpArgv;
+   delete [] mpArgV;
 
-} // end ArgString2Array::~ArgString2Array
+} // ArgString2Array::~ArgString2Array
 
 
 
@@ -134,13 +128,13 @@ namespace {
 /// @param[out]  arguments  Returns the arguments as separate strings.
 /// @param[in]   argstring  The complete argument argument string.
 /// @since  0.2, 05.0.4.2016
-void splitString( StringVec& arguments, const string& argstring)
+void splitString( StringVec& arguments, const std::string& argstring)
 {
 
-   string  currWord;
-   char    usedQuoteChar = '-';
-   bool    inQuote = false;
-   bool    gotBackslash = false;
+   std::string  currWord;
+   char         usedQuoteChar = '-';
+   bool         inQuote = false;
+   bool         gotBackslash = false;
 
 
    // priority for parsing:
@@ -185,7 +179,7 @@ void splitString( StringVec& arguments, const string& argstring)
    if (currWord.length() > 0)
       arguments.push_back( currWord);
 
-} // end splitString
+} // splitString
 
 
 
@@ -210,7 +204,7 @@ void copyArguments( int& argc, char* argv[], const StringVec& arguments)
 
    argv[ argc] = nullptr;
 
-} // end copyArguments
+} // copyArguments
 
 
 
@@ -221,5 +215,5 @@ void copyArguments( int& argc, char* argv[], const StringVec& arguments)
 } // namespace celma
 
 
-// ======================  END OF arg_string_2_array.cpp  ======================
+// =====  END OF arg_string_2_array.cpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -13,6 +13,10 @@
 **    celma::prog_args::Handler, using the Boost.Test module.
 **
 --*/
+
+
+// module to test header file include
+#include "celma/prog_args.hpp"
 
 
 // C++ Standard Library includes
@@ -30,7 +34,6 @@
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/tokenizer.hpp"
-#include "celma/prog_args.hpp"
 
 
 using std::string;
@@ -41,13 +44,17 @@ using celma::prog_args::Handler;
 
 // module definitions
 
+
+namespace {
+
+
 /// Custom type: set flags in a bitset.
 /// @since  0.2, 10.04.2016
 class TypedArgBitset: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef std::bitset< 1024>  type;
+   using type = std::bitset< 1024>;
 
    /// Constructor.
    /// @param[in]  dest   The destination variable to store the values in.
@@ -56,6 +63,12 @@ public:
    /// @since  0.16.0, 13.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArgBitset( type& dest, const string& vname);
+
+   /// Returns the name of the destination type as string.
+   ///
+   /// @return  String with the name of the destination type.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
@@ -67,6 +80,16 @@ public:
    ///          value, \c false otherwise.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const;
+
+   /// Writes the contents of the destination variable into the stream.
+   /// @param[in]  os
+   ///    The stream to write into.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
@@ -96,6 +119,12 @@ TypedArgBitset::TypedArgBitset( type& dest, const string& vname):
 } // TypedArgBitset::TypedArgBitset
 
 
+const std::string TypedArgBitset::varTypeName() const
+{
+   return "custom";
+} // TypedArgBitset::varTypeName
+
+
 void TypedArgBitset::assign( const string& value)
 {
 
@@ -122,7 +151,13 @@ void TypedArgBitset::assign( const string& value)
 bool TypedArgBitset::hasValue() const
 {
    return mDestVar.count() > 0;
-} // end TypedArgBitset::hasValue
+} // TypedArgBitset::hasValue
+
+
+void TypedArgBitset::printValue( std::ostream& os, bool) const
+{
+   os << "[custom]";
+} // TypedArgBitset::printValue
 
 
 TypedArgBase* TypedArgBitset::setListSep( char sep)
@@ -130,6 +165,9 @@ TypedArgBase* TypedArgBitset::setListSep( char sep)
    mListSep = sep;
    return this;
 } // TypedArgBitset::setListSep
+
+
+} // namespace
 
 
 
@@ -148,7 +186,7 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
 
    const celma::appl::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( kilobits.count(), 6);
    BOOST_REQUIRE( kilobits[  1]);
    BOOST_REQUIRE( kilobits[  2]);
@@ -161,5 +199,5 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
 
 
 
-// ====================  END OF test_argh_custom_type.cpp  ====================
+// =====  END OF test_argh_custom_type.cpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,7 @@ namespace celma { namespace log { namespace detail {
 /// Constructor.
 /// @since  1.0.0, 19.06.2016
 Log::Log():
-   LogFilter(),
+   filter::Filters(),
    mLoggers()
 {
 } // Log::Log
@@ -152,5 +152,5 @@ std::ostream& operator <<( std::ostream& os, const Log& l)
 } // namespace celma
 
 
-// =============================  END OF log.cpp  =============================
+// =====  END OF log.cpp  =====
 

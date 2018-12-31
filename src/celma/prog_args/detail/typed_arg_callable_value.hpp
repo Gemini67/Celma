@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -44,10 +44,25 @@ public:
    TypedArgCallableValue( ArgHandlerCallableValue fun,
                           const std::string& fname);
 
+   /// Returns "callable-value".
+   /// @return  The string "callable-value".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
+
+   /// Prints "callable" since there is no value to print.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Allows to set the value mode to 'optional' (or required, but that is
    /// already the default).
@@ -93,10 +108,22 @@ inline TypedArgCallableValue::TypedArgCallableValue( ArgHandlerCallableValue fun
 } // TypedArgCallableValue::TypedArgCallableValue
 
 
+inline const std::string TypedArgCallableValue::varTypeName() const
+{
+   return "callable-value";
+} // TypedArgCallableValue::varTypeName
+
+
 inline bool TypedArgCallableValue::hasValue() const
 {
    return mWasCalled;
 } // TypedArgCallableValue::hasValue
+
+
+inline void TypedArgCallableValue::printValue( std::ostream& os, bool) const
+{
+   os << "[callable(value)]";
+} // TypedArgCallableValue::printValue
 
 
 inline TypedArgBase* TypedArgCallableValue::setValueMode( ValueMode vm) noexcept( false)
@@ -139,5 +166,5 @@ inline void TypedArgCallableValue::assign( const std::string& value)
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_CALLABLE_VALUE_HPP
 
 
-// ======================  END OF typed_arg_callable.hpp  ======================
+// =====  END OF typed_arg_callable_value.hpp  =====
 

@@ -7,10 +7,11 @@
 ##    ####   ######  ######  #    #  #    #
 ##
 
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.5 )
 
 add_definitions( -DBOOST_TEST_DYN_LINK)
 
+celma_add_celma_boost_testprogram( test_argh_arg_help )
 celma_add_celma_boost_testprogram( test_argh_callables )
 celma_add_celma_boost_testprogram( test_argh_cardinality )
 celma_add_celma_boost_testprogram( test_argh_checks )
@@ -19,6 +20,7 @@ celma_add_celma_boost_testprogram( test_argh_constraints )
 celma_add_celma_boost_testprogram( test_argh_custom_convert )
 celma_add_celma_boost_testprogram( test_argh_custom_type )
 celma_add_celma_boost_testprogram( test_argh_dest_bitset )
+celma_add_celma_boost_testprogram( test_argh_dest_level_counter )
 celma_add_celma_boost_testprogram( test_argh_dest_pair )
 celma_add_celma_boost_testprogram( test_argh_dest_tuple )
 celma_add_celma_boost_testprogram( test_argh_dest_vector )
@@ -27,6 +29,7 @@ celma_add_celma_boost_testprogram( test_argh_migration )
 celma_add_celma_boost_testprogram( test_argh_output_streams)
 celma_add_celma_boost_testprogram( test_argh_range )
 celma_add_celma_boost_testprogram( test_argh_separate_values )
+celma_add_celma_boost_testprogram( test_argh_summary )
 celma_add_celma_boost_testprogram( test_argh_value_arg )
 celma_add_celma_boost_testprogram( test_arg_list_parser )
 celma_add_celma_boost_testprogram( test_argument_groups )
@@ -90,9 +93,10 @@ set( test_arg_groups_usage_result
      "\n"
      "Standard Arguments:\n"
      "Optional:\n"
-     "   -h,--help   Prints the program usage.\n"
-     "   --version   prints version information\n"
-     "   --modlist   prints module list\n"
+     "   -h,--help    Prints the program usage.\n"
+     "   --help-arg   Prints the usage for the given argument.\n"
+     "   --version    prints version information\n"
+     "   --modlist    prints module list\n"
      "\n"
      "\n$"
 )
@@ -110,6 +114,7 @@ set( test_argh_print_def_result
      "\n"
      "Optional arguments:\n"
      "   -h,--help              Prints the program usage.\n"
+     "   --help-arg             Prints the usage for the given argument.\n"
      "   -f,--flag              Boolean flag, no default\n"
      "   -o,--optional          Optional integer argument, \\*with\\* default\n"
      "                          Default value: 4711\n"
@@ -170,9 +175,10 @@ set( test_groups_sub_groups_usage_main_result
    "\n"
    "Standard Arguments:\n"
    "Optional:\n"
-   "   -h,--help   Prints the program usage.\n"
-   "   --version   prints version information\n"
-   "   --modlist   prints module list\n"
+   "   -h,--help    Prints the program usage.\n"
+   "   --help-arg   Prints the usage for the given argument.\n"
+   "   --version    prints version information\n"
+   "   --modlist    prints module list\n"
    "\n"
    "\n$"
 )
@@ -220,6 +226,7 @@ set( test_sub_groups_usage_main_result
    "\n"
    "Optional arguments:\n"
    "   -h,--help         Prints the program usage.\n"
+   "   --help-arg        Prints the usage for the given argument.\n"
    "   -q                be quiet\n"
    "   --debug_mode      set to activate the debug mode\n"
    "   -i                input arguments\n"
@@ -266,6 +273,7 @@ set( test_long_arg_desc_long_desc_output_result
    "^Usage:\n"
    "Optional arguments:\n"
    "   -h,--help      Prints the program usage.\n"
+   "   --help-arg     Prints the usage for the given argument.\n"
    "   -i,--include   Now here we have a parameter with a very long, long,\n"
    "                  description.\n"
    "                  This description spawns multiple lines by itself, and contains\n"
@@ -286,6 +294,8 @@ set( test_long_arg_desc_long_name_output_result
    "Optional arguments:\n"
    "   -h,--help\n"
    "      Prints the program usage.\n"
+   "   --help-arg\n"
+   "      Prints the usage for the given argument.\n"
    "   -i,--include-from-this-absolute-directory-path\n"
    "      Long parameter\n"
    "      Default value:\n"
@@ -303,6 +313,8 @@ set( test_long_arg_desc_long_name_desc_output_result
    "Optional arguments:\n"
    "   -h,--help\n"
    "      Prints the program usage.\n"
+   "   --help-arg\n"
+   "      Prints the usage for the given argument.\n"
    "   -i,--include-from-this-absolute-directory-path\n"
    "      Now here we have a long parameter with a very long, long, description.\n"
    "      This description spawns multiple lines by itself, and contains lines that\n"
@@ -323,6 +335,8 @@ set( test_long_arg_desc_long_name_4_output_result
    "Optional arguments:\n"
    "   -h,--help\n"
    "      Prints the program usage.\n"
+   "   --help-arg\n"
+   "      Prints the usage for the given argument.\n"
    "   -i,--include-from-this-absolute-directory-path\n"
    "      Now here we have a long parameter with a very long, long,\n"
    "      description.\n"

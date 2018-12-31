@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,7 +34,9 @@ public:
    static constexpr const char* name()
    {
       return "unknown";
-   } // end type< T>::name
+   } // type< T>::name
+
+   static constexpr char const  mName[] = "unknown";
 
 }; // type< T>
 
@@ -45,4 +47,4 @@ public:
 #endif   // CELMA_TYPE_NAME_HPP
 
 
-// ==========================  END OF type_name.hpp  ==========================
+// =====  END OF type_name.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,7 +25,7 @@
 #include "celma/format/detail/grouped_int16_to_string.hpp"
 
 
-// C/OS library includes
+// OS/C library includes
 #include <climits>
 
 
@@ -81,12 +81,16 @@ inline void convert( char* buffer, uint16_t value, uint8_t result_len,
    {
    case 5:   *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
+             [[fallthrough]];
    case 4:   *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
+             [[fallthrough]];
    case 3:   *buffer-- = '0' + (value % 10);  value /= 10;
              ++num_digits;
+             [[fallthrough]];
    case 2:   checkAddGroupChar( buffer, num_digits, group_char);
              *buffer-- = '0' + (value % 10);  value /= 10;
+             [[fallthrough]];
    default:  checkAddGroupChar( buffer, num_digits, group_char);
              *buffer   = '0' + value;
    } // end switch
@@ -233,5 +237,5 @@ int groupedInt16negToString( char* buffer, int16_t value, char group_char)
 } // namespace celma
 
 
-// ===================  END OF grouped_int16_to_string.cpp  ===================
+// =====  END OF grouped_int16_to_string.cpp  =====
 

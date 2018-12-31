@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,11 +41,13 @@ namespace celma { namespace format {
 /// - Forced line-break in list:
 ///   To force a line break in list (like thise line here), use the token ' nn '
 ///   in the text.
+///
 /// @since  0.2, 04.04.2016
 class TextBlock
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  indent       Number of characters to indent the block of text.
    /// @param[in]  length       Maximum line length to print.
    /// @param[in]  indentFirst  Specifies if the first line of the text should
@@ -55,6 +57,7 @@ public:
    TextBlock( int indent, int length, bool indentFirst);
 
    /// Formats the text (string) as specified in the constructor.
+   ///
    /// @param[out]  os   The stream to write to.
    /// @param[in]   txt  The text to format.
    /// @since  0.2, 04.04.2016
@@ -74,6 +77,7 @@ private:
    /// starts a new line with indention.<br>
    /// If a line starts with a dash, the text of the second, third etc. line is
    /// indented two additional characters.
+   ///
    /// @param[out]  os    The stream to write to.
    /// @param[in]   line  The line to format/print.
    /// @since  0.2, 04.04.2016
@@ -98,5 +102,5 @@ private:
 #endif   // CELMA_FORMAT_TEXT_BLOCK_HPP
 
 
-// =========================  END OF text_block.hpp  =========================
+// =====  END OF text_block.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,9 +32,6 @@
 #include "celma/celma_version.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace common {
 
 
@@ -44,10 +41,9 @@ namespace celma { namespace common {
 void print_version_info()
 {
 
-   printf( "Celma library version: %s.\n",
-           VersionString);
+   ::printf( "Celma library version: %s.\n", VersionString);
 
-} // end print_version_info
+} // print_version_info
 
 
 
@@ -55,11 +51,11 @@ void print_version_info()
 /// @param[out]  os  The stream to write into.
 /// @return  The stream as passed in.
 /// @since  0.2, 08.04.2016
-ostream& version_info( ostream& os)
+std::ostream& version_info( std::ostream& os)
 {
 
    return os << "Celma library version: " << VersionString;
-} // end version_info
+} // version_info
 
 
 
@@ -67,5 +63,5 @@ ostream& version_info( ostream& os)
 } // namespace celma
 
 
-// =========================  END OF print_version_info.cpp  =========================
+// =====  END OF print_version_info.cpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,8 +26,9 @@ namespace celma { namespace common {
 
 
 /// Extracts the function name without return type and parameters.
+///
 /// @param[in]  pretty_funcname  Function prototype as in the macro
-///                              __PRETTY_FUNCTION__.
+///                              \c __PRETTY_FUNCTION__.
 /// @since  0.6, 04.11.2016  (interface changed, simplified algorithm)
 /// @since  0.2, 07.04.2016
 std::string extractFuncname( const std::string& pretty_funcname);
@@ -40,5 +41,5 @@ std::string extractFuncname( const std::string& pretty_funcname);
 #endif   // CELMA_COMMON_EXTRACT_FUNCNAME_HPP
 
 
-// =======================  END OF extract_funcname.hpp  =======================
+// =====  END OF extract_funcname.hpp  =====
 

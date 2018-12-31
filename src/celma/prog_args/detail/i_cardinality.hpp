@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,6 +17,9 @@
 
 #ifndef CELMA_PROG_ARGS_DETAIL_I_CARDINALITY_HPP
 #define CELMA_PROG_ARGS_DETAIL_I_CARDINALITY_HPP
+
+
+#include <string>
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -35,7 +38,7 @@ class ICardinality
 public:
    /// Empty, virtual destructor.
    /// @since  0.2, 10.04.2016
-   virtual ~ICardinality() { }
+   virtual ~ICardinality() = default;
 
    /// Called by the framework when the argument was detected in the command
    /// line (actually may be without a value).
@@ -46,27 +49,23 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void check() = 0;
 
+   /// Should return a text description of the cardinality.
+   ///
+   /// @return  String with the text description of the cardinality.
+   /// @since  1.14.0, 02.10.2018
+   virtual std::string cardinalityStr() const = 0;
+
 protected:
    /// Constructor. Does not really need to be protected, but emphasizes the
    /// point that objects of this class can only be created through classes
    /// derived from it.
    /// @since  0.2, 10.04.2016
-   ICardinality();
+   ICardinality() = default;
 
    /// Counter for the number of calls/values.
-   int  mNumValues;
+   int  mNumValues = 0;
 
 }; // ICardinality
-
-
-// inlined methods
-// ===============
-
-
-inline ICardinality::ICardinality():
-   mNumValues( 0)
-{
-} // end ICardinality::ICardinality
 
 
 } // namespace detail
@@ -77,5 +76,5 @@ inline ICardinality::ICardinality():
 #endif   // CELMA_PROG_ARGS_DETAIL_I_CARDINALITY_HPP
 
 
-// ========================  END OF i_cardinality.hpp  ========================
+// =====  END OF i_cardinality.hpp  =====
 

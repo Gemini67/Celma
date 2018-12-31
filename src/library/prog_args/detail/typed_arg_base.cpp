@@ -120,7 +120,7 @@ void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
             + "' has been replaced by '" + mReplacedBy + "'!");
    } // end if
 
-   if (!ignore_cardinality && (mpCardinality.get() != nullptr))
+   if (!ignore_cardinality && mpCardinality)
       mpCardinality->gotValue();
 
    assign( value);
@@ -226,6 +226,9 @@ void TypedArgBase::check( const string& val) const
 string TypedArgBase::checkStr() const
 {
 
+   if (mChecks.empty())
+      return "-";
+
    return format::toString( mChecks.begin(), mChecks.end());
 } // TypedArgBase::checkStr
 
@@ -238,6 +241,9 @@ string TypedArgBase::checkStr() const
 ///    0.16.0, 15.08.2017
 string TypedArgBase::constraintStr() const
 {
+
+   if (mConstraints.empty())
+      return "-";
 
    return format::toString( mConstraints.begin(), mConstraints.end());
 } // TypedArgBase::constraintStr
@@ -295,10 +301,22 @@ TypedArgBase* TypedArgBase::setCardinality( ICardinality* c)
 void TypedArgBase::checkCardinality()
 {
 
-   if (mpCardinality.get() != nullptr)
+   if (mpCardinality)
       mpCardinality->check();
 
 } // TypedArgBase::checkCardinality
+
+
+
+/// Returns a text description of the cardinality specified for this argument.
+///
+/// @return  A string with the description of the cardinality.
+/// @since  1.14.0, 02.10.2018
+string TypedArgBase::cardinalityStr() const
+{
+
+   return mpCardinality ? mpCardinality->cardinalityStr() : string( "none");
+} // TypedArgBase::cardinalityStr
 
 
 

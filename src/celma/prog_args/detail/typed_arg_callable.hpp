@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -43,10 +43,25 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgCallable( ArgHandlerCallable fun, const std::string& fname);
 
+   /// Returns "callable" as type name.
+   /// @return  The string "callable".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
+
+   /// Prints "callable" since there is no value to print.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -80,10 +95,22 @@ inline TypedArgCallable::TypedArgCallable( ArgHandlerCallable fun,
 } // TypedArgCallable::TypedArgCallable
 
 
+inline const std::string TypedArgCallable::varTypeName() const
+{
+   return "callable";
+} // TypedArgCallable::varTypeName
+
+
 inline bool TypedArgCallable::hasValue() const
 {
    return mWasCalled;
 } // TypedArgCallable::hasValue
+
+
+inline void TypedArgCallable::printValue( std::ostream& os, bool) const
+{
+   os << "[callable]";
+} // TypedArgCallable::printValue
 
 
 inline void TypedArgCallable::dump( std::ostream& os) const
@@ -108,5 +135,5 @@ inline void TypedArgCallable::assign( const std::string&)
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_CALLABLE_HPP
 
 
-// ======================  END OF typed_arg_callable.hpp  ======================
+// =====  END OF typed_arg_callable.hpp  =====
 

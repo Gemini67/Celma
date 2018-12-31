@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,9 @@
 #define CELMA_COMMON_OBJECT_ENUMERATOR_HPP
 
 
+#include <cstdint>
+
+
 namespace celma { namespace common {
 
 
@@ -27,6 +30,7 @@ namespace celma { namespace common {
 ///   class Counter: public ObjectEnumerator< Counter>
 /// This (the CRTP) is necessary to make sure that multiple enumerated classes
 /// in the same application are counted separately.
+///
 /// @tparam  T  The class to enumerate the objects of.
 /// @tparam  C  The type to use for the counter.
 /// @since  0.2, 10.04.2016
@@ -34,30 +38,42 @@ template< typename T, typename C = uint64_t> class ObjectEnumerator
 {
 public:
    /// Returns the number of this object.
+   ///
    /// @return  The number of this (super) object.
    /// @since  0.2, 10.04.2016
    C objectNbr() const
    {
       return mObjectNbr;
-   } // end ObjectEnumerator< T, C>::objectNbr
+   } // ObjectEnumerator< T, C>::objectNbr
 
 protected:
    /// Constructor. Stores the number of the current, new object.<br>
    /// Protected to make sure that no stand-alone objects of this class can be
    /// created.
+   ///
    /// @since  0.2, 10.04.2016
    ObjectEnumerator():
       mObjectNbr( mObjectCounter++)
    {
-   } // end ObjectEnumerator< T, C>::ObjectEnumerator
+   } // ObjectEnumerator< T, C>::ObjectEnumerator
 
    /// Copy constructor. Makes sure that copy-created object get their own,
    /// unique number.
+   ///
    /// @since  0.2, 10.04.2016
    ObjectEnumerator( const ObjectEnumerator& /* other */):
       mObjectNbr( mObjectCounter++)
    {
-   } // end ObjectEnumerator< T, C>::ObjectEnumerator
+   } // ObjectEnumerator< T, C>::ObjectEnumerator
+
+   /// Move constructor. Makes sure that move-created object get their own,
+   /// unique number.
+   ///
+   /// @since  1.11.0, 22.08.2018
+   ObjectEnumerator( ObjectEnumerator&& /* other */):
+      mObjectNbr( mObjectCounter++)
+   {
+   } // ObjectEnumerator< T, C>::ObjectEnumerator
 
 private:
    /// Number of the next object.
@@ -78,5 +94,5 @@ template< typename T, typename C> C ObjectEnumerator< T, C>::mObjectCounter = 0;
 #endif   // CELMA_COMMON_OBJECT_ENUMERATOR_HPP
 
 
-// =========================  END OF object_enumerator.hpp  =========================
+// =====  END OF object_enumerator.hpp  =====
 

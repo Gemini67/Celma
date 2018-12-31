@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of class celma::log::files::@@@.
+/// See documentation of class celma::log::files::Timestamped.
 
 
 // module header file include
@@ -44,18 +44,6 @@ Timestamped::Timestamped( const filename::Definition& fname_def):
       throw std::runtime_error( "a log filename definition for log files "
          "limited by timestamp must include a date field");
 
-} // Timestamped::Timestamped
-
-
-
-/// Copy constructor. Copies only the settings but not any eventually open
-/// log file.
-/// @param[in]  other  The other object to copy the data from.
-/// @since  1.0.0, 13.12.2017
-Timestamped::Timestamped( const Timestamped& other):
-   PolicyBase( other),
-   mTimestampLast( 0)
-{
 } // Timestamped::Timestamped
 
 
@@ -99,14 +87,6 @@ bool Timestamped::openCheck()
 
 
 
-/// Does nothing in this policy.
-/// @since  1.0.0, 13.12.2017
-void Timestamped::rollFiles()
-{
-} // Timestamped::rollFiles
-
-
-
 /// Called to check if the next log message can still be written into the
 /// current log file.<br>
 /// Here, checks if the timestamp of the log message still matches the date
@@ -141,5 +121,5 @@ void Timestamped::written( const detail::LogMsg&, const std::string&)
 } // namespace celma
 
 
-// =========================  END OF timestamped.cpp  =========================
+// =====  END OF timestamped.cpp  =====
 
