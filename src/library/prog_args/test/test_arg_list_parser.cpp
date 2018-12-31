@@ -43,7 +43,7 @@ using celma::prog_args::detail::ArgListElement;
 using celma::prog_args::detail::ArgListParser;
 
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE( ArgListElement::ElementType);
+BOOST_TEST_DONT_PRINT_LOG_VALUE( ArgListElement::ElementType)
 
 
 // module definitions

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,11 +37,6 @@ public:
    /// @since  0.2, 09.04.2016
    ResetAtExit( T& var, const T& reset_val);
 
-   /// Destructor, assigns the value to the variable.
-   /// @since  0.2, 09.04.2016
-   ~ResetAtExit();
-
-private:
    /// Don't copy.
    /// @since  0.2, 09.04.2016
    ResetAtExit( const ResetAtExit&) = delete;
@@ -50,6 +45,11 @@ private:
    /// @since  0.2, 09.04.2016
    ResetAtExit& operator =( const ResetAtExit&) = delete;
 
+   /// Destructor, assigns the value to the variable.
+   /// @since  0.2, 09.04.2016
+   ~ResetAtExit();
+
+private:
    /// The variable to assign the value to in the destructor of this class.
    T&       mVariable;
    /// The value to assign.
@@ -66,13 +66,13 @@ template< typename T> ResetAtExit< T>::ResetAtExit( T& var, const T& reset_val):
    mVariable( var),
    mResetValue( reset_val)
 {
-} // end ResetAtExit< T>::ResetAtExit
+} // ResetAtExit< T>::ResetAtExit
 
 
 template< typename T> ResetAtExit< T>::~ResetAtExit()
 {
    mVariable = mResetValue;
-} // end ResetAtExit< T>::~ResetAtExit
+} // ResetAtExit< T>::~ResetAtExit
 
 
 } // namespace common
@@ -82,5 +82,5 @@ template< typename T> ResetAtExit< T>::~ResetAtExit()
 #endif   // CELMA_COMMON_RESET_AT_EXIT_HPP
 
 
-// =========================  END OF reset_at_exit.hpp  =========================
+// =====  END OF reset_at_exit.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -13,6 +13,10 @@
 **    Boost.Test framework.
 **
 --*/
+
+
+// module to test header file include
+#include "celma/common/extract_funcname.hpp"
 
 
 // OS/C lib includes
@@ -30,10 +34,6 @@
 #include <boost/test/unit_test.hpp>
 
 
-// project includes
-#include "celma/common/extract_funcname.hpp"
-
-
 using std::ostream;
 using std::ostringstream;
 using std::string;
@@ -46,7 +46,7 @@ static void testVoidFunc( string& funcname)
 
    funcname = extractFuncname( __PRETTY_FUNCTION__);
 
-} // end testVoidFunc
+} // testVoidFunc
 
 
 
@@ -54,7 +54,7 @@ static string testStringFunc()
 {
 
    return extractFuncname( __PRETTY_FUNCTION__);
-} // end testStringFunc
+} // testStringFunc
 
 
 
@@ -64,7 +64,7 @@ static bool otherTestFunc( string& result, int param)
    result = extractFuncname( __PRETTY_FUNCTION__);
 
    return param == 0;
-} // end otherTestFunc
+} // otherTestFunc
 
 
 
@@ -77,7 +77,7 @@ static void testVoidFuncUnnamedNamespace( string& funcname)
 
    funcname = extractFuncname( __PRETTY_FUNCTION__);
 
-} // end testVoidFuncUnnamedNamespace
+} // testVoidFuncUnnamedNamespace
 
 
 
@@ -85,7 +85,7 @@ static string testStringFuncUnnamedNamespace()
 {
 
    return extractFuncname( __PRETTY_FUNCTION__);
-} // end testStringFuncUnnamedNamespace
+} // testStringFuncUnnamedNamespace
 
 
 
@@ -95,7 +95,7 @@ bool otherTestFuncUnnamedNamespace( string& result, int param)
    result = extractFuncname( __PRETTY_FUNCTION__);
 
    return param == 0;
-} // end otherTestFuncUnnamedNamespace
+} // otherTestFuncUnnamedNamespace
 
 
 
@@ -199,7 +199,7 @@ static void testVoidFuncProject( string& funcname)
 
    funcname = extractFuncname( __PRETTY_FUNCTION__);
 
-} // end testVoidFuncProject
+} // testVoidFuncProject
 
 
 
@@ -207,7 +207,7 @@ static string testStringFuncProject()
 {
 
    return extractFuncname( __PRETTY_FUNCTION__);
-} // end testStringFuncProject
+} // testStringFuncProject
 
 
 
@@ -217,7 +217,7 @@ static bool otherTestFuncProject( string& result, int param)
    result = extractFuncname( __PRETTY_FUNCTION__);
 
    return param == 0;
-} // end otherTestFuncProject
+} // otherTestFuncProject
 
 
 
@@ -304,7 +304,7 @@ ostream& operator <<( ostream& os, const TestClassProject&)
    TestClassProject::mLastFuncName = extractFuncname( __PRETTY_FUNCTION__);
 
    return os;
-} // end operator <<
+} // operator <<
 
 
 
@@ -325,15 +325,17 @@ BOOST_AUTO_TEST_CASE( simple_functions_test)
    BOOST_REQUIRE_EQUAL( testStringFunc(), string( "testStringFunc"));
 
    testVoidFuncUnnamedNamespace( result);
-   BOOST_REQUIRE_EQUAL( result,
-                        string( "(anonymous namespace)::testVoidFuncUnnamedNamespace"));
-   BOOST_REQUIRE_EQUAL( testStringFuncUnnamedNamespace(),
-                        string( "(anonymous namespace)::testStringFuncUnnamedNamespace"));
+   BOOST_REQUIRE( (result == string( "(anonymous namespace)::testVoidFuncUnnamedNamespace")) ||
+                  (result == string( "{anonymous}::testVoidFuncUnnamedNamespace")));
+
+   BOOST_REQUIRE( (testStringFuncUnnamedNamespace() == string( "(anonymous namespace)::testStringFuncUnnamedNamespace")) ||
+                  (testStringFuncUnnamedNamespace() == string( "{anonymous}::testStringFuncUnnamedNamespace")));
 
    otherTestFunc( result, 45);
    BOOST_REQUIRE_EQUAL( result, string( "otherTestFunc"));
    otherTestFuncUnnamedNamespace( result, 45);
-   BOOST_REQUIRE_EQUAL( result, string( "(anonymous namespace)::otherTestFuncUnnamedNamespace"));
+   BOOST_REQUIRE( (result == string( "(anonymous namespace)::otherTestFuncUnnamedNamespace")) ||
+                  (result == string( "{anonymous}::otherTestFuncUnnamedNamespace")));
 
    project::testVoidFuncProject( result);
    BOOST_REQUIRE_EQUAL( result, string( "project::testVoidFuncProject"));
@@ -342,7 +344,7 @@ BOOST_AUTO_TEST_CASE( simple_functions_test)
    project::otherTestFuncProject( result, 88);
    BOOST_REQUIRE_EQUAL( result, string( "project::otherTestFuncProject"));
 
-} // end simple_functions_test
+} // simple_functions_test
 
 
 
@@ -371,7 +373,8 @@ BOOST_AUTO_TEST_CASE( methods_test)
       BOOST_REQUIRE_EQUAL( TestClass::mLastFuncName, string( "TestClass::operator+="));
 
       static_cast< const char*>( tc);
-      BOOST_REQUIRE_EQUAL( TestClass::mLastFuncName, string( "TestClass::operator const char *"));
+      BOOST_REQUIRE( (TestClass::mLastFuncName == string( "TestClass::operator const char *")) ||
+                     (TestClass::mLastFuncName == string( "TestClass::operator const char*")));
 
       int  my_value;
       tc.templateMethod( my_value);
@@ -385,7 +388,7 @@ BOOST_AUTO_TEST_CASE( methods_test)
 
    BOOST_REQUIRE_EQUAL( TestClass::mLastFuncName, string( "TestClass::~TestClass"));
 
-} // end methods_test
+} // methods_test
 
 
 
@@ -416,8 +419,10 @@ BOOST_AUTO_TEST_CASE( methods_namespace_test)
                           string( "project::TestClassProject::operator+="));
 
       static_cast< const char*>( tc);
-      BOOST_REQUIRE_EQUAL( project::TestClassProject::mLastFuncName,
-                           string( "project::TestClassProject::operator const char *"));
+      BOOST_REQUIRE( (project::TestClassProject::mLastFuncName ==
+                      string( "project::TestClassProject::operator const char *")) ||
+                     (project::TestClassProject::mLastFuncName ==
+                      string( "project::TestClassProject::operator const char*")));
 
       int  my_value;
       tc.templateMethod( my_value);
@@ -433,7 +438,7 @@ BOOST_AUTO_TEST_CASE( methods_namespace_test)
 
    BOOST_REQUIRE_EQUAL( project::TestClassProject::mLastFuncName,
                         string( "project::TestClassProject::~TestClassProject"));
-} // end methods_namespace_test
+} // methods_namespace_test
 
 
 
@@ -447,19 +452,19 @@ BOOST_AUTO_TEST_CASE( template_class_test)
 
    TemplateTestClass< string>  tplObj( result);
 
-   BOOST_REQUIRE_EQUAL( result,
-                        string( "TemplateTestClass<std::__cxx11::basic_string<char> >::TemplateTestClass"));
+   BOOST_REQUIRE( (result == string( "TemplateTestClass<std::__cxx11::basic_string<char> >::TemplateTestClass")) ||
+                  (result == string( "TemplateTestClass<T>::TemplateTestClass")));
 
    tplObj.method1( result);
-   BOOST_REQUIRE_EQUAL( result,
-                        string( "TemplateTestClass<std::__cxx11::basic_string<char> >::method1"));
+   BOOST_REQUIRE( (result == string( "TemplateTestClass<std::__cxx11::basic_string<char> >::method1")) ||
+                  (result == string( "TemplateTestClass<T>::method1")));
 
    int  my_value;
    tplObj.templateMethod( my_value, result);
-   BOOST_REQUIRE_EQUAL( result,
-                        string( "TemplateTestClass<std::__cxx11::basic_string<char> >::templateMethod"));
+   BOOST_REQUIRE( (result == string( "TemplateTestClass<std::__cxx11::basic_string<char> >::templateMethod")) ||
+                  (result == string( "TemplateTestClass<T>::templateMethod")));
 
-} // end template_class_test
+} // template_class_test
 
 
 

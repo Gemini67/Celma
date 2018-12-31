@@ -37,7 +37,7 @@ public:
    /// @param[in]  ...     Additional parameters for the string formatting.
    /// @throw  CelmaRuntimeError when the string formatting failed.
    /// @since  0.2, 08.04.2016
-   AutoSprintf( const char* format, ...);
+   AutoSprintf( const char* format, ...) noexcept( false);
 
    /// Constructor for passing a pre-processed argument list.<br>
    /// Make sure that the format string is a std::string object to make sure
@@ -46,7 +46,7 @@ public:
    /// @param[in]  ap      Additional parameters for the string formatting.
    /// @throw  SixRuntimeError when the string formatting failed.
    /// @since  0.7, 08.11.2016
-   AutoSprintf( const std::string& format, va_list ap);
+   AutoSprintf( const std::string& format, va_list ap) noexcept( false);
 
    /// Destructor, ensures that the buffer is free'd again.
    /// @since  0.2, 08.04.2016

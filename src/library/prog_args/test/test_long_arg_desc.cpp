@@ -33,7 +33,7 @@ using namespace celma;
 int main( int argc, char* argv[])
 {
 
-   celma::appl::ArgString2Array  as2a( "-h", nullptr);
+   appl::ArgString2Array  as2a( "-h", nullptr);
 
 
    if (argc != 2)

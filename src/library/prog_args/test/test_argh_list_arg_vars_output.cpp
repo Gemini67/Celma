@@ -40,9 +40,9 @@ int main( int /* argc */, char* argv[])
 {
 
    {
-      Handler          ah( 0);
-      const string     args( "--list-arg-vars");
-      ArgString2Array  as2a( args, argv[ 0]);
+      Handler                ah( 0);
+      const string           args( "--list-arg-vars");
+      const ArgString2Array  as2a( args, argv[ 0]);
 
       try
       {
@@ -120,12 +120,16 @@ int main( int /* argc */, char* argv[])
                        ->setIsMandatory();
          ah.addArgument( "s,string", DEST_VAR( my_string),  "My string.")
                        ->setPrintDefault( false);
-         ah.addArgument( "long",     DEST_VAR( my_long),    "My hidden long integer.")->setIsHidden();
-         ah.addArgument( "ulong",    DEST_VAR( my_ulong),   "My unsigned long integer.");
+         ah.addArgument( "long",     DEST_VAR( my_long),
+                         "My hidden long integer.")->setIsHidden();
+         ah.addArgument( "ulong",    DEST_VAR( my_ulong),
+                         "My unsigned long integer.");
          ah.addArgument( "call",     DEST_FUNCTION( callable_function),
                          "My function.");
-         ah.addArgument( "cas",      DEST_VAR( my_ca_string), "My CheckAssign string");
-         ah.addArgument( "sl",       DEST_VAR( my_string_list), "My string list");
+         ah.addArgument( "cas",      DEST_VAR( my_ca_string),
+                         "My CheckAssign string");
+         ah.addArgument( "sl",       DEST_VAR( my_string_list),
+                         "My string list");
 
          ah.evalArguments( as2a.mArgc, as2a.mpArgv);
       } catch (const exception& e)

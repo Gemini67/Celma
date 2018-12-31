@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
       vector< int>  myVec;
 
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer")
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer")
                                             ->setIsMandatory());
       ArgString2Array  as2a( "", nullptr);
 
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
       vector< int>  myVec;
 
 
-      ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
+      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
       ArgString2Array  as2a( "", nullptr);
 
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
       vector< int>  myVec;
 
 
-      ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
+      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
       ArgString2Array  as2a( "10,20,40", nullptr);
 
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
       vector< int>  myVec;
 
 
-      ah.addArgument( DEST_RANGE( myVec, int, vector), "Integer");
+      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
       ArgString2Array  as2a( "3-9", nullptr);
 

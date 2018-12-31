@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -84,8 +84,11 @@ BOOST_AUTO_TEST_CASE( adress_record_test)
    BOOST_REQUIRE_EQUAL( ia_addr1.getPostalCode(), 90125);
 
    std::ostringstream  oss;
-   celma::indirect_access::detail::IndirectAccessBase*  bp = &ia_addr1;
+   celma::indirect_access::detail::Base*  bp = &ia_addr1;
 
+   // the following output is generated through the insertion operator of the
+   // base class
+   // oss << &ia_addr1;   would also work
    oss << bp;
    BOOST_REQUIRE_EQUAL( oss.str(),
                         "field idx 0: name='Name', type='std::string', value='Fox'\n"
@@ -101,9 +104,9 @@ BOOST_AUTO_TEST_CASE( adress_record_test)
                         "PostalCode = 90125\n"
                         );
 
-} // end adress_record_test
+} // adress_record_test
 
 
 
-// =====================  END OF test_indirect_access.cpp  =====================
+// =====  END OF test_indirect_access.cpp  =====
 

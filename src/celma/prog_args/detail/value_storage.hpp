@@ -25,16 +25,16 @@
 namespace celma { namespace prog_args { namespace detail {
 
 
-/// @since  x.y.z, 09.02.2017
+/// @since  0.15.0, 09.02.2017
 class ValueStorage
 {
 public:
-   /// @since  x.y.z, 10.02.2017
+   /// @since  0.15.0, 10.02.2017
    ValueStorage( const std::string& type_name);
 
    ~ValueStorage() = default;
 
-   /// @since  x.y.z, 10.02.2017
+   /// @since  0.15.0, 10.02.2017
    bool isSameType( const std::string& other_type_name) const noexcept;
 
 protected:

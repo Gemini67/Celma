@@ -9,7 +9,7 @@
 **
 **
 **  Description:
-**    Test program for the hanlding of tuples by the module prog_args::Handler,
+**    Test program for the handling of tuples by the module prog_args::Handler,
 **    using the Boost.Test module.
 **
 --*/
@@ -22,7 +22,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/prog_args/handler.hpp"
+#include "celma/prog_args.hpp"
 
 
 using celma::prog_args::Handler;

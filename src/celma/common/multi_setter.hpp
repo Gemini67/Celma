@@ -76,10 +76,9 @@ private:
 } // namespace detail
 
 
-/// Template to use together with the class \c ArgumentHandler:<br>
+/// Template to use together with the class celma::prog_args::Handler:<br>
 /// When assign is called, sets the passed value on the first variable, and sets
-/// the value specified in the constructor on the second variable.<br>
-/// Use the macro \c DEST_VAR() to easily initialise objects of this class.
+/// the value specified in the constructor on the second variable.
 /// @tparam  T1  The type of the first variable.
 /// @tparam  T2  The type of the second variable.
 /// @since  0.2, 10.04.2016
@@ -125,10 +124,9 @@ private:
 }; // MultiSetter2< T1, T2>
 
 
-/// Template to use together with the class \c ArgumentHandler:<br>
+/// Template to use together with the class celma::prog_args::Handler:<br>
 /// When assign is called, sets the passed value on the first variable, and sets
-/// the values specified in the constructor on the second and third variable.<br>
-/// Use the macro \c DEST_VAR() to easily initialise objects of this class.
+/// the values specified in the constructor on the second and third variable.
 /// @tparam  T1  The type of the first variable.
 /// @tparam  T2  The type of the second variable.
 /// @tparam  T3  The type of the third variable.
@@ -177,6 +175,11 @@ private:
 
 } // namespace common
 } // namespace selma
+
+
+#define DEST_MULTI_SETTER2( dv1, dv2, val2)  dv1, #dv1, dv2, #dv2, val2
+#define DEST_MULTI_SETTER3( dv1, dv2, val2, dv3, val3)  \
+   dv1, #dv1, dv2, #dv2, val2, dv3, #dv3, val3
 
 
 #endif   // CELMA_COMMON_MULTI_SETTER_HPP

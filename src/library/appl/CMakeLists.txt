@@ -9,10 +9,10 @@
 
 cmake_minimum_required( VERSION 2.8 )
 
-set( appl_sources
-   ${CMAKE_CURRENT_SOURCE_DIR}/arg_string_2_array.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/generation_file_creator.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/project_path.cpp
+# list of files to add to the library
+# use GLOB (instead of GLOB_RECURSE) so we can exclude the test directory
+file( GLOB appl_sources
+      "*.cpp"
 )
 
 add_subdirectory( test )

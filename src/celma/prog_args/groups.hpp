@@ -241,17 +241,19 @@ private:
    typedef std::vector< Storage>  ArgHandlerCont;
 
    /// Stream to write output to.
-   std::ostream&   mOutput;
+   std::ostream&                  mOutput;
    /// Stream to write error output to.
-   std::ostream&   mErrorOutput;
+   std::ostream&                  mErrorOutput;
    /// The set of flags to pass on to all handler objects that are created.
-   int             mHandlerFlags;
+   int                            mHandlerFlags;
    /// The argument handlers.
-   ArgHandlerCont  mArgGroups;
+   ArgHandlerCont                 mArgGroups;
    /// Set to \c true when the method evalArguments() of this class is used.
-   bool            mEvaluating;
+   bool                           mEvaluating;
    /// The line length to use when printing the usage.
-   int             mUsageLineLength;
+   int                            mUsageLineLength;
+   /// Defines the contents of the usage.
+   detail::shared_usage_params_t  mpUsageParams;
 
 }; // Groups
 

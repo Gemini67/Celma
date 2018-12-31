@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,10 +19,14 @@
 #define CELMA_PROG_ARGS_DETAIL_I_CONSTRAINT_HPP
 
 
+#include <iosfwd>
 #include <string>
 
 
 namespace celma { namespace prog_args { namespace detail {
+
+
+class ArgumentKey;
 
 
 /// Base class for constraints.<br>
@@ -41,8 +45,10 @@ public:
 
    /// Called when an argument was identified and the corresponding handler
    /// called.
+   /// @param[in]  key  The argument to execute the constraint with.
+   /// @since  0.15.0, 18.07.2017  (use ArgumentKey as parameter type)
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const std::string& sourceArg) = 0;
+   virtual void executeConstraint( const ArgumentKey& key) = 0;
 
    /// Needed on global constraints: The list of arguments for which the
    /// constraint is defined.
@@ -59,6 +65,11 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void checkEndCondition() const;
 
+   /// Returns a text description of the constraint.
+   /// @return  A string with the text description of the constraint.
+   /// @since  0.16.0, 15.08.2017
+   virtual std::string toString() const = 0;
+
 protected:
    /// Checks if the argument specified in \a arg_spec is one of the argument(s)
    /// specified in the \a constraint_arg_list.<br>
@@ -67,15 +78,27 @@ protected:
    /// found on the command line.
    /// @param[in]  constraint_arg_list  The list of argument(s) for which the
    ///                                  constraint is defined.
-   /// @param[in]  arg_spec             The specification of the argument just
+   /// @param[in]  key                  The specification of the argument just
    ///                                  found in the argument string.
    /// @return  \c true if the specified argument is in the list of constrained
    ///          arguments.
+   /// @since  0.15.0, 18.07.2017  (use ArgumentKey as parameter type)
    /// @since  0.2, 10.04.2016
    static bool isConstraintArgument( const std::string& constraint_arg_list,
-                                     const std::string& arg_spec);
+                                     const ArgumentKey& key);
 
 }; // IConstraint
+
+
+// inlined methods
+// ===============
+
+
+inline std::ostream& operator <<( std::ostream& os, IConstraint* pc)
+{
+
+   return os << pc->toString();
+} // operator <<
 
 
 } // namespace detail

@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE( boolean_used_twice)
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
 
-} // end boolean_used_twice
+} // boolean_used_twice
 
 
 
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE( int_set_twice)
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
 
-} // end int_set_twice
+} // int_set_twice
 
 
 
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
    } // end scope
 
-} // end int_allow_max_two
+} // int_allow_max_two
 
 
 
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE( vector_multiple)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
 
-} // end vector_multiple
+} // vector_multiple
 
 
 
@@ -203,7 +203,7 @@ BOOST_AUTO_TEST_CASE( vector_max_3)
                            runtime_error);
    } // end scope
 
-} // end vector_max_3
+} // vector_max_3
 
 
 
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE( vector_exact_3)
                            runtime_error);
    } // end scope
 
-} // end vector_exact_3
+} // vector_exact_3
 
 
 
@@ -324,8 +324,8 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
                            runtime_error);
    } // end scope
 
-} // end vector_range_2_5
+} // vector_range_2_5
 
 
 
-// ====================  END OF test_argh_cardinality.cpp  ====================
+// =====================  END OF test_argh_cardinality.cpp  ====================

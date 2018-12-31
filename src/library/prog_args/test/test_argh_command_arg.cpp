@@ -16,7 +16,7 @@
 
 
 // module to test, header file include
-#include "celma/prog_args/handler.hpp"
+#include "celma/prog_args.hpp"
 
 
 // STL includes
@@ -75,7 +75,8 @@ public:
       TestFixtureBase()
    {
    
-      BOOST_REQUIRE_NO_THROW( mArgH.addArgument( DEST_VAR( mCommand), "command")
+      BOOST_REQUIRE_NO_THROW( mArgH.addArgument( "-", DEST_VAR( mCommand),
+                                                 "command")
                                                ->setValueMode( Handler::ValueMode::command));
 
    } // TestFixturePositional::TestFixturePositional
@@ -111,7 +112,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
    {
       Handler  ah( 0);
       bool     flag;
-      BOOST_REQUIRE_THROW( ah.addArgument( DEST_VAR( flag), "command")
+      BOOST_REQUIRE_THROW( ah.addArgument( "-", DEST_VAR( flag), "command")
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
@@ -127,7 +128,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
    {
       Handler  ah( 0);
       int      value;
-      BOOST_REQUIRE_THROW( ah.addArgument( DEST_VAR( value), "command")
+      BOOST_REQUIRE_THROW( ah.addArgument( "-", DEST_VAR( value), "command")
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope

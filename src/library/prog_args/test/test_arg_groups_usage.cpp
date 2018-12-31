@@ -42,7 +42,14 @@ int main( int argc, char* argv[])
    ah2->addArgument( "version", DEST_VAR( printVersion), "prints version information");
    ah2->addArgument( "modlist", DEST_VAR( printModList), "prints module list");
 
-   Groups::instance().evalArguments( argc, argv);
+   try
+   {
+      Groups::instance().evalArguments( argc, argv);
+   } catch (const std::exception& e)
+   {
+      std::cerr << "caught exception: " << e.what() << std::endl;
+      exit( EXIT_FAILURE);
+   } // end try
 
    return EXIT_SUCCESS;
 } // end main
