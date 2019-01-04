@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -39,6 +39,7 @@ celma_add_boost_testprogram( test_tokenizer_base )
 celma_add_boost_testprogram( test_transform_call )
 celma_add_boost_testprogram( test_type_name )
 celma_add_boost_testprogram( test_value_result )
+celma_add_boost_testprogram( test_write_buffer )
 
 celma_add_boost_mt_testprogram( test_managed_thread )
 celma_add_boost_mt_testprogram( test_sleep_on_error )
