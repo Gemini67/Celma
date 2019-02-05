@@ -105,7 +105,7 @@ private:
 
 /// Test some functions on an empty buffer.
 ///
-/// @since  x.y.z, 05.01.2019
+/// @since  1.20.0, 05.01.2019
 BOOST_AUTO_TEST_CASE( empty_buffer)
 {
 
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE( empty_buffer)
 
 /// Test some functions on an empty buffer with read statistics.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 BOOST_AUTO_TEST_CASE( empty_buffer_count)
 {
 
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE( empty_buffer_count)
 
 /// Read data once.
 ///
-/// @since  x.y.z, 24.01.2019
+/// @since  1.20.0, 24.01.2019
 BOOST_AUTO_TEST_CASE( read_once)
 {
 
@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE( read_once)
 
 /// Read data once, with a buffer with read statistics.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 BOOST_AUTO_TEST_CASE( read_once_count)
 {
 
@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE( read_once_count)
 
 /// One message that must be read in many parts.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 BOOST_AUTO_TEST_CASE( many_parts)
 {
 
@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_CASE( many_parts)
 
 /// One message that must be read in many parts, using a buffer with statistics.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 BOOST_AUTO_TEST_CASE( many_parts_count)
 {
 
@@ -357,7 +357,7 @@ BOOST_AUTO_TEST_CASE( many_parts_count)
 
 /// Multiple reads from one large data block.
 ///
-/// @since  x.y.z, 24.01.2019
+/// @since  1.20.0, 24.01.2019
 BOOST_AUTO_TEST_CASE( read_multiple)
 {
 
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE( read_multiple)
 
 /// Multiple reads from one large data block, using a buffer with statistics.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 BOOST_AUTO_TEST_CASE( read_multiple_count)
 {
 
@@ -423,7 +423,7 @@ BOOST_AUTO_TEST_CASE( read_multiple_count)
 
 /// Read multiple large messages, each provided as one.
 ///
-/// @since  x.y.z, 24.01.2019
+/// @since  1.20.0, 24.01.2019
 BOOST_AUTO_TEST_CASE( large_messages)
 {
 
@@ -458,7 +458,7 @@ BOOST_AUTO_TEST_CASE( large_messages)
 /// Read multiple large messages, each provided as one, using a buffer with
 /// statistics.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 BOOST_AUTO_TEST_CASE( large_messages_count)
 {
 
@@ -507,7 +507,7 @@ BOOST_AUTO_TEST_CASE( large_messages_count)
 
 /// Mixed messages and internal reads.
 ///
-/// @since  x.y.z, 24.01.2019
+/// @since  1.20.0, 24.01.2019
 BOOST_AUTO_TEST_CASE( mixed_reads)
 {
 
@@ -542,7 +542,7 @@ BOOST_AUTO_TEST_CASE( mixed_reads)
 
 /// Mixed messages and internal reads, using a buffer with statistics.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 BOOST_AUTO_TEST_CASE( mixed_reads_count)
 {
 
@@ -594,7 +594,7 @@ BOOST_AUTO_TEST_CASE( mixed_reads_count)
 
 /// Read multiple large messages, some provided through mixed internal reads.
 ///
-/// @since  x.y.z, 24.01.2019
+/// @since  1.20.0, 24.01.2019
 BOOST_AUTO_TEST_CASE( large_mixed)
 {
 
@@ -638,7 +638,7 @@ BOOST_AUTO_TEST_CASE( large_mixed)
 /// Read multiple large messages, some provided through mixed internal reads,
 /// using a buffer with statistics.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 BOOST_AUTO_TEST_CASE( large_mixed_count)
 {
 

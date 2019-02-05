@@ -34,7 +34,7 @@ namespace celma { namespace common {
 
 /// Default policy for the class ReadBuffer: Does nothing.
 ///
-/// @since  x.y.z, 05.01.2019
+/// @since  1.20.0, 05.01.2019
 class EmptyReadPolicy
 {
 public:
@@ -42,7 +42,7 @@ public:
    /// Does nothing.
    ///
    /// @param  Ignored.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    void sourceRead( size_t)
    {
    } // EmptyReadPolicy::sourceRead
@@ -51,7 +51,7 @@ public:
    /// outgoing destination buffer: Does nothing.
    ///
    /// @param  Ignored.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    void bufferRead( size_t)
    {
    } // EmptyReadPolicy::bufferRead
@@ -59,7 +59,7 @@ public:
    /// Always returns 0.
    ///
    /// @return  0.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t numSourceReads() const
    {
       return 0;
@@ -68,7 +68,7 @@ public:
    /// Always returns 0.
    ///
    /// @return  0.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t bytesReadFromSource() const
    {
       return 0;
@@ -77,7 +77,7 @@ public:
    /// Always returns 0.
    ///
    /// @return  0.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t numBufferReads() const
    {
       return 0;
@@ -86,7 +86,7 @@ public:
    /// Always returns 0.
    ///
    /// @return  0.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t bytesReadFromBuffer() const
    {
       return 0;
@@ -102,14 +102,14 @@ public:
 /// Use this policy with the class ReadBuffer to get statistics about how often
 /// the functions were called and how many bytes of data were handled.
 ///
-/// @since  x.y.z, 25.01.2019
+/// @since  1.20.0, 25.01.2019
 class ReadCountPolicy
 {
 public:
    /// Called when data was read from the source, i.e. readData() was called.
    ///
    /// @param[in]  num_bytes  Number of bytes that were read from the source.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    void sourceRead( size_t num_bytes)
    {
       ++mNumSourceReads;
@@ -120,7 +120,7 @@ public:
    /// outgoing destination buffer.
    ///
    /// @param[in]  num_bytes  Number of bytes that were copied from the buffer.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    void bufferRead( size_t num_bytes)
    {
       ++mNumBufferReads;
@@ -130,7 +130,7 @@ public:
    /// Returns how many times data was read from the source.
    ///
    /// @return  Number of times that data was read from the source.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t numSourceReads() const
    {
       return mNumSourceReads;
@@ -139,7 +139,7 @@ public:
    /// Returns how much data was read from the source so far.
    ///
    /// @return  Amount of data in bytes that was read from the source.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t bytesReadFromSource() const
    {
       return mBytesSourceRead;
@@ -149,7 +149,7 @@ public:
    /// outgoing buffer.
    ///
    /// @return  Number of times that data was copied from the buffer.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t numBufferReads() const
    {
       return mNumBufferReads;
@@ -158,7 +158,7 @@ public:
    /// Returns how much data was copied from the buffer so far.
    ///
    /// @return  Amount of data in bytes that data was copied from the buffer.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t bytesReadFromBuffer() const
    {
       return mBytesBufferedRead;
@@ -197,13 +197,13 @@ private:
 /// @tparam  P
 ///    The statistics policy to use by this class.<br>
 ///    Default = EmptyReadPolicy, a policy that counts nothing.
-/// @since  x.y.z, 05.01.2019
+/// @since  1.20.0, 05.01.2019
 template< size_t N, typename P = EmptyReadPolicy> class ReadBuffer: public P
 {
 public:
    /// Constructor, initialises the internal buffer (does not read anything yet).
    ///
-   /// @since  x.y.z, 05.01.2019
+   /// @since  1.20.0, 05.01.2019
    ReadBuffer();
 
    // No copying.
@@ -232,7 +232,7 @@ public:
    /// @param[in]  len
    ///    Length of the data in bytes to return.
    /// @since
-   ///    x.y.z, 25.01.2019
+   ///    1.20.0, 25.01.2019
    template< typename T> void get( T* data, size_t len) noexcept( false);
 
 protected:
@@ -245,7 +245,7 @@ protected:
    /// @return
    ///    Number of bytes of data actually read.
    /// @since
-   ///    x.y.z, 25.01.2019
+   ///    1.20.0, 25.01.2019
    virtual size_t readData( unsigned char* data, size_t len) = 0;
 
 private:
@@ -253,7 +253,7 @@ private:
    /// until the required amount of data is available.
    ///
    /// @param[in]  min_length  Minimum amount of data to read.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    void fillBuffer( size_t min_length = 0);
 
    /// The internal buffer.

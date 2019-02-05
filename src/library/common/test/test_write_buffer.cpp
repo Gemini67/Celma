@@ -32,7 +32,7 @@ namespace {
 
 /// Helper class to test a write buffer.
 ///
-/// @since  x.y.z, 01.01.2019
+/// @since  1.20.0, 01.01.2019
 class TestWriteBuffer: public WriteBuffer< 100>
 {
 public:
@@ -43,7 +43,7 @@ public:
 
    /// Destructor, has to call flush() to wrie remaining bytes from the buffer.
    ///
-   /// @since  x.y.z, 01.01.2019
+   /// @since  1.20.0, 01.01.2019
    virtual ~TestWriteBuffer()
    {
       flush();
@@ -58,7 +58,7 @@ private:
    ///    Pointer to the buffer with the data to write. Ignored.
    /// @param[in]  len
    ///    The length of the data to write.
-   /// @since  x.y.z, 01.01.2019
+   /// @since  1.20.0, 01.01.2019
    virtual void writeData( const unsigned char* const, size_t len) const override
    {
       mDataWritten += len;
@@ -70,7 +70,7 @@ private:
 
 /// Helper class to test a write buffer with a write statistic policy.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 class TestWriteBufferCount:
    public WriteBuffer< 100, celma::common::WriteCountPolicy>
 {
@@ -82,7 +82,7 @@ public:
 
    /// Destructor, has to call flush() to wrie remaining bytes from the buffer.
    ///
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    virtual ~TestWriteBufferCount()
    {
       flush();
@@ -97,7 +97,7 @@ private:
    ///    Pointer to the buffer with the data to write. Ignored.
    /// @param[in]  len
    ///    The length of the data to write.
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    virtual void writeData( const unsigned char* const, size_t len) const override
    {
       mDataWritten += len;
@@ -119,7 +119,7 @@ int     TestWriteBufferCount::mWriteCalled = 0;
 
 /// Test some functions on an empty buffer.
 ///
-/// @since  x.y.z, 01.01.2019
+/// @since  1.20.0, 01.01.2019
 BOOST_AUTO_TEST_CASE( empty_buffer)
 {
 
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE( empty_buffer)
 
 /// Test some functions on an empty buffer.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 BOOST_AUTO_TEST_CASE( empty_buffer_count)
 {
 
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE( empty_buffer_count)
 
 /// Test with data in the buffer.
 ///
-/// @since  x.y.z, 01.01.2019
+/// @since  1.20.0, 01.01.2019
 BOOST_AUTO_TEST_CASE( append_once)
 {
 
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE( append_once)
 
 /// Test with data in the buffer.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 BOOST_AUTO_TEST_CASE( append_once_count)
 {
 
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE( append_once_count)
 
 /// Test with more data in the buffer.
 ///
-/// @since  x.y.z, 01.01.2019
+/// @since  1.20.0, 01.01.2019
 BOOST_AUTO_TEST_CASE( append_multiple)
 {
 
@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE( append_multiple)
 
 /// Test with more data in the buffer.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 BOOST_AUTO_TEST_CASE( append_multiple_count)
 {
 
@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE( append_multiple_count)
 
 /// Test buffer overflow.
 ///
-/// @since  x.y.z, 01.01.2019
+/// @since  1.20.0, 01.01.2019
 BOOST_AUTO_TEST_CASE( append_too_much)
 {
 
@@ -328,7 +328,7 @@ BOOST_AUTO_TEST_CASE( append_too_much)
 
 /// Test buffer overflow.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 BOOST_AUTO_TEST_CASE( append_too_much_count)
 {
 
@@ -370,7 +370,7 @@ BOOST_AUTO_TEST_CASE( append_too_much_count)
 
 /// Attempt to add a data block that is the same size as the buffer.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 BOOST_AUTO_TEST_CASE( append_large_on_empty)
 {
 
@@ -400,7 +400,7 @@ BOOST_AUTO_TEST_CASE( append_large_on_empty)
 
 /// Attempt to add a data block that is the same size as the buffer.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 BOOST_AUTO_TEST_CASE( append_large_on_empty_count)
 {
 
@@ -435,7 +435,7 @@ BOOST_AUTO_TEST_CASE( append_large_on_empty_count)
 
 /// Attempt to add a data block that is bigger than the buffer.
 ///
-/// @since  x.y.z, 01.01.2019
+/// @since  1.20.0, 01.01.2019
 BOOST_AUTO_TEST_CASE( append_large)
 {
 
@@ -470,7 +470,7 @@ BOOST_AUTO_TEST_CASE( append_large)
 
 /// Attempt to add a data block that is bigger than the buffer.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 BOOST_AUTO_TEST_CASE( append_large_count)
 {
 

@@ -34,14 +34,14 @@ namespace celma { namespace common {
 
 /// Default policy for the class WriteBuffer: Does nothing.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 class EmptyWritePolicy
 {
 public:
    /// Called when data is appended to the write buffer: Does nothing.
    ///
    /// @param  Ignored.
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    void appended( size_t /* len */)
    {
    } // EmptyWritePolicy::appended
@@ -49,7 +49,7 @@ public:
    /// Called when data is written to the destination: Does nothing.
    ///
    /// @param  Ignored.
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    void flushed( size_t /* len */)
    {
    } // EmptyWritePolicy::flushed
@@ -57,7 +57,7 @@ public:
    /// Always returns 0.
    ///
    /// @return  0.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t numAppendCalled() const
    {
       return 0;
@@ -66,7 +66,7 @@ public:
    /// Always returns 0.
    ///
    /// @return  0.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t bytesAppended() const
    {
       return 0;
@@ -75,7 +75,7 @@ public:
    /// Always returns 0.
    ///
    /// @return  0.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t numFlushCalled() const
    {
       return 0;
@@ -84,7 +84,7 @@ public:
    /// Always returns 0.
    ///
    /// @return  0.
-   /// @since  x.y.z, 25.01.2019
+   /// @since  1.20.0, 25.01.2019
    size_t bytesFlushed() const
    {
       return 0;
@@ -100,7 +100,7 @@ public:
 /// Use this policy with the class WriteBuffer to get statistics about how often
 /// the functions were called and how many bytes of data were handled.
 ///
-/// @since  x.y.z, 04.01.2019
+/// @since  1.20.0, 04.01.2019
 class WriteCountPolicy
 {
 public:
@@ -108,7 +108,7 @@ public:
    /// calls and how many bytes were appended.
    ///
    /// @param[in]  len  Number of bytes that were appended.
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    void appended( size_t len)
    {
       ++mNumAppendCalled;
@@ -120,7 +120,7 @@ public:
    /// Counts the number of calls and the amount of bytes written.
    ///
    /// @param[in]  len  Number of bytes that were written to the destination.
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    void flushed( size_t len)
    {
       ++mNumFlushCalled;
@@ -132,7 +132,7 @@ public:
    /// @return
    ///    Number of times that the append method was called in the class
    ///    WriteBuffer.
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    size_t numAppendCalled() const
    {
       return mNumAppendCalled;
@@ -146,7 +146,7 @@ public:
    ///
    /// @return
    ///    Number of bytes passed to WriteBuffer::append().
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    size_t bytesAppended() const
    {
       return mBytesAppended;
@@ -160,7 +160,7 @@ public:
    /// @return
    ///    Number of times that data was flushed, either from the internal
    ///    buffer or directly.
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    size_t numFlushCalled() const
    {
       return mNumFlushCalled;
@@ -171,7 +171,7 @@ public:
    /// @return
    ///    Number of bytes written to the destination so far, either from the
    ///    internal buffer or directly.
-   /// @since  x.y.z, 04.01.2019
+   /// @since  1.20.0, 04.01.2019
    size_t bytesFlushed() const
    {
       return mBytesFlushed;
@@ -208,13 +208,13 @@ private:
 /// @tparam  P
 ///    The statistics policy to use by this class.<br>
 ///    Default = EmptyWritePolicy, a policy that counts nothing.
-/// @since  x.y.z, 01.01.2019
+/// @since  1.20.0, 01.01.2019
 template< size_t N, typename P = EmptyWritePolicy> class WriteBuffer: public P
 {
 public:
    /// Default constructor, allocates the buffer.
    ///
-   /// @since  x.y.z, 01.01.2019
+   /// @since  1.20.0, 01.01.2019
    WriteBuffer();
 
    // No copying or moving.
@@ -225,7 +225,7 @@ public:
    /// To make sure that all data in the buffer is written to the destination,
    /// call flush() from the destructor of the derived class.
    ///
-   /// @since  x.y.z, 01.01.2019
+   /// @since  1.20.0, 01.01.2019
    virtual ~WriteBuffer() = default;
 
    // No assignment.
@@ -245,19 +245,19 @@ public:
    ///    Pointer to the data to append to the buffer.
    /// @param[in]  len
    ///    The length of the data block.
-   /// @since  x.y.z, 01.01.2019
+   /// @since  1.20.0, 01.01.2019
    template< typename T> void append( const T* const data, size_t len) noexcept( false);
 
    /// Writes all data from the buffer to the destination. Does nothing if the
    /// buffer is empty.
    ///
-   /// @since  x.y.z, 01.01.2019
+   /// @since  1.20.0, 01.01.2019
    void flush();
 
    /// Returns the amount of data currently stored in the buffer.
    ///
    /// @return  Amount of data currently stored in the buffer.
-   /// @since  x.y.z, 01.01.2019
+   /// @since  1.20.0, 01.01.2019
    size_t buffered() const;
 
 protected:
@@ -269,7 +269,7 @@ protected:
    ///    Pointer to the beginning of the data block to write.
    /// @param[in]  len
    ///    Length of the data block to write.
-   /// @since  x.y.z, 01.01.2019
+   /// @since  1.20.0, 01.01.2019
    virtual void writeData( const unsigned char* const data, size_t len) const = 0;
 
 private:
