@@ -39,7 +39,7 @@ public:
    explicit Simple( const filename::Definition& fname_def);
 
    /// Copying and moving not needed.
-   /// @since  x.y.z, 06.12.2018  (not needed)
+   /// @since  1.19.0, 06.12.2018  (not needed)
    /// @since  1.0.0, 13.12.2017
    Simple( const Simple&) = delete;
    Simple( Simple&&) = delete;

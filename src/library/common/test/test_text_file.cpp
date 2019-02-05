@@ -21,7 +21,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE TextFileTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 using celma::common::EmptyLineFilter;

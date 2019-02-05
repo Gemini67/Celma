@@ -35,6 +35,7 @@
 #include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
 #include "celma/prog_args/detail/check_parent_directory_exists.hpp"
+#include "celma/prog_args/detail/check_pattern.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
 #include "celma/prog_args/detail/check_upper.hpp"
 #include "celma/prog_args/detail/check_values.hpp"

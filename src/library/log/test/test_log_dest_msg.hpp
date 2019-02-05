@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 
 
 /// @file
-/// See documentation of class celma::log::test::@@@.
+/// See documentation of class celma::log::test::LogDestMsg.
 
 
 #ifndef CELMA_LOG_TEST_TEST_LOG_DEST_MSG_HPP
@@ -45,7 +45,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~LogDestMsg() { }
+   virtual ~LogDestMsg() = default;
 
 private:
    /// Called through the base class. Stores the data of a log message in the
@@ -71,5 +71,5 @@ private:
 #endif   // CELMA_LOG_TEST_TEST_LOG_DEST_MSG_HPP
 
 
-// ======================  END OF test_log_dest_msg.hpp  ======================
+// =====  END OF test_log_dest_msg.hpp  =====
 

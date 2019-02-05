@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -30,6 +30,7 @@ celma_add_boost_testprogram( test_multiline_string_compare )
 celma_add_boost_testprogram( test_object_counted_enumerated )
 celma_add_boost_testprogram( test_object_counter )
 celma_add_boost_testprogram( test_object_enumerator )
+celma_add_boost_testprogram( test_read_buffer )
 celma_add_boost_testprogram( test_rel_ops_from_less )
 celma_add_boost_testprogram( test_reset_at_exit )
 celma_add_boost_testprogram( test_string_util )
@@ -39,6 +40,7 @@ celma_add_boost_testprogram( test_tokenizer_base )
 celma_add_boost_testprogram( test_transform_call )
 celma_add_boost_testprogram( test_type_name )
 celma_add_boost_testprogram( test_value_result )
+celma_add_boost_testprogram( test_write_buffer )
 
 celma_add_boost_mt_testprogram( test_managed_thread )
 celma_add_boost_mt_testprogram( test_sleep_on_error )

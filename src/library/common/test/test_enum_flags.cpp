@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,7 +22,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE EnumFlagsTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 using celma::common::EnumFlags;

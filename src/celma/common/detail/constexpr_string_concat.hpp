@@ -22,8 +22,8 @@
 #define CELMA_COMMON_DETAIL_CONSTEXPR_STRING_CONCAT_HPP
 
 
-#include <utility>
 #include <array>
+#include <utility>
 
 
 namespace celma { namespace common { namespace detail {

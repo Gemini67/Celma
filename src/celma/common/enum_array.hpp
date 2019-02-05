@@ -20,7 +20,6 @@
 
 
 #include <array>
-#include <utility>
 
 
 namespace celma { namespace common {

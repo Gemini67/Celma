@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,7 +18,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE ManagedThreadTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 namespace {
@@ -81,5 +80,5 @@ BOOST_AUTO_TEST_CASE( test_two)
 
 
 
-// =====================  END OF test_managed_thread.cpp  =====================
+// =====  END OF test_managed_thread.cpp  =====
 

@@ -32,7 +32,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE TestToString
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 using celma::format::toString;

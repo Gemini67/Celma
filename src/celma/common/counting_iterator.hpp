@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,7 +36,7 @@ class ICountResult
 public:
    /// Empty, virtual destructor.
    /// @since  0.2, 04.04.2016
-   virtual ~ICountResult() { }
+   virtual ~ICountResult() = default;
 
    /// This method must be implemented by the derived class.<br>
    /// It is called by the CountingIterator object when it is deleted, and is
@@ -120,7 +120,7 @@ template< class BaseType>
       mpObj( obj),
       mIterCounter( 0)
 {
-} // end CountingIterator< BaseType>::CountingIterator
+} // CountingIterator< BaseType>::CountingIterator
 
 
 template< class BaseType>
@@ -129,8 +129,7 @@ template< class BaseType>
       mpObj( other.mpObj),
       mIterCounter( other.mIterCounter)
 {
-} // end CountingIterator< BaseType>::CountingIterator
-
+} // CountingIterator< BaseType>::CountingIterator
 
 
 template< class BaseType>
@@ -138,7 +137,7 @@ template< class BaseType>
 {
    if (mpObj != nullptr)
       mpObj->setCount( mIterCounter);
-}
+} // CountingIterator< BaseType>::~CountingIterator
 
 
 template< class BaseType>
@@ -147,7 +146,7 @@ template< class BaseType>
    ++mIterCounter;
    BaseType::operator ++();
    return *this;
-} // end CountingIterator< BaseType>::operator ++
+} // CountingIterator< BaseType>::operator ++
 
 
 template< class BaseType>
@@ -159,7 +158,7 @@ template< class BaseType>
    BaseType::operator ++();
 
    return result;
-} // end CountingIterator< BaseType>::operator ++
+} // CountingIterator< BaseType>::operator ++
 
 
 template< class BaseType>
@@ -172,13 +171,13 @@ template< class BaseType>
       mIterCounter = other.mIterCounter;
    } // end if
    return *this;
-} // end CountingIterator< BaseType>::operator =
+} // CountingIterator< BaseType>::operator =
 
 
 template< class BaseType> int CountingIterator< BaseType>::currentNum() const
 {
    return mIterCounter;
-} // end CountingIterator< BaseType>::currentNum
+} // CountingIterator< BaseType>::currentNum
 
 
 } // namespace common
@@ -188,5 +187,5 @@ template< class BaseType> int CountingIterator< BaseType>::currentNum() const
 #endif   // CELMA_COMMON_COUNTING_ITERATOR_HPP
 
 
-// ======================  END OF counting_iterator.hpp  ======================
+// =====  END OF counting_iterator.hpp  =====
 

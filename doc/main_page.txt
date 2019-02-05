@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.18.0
+   \mainpage  CELMA v1.20.0
 
    \tableofcontents
 
@@ -46,6 +46,9 @@
    Version  | Publish Date      | Description
    ------:  | ----------------: | -----------
      x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ...
+     1.20.0 | 2019-02-05        | Added read and write buffers.
+     1.19.0 | 2018-12-25        | Added new argument value check: regular expression.
+     1.18.1 | 2018-12-18        | Code quality improved.
      1.18.0 | 2018-12-12        | Added module enum array.
      1.17.2 | 2018-12-03        | Feature "unset flag" in argument handler is now automatic, where possible.
      1.17.1 | 2018-11-27        | Replaced exception 'range_error' by 'out_of_range'.

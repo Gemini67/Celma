@@ -87,6 +87,15 @@ class ValueHandler;
 ///     - upper: Upper limit for values to accept (exclusive).
 ///     - range: Range of values for scalar types to accept.
 ///     - values: List of values to accept.
+///     - pattern: Compares values from the command line against a regular
+///       expression pattern.
+///     - is file: Value must be the (path and) file name of an existing regular
+///       file.
+///     - is directory: Value must be the path and name of an existing
+///       directory.
+///     - is absolute path: The value must be an absolute path.
+///     - parent directory exists: The parent directory of the given path/file
+///       name must exist (the file itself not).
 ///     .
 ///     It is possible to add multiple checks to the same argument. In this case,
 ///     a value must be accepted by all checks. The checks are executed in the
@@ -418,15 +427,20 @@ public:
    /// the help argument should e.g. be in another language.<br>
    /// The standard help arguments may still be set in the constructor, then
    /// both arguments can be used to get the usage displayed.
-   /// @param[in]  arg_spec  The arguments on the command line for the help
-   ///                       feature.
-   /// @param[in]  desc      The description of this argument.
-   /// @param[in]  txt1      Optional pointer to the object to provide
-   ///                       additional text for the usage.
-   /// @param[in]  txt2      Optional pointer to the object to provide
-   ///                       additional text for the usage.
-   /// @return  The object managing the argument, may be used to apply further
-   ///          settings (normally not necessary).
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line for the help feature.
+   /// @param[in]  desc
+   ///    The description of this argument.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @return
+   ///    The object managing the argument, may be used to apply further
+   ///    settings (normally not necessary).
    /// @since  0.10, 22.12.2016
    detail::TypedArgBase* addHelpArgument( const std::string& arg_spec,
                                           const std::string& desc,

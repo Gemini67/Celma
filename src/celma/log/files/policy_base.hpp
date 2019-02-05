@@ -47,7 +47,7 @@ public:
    explicit PolicyBase( const filename::Definition& fname_def);
 
    /// Copying and moving not allowed/needed.
-   /// @since  x.y.z, 06.12.2018  (deleted)
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.0.0, 13.12.2017
    PolicyBase( const PolicyBase&) = delete;
    PolicyBase( PolicyBase&&) = delete;
@@ -57,7 +57,7 @@ public:
    virtual ~PolicyBase() = default;
 
    /// Copying and moving not allowed/needed.
-   /// @since  x.y.z, 06.12.2018
+   /// @since  1.19.0, 06.12.2018
    PolicyBase& operator =( const PolicyBase&) = delete;
    PolicyBase& operator =( PolicyBase&&) = delete;
 

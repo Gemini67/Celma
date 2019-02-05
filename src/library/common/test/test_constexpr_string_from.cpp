@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,14 +11,13 @@
 --*/
 
 
+// module to test header file include
+#include "celma/common/constexpr_string_from.hpp"
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ConstexprStringFromTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
-
-
-// project includes
-#include "celma/common/constexpr_string_from.hpp"
 
 
 using celma::common::string_from;
@@ -60,9 +59,9 @@ BOOST_AUTO_TEST_CASE( test_constexpr_conversion)
                                        ::value,
                             "65535") == 0);
 
-} // end test_constexpr_conversion
+} // test_constexpr_conversion
 
 
 
-// ==================  END OF test_constexpr_string_from.cpp  ==================
+// =====  END OF test_constexpr_string_from.cpp  =====
 

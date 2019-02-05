@@ -403,6 +403,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
    std::string     dir;
    std::string     existing_parent_dir;
    std::string     absolute_path;
+   std::string     name;
 
 
    ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")
@@ -426,6 +427,9 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
                  ->setPrintDefault( false);
    ah.addArgument( "absolute", DEST_VAR( absolute_path), "Absolute path required")
                  ->addCheck( celma::prog_args::isAbsolutePath())
+                 ->setPrintDefault( false);
+   ah.addArgument( "n", DEST_VAR( name), "A name")
+                 ->addCheck( celma::prog_args::pattern( "^[A-Z][a-z]+"))
                  ->setPrintDefault( false);
 
    const ArgString2Array  as2a( "-h", nullptr);
@@ -457,6 +461,8 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
             "                Check: parent directory exists\n"
             "   --absolute   Absolute path required\n"
             "                Check: is an absolute path\n"
+            "   -n           A name\n"
+            "                Check: Value matches '^[A-Z][a-z]+'\n"
             "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 

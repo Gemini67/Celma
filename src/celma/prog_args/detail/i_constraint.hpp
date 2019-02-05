@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,7 +41,7 @@ class IConstraint
 public:
    /// Empty, virtual destructor required for base classes.
    /// @since  0.2, 10.04.2016
-   virtual ~IConstraint() { }
+   virtual ~IConstraint() = default;
 
    /// Called when an argument was identified and the corresponding handler
    /// called.
@@ -109,5 +109,5 @@ inline std::ostream& operator <<( std::ostream& os, IConstraint* pc)
 #endif   // CELMA_PROG_ARGS_DETAIL_I_CONSTRAINT_HPP
 
 
-// =========================  END OF i_constraint.hpp  =========================
+// =====  END OF i_constraint.hpp  =====
 
