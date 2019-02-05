@@ -84,7 +84,7 @@ public:
    ///
    /// @param[in]  other  The other object to copy the data from.
    /// @return  This object.
-   /// @since  x.y.z, 29.11.2018
+   /// @since  1.19.0, 29.11.2018
    RangeStringIterator& operator =( const RangeStringIterator& other);
 
    /// Instead of de-referencing the iterator: Use a typecast to the field/

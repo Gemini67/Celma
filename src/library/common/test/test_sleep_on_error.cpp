@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,7 +18,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE SleepOnErrorTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 
@@ -70,5 +69,5 @@ BOOST_AUTO_TEST_CASE( test_basics)
 
 
 
-// =====================  END OF test_sleep_on_error.cpp  =====================
+// =====  END OF test_sleep_on_error.cpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,21 +15,26 @@
 --*/
 
 
+// module to test header file include
+#include "celma/common/tuple_length.hpp"
+
+
+// C++ Standard Library includes
+#include <tuple>
+
+
 // Boost includes
 #define BOOST_TEST_MODULE TupleLengthBase
 #include <boost/test/unit_test.hpp>
-#include <utility>
-
-
-// project includes
-#include "celma/common/tuple_length.hpp"
 
 
 using celma::common::tuple_length;
 
 
+
 /// Verifies that the length i.e. number of elements of a tuple is returned
 /// correctly.
+///
 /// @since  0.5, 27.09.2016
 BOOST_AUTO_TEST_CASE( length)
 {
@@ -50,9 +55,9 @@ BOOST_AUTO_TEST_CASE( length)
       BOOST_REQUIRE_EQUAL( tuple_length( tup), 3);
    } // end scope
 
-} // end length
+} // length
 
 
 
-// ======================  END OF test_tuple_length.cpp  ======================
+// =====  END OF test_tuple_length.cpp  =====
 

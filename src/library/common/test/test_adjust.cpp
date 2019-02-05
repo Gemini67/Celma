@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,14 +11,13 @@
 --*/
 
 
-// project includes
+// module to test header file include
 #include "celma/common/adjust.hpp"
 
 
 // Boost includes
 #define BOOST_TEST_MODULE AdjustTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
 
@@ -88,5 +87,5 @@ BOOST_AUTO_TEST_CASE( test_adjust_max)
 
 
 
-// =========================  END OF test_adjust.cpp  =========================
+// =====  END OF test_adjust.cpp  =====
 

@@ -43,7 +43,7 @@ public:
    explicit PolicyBaseStub( const filename::Definition& fname_def);
 
    /// Copying and moving not needed.
-   /// @since  x.y.z, 06.12.2018  (deleted)
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.11.0, 27.08.2018
    PolicyBaseStub( const PolicyBaseStub&) = delete;
    PolicyBaseStub( PolicyBaseStub&&) = delete;

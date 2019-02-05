@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,12 +14,8 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <stdint.h>
-#include <cstdio>
-#include <cstring>
+// module to test header file include
+#include "celma/common/clear_container.hpp"
 
 
 // C++ Standard Library includes
@@ -33,13 +29,7 @@
 #include <boost/test/unit_test.hpp>
 
 
-// project includes
-#include "celma/common/clear_container.hpp"
-
-
-using namespace std;
-using namespace celma;
-
+namespace {
 
 
 class TestCountInstances
@@ -66,10 +56,17 @@ public:
 uint64_t  TestCountInstances::mInstances = 0;
 
 
+} // namespace
+
+
+
 /// Clear a vector.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( test_clear_vector)
 {
+
+   using std::vector;
 
    {
       vector< int*>  myVec;
@@ -83,7 +80,7 @@ BOOST_AUTO_TEST_CASE( test_clear_vector)
    } // end scope
 
    {
-      vector< TestCountInstances*>  myVec;
+      std::vector< TestCountInstances*>  myVec;
 
       myVec.push_back( new TestCountInstances);
       myVec.push_back( new TestCountInstances);
@@ -95,17 +92,18 @@ BOOST_AUTO_TEST_CASE( test_clear_vector)
       BOOST_REQUIRE_EQUAL( TestCountInstances::mInstances, 0);
    } // end scope
 
-} // end test_clear_vector
+} // test_clear_vector
 
 
 
 /// Clear a container, here: a list.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( test_clear_list)
 {
 
    {
-      list< int*>  myList;
+      std::list< int*>  myList;
 
       myList.push_back( new int(   42));
       myList.push_back( new int( 4711));
@@ -116,7 +114,7 @@ BOOST_AUTO_TEST_CASE( test_clear_list)
    } // end scope
 
    {
-      list< TestCountInstances*>  myList;
+      std::list< TestCountInstances*>  myList;
 
       myList.push_back( new TestCountInstances);
       myList.push_back( new TestCountInstances);
@@ -128,17 +126,18 @@ BOOST_AUTO_TEST_CASE( test_clear_list)
       BOOST_REQUIRE_EQUAL( TestCountInstances::mInstances, 0);
    } // end scope
 
-} // end test_clear_list
+} // test_clear_list
 
 
 
 /// Clear a map.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( test_clear_map)
 {
 
    {
-      map< int, int*>  myMap;
+      std::map< int, int*>  myMap;
 
       myMap[   42] = new int(   42);
       myMap[ 4711] = new int( 4711);
@@ -149,7 +148,7 @@ BOOST_AUTO_TEST_CASE( test_clear_map)
    } // end scope
 
    {
-      map< int, TestCountInstances*>  myMap;
+      std::map< int, TestCountInstances*>  myMap;
 
       myMap[ 1] = new TestCountInstances;
       myMap[ 3] = new TestCountInstances;
@@ -161,8 +160,9 @@ BOOST_AUTO_TEST_CASE( test_clear_map)
       BOOST_REQUIRE_EQUAL( TestCountInstances::mInstances, 0);
    } // end scope
 
-} // end test_clear_map
+} // test_clear_map
 
 
 
-// =====================  END OF test_clear_container.cpp  =====================
+// =====  END OF test_clear_container.cpp  =====
+

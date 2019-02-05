@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,52 +14,46 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test header file include
+#include "celma/common/tokenizer.hpp"
 
 
 // Boost includes
 #define BOOST_TEST_MODULE TestTokenizer
 #include <boost/test/unit_test.hpp>
-#include <utility>
 
 
-// project includes
-#include "celma/common/tokenizer.hpp"
-
-
-using namespace std;
-using namespace celma;
+using celma::common::Tokenizer;
+using std::string;
 
 
 
 /// Call tokenizer for an empty string.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_empty)
 {
 
-   const string                 s;
-   common::Tokenizer            t( s, ',');
-   common::Tokenizer::iterator  it = t.begin();
+   const string  s;
+   Tokenizer     t( s, ',');
+   auto          it = t.begin();
 
 
    BOOST_REQUIRE( it == t.end());
 
-} // end test_empty
+} // test_empty
 
 
 
 /// Call tokenizer for a string that does not contain the token.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
-   const string                 s( "string that does not contain the token");
-   common::Tokenizer            t( s, ',');
-   common::Tokenizer::iterator  it = t.begin();
+   const string  s( "string that does not contain the token");
+   Tokenizer     t( s, ',');
+   auto          it = t.begin();
 
 
    BOOST_REQUIRE( it != t.end());
@@ -68,18 +62,19 @@ BOOST_AUTO_TEST_CASE( test_one)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_one
+} // test_one
 
 
 
 /// Split string with multiple tokens.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_multi)
 {
 
-   const string                 s( "string that does not contain the token");
-   common::Tokenizer            t( s, ' ');
-   common::Tokenizer::iterator  it = t.begin();
+   const string  s( "string that does not contain the token");
+   Tokenizer     t( s, ' ');
+   auto          it = t.begin();
 
 
    BOOST_REQUIRE( it != t.end());
@@ -112,19 +107,20 @@ BOOST_AUTO_TEST_CASE( test_multi)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_multi
+} // test_multi
 
 
 
 /// Test the handling of two tokens directly following each other, which should
 /// be ignored.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_double)
 {
 
-   const string                 s( "two tokens  directly following");
-   common::Tokenizer            t( s, ' ');
-   common::Tokenizer::iterator  it = t.begin();
+   const string  s( "two tokens  directly following");
+   Tokenizer     t( s, ' ');
+   auto          it = t.begin();
 
 
    BOOST_REQUIRE( it != t.end());
@@ -145,19 +141,20 @@ BOOST_AUTO_TEST_CASE( test_double)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_double
+} // test_double
 
 
 
 /// Test the handling of two tokens directly following each other, which should
 /// lead to one empty token.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_double_detected)
 {
 
-   const string                          s( "two tokens  directly following");
-   common::Tokenizer                     t( s, ' ', true);
-   common::Tokenizer::counting_iterator  cit = t.begin_counting();
+   const string  s( "two tokens  directly following");
+   Tokenizer     t( s, ' ', true);
+   auto          cit = t.begin_counting();
 
 
    BOOST_REQUIRE( cit != t.end());
@@ -187,18 +184,19 @@ BOOST_AUTO_TEST_CASE( test_double_detected)
    ++cit;
    BOOST_REQUIRE( cit == t.end());
 
-} // end test_double_detected
+} // test_double_detected
 
 
 
 /// Test that multiple empty tokens are correctly ignored.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_multiple_empty_ignored)
 {
 
-   const string                 s( " string with  multiple   empty tokens  ");
-   common::Tokenizer            t( s, ' ');
-   common::Tokenizer::iterator  it = t.begin();
+   const string  s( " string with  multiple   empty tokens  ");
+   Tokenizer     t( s, ' ');
+   auto          it = t.begin();
 
 
    BOOST_REQUIRE( it != t.end());
@@ -223,19 +221,20 @@ BOOST_AUTO_TEST_CASE( test_multiple_empty_ignored)
    ++it;
    BOOST_REQUIRE( it == t.end());
 
-} // end test_multiple_empty_ignored
+} // test_multiple_empty_ignored
 
 
 
 /// Test the handling of multiple empty tokens due to leading/cosecutive/
 /// trailing separator characters.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_multiple_empty_detected)
 {
 
-   const string                          s( " string with  multiple   empty tokens  ");
-   common::Tokenizer                     t( s, ' ', true);
-   common::Tokenizer::counting_iterator  cit = t.begin_counting();
+   const string  s( " string with  multiple   empty tokens  ");
+   Tokenizer     t( s, ' ', true);
+   auto          cit = t.begin_counting();
 
 
    BOOST_REQUIRE( cit != t.end());
@@ -295,24 +294,23 @@ BOOST_AUTO_TEST_CASE( test_multiple_empty_detected)
    ++cit;
    BOOST_REQUIRE( cit == t.end());
 
-} // end test_multiple_empty_detected
+} // test_multiple_empty_detected
 
 
 
 /// Verify that two nested tokenizers don't interfere with each other.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_nested)
 {
 
-   const string       s( "phrase one.phrase two.short phrase three.");
-   common::Tokenizer  t( s, '.');
-   int                tokenNum = 0;
+   const string  s( "phrase one.phrase two.short phrase three.");
+   Tokenizer     t( s, '.');
+   int           tokenNum = 0;
 
 
-   for (common::Tokenizer::iterator it = t.begin(); it != t.end(); ++it)
+   for (auto const& token : t)
    {
-      const string&  token( *it);
-
       if (tokenNum == 0)
          BOOST_REQUIRE_EQUAL( token, "phrase one");
       else if (tokenNum == 1)
@@ -322,13 +320,11 @@ BOOST_AUTO_TEST_CASE( test_nested)
       else
          BOOST_REQUIRE( tokenNum == 0);
 
-      common::Tokenizer  t2( token, ' ');
-      int                tokenNum2 = 0;
+      Tokenizer  t2( token, ' ');
+      int        tokenNum2 = 0;
 
-      for (common::Tokenizer::iterator it2 = t2.begin(); it2 != t2.end(); ++it2)
+      for (auto const& token2 : t2)
       {
-         const string&  token2( *it2);
-
          if (tokenNum == 0)
          {
             if (tokenNum2 == 0)
@@ -372,21 +368,21 @@ BOOST_AUTO_TEST_CASE( test_nested)
 
    BOOST_REQUIRE_EQUAL( tokenNum, 3);
 
-} // end test_nested
+} // test_nested
 
 
 
 /// Verify that two nested tokenizers don't interfere with each other.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_nested_counting)
 {
 
-   const string       s( "phrase one.phrase two.short phrase three.");
-   common::Tokenizer  t( s, '.');
+   const string  s( "phrase one.phrase two.short phrase three.");
+   Tokenizer     t( s, '.');
 
 
-   for (common::Tokenizer::counting_iterator cit = t.begin_counting();
-        cit != t.end_counting(); ++cit)
+   for (auto cit = t.begin_counting(); cit != t.end_counting(); ++cit)
    {
       const string&  token( *cit);
 
@@ -399,10 +395,9 @@ BOOST_AUTO_TEST_CASE( test_nested_counting)
       else
          BOOST_REQUIRE( cit.currentNum() == 0);
 
-      common::Tokenizer  t2( token, ' ');
+      Tokenizer  t2( token, ' ');
 
-      for (common::Tokenizer::counting_iterator cit2 = t2.begin_counting();
-           cit2 != t2.end(); ++cit2)
+      for (auto cit2 = t2.begin_counting(); cit2 != t2.end(); ++cit2)
       {
          const string&  token2( *cit2);
 
@@ -445,9 +440,9 @@ BOOST_AUTO_TEST_CASE( test_nested_counting)
 
    BOOST_REQUIRE_EQUAL( t.numTokens(), 3);
 
-} // end test_nested_counting
+} // test_nested_counting
 
 
 
-// =========================  END OF test_tokenizer.cpp  =========================
+// =====  END OF test_tokenizer.cpp  =====
 
