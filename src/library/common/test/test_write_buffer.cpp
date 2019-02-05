@@ -20,7 +20,7 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE DataBufferTest
+#define BOOST_TEST_MODULE WriteBufferTest
 #include <boost/test/unit_test.hpp>
 
 
@@ -30,60 +30,81 @@ using celma::common::WriteBuffer;
 namespace {
 
 
-class TestWriteBuffer : public WriteBuffer< 100>
+/// Helper class to test a write buffer.
+///
+/// @since  x.y.z, 01.01.2019
+class TestWriteBuffer: public WriteBuffer< 100>
 {
 public:
+   /// Number of bytes written.
    static size_t  mDataWritten;
+   /// Numberof times writeData() is called.
    static int     mWriteCalled;
 
-   /// 
-   /// @return
-   ///    .
-   /// @since
-   ///    x.y.z, 01.01.2019
+   /// Destructor, has to call flush() to wrie remaining bytes from the buffer.
+   ///
+   /// @since  x.y.z, 01.01.2019
    virtual ~TestWriteBuffer()
    {
       flush();
-   }
+   } /// ~TestWriteBuffer::TestWriteBuffer
 
 private:
    using WriteBuffer< 100UL>::writeData;
 
+   /// Called to write the data to the destination.
+   ///
+   /// @param[in]
+   ///    Pointer to the buffer with the data to write. Ignored.
+   /// @param[in]  len
+   ///    The length of the data to write.
+   /// @since  x.y.z, 01.01.2019
    virtual void writeData( const unsigned char* const, size_t len) const override
    {
       mDataWritten += len;
       ++mWriteCalled;
-   }
+   } // TestWriteBuffer::writeData
 
-};
+}; // TestWriteBuffer
 
 
-class TestWriteBufferCount : public WriteBuffer< 100, celma::common::CountPolicy>
+/// Helper class to test a write buffer with a write statistic policy.
+///
+/// @since  x.y.z, 04.01.2019
+class TestWriteBufferCount:
+   public WriteBuffer< 100, celma::common::WriteCountPolicy>
 {
 public:
+   /// Number of bytes written.
    static size_t  mDataWritten;
+   /// Numberof times writeData() is called.
    static int     mWriteCalled;
 
-   /// 
-   /// @return
-   ///    .
-   /// @since
-   ///    x.y.z, 04.01.2019
+   /// Destructor, has to call flush() to wrie remaining bytes from the buffer.
+   ///
+   /// @since  x.y.z, 04.01.2019
    virtual ~TestWriteBufferCount()
    {
       flush();
-   }
+   } // TestWriteBufferCount::~TestWriteBufferCount
 
 private:
-   using WriteBuffer< 100, celma::common::CountPolicy>::writeData;
+   using WriteBuffer< 100, celma::common::WriteCountPolicy>::writeData;
 
+   /// Called to write the data to the destination.
+   ///
+   /// @param[in]
+   ///    Pointer to the buffer with the data to write. Ignored.
+   /// @param[in]  len
+   ///    The length of the data to write.
+   /// @since  x.y.z, 04.01.2019
    virtual void writeData( const unsigned char* const, size_t len) const override
    {
       mDataWritten += len;
       ++mWriteCalled;
-   }
+   } // TestWriteBufferCount::writeData
 
-};
+}; // TestWriteBufferCount
 
 
 size_t  TestWriteBuffer::mDataWritten = 0;
@@ -105,6 +126,13 @@ BOOST_AUTO_TEST_CASE( empty_buffer)
    {
       TestWriteBuffer  buff;
 
+      BOOST_REQUIRE_EQUAL( buff.buffered(), 0);
+
+      BOOST_REQUIRE_NO_THROW( buff.append( "huhu", 0));
+      BOOST_REQUIRE_EQUAL( buff.buffered(), 0);
+
+      char* dummy = nullptr;
+      BOOST_REQUIRE_THROW( buff.append( dummy, 10), std::runtime_error);
       BOOST_REQUIRE_EQUAL( buff.buffered(), 0);
    } // end scope
 

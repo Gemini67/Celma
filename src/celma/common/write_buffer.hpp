@@ -19,18 +19,23 @@
 #define CELMA_COMMON_WRITE_BUFFER_HPP
 
 
+#include <cstddef>
 #include <cstring>
 #include <memory>
-#include <cstddef>
+#include <stdexcept>
 
 
 namespace celma { namespace common {
 
 
+// Class EmptyWritePolicy
+// ======================
+
+
 /// Default policy for the class WriteBuffer: Does nothing.
 ///
 /// @since  x.y.z, 04.01.2019
-class EmptyPolicy
+class EmptyWritePolicy
 {
 public:
    /// Called when data is appended to the write buffer: Does nothing.
@@ -39,7 +44,7 @@ public:
    /// @since  x.y.z, 04.01.2019
    void appended( size_t /* len */)
    {
-   } // EmptyPolicy::appended
+   } // EmptyWritePolicy::appended
 
    /// Called when data is written to the destination: Does nothing.
    ///
@@ -47,16 +52,56 @@ public:
    /// @since  x.y.z, 04.01.2019
    void flushed( size_t /* len */)
    {
-   } // EmptyPolicy::flushed
+   } // EmptyWritePolicy::flushed
 
-}; // EmptyPolicy
+   /// Always returns 0.
+   ///
+   /// @return  0.
+   /// @since  x.y.z, 25.01.2019
+   size_t numAppendCalled() const
+   {
+      return 0;
+   } // EmptyWritePolicy::numAppendCalled
+
+   /// Always returns 0.
+   ///
+   /// @return  0.
+   /// @since  x.y.z, 25.01.2019
+   size_t bytesAppended() const
+   {
+      return 0;
+   } // EmptyWritePolicy::bytesAppended
+
+   /// Always returns 0.
+   ///
+   /// @return  0.
+   /// @since  x.y.z, 25.01.2019
+   size_t numFlushCalled() const
+   {
+      return 0;
+   } // EmptyWritePolicy::numFlushCalled
+
+   /// Always returns 0.
+   ///
+   /// @return  0.
+   /// @since  x.y.z, 25.01.2019
+   size_t bytesFlushed() const
+   {
+      return 0;
+   } // EmptyWritePolicy::bytesFlushed
+
+}; // EmptyWritePolicy
+
+
+// Class WriteCountPolicy
+// ======================
 
 
 /// Use this policy with the class WriteBuffer to get statistics about how often
 /// the functions were called and how many bytes of data were handled.
 ///
 /// @since  x.y.z, 04.01.2019
-class CountPolicy
+class WriteCountPolicy
 {
 public:
    /// Called when data is appended to the write buffer. Counts the number of
@@ -68,7 +113,7 @@ public:
    {
       ++mNumAppendCalled;
       mBytesAppended += len;
-   } // CountPolicy::appended
+   } // WriteCountPolicy::appended
 
    /// Called when data is written to the destination. This can be either from
    /// the buffer, or directly if a large block of data was passed.<br>
@@ -80,7 +125,7 @@ public:
    {
       ++mNumFlushCalled;
       mBytesFlushed += len;
-   } // CountPolicy::flushed
+   } // WriteCountPolicy::flushed
 
    /// Returns how many times WriteBuffer::append() was called.
    ///
@@ -91,7 +136,7 @@ public:
    size_t numAppendCalled() const
    {
       return mNumAppendCalled;
-   } // CountPolicy::numAppendCalled
+   } // WriteCountPolicy::numAppendCalled
 
    /// Returns how many bytes were passed to the WriteBuffer object through
    /// calling the append method.<br>
@@ -105,7 +150,7 @@ public:
    size_t bytesAppended() const
    {
       return mBytesAppended;
-   } // CountPolicy::bytesAppended
+   } // WriteCountPolicy::bytesAppended
 
    /// Returns how many times WriteBuffer::flush() was called, either externally
    /// or internally when the buffer was full/more free space was needed.<br>
@@ -119,7 +164,7 @@ public:
    size_t numFlushCalled() const
    {
       return mNumFlushCalled;
-   } // CountPolicy::numFlushCalled
+   } // WriteCountPolicy::numFlushCalled
 
    /// Returns the number of bytes that were written to the destination.
    ///
@@ -130,7 +175,7 @@ public:
    size_t bytesFlushed() const
    {
       return mBytesFlushed;
-   } // CountPolicy::bytesFlushed
+   } // WriteCountPolicy::bytesFlushed
 
 private:
    /// Counts the number of times that WriteBuffer::append() was called.
@@ -143,7 +188,11 @@ private:
    /// Counts the amount of bytes written to the destination.
    size_t mBytesFlushed = 0;
 
-}; // CountPolicy
+}; // WriteCountPolicy
+
+
+// Template Class WriteBuffer
+// ==========================
 
 
 /// Use this base class to collect data in a buffer and then write all data from
@@ -158,9 +207,9 @@ private:
 ///    The size of the buffer to use.
 /// @tparam  P
 ///    The statistics policy to use by this class.<br>
-///    Default = EmptyPolicy, a policy that counts nothing.
+///    Default = EmptyWritePolicy, a policy that counts nothing.
 /// @since  x.y.z, 01.01.2019
-template< size_t N, typename P = EmptyPolicy> class WriteBuffer: public P
+template< size_t N, typename P = EmptyWritePolicy> class WriteBuffer: public P
 {
 public:
    /// Default constructor, allocates the buffer.
@@ -185,8 +234,10 @@ public:
 
    /// Appends data to the buffer.<br>
    /// If there is not enough space left in the buffer, the buffer is flushed.<br>
-   /// The function only fails if flushing the buffer is requested and this
-   /// fails, i.e. an exception is thrown by writeData().
+   /// The function fails if a NULL pointer is passed, or if flushing the buffer
+   /// is requested and this fails, i.e. an exception is thrown by
+   /// writeData().<br>
+   /// Does nothing when a length of 0 is passed.
    ///
    /// @tparam  T
    ///    The type of the pointer to the data.
@@ -195,7 +246,7 @@ public:
    /// @param[in]  len
    ///    The length of the data block.
    /// @since  x.y.z, 01.01.2019
-   template< typename T> void append( const T* const data, size_t len);
+   template< typename T> void append( const T* const data, size_t len) noexcept( false);
 
    /// Writes all data from the buffer to the destination. Does nothing if the
    /// buffer is empty.
@@ -244,7 +295,13 @@ template< size_t N, typename P> WriteBuffer< N, P>::WriteBuffer():
 template< size_t N, typename P>
    template< typename T>
       void WriteBuffer< N, P>::append( const T* const data, size_t len)
+         noexcept( false)
 {
+   if (len == 0)
+      return;
+   if (data == nullptr)
+      throw std::runtime_error( "NULL pointer passed to append()");
+
    P::appended( len);
 
    if (len >= N)
