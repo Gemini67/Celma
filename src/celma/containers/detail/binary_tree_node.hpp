@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,8 @@
 
 
 /// @file
-/// See documentation of class celma::containers::detail::@@@.
+/// See documentation of template class
+/// celma::containers::detail::BinaryTreeNode<>.
 
 
 #ifndef CELMA_CONTAINERS_DETAIL_BINARY_TREE_NODE_HPP
@@ -25,27 +26,41 @@
 namespace celma { namespace containers { namespace detail {
 
 
+/// Nodes of a binary tree.<br>
+/// Does not only store the data and the pointers, but also contains part of the
+/// logic/implementation of the tree.
+///
+/// @tparam  T  The type of the data to store in a node.
 /// @since  x.y.z, 25.03.2017
 template< typename T> class BinaryTreeNode
 {
 public:
    using value_type = T;
 
+   /// Constructor for an empty (no data), new node.
+   ///
+   /// @param[in]  parent_node  Pointer to the parent node.
    /// @since  x.y,y, 03.04.2017
    BinaryTreeNode( BinaryTreeNode* parent_node):
-      parent( parent_node),
-      left(),
-      right(),
-      value()
+      mpParent( parent_node),
+      mpLeft(),
+      mpRight(),
+      mValue()
    {
    } // BinaryTreeNode< T>::BinaryTreeNode
 
+   /// Constructor for a new node with data.
+   ///
+   /// @param[in]  new_value
+   ///    The data to store in this new node.
+   /// @param[in]  parent_node
+   ///    Pointer to the parent node.
    /// @since  x.y,y, 24.03.2017
    BinaryTreeNode( const T& new_value, BinaryTreeNode* parent_node = nullptr):
-      parent( parent_node),
-      left(),
-      right(),
-      value( new_value)
+      mpParent( parent_node),
+      mpLeft(),
+      mpRight(),
+      mValue( new_value)
    {
    } // BinaryTreeNode< T>::BinaryTreeNode
 
@@ -56,102 +71,119 @@ public:
    /// If there is no right sub-tree, check if the current element was in the
    /// right sub-tree of its parent, which means that it was processed
    /// already.
-   /// @return  Pointer to the next element in the tree, NULL if no next
-   ///          element exists.
+   ///
+   /// @return
+   ///    Pointer to the next element in the tree, NULL if no next element
+   ///    exists.
    /// @since  x.y.z, 25.03.2017
    BinaryTreeNode* increment() const
    {
       // have right sub-tree?
-      if (right)
+      if (mpRight)
       {
          // have greater values
-         auto  next = right.get();
-         while (next->left)
-            next = next->left.get();
+         auto  next = mpRight.get();
+         while (next->mpLeft)
+            next = next->mpLeft.get();
          return next;
       } // end if
 
-      // find next parent node, where we come from the left sub-tree
-      auto  next( parent);
+      // find the next parent node, where we come up from the right sub-tree
+      auto  next( mpParent);
       auto  coming_from( this);
-      while ((next != nullptr) && (coming_from == next->right.get()))
+      while ((next != nullptr) && (coming_from == next->mpRight.get()))
       {
          coming_from = next;
-         next        = next->parent;
+         next        = next->mpParent;
       } // end while
 
       return next;
-   }
+   } // BinaryTreeNode< T>::increment
 
    /// Decrement a node (pointer), i.e. go to the previous/smaller element in
    /// the tree.<br>
    /// The previous element is either the greatest in the left sub-tree, or the
    /// the parent.<br>
-   /// @return  Pointer to the previous element in the tree, NULL if no previous
-   ///          element exists.
+   ///
+   /// @return
+   ///    Pointer to the previous element in the tree, NULL if no previous
+   ///    element exists.
    /// @since  x.y.z, 02.04.2017
    BinaryTreeNode* decrement() const
    {
       // have left sub-tree?
-      if (left)
+      if (mpLeft)
       {
          // have smaller values
-         auto  previous = left.get();
-         while (previous->right)
-            previous = previous->right.get();
+         auto  previous = mpLeft.get();
+         while (previous->mpRight)
+            previous = previous->mpRight.get();
          return previous;
       } // end if
 
-      // find previous parent node, where we come from the right sub-tree
-      auto  previous( parent);
+      // find the previous parent node, where we come up from the left sub-tree
+      auto  previous( mpParent);
       auto  coming_from( this);
-      while ((previous != nullptr) && (coming_from == previous->left.get()))
+      while ((previous != nullptr) && (coming_from == previous->mpLeft.get()))
       {
          coming_from = previous;
-         previous    = previous->parent;
+         previous    = previous->mpParent;
       } // end while
 
       return previous;
-   }
+   } // BinaryTreeNode< T>::decrement
 
+   /// Returns the value stored internally.
+   ///
+   /// @return  Pointer to the internally stored value.
+   /// @since  x.y.z, 25.03.2017
    T* getValue()
    {
-      return &value;
-   }
+      return &mValue;
+   } // BinaryTreeNode< T>::getValue
 
-   /// 
-   /// @return  Pointer to the node to use as new root, if the root node was
-   ///          deleted.
+   /// Detaches a node from the binary tree. The node can be deleted afterwards.
+   ///
+   /// @param[in]  next_greater
+   ///    Pointer to the node with the next-greater value, if there exists one.
+   /// @return
+   ///    Pointer to the node to use as new root, if the root node was deleted.
    /// @since  x.y.z, 27.04.2017
    BinaryTreeNode* detach( BinaryTreeNode* next_greater)
    {
 
       // test if this node has any child nodes
-      if (!left)
+      if (!mpLeft)
       {
-         if (!right)
+         if (!mpRight)
          {
-            if (parent != nullptr)
-               parent->releaseChild( this);
+            if (mpParent != nullptr)
+               mpParent->releaseChild( this);
             // no sub-tree at all: can be deleted right away
             return nullptr;
          } // end if
 
          // no left sub-tree: attach my right to my parent (if I have one)
-         if (parent == nullptr)
-            return right.release();
+         if (mpParent == nullptr)
+         {
+            mpRight->mpParent = nullptr;
+            return mpRight.release();
+         } // end if
 
-         parent->releaseReplaceChild( this, right.release());
+         mpParent->releaseReplaceChild( this, mpRight.release());
          return nullptr;
       } // end if
 
-      if (!right)
+      if (!mpRight)
       {
          // no right sub-tree: attach my left to my parent (if I have one)
-         if (parent == nullptr)
-            return left.release();
+         if (mpParent == nullptr)
+         {
+            mpLeft->mpParent = nullptr;
+            return mpLeft.release();
+         } // end if
 
-         parent->releaseReplaceChild( this, left.release());
+         mpParent->releaseReplaceChild( this, mpLeft.release());
          return nullptr;
       } // end if
 
@@ -159,75 +191,106 @@ public:
       // replace myself with my next greater
 
       // next greater cannot be NULL, since right was not NULL
-      // next greater must be a leaf, so no detach() necessary
-      if (next_greater->parent != nullptr)
-         parent->releaseChild( this);
-
-      next_greater->left.reset( left.release());
-      next_greater->right.reset( right.release());
-
-      if (parent != nullptr)
+      // next_greater left must be NULL, otherwise this left node/tree would
+      // contain another greater
+      // if the next_greater node has a right node, this right node must be
+      // attached to next_greater's parent
+      if (next_greater->mpParent != nullptr)
       {
-         parent->releaseReplaceChild( this, next_greater);
+         if (next_greater->mpRight)
+         {
+            next_greater->mpParent->releaseReplaceChild( next_greater, next_greater->mpRight.release());
+            next_greater->mpRight->mpParent = next_greater->mpParent;
+         } else
+         {
+            next_greater->mpParent->releaseChild( next_greater);
+         } // end if
+      } // end if
+
+      // now next_greater is detached, give it my nodes
+      next_greater->mpLeft.reset( mpLeft.release());
+      next_greater->mpRight.reset( mpRight.release());
+
+      if (next_greater->mpLeft)
+         next_greater->mpLeft->mpParent = next_greater;
+      if (next_greater->mpRight)
+         next_greater->mpRight->mpParent = next_greater;
+
+      // if there is parent, tell him he's got a new child
+      if (mpParent != nullptr)
+      {
+         mpParent->releaseReplaceChild( this, next_greater);
+         next_greater->mpParent = mpParent;
          return nullptr;
       } // end if
 
-      next_greater->parent = nullptr;
+      next_greater->mpParent = nullptr;
       return next_greater;
-   } // 
+   } // BinaryTreeNode< T>::detach
    
-   /// 
-   /// @param[in]  old_child  .
-   /// @param[in]  new_child  .
+   /// Replaces a child node/pointer with a new child/node.<br>
+   /// Checks if the given old child was the left or the right child node, and
+   /// replaces the corresponding pointer with the new one.<br>
+   /// The old/previous child node is deleted.
+   ///
+   /// @param[in]  old_child
+   ///    Pointer to the old child/node that should be replaced.
+   /// @param[in]  new_child
+   ///    The new child/node that should be stored instead.
    /// @since  x.y.z, 24.04.2017
    void replaceChild( BinaryTreeNode* old_child, BinaryTreeNode* new_child)
    {
-      // no right sub-tree: left moves up
-      if (left.get() == old_child)
-         left.reset( new_child);
+      if (mpLeft.get() == old_child)
+         mpLeft.reset( new_child);
       else
-         right.reset( new_child);
-   } // 
+         mpRight.reset( new_child);
+   } // BinaryTreeNode< T>::replaceChild
 
+   /// Replaces a child node/pointer with a new child/node.<br>
+   /// Checks if the given old child was the left or the right child node, and
+   /// replaces the corresponding pointer with the new one.<br>
+   /// The old/previous child node is not deleted.
    /// 
-   /// @param[in]  old_child  .
-   /// @param[in]  new_child  .
+   /// @param[in]  old_child
+   ///    Pointer to the old child/node that should be replaced.
+   /// @param[in]  new_child
+   ///    The new child/node that should be stored instead.
    /// @since  x.y.z, 24.04.2017
    void releaseReplaceChild( BinaryTreeNode* old_child, BinaryTreeNode* new_child)
    {
-      // no right sub-tree: left moves up
-      if (left.get() == old_child)
+      if (mpLeft.get() == old_child)
       {
-         left.release();
-         left.reset( new_child);
+         mpLeft.release();
+         mpLeft.reset( new_child);
       } else
       {
-         right.release();
-         right.reset( new_child);
+         mpRight.release();
+         mpRight.reset( new_child);
       } // end if
-   } // 
+   } // BinaryTreeNode< T>::releaseReplaceChild
 
-   /// 
-   /// @param[in]  child_node  .
+   /// Releases a child node.
+   ///
+   /// @param[in]  child_node  Pointer to the child/node to release.
    /// @since  x.y.z, 24.04.2017
    void releaseChild( BinaryTreeNode* child_node)
    {
-      if (left.get() == child_node)
-         left.release();
+      if (mpLeft.get() == child_node)
+         mpLeft.release();
       else
-         right.release();
-   } // 
+         mpRight.release();
+   } // BinaryTreeNode< T>::releaseChild
 
    /// Pointer to the parent node.
-   BinaryTreeNode*                   parent;
+   BinaryTreeNode*                   mpParent;
    /// Left node pointer, use unique pointer to make sure it is deleted when the
    /// tree is deleted.
-   std::unique_ptr< BinaryTreeNode>  left;
+   std::unique_ptr< BinaryTreeNode>  mpLeft;
    /// Right node pointer, use unique pointer to make sure it is deleted when
    /// the tree is deleted.
-   std::unique_ptr< BinaryTreeNode>  right;
+   std::unique_ptr< BinaryTreeNode>  mpRight;
    /// The value stored in this node.
-   T                                 value;
+   T                                 mValue;
 
 }; // BinaryTreeNode< T>
 
@@ -240,5 +303,5 @@ public:
 #endif   // CELMA_CONTAINERS_DETAIL_BINARY_TREE_NODE_HPP
 
 
-// =======================  END OF binary_tree_node.hpp  =======================
+// =====  END OF binary_tree_node.hpp  =====
 
