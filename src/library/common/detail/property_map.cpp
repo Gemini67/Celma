@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,6 +32,7 @@ namespace celma { namespace common { namespace detail {
 
 
 /// Constructor.
+///
 /// @param[in]  name  The name of the subtree entry.
 /// @since  1.2, 19.10.2016
 PropertyMap::PropertyMap( const std::string& name):
@@ -43,6 +44,7 @@ PropertyMap::PropertyMap( const std::string& name):
 
 
 /// Destructor, clears the entries in the map.
+///
 /// @since  1.2, 19.10.2016
 PropertyMap::~PropertyMap()
 {
@@ -54,8 +56,11 @@ PropertyMap::~PropertyMap()
 
 
 /// Returns if a property with the specified name exists.
-/// @param[in]  name       The name of the property, may be a path.
-/// @param[in]  separator  The separator character to use to split the path.
+///
+/// @param[in]  name
+///    The name of the property, may be a path.
+/// @param[in]  separator
+///    The separator character to use to split the path.
 /// @return  \c true if a property with the specified name exists.
 /// @since  1.2, 19.10.2016
 bool PropertyMap::hasProperty( const std::string& name, char separator) const
@@ -77,8 +82,11 @@ bool PropertyMap::hasProperty( const std::string& name, char separator) const
 
 
 /// Dumps the contents of the map.
-/// @param[in]  os      The stream to write to.
-/// @param[in]  indent  Indent string.
+///
+/// @param[in]  os
+///    The stream to write to.
+/// @param[in]  indent
+///    Indent string.
 /// @since  1.2, 19.10.2016
 void PropertyMap::dump( std::ostream& os, std::string indent) const
 {
@@ -105,5 +113,5 @@ void PropertyMap::dump( std::ostream& os, std::string indent) const
 } // namespace celma
 
 
-// =========================  END OF property_map.cpp  =========================
+// =====  END OF property_map.cpp  =====
 

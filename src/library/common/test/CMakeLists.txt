@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -46,6 +46,8 @@ celma_add_celma_boost_testprogram( test_exception )
 celma_add_celma_boost_testprogram( test_extract_funcname )
 celma_add_celma_boost_testprogram( test_file_info )
 celma_add_celma_boost_testprogram( test_file_operations )
+celma_add_celma_boost_testprogram( test_properties )
+celma_add_celma_boost_testprogram( test_property_iterator )
 celma_add_celma_boost_testprogram( test_range_dest )
 celma_add_celma_boost_testprogram( test_range_expression )
 celma_add_celma_boost_testprogram( test_range_generator )

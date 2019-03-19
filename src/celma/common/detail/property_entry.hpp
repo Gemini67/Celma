@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,6 +28,7 @@ namespace celma { namespace common { namespace detail {
 
 /// Base class for entries in the property map: Either a (property) map itself,
 /// or a value with a specific type.
+///
 /// @since  1.2, 19.10.2016
 class PropertyEntry
 {
@@ -40,28 +41,37 @@ public:
    };
 
    /// Constructor.
-   /// @param[in]  name     The name of the entry.
-   /// @param[in]  my_type  The type of the entry.
+   ///
+   /// @param[in]  name
+   ///    The name of the entry.
+   /// @param[in]  my_type
+   ///    The type of the entry.
    /// @since  1.2, 19.10.2016
    PropertyEntry( const std::string& name, Types my_type);
 
    /// Empty, virtual destructor.
+   ///
    /// @since  1.2, 19.10.2016
    virtual ~PropertyEntry() = default;
 
    /// Returns the name of the entry.
+   ///
    /// @return  The name of the entry.
    /// @since  1.2, 19.10.2016
    const std::string& getName() const;
 
    /// Returns the type of the entry.
+   ///
    /// @return  The type of the entry.
    /// @since  1.2, 19.10.2016
    Types entryType() const;
 
    /// Interface to dump the contents of an entry.
-   /// @param[in]  os      The stream to write to.
-   /// @param[in]  indent  Indent string.
+   ///
+   /// @param[in]  os
+   ///    The stream to write to.
+   /// @param[in]  indent
+   ///    Indent string.
    /// @since  1.2, 19.10.2016
    virtual void dump( std::ostream& os, std::string indent) const = 0;
 
@@ -98,5 +108,5 @@ inline PropertyEntry::Types PropertyEntry::entryType() const
 #endif   // CELMA_COMMON_DETAIL_PROPERTY_ENTRY_HPP
 
 
-// ========================  END OF property_entry.hpp  ========================
+// =====  END OF property_entry.hpp  =====
 

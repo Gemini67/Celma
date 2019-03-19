@@ -57,7 +57,7 @@ template< typename B> class TypeNameBase;
 class AnyBase
 {
 public:
-   ~AnyBase() = default;
+   virtual ~AnyBase() = default;
 
    const TypeNameBase< AnyBase>* getTypeNameBase() const;
 
@@ -82,7 +82,7 @@ private:
 template< typename B> class TypeNameBase: public B
 {
 public:
-   ~TypeNameBase() = default;
+   virtual ~TypeNameBase() = default;
 
    /// Returns the stored type name.
    /// @return  The type name stored internally.
@@ -120,7 +120,7 @@ private:
 template< typename T, typename B> class TypeName: public TypeNameBase< B>
 {
 public:
-   ~TypeName() = default;
+   virtual ~TypeName() = default;
 
 protected:
    /// Constructor.
@@ -155,7 +155,7 @@ public:
    {
    } // Reference< T, B>::Reference
 
-   ~Reference() = default;
+   virtual ~Reference() = default;
 
 protected:
    /// Reference of the specified variable.
@@ -185,7 +185,7 @@ public:
    {
    } // Value< T, B>::Value
 
-   ~Value() = default;
+   virtual ~Value() = default;
 
 protected:
    /// Internal variable of the specified type.
@@ -216,7 +216,7 @@ public:
    {
    } // VarName< T, B>::VarName
 
-   ~VarName() = default;
+   virtual ~VarName() = default;
 
    /// Returns the name of the original variable.
    /// @return  The name of the original variable as specified in the
@@ -250,5 +250,5 @@ inline const TypeNameBase< AnyBase>* AnyBase::getTypeNameBase() const
 #endif   // CELMA_COMMON_ANY_TYPE_BASE_HPP
 
 
-// ========================  END OF any_type_base.hpp  ========================
+// =====  END OF any_type_base.hpp  =====
 

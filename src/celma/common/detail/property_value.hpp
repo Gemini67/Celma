@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,31 +28,40 @@ namespace celma { namespace common { namespace detail {
 
 
 /// Stores a property, i.e. a named value.
+///
 /// @tparam  T  The type of the value.
 /// @since  1.2, 19.10.2016
 template< typename T> class PropertyValue: public PropertyEntry
 {
 public:
    /// Constructor.
-   /// @param[in]  name   The name of the property.
-   /// @param[in]  value  The value of the property.
+   ///
+   /// @param[in]  name
+   ///    The name of the property.
+   /// @param[in]  value
+   ///    The value of the property.
    /// @since  1.2, 19.10.2016
    PropertyValue( const std::string& name, const T& value);
 
    /// Empty, virtual destructor.
+   ///
    /// @since  1.2, 19.10.2016
    virtual ~PropertyValue() = default;
 
    /// Returns the value.
+   ///
    /// @return  The value.
    /// @since  1.2, 19.10.2016
    const T& getValue() const;
    
    /// Prints the value stored in the object.
-   /// @param[in]  os  The stream to write to.
-   /// @param[in]      Required by base class, ignored here.
+   ///
+   /// @param[in]  os
+   ///    The stream to write to.
+   /// @param[in]  indent
+   ///    Required by base class, ignored here.
    /// @since  1.2, 19.10.2016
-   virtual void dump( std::ostream& os, std::string) const override;
+   virtual void dump( std::ostream& os, std::string indent) const override;
 
 private:
    /// The value of the property.
@@ -94,5 +103,5 @@ template< typename T>
 #endif   // CELMA_COMMON_DETAIL_PROPERTY_VALUE_HPP
 
 
-// ========================  END OF property_value.hpp  ========================
+// =====  END OF property_value.hpp  =====
 

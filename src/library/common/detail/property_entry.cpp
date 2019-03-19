@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -24,8 +24,11 @@ namespace celma { namespace common { namespace detail {
 
 
 /// Constructor.
-/// @param[in]  name     The name of the entry.
-/// @param[in]  my_type  The type of the entry.
+///
+/// @param[in]  name
+///    The name of the entry.
+/// @param[in]  my_type
+///    The type of the entry.
 /// @since  1.2, 19.10.2016
 PropertyEntry::PropertyEntry( const std::string& name, Types my_type):
    mName( name),
@@ -40,5 +43,5 @@ PropertyEntry::PropertyEntry( const std::string& name, Types my_type):
 } // namespace celma
 
 
-// ========================  END OF property_entry.cpp  ========================
+// =====  END OF property_entry.cpp  =====
 

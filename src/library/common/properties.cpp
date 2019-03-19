@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,6 +28,7 @@ namespace celma { namespace common {
 
 
 /// Constructor.
+///
 /// @param[in]  separator  The spearator to use for this instance.
 /// @since  1.2, 19.10.2016
 Properties::Properties( char separator):
@@ -39,8 +40,11 @@ Properties::Properties( char separator):
 
 
 /// Insertion operator for a Properties object.
-/// @param[out]  os     The stream to write to.
-/// @param[in]   props  The object to dump the contents of.
+///
+/// @param[out]  os
+///    The stream to write to.
+/// @param[in]   props
+///    The object to dump the contents of.
 /// @return  The stream as passed in.
 /// @since  1.2, 19.10.2016
 std::ostream& operator <<( std::ostream& os, const Properties& props)
@@ -57,5 +61,5 @@ std::ostream& operator <<( std::ostream& os, const Properties& props)
 } // namespace celma
 
 
-// ==========================  END OF properties.cpp  ==========================
+// =====  END OF properties.cpp  =====
 
