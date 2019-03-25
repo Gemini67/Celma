@@ -58,8 +58,8 @@ bool Properties::addLink( const std::string& link, const std::string& from)
    auto  dest_entry = mProperties.findEntry( from, mSeparator);
 
 
-   return dest_entry.first && mProperties.addProperty( link, dest_entry.second,
-      mSeparator);
+   return dest_entry.first && mProperties.addProperty( link, from,
+      dest_entry.second, mSeparator);
 } // Properties::addLink
 
 

@@ -38,10 +38,13 @@ public:
    ///
    /// @param[in]  name
    ///    The name of the property.
+   /// @param[in]  full_path_name
+   ///    The full path and name of a link destination. Not used here.
    /// @param[in]  value
    ///    The value of the property.
    /// @since  x.y.z, 19.10.2016
-   PropertyValue( const std::string& name, const T& value);
+   PropertyValue( const std::string& name, const std::string& full_path_name,
+      const T& value);
 
    /// Empty, virtual destructor.
    ///
@@ -75,7 +78,8 @@ private:
 
 
 template< typename T>
-   PropertyValue< T>::PropertyValue( const std::string& name, const T& value):
+   PropertyValue< T>::PropertyValue( const std::string& name,
+      const std::string&, const T& value):
       PropertyEntry( name, Types::value),
       mValue( value)
 {

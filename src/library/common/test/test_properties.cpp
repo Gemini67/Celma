@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE( property_link)
    oss << myProperties;
 
    BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
-      "Family Name -> [?] Name\n"
+      "Family Name -> Name\n"
       "Name = Hugentobler\n"
    ));
 
@@ -262,10 +262,10 @@ BOOST_AUTO_TEST_CASE( multiple_links)
       "      Home = 123 45 67 89\n"
       "      Mobile = 079 45 67 89\n"
       "   Postal Code = 5037\n"
-      "   Primary Phone Number -> [?] Home\n"
+      "   Primary Phone Number -> Address.Phone.Home\n"
       "   Street = Hochtiefstrasse\n"
       "Age = 50\n"
-      "Contacts -> [?] Phone\n"
+      "Contacts -> Address.Phone\n"
       "First Name = Klaus-Peter\n"
       "Name = Hugentobler\n"
    ));
@@ -286,10 +286,10 @@ BOOST_AUTO_TEST_CASE( multiple_links)
       "      Mobile = 079 45 67 89\n"
       "      Office = 399 33 44 55\n"
       "   Postal Code = 5037\n"
-      "   Primary Phone Number -> [?] Home\n"
+      "   Primary Phone Number -> Address.Phone.Home\n"
       "   Street = Hochtiefstrasse\n"
       "Age = 50\n"
-      "Contacts -> [?] Phone\n"
+      "Contacts -> Address.Phone\n"
       "First Name = Klaus-Peter\n"
       "Name = Hugentobler\n"
    ));

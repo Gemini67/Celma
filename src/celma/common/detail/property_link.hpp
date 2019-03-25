@@ -41,10 +41,12 @@ public:
    ///
    /// @param[in]  name
    ///    The name of the link.
+   /// @param[in]  full_path_name
+   ///    The full path and name of the destination of the link.
    /// @param[in]  dest
    ///    Iterator pointing to the other property to link to.
    /// @since  x.y.z, 20.03.2019
-   PropertyLink( const std::string& name,
+   PropertyLink( const std::string& name, const std::string& full_path_name,
       const property_map_t::const_iterator dest);
 
    /// Empty, virtual destructor.
@@ -69,6 +71,8 @@ public:
    virtual void dump( std::ostream& os, std::string indent) const override;
 
 private:
+   /// The full path and name of the destination of the link.
+   const std::string                     mFullPathName;
    /// The pointer to the other property.
    const property_map_t::const_iterator  mDest;
 
@@ -80,8 +84,9 @@ private:
 
 
 inline PropertyLink::PropertyLink( const std::string& name,
-   const property_map_t::const_iterator dest):
+   const std::string& full_path_name, const property_map_t::const_iterator dest):
       PropertyEntry( name, Types::link),
+      mFullPathName( full_path_name),
       mDest( dest)
 {
 } // PropertyLink::PropertyLink
@@ -95,7 +100,7 @@ inline property_map_t::const_iterator PropertyLink::iterator() const
 
 inline void PropertyLink::dump( std::ostream& os, std::string indent) const
 {
-   os << indent << mName << " -> [?] " << mDest->second->getName() << '\n';
+   os << indent << mName << " -> " << mFullPathName << std::endl;
 } // PropertyLink::dump
 
 

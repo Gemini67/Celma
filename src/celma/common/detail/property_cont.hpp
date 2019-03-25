@@ -63,7 +63,8 @@ public:
    ///    conflicts with an existing property value.
    /// @since  x.y.z, 19.10.2016
    template< typename T>
-      bool addProperty( const std::string& name, const T& value, char separator);
+      bool addProperty( const std::string& name,
+         const std::string& full_path_name, const T& value, char separator);
 
    /// Returns if a property with the specified name exists.
    ///
@@ -136,7 +137,8 @@ private:
 
 
 template< typename T>
-   bool PropertyCont::addProperty( const std::string& name, const T& value,
+   bool PropertyCont::addProperty( const std::string& name,
+      const std::string& full_path_name, const T& value,
       char separator)
 {
    if (detail::NamePathRemain::nameHasSeparator( name, separator))
@@ -158,11 +160,13 @@ template< typename T>
             return false;
 
          auto  map_entry = static_cast< PropertyCont*>( linked_entry);
-         return map_entry->addProperty( npr.remain(), value, separator);
+         return map_entry->addProperty( npr.remain(), full_path_name, value,
+            separator);
       } // end if
 
       auto  subtree = static_cast< PropertyCont*>( subtree_iter->second);
-      return subtree->addProperty( npr.remain(), value, separator);
+      return subtree->addProperty( npr.remain(), full_path_name, value,
+         separator);
    } // end if
 
    auto  value_entry_iter = mProperties.find( name);
@@ -174,10 +178,10 @@ template< typename T>
       // because the type could change, and because the members in
       // PropertyValue are const: delete existing entry, create a new one
       delete value_entry_iter->second;
-      value_entry_iter->second = propertyFactory( name, value);
+      value_entry_iter->second = propertyFactory( name, full_path_name, value);
    } else
    {
-      mProperties.emplace( name, propertyFactory( name, value));
+      mProperties.emplace( name, propertyFactory( name, full_path_name, value));
    } // end if
 
    return true;

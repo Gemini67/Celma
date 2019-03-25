@@ -138,15 +138,6 @@ public:
    /// @since  x.y.z, 12.03.2019
    iterator end();
 
-   /// 
-   /// @param[in]  name
-   ///    .
-   /// @return
-   ///    .
-   /// @since
-   ///    x.y.z, 22.03.2019
-   iterator find( const std::string& name) const;
-
    /// Insertion operator for a Properties object.<br>
    /// Prints all property values, one per line as "name = value", displaying
    /// sub-trees by indented blocks.<br>
@@ -177,14 +168,14 @@ private:
 
 inline bool Properties::addProperty( const std::string& name, const char* value)
 {
-   return mProperties.addProperty( name, std::string( value), mSeparator);
+   return mProperties.addProperty( name, name, std::string( value), mSeparator);
 } // Properties::addProperty
 
 
 template< typename T>
    bool Properties::addProperty( const std::string& name, const T& value)
 {
-   return mProperties.addProperty( name, value, mSeparator);
+   return mProperties.addProperty( name, name, value, mSeparator);
 } // Properties::addProperty
 
 
@@ -211,13 +202,6 @@ inline typename Properties::iterator Properties::end()
 {
    return iterator();
 } // Properties::end
-
-
-inline typename Properties::iterator
-   Properties::findEntry( const std::string& name) const
-{
-   return mProperties.findEntry( name, mSeparator);
-} // Properties::find
 
 
 } // namespace common
