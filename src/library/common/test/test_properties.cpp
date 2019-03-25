@@ -52,7 +52,8 @@ BOOST_AUTO_TEST_CASE( no_properties)
 
 
 
-/// 
+/// Test storing and retrieving some properties.
+///
 /// @since  x.y.z, 19.10.2016
 BOOST_AUTO_TEST_CASE( simple_properties)
 {
@@ -60,18 +61,18 @@ BOOST_AUTO_TEST_CASE( simple_properties)
    Properties  myProperties;
 
 
-   myProperties.addProperty( "Name", "Hugentobler");
-   myProperties.addProperty( "First Name", "Klaus-Peter");
-   myProperties.addProperty( "Age", 50);
+   BOOST_REQUIRE( myProperties.addProperty( "Name", "Hugentobler"));
+   BOOST_REQUIRE( myProperties.addProperty( "First Name", "Klaus-Peter"));
+   BOOST_REQUIRE( myProperties.addProperty( "Age", 50));
 
-   myProperties.addProperty( "Address.Street", "Hochtiefstrasse");
-   myProperties.addProperty( "Address.House Number", 123);
-   myProperties.addProperty( "Address.Location", "Muhen");
-   myProperties.addProperty( "Address.Postal Code", 5037);
-   myProperties.addProperty( "Address.Country", "Switzerland");
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Street", "Hochtiefstrasse"));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.House Number", 123));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Location", "Muhen"));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Postal Code", 5037));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Country", "Switzerland"));
 
-   myProperties.addProperty( "Address.Phone.Home", "123 45 67 89");
-   myProperties.addProperty( "Address.Phone.Mobile", "079 45 67 89");
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Phone.Home", "123 45 67 89"));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Phone.Mobile", "079 45 67 89"));
 
    int  age = -1;
    BOOST_REQUIRE( myProperties.getProperty( age, "Age"));
@@ -122,18 +123,18 @@ BOOST_AUTO_TEST_CASE( overwrite_properties)
    Properties  myProperties;
 
 
-   myProperties.addProperty( "Name", "Hugentobler");
-   myProperties.addProperty( "First Name", "Klaus-Peter");
-   myProperties.addProperty( "Age", 50);
+   BOOST_REQUIRE( myProperties.addProperty( "Name", "Hugentobler"));
+   BOOST_REQUIRE( myProperties.addProperty( "First Name", "Klaus-Peter"));
+   BOOST_REQUIRE( myProperties.addProperty( "Age", 50));
 
-   myProperties.addProperty( "Address.Street", "Hochtiefstrasse");
-   myProperties.addProperty( "Address.House Number", 123);
-   myProperties.addProperty( "Address.Location", "Muhen");
-   myProperties.addProperty( "Address.Postal Code", 5037);
-   myProperties.addProperty( "Address.Country", "Switzerland");
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Street", "Hochtiefstrasse"));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.House Number", 123));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Location", "Muhen"));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Postal Code", 5037));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Country", "Switzerland"));
 
-   myProperties.addProperty( "Age", 35);
-   myProperties.addProperty( "Address.Country", "Schweiz");
+   BOOST_REQUIRE( myProperties.addProperty( "Age", 35));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Country", "Schweiz"));
 
    int  age = -1;
    BOOST_REQUIRE( myProperties.getProperty( age, "Age"));
@@ -144,6 +145,156 @@ BOOST_AUTO_TEST_CASE( overwrite_properties)
    BOOST_REQUIRE_EQUAL( country, "Schweiz");
 
 } // overwrite_properties
+
+
+
+/// Check that a conflict of an existing property (value) and a new property
+/// path is detected.
+///
+/// @since  x.y.z, 19.03.2019
+BOOST_AUTO_TEST_CASE( property_conflict)
+{
+
+   {
+      Properties  myProperties;
+
+      BOOST_REQUIRE( myProperties.addProperty( "Name", "Hugentobler"));
+      BOOST_REQUIRE( !myProperties.addProperty( "Name.First", "Peter"));
+
+      std::string  name;
+      BOOST_REQUIRE( myProperties.getProperty( name, "Name"));
+      BOOST_REQUIRE_EQUAL( name, "Hugentobler");
+   } // end scope
+
+   {
+      Properties  myProperties;
+
+      BOOST_REQUIRE( myProperties.addProperty( "Name.First", "Peter"));
+      BOOST_REQUIRE( !myProperties.addProperty( "Name", "Hugentobler"));
+
+      std::string  name;
+      BOOST_REQUIRE( myProperties.getProperty( name, "Name.First"));
+      BOOST_REQUIRE_EQUAL( name, "Peter");
+   } // end scope
+
+} // property_conflict
+
+
+
+/// Create a link to an existing property.
+///
+/// @since  x.y.z, 21.03.2019
+BOOST_AUTO_TEST_CASE( property_link)
+{
+
+   Properties  myProperties;
+
+
+   BOOST_REQUIRE( myProperties.addProperty( "Name", "Hugentobler"));
+   BOOST_REQUIRE( myProperties.addLink( "Family Name", "Name"));
+
+   std::string  name;
+   BOOST_REQUIRE( myProperties.getProperty( name, "Name"));
+   BOOST_REQUIRE_EQUAL( name, "Hugentobler");
+
+   name.clear();
+   BOOST_REQUIRE( myProperties.getProperty( name, "Family Name"));
+   BOOST_REQUIRE_EQUAL( name, "Hugentobler");
+
+   std::ostringstream  oss;
+   oss << myProperties;
+
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      "Family Name -> [?] Name\n"
+      "Name = Hugentobler\n"
+   ));
+
+} // property_link
+
+
+
+/// Create multiple properties and then add some links.
+///
+/// @since  x.y.z, 21.03.2019
+BOOST_AUTO_TEST_CASE( multiple_links)
+{
+
+   Properties  myProperties;
+
+
+   BOOST_REQUIRE( myProperties.addProperty( "Name", "Hugentobler"));
+   BOOST_REQUIRE( myProperties.addProperty( "First Name", "Klaus-Peter"));
+   BOOST_REQUIRE( myProperties.addProperty( "Age", 50));
+
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Street", "Hochtiefstrasse"));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.House Number", 123));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Location", "Muhen"));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Postal Code", 5037));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Country", "Switzerland"));
+
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Phone.Home", "123 45 67 89"));
+   BOOST_REQUIRE( myProperties.addProperty( "Address.Phone.Mobile", "079 45 67 89"));
+
+   BOOST_REQUIRE( myProperties.addLink( "Address.Primary Phone Number", "Address.Phone.Home"));
+   BOOST_REQUIRE( myProperties.addLink( "Contacts", "Address.Phone"));
+
+   std::string  value;
+   BOOST_REQUIRE( myProperties.getProperty( value, "Address.Primary Phone Number"));
+   BOOST_REQUIRE_EQUAL( value, "123 45 67 89");
+
+   value.clear();
+   BOOST_REQUIRE( myProperties.getProperty( value, "Contacts.Home"));
+   BOOST_REQUIRE_EQUAL( value, "123 45 67 89");
+
+   value.clear();
+   BOOST_REQUIRE( myProperties.getProperty( value, "Contacts.Mobile"));
+   BOOST_REQUIRE_EQUAL( value, "079 45 67 89");
+
+   std::ostringstream  oss;
+   oss << myProperties;
+
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      "Address:\n"
+      "   Country = Switzerland\n"
+      "   House Number = 123\n"
+      "   Location = Muhen\n"
+      "   Phone:\n"
+      "      Home = 123 45 67 89\n"
+      "      Mobile = 079 45 67 89\n"
+      "   Postal Code = 5037\n"
+      "   Primary Phone Number -> [?] Home\n"
+      "   Street = Hochtiefstrasse\n"
+      "Age = 50\n"
+      "Contacts -> [?] Phone\n"
+      "First Name = Klaus-Peter\n"
+      "Name = Hugentobler\n"
+   ));
+
+   // try to add an entry through a link
+   BOOST_REQUIRE( myProperties.addProperty( "Contacts.Office", "399 33 44 55"));
+
+   oss.str( "");
+   oss << myProperties;
+
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      "Address:\n"
+      "   Country = Switzerland\n"
+      "   House Number = 123\n"
+      "   Location = Muhen\n"
+      "   Phone:\n"
+      "      Home = 123 45 67 89\n"
+      "      Mobile = 079 45 67 89\n"
+      "      Office = 399 33 44 55\n"
+      "   Postal Code = 5037\n"
+      "   Primary Phone Number -> [?] Home\n"
+      "   Street = Hochtiefstrasse\n"
+      "Age = 50\n"
+      "Contacts -> [?] Phone\n"
+      "First Name = Klaus-Peter\n"
+      "Name = Hugentobler\n"
+   ));
+
+} // multiple_links
 
 
 

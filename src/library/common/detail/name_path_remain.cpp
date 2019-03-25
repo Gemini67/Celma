@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,9 +25,12 @@ namespace celma { namespace common { namespace detail {
 
 /// Constructor.<br>
 /// Tries to split the \a name into the first name and the remaining path.
-/// @param[in]  name       The property path to handle.
-/// @param[in]  separator  The separator character.
-/// @since  1.2, 19.10.2016
+///
+/// @param[in]  name
+///    The property path to handle.
+/// @param[in]  separator
+///    The separator character.
+/// @since  x.y.z, 19.10.2016
 NamePathRemain::NamePathRemain( const std::string& name, char separator):
    mFirstName(),
    mRemain()
@@ -54,5 +57,5 @@ NamePathRemain::NamePathRemain( const std::string& name, char separator):
 } // namespace celma
 
 
-// =======================  END OF name_path_remain.cpp  =======================
+// =====  END OF name_path_remain.cpp  =====
 

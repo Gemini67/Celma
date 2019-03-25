@@ -25,7 +25,7 @@
 #include <stdexcept>
 #include <string>
 #include "celma/common/detail/property_entry.hpp"
-#include "celma/common/detail/property_map.hpp"
+#include "celma/common/detail/property_cont.hpp"
 #include "celma/common/pre_postfix.hpp"
 
 
@@ -63,7 +63,7 @@ public:
    /// @param[in]  path_sep
    ///    The character to use as separator when building a property path.
    /// @since  x.y.z, 12.03.2019
-   explicit PropertyIterator( PropertyMap& properties, char path_sep);
+   PropertyIterator( PropertyCont& properties, char path_sep);
 
    /// Default copy constructor and destructor should be okay.
    PropertyIterator( const PropertyIterator&) = default;
@@ -148,7 +148,7 @@ private:
       /// 
       /// @param[in]  properties  The property map to start iterating over.
       /// @since  x.y.z, 12.03.2019
-      CurrentEntry( PropertyMap::map_t& properties):
+      CurrentEntry( property_map_t& properties):
          mPathPrefix(),
          mpProperties( &properties),
          mEntryIter( properties.begin())
@@ -168,7 +168,7 @@ private:
       ///
       /// @param[in]  properties  The map to start iterating over.
       /// @since  x.y.z, 15.03.2019
-      void reset( PropertyMap::map_t& properties)
+      void reset( property_map_t& properties)
       {
          mpProperties = &properties;
          mEntryIter = properties.begin();
@@ -229,11 +229,11 @@ private:
       } // PropertyIterator::CurrentEntry::operator ==
 
       /// The path prefix of the current entry.
-      std::string                   mPathPrefix;
+      std::string               mPathPrefix;
       /// The property map to which the iterator belongs.
-      PropertyMap::map_t*           mpProperties = nullptr;
+      property_map_t*           mpProperties = nullptr;
       /// The property map iterator pointing to the current value.
-      PropertyMap::map_t::iterator  mEntryIter;
+      property_map_t::iterator  mEntryIter;
    }; // PropertyIterator::CurrentEntry
 
    /// Container used to store the path of parent maps that led to the current
@@ -269,10 +269,10 @@ private:
 
 
 inline
-   PropertyIterator::PropertyIterator( PropertyMap& properties, char path_sep):
+   PropertyIterator::PropertyIterator( PropertyCont& properties, char path_sep):
       mPathSeparator( path_sep),
       mEntriesStack(),
-      mCurrentEntry( properties.mProperties)
+      mCurrentEntry( properties.map())
 {
    findNextValue();
 } // PropertyIterator::PropertyIterator
@@ -354,8 +354,8 @@ inline void PropertyIterator::findNextValue()
    {
       mEntriesStack.push( mCurrentEntry);
       mCurrentEntry.append( mCurrentEntry.mEntryIter->first, mPathSeparator);
-      auto  sub_map = static_cast< PropertyMap*>( mCurrentEntry.mEntryIter->second);
-      mCurrentEntry.reset( sub_map->mProperties);
+      auto  sub_map = static_cast< PropertyCont*>( mCurrentEntry.mEntryIter->second);
+      mCurrentEntry.reset( sub_map->map());
    } // end while
 
    if (mCurrentEntry.atEnd())

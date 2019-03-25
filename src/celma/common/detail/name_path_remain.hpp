@@ -4,7 +4,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,22 +28,29 @@ namespace celma { namespace common { namespace detail {
 
 /// Helper class used to split a property path into the first name and the
 /// remaining path.
-/// @since  1.2, 19.10.2016
+///
+/// @since  x.y.z, 19.10.2016
 class NamePathRemain
 {
 public:
    /// Returns if the specified string contains a separator, making it a path.
-   /// @param[in]  name       The name to check for the separator.
-   /// @param[in]  separator  The separator character to check for.
+   ///
+   /// @param[in]  name
+   ///    The name to check for the separator.
+   /// @param[in]  separator
+   ///    The separator character to check for.
    /// @return  \c true if \a name contains the \a separator.
-   /// @since  1.2, 19.10.2016
+   /// @since  x.y.z, 19.10.2016
    static bool nameHasSeparator( const std::string& name, char separator);
 
    /// Constructor.<br>
    /// Tries to split the \a name into the first name and the remaining path.
-   /// @param[in]  name       The property path to handle.
-   /// @param[in]  separator  The separator character.
-   /// @since  1.2, 19.10.2016
+   ///
+   /// @param[in]  name
+   ///    The property path to handle.
+   /// @param[in]  separator
+   ///    The separator character.
+   /// @since  x.y.z, 19.10.2016
    NamePathRemain( const std::string& name, char separator);
 
    /// Should not be needed, but when, the default is okay.
@@ -54,11 +61,13 @@ public:
    ~NamePathRemain() = default;
 
    /// Returns the first name as extracted in the constructor.
+   ///
    /// @return  The first name.
    /// @since  1.2, 19.10.2016
    const std::string& firstName() const;
 
    /// Returns the remaining path as extracted in the constructor.
+   ///
    /// @return  The remaining path.
    /// @since  1.2, 19.10.2016
    const std::string& remain() const;
@@ -103,5 +112,5 @@ inline const std::string& NamePathRemain::remain() const
 #endif   // CELMA_COMMON_DETAIL_NAME_PATH_REMAIN_HPP
 
 
-// =======================  END OF name_path_remain.hpp  =======================
+// =====  END OF name_path_remain.hpp  =====
 
