@@ -41,6 +41,9 @@ public:
       link     //!< A link to another property entry.
    };
 
+   /// Default construction is not allowed.
+   PropertyEntry() = delete;
+
    /// Constructor.
    ///
    /// @param[in]  name

@@ -47,6 +47,17 @@ BOOST_AUTO_TEST_CASE( no_properties)
 
    BOOST_REQUIRE( myProperties.begin() == myProperties.end());
 
+   // make sure that access after the end does not crash
+   auto  dummy = myProperties.begin();
+   BOOST_REQUIRE_NO_THROW( ++dummy);
+   BOOST_REQUIRE_NO_THROW( dummy++);
+   BOOST_REQUIRE_NO_THROW( dummy.name());
+   BOOST_REQUIRE_EQUAL( dummy.name(), "");
+   BOOST_REQUIRE_NO_THROW( dummy.pathAndName());
+   BOOST_REQUIRE_EQUAL( dummy.pathAndName(), "");
+
+   BOOST_REQUIRE_THROW( dummy.value< int>(), std::runtime_error);
+
 } // no_properties
 
 
@@ -214,7 +225,7 @@ BOOST_AUTO_TEST_CASE( two_second_level)
    BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
    BOOST_REQUIRE_EQUAL( value, "Hochtiefstrasse");
 
-   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE_NO_THROW( iter++);
    BOOST_REQUIRE( iter != myProperties.end());
 
    BOOST_REQUIRE_EQUAL( iter.path(), "Occupation");
@@ -269,7 +280,7 @@ BOOST_AUTO_TEST_CASE( changing_levels)
    BOOST_REQUIRE_NO_THROW( value = iter.value< int>());
    BOOST_REQUIRE_EQUAL( value, 2);
 
-   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE_NO_THROW( iter++);
    BOOST_REQUIRE( iter != myProperties.end());
 
    BOOST_REQUIRE_EQUAL( iter.path(), "");
@@ -290,7 +301,7 @@ BOOST_AUTO_TEST_CASE( changing_levels)
    BOOST_REQUIRE_NO_THROW( value = iter.value< int>());
    BOOST_REQUIRE_EQUAL( value, 4);
 
-   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE_NO_THROW( iter++);
    BOOST_REQUIRE( iter != myProperties.end());
 
    BOOST_REQUIRE_EQUAL( iter.path(), "");
@@ -387,6 +398,138 @@ BOOST_AUTO_TEST_CASE( increasing_levels)
    BOOST_REQUIRE( iter == myProperties.end());
 
 } // increasing_levels
+
+
+
+/// One top level property with a link to it.
+/// 
+/// @since  x.y.z, 25.03.2019
+BOOST_AUTO_TEST_CASE( top_level_link)
+{
+
+   Properties  myProperties;
+
+
+   myProperties.addProperty( "Name", "Hugentobler");
+   myProperties.addLink( "Name-Link", "Name");
+
+   auto  iter = myProperties.begin();
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Name");
+
+   std::string  value;
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "Hugentobler");
+
+   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Name-Link");
+
+   value.clear();
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "Hugentobler");
+
+   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE( iter == myProperties.end());
+
+} // top_level_link
+
+
+
+/// A sub-map of properties and a link to it.
+/// 
+/// @since  x.y.z, 25.03.2019
+BOOST_AUTO_TEST_CASE( linked_map)
+{
+
+   Properties  myProperties;
+
+
+   myProperties.addProperty( "Name", "Hugentobler");
+   myProperties.addProperty( "Address.Phone.Home", "123 45 67 89");
+   myProperties.addProperty( "Address.Phone.Mobile", "456 12 34 56");
+   myProperties.addProperty( "Address.Phone.Office", "987 65 43 21");
+
+   myProperties.addLink( "Contacts", "Address.Phone");
+
+   auto  iter = myProperties.begin();
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "Address.Phone");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Home");
+
+   std::string  value;
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "123 45 67 89");
+
+   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "Address.Phone");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Mobile");
+
+   value.clear();
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "456 12 34 56");
+
+   BOOST_REQUIRE_NO_THROW( iter++);
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "Address.Phone");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Office");
+
+   value.clear();
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "987 65 43 21");
+
+   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "Contacts");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Home");
+
+   value.clear();
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "123 45 67 89");
+
+   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "Contacts");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Mobile");
+
+   value.clear();
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "456 12 34 56");
+
+   BOOST_REQUIRE_NO_THROW( iter++);
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "Contacts");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Office");
+
+   value.clear();
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "987 65 43 21");
+
+   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE( iter != myProperties.end());
+
+   BOOST_REQUIRE_EQUAL( iter.path(), "");
+   BOOST_REQUIRE_EQUAL( iter.name(), "Name");
+
+   value.clear();
+   BOOST_REQUIRE_NO_THROW( value = iter.value< std::string>());
+   BOOST_REQUIRE_EQUAL( value, "Hugentobler");
+
+   BOOST_REQUIRE_NO_THROW( ++iter);
+   BOOST_REQUIRE( iter == myProperties.end());
+
+} // linked_map
 
 
 

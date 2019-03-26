@@ -213,6 +213,17 @@ private:
          return mEntryIter->second->entryType();
       } // PropertyIterator::CurrentEntry::entryType
 
+      /// Returns the entry that the current entry/link points to.
+      ///
+      /// @return  Pointer to the linked entry.
+      /// @since  x.y.z, 25.03.2019
+      PropertyEntry* linkDest() const
+      {
+         assert( entryType() == PropertyEntry::Types::link);
+         auto  link_entry = static_cast< PropertyLink*>( mEntryIter->second);
+         return link_entry->iterator()->second;
+      } // PropertyIterator::CurrentEntry::linkDest
+
       /// Equality comparison operator.
       ///
       /// @param[in]  other  The other object to compare against.
@@ -268,16 +279,6 @@ private:
 // ===============
 
 
-inline
-   PropertyIterator::PropertyIterator( PropertyCont& properties, char path_sep):
-      mPathSeparator( path_sep),
-      mEntriesStack(),
-      mCurrentEntry( properties.map())
-{
-   findNextValue();
-} // PropertyIterator::PropertyIterator
-
-
 inline PropertyIterator& PropertyIterator::operator ++( std::prefix)
 {
    if (mCurrentEntry.atEnd())
@@ -325,57 +326,26 @@ inline const std::string& PropertyIterator::name() const
 } // PropertyIterator::name
 
 
-inline std::string PropertyIterator::pathAndName() const
-{
-   if (mCurrentEntry.atEnd())
-      return mCurrentEntry.mPathPrefix;
-   std::string  full( mCurrentEntry.mPathPrefix);
-   if (!full.empty())
-      full.append( 1, mPathSeparator);
-   full.append( mCurrentEntry.mEntryIter->first);
-   return full;
-} // PropertyIterator::pathAndName
-
-
 template< typename T> inline const T& PropertyIterator::value() const
 {
    if (mCurrentEntry.mpProperties == nullptr)
       throw std::runtime_error( "no current element");
-   auto  entry = static_cast< PropertyValue< T>*>( mCurrentEntry.mEntryIter->second);
-   return entry->getValue();
-} // PropertyIterator::value
-
-
-inline void PropertyIterator::findNextValue()
-{
-   assert( mCurrentEntry.mpProperties != nullptr);
-   while (!mCurrentEntry.atEnd()
-          && (mCurrentEntry.entryType() == PropertyEntry::Types::map))
+   if (mCurrentEntry.entryType() == PropertyEntry::Types::value)
    {
-      mEntriesStack.push( mCurrentEntry);
-      mCurrentEntry.append( mCurrentEntry.mEntryIter->first, mPathSeparator);
-      auto  sub_map = static_cast< PropertyCont*>( mCurrentEntry.mEntryIter->second);
-      mCurrentEntry.reset( sub_map->map());
-   } // end while
-
-   if (mCurrentEntry.atEnd())
-   {
-      if (!mEntriesStack.empty())
-      {
-         mCurrentEntry = mEntriesStack.top();
-         mEntriesStack.pop();
-         // the iterator in the current entry from the stack still points to the
-         // map that we just returned from
-         // have to increment the iterator now
-         ++mCurrentEntry.mEntryIter;
-         findNextValue();
-         return;
-      } // end if
-
-      mCurrentEntry.reset();
+      auto  entry = static_cast< PropertyValue< T>*>( mCurrentEntry.mEntryIter->second);
+      return entry->getValue();
    } // end if
-
-} // PropertyIterator::findNextValue
+   if (mCurrentEntry.entryType() == PropertyEntry::Types::link)
+   {
+      auto  value_entry = mCurrentEntry.linkDest();
+      if (value_entry->entryType() == PropertyEntry::Types::value)
+      {
+         auto  entry = static_cast< PropertyValue< T>*>( value_entry);
+         return entry->getValue();
+      } // end if
+   } // end if
+   throw std::runtime_error( "invalid entry state");
+} // PropertyIterator::value
 
 
 } // namespace detail
