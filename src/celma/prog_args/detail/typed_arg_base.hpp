@@ -35,6 +35,7 @@
 #include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
 #include "celma/prog_args/detail/check_parent_directory_exists.hpp"
+#include "celma/prog_args/detail/check_pattern.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
 #include "celma/prog_args/detail/check_upper.hpp"
 #include "celma/prog_args/detail/check_values.hpp"
@@ -178,14 +179,13 @@ public:
    ///    0.2, 10.04.2016
    const ArgumentKey& key() const;
 
-   /// For boolean arguments: Unset the flag (set to \c false) instead of
-   /// setting it (the default).<br>
+   /// For bitset destinations and boolean within a check-assign: Unset the bits
+   /// instead of setting them.<br>
    /// Throws an exception here, must be implemented by the partial
-   /// specialisation for type \c bool.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   /// specialisation for type \c std::bitset.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* unsetFlag() noexcept( false);
 
    /// Specifies that the argument is mandatory (required). By default, all

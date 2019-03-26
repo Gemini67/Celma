@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -96,7 +96,7 @@ protected:
    /// Constructor, stores the specified type name.
    /// @param[in]  type_name  The type name to store.
    /// @since  0.13.3, 15.02.2017
-   TypeNameBase( const std::string& type_name):
+   explicit TypeNameBase( const std::string& type_name):
       mTypeName( type_name)
    {
    } // TypeNameBase< B>::TypeNameBase
@@ -149,7 +149,7 @@ public:
    /// Constructor.
    /// @param[in]  dest  The variable to store the reference to.
    /// @since  0.13.3, 13.02.2017
-   Reference( T& dest):
+   explicit Reference( T& dest):
       TypeName< T, B>(),
       mDestination( dest)
    {
@@ -179,7 +179,7 @@ public:
    /// Constructor.
    /// @param[in]  init_val  Initial value to set on the internal variable.
    /// @since  0.13.3, 13.02.2017
-   Value( const T& init_val = T()):
+   explicit Value( const T& init_val = T()):
       TypeName< T, B>(),
       mValue( init_val)
    {
@@ -225,7 +225,7 @@ public:
    const std::string& getVarName() const
    {
       return mVarName;
-   } // 
+   } // VarName< T, B>::getVarName
    
 protected:
    /// The name of the original variable.

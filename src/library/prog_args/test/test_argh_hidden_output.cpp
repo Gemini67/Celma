@@ -82,21 +82,20 @@ namespace {
 void printUsage( int flags, int argc, char* argv[])
 {
 
-   Handler  ah( flags);
-   bool     flagArg = false;
-   int      intArgOpt = 0;
-   int      intArgMan;
-   string   stringArgOpt;
-   string   stringArgMan;
-   bool     hiddenFlagArg = false;
-   int      hiddenIntArgOpt = 0;
-   int      hiddenIntArgMan;
-   string   hiddenStringArgOpt;
-   string   hiddenStringArgMan;
-
-
    try
    {
+      Handler  ah( flags);
+      bool     flagArg = false;
+      int      intArgOpt = 0;
+      int      intArgMan;
+      string   stringArgOpt;
+      string   stringArgMan;
+      bool     hiddenFlagArg = false;
+      int      hiddenIntArgOpt = 0;
+      int      hiddenIntArgMan;
+      string   hiddenStringArgOpt;
+      string   hiddenStringArgMan;
+
       ah.addArgument( "flag", DEST_VAR( flagArg), "flag");
       ah.addArgument( "int-opt", DEST_VAR( intArgOpt), "integer optional");
       ah.addArgument( "int-man", DEST_VAR( intArgMan), "integer mandatory")

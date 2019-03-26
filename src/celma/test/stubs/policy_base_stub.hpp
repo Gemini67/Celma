@@ -40,19 +40,22 @@ public:
    ///
    /// @param[in]  fname_def  Log filename definition.
    /// @since  1.11.0, 27.08.2018
-   PolicyBaseStub( const filename::Definition& fname_def);
+   explicit PolicyBaseStub( const filename::Definition& fname_def);
 
-   /// Copy constructor. Only copies the log filename definition, not any
-   /// eventually open log file.
-   ///
-   /// @param[in]  other  The other object to copy the data from.
+   /// Copying and moving not needed.
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.11.0, 27.08.2018
-   PolicyBaseStub( const PolicyBaseStub& other);
+   PolicyBaseStub( const PolicyBaseStub&) = delete;
+   PolicyBaseStub( PolicyBaseStub&&) = delete;
 
    /// Default, virtual destructor.
    ///
    /// @since  1.11.0, 27.08.2018
    virtual ~PolicyBaseStub() = default;
+
+   /// Copying and moving not needed.
+   PolicyBaseStub& operator =( const PolicyBaseStub&) = delete;
+   PolicyBaseStub& operator =( PolicyBaseStub&&) = delete;
 
    /// Opens the current log file, checks if it still is okay to use the file,
    /// if not closes the file again, rolls the log file generations and opens
@@ -238,13 +241,6 @@ inline size_t PolicyBaseStub::logFileSize() const
 
 inline PolicyBaseStub::PolicyBaseStub( const filename::Definition& fname_def):
    mFilenameDefinition( fname_def),
-   mCurrentLogfileName()
-{
-} // PolicyBaseStub::PolicyBaseStub
-
-
-inline PolicyBaseStub::PolicyBaseStub( const PolicyBaseStub& other):
-   mFilenameDefinition( other.mFilenameDefinition),
    mCurrentLogfileName()
 {
 } // PolicyBaseStub::PolicyBaseStub

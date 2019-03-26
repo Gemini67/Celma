@@ -44,17 +44,22 @@ public:
    /// Constructor. Stores the object to use to create the log file names.
    /// @param[in]  fname_def  Log filename definition.
    /// @since  1.0.0, 13.12.2017
-   PolicyBase( const filename::Definition& fname_def);
+   explicit PolicyBase( const filename::Definition& fname_def);
 
-   /// Copy constructor. Only copies the log filename definition, not any
-   /// eventually open log file.
-   /// @param[in]  other  The other object to copy the data from.
+   /// Copying and moving not allowed/needed.
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.0.0, 13.12.2017
-   PolicyBase( const PolicyBase& other);
+   PolicyBase( const PolicyBase&) = delete;
+   PolicyBase( PolicyBase&&) = delete;
 
    /// Default, virtual destructor.
    /// @since  1.0.0, 13.12.2017
    virtual ~PolicyBase() = default;
+
+   /// Copying and moving not allowed/needed.
+   /// @since  1.19.0, 06.12.2018
+   PolicyBase& operator =( const PolicyBase&) = delete;
+   PolicyBase& operator =( PolicyBase&&) = delete;
 
    /// Opens the current log file, checks if it still is okay to use the file,
    /// if not closes the file again, rolls the log file generations and opens

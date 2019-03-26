@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,9 +14,13 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
+// module to test header file include
+#include "celma/format/text_block.hpp"
+
+
+// C++ Standard Library includes
+#include <sstream>
+#include <string>
 
 
 // Boost includes
@@ -25,35 +29,37 @@
 
 
 // project includes
-#include "celma/format/text_block.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::format::TextBlock;
+using std::ostringstream;
+using std::string;
 
 
 
 /// Tests block formatting with indent 0, line length 80 and 'indent first'
-/// set to false.
+/// set to \c false.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_Formatting_0_80_false)
 {
 
-   format::TextBlock  tb( 0, 80, false);
-   string             input( "This is the string with the input to format");
-   ostringstream      result;
-   string             expResult;
+   TextBlock      tb( 0, 80, false);
+   string         input( "This is the string with the input to format");
+   ostringstream  result;
+   string         expResult( "This is the string with the input to format");
 
 
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), input);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input += ". Append more text with an unbelievable_impossible_ridiculous long word at then end.";
    expResult = "This is the string with the input to format. Append more text with an\n"
                "unbelievable_impossible_ridiculous long word at then end.";
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input = "New test with a string with a lot of short words which make it "
            "easier to split the string to multiple lines. Actually we make "
@@ -67,7 +73,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_0_80_false)
 
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input = "Last but not least:\n"
            "Format a string that includes:\n"
@@ -93,33 +99,34 @@ BOOST_AUTO_TEST_CASE( test_Formatting_0_80_false)
 
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
-} // end test_Formatting_0_80_false
+} // test_Formatting_0_80_false
 
 
 
 /// Tests block formatting with indent 10, line length 80 and 'indent first'
-/// set to true.
+/// set to \c true.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_Formatting_10_80_true)
 {
 
-   format::TextBlock  tb( 10, 80, true);
-   string             input( "This is the string with the input to format");
-   ostringstream      result;
-   string             expResult( "          This is the string with the input to format");
+   TextBlock      tb( 10, 80, true);
+   string         input( "This is the string with the input to format");
+   ostringstream  result;
+   string         expResult( "          This is the string with the input to format");
 
 
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input += ". Append more text with an unbelievable_impossible_ridiculous long word at then end.";
    expResult = "          This is the string with the input to format. Append more text with an\n"
                "          unbelievable_impossible_ridiculous long word at then end.";
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input = "New test with a string with a lot of short words which make it "
            "easier to split the string to multiple lines. Actually we make "
@@ -134,7 +141,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_10_80_true)
 
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input = "Last but not least:\n"
            "Format a string that includes:\n"
@@ -161,33 +168,34 @@ BOOST_AUTO_TEST_CASE( test_Formatting_10_80_true)
 
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
-} // end test_Formatting_10_80_true
+} // test_Formatting_10_80_true
 
 
 
 /// Tests block formatting with indent 10, line length 70 and 'indent first'
 /// set to true.
+///
 /// @since  0.2, 04.04.2016
 BOOST_AUTO_TEST_CASE( test_Formatting_5_75_true)
 {
 
-   format::TextBlock  tb( 5, 75, true);
-   string             input( "This is the string with the input to format");
-   ostringstream      result;
-   string             expResult( "     This is the string with the input to format");
+   TextBlock      tb( 5, 75, true);
+   string         input( "This is the string with the input to format");
+   ostringstream  result;
+   string         expResult( "     This is the string with the input to format");
 
 
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input += ". Append more text with an unbelievable_impossible_ridiculous long word at then end.";
    expResult = "     This is the string with the input to format. Append more text with an\n"
                "     unbelievable_impossible_ridiculous long word at then end.";
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input = "New test with a string with a lot of short words which make it "
            "easier to split the string to multiple lines. Actually we make "
@@ -202,7 +210,7 @@ BOOST_AUTO_TEST_CASE( test_Formatting_5_75_true)
 
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
    input = "Last but not least:\n"
            "Format a string that includes:\n"
@@ -229,11 +237,11 @@ BOOST_AUTO_TEST_CASE( test_Formatting_5_75_true)
 
    result.str( "");
    tb.format( result, input);
-   BOOST_REQUIRE_EQUAL( result.str(), expResult);
+   BOOST_REQUIRE( celma::test::multilineStringCompare( result.str(), expResult));
 
-} // end test_Formatting_5_75_true
+} // test_Formatting_5_75_true
 
 
 
-// =========================  END OF test_text_block.cpp  =========================
+// =====  END OF test_text_block.cpp  =====
 

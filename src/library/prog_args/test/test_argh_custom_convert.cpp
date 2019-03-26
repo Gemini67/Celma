@@ -81,7 +81,7 @@ static std::istream& operator >>( std::istream& source, MyEnum& me)
 
 
    source >> v;
-   me = string2enum( v.c_str());
+   me = string2enum( v);
 
    return source;
 } // operator >>

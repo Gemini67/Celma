@@ -39,7 +39,7 @@ public:
    /// @param[in]  max_values  The maximum number of calls/values allowed for
    ///                         the corresponding argument.
    /// @since  0.2, 10.04.2016
-   CardinalityMax( int max_values);
+   explicit CardinalityMax( int max_values);
 
    /// Empty, virtual destructor.
    ///

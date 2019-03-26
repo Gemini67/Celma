@@ -36,16 +36,21 @@ public:
    /// Constructor.
    /// @param[in]  fname_def  The object used to create the file name.
    /// @since  1.0.0, 13.12.2017
-   Simple( const filename::Definition& fname_def);
+   explicit Simple( const filename::Definition& fname_def);
 
-   /// Copy constructor. Copies onle the definition.
-   /// @param[in]  fname_def  The object used to create the file name.
+   /// Copying and moving not needed.
+   /// @since  1.19.0, 06.12.2018  (not needed)
    /// @since  1.0.0, 13.12.2017
-   Simple( const Simple& other);
+   Simple( const Simple&) = delete;
+   Simple( Simple&&) = delete;
 
    /// Default destructor.
    /// @since  1.0.0, 13.12.2017
    virtual ~Simple() = default;
+
+   /// Copying and moving not needed.
+   Simple& operator =( const Simple&) = delete;
+   Simple& operator =( Simple&&) = delete;
 
 private:
    /// Check if the currently opened file is valid for writing into.

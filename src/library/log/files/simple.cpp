@@ -33,16 +33,6 @@ Simple::Simple( const filename::Definition& fname_def):
 
 
 
-/// Copy constructor. Copies onle the definition.
-/// @param[in]  fname_def  The object used to create the file name.
-/// @since  1.0.0, 13.12.2017
-Simple::Simple( const Simple& other):
-   PolicyBase( other.mFilenameDefinition)
-{
-} // Simple::Simple
-
-
-
 /// Check if the currently opened file is valid for writing into.
 /// @return  Always \c true.
 /// @since  1.0.0, 13.12.2017
