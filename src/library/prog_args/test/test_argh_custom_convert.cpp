@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,6 +32,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args.hpp"
 
 
@@ -105,6 +106,10 @@ BOOST_AUTO_TEST_CASE( basic_conversion)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
 
+   // to improve coverage: try to convert the enum to a string
+   const std::string  str( celma::format::toString( enumedValue));
+   BOOST_REQUIRE_EQUAL( str, "2");
+
 } // basic_conversion
 
 
@@ -152,6 +157,11 @@ BOOST_AUTO_TEST_CASE( vector_conversion)
    BOOST_REQUIRE_EQUAL( enumedValue.size(), 2);
    BOOST_REQUIRE_EQUAL( enumedValue[ 0], meVal1);
    BOOST_REQUIRE_EQUAL( enumedValue[ 1], meVal3);
+
+   // to improve coverage: try to convert the enum to a string
+   const std::string  str( celma::format::toString( enumedValue.begin(),
+      enumedValue.end()));
+   BOOST_REQUIRE_EQUAL( str, "1, 3");
 
 } // vector_conversion
 
