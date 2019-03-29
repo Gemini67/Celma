@@ -119,7 +119,7 @@ set( test_argh_print_def_result
      "   -o,--optional          Optional integer argument, \\*with\\* default\n"
      "                          Default value: 4711\n"
      "   -p,--optional-string   Optional string argument, \\*with\\* default\n"
-     "                          Default value: hello world\n"
+     "                          Default value: \"hello world\"\n"
      "   -l,--list              Optional vector argument, don't print default\n"
      "   -c,--checked           Optional integer argument, using CheckAssign<>, \\*with\\*\n"
      "                          default\n"
@@ -279,7 +279,7 @@ set( test_long_arg_desc_long_desc_output_result
    "                  This description spawns multiple lines by itself, and contains\n"
    "                  lines that are so long that they must be split unto multiple\n"
    "                  lines in order to get a decent output.\n"
-   "                  Default value:\n"
+   "                  Default value: \"\"\n"
    "\n$"
 )
 
@@ -298,7 +298,7 @@ set( test_long_arg_desc_long_name_output_result
    "      Prints the usage for the given argument.\n"
    "   -i,--include-from-this-absolute-directory-path\n"
    "      Long parameter\n"
-   "      Default value:\n"
+   "      Default value: \"\"\n"
    "\n$"
 )
 
@@ -320,7 +320,7 @@ set( test_long_arg_desc_long_name_desc_output_result
    "      This description spawns multiple lines by itself, and contains lines that\n"
    "      are so long that they must be split unto multiple lines in order to get a\n"
    "      decent output.\n"
-   "      Default value:\n"
+   "      Default value: \"\"\n"
    "\n$"
 )
 
@@ -343,7 +343,7 @@ set( test_long_arg_desc_long_name_4_output_result
    "      This description spawns multiple lines by itself, and\n"
    "      contains lines that are so long that they must be split\n"
    "      unto multiple lines in order to get a decent output.\n"
-   "      Default value:\n"
+   "      Default value: \"\"\n"
    "\n$"
 )
 
@@ -366,7 +366,7 @@ set( test_argh_hidden_output_result
    "   --int-opt        integer optional\n"
    "                    Default value: 0\n"
    "   --string-opt     string optional\n"
-   "                    Default value:\n"
+   "                    Default value: \"\"\n"
    "\n"
    "\n"
    "--------------------------------------------------------------------------------\n"
@@ -386,14 +386,14 @@ set( test_argh_hidden_output_result
    "   --int-opt             integer optional\n"
    "                         Default value: 0\n"
    "   --string-opt          string optional\n"
-   "                         Default value:\n"
+   "                         Default value: \"\"\n"
    "   --hidden-flag         hidden flag\n"
    "                         \\[hidden\\]\n"
    "   --hidden-int-opt      hidden integer optional\n"
    "                         Default value: 0\n"
    "                         \\[hidden\\]\n"
    "   --hidden-string-opt   hidden string optional\n"
-   "                         Default value:\n"
+   "                         Default value: \"\"\n"
    "                         \\[hidden\\]\n"
    "\n"
    "\n"
@@ -415,14 +415,14 @@ set( test_argh_hidden_output_result
    "   --int-opt             integer optional\n"
    "                         Default value: 0\n"
    "   --string-opt          string optional\n"
-   "                         Default value:\n"
+   "                         Default value: \"\"\n"
    "   --hidden-flag         hidden flag\n"
    "                         \\[hidden\\]\n"
    "   --hidden-int-opt      hidden integer optional\n"
    "                         Default value: 0\n"
    "                         \\[hidden\\]\n"
    "   --hidden-string-opt   hidden string optional\n"
-   "                         Default value:\n"
+   "                         Default value: \"\"\n"
    "                         \\[hidden\\]\n"
    "\n$"
 )

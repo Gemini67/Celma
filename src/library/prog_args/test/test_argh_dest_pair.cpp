@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
          "   -s   string and int\n"
-         "        Default value:\n"
+         "        Default value: \"\"\n"
          "\n"));
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
