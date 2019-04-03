@@ -43,13 +43,13 @@ namespace {
 
 /// Test environment initialisation: Need the start argument of the test program.
 ///
-/// @since  x.y.z, 02.04.2019
+/// @since  1.22.0, 02.04.2019
 class TestEnvironment: public celma::test::GlobalFixtureAccess< TestEnvironment>
 {
 public:
    /// Constructor.
    ///
-   /// @since  x.y.z, 02.04.2019
+   /// @since  1.22.0, 02.04.2019
    TestEnvironment():
       celma::test::GlobalFixtureAccess< TestEnvironment>(),
       mProgArgs()
@@ -59,7 +59,7 @@ public:
    /// Returns the number of arguments.
    ///
    /// @return  The number of arguments passed to the test program.
-   /// @since  x.y.z, 03.04.2019
+   /// @since  1.22.0, 03.04.2019
    int argC() const
    {
       return mProgArgs.argC();
@@ -68,7 +68,7 @@ public:
    /// Returns the pointer to the list of arguments.
    ///
    /// @return  Pointer to the list of argument strings.
-   /// @since  x.y.z, 03.04.2019
+   /// @since  1.22.0, 03.04.2019
    char** argV() const
    {
       return mProgArgs.argV();
@@ -91,7 +91,7 @@ BOOST_GLOBAL_FIXTURE( TestEnvironment);
 /// Nothing bad should happen if the environment variable does not exist at all,
 /// or exists but has no value, i.e. is an empty string.
 ///
-/// @since  x.y.z, 01.04.2019
+/// @since  1.22.0, 01.04.2019
 BOOST_AUTO_TEST_CASE( no_or_empty_env)
 {
 
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE( no_or_empty_env)
 
 /// Now actually set argument(s) through the environment variable.
 ///
-/// @since  x.y.z, 01.04.2019
+/// @since  1.22.0, 01.04.2019
 BOOST_AUTO_TEST_CASE( set_through_env)
 {
 
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE( set_through_env)
 
 /// Set argument in environment variable that an argument file should be read.
 ///
-/// @since  x.y.z, 02.04.2019
+/// @since  1.22.0, 02.04.2019
 BOOST_AUTO_TEST_CASE( file_through_env)
 {
 
@@ -258,7 +258,7 @@ BOOST_AUTO_TEST_CASE( file_through_env)
 /// Set argument in environment variable that an argument file should be read,
 /// and afterwards overwrite the value.
 ///
-/// @since  x.y.z, 02.04.2019
+/// @since  1.22.0, 02.04.2019
 BOOST_AUTO_TEST_CASE( file_through_env_overwrite)
 {
 

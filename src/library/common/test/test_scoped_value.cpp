@@ -26,7 +26,7 @@
 
 /// Value should be set immediately and the old value restored afterwards.
 ///
-/// @since  x.y.z, 02.04.2019
+/// @since  1.22.0, 02.04.2019
 BOOST_AUTO_TEST_CASE( scoped_value)
 {
 
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE( scoped_value)
 
 /// A specific bit should be set and restored to its previous value afterwards.
 ///
-/// @since  x.y.z, 02.04.2019
+/// @since  1.22.0, 02.04.2019
 BOOST_AUTO_TEST_CASE( scoped_flag)
 {
 

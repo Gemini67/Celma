@@ -62,7 +62,7 @@ private:
 /// value of the flag is restored.
 ///
 /// @tparam  S  The type of the variable to assign a scoped value to.
-/// @since  x.y.z, 01.04.2019
+/// @since  1.22.0, 01.04.2019
 template< typename S> class ScopedFlag
 {
 public:
@@ -72,7 +72,7 @@ public:
    ///    The variable to set the flag in.
    /// @param[in]  flag
    ///    The bit value/flag to set.
-   /// @since  x.y.z, 01.04.2019
+   /// @since  1.22.0, 01.04.2019
    ScopedFlag( S& dest_var, int value):
       mDestVar( dest_var),
       mFlagBit( value),
@@ -83,7 +83,7 @@ public:
 
    /// Destructor, restores the previous value of the flag.
    ///
-   /// @since  x.y.z, 01.04.2019
+   /// @since  1.22.0, 01.04.2019
    ~ScopedFlag()
    {
       if ((mOldValue != 0) && ((mDestVar & mFlagBit) == 0))

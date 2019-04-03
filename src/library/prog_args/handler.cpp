@@ -188,7 +188,7 @@ Handler::~Handler()
 /// The default is the name of the program file, all in uppercase letters.
 ///
 /// @param[in]  env_var_name  Optional, the name of the environment variable.
-/// @since  x.y.z, 01.04.2019
+/// @since  1.22.0, 01.04.2019
 void Handler::checkEnvVarArgs( std::string env_var_name)
 {
 
@@ -983,7 +983,7 @@ void Handler::readEvalFileArguments( const char* arg0)
 /// not empty. If so the evaluate the program arguments from the variable.
 ///
 /// @param[in]  arg0  The (path and) name of the program file.
-/// @since  x.y.z, 01.04.2019
+/// @since  1.22.0, 01.04.2019
 void Handler::checkReadEnvVarArgs( const char* arg0)
 {
 

@@ -401,7 +401,7 @@ public:
    /// The default is the name of the program file, all in uppercase letters.
    ///
    /// @param[in]  env_var_name  Optional, the name of the environment variable.
-   /// @since  x.y.z, 01.04.2019
+   /// @since  1.22.0, 01.04.2019
    void checkEnvVarArgs( std::string env_var_name = "");
 
    /// Adds an argument with short and/or long arguments.<br>
@@ -805,7 +805,7 @@ private:
    /// not empty. If so the evaluate the program arguments from the variable.
    ///
    /// @param[in]  arg0  The (path and) name of the program file.
-   /// @since  x.y.z, 01.04.2019
+   /// @since  1.22.0, 01.04.2019
    void checkReadEnvVarArgs( const char* arg0);
 
    /// Function to read arguments from a file.

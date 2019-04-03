@@ -50,7 +50,7 @@ using std::vector;
 /// Check some cases where the functions of the argument handler are used
 /// wrongly.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 BOOST_AUTO_TEST_CASE( wrong_usage)
 {
 

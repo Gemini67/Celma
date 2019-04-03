@@ -29,7 +29,7 @@ namespace {
 
 /// Throws an integer value.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 void throw_integer_error()
 {
 
@@ -39,7 +39,7 @@ void throw_integer_error()
 
 /// Throws a standard exception.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 void throw_exception()
 {
 
@@ -49,7 +49,7 @@ void throw_exception()
 
 /// Throws an invalid argument exception.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 void throw_invalid_argument()
 {
 
@@ -59,7 +59,7 @@ void throw_invalid_argument()
 
 /// Throws a logic error exception.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 void throw_logic_error()
 {
 
@@ -69,7 +69,7 @@ void throw_logic_error()
 
 /// Throws an out-of-range exception.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 void throw_out_of_range()
 {
 
@@ -79,7 +79,7 @@ void throw_out_of_range()
 
 /// Throws an overflow error exception.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 void throw_overflow_error()
 {
 
@@ -89,7 +89,7 @@ void throw_overflow_error()
 
 /// Throws a runtime error exception.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 void throw_runtime_error()
 {
 
@@ -99,7 +99,7 @@ void throw_runtime_error()
 
 /// Throws an underflow error exception.
 ///
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 void throw_underflow_error()
 {
 
@@ -120,7 +120,7 @@ void throw_underflow_error()
 /// @param[in]  argv[]
 ///    List of argument strings.
 /// @return  \c EXIT_FAILURE on error, \c EXIT_SUCCESS otherwise.
-/// @since  x.y.z, 03.04.2019
+/// @since  1.22.0, 03.04.2019
 int main( int argc, char* argv[])
 {
 
