@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -513,7 +513,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
       "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
-      "'-s' value type 'std::string', destination 'string_arg', value = text.\n"
+      "'-s' value type 'std::string', destination 'string_arg', value = \"text\".\n"
       "   value 'required' (2), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
       "'-i,--index' value type 'int', destination 'opt_int_arg', value not set.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
@@ -537,7 +537,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
       "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
-      "'-s' value type 'std::string', destination 'string_arg', value = text.\n"
+      "'-s' value type 'std::string', destination 'string_arg', value = \"text\".\n"
       "   value 'required' (2), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
       "'-i,--index' value type 'int', destination 'opt_int_arg', value = 4711.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
