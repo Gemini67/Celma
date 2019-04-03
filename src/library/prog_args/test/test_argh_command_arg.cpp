@@ -62,7 +62,7 @@ protected:
    Handler      mArgH;
    bool         mVerbose = false;
    int          mCount = 0;
-   std::string  mCommand;  
+   std::string  mCommand;
 
 }; // TestFixtureBase
 
@@ -74,13 +74,13 @@ public:
    TestFixturePositional():
       TestFixtureBase()
    {
-   
+
       BOOST_REQUIRE_NO_THROW( mArgH.addArgument( "-", DEST_VAR( mCommand),
                                                  "command")
                                                ->setValueMode( Handler::ValueMode::command));
 
    } // TestFixturePositional::TestFixturePositional
-   
+
 }; // TestFixturePositional
 
 
@@ -91,12 +91,12 @@ public:
    TestFixtureCharArg():
       TestFixtureBase()
    {
-   
+
       BOOST_REQUIRE_NO_THROW( mArgH.addArgument( "x", DEST_VAR( mCommand), "command")
                                                ->setValueMode( Handler::ValueMode::command));
 
    } // TestFixtureCharArg::TestFixtureCharArg
-   
+
 }; // TestFixtureCharArg
 
 
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
-   
+
    {
       Handler  ah( 0);
       bool     flag;
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
-   
+
    {
       Handler  ah( 0);
       int      value;
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
-   
+
    {
       Handler  ah( 0);
       int      value;
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
-   
+
 } // test_wrong_dest_type
 
 

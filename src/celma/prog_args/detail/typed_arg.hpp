@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -184,7 +184,7 @@ template< typename T>
 
 template< typename T> void TypedArg< T>::defaultValue( std::string& dest) const
 {
-   dest.append( boost::lexical_cast< std::string>( mDestVar));
+   dest.append( format::toString( mDestVar));
 } // TypedArg< T>::defaultValue
 
 
@@ -193,7 +193,7 @@ template< typename T> void TypedArg< T>::dump( std::ostream& os) const
    os << "value type '" << type< T>::name() << "', destination '"
       << mVarName << "', ";
    if (mHasValueSet)
-      os << "value = " << mDestVar << "." << std::endl;
+      os << "value = " << format::toString( mDestVar) << "." << std::endl;
    else 
       os << "value not set." << std::endl;
    os << "   " << static_cast< const TypedArgBase&>( *this);
@@ -1173,19 +1173,7 @@ template< typename... T>
 template< typename... T>
    void TypedArg< std::tuple< T...>>::defaultValue( std::string& dest) const
 {
-   dest.append( "<");
-   for (size_t i = 0; i < mTupleLength; ++i)
-   {
-      if (i > 0)
-         dest.append(",");
-
-      common::tuple_at_index( i, mDestVar, [&dest]( auto const& value)
-         {
-            dest.append( boost::lexical_cast< std::string>( value));
-         });
-   } // end for
-
-   dest.append( ">");
+   dest.append( "<").append( format::toString( mDestVar)).append( ">");
 } // TypedArg< std::tuple< T...>>::defaultValue
 
 
@@ -1212,18 +1200,7 @@ template< typename... T>
       << "', ";
    if (hasValue())
    {
-      os << "value = <";
-      for (size_t i = 0; i < mTupleLength; ++i)
-      {
-         if (i > 0)
-            os << ",";
-
-         common::tuple_at_index( i, mDestVar, [&os]( auto const& value)
-            {
-               os << value;
-            });
-      } // end for
-      os << ">." << std::endl;
+      os << "value = <" << format::toString( mDestVar) << ">." << std::endl;
    } else
    { 
       os << "value not set." << std::endl;

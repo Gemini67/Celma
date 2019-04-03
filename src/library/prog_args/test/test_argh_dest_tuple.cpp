@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -82,6 +82,19 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
                            std::bad_cast);
    } // end scope
 
+   // error when mandatory tuple argument is not used
+   {
+      Handler                ah( 0);
+      std::tuple< int, int>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+                                              "Key and value")->setIsMandatory());
+
+      const ArgString2Array  as2a( "", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           std::runtime_error);
+   } // end scope
+
 } // test_tuple_errors
 
 
@@ -111,7 +124,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
          "Optional arguments:\n"
          "   -h          Prints the program usage.\n"
          "   -p,--pair   Key and value\n"
-         "               Default value: <42,13>\n"
+         "               Default value: <42, 13>\n"
          "\n"));
    } // end scope
 
@@ -127,6 +140,18 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
+   } // end scope
+
+   // no error when tuple argument is not used
+   {
+      Handler                ah( 0);
+      std::tuple< int, int>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+                                              "Key and value"));
+
+      const ArgString2Array  as2a( "", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // test with a tuple with two integer values and another list separator
@@ -173,6 +198,36 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
    } // end scope
 
+   // test "list arguments and variables" with a tuple
+   {
+      std::ostringstream     oss;
+      Handler                ah( oss, std::cerr, Handler::hfListArgVar);
+      std::tuple< int, int>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+                                              "Key and value")
+                                            ->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "--list-arg-vars -p 13,42 --list-arg-vars",
+         nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !oss.str().empty());
+      // std::cerr << oss.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-p,--pair' value type 'std::tuple<int,int>', destination 'myTuple', value not set.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-p,--pair' value type 'std::tuple<int,int>', destination 'myTuple', value = <13, 42>.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"));
+   } // end scope
+
 } // test_tuple_two
 
 
@@ -195,6 +250,28 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
       BOOST_REQUIRE_EQUAL( std::get< 2>( myTuple), 27);
+   } // end scope
+
+   // print the default values of a tuple with 3 integers in the usage
+   {
+      std::ostringstream          oss_std;
+      Handler                     ah( oss_std, std::cerr, Handler::AllHelp
+         | Handler::hfUsageCont);
+      std::tuple< int, int, int>  myTuple = { 2, 3, 5 };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
+         "Key and value")->setPrintDefault( true));
+
+      const ArgString2Array  as2a( "-h", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help     Prints the program usage.\n"
+         "   --help-arg    Prints the usage for the given argument.\n"
+         "   -t,--triple   Key and value\n"
+         "                 Default value: <2, 3, 5>\n"
+         "\n"));
    } // end scope
 
    // test with a tuple with an integer, a string and another integer value
@@ -246,7 +323,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
-         "'-p,--pair' value type 'std::tuple<int,std::string,int>', destination 'myTuple', value = <4711,foobar,42>.\n"
+         "'-p,--pair' value type 'std::tuple<int,std::string,int>', destination 'myTuple', value = <4711, \"foobar\", 42>.\n"
          "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "\n"));
    } // end scope
@@ -266,6 +343,143 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
       BOOST_REQUIRE_EQUAL( std::get< 2>( myTuple), 27);
+   } // end scope
+
+   // test "list arguments and variables" with a tuple with 3 integers
+   {
+      std::ostringstream          oss;
+      Handler                     ah( oss, std::cerr, Handler::hfListArgVar);
+      std::tuple< int, int, int>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
+                                              "Key and value")
+                                            ->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "--list-arg-vars -t 13,42,4711 --list-arg-vars",
+         nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !oss.str().empty());
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-t,--triple' value type 'std::tuple<int,int,int>', destination 'myTuple', value not set.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-t,--triple' value type 'std::tuple<int,int,int>', destination 'myTuple', value = <13, 42, 4711>.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"));
+   } // end scope
+
+   // print usage with a tuple with 2 integers and a string in between
+   {
+      std::ostringstream                  oss;
+      Handler                             ah( oss, std::cerr,
+         Handler::AllHelp | Handler::hfUsageCont);
+      std::tuple< int, std::string, int>  myTuple = { 42, "hello world", 4711 };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
+         "Key and value")->setTakesMultiValue()->setPrintDefault( true));
+
+      const ArgString2Array  as2a( "-h", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !oss.str().empty());
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help     Prints the program usage.\n"
+         "   --help-arg    Prints the usage for the given argument.\n"
+         "   -t,--triple   Key and value\n"
+         "                 Default value: <42, \"hello world\", 4711>\n"
+         "\n"));
+   } // end scope
+
+   // test "list arguments and variables" with a tuple with 2 integers and a
+   // string in between
+   {
+      std::ostringstream                  oss;
+      Handler                             ah( oss, std::cerr,
+         Handler::hfListArgVar);
+      std::tuple< int, std::string, int>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
+         "Key and value")->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "--list-arg-vars -t 13,'hello world',4711 --list-arg-vars",
+         nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !oss.str().empty());
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-t,--triple' value type 'std::tuple<int,std::string,int>', destination 'myTuple', value not set.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-t,--triple' value type 'std::tuple<int,std::string,int>', destination 'myTuple', value = <13, \"hello world\", 4711>.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"));
+   } // end scope
+
+   // print usage with a tuple with an integer, a string and a double
+   {
+      std::ostringstream                     oss;
+      Handler                                ah( oss, std::cerr,
+         Handler::AllHelp | Handler::hfUsageCont);
+      std::tuple< int, std::string, double>  myTuple = { 42, "hello world", 3.1415 };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
+         "Key and value")->setTakesMultiValue()->setPrintDefault( true));
+
+      const ArgString2Array  as2a( "-h", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !oss.str().empty());
+      // std::cerr << oss.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help     Prints the program usage.\n"
+         "   --help-arg    Prints the usage for the given argument.\n"
+         "   -t,--triple   Key and value\n"
+         "                 Default value: <42, \"hello world\", 3.141500>\n"
+         "\n"));
+   } // end scope
+
+   // test "list arguments and variables" with a tuple with an integer, a string
+   // and a double
+   {
+      std::ostringstream                     oss;
+      Handler                                ah( oss, std::cerr,
+         Handler::hfListArgVar);
+      std::tuple< int, std::string, double>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
+         "Key and value")->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "--list-arg-vars -t 13,'hello world',3.1415 --list-arg-vars",
+         nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !oss.str().empty());
+      // std::cerr << oss.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-t,--triple' value type 'std::tuple<int,std::string,double>', destination 'myTuple', value not set.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-t,--triple' value type 'std::tuple<int,std::string,double>', destination 'myTuple', value = <13, \"hello world\", 3.141500>.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"));
    } // end scope
 
 } // test_tuple_three

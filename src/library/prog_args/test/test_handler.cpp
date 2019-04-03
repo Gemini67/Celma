@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -44,6 +44,22 @@ using std::logic_error;
 using std::runtime_error;
 using std::string;
 using std::vector;
+
+
+
+/// Check some cases where the functions of the argument handler are used
+/// wrongly.
+///
+/// @since  1.22.0, 03.04.2019
+BOOST_AUTO_TEST_CASE( wrong_usage)
+{
+
+   Handler  ah( 0);
+
+
+   BOOST_REQUIRE_THROW( ah.getValueHandlerObj(), runtime_error);
+
+} // wrong_usage
 
 
 
