@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -269,6 +269,52 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
          "                  [deprecated]\n"
          "   -n,--name      Argument replaced by '-i', don't use anymore\n"
          "                  [replaced by '-i']\n"
+         "\n"));
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+   // set a custom argument to activate "print hidden", but don't use it
+   {
+      TestData  td( 0, "-h");
+
+      td.mHandler.addArgumentPrintHidden( "-H");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
+         td.mAs2a.mpArgV));
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+         "Usage:\nMandatory arguments:\n"
+         "   -s           String argument\n"
+         "\n"
+         "Optional arguments:\n"
+         "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
+         "   -i,--index   Integer argument\n"
+         "                Default value: 42\n"
+         "   -H           Also print hidden arguments in the usage.\n"
+         "\n"));
+      BOOST_REQUIRE( td.mErrOut.str().empty());
+   } // end scope
+
+   // use a custom argument to activate "print hidden"
+   {
+      TestData  td( 0, "-H -h");
+
+      td.mHandler.addArgumentPrintHidden( "-H", "Print hidden arguments too.");
+
+      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
+         td.mAs2a.mpArgV));
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+         "Usage:\nMandatory arguments:\n"
+         "   -s           String argument\n"
+         "\n"
+         "Optional arguments:\n"
+         "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
+         "   -i,--index   Integer argument\n"
+         "                Default value: 42\n"
+         "   --hidden     Hidden boolean argument\n"
+         "                [hidden]\n"
+         "   -H           Print hidden arguments too.\n"
          "\n"));
       BOOST_REQUIRE( td.mErrOut.str().empty());
    } // end scope
@@ -559,6 +605,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
 BOOST_AUTO_TEST_CASE( test_usage_short)
 {
 
+   // activate argument for short usage only, but don't use it
    {
       ostringstream   std_out;
       ostringstream   err_out;
@@ -591,6 +638,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
 
+   // use the flag and standard argument for short usage
    {
       ostringstream   std_out;
       ostringstream   err_out;
@@ -619,6 +667,73 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
 
+   // set a custom argument for short usage only, but don't use it
+   {
+      ostringstream   std_out;
+      ostringstream   err_out;
+      Handler         ah( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont);
+      int             intArg1 = 0;
+      int             intArg2 = 0;
+      int             intArg3 = 0;
+
+      ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
+      ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
+      ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
+
+      ah.addArgumentUsageShort( "S");
+
+      const ArgString2Array  as2a( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help     Prints the program usage.\n"
+         "   --help-arg    Prints the usage for the given argument.\n"
+         "   -f            The first argument.\n"
+         "                 Default value: 0\n"
+         "   -s,--second   The second argument.\n"
+         "                 Default value: 0\n"
+         "   --third       The third argument.\n"
+         "                 Default value: 0\n"
+         "   -S            Only print arguments with their short key in the usage.\n"
+         "\n"));
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+   // set and use a custom argument for short usage
+   {
+      ostringstream   std_out;
+      ostringstream   err_out;
+      Handler         ah( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont);
+      int             intArg1 = 0;
+      int             intArg2 = 0;
+      int             intArg3 = 0;
+
+      ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
+      ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
+      ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
+
+      ah.addArgumentUsageShort( "S", "Short usage only.");
+
+      const ArgString2Array  as2a( "-S -h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h   Prints the program usage.\n"
+         "   -f   The first argument.\n"
+         "        Default value: 0\n"
+         "   -s   The second argument.\n"
+         "        Default value: 0\n"
+         "   -S   Short usage only.\n"
+         "\n"));
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
 } // test_usage_short
 
 
@@ -628,6 +743,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 BOOST_AUTO_TEST_CASE( test_usage_long)
 {
 
+   // activate argument for long usage only, but don't use it
    {
       ostringstream   std_out;
       ostringstream   err_out;
@@ -660,6 +776,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
 
+   // use the flag and standard argument for long usage
    {
       ostringstream   std_out;
       ostringstream   err_out;
@@ -686,6 +803,73 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
          "                 Default value: 0\n"
          "   --third       The third argument.\n"
          "                 Default value: 0\n"
+         "\n"));
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+   // set a custom argument for long usage only, but don't use it
+   {
+      ostringstream   std_out;
+      ostringstream   err_out;
+      Handler         ah( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont);
+      int             intArg1 = 0;
+      int             intArg2 = 0;
+      int             intArg3 = 0;
+
+      ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
+      ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
+      ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
+
+      ah.addArgumentUsageLong( "L");
+
+      const ArgString2Array  as2a( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help     Prints the program usage.\n"
+         "   --help-arg    Prints the usage for the given argument.\n"
+         "   -f            The first argument.\n"
+         "                 Default value: 0\n"
+         "   -s,--second   The second argument.\n"
+         "                 Default value: 0\n"
+         "   --third       The third argument.\n"
+         "                 Default value: 0\n"
+         "   -L            Only print arguments with their long key in the usage.\n"
+         "\n"));
+      BOOST_REQUIRE( err_out.str().empty());
+   } // end scope
+
+   // set and use a custom argument for short usage
+   {
+      ostringstream   std_out;
+      ostringstream   err_out;
+      Handler         ah( std_out, err_out,
+         Handler::AllHelp | Handler::hfUsageCont);
+      int             intArg1 = 0;
+      int             intArg2 = 0;
+      int             intArg3 = 0;
+
+      ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
+      ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
+      ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
+
+      ah.addArgumentUsageLong( "L", "Long arguments only.");
+
+      const ArgString2Array  as2a( "-L -h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   --help       Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
+         "   --second     The second argument.\n"
+         "                Default value: 0\n"
+         "   --third      The third argument.\n"
+         "                Default value: 0\n"
          "\n"));
       BOOST_REQUIRE( err_out.str().empty());
    } // end scope
