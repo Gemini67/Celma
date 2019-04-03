@@ -59,7 +59,7 @@ private:
  
  
 /// Test the relational operators with two objects.
-/// @since  x.y.z, 27.03.2019
+/// @since  1.22.0, 27.03.2019
 BOOST_AUTO_TEST_CASE( comparisons)
 {
  

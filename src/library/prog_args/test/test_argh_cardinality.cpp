@@ -43,7 +43,7 @@ using celma::prog_args::Handler;
 /// Check that arguments with a cardinality that are not used at all do not lead
 /// to an error.
 ///
-/// @since  x.y.z, 29.03.2019
+/// @since  1.22.0, 29.03.2019
 BOOST_AUTO_TEST_CASE( unused_args)
 {
 

@@ -31,7 +31,7 @@ namespace celma { namespace common {
 /// celma::common::RelOpsFromLess<> instead.
 ///
 /// @tparpam  T  The type of the class to provide relational operator for.
-/// @since  x.y.z, 27.03.2019
+/// @since  1.22.0, 27.03.2019
 template< class T> class RelOpsFromCompare
 {
 public:
@@ -39,7 +39,7 @@ public:
    ///
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this is less-than \a other.
-   /// @since  x.y.z, 27.03.2019
+   /// @since  1.22.0, 27.03.2019
    bool operator <( const T& other) const
    {
       const T&  self = static_cast< const T&>( *this);
@@ -50,7 +50,7 @@ public:
    ///
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this is less-than or equal to \a other.
-   /// @since  x.y.z, 27.03.2019
+   /// @since  1.22.0, 27.03.2019
    bool operator <=( const T& other) const
    {
       const T&  self = static_cast< const T&>( *this);
@@ -61,7 +61,7 @@ public:
    ///
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this is equal to \a other.
-   /// @since  x.y.z, 27.03.2019
+   /// @since  1.22.0, 27.03.2019
    bool operator ==( const T& other) const
    {
       const T&  self = static_cast< const T&>( *this);
@@ -72,7 +72,7 @@ public:
    ///
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this is greater-than or equal to \a other.
-   /// @since  x.y.z, 27.03.2019
+   /// @since  1.22.0, 27.03.2019
    bool operator >=( const T& other) const
    {
       const T&  self = static_cast< const T&>( *this);
@@ -83,7 +83,7 @@ public:
    ///
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this is greater than \a other.
-   /// @since  x.y.z, 27.03.2019
+   /// @since  1.22.0, 27.03.2019
    bool operator >( const T& other) const
    {
       const T&  self = static_cast< const T&>( *this);
@@ -94,7 +94,7 @@ public:
    ///
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this is different from \a other.
-   /// @since  x.y.z, 27.03.2019
+   /// @since  1.22.0, 27.03.2019
    bool operator !=( const T& other) const
    {
       const T&  self = static_cast< const T&>( *this);
