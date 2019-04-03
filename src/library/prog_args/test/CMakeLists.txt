@@ -90,6 +90,18 @@ add_test( test_sub_groups_usage_input             ${CMAKE_CURRENT_BINARY_DIR}/te
 add_test( test_sub_groups_usage_main              ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -h )
 add_test( test_sub_groups_usage_output            ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -oh )
 
+set_tests_properties( test_argh_eval_error_exit_exception
+   test_argh_eval_error_exit_integer
+   test_argh_eval_error_exit_logic
+   test_argh_eval_error_exit_out_of_range
+   test_argh_eval_error_exit_runtime
+   test_argh_eval_error_exit_inv_arg
+   test_argh_eval_error_exit_overflow
+   test_argh_eval_error_exit_underflow
+   PROPERTIES WILL_FAIL TRUE
+)
+
+
 # test_arg_groups_usage
 # ---------------------
 
