@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,6 +37,80 @@
 using celma::appl::ArgString2Array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
+
+
+
+/// Check that arguments with a cardinality that are not used at all do not lead
+/// to an error.
+///
+/// @since  1.22.0, 29.03.2019
+BOOST_AUTO_TEST_CASE( unused_args)
+{
+
+   // test with default cardinality
+   {
+      Handler            ah( 0);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-x", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // test with "exact" cardinality
+   {
+      Handler            ah( 0);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_exact( 3)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-x", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // test with "max" cardinality
+   {
+      Handler            ah( 0);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_max( 4)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-x", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // test with "range" cardinality
+   {
+      Handler            ah( 0);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_range( 3, 7)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-x", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+} // unused_args
 
 
 

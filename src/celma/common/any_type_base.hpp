@@ -57,7 +57,7 @@ template< typename B> class TypeNameBase;
 class AnyBase
 {
 public:
-   ~AnyBase() = default;
+   virtual ~AnyBase() = default;
 
    const TypeNameBase< AnyBase>* getTypeNameBase() const;
 
@@ -216,7 +216,7 @@ public:
    {
    } // VarName< T, B>::VarName
 
-   ~VarName() = default;
+   virtual ~VarName() = default;
 
    /// Returns the name of the original variable.
    /// @return  The name of the original variable as specified in the

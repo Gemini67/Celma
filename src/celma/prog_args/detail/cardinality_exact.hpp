@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -54,9 +54,11 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void gotValue() noexcept( false) override;
 
-   /// Called by the framework at the end of the command line processing.
+   /// Called by the framework at the end of the command line processing.<br>
+   /// Here we check that the exact number of values was processed, if any.
    ///
-   /// @throw  if not all execpted values were passed.
+   /// @throw  runtime_error
+   ///    if at least one but not all execpted values were passed.
    /// @since  0.2, 10.04.2016
    virtual void check() noexcept( false) override;
 
