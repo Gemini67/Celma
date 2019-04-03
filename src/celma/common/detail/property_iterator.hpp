@@ -43,7 +43,7 @@ namespace celma { namespace common { namespace detail {
 /// stored, then an interator is created for the sub-map, and when we finished
 /// processing the sub-map we return and continue with the previous iterator.
 ///
-/// @since  x.y.z, 12.03.2019
+/// @since  1.22.0, 12.03.2019
 class PropertyIterator
 {
 public:
@@ -51,7 +51,7 @@ public:
 
    /// Default constructor, can be used for end() iterators.
    ///
-   /// @since  x.y.z, 13.03.2019
+   /// @since  1.22.0, 13.03.2019
    PropertyIterator() = default;
 
    /// Creates an iterator that points to the first value of all properties.<br>
@@ -62,7 +62,7 @@ public:
    ///    The top-level property map.
    /// @param[in]  path_sep
    ///    The character to use as separator when building a property path.
-   /// @since  x.y.z, 12.03.2019
+   /// @since  1.22.0, 12.03.2019
    PropertyIterator( PropertyCont& properties, char path_sep);
 
    /// Default copy constructor and destructor should be okay.
@@ -75,7 +75,7 @@ public:
    /// @return
    ///    Reference to this object which just moved the internal iterator to the
    ///    next value.
-   /// @since  x.y.z, 13.03.2019
+   /// @since  1.22.0, 13.03.2019
    PropertyIterator& operator ++( std::prefix);
 
    /// Postfix increment operator.
@@ -84,7 +84,7 @@ public:
    ///    Dummy parameter used to distinguish from the prefix operator.
    /// @return
    ///    The old value of this object.
-   /// @since  x.y.z, 13.03.2019
+   /// @since  1.22.0, 13.03.2019
    PropertyIterator operator ++( std::postfix);
 
    /// Equality comparison operator.
@@ -93,7 +93,7 @@ public:
    /// @return
    ///    \c true if this object and the other point to the same entry, or both
    ///    equal to end().
-   /// @since  x.y.z, 13.03.2019
+   /// @since  1.22.0, 13.03.2019
    bool operator ==( const PropertyIterator& other) const;
 
    /// Inequality comparison operator.
@@ -101,7 +101,7 @@ public:
    /// @param[in]  other  The other object to compare against.
    /// @return
    ///    \c true if this object and the other do not point to the same entry.
-   /// @since  x.y.z, 13.03.2019
+   /// @since  1.22.0, 13.03.2019
    bool operator !=( const PropertyIterator& other) const;
 
    /// Returns the path of the current entry (without the name of the entry
@@ -110,34 +110,34 @@ public:
    /// @return
    ///    The path of the current entry, may be an empty string for top-level
    ///    properties.
-   /// @since  x.y.z, 12.03.2019
+   /// @since  1.22.0, 12.03.2019
    const std::string& path() const;
 
    /// Returns the name of the current entry (without the path to the entry).
    ///
    /// @return
    ///    The name of the current entry.
-   /// @since  x.y.z, 12.03.2019
+   /// @since  1.22.0, 12.03.2019
    const std::string& name() const;
 
    /// Returns the complete path and name of the current entry.
    ///
    /// @return  The complete path plus name of the current entry.
-   /// @since  x.y.z, 19.03.2019
+   /// @since  1.22.0, 19.03.2019
    std::string pathAndName() const;
 
    /// Returns the value of the current entry.
    ///
    /// @return
    ///    The value of the current entry.
-   /// @since  x.y.z, 12.03.2019
+   /// @since  1.22.0, 12.03.2019
    template< typename T> const T& value() const noexcept( false);
 
 private:
    /// Helper class to manage the entries needed to store the current position
    /// in a property map.
    ///
-   /// @since  x.y.z, 12.03.2019
+   /// @since  1.22.0, 12.03.2019
    class CurrentEntry
    {
    public:
@@ -147,7 +147,7 @@ private:
       /// Constructor with the iterator position to store.
       /// 
       /// @param[in]  properties  The property map to start iterating over.
-      /// @since  x.y.z, 12.03.2019
+      /// @since  1.22.0, 12.03.2019
       CurrentEntry( property_map_t& properties):
          mPathPrefix(),
          mpProperties( &properties),
@@ -157,7 +157,7 @@ private:
 
       /// Clears the current entry (clear path and set the iterator to end).
       ///
-      /// @since  x.y.z, 13.03.2019
+      /// @since  1.22.0, 13.03.2019
       void reset()
       {
          mPathPrefix.clear();
@@ -167,7 +167,7 @@ private:
       /// Resets this object to iterate over the given map.
       ///
       /// @param[in]  properties  The map to start iterating over.
-      /// @since  x.y.z, 15.03.2019
+      /// @since  1.22.0, 15.03.2019
       void reset( property_map_t& properties)
       {
          mpProperties = &properties;
@@ -181,7 +181,7 @@ private:
       ///    The path to append to the current path prefix.
       /// @param[in]  path_sep
       ///    Separator character to use.
-      /// @since  x.y.z, 13.03.2019
+      /// @since  1.22.0, 13.03.2019
       void append( const std::string& path, char path_sep)
       {
          if (!mPathPrefix.empty())
@@ -195,7 +195,7 @@ private:
       /// iterator.
       ///
       /// @return  \c true if the internal iterator equals end().
-      /// @since  x.y.z, 15.03.2019
+      /// @since  1.22.0, 15.03.2019
       bool atEnd() const
       {
          return (mpProperties == nullptr) || (mEntryIter == mpProperties->end());
@@ -207,7 +207,7 @@ private:
       /// @return
       ///    The type of the property entry to which the stored iterator
       ///    currently points.
-      /// @since  x.y.z, 15.03.2019
+      /// @since  1.22.0, 15.03.2019
       PropertyEntry::Types entryType() const
       {
          return mEntryIter->second->entryType();
@@ -216,7 +216,7 @@ private:
       /// Returns the entry that the current entry/link points to.
       ///
       /// @return  Pointer to the linked entry.
-      /// @since  x.y.z, 25.03.2019
+      /// @since  1.22.0, 25.03.2019
       PropertyEntry* linkDest() const
       {
          assert( entryType() == PropertyEntry::Types::link);
@@ -230,7 +230,7 @@ private:
       /// @return
       ///    \c true if this object and the other point to the same property map
       ///    entry.
-      /// @since  x.y.z, 13.03.2019
+      /// @since  1.22.0, 13.03.2019
       bool operator ==( const CurrentEntry& other) const
       {
          return ((mpProperties == nullptr) && (other.mpProperties == nullptr))
@@ -262,7 +262,7 @@ private:
    /// When the function returns, the current entry either points to the next
    /// value, or has been reset to end() if no more value existed.
    ///
-   /// @since  x.y.z, 13.03.2019
+   /// @since  1.22.0, 13.03.2019
    void findNextValue();
 
    /// The path separator to be used.

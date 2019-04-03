@@ -39,7 +39,7 @@ namespace celma { namespace common { namespace detail {
 /// @param[in]  value
 ///    The value to store as property.
 /// @return  New propety value object.
-/// @since  x.y.z, 20.03.2019
+/// @since  1.22.0, 20.03.2019
 template< typename T> PropertyEntry* propertyFactory( const std::string& name,
    const std::string& full_path_name, const T& value)
 {
@@ -56,7 +56,7 @@ template< typename T> PropertyEntry* propertyFactory( const std::string& name,
 /// @param[in]  link_dest
 ///    The iterator pointing to the other entry to link to.
 /// @return  New propety link object.
-/// @since  x.y.z, 20.03.2019
+/// @since  1.22.0, 20.03.2019
 inline PropertyEntry* propertyFactory( const std::string& name,
    const std::string& full_path_name,
    const property_map_t::const_iterator link_dest)

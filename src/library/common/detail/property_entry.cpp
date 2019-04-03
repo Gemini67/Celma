@@ -29,7 +29,7 @@ namespace celma { namespace common { namespace detail {
 ///    The name of the entry.
 /// @param[in]  my_type
 ///    The type of the entry.
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 PropertyEntry::PropertyEntry( const std::string& name, Types my_type):
    mName( name),
    mType( my_type)

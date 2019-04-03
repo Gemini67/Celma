@@ -43,14 +43,14 @@ namespace celma { namespace common {
 /// entries using the link path, and of course these entries will be available
 /// through both paths.
 ///
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 class Properties
 {
 public:
    /// Constructor.
    ///
    /// @param[in]  separator  The spearator to use for this instance.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    explicit Properties( char separator = '.');
 
    /// Don't copy this object.
@@ -71,7 +71,7 @@ public:
    ///    - \c true if the property (value) could be addd/stored.
    ///    - \c false if the given path conflicts with an existing property
    ///      value.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    bool addProperty( const std::string& name, const char* value);
 
    /// Stores a (new) value for the specified property.
@@ -85,7 +85,7 @@ public:
    ///    - \c true if the property (value) could be addd/stored.
    ///    - \c false if the given path conflicts with an existing property
    ///      value.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    template< typename T>
       bool addProperty( const std::string& name, const T& value);
 
@@ -93,7 +93,7 @@ public:
    ///
    /// @param[in]  name  The name to check for.
    /// @return  \c true if the specified property exists.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    bool hasProperty( const std::string& name) const;
 
    /// Returns the value of the specified property.
@@ -104,7 +104,7 @@ public:
    /// @param[in]   name
    ///    The name of the property, may be a path.
    /// @return  \c true if the property with the specified name was found.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    template< typename T>
       bool getProperty( T& value, const std::string& name) const;
 
@@ -120,7 +120,7 @@ public:
    ///    \c true if the link could be created, i.e. the destination entry was
    ///    found.
    /// @since
-   ///    x.y.z, 19.03.2019
+   ///    1.22.0, 19.03.2019
    bool addLink( const std::string& link, const std::string& from);
 
    /// Using our own iterator implementation that handles maps in maps.
@@ -129,13 +129,13 @@ public:
    /// Returns an iterator pointing to the first property value.
    ///
    /// @return  Iterator pointing to the first property value.
-   /// @since  x.y.z, 12.03.2019
+   /// @since  1.22.0, 12.03.2019
    iterator begin();
 
    /// Returns an iterator pointing behind the last property entry.
    ///
    /// @return  Iterator pointing behind the last property entry.
-   /// @since  x.y.z, 12.03.2019
+   /// @since  1.22.0, 12.03.2019
    iterator end();
 
    /// Insertion operator for a Properties object.<br>
@@ -150,7 +150,7 @@ public:
    /// @param[in]   props
    ///    The object to dump the contents of.
    /// @return  The stream as passed in.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    friend std::ostream& operator <<( std::ostream& os, const Properties& props);
 
 private:

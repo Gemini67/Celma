@@ -38,7 +38,7 @@ using celma::common::Properties;
 
 /// Test with an empty property container.
 ///
-/// @since  x.y.z, 13.03.2019
+/// @since  1.22.0, 13.03.2019
 BOOST_AUTO_TEST_CASE( no_properties)
 {
 
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE( no_properties)
 
 /// Test with one top-level property.
 /// 
-/// @since  x.y.z, 15.03.2019
+/// @since  1.22.0, 15.03.2019
 BOOST_AUTO_TEST_CASE( one_top_level)
 {
 
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE( one_top_level)
 
 /// Test with two top-level properties.
 /// 
-/// @since  x.y.z, 15.03.2019
+/// @since  1.22.0, 15.03.2019
 BOOST_AUTO_TEST_CASE( two_top_level)
 {
 
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE( two_top_level)
 
 /// Test with one second-level property.
 /// 
-/// @since  x.y.z, 15.03.2019
+/// @since  1.22.0, 15.03.2019
 BOOST_AUTO_TEST_CASE( one_second_level)
 {
 
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( one_second_level)
 
 /// Test with one second-level property.
 /// 
-/// @since  x.y.z, 18.03.2019
+/// @since  1.22.0, 18.03.2019
 BOOST_AUTO_TEST_CASE( one_top_one_second_level)
 {
 
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE( one_top_one_second_level)
 
 /// Test with two second-level properties.
 /// 
-/// @since  x.y.z, 19.03.2019
+/// @since  1.22.0, 19.03.2019
 BOOST_AUTO_TEST_CASE( two_second_level)
 {
 
@@ -245,7 +245,7 @@ BOOST_AUTO_TEST_CASE( two_second_level)
 
 /// Test with properties on levels 1, 2, 1, 2 and 1.
 /// 
-/// @since  x.y.z, 19.03.2019
+/// @since  1.22.0, 19.03.2019
 BOOST_AUTO_TEST_CASE( changing_levels)
 {
 
@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_CASE( changing_levels)
 
 /// Test with properties on levels 1, 2, 3, 1, 2 and 3.
 /// 
-/// @since  x.y.z, 19.03.2019
+/// @since  1.22.0, 19.03.2019
 BOOST_AUTO_TEST_CASE( increasing_levels)
 {
 
@@ -403,7 +403,7 @@ BOOST_AUTO_TEST_CASE( increasing_levels)
 
 /// One top level property with a link to it.
 /// 
-/// @since  x.y.z, 25.03.2019
+/// @since  1.22.0, 25.03.2019
 BOOST_AUTO_TEST_CASE( top_level_link)
 {
 
@@ -442,7 +442,7 @@ BOOST_AUTO_TEST_CASE( top_level_link)
 
 /// A sub-map of properties and a link to it.
 /// 
-/// @since  x.y.z, 25.03.2019
+/// @since  1.22.0, 25.03.2019
 BOOST_AUTO_TEST_CASE( linked_map)
 {
 

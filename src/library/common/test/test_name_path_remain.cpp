@@ -30,7 +30,7 @@ using celma::common::detail::NamePathRemain;
 
 /// Check with wrong values.
 ///
-/// @since  x.y.z, 26.03.2019
+/// @since  1.22.0, 26.03.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
 /// Some real split tests.
 ///
-/// @since  x.y.z, 26.03.2019
+/// @since  1.22.0, 26.03.2019
 BOOST_AUTO_TEST_CASE( split)
 {
 

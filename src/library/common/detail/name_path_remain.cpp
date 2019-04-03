@@ -30,7 +30,7 @@ namespace celma { namespace common { namespace detail {
 ///    The property path to handle.
 /// @param[in]  separator
 ///    The separator character.
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 NamePathRemain::NamePathRemain( const std::string& name, char separator):
    mFirstName(),
    mRemain()

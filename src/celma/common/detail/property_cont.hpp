@@ -33,19 +33,19 @@ namespace celma { namespace common { namespace detail {
 
 /// Handles a property map which can contain values and property maps.
 ///
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 class PropertyCont: public PropertyEntry
 {
 public:
    /// Constructor.
    ///
    /// @param[in]  name  The name of the subtree entry.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    explicit PropertyCont( const std::string& name);
 
    /// Destructor, clears the entries in the map.
    ///
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    virtual ~PropertyCont();
 
    /// Adds a property, i.e. a named value.<br>
@@ -61,7 +61,7 @@ public:
    /// @return
    ///    \c true if the property could be stored, \c false when the path name
    ///    conflicts with an existing property value.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    template< typename T>
       bool addProperty( const std::string& name,
          const std::string& full_path_name, const T& value, char separator);
@@ -73,7 +73,7 @@ public:
    /// @param[in]  separator
    ///    The separator character to use to split the path.
    /// @return  \c true if a property with the specified name exists.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    bool hasProperty( const std::string& name, char separator) const;
 
    /// Returns the value of the specified property.
@@ -86,7 +86,7 @@ public:
    /// @param[in]  separator
    ///    The separator character to use to split the path.
    /// @return  \c true if the property with the specified name was found.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    template< typename T>
       bool getProperty( T& value, const std::string& name, char separator) const;
 
@@ -96,19 +96,19 @@ public:
    ///    The stream to write to.
    /// @param[in]  indent
    ///    Indent string.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    virtual void dump( std::ostream& os, std::string indent = "") const override;
 
    /// Returns the internal container in which the properties are stored.
    ///
    /// @return  The internal property container.
-   /// @since  x.y.z, 20.03.2019
+   /// @since  1.22.0, 20.03.2019
    property_map_t& map();
 
    /// Returns the internal container in which the properties are stored.
    ///
    /// @return  The internal property container.
-   /// @since  x.y.z, 20.03.2019
+   /// @since  1.22.0, 20.03.2019
    const property_map_t& map() const;
 
    using result_t = std::pair< bool, typename property_map_t::const_iterator>;
@@ -122,7 +122,7 @@ public:
    /// @return
    ///    A pair of values: A boolean that is set to \c true if the entry was
    ///    found, and an iterator that points to the entry.
-   /// @since  x.y.z, 19.03.2019
+   /// @since  1.22.0, 19.03.2019
    result_t findEntry( const std::string& name, char separator) const;
 
 private:

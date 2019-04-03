@@ -33,7 +33,7 @@ namespace celma { namespace common { namespace detail {
 /// updated, the iterator pointing to the entry is stored, and not the pointer
 /// to the entry itself.
 ///
-/// @since  x.y.z, 20.03.2019
+/// @since  1.22.0, 20.03.2019
 class PropertyLink: public PropertyEntry
 {
 public:
@@ -45,20 +45,20 @@ public:
    ///    The full path and name of the destination of the link.
    /// @param[in]  dest
    ///    Iterator pointing to the other property to link to.
-   /// @since  x.y.z, 20.03.2019
+   /// @since  1.22.0, 20.03.2019
    PropertyLink( const std::string& name, const std::string& full_path_name,
       const property_map_t::const_iterator dest);
 
    /// Empty, virtual destructor.
    ///
-   /// @since  x.y.z, 20.03.2019
+   /// @since  1.22.0, 20.03.2019
    virtual ~PropertyLink() = default;
 
    /// Return s the internally stored iterator that points to the destination
    /// property.
    ///
    /// @return  The iterator pointing to the destination.
-   /// @since  x.y.z, 21.03.2019
+   /// @since  1.22.0, 21.03.2019
    property_map_t::const_iterator iterator() const;
 
    /// Prints the value stored in the object.
@@ -67,7 +67,7 @@ public:
    ///    The stream to write to.
    /// @param[in]  indent
    ///    Indent string.
-   /// @since  x.y.z, 20.03.2019
+   /// @since  1.22.0, 20.03.2019
    virtual void dump( std::ostream& os, std::string indent) const override;
 
 private:

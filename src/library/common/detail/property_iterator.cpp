@@ -31,7 +31,7 @@ namespace celma { namespace common { namespace detail {
 ///    The top-level property map.
 /// @param[in]  path_sep
 ///    The character to use as separator when building a property path.
-/// @since  x.y.z, 12.03.2019
+/// @since  1.22.0, 12.03.2019
 PropertyIterator::PropertyIterator( PropertyCont& properties, char path_sep):
    mPathSeparator( path_sep),
    mEntriesStack(),
@@ -47,7 +47,7 @@ PropertyIterator::PropertyIterator( PropertyCont& properties, char path_sep):
 /// Returns the complete path and name of the current entry.
 ///
 /// @return  The complete path plus name of the current entry.
-/// @since  x.y.z, 19.03.2019
+/// @since  1.22.0, 19.03.2019
 std::string PropertyIterator::pathAndName() const
 {
 
@@ -77,7 +77,7 @@ std::string PropertyIterator::pathAndName() const
 /// When the function returns, the current entry either points to the next
 /// value, or has been reset to end() if no more value existed.
 ///
-/// @since  x.y.z, 13.03.2019
+/// @since  1.22.0, 13.03.2019
 void PropertyIterator::findNextValue()
 {
 

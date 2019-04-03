@@ -29,7 +29,7 @@ namespace celma { namespace common { namespace detail {
 /// Helper class used to split a property path into the first name and the
 /// remaining path.
 ///
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 class NamePathRemain
 {
 public:
@@ -40,7 +40,7 @@ public:
    /// @param[in]  separator
    ///    The separator character to check for.
    /// @return  \c true if \a name contains the \a separator.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    static bool nameHasSeparator( const std::string& name, char separator);
 
    /// Constructor.<br>
@@ -50,7 +50,7 @@ public:
    ///    The property path to handle.
    /// @param[in]  separator
    ///    The separator character.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    NamePathRemain( const std::string& name, char separator);
 
    /// Should not be needed, but when, the default is okay.

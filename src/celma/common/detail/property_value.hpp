@@ -30,7 +30,7 @@ namespace celma { namespace common { namespace detail {
 /// Stores a property, i.e. a named value.
 ///
 /// @tparam  T  The type of the value.
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 template< typename T> class PropertyValue: public PropertyEntry
 {
 public:
@@ -42,19 +42,19 @@ public:
    ///    The full path and name of a link destination. Not used here.
    /// @param[in]  value
    ///    The value of the property.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    PropertyValue( const std::string& name, const std::string& full_path_name,
       const T& value);
 
    /// Empty, virtual destructor.
    ///
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    virtual ~PropertyValue() = default;
 
    /// Returns the value.
    ///
    /// @return  The value.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    const T& getValue() const;
    
    /// Prints the value stored in the object.
@@ -63,7 +63,7 @@ public:
    ///    The stream to write to.
    /// @param[in]  indent
    ///    Required by base class, ignored here.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    virtual void dump( std::ostream& os, std::string indent) const override;
 
 private:

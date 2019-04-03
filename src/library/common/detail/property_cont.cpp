@@ -117,7 +117,7 @@ void PropertyCont::dump( std::ostream& os, std::string indent) const
 /// @return
 ///    A pair of values: A boolean that is set to \c true if the entry was
 ///    found, and an iterator that points to the entry.
-/// @since  x.y.z, 19.03.2019
+/// @since  1.22.0, 19.03.2019
 typename PropertyCont::result_t
    PropertyCont::findEntry( const std::string& name, char separator) const
 {

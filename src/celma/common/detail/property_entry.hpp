@@ -29,7 +29,7 @@ namespace celma { namespace common { namespace detail {
 /// Base class for entries in the property map: Either a (property) map itself,
 /// or a value with a specific type.
 ///
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 class PropertyEntry
 {
 public:
@@ -50,24 +50,24 @@ public:
    ///    The name of the entry.
    /// @param[in]  my_type
    ///    The type of the entry.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    PropertyEntry( const std::string& name, Types my_type);
 
    /// Empty, virtual destructor.
    ///
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    virtual ~PropertyEntry() = default;
 
    /// Returns the name of the entry.
    ///
    /// @return  The name of the entry.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    const std::string& getName() const;
 
    /// Returns the type of the entry.
    ///
    /// @return  The type of the entry.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    Types entryType() const;
 
    /// Interface to dump the contents of an entry.
@@ -76,7 +76,7 @@ public:
    ///    The stream to write to.
    /// @param[in]  indent
    ///    Indent string.
-   /// @since  x.y.z, 19.10.2016
+   /// @since  1.22.0, 19.10.2016
    virtual void dump( std::ostream& os, std::string indent) const = 0;
 
 protected:

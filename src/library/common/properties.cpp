@@ -30,7 +30,7 @@ namespace celma { namespace common {
 /// Constructor.
 ///
 /// @param[in]  separator  The spearator to use for this instance.
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 Properties::Properties( char separator):
    mSeparator( separator),
    mProperties( "")
@@ -51,7 +51,7 @@ Properties::Properties( char separator):
 ///    \c true if the link could be created, i.e. the destination entry was
 ///    found.
 /// @since
-///    x.y.z, 19.03.2019
+///    1.22.0, 19.03.2019
 bool Properties::addLink( const std::string& link, const std::string& from)
 {
 
@@ -71,7 +71,7 @@ bool Properties::addLink( const std::string& link, const std::string& from)
 /// @param[in]   props
 ///    The object to dump the contents of.
 /// @return  The stream as passed in.
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 std::ostream& operator <<( std::ostream& os, const Properties& props)
 {
 

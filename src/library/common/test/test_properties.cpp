@@ -38,7 +38,7 @@ using celma::common::Properties;
 
 /// Test with an empty property container.
 ///
-/// @since  x.y.z, 12.03.2019
+/// @since  1.22.0, 12.03.2019
 BOOST_AUTO_TEST_CASE( no_properties)
 {
 
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE( no_properties)
 
 /// Test storing and retrieving some properties.
 ///
-/// @since  x.y.z, 19.10.2016
+/// @since  1.22.0, 19.10.2016
 BOOST_AUTO_TEST_CASE( simple_properties)
 {
 
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE( simple_properties)
 
 /// Store some properties and then overwrite some with new values.
 ///
-/// @since  x.y.z, 12.03.2019
+/// @since  1.22.0, 12.03.2019
 BOOST_AUTO_TEST_CASE( overwrite_properties)
 {
 
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE( overwrite_properties)
 /// Check that a conflict of an existing property (value) and a new property
 /// path is detected.
 ///
-/// @since  x.y.z, 19.03.2019
+/// @since  1.22.0, 19.03.2019
 BOOST_AUTO_TEST_CASE( property_conflict)
 {
 
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE( property_conflict)
 
 /// Create a link to an existing property.
 ///
-/// @since  x.y.z, 21.03.2019
+/// @since  1.22.0, 21.03.2019
 BOOST_AUTO_TEST_CASE( property_link)
 {
 
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE( property_link)
 
 /// Create multiple properties and then add some links.
 ///
-/// @since  x.y.z, 21.03.2019
+/// @since  1.22.0, 21.03.2019
 BOOST_AUTO_TEST_CASE( multiple_links)
 {
 
