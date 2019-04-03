@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,59 +29,77 @@ namespace celma { namespace log { namespace files {
 
 
 /// Log file policy that ensures a maximum log file size.
+///
 /// @since  1.0.0, 13.12.2017
 class MaxSize: public PolicyBase
 {
 public:
    /// Constructor. Checks that the given log filename definition contains a log
    /// generation number.
-   /// @param[in]  fname_def      Log filename definition.
-   /// @param[in]  max_file_size  The maximum size of a log file.
-   /// @param[in]  max_gen        Maximum number of log file generations to
-   ///                            keep.
+   ///
+   /// @param[in]  fname_def
+   ///    Log filename definition.
+   /// @param[in]  max_file_size
+   ///    The maximum size of a log file.
+   /// @param[in]  max_gen
+   ///    Maximum number of log file generations to keep.
    /// @since  1.0.0, 13.12.2017
    MaxSize( const filename::Definition& fname_def, size_t max_file_size,
       int max_gen) noexcept( false);
 
-   /// Copy constructor. Copies only the settings but not any eventually open
-   /// log file.
-   /// @param[in]  other  The other object to copy the data from.
+   /// Copying and moving not needed.
+   /// @since  1.19.0, 06.12.2018  (deleted)
    /// @since  1.0.0, 13.12.2017
-   MaxSize( const MaxSize& other);
+   MaxSize( const MaxSize&) = delete;
+   MaxSize( MaxSize&&) = delete;
 
    /// Default destructor.
    /// @since  1.0.0, 13.12.2017
    virtual ~MaxSize() = default;
 
+   /// Copying and moving not needed.
+   MaxSize& operator =( const MaxSize&) = delete;
+   MaxSize& operator =( MaxSize&&) = delete;
+
 private:
    /// Checks the currently open file if the file limit is reached.
-   /// @return  \c true if the current log file can still be used, \c false if
-   ///          the log file(s) should be rolled.
+   ///
+   /// @return
+   ///    \c true if the current log file can still be used, \c false if the log
+   ///    file(s) should be rolled.
    /// @since  1.0.0, 13.12.2017
    virtual bool openCheck() override;
 
    /// Called when openCheck() return \c false. Rolls the existing log file
    /// generations.
+   ///
    /// @since  1.0.0, 13.12.2017
-   virtual void rollFiles();
+   virtual void rollFiles() override;
 
    /// Called to check if the next log message can still be written into the
    /// current log file.<br>
    /// Here, checks if the log file size still allows to write the given log
-   /// message into the file
-   /// @param[in]  msg       Ignored.
-   /// @param[in]  msg_text  The formatted text of the log message.
-   /// @return  \c true if the log message text can be written into the current
-   ///          log file.
+   /// message into the file.
+   ///
+   /// @param[in]  msg
+   ///    Ignored.
+   /// @param[in]  msg_text
+   ///    The formatted text of the log message.
+   /// @return
+   ///    \c true if the log message text can be written into the current log
+   ///    file.
    /// @since  1.0.0, 13.12.2017
    virtual bool writeCheck( const detail::LogMsg& msg,
       const std::string& msg_text) override;
 
    /// Called after the log message was written into the log file. Here, updates
    /// the #mCurrentFilesize variable.
-   /// @param[in]  msg       Ignored.
-   /// @param[in]  msg_text  The formatted text of the log message that was
-   ///                       written into the log file.
+   ///
+   /// @param[in]  msg
+   ///    Ignored.
+   /// @param[in]  msg_text
+   ///    The formatted text of the log message that was written into the log
+   ///    file.
    /// @since  1.0.0, 13.12.2017
    virtual void written( const detail::LogMsg& msg,
       const std::string& msg_text) override;
@@ -89,7 +107,7 @@ private:
    /// Maximum size of one logfile.
    size_t  mMaxFileSize;
    /// Size of the current file.
-   size_t  mCurrentFilesize;
+   size_t  mCurrentFilesize = 0;
    /// Maximum number of generations of log files to keep.
    int     mMaxGenerations;
 
@@ -104,5 +122,5 @@ private:
 #endif   // CELMA_LOG_FILES_MAX_SIZE_HPP
 
 
-// ===========================  END OF max_size.hpp  ===========================
+// =====  END OF max_size.hpp  =====
 

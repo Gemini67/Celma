@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,11 +20,14 @@
 
 
 #include <algorithm>
+#include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/argument_key.hpp"
+#include "celma/prog_args/summary_options.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -109,6 +112,10 @@ private:
 }; // Data< U>
 
 
+// Template Storage
+// ================
+
+
 /// Helper class to store data with an ArgumentKey as key.<br>
 /// The objects stored in this container are deleted when the container is
 /// deleted.<br>
@@ -154,7 +161,7 @@ public:
       noexcept( false);
 
    /// Storage type for the argument keys and objects.
-   typedef std::vector< Data< T>>  cont_t;
+   using cont_t = std::vector< Data< T>>;
 
    /// Iterator type for accessing the elements in the container.
    using const_iterator = typename cont_t::const_iterator;
@@ -200,6 +207,20 @@ public:
    /// @return  Number of entries.
    /// @since  0.15.0, 27.06.2017
    size_t size() const;
+
+   /// Iterates over the stored arguments, checks which ones have been set and
+   /// prints the details into the stream.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @param[in]   arg_prefix
+   ///    Specifies the prefix for the arguments of this handler. Used when the
+   ///    argument handler handles the arguments of a sub-group.
+   /// @since  1.8.0, 03.07.2018
+   void printSummary( sumoptset_t contents_set, std::ostream& os,
+      const char* arg_prefix) const;
 
 private:
    /// Flag set in constructor, specifies if duplicates are allowed.
@@ -317,6 +338,46 @@ template< typename T, typename E> size_t Storage< T, E>::size() const
 } // Storage< T, E>::size
 
 
+template< typename T, typename E>
+   void Storage< T, E>::printSummary( sumoptset_t contents_set,
+      std::ostream& os, const char* arg_prefix) const
+{
+
+   for (auto const& entry : mArgs)
+   {
+      // pointer to the object that handles this argument, derived from
+      // TypedArgBase
+      auto const  argh = entry.data();
+
+      if (argh->hasValue())
+      {
+         std::ostringstream  os_value;
+
+         argh->printValue( os_value, contents_set & SummaryOptions::with_type);
+
+         os << "   ";
+
+         os << "Value <" << os_value.str() << "> set on variable '"
+            << argh->varName() << "'";
+
+         if (contents_set & SummaryOptions::with_key)
+         {
+            os << " by argument '";
+
+            // have an argument prefix from a group-handler?
+            if (arg_prefix != nullptr)
+               os << arg_prefix << "'/'";
+
+            os << format::toString( argh->key()) << "'";
+         } // end if
+
+         os << "." << std::endl;
+      } // end if
+   } // end for
+
+} // Storage< T, E>::printSummary
+
+
 } // namespace detail
 } // namespace prog_args
 } // namespace celma
@@ -325,5 +386,5 @@ template< typename T, typename E> size_t Storage< T, E>::size() const
 #endif   // CELMA_PROG_ARGS_DETAIL_STORAGE_HPP
 
 
-// ===========================  END OF storage.hpp  ===========================
+// =====  END OF storage.hpp  =====
 

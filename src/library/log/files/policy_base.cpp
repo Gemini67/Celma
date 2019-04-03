@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,6 +17,11 @@
 
 // module header file include
 #include "celma/log/files/policy_base.hpp"
+
+
+// OS/C lib includes
+#include <cerrno>
+#include <cstring>
 
 
 // C++ Standard Library includes
@@ -45,19 +50,6 @@ PolicyBase::PolicyBase( const filename::Definition& fname_def):
 
 
 
-/// Copy constructor. Only copies the log filename definition, not any
-/// eventually open log file.
-/// @param[in]  other  The other object to copy the data from.
-/// @since  1.0.0, 13.12.2017
-PolicyBase::PolicyBase( const PolicyBase& other):
-   mFilenameDefinition( other.mFilenameDefinition),
-   mCurrentLogfileName(),
-   mFile()
-{
-} // PolicyBase::PolicyBase
-
-
-
 /// Opens the current log file, checks if it still is okay to use the file,
 /// if not closes the file again, rolls the log file generations and opens
 /// a new file.<br>
@@ -74,7 +66,7 @@ void PolicyBase::open()
 
    if (!mFile || !mFile.is_open())
       throw std::runtime_error( "could not open file '" + filename
-         + "': " /* + error_reason @@@ */);
+         + "': " + ::strerror( errno));
 
    mCurrentLogfileName = filename;
 
@@ -108,6 +100,20 @@ void PolicyBase::writeMessage( const detail::LogMsg& msg,
 
 
 
+/// Called when openCheck() returned \c false. The current file is already
+/// closed then, all the function has to do is roll the log file
+/// enerations.<br>
+/// Empty method provided here in the base class, so it only needs to be
+/// overwritten when actually used.
+///
+/// @since  1.11.0, 05.09.2018  (not pure virtual anymore)
+/// @since  1.0.0, 13.12.2017
+void PolicyBase::rollFiles()
+{
+} // PolicyBase::rollFiles
+
+
+
 /// Closes the currently open log file, calls rollFiles() to roll the log
 /// file generations, and finally opens a new log file.<br>
 /// This functions is called when either the openCheck() or writeCheck()
@@ -126,10 +132,22 @@ void PolicyBase::reOpenFile()
 
 
 
+/// Returns the current size of the log file.
+///
+/// @return  The current size of the file.
+/// @since  1.11.0, 27.08.2018
+size_t PolicyBase::fileSize()
+{
+
+   return mFile.tellp();
+} // PolicyBase::fileSize
+
+
+
 } // namespace files
 } // namespace log
 } // namespace celma
 
 
-// =========================  END OF policy_base.cpp  =========================
+// =====  END OF policy_base.cpp  =====
 

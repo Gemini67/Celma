@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -62,7 +62,7 @@ protected:
    Handler      mArgH;
    bool         mVerbose = false;
    int          mCount = 0;
-   std::string  mCommand;  
+   std::string  mCommand;
 
 }; // TestFixtureBase
 
@@ -74,13 +74,13 @@ public:
    TestFixturePositional():
       TestFixtureBase()
    {
-   
+
       BOOST_REQUIRE_NO_THROW( mArgH.addArgument( "-", DEST_VAR( mCommand),
                                                  "command")
                                                ->setValueMode( Handler::ValueMode::command));
 
    } // TestFixturePositional::TestFixturePositional
-   
+
 }; // TestFixturePositional
 
 
@@ -91,12 +91,12 @@ public:
    TestFixtureCharArg():
       TestFixtureBase()
    {
-   
+
       BOOST_REQUIRE_NO_THROW( mArgH.addArgument( "x", DEST_VAR( mCommand), "command")
                                                ->setValueMode( Handler::ValueMode::command));
 
    } // TestFixtureCharArg::TestFixtureCharArg
-   
+
 }; // TestFixtureCharArg
 
 
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
-   
+
    {
       Handler  ah( 0);
       bool     flag;
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
-   
+
    {
       Handler  ah( 0);
       int      value;
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
-   
+
    {
       Handler  ah( 0);
       int      value;
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
                                          ->setValueMode( Handler::ValueMode::command),
                            std::invalid_argument);
    } // end scope
-   
+
 } // test_wrong_dest_type
 
 
@@ -152,7 +152,7 @@ BOOST_FIXTURE_TEST_CASE( test_no_args_pos, TestFixturePositional)
 
    const ArgString2Array  as2a( "", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE( mCommand.empty());
@@ -168,7 +168,7 @@ BOOST_FIXTURE_TEST_CASE( test_no_args_carg, TestFixtureCharArg)
 
    const ArgString2Array  as2a( "", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE( mCommand.empty());
@@ -184,7 +184,7 @@ BOOST_FIXTURE_TEST_CASE( test_only_flag_pos, TestFixturePositional)
 
    const ArgString2Array  as2a( "-v", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE( mCommand.empty());
@@ -200,7 +200,7 @@ BOOST_FIXTURE_TEST_CASE( test_only_flag_carg, TestFixtureCharArg)
 
    const ArgString2Array  as2a( "-v", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE( mCommand.empty());
@@ -216,7 +216,7 @@ BOOST_FIXTURE_TEST_CASE( test_only_cmd_pos, TestFixturePositional)
 
    const ArgString2Array  as2a( "command list vars", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE_EQUAL( mCommand, "command list vars");
@@ -232,7 +232,7 @@ BOOST_FIXTURE_TEST_CASE( test_only_cmd_carg, TestFixtureCharArg)
 
    const ArgString2Array  as2a( "-x list vars", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE_EQUAL( mCommand, "list vars");
@@ -248,7 +248,7 @@ BOOST_FIXTURE_TEST_CASE( test_cmd_after_flag_pos, TestFixturePositional)
 
    const ArgString2Array  as2a( "-v command list vars", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE_EQUAL( mCommand, "command list vars");
@@ -264,7 +264,7 @@ BOOST_FIXTURE_TEST_CASE( test_cmd_after_flag_carg, TestFixtureCharArg)
 
    const ArgString2Array  as2a( "-v -x list vars", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE_EQUAL( mCommand, "list vars");
@@ -280,7 +280,7 @@ BOOST_FIXTURE_TEST_CASE( test_cmd_after_value_pos, TestFixturePositional)
 
    const ArgString2Array  as2a( "-c 42 command list vars", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 42);
    BOOST_REQUIRE_EQUAL( mCommand, "command list vars");
@@ -296,7 +296,7 @@ BOOST_FIXTURE_TEST_CASE( test_cmd_after_value_carg, TestFixtureCharArg)
 
    const ArgString2Array  as2a( "-c 42 -x list vars", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 42);
    BOOST_REQUIRE_EQUAL( mCommand, "list vars");
@@ -312,12 +312,12 @@ BOOST_FIXTURE_TEST_CASE( test_wrong_usage_carg, TestFixtureCharArg)
 
    const ArgString2Array  as2a( "-vx list vars", nullptr);
 
-   BOOST_REQUIRE_THROW( mArgH.evalArguments( as2a.mArgc, as2a.mpArgv),
+   BOOST_REQUIRE_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV),
                         std::runtime_error);
 
 } // test_wrong_usage_carg
 
 
 
-// ====================  END OF test_argh_command_arg.cpp  ====================
+// =====  END OF test_argh_command_arg.cpp  =====
 

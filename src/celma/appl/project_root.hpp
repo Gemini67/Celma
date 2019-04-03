@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -47,11 +47,13 @@ public:
    /// Initialise the 'project root' directory.<br>
    /// If this method is not called explicitly, it is called when the singleton
    /// object is created.
-   /// @param[in]  srcType  Base to use to determine the root of the project.
-   /// @param[in]  source   If \a srcType ProjRootSrc::env or ProjRootSrc::bin
-   ///                      are used, the corresponding value (name of the
-   ///                      environment variable or the program start path,
-   ///                      respectively) must be passed here.
+   ///
+   /// @param[in]  srcType
+   ///    Base to use to determine the root of the project.
+   /// @param[in]  source
+   ///    If \a srcType ProjRootSrc::env or ProjRootSrc::bin are used, the
+   ///    corresponding value (name of the environment variable or the program
+   ///    start path, respectively) must be passed here.
    /// @since  1.0.0, 11.01.2017
    void setProjectRoot( ProjRootSrc srcType,
                         const char* source = nullptr) noexcept( false);
@@ -76,15 +78,21 @@ public:
 protected:
    friend class common::Singleton< ProjectRoot>;
 
+   /// Default constructor, sets the home directory as project root.
+   ///
+   /// @since  1.0.0, 18.10.2017
    ProjectRoot();
 
-   /// 
-   /// @param[in]  srcType  .
-   /// @param[in]  source   .
-   /// @return  .
+   /// Constructor, initialises the project root path with the given parameters.
+   ///
+   /// @param[in]  srcType
+   ///    The type of initialisation to use for the project root.
+   /// @param[in]  source
+   ///    For some initialisation types, additional value (e.g. name of
+   ///    environment variable).
    /// @since  1.0.0, 18.10.2017
-   ProjectRoot( ProjRootSrc srcType,
-                const char* source = nullptr) noexcept( false);
+   explicit ProjectRoot( ProjRootSrc srcType,
+      const char* source = nullptr) noexcept( false);
 
 private:
    /// The project root path, same for all instances of this class (only one
@@ -102,8 +110,6 @@ private:
 
 inline const std::string& ProjectRoot::path()
 {
-   if (mProjectRoot.empty())
-      setProjectRoot( ProjRootSrc::home);
    return mProjectRoot;
 } // ProjectRoot::dir
 
@@ -121,5 +127,5 @@ inline ProjectRoot::ProjRootSrc ProjectRoot::projectRootSrc()
 #endif   // CELMA_APPL_PROJECT_ROOT_HPP
 
 
-// =========================  END OF project_root.hpp  =========================
+// =====  END OF project_root.hpp  =====
 

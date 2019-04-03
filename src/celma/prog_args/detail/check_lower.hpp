@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,7 +37,9 @@ public:
    /// Constructor.
    /// @param[in]  value  The lower limit to check against.
    /// @since  0.2, 10.04.2016
-   CheckLower( T value);
+   explicit CheckLower( T value);
+
+   virtual ~CheckLower() = default;
 
    /// Checks if the value in \a val is greater-than or equal to the stored
    /// limit.
@@ -112,5 +114,5 @@ template< typename T> detail::ICheck* lower( T value)
 #endif   // CELMA_PROG_ARGS_DETAIL_CHECK_LOWER_HPP
 
 
-// =========================  END OF check_lower.hpp  =========================
+// =====  END OF check_lower.hpp  =====
 

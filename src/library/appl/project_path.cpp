@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -139,9 +139,6 @@ void ProjectPath::store( const char* subDir, const char* filename,
                          const char* fileExt)
 {
 
-//   if (ProjectRoot::instance().empty())
-//      setProjectRoot( ProjRootSrc::home);
-
    mFullPathFilename.assign( ProjectRoot::instance().path());
 
    if (subDir != nullptr)
@@ -173,5 +170,5 @@ void ProjectPath::store( const char* subDir, const char* filename,
 } // namespace celma
 
 
-// =========================  END OF project_path.cpp  =========================
+// =====  END OF project_path.cpp  =====
 

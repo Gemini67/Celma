@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,7 +23,7 @@
 #include "celma/format/detail/int64_to_string.hpp"
 
 
-// C/OS library includes
+// OS/C library includes
 #include <climits>
 
 
@@ -53,25 +53,25 @@ inline void convert( char* buffer, uint64_t value, uint8_t result_len)
    // but then it's easy to convert digit by digit
    switch (result_len)
    {
-   case 20:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 19:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 18:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 17:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 16:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 15:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 14:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 13:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 12:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 11:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case 10:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  9:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  8:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  7:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  6:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  5:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  4:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  3:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  2:  *buffer-- = '0' + (value % 10);  value /= 10;
+   case 20:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 19:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 18:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 17:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 16:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 15:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 14:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 13:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 12:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 11:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case 10:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  9:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  8:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  7:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  6:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  5:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  4:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  3:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  2:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
    default:  *buffer   = '0' + value;
    } // end switch
 
@@ -213,5 +213,5 @@ int int64negToString( char* buffer, int64_t value)
 } // namespace celma
 
 
-// =======================  END OF int64_to_string.cpp  =======================
+// =====  END OF int64_to_string.cpp  =====
 

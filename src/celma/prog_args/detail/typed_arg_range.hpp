@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -31,6 +31,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Helper class to store a destination variable that is a container in which a
 /// range of values can be stored.
+///
 /// @tparam  T  The type of the value(s) to be stored in the container.
 /// @tparam  C  The type of the container to store the values in.
 /// @since  0.2, 10.04.2016
@@ -38,7 +39,7 @@ template< typename T, typename C> class TypedArgRange: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef common::RangeDest< T, C>  dest_type;
+   using dest_type = common::RangeDest< T, C>;
 
    /// Constructor.
    /// @param[in]  dest   The destination variable to store the values in.
@@ -48,11 +49,29 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgRange( const dest_type& dest, const std::string& vname);
 
+   /// Returns the name of the type of the destination container.
+   ///
+   /// @return  The destination container's type name.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
+
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
    ///          value, \c false otherwise.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Throws.
    /// @return  Nothing, always throws.
@@ -97,10 +116,27 @@ template< typename T, typename C>
 } // TypedArgRange< T, C>::TypedArgRange
 
 
+template< typename T, typename C>
+   const std::string TypedArgRange< T, C>::varTypeName() const
+{
+   return type< C>::name();
+} // TypedArgRange< T, C>::varTypeName
+
+
 template< typename T, typename C> bool TypedArgRange< T, C>::hasValue() const
 {
    return !mDestVar.empty();
 } // TypedArgRange< T, C>::hasValue
+
+
+template< typename T, typename C>
+   void TypedArgRange< T, C>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( mDestVar);
+   if (print_type)
+      os << " [" << varTypeName() << "]";
+} // TypedArgRange< T, C>::printValue
 
 
 template< typename T, typename C> TypedArgBase*
@@ -155,5 +191,5 @@ template< typename T, typename C>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_RANGE_HPP
 
 
-// =======================  END OF typed_arg_range.hpp  =======================
+// =====  END OF typed_arg_range.hpp  =====
 

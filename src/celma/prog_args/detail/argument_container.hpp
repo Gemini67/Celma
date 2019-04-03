@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -24,6 +24,7 @@
 #include <memory>
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 #include "celma/prog_args/detail/storage.hpp"
+#include "celma/prog_args/summary_options.hpp"
 
 
 namespace celma { namespace prog_args { namespace detail {
@@ -31,14 +32,22 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Extracted from ArgumentHandler: Store an argument which may use the short
 /// argument format (character), the long format (string/name) or name.
+///
 /// @since  0.15.0, 05.07.2017  (use container Storage)
 /// @since  0.2, 10.04.2016
 class ArgumentContainer
 {
 public:
    /// Constructor.
-   /// @since  0.2, 10.04.2016
-   ArgumentContainer();
+   ///
+   /// @param[in]  stores_sub_args
+   ///    Set if the object is used to store sub-arguments, i.e. arguments that
+   ///    are related to another (parent) argument.
+   /// @since
+   ///    1.8.0, 12.07.2018  (parameter stores_sub_args added)
+   /// @since
+   ///    0.2, 10.04.2016
+   ArgumentContainer( bool stores_sub_args = false);
 
    /// Adds a new argument.
    /// @param[in]  argHandler  The object used to handle this argument.
@@ -81,6 +90,20 @@ public:
    /// @since  0.2, 10.04.2016
    bool empty() const;
 
+   /// After the arguments from the command line were evaluated, prints the list
+   /// of arguments that were used and the values that were aet.
+   /// 
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @param[in]   arg_prefix
+   ///    Specifies the prefix for the arguments of this handler. Used when the
+   ///    argument handler handles the arguments of a sub-group.
+   /// @since  1.8.0, 03.07.2018
+   void printSummary( sumoptset_t contents_set, std::ostream& os,
+      const char* arg_prefix) const;
+
    /// Prints the contents of the container == list of all arguments.
    /// @param[out]  os  The stream to write to.
    /// @param[in]   ac  The object to dump the data of.
@@ -91,10 +114,13 @@ public:
 
 private:
    /// Store shared pointers to the handler objects.
-   typedef std::shared_ptr< TypedArgBase>  shared_handler_t;
+   using shared_handler_t = std::shared_ptr< TypedArgBase>;
 
    /// All arguments set.
    Storage< shared_handler_t>  mArguments;
+   /// Flag, set by the constructor, specifies if this container stores sub-
+   /// arguments or not.
+   const bool  mStoreSubArgs;
 
 }; // ArgumentContainer
 
@@ -106,7 +132,7 @@ private:
 inline bool ArgumentContainer::empty() const
 {
    return mArguments.empty();
-} // end ArgumentContainer::empty
+} // ArgumentContainer::empty
 
 
 } // namespace detail
@@ -117,5 +143,5 @@ inline bool ArgumentContainer::empty() const
 #endif   // CELMA_PROG_ARGS_DETAIL_ARGUMENT_CONTAINER_HPP
 
 
-// ======================  END OF argument_container.hpp  ======================
+// =====  END OF argument_container.hpp  =====
 

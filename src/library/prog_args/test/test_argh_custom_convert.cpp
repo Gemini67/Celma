@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,30 +15,29 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test header file include
+#include "celma/prog_args.hpp"
 
 
-// STL includes
-#include <string>
+// C++ Standard Template Library includes
 #include <iostream>
+#include <string>
+#include <vector>
 
 
 // Boost includes
-#define BOOST_TEST_MODULE ArgumentHandlerCustomConversion
+#define BOOST_TEST_MODULE ArgumentHandlerCustomConversionTest
 #include <boost/test/unit_test.hpp>
 
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::appl::ArgString2Array;
+using celma::prog_args::Handler;
 
 
 // module definitions
@@ -57,7 +56,7 @@ enum MyEnum
 
 /// Helper function to convert an enum name in string format into the
 /// corresponding enum.
-static MyEnum string2enum( const string& enumText)
+static MyEnum string2enum( const std::string& enumText)
 {
    if (enumText == "meVal1")
       return meVal1;
@@ -66,7 +65,7 @@ static MyEnum string2enum( const string& enumText)
    if (enumText == "meVal3")
       return meVal3;
    return initVal;
-}
+} // string2enum
 
 
 
@@ -76,14 +75,14 @@ static MyEnum string2enum( const string& enumText)
 /// @param[out]  me      The enum variable to store the value in.
 /// @return  The stream as passed as input parameter.
 /// @since  0.2, 10.04.2016
-static istream& operator >>( istream& source, MyEnum& me)
+static std::istream& operator >>( std::istream& source, MyEnum& me)
 {
 
-   string  v;
+   std::string  v;
 
 
    source >> v;
-   me = string2enum( v.c_str());
+   me = string2enum( v);
 
    return source;
 } // operator >>
@@ -95,18 +94,21 @@ static istream& operator >>( istream& source, MyEnum& me)
 BOOST_AUTO_TEST_CASE( basic_conversion)
 {
 
-   prog_args::Handler  ah( 0);
-   MyEnum              enumedValue( initVal);
+   Handler  ah( 0);
+   MyEnum   enumedValue( initVal);
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
-                                           "Enum")
-                                         ->setIsMandatory());
+      "Enum")->setIsMandatory());
 
-   appl::ArgString2Array  as2a( "-e meVal2", nullptr);
+   const ArgString2Array  as2a( "-e meVal2", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
+
+   // to improve coverage: try to convert the enum to a string
+   const std::string  str( celma::format::toString( enumedValue));
+   BOOST_REQUIRE_EQUAL( str, "2");
 
 } // basic_conversion
 
@@ -118,15 +120,16 @@ BOOST_AUTO_TEST_CASE( basic_conversion)
 BOOST_AUTO_TEST_CASE( check_assign_conversion)
 {
 
-   prog_args::Handler            ah( 0);
-   common::CheckAssign< MyEnum>  enumedValue( initVal);
+   Handler                              ah( 0);
+   celma::common::CheckAssign< MyEnum>  enumedValue( initVal);
 
 
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue), "Enum"));
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+      "Enum"));
 
-   appl::ArgString2Array  as2a( "-e meVal2", nullptr);
+   const ArgString2Array  as2a( "-e meVal2", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( enumedValue.hasValue());
    BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
 
@@ -140,23 +143,29 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
 BOOST_AUTO_TEST_CASE( vector_conversion)
 {
 
-   prog_args::Handler  ah( 0);
-   vector< MyEnum>  enumedValue;
+   Handler               ah( 0);
+   std::vector< MyEnum>  enumedValue;
 
 
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue), "Enum"));
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+      "Enum"));
 
-   appl::ArgString2Array  as2a( "-e meVal1,meVal3", nullptr);
+   const ArgString2Array  as2a( "-e meVal1,meVal3", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !enumedValue.empty());
    BOOST_REQUIRE_EQUAL( enumedValue.size(), 2);
    BOOST_REQUIRE_EQUAL( enumedValue[ 0], meVal1);
    BOOST_REQUIRE_EQUAL( enumedValue[ 1], meVal3);
 
+   // to improve coverage: try to convert the enum to a string
+   const std::string  str( celma::format::toString( enumedValue.begin(),
+      enumedValue.end()));
+   BOOST_REQUIRE_EQUAL( str, "1, 3");
+
 } // vector_conversion
 
 
 
-// ===================  END OF test_argh_custom_convert.cpp  ===================
+// =====  END OF test_argh_custom_convert.cpp  =====
 

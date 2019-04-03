@@ -63,6 +63,18 @@ public:
    TypedArgPair( T1& dest1, const std::string& vname1, T2& dest2,
                  const std::string& vname2, const T2& value2);
 
+   /// Prints the two current values of the destination variables.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os
@@ -105,6 +117,17 @@ template< typename T1, typename T2>
       mValue2( value2)
 {
 } // TypedArgPair< T1, T2>::TypedArgPair
+
+
+template< typename T1, typename T2>
+   void TypedArgPair< T1, T2>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   TypedArg< T1>::printValue( os, print_type);
+   os << ", destination 2 = " << mDestVar2;
+   if (print_type)
+     os << " [" << type< T2>::name() << "]";
+} // TypedArgPair< T1, T2>::printValue
 
 
 template< typename T1, typename T2>

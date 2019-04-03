@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test header file include
+#include "celma/prog_args.hpp"
 
 
 // C++ Standard Library includes
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 
@@ -33,11 +32,85 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/prog_args.hpp"
 
 
-using namespace std;
-using namespace celma;
+using celma::appl::ArgString2Array;
+using celma::common::CheckAssign;
+using celma::prog_args::Handler;
+
+
+
+/// Check that arguments with a cardinality that are not used at all do not lead
+/// to an error.
+///
+/// @since  1.22.0, 29.03.2019
+BOOST_AUTO_TEST_CASE( unused_args)
+{
+
+   // test with default cardinality
+   {
+      Handler            ah( 0);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-x", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // test with "exact" cardinality
+   {
+      Handler            ah( 0);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_exact( 3)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-x", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // test with "max" cardinality
+   {
+      Handler            ah( 0);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_max( 4)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-x", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // test with "range" cardinality
+   {
+      Handler            ah( 0);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_range( 3, 7)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-x", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+} // unused_args
 
 
 
@@ -46,15 +119,16 @@ using namespace celma;
 BOOST_AUTO_TEST_CASE( boolean_used_twice)
 {
 
-   prog_args::Handler          ah( 0);
-   common::CheckAssign< bool>  flag;
+   Handler             ah( 0);
+   CheckAssign< bool>  flag;
 
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
 
-   appl::ArgString2Array  as2a( "-f -f", nullptr);
+   const ArgString2Array  as2a( "-f -f", nullptr);
 
-   BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+   BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      std::runtime_error);
 
 } // boolean_used_twice
 
@@ -65,15 +139,16 @@ BOOST_AUTO_TEST_CASE( boolean_used_twice)
 BOOST_AUTO_TEST_CASE( int_set_twice)
 {
 
-   prog_args::Handler         ah( 0);
-   common::CheckAssign< int>  value;
+   Handler            ah( 0);
+   CheckAssign< int>  value;
 
 
    ah.addArgument( "v", DEST_VAR( value), "integer value");
 
-   appl::ArgString2Array  as2a( "-v 1 -v 2", nullptr);
+   const ArgString2Array  as2a( "-v 1 -v 2", nullptr);
 
-   BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+   BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      std::runtime_error);
 
 } // int_set_twice
 
@@ -85,43 +160,46 @@ BOOST_AUTO_TEST_CASE( int_set_twice)
 BOOST_AUTO_TEST_CASE( int_allow_max_two)
 {
 
+   using celma::prog_args::cardinality_max;
+
    // set just one value
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  value;
+      Handler            ah( 0);
+      CheckAssign< int>  value;
 
       ah.addArgument( "v", DEST_VAR( value), "integer value")
-                    ->setCardinality( prog_args::cardinality_max( 2));
+                    ->setCardinality( cardinality_max( 2));
 
-      appl::ArgString2Array  as2a( "-v 1", nullptr);
+      const ArgString2Array  as2a( "-v 1", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // set two values, still okay
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  value;
+      Handler            ah( 0);
+      CheckAssign< int>  value;
 
       ah.addArgument( "v", DEST_VAR( value), "integer value")
-                    ->setCardinality( prog_args::cardinality_max( 2));
+                    ->setCardinality( cardinality_max( 2));
 
-      appl::ArgString2Array  as2a( "-v 1 -v 2", nullptr);
+      const ArgString2Array  as2a( "-v 1 -v 2", nullptr);
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
    // setting three values should fail
    {
-      prog_args::Handler         ah( 0);
-      common::CheckAssign< int>  value;
+      Handler            ah( 0);
+      CheckAssign< int>  value;
 
       ah.addArgument( "v", DEST_VAR( value), "integer value")
-                    ->setCardinality( prog_args::cardinality_max( 2));
+                    ->setCardinality( cardinality_max( 2));
 
-      appl::ArgString2Array  as2a( "-v 1 -v 2 -v 3", nullptr);
+      const ArgString2Array  as2a( "-v 1 -v 2 -v 3", nullptr);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
 } // int_allow_max_two
@@ -133,15 +211,15 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
 BOOST_AUTO_TEST_CASE( vector_multiple)
 {
 
-   prog_args::Handler  ah( 0);
-   vector< int>        values;
+   Handler            ah( 0);
+   std::vector< int>  values;
 
 
    ah.addArgument( "v", DEST_VAR( values), "integer values");
 
-   appl::ArgString2Array  as2a( "-v 1 -v 2,3,4 -v 5", nullptr);
+   const ArgString2Array  as2a( "-v 1 -v 2,3,4 -v 5", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgc, as2a.mpArgv));
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
 } // vector_multiple
 
@@ -152,6 +230,9 @@ BOOST_AUTO_TEST_CASE( vector_multiple)
 BOOST_AUTO_TEST_CASE( vector_max_3)
 {
 
+   using celma::prog_args::cardinality_max;
+   using std::runtime_error;
+
    /// Helper class used to create/initialise the objects for the test.
    /// @since  0.2, 10.04.2016
    class TestData
@@ -160,46 +241,46 @@ BOOST_AUTO_TEST_CASE( vector_max_3)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const std::string& argstring):
          ah( 0),
          values(),
          as2a( argstring, nullptr)
       {
          ah.addArgument( "v", DEST_VAR( values), "integer values")
-                       ->setCardinality( prog_args::cardinality_max( 3))
+                       ->setCardinality( cardinality_max( 3))
                        ->setTakesMultiValue();
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      prog_args::Handler       ah;
+      Handler                ah;
       /// Destination variable.
-      vector< int>             values;
+      std::vector< int>      values;
       /// Argument string split into argc, argv.
-      appl::ArgString2Array  as2a;
+      const ArgString2Array  as2a;
 
    }; // TestData
 
    {
       TestData  td( "-v 1,2,3,4");
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
    {
       TestData  td( "-v 1,2 -v 3,4");
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
    {
       TestData  td( "-v 1 2 3 4");
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
    {
       TestData  td( "-v 1,2,3 -v 4");
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
@@ -212,6 +293,9 @@ BOOST_AUTO_TEST_CASE( vector_max_3)
 BOOST_AUTO_TEST_CASE( vector_exact_3)
 {
 
+   using celma::prog_args::cardinality_exact;
+   using std::runtime_error;
+
    /// Helper class used to create/initialise the objects for the test.
    /// @since  0.2, 10.04.2016
    class TestData
@@ -220,39 +304,39 @@ BOOST_AUTO_TEST_CASE( vector_exact_3)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const std::string& argstring):
          ah( 0),
          values(),
          as2a( argstring, nullptr)
       {
          ah.addArgument( "v", DEST_VAR( values), "integer values")
-                       ->setCardinality( prog_args::cardinality_exact( 3))
+                       ->setCardinality( cardinality_exact( 3))
                        ->setTakesMultiValue();
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      prog_args::Handler       ah;
+      Handler                ah;
       /// Destination variable.
-      vector< int>             values;
+      std::vector< int>      values;
       /// Argument string split into argc, argv.
-      appl::ArgString2Array  as2a;
+      const ArgString2Array  as2a;
 
    }; // TestData
 
    {
       TestData  td( "-v 1,2");
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
    {
       TestData  td( "-v 1,2,3");
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    {
       TestData  td( "-v 1,2,3,4");
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
@@ -265,6 +349,9 @@ BOOST_AUTO_TEST_CASE( vector_exact_3)
 BOOST_AUTO_TEST_CASE( vector_range_2_5)
 {
 
+   using celma::prog_args::cardinality_range;
+   using std::runtime_error;
+
    /// Helper class used to create/initialise the objects for the test.
    /// @since  0.2, 10.04.2016
    class TestData
@@ -273,54 +360,54 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
       /// Constructor, does all the work.
       /// @param[in]  argstring  The argument string for this test.
       /// @since  0.2, 10.04.2016
-      TestData( const string& argstring):
+      explicit TestData( const std::string& argstring):
          ah( 0),
          values(),
          as2a( argstring, nullptr)
       {
          ah.addArgument( "v", DEST_VAR( values), "integer values")
-                       ->setCardinality( prog_args::cardinality_range( 2, 5))
+                       ->setCardinality( cardinality_range( 2, 5))
                        ->setTakesMultiValue();
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      prog_args::Handler       ah;
+      Handler                ah;
       /// Destination variable.
-      vector< int>             values;
+      std::vector< int>      values;
       /// Argument string split into argc, argv.
-      appl::ArgString2Array  as2a;
+      const ArgString2Array  as2a;
 
    }; // TestData
 
    {
       TestData  td( "-v 1");
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
    {
       TestData  td( "-v 1,2");
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    {
       TestData  td( "-v 1,2,3");
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    {
       TestData  td( "-v 1,2,3,4");
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    {
       TestData  td( "-v 1,2,3,4,5");
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv));
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
    } // end scope
 
    {
       TestData  td( "-v 1,2,3,4,5,6");
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgc, td.as2a.mpArgv),
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
    } // end scope
 
@@ -328,4 +415,4 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
 
 
 
-// =====================  END OF test_argh_cardinality.cpp  ====================
+// =====  END OF test_argh_cardinality.cpp  =====

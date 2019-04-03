@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,7 +19,7 @@
 #include "celma/format/text_block.hpp"
 
 
-// Standard Template Library includes
+// C++ Standard Template Library includes
 #include <iostream>
 
 
@@ -28,13 +28,12 @@
 #include "celma/common/tokenizer.hpp"
 
 
-using namespace std;
-
-
 namespace celma { namespace format {
 
 
+
 /// Constructor.
+///
 /// @param[in]  indent       Number of characters to indent the block of text.
 /// @param[in]  length       Maximum line length to print.
 /// @param[in]  indentFirst  Specifies if the first line of the text should
@@ -47,17 +46,18 @@ TextBlock::TextBlock( int indent, int length, bool indentFirst):
    mIndentFirst( indentFirst),
    mIndentSpaces( mIndent, ' ')
 {
-} // end TextBlock::TextBlock
+} // TextBlock::TextBlock
 
 
 
 /// Formats the text (string) as specified in the constructor.<br>
 /// This function splits the text into separate lines and then takes care of
 /// the indention for each (new) line.
+///
 /// @param[out]  os   The stream to write to.
 /// @param[in]   txt  The text to format.
 /// @since  0.2, 04.04.2016
-void TextBlock::format( ostream& os, const string& txt)
+void TextBlock::format( std::ostream& os, const std::string& txt)
 {
 
    common::Tokenizer  tokNL( txt, '\n');
@@ -72,13 +72,13 @@ void TextBlock::format( ostream& os, const string& txt)
             os << mIndentSpaces;
       } else
       {
-         os << endl << mIndentSpaces;
+         os << std::endl << mIndentSpaces;
       } // end if
 
       formatLine( os, tiNL);
    } // end for
 
-} // end TextBlock::format
+} // TextBlock::format
 
 
 
@@ -87,14 +87,15 @@ void TextBlock::format( ostream& os, const string& txt)
 /// starts a new line with indention.<br>
 /// If a line starts with a dash, the text of the second, third etc. line is
 /// indented two additional characters.
+///
 /// @param[out]  os    The stream to write to.
 /// @param[in]   line  The line to format/print.
 /// @since  0.2, 04.04.2016
-void TextBlock::formatLine( ostream& os, const string& line)
+void TextBlock::formatLine( std::ostream& os, const std::string& line)
 {
 
    common::Tokenizer  tokWord( line, ' ');
-   string::size_type  currLength = mIndentSpaces.length();
+   auto               currLength = mIndentSpaces.length();
    bool               lineStartsWithDash = false;
 
 
@@ -105,7 +106,7 @@ void TextBlock::formatLine( ostream& os, const string& line)
       // allow output length == defined length to include the last column
       if (tiWord == "nn")
       {
-         os << endl << mIndentSpaces;
+         os << std::endl << mIndentSpaces;
          currLength = mIndentSpaces.length();
          if (lineStartsWithDash)
          {
@@ -120,7 +121,7 @@ void TextBlock::formatLine( ostream& os, const string& line)
          } // end if
       } else if (currLength + tiWord.length() + 1 > mLength)
       {
-         os << endl << mIndentSpaces;
+         os << std::endl << mIndentSpaces;
          if (lineStartsWithDash)
             os << "  ";
          os << tiWord;
@@ -144,7 +145,7 @@ void TextBlock::formatLine( ostream& os, const string& line)
       } // end if
    } // end for
 
-} // end TextBlock::formatLine
+} // TextBlock::formatLine
 
 
 
@@ -152,5 +153,5 @@ void TextBlock::formatLine( ostream& os, const string& line)
 } // namespace celma
 
 
-// =========================  END OF text_block.cpp  =========================
+// =====  END OF text_block.cpp  =====
 

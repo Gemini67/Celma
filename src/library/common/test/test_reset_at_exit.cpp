@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,25 +14,13 @@
 --*/
 
 
-// OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+// module to test header file include
+#include "celma/common/reset_at_exit.hpp"
 
 
 // Boost includes
 #define BOOST_TEST_MODULE ResetAtExitTest
 #include <boost/test/unit_test.hpp>
-#include <utility>
-
-
-// project includes
-#include "celma/common/reset_at_exit.hpp"
-
-
-using namespace std;
-using namespace celma;
 
 
 
@@ -45,16 +33,16 @@ BOOST_AUTO_TEST_CASE( reset_at_exit)
 
 
    {
-      const common::ResetAtExit< int>  rae( my_test_var, 4711);
+      const celma::common::ResetAtExit< int>  rae( my_test_var, 4711);
 
       BOOST_REQUIRE_EQUAL( my_test_var, 42);
    } // end scope
 
    BOOST_REQUIRE_EQUAL( my_test_var, 4711);
 
-} // end reset_at_exit
+} // reset_at_exit
 
 
 
-// =========================  END OF test_reset_at_exit.cpp  =========================
+// =====  END OF test_reset_at_exit.cpp  =====
 
