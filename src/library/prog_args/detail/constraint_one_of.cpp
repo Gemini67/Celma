@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,6 +40,16 @@ ConstraintOneOf::ConstraintOneOf( const std::string& reqArgSpec):
    mArgSpecList( reqArgSpec),
    mUsedArgument()
 {
+
+
+   if (mArgSpecList.empty())
+      throw std::invalid_argument( "Constraint 'one of' cannot be created with "
+         " an empty list of arguments");
+
+   if (mArgSpecList.find( ';') == std::string::npos)
+      throw std::invalid_argument( "List of needed arguments for constraint "
+         "'one of' must contain at least two arguments separated by ';'");
+
 } // ConstraintOneOf::ConstraintOneOf
 
 

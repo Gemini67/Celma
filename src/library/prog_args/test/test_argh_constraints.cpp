@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,8 +34,58 @@
 
 using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
-using std::runtime_error;
-using std::string;
+
+
+
+/// Check that errors are caught.
+///
+/// @since  x.y.z 04.04.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::all_of( "")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::all_of( "one_arg")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::any_of( "")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::any_of( "one_arg")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::one_of( "")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::one_of( "one_arg")),
+         std::invalid_argument);
+   } // end scope
+
+} // errors
 
 
 
@@ -44,8 +94,8 @@ using std::string;
 BOOST_AUTO_TEST_CASE( constraint_requires)
 {
 
-   string  name;
-   int     idx;
+   std::string  name;
+   int          idx;
 
 
    // constraint is not activated
@@ -72,7 +122,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
    // constraint met, no error
@@ -98,9 +148,9 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
 BOOST_AUTO_TEST_CASE( constraint_requires_two)
 {
 
-   string  name;
-   int     idx;
-   string  opt;
+   std::string  name;
+   int          idx;
+   std::string  opt;
 
 
    // constraint is not activated
@@ -128,7 +178,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // constraint error: third argument not used/set
@@ -142,7 +193,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // constraint met with character argument, no error
@@ -213,9 +265,9 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 {
 
-   string  name;
-   int     idx;
-   string  opt;
+   std::string  name;
+   int          idx;
+   std::string  opt;
 
 
    // constraint is not activated
@@ -245,7 +297,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // constraint error: third argument not used/set
@@ -260,7 +313,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // constraint met with character argument, no error
@@ -303,9 +357,9 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 BOOST_AUTO_TEST_CASE( constraint_required_twice)
 {
 
-   string  name;
-   int     idx;
-   string  opt;
+   std::string  name;
+   int          idx;
+   std::string  opt;
 
 
    // constraint is not activated
@@ -335,7 +389,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // constraint required once, second arg
@@ -350,7 +405,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // constraint required twice
@@ -365,7 +421,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // constraint required once, fulfilled, short arg
@@ -437,8 +494,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 BOOST_AUTO_TEST_CASE( constraint_excludes)
 {
 
-   string  name;
-   int     idx;
+   std::string  name;
+   int          idx;
 
 
    // constraint is not activated
@@ -477,7 +534,8 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
                     ->addConstraint( celma::prog_args::excludes( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // constraint not activated yet ...
@@ -504,7 +562,8 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
       ah.addArgument( "i", DEST_VAR( idx),  "Index")
                     ->addConstraint( celma::prog_args::excludes( "n"));;
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
 } // constraint_excludes
@@ -516,9 +575,9 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
 BOOST_AUTO_TEST_CASE( constraint_all_of)
 {
 
-   string  name;
-   int     idx;
-   int     rate;
+   std::string  name;
+   int          idx;
+   int          rate;
 
 
    // invalid list of arguments: unknown argument
@@ -531,7 +590,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r;a")), runtime_error);
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r;a")),
+         std::invalid_argument);
    } // end scope
 
    // invalid list of arguments: short/long mixed
@@ -546,7 +606,7 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
       BOOST_REQUIRE_THROW( ah.addConstraint(
                               celma::prog_args::all_of( "n;i,name;r")),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
    // none of the specified arguments used: constraint is not fulfilled
@@ -560,7 +620,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // none of the specified arguments used, only another/not relevant:
@@ -577,7 +638,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+        std::runtime_error);
    } // end scope
 
    // one of the specified arguments used: constraint is not fulfilled
@@ -591,7 +653,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // not all of the specified arguments used: constraint is not fulfilled
@@ -605,7 +668,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::all_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // all of the specified arguments used: constraint is fulfilled
@@ -680,9 +744,9 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 BOOST_AUTO_TEST_CASE( constraint_any_of)
 {
 
-   string  name;
-   int     idx;
-   int     rate;
+   std::string  name;
+   int          idx;
+   int          rate;
 
 
    // none of the arguments is used: constraint is fulfilled
@@ -741,7 +805,8 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // try to use two of the specified arguments: constraint is violated
@@ -755,7 +820,8 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;index;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // try to use two of the specified arguments: constraint is violated
@@ -771,7 +837,8 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::any_of( "n;index;rate")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
 } // constraint_any_of
@@ -783,9 +850,9 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
 BOOST_AUTO_TEST_CASE( constraint_one_of)
 {
 
-   string  name;
-   int     idx;
-   int     rate;
+   std::string  name;
+   int          idx;
+   int          rate;
 
 
    // no argument used: constraint is not fulfilled
@@ -799,7 +866,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate), "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // no/another argument used: constraint is not fulfilled
@@ -815,7 +883,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
    // use one of the arguments: constraint is met
@@ -871,7 +940,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
       ah.addArgument( "r,rate",  DEST_VAR( rate),   "Rate");
 
       BOOST_REQUIRE_NO_THROW( ah.addConstraint( celma::prog_args::one_of( "n;i;r")));
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), runtime_error);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
    } // end scope
 
 } // constraint_one_of
@@ -887,7 +957,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
    class TestData
    {
    public:
-      explicit TestData( const string& prog_args):
+      explicit TestData( const std::string& prog_args):
          ah( 0),
          as2a( prog_args, nullptr),
          name(),
@@ -916,10 +986,10 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
 
       Handler                ah;
       const ArgString2Array  as2a;
-      string                 name;
-      string                 input_name;
-      string                 path;
-      string                 format_name;
+      std::string            name;
+      std::string            input_name;
+      std::string            path;
+      std::string            format_name;
       bool                   display;
       bool                   do_write;
       bool                   do_store;
@@ -931,7 +1001,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
       TestData  td( "");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
    // celma::prog_args::one_of requirement validated
@@ -939,7 +1009,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
       TestData  td( "--name myname");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
    // minimum set of arguments, okay
@@ -961,7 +1031,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
       TestData  td( "--name myname --input input_source --path=my_path");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           runtime_error);
+         std::runtime_error);
    } // end scope
 
    // additional required argument missing
@@ -969,7 +1039,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
       TestData  td( "--name myname -p from_path");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           runtime_error);
+         std::runtime_error);
    } // end scope
 
    // all necessary arguments set
@@ -998,7 +1068,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
       TestData  td( "--name myname -p from_path --format=formatname -w -s");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           runtime_error);
+         std::runtime_error);
    } // end scope
 
 } // constraint_mix

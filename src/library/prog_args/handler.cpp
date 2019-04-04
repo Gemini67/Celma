@@ -30,6 +30,7 @@
 #include <iostream>
 #include <iomanip>
 #include <memory>
+#include <stdexcept>
 
 
 // Boost library includes
@@ -479,7 +480,7 @@ detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
 /// @param[in]  hf        The handler to call when the control character is
 ///                       detected on the argument list.
 /// @since  0.2, 10.04.2016
-void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
+void Handler::addControlHandler( char ctrlChar, HandlerFunc hf)
 {
 
    switch (ctrlChar)
@@ -503,17 +504,14 @@ void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
 /// @param[in]  ihc
 ///    Pointer to the object that handles the constraint.
 /// @since  0.2, 10.04.2016
-void Handler::addConstraint( detail::IHandlerConstraint* ihc) noexcept( false)
+void Handler::addConstraint( detail::IHandlerConstraint* ihc)
 {
 
    if (ihc == nullptr)
-      throw runtime_error( "invalid NULL pointer passed");
-
-   if (ihc->argumentList().empty())
-      throw runtime_error( "may not specify constraint with empty argument list");
+      throw invalid_argument( "invalid NULL pointer passed");
 
    if (!validArguments( ihc->argumentList()))
-      throw runtime_error( "constraint contains invalid argument(s)");
+      throw invalid_argument( "constraint contains invalid argument(s)");
 
    // in case the argument list was updated through validArguments(), the
    // constraints may need to be notified about the new content
@@ -1264,6 +1262,20 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
    else if (flag_set & hfHelpLong)
       args = "help";
 
+   if ((txt1 == nullptr) && (txt2 != nullptr))
+      throw std::invalid_argument( "Use first usage text argument to specify a "
+         "single usage text");
+   if ((txt1 != nullptr) && (txt2 != nullptr))
+   {
+      if (txt1->usagePos() == txt2->usagePos())
+         throw std::invalid_argument( "Cannot have two usage texts with the "
+            "same position");
+      if ((txt1->usagePos() == UsagePos::afterArgs)
+          && (txt2->usagePos() == UsagePos::beforeArgs))
+         throw std::invalid_argument( "Invalid order of usage texts "
+            "(after/before)");
+   } // end if
+
    if (!args.empty())
       addArgument( args, new detail::TypedArgCallable(
          [=]() { usage( txt1, txt2); }, "Handler::usage"),
@@ -1311,10 +1323,6 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
 /// @since  0.2, 10.04.2016
 void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 {
-
-   if ((txt2 != nullptr) && (txt1 == nullptr))
-      throw std::invalid_argument( "second usage text can only be used if first"
-         " usage text is used too");
 
    if (Groups::instance().evaluatedByArgGroups() && !mIsSubGroupHandler)
        Groups::instance().displayUsage( txt1, txt2);

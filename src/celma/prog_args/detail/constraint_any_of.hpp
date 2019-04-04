@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,11 +34,18 @@ class ConstraintAnyOf: public IHandlerConstraint
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  reqArgSpec
    ///    The list of arguments of which at most one may be used.
+   /// @throws
+   ///    "invalid argument" if the string is empty or does not contain at least
+   ///    two arguments.
    /// @since  0.2, 10.04.2016
-   explicit ConstraintAnyOf( const std::string& reqArgSpec);
-   
+   explicit ConstraintAnyOf( const std::string& reqArgSpec) noexcept( false);
+
+   // Default destructor is fine.
+   virtual ~ConstraintAnyOf() = default;
+
    /// Called when an argument was identified. If the argument is one of those
    /// in the specified list, check if it is the first of these arguments that
    /// is used, i.e. #mUsedArgument is empty.
