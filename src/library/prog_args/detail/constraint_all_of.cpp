@@ -40,18 +40,9 @@ namespace celma { namespace prog_args { namespace detail {
 ///    two arguments.
 /// @since  0.2, 10.04.2016
 ConstraintAllOf::ConstraintAllOf( const std::string& reqArgSpec):
-   mArgSpecList( reqArgSpec),
+   IHandlerConstraint( "all of", reqArgSpec),
    mRemainingArguments()
 {
-
-   if (mArgSpecList.empty())
-      throw std::invalid_argument( "Constraint 'all of' cannot be created with "
-         " an empty list of arguments");
-
-   if (mArgSpecList.find( ';') == std::string::npos)
-      throw std::invalid_argument( "List of needed arguments for constraint "
-         "'all of' must contain at least two arguments separated by ';'");
-
 } // ConstraintAllOf::ConstraintAllOf
 
 

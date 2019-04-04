@@ -86,13 +86,10 @@ private:
    /// Container for the keys, only keys needed.
    using key_cont_t = Storage< std::nullptr_t>;
 
-   /// The argument specifications of the arguments.<br>
-   /// Non-const because non-complete argument specifications may be expanded.
-   std::string  mArgSpecList;
    /// When validated() is called, the arguments from #mArgSpecList are copied
    /// here. Afterwards, executeConstraint() will delete the used argument from
    /// it
-   key_cont_t   mRemainingArguments;
+   key_cont_t  mRemainingArguments;
 
 }; // ConstraintAllOf
 

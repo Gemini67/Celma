@@ -41,18 +41,9 @@ namespace celma { namespace prog_args { namespace detail {
 ///    two arguments.
 /// @since  0.2, 10.04.2016
 ConstraintAnyOf::ConstraintAnyOf( const std::string& reqArgSpec):
-   mArgSpecList( reqArgSpec),
+   IHandlerConstraint( "any of", reqArgSpec),
    mUsedArgument()
 {
-
-   if (mArgSpecList.empty())
-      throw std::invalid_argument( "Constraint 'any of' cannot be created with "
-         " an empty list of arguments");
-
-   if (mArgSpecList.find( ';') == std::string::npos)
-      throw std::invalid_argument( "List of needed arguments for constraint "
-         "'any of' must contain at least two arguments separated by ';'");
-
 } // ConstraintAnyOf::ConstraintAnyOf
 
 

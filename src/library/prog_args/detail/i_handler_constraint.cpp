@@ -105,6 +105,33 @@ bool IHandlerConstraint::isConstraintArgument( const std::string& constraint_arg
 
 
 
+/// Constructor.
+///
+/// @param[in]  constraint_name
+///    The name of the constraint for error messages.
+/// @param[in]  arg_spec
+///    The list of arguments affected by the constraint.
+/// @since
+///    x.y.z, 04.04.2019
+IHandlerConstraint::IHandlerConstraint( const std::string& constraint_name,
+   const std::string& arg_spec):
+      mConstraintName( constraint_name),
+      mArgSpecList( arg_spec)
+{
+
+   if (mArgSpecList.empty())
+      throw std::invalid_argument( "Constraint '" + mConstraintName
+         + "' cannot be created with an empty list of arguments");
+
+   if (mArgSpecList.find( ';') == std::string::npos)
+      throw std::invalid_argument( "List of needed arguments for constraint '"
+         + mConstraintName + "' must contain at least two arguments separated "
+         "by ';'");
+
+} // IHandlerConstraint::IHandlerConstraint
+
+
+
 } // namespace detail
 } // namespace prog_args
 } // namespace celma

@@ -37,19 +37,9 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  reqArgSpec  The list of arguments of which one must be used.
 /// @since  0.2, 10.04.2016
 ConstraintOneOf::ConstraintOneOf( const std::string& reqArgSpec):
-   mArgSpecList( reqArgSpec),
+   IHandlerConstraint( "one of", reqArgSpec),
    mUsedArgument()
 {
-
-
-   if (mArgSpecList.empty())
-      throw std::invalid_argument( "Constraint 'one of' cannot be created with "
-         " an empty list of arguments");
-
-   if (mArgSpecList.find( ';') == std::string::npos)
-      throw std::invalid_argument( "List of needed arguments for constraint "
-         "'one of' must contain at least two arguments separated by ';'");
-
 } // ConstraintOneOf::ConstraintOneOf
 
 

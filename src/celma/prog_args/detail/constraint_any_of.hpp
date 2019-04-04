@@ -79,9 +79,6 @@ public:
    virtual std::string toString() const override;
 
 private:
-   /// The argument specifications of the arguments.<br>
-   /// Non-const because non-complete argument specifications may be expanded.
-   std::string  mArgSpecList;
    /// Contains the argument that was actually used on the command line.<br>
    /// Used to determine if an argument was used, may be used and for error
    /// reporting.
