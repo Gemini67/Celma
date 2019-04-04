@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.22.0
+   \mainpage  CELMA v1.22.1
 
    \tableofcontents
 
@@ -46,6 +46,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
+   |   1.22.1 | 2019-04-04        | Split base class for constraints. |
    |   1.22.0 | 2019-04-03        | Added modules "properties" and "relational operators from compare". Added feature "arguments from environment variable". |
    |   1.21.0 | 2019-03-27        | Added module "range value string", improved coverage, fixed some minor bugs. |
    |   1.20.0 | 2019-02-05        | Added read and write buffers. |

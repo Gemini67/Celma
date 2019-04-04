@@ -252,16 +252,17 @@ string TypedArgBase::constraintStr() const
 
 /// Adds a constraint to this argument. The constraint is only evaluated when
 /// the argument is actually used.
-/// @param[in]  ic
+///
+/// @param[in]  iac
 ///    Pointer to the contraint object to add to this argument.
 /// @return
 ///    Pointer to this object.
 /// @since
 ///    0.2, 10.04.2016
-TypedArgBase* TypedArgBase::addConstraint( IConstraint* ic)
+TypedArgBase* TypedArgBase::addConstraint( IArgConstraint* iac)
 {
 
-   mConstraints.push_back( ic);
+   mConstraints.push_back( iac);
 
    return this;
 } // TypedArgBase::addConstraint

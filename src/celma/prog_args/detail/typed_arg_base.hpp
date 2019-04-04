@@ -24,7 +24,7 @@
 #include <vector>
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
-#include "celma/prog_args/detail/i_constraint.hpp"
+#include "celma/prog_args/detail/i_arg_constraint.hpp"
 #include "celma/prog_args/detail/i_format.hpp"
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
@@ -501,13 +501,14 @@ public:
 
    /// Adds a constraint to this argument. The constraint is only evaluated when
    /// the argument is actually used.
-   /// @param[in]  ic
+   ///
+   /// @param[in]  iac
    ///    Pointer to the contraint object to add to this argument.
    /// @return
    ///    Pointer to this object.
    /// @since
    ///    0.2, 10.04.2016
-   virtual TypedArgBase* addConstraint( IConstraint* ic);
+   virtual TypedArgBase* addConstraint( IArgConstraint* iac);
 
    /// Returns if the argument has a constraint specified.
    /// @return
@@ -605,7 +606,7 @@ protected:
    /// Pointer to the object that manages the cardinality check.
    std::unique_ptr< ICardinality>  mpCardinality;
    /// Stores the constraints defined for this argument.
-   std::vector< IConstraint*>      mConstraints;
+   std::vector< IArgConstraint*>   mConstraints;
 
 private:
    /// Should assign a value to the specified destination variable.

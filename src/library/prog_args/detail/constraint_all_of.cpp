@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,6 +37,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Constructor, does a basic validation of the argument list.
+///
 /// @param[in]  reqArgSpec    The list of arguments that must be used.
 /// @since  0.2, 10.04.2016
 ConstraintAllOf::ConstraintAllOf( const string& reqArgSpec):
@@ -87,6 +88,7 @@ void ConstraintAllOf::executeConstraint( const ArgumentKey& key)
 
 
 /// Returns the list of arguments that must be used.
+///
 /// @return  The list of arguments as passed to the constructor.
 /// @since  0.2, 10.04.2016
 string& ConstraintAllOf::argumentList()
@@ -98,6 +100,7 @@ string& ConstraintAllOf::argumentList()
 
 
 /// Called after the argument list in a global constraint was validated.
+///
 /// @since  0.2, 10.04.2016
 void ConstraintAllOf::validated()
 {
@@ -113,6 +116,7 @@ void ConstraintAllOf::validated()
 
 /// Checks if all of the specified arguments were used, i.e.: if the string
 /// \a #mRemainingArguments is empty.
+///
 /// @since  0.2, 10.04.2016
 void ConstraintAllOf::checkEndCondition() const
 {
@@ -135,6 +139,7 @@ void ConstraintAllOf::checkEndCondition() const
 
 
 /// Returns a text description of the constraint.
+///
 /// @return  A string with the text description of the constraint.
 /// @since  0.16.0, 15.08.2017
 string ConstraintAllOf::toString() const
@@ -154,5 +159,5 @@ string ConstraintAllOf::toString() const
 } // namespace celma
 
 
-// ======================  END OF constraint_all_of.cpp  ======================
+// =====  END OF constraint_all_of.cpp  =====
 

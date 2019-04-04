@@ -29,6 +29,7 @@
 #include "celma/prog_args/detail/argument_desc.hpp"
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
+#include "celma/prog_args/detail/i_handler_constraint.hpp"
 #include "celma/prog_args/summary_options.hpp"
 
 
@@ -590,9 +591,11 @@ public:
    /// Adds a constraint to the argument handler itself that affects multiple
    /// arguments.<br>
    /// The arguments specified in the constraint must already be defined.
-   /// @param[in]  ic  Pointer to the object that handles the constraint.
+   ///
+   /// @param[in]  ihc
+   ///    Pointer to the object that handles the constraint.
    /// @since  0.2, 10.04.2016
-   void addConstraint( detail::IConstraint* ic) noexcept( false);
+   void addConstraint( detail::IHandlerConstraint* ihc) noexcept( false);
 
    /// Iterates over the list of arguments and their values and stores the
    /// values in the corresponding destination variables.<br>
@@ -747,7 +750,7 @@ private:
    static const detail::ArgumentKey  mPosKey;
 
    /// Type of the container to store the global constrainst in.
-   using ConstraintCont = std::vector< detail::IConstraint*>;
+   using ConstraintCont = std::vector< detail::IHandlerConstraint*>;
 
    /// Called by the constructors to evaluate the set of flags given.
    ///

@@ -499,24 +499,27 @@ void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
 /// Adds a constraint to the argument handler itself that affects multiple
 /// arguments.<br>
 /// The arguments specified in the constraint must already be defined.
-/// @param[in]  ic  Pointer to the object that handles the constraint.
+///
+/// @param[in]  ihc
+///    Pointer to the object that handles the constraint.
 /// @since  0.2, 10.04.2016
-void Handler::addConstraint( detail::IConstraint* ic) noexcept( false)
+void Handler::addConstraint( detail::IHandlerConstraint* ihc) noexcept( false)
 {
 
-   assert( ic != nullptr);
+   if (ihc == nullptr)
+      throw runtime_error( "invalid NULL pointer passed");
 
-   if (ic->argumentList().empty())
+   if (ihc->argumentList().empty())
       throw runtime_error( "may not specify constraint with empty argument list");
 
-   if (!validArguments( ic->argumentList()))
+   if (!validArguments( ihc->argumentList()))
       throw runtime_error( "constraint contains invalid argument(s)");
 
    // in case the argument list was updated through validArguments(), the
    // constraints may need to be notified about the new content
-   ic->validated();
+   ihc->validated();
 
-   mGlobalConstraints.push_back( ic);
+   mGlobalConstraints.push_back( ihc);
 
 } // Handler::addConstraint
 
