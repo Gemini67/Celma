@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,6 +46,9 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
    // test with a boolean value, not set as parameter
    {
       ValueHandler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.getValueHandlerObj());
+      BOOST_REQUIRE( ah.getValueHandlerObj() != nullptr);
 
       ah.addValueArgument< bool>( "b", "Boolean.");
 

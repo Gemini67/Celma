@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -55,7 +55,7 @@ class ValueHandler;
 ///   The short (character) and long argument format are order independent in
 ///   the argument string.<br>
 ///   The object to handle the destination variable is created using a function
-///   of the template family celma::prg_args::destinaion().<br>
+///   of the template family celma::prg_args::destination().<br>
 ///   Use one of the \c DEST_... macros to easily create the second and third
 ///   parameter of the function, the destination variable object plus the name
 ///   of the destination variable.<br>
@@ -117,7 +117,7 @@ class ValueHandler;
 ///   - setCardinality(): Allows to change or delete the cardinality check that
 ///     is applied to this argument.
 ///   - checkOriginalValue(): For value arguments, i.e. 'flag' arguments where
-///     the value to set on the destinaion variable is part of the argument
+///     the value to set on the destination variable is part of the argument
 ///     itself, multiple changes to the same destination variable are prevented
 ///     by checking the original value before changing it. Set
 ///     checkOriginalValue() to \c false to allow multiple changes.
@@ -266,8 +266,12 @@ public:
       /// before parsing the command line arguments.<br>
       /// File: $HOME/.progargs/\<progfilename\>.pa
       hfReadProgArg     = hfHelpArgFull  << 1,
+      /// Set this when additional program arguments should be read from an
+      /// environment variable. Default name of the environment variable is the
+      /// name of the program file in uppercase letters.
+      hfEnvVarArgs = hfReadProgArg << 1,
       /// Produces verbose output when a value is assigned to a variable.
-      hfVerboseArgs     = hfReadProgArg << 1,
+      hfVerboseArgs     = hfEnvVarArgs << 1,
       /// Specifies that hidden arguments should be printed too in the usage.
       hfUsageHidden     = hfVerboseArgs << 1,
       /// Allows the argument '--print-hidden' to print the hidden arguments in
@@ -330,7 +334,7 @@ public:
    static const int  DebugFlags = hfVerboseArgs | hfListArgVar;
    /// Complete set of all available arguments.
    static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfHelpArg
-                                   | hfReadProgArg | hfVerboseArgs
+                                   | hfReadProgArg | hfEnvVarArgs | hfVerboseArgs
                                    | hfUsageHidden | hfArgHidden | hfListArgVar
                                    | hfUsageCont;
 
@@ -393,6 +397,14 @@ public:
    /// @since  0.2, 10.04.2016
    ~Handler();
 
+   /// Activates the check for program arguments in an environment variable,
+   /// plus allows to specify the name of the environment variable o use.<br>
+   /// The default is the name of the program file, all in uppercase letters.
+   ///
+   /// @param[in]  env_var_name  Optional, the name of the environment variable.
+   /// @since  1.22.0, 01.04.2019
+   void checkEnvVarArgs( std::string env_var_name = "");
+
    /// Adds an argument with short and/or long arguments.<br>
    /// For positional arguments, i.e. arguments not preceeded by a an argument
    /// character/name, specify "-" as \a arg_spec.
@@ -452,14 +464,17 @@ public:
    /// parameter.<br>
    /// When the flag #hfReadProgArg is passed to the constructor, the program
    /// arguments file with the predefined name is always read if it exists.<br>
-   /// With the method it is possible to specify an argument with which the
+   /// With this method it is possible to specify an argument with which the
    /// (path and) name of the arguments file can be specified. Only if this
    /// given argument is then used on the command line, the argument file is
    /// read.
-   /// @param[in]  arg_spec  The arguments on the command line for specifying
-   ///                       the file with the arguments.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line for specifying the file with the
+   ///    arguments.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentFile( const std::string& arg_spec);
 
@@ -788,6 +803,14 @@ private:
    /// @since  0.2, 10.04.2016
    void readEvalFileArguments( const char* arg0);
 
+   /// If no environment variable name is given, the name of the program file is
+   /// used. Then check if an environment variable with this name exists and is
+   /// not empty. If so the evaluate the program arguments from the variable.
+   ///
+   /// @param[in]  arg0  The (path and) name of the program file.
+   /// @since  1.22.0, 01.04.2019
+   void checkReadEnvVarArgs( const char* arg0);
+
    /// Function to read arguments from a file.
    /// @param[in]  pathFilename   The (path and) file name to read from.
    /// @param[in]  reportMissing  If set, the file should exist, an exception is
@@ -921,14 +944,35 @@ private:
    /// Global constraints, i.e. constraints that affect multiple arguments
    /// and/or are not triggered by a specific argument.
    ConstraintCont                 mGlobalConstraints;
+   /// Set when the flag #hfEnvVarArgs is passed to the constructor, or when
+   /// checkEnvVarArgs() is called: Checks for additional program arguments in
+   /// the given environment variable.
+   bool                           mCheckEnvVar = false;
+   /// Contains the name of the environment variable to check for additional
+   /// program arguments. By default, the name of the program file is used, all
+   /// in uppercase letters.
+   std::string                    mEnvVarName;
 
    /// Pointer to the last argument handler that was used. Needed for
    /// processing multiple, separate values.
    detail::TypedArgBase*          mpLastArg = nullptr;
-   /// Reading arguments from a file should not influence the cardinality
-   /// checks, i.e. it should be possible to overwrite a value from a file
-   /// without triggering a 'too many values' exception.
-   bool                           mReadingArgumentFile = false;
+
+   /// List of values/flags for the different read mode.<br>
+   /// The flags for "reading from file" and "processing environment variable"
+   /// may be set in parallel.
+   enum ReadMode
+   {
+      commandLine,   //!< Normal evaluation of command line arguments.
+      file,          //!< Flag/Bit set when evaluating an argument file.
+      envVar         //!< Flag/Bit set when evaluating an environment variable.
+   };
+
+   /// Reading arguments from a file or an environment variable should not
+   /// influence the cardinality checks, i.e. it should be possible to overwrite
+   /// a value from a file without triggering a 'too many values' exception.<br>
+   /// Since arguments from the environment variable could trigger reading an
+   /// argument file, these two states must be managd separately.
+   uint8_t                        mReadMode = ReadMode::commandLine;
    /// Flag, set when this argument handler object was created by a Groups
    /// object.
    bool                           mUsedByGroup;

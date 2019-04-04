@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,6 +30,10 @@
 #include <iostream>
 #include <iomanip>
 #include <memory>
+
+
+// Boost library includes
+#include <boost/algorithm/string.hpp>
 
 
 // project includes
@@ -107,6 +111,8 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mpExclamationMarkHdlr(),
    mConstraints(),
    mGlobalConstraints(),
+   mCheckEnvVar( (flag_set & hfEnvVarArgs) != 0),
+   mEnvVarName(),
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
@@ -155,6 +161,8 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
    mpExclamationMarkHdlr(),
    mConstraints(),
    mGlobalConstraints(),
+   mCheckEnvVar(),
+   mEnvVarName(),
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
@@ -172,6 +180,22 @@ Handler::~Handler()
    common::Vector::clear( mGlobalConstraints);
 
 } // Handler::~Handler
+
+
+
+/// Activates the check for program arguments in an environment variable,
+/// plus allows to specify the name of the environment variable o use.<br>
+/// The default is the name of the program file, all in uppercase letters.
+///
+/// @param[in]  env_var_name  Optional, the name of the environment variable.
+/// @since  1.22.0, 01.04.2019
+void Handler::checkEnvVarArgs( std::string env_var_name)
+{
+
+   mCheckEnvVar = true;
+   mEnvVarName  = env_var_name;
+
+} // Handler::checkEnvVarArgs
 
 
 
@@ -239,14 +263,17 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 /// parameter.<br>
 /// When the flag #hfReadProgArg is passed to the constructor, the program
 /// arguments file with the predefined name is always read if it exists.<br>
-/// With the method it is possible to specify an argument with which the
+/// With this method it is possible to specify an argument with which the
 /// (path and) name of the arguments file can be specified. Only if this
 /// given argument is then used on the command line, the argument file is
 /// read.
-/// @param[in]  arg_spec  The arguments on the command line for specifying
-///                       the file with the arguments.
-/// @return  The object managing this argument, may be used to apply further
-///          settings.
+///
+/// @param[in]  arg_spec
+///    The arguments on the command line for specifying the file with the
+///    arguments.
+/// @return
+///    The object managing this argument, may be used to apply further
+///    settings.
 /// @since  0.2, 10.04.2016
 detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 {
@@ -516,6 +543,11 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
       readEvalFileArguments( argv[ 0]);
    } // end if
 
+   if (mCheckEnvVar)
+   {
+      checkReadEnvVarArgs( argv[ 0]);
+   } // end if
+
    // make sure that mpLastArg is reset at the end, in case the same object is
    // used multiple times
    const common::ResetAtExit< detail::TypedArgBase*>  rae( mpLastArg, nullptr);
@@ -555,7 +587,7 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
 ///                     space at the end as separator to the following text.
 /// @since  0.2, 10.04.2016
 void Handler::evalArgumentsErrorExit( int argc, char* argv[],
-                                      const string& prefix)
+   const string& prefix)
 {
 
    try
@@ -829,7 +861,7 @@ Handler::ArgResult
    case detail::ArgListElement::ElementType::value:
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
-         mpLastArg->assignValue( mReadingArgumentFile, ai->mValue);
+         mpLastArg->assignValue( mReadMode != ReadMode::commandLine, ai->mValue);
          return ArgResult::consumed;
       } // end if
       if (detail::TypedArgBase* hdl = mArguments.findArg( mPosKey))
@@ -926,8 +958,12 @@ bool Handler::argumentExists( const string& argString) const
 void Handler::readEvalFileArguments( const char* arg0)
 {
 
+   assert( (mReadMode & ReadMode::file) == 0);
+
    // have to copy the path since basename() may want to modify it
    std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
+
+   ::strcpy( copy.get(), arg0);
 
    const char*  progNameOnly = ::basename( copy.get());
    const char*  homeDir = ::getenv( "HOME");
@@ -942,6 +978,41 @@ void Handler::readEvalFileArguments( const char* arg0)
    readArgumentFile( absPath, false);
 
 } // Handler::readEvalFileArguments
+
+
+
+/// If no environment variable name is given, the name of the program file is
+/// used. Then check if an environment variable with this name exists and is
+/// not empty. If so the evaluate the program arguments from the variable.
+///
+/// @param[in]  arg0  The (path and) name of the program file.
+/// @since  1.22.0, 01.04.2019
+void Handler::checkReadEnvVarArgs( const char* arg0)
+{
+
+   assert( (mReadMode & ReadMode::envVar) == 0);
+
+   if (mEnvVarName.empty())
+   {
+      std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
+
+      ::strcpy( copy.get(), arg0);
+      mEnvVarName = ::basename( copy.get());
+      boost::to_upper( mEnvVarName);
+   } // end if
+
+   const char*  arg_env = ::getenv( mEnvVarName.c_str());
+
+   if ((arg_env == nullptr) || (arg_env[ 0] == '\0'))
+      return;
+
+   const common::ScopedFlag< uint8_t>  sf( mReadMode, ReadMode::envVar);
+   const appl::ArgString2Array         as2a( arg_env, nullptr);
+   detail::ArgListParser               alp( as2a.mArgC, as2a.mpArgV);
+
+   iterateArguments( alp);
+
+} // Handler::checkReadEnvVarArgs
 
 
 
@@ -963,8 +1034,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       return;
    } // end if
 
-   const common::ResetAtExit< bool>  rae( mReadingArgumentFile, false);
-   mReadingArgumentFile = true;
+   const common::ScopedFlag< uint8_t>  sf( mReadMode, ReadMode::file);
 
    // now read the lines with arguments and process them
    string  line;
@@ -973,8 +1043,8 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       if (line.empty() || (line[ 0] == '#'))
          continue;   // while
 
-      appl::ArgString2Array  as2a( line, nullptr);
-      detail::ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+      const appl::ArgString2Array  as2a( line, nullptr);
+      detail::ArgListParser        alp( as2a.mArgC, as2a.mpArgV);
 
       iterateArguments( alp);
    } // end while
@@ -1426,7 +1496,7 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
                  << endl;
    } // end if
 
-   hdl->assignValue( mReadingArgumentFile, value);
+   hdl->assignValue( mReadMode != 0, value);
 
 } // Handler::handleIdentifiedArg
 
