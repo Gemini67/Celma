@@ -32,7 +32,7 @@ class ArgumentKey;
 /// Base class for constraints depending on a specific argument, dynamically
 /// activated if the argument is used.
 ///
-/// @since  x.y.z, 25.10.2018
+/// @since  1.22.1, 25.10.2018
 ///    (moved from IConstraint, special version for argument-specific constraints)
 /// @since  0.2, 10.04.2016
 class IArgConstraint
