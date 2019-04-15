@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -66,6 +66,28 @@ bool IArgConstraint::isConstraintArgument( const std::string& constraint_arg_lis
 
    return false;
 } // IArgConstraint::isConstraintArgument
+
+
+
+/// Constructor, verifies the constraint string.
+///
+/// @param[in]  name
+///    The name of the constraint for error messages.
+/// @param[in]  constraint
+///    The string with the (list of) constraint(s).
+/// @throws  "invalid argument" when the given constraint string is empty.
+/// @since  x.y.z, 05.04.2019
+IArgConstraint::IArgConstraint( const std::string name,
+   const std::string constraint):
+      mName( name),
+      mConstraints( constraint)
+{
+
+   if (constraint.empty())
+      throw std::invalid_argument( "Constraint string for constraint '" + mName
+         + "' may not be empty");
+   
+} // IArgConstraint::IArgConstraint
 
 
 

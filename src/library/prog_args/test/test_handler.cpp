@@ -258,14 +258,22 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
                            logic_error);
    } // end scope
 
-   // Ensure that calling addFormat() on a wrong type throws.
+   // ensure that calling addFormat() on a wrong type throws
    {
       Handler  ah( 0);
       bool     dummy;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( dummy), "flag")
-                                         ->addFormat( celma::prog_args::uppercase()),
-                           logic_error);
+         ->addFormat( celma::prog_args::uppercase()), logic_error);
+   } // end scope
+
+   // ensure that calling addFormat() with an empty format pattern throws
+   {
+      Handler      ah( 0);
+      std::string  dummy;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dummy), "string")
+         ->addFormat( celma::prog_args::anycase( "")), invalid_argument);
    } // end scope
 
 } // argument_setup_errors
@@ -2282,42 +2290,6 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
    } // end scope
 
 } // missing_mandatory
-
-
-
-/// Check formatting functions.
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( format_check)
-{
-
-   CheckAssign< string>  name;
-
-
-   {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n process1", nullptr);
-
-      ah.addArgument( "n", DEST_VAR( name), "Name")->addFormat( celma::prog_args::uppercase());
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
-      BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
-   } // end scope
-
-   name.reset();
-
-   {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n PROceSS1", nullptr);
-
-      ah.addArgument( "n", DEST_VAR( name), "Name")->addFormat( celma::prog_args::lowercase());
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
-      BOOST_REQUIRE_EQUAL( name.value(), "process1");
-   } // end scope
-
-} // format_check
 
 
 

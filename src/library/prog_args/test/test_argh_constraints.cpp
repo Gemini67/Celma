@@ -46,6 +46,12 @@ BOOST_AUTO_TEST_CASE( errors)
    {
       Handler  ah( 0);
 
+      BOOST_REQUIRE_THROW( ah.addConstraint( nullptr), std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+
       BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::all_of( "")),
          std::invalid_argument);
    } // end scope
@@ -82,6 +88,29 @@ BOOST_AUTO_TEST_CASE( errors)
       Handler  ah( 0);
 
       BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::one_of( "one_arg")),
+         std::invalid_argument);
+   } // end scope
+
+   // constraint is not activated
+   {
+      Handler  ah( 0);
+      bool     dummy;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "d", DEST_VAR( dummy), "no name")
+         ->addConstraint( nullptr), std::invalid_argument);
+   } // end scope
+
+   // constraint is not activated
+   {
+      Handler  ah( 0);
+      bool     dummy;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "d", DEST_VAR( dummy), "no name")
+         ->addConstraint( celma::prog_args::requires( "")),
+         std::invalid_argument);
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "d", DEST_VAR( dummy), "no name")
+         ->addConstraint( celma::prog_args::excludes( "")),
          std::invalid_argument);
    } // end scope
 

@@ -35,6 +35,8 @@
 
 using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
+using celma::prog_args::SummaryOptions;
+using celma::test::multilineStringCompare;
 
 
 
@@ -42,6 +44,16 @@ using celma::prog_args::Handler;
 /// @since  0.11, 05.01.2017
 BOOST_AUTO_TEST_CASE( test_tuple_errors)
 {
+
+   // not possible to add a format for a tuple
+   {
+      Handler                        ah( 0);
+      std::tuple< int, std::string>  myTuple;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+         "Key and value")->addFormat( celma::prog_args::lowercase()),
+         std::logic_error);
+   } // end scope
 
    // not enough values for the tuple
    {
@@ -140,6 +152,17 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
+
+      using celma::common::operator |;
+
+      std::ostringstream  std_out;
+      ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key,
+         std_out);
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Argument summary:\n"
+         "   Value <3, 9 [std::tuple<int,int>]> set on variable 'myTuple' by argument '-p,--pair'.\n"));
    } // end scope
 
    // no error when tuple argument is not used
@@ -180,6 +203,17 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 4711);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), "foobar");
+
+      using celma::common::operator |;
+
+      std::ostringstream  std_out;
+      ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key,
+         std_out);
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Argument summary:\n"
+         "   Value <4711, \"foobar\" [std::tuple<int,std::string>]> set on variable 'myTuple' by argument '-p,--pair'.\n"));
    } // end scope
 
    // test with a tuple with two integer values that are passed as two separate
@@ -200,15 +234,18 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
 
    // test "list arguments and variables" with a tuple
    {
-      std::ostringstream     oss;
-      Handler                ah( oss, std::cerr, Handler::hfListArgVar);
-      std::tuple< int, int>  myTuple;
+      std::ostringstream             oss;
+      Handler                        ah( oss, std::cerr, Handler::hfListArgVar);
+      std::tuple< int, int>          myTuple;
+      std::tuple< int, std::string>  myTuple2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value")
                                             ->setTakesMultiValue());
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s,string-pair",
+         DEST_VAR( myTuple2), "Key and string value")->setListSep( '-'));
 
-      const ArgString2Array  as2a( "--list-arg-vars -p 13,42 --list-arg-vars",
+      const ArgString2Array  as2a( "--list-arg-vars -p 13,42 -s 7-wonderful --list-arg-vars",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
@@ -219,12 +256,16 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'-p,--pair' value type 'std::tuple<int,int>', destination 'myTuple', value not set.\n"
          "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-s,--string-pair' value type 'std::tuple<int,std::string>', destination 'myTuple2', value not set.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "\n"
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "'-p,--pair' value type 'std::tuple<int,int>', destination 'myTuple', value = <13, 42>.\n"
          "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-s,--string-pair' value type 'std::tuple<int,std::string>', destination 'myTuple2', value = <7, \"wonderful\">.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
          "\n"));
    } // end scope
 
@@ -372,6 +413,18 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
          "'-t,--triple' value type 'std::tuple<int,int,int>', destination 'myTuple', value = <13, 42, 4711>.\n"
          "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
          "\n"));
+
+      using celma::common::operator |;
+
+      std::ostringstream  std_out;
+      ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key,
+         std_out);
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Argument summary:\n"
+         "   Value <[callable]> set on variable 'Handler::listArgVars' by argument '--list-arg-vars'.\n"
+         "   Value <13, 42, 4711 [std::tuple<int,int,int>]> set on variable 'myTuple' by argument '-t,--triple'.\n"));
    } // end scope
 
    // print usage with a tuple with 2 integers and a string in between

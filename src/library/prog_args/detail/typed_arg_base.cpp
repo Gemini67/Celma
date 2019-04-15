@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -261,6 +261,9 @@ string TypedArgBase::constraintStr() const
 ///    0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addConstraint( IArgConstraint* iac)
 {
+
+   if (iac == nullptr)
+      throw std::invalid_argument( "invalid NULL pointer added as constraint");
 
    mConstraints.push_back( iac);
 

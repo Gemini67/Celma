@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,6 +28,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Converts the text in \a val to uppercase.
+///
 /// @param[in,out]  val  The text to convert to uppercase.
 /// @since  0.2, 10.04.2016
 void FormatUppercase::formatValue( std::string& val) const
@@ -44,5 +45,5 @@ void FormatUppercase::formatValue( std::string& val) const
 } // namespace celma
 
 
-// =======================  END OF format_uppercase.cpp  =======================
+// =====  END OF format_uppercase.cpp  =====
 

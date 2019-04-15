@@ -1,0 +1,158 @@
+
+/*==
+**
+**    ####   ######  #       #    #   ####
+**   #    #  #       #       ##  ##  #    #
+**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #    #  #       #       #    #  #    #        LGPL
+**    ####   ######  ######  #    #  #    #
+**
+**
+**  Description:
+**    Test program for the feature "value formatting" in the module Handler,
+**    using the Boost.Test module.
+**
+--*/
+
+
+// module to test header file include
+#include "celma/prog_args.hpp"
+
+
+// C++ Standard Library includes
+#include <string>
+#include <vector>
+
+
+// Boost includes
+#define BOOST_TEST_MODULE HandlerFormatTest
+#include <boost/test/unit_test.hpp>
+
+
+// project includes
+#include "celma/appl/arg_string_2_array.hpp"
+
+
+using celma::appl::ArgString2Array;
+using celma::prog_args::Handler;
+
+
+
+/// Check formatting to upper- and lowercase.
+///
+/// @since  0.2, 10.04.2016
+BOOST_AUTO_TEST_CASE( format_case)
+{
+
+   celma::common::CheckAssign< std::string>  name;
+
+
+   {
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n process1", nullptr);
+
+      ah.addArgument( "n", DEST_VAR( name), "Name")
+         ->addFormat( celma::prog_args::uppercase());
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
+   } // end scope
+
+   name.reset();
+
+   {
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-n PROceSS1", nullptr);
+
+      ah.addArgument( "n", DEST_VAR( name), "Name")
+         ->addFormat( celma::prog_args::lowercase());
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE_EQUAL( name.value(), "process1");
+   } // end scope
+
+   // test with a string directly
+   {
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a PROceSS1", nullptr);
+      std::string            my_string;
+
+      ah.addArgument( "a", DEST_VAR( my_string), "another string")
+         ->addFormat( celma::prog_args::uppercase());
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !my_string.empty());
+      BOOST_REQUIRE_EQUAL( my_string, "PROCESS1");
+   } // end scope
+
+} // format_case
+
+
+
+/// Check any-case formatting.
+///
+/// @since  x.y.z, 11.04.2019
+BOOST_AUTO_TEST_CASE( format_anycase)
+{
+
+   // must throw when the format string is empty
+   {
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a bigSmAlL", nullptr);
+      std::string            my_string;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "a", DEST_VAR( my_string),
+         "another string")->addFormat( celma::prog_args::anycase( "")),
+         std::invalid_argument);
+   } // end scope
+
+   // test special anycase formatting
+   {
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a bigSmAlL", nullptr);
+      std::string            my_string;
+
+      ah.addArgument( "a", DEST_VAR( my_string), "another string")
+         ->addFormat( celma::prog_args::anycase( "UUUlllll"));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !my_string.empty());
+      BOOST_REQUIRE_EQUAL( my_string, "BIGsmall");
+   } // end scope
+
+   // format string longer than input string
+   {
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a bigS", nullptr);
+      std::string            my_string;
+
+      ah.addArgument( "a", DEST_VAR( my_string), "another string")
+         ->addFormat( celma::prog_args::anycase( "UUUlllll"));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !my_string.empty());
+      BOOST_REQUIRE_EQUAL( my_string, "BIGs");
+   } // end scope
+
+   // format string shorter than input string
+   {
+      Handler                ah( 0);
+      const ArgString2Array  as2a( "-a bigSmAlL", nullptr);
+      std::string            my_string;
+
+      ah.addArgument( "a", DEST_VAR( my_string), "another string")
+         ->addFormat( celma::prog_args::anycase( "UUUl"));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !my_string.empty());
+      BOOST_REQUIRE_EQUAL( my_string, "BIGsmAlL");
+   } // end scope
+
+} // format_anycase
+
+
+
+// =====  END OF test_argh_format.cpp  =====
+

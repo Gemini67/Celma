@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -1428,6 +1428,155 @@ BOOST_AUTO_TEST_CASE( pattern_check)
    } // end scope
 
 } // pattern_check
+
+
+
+/// Verifies that the 'minimum length' check works correctly.
+///
+/// @since  x.y.z, 11.04.2019
+BOOST_AUTO_TEST_CASE( minimum_length)
+{
+
+   using celma::prog_args::minLength;
+
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 0)), std::invalid_argument);
+   } // end scope
+
+   // value too short
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6)));
+
+      const ArgString2Array  as2a( "-s hello", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::underflow_error);
+   } // end scope
+
+   // value just about long enough
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6)));
+
+      const ArgString2Array  as2a( "-s worlds", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+} // minimum_length
+
+
+
+/// Verifies that the 'maximum length' check works correctly.
+///
+/// @since  x.y.z, 12.04.2019
+BOOST_AUTO_TEST_CASE( maximum_length)
+{
+
+   using celma::prog_args::maxLength;
+
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( maxLength( 0)), std::invalid_argument);
+   } // end scope
+
+   // value too long
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( maxLength( 6)));
+
+      const ArgString2Array  as2a( "-s wonderful", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::overflow_error);
+   } // end scope
+
+   // value just about short enough
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( maxLength( 6)));
+
+      const ArgString2Array  as2a( "-s worlds", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+} // maximum_length
+
+
+
+/// Verifies that combinations of the 'minimum length' and 'maximum length'
+/// checks work correctly.
+///
+/// @since  x.y.z, 12.04.2019
+BOOST_AUTO_TEST_CASE( min_max_length)
+{
+
+   using celma::prog_args::maxLength;
+   using celma::prog_args::minLength;
+
+   // value too short
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
+
+      const ArgString2Array  as2a( "-s hello", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::underflow_error);
+   } // end scope
+
+   // value length in range
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
+
+      const ArgString2Array  as2a( "-s wonderful", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // value too long
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
+
+      const ArgString2Array  as2a( "-s outstandingly", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::overflow_error);
+   } // end scope
+
+} // min_max_length
 
 
 

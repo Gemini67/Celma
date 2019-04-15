@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -58,10 +58,6 @@ public:
    /// @return  A string with the text description of the constraint.
    /// @since  0.16.0, 15.08.2017
    virtual std::string toString() const override;
-
-private:
-   /// The argument specification of the other, forbidden argument(s).
-   const std::string  mExcludedArgSpec;
 
 }; // ConstraintExcludes
 

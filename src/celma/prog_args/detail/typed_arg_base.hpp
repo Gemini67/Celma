@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,6 +34,8 @@
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
+#include "celma/prog_args/detail/check_max_length.hpp"
+#include "celma/prog_args/detail/check_min_length.hpp"
 #include "celma/prog_args/detail/check_parent_directory_exists.hpp"
 #include "celma/prog_args/detail/check_pattern.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
@@ -42,6 +44,7 @@
 
 // also the specific formatters are not actually needed here, but they are also
 // included anyway for convenience of the user
+#include "celma/prog_args/detail/format_anycase.hpp"
 #include "celma/prog_args/detail/format_lowercase.hpp"
 #include "celma/prog_args/detail/format_uppercase.hpp"
 
@@ -508,7 +511,7 @@ public:
    ///    Pointer to this object.
    /// @since
    ///    0.2, 10.04.2016
-   virtual TypedArgBase* addConstraint( IArgConstraint* iac);
+   virtual TypedArgBase* addConstraint( IArgConstraint* iac) noexcept( false);
 
    /// Returns if the argument has a constraint specified.
    /// @return

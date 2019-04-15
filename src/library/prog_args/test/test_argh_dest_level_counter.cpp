@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,6 +36,50 @@
 using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using celma::prog_args::LevelCounter;
+
+
+namespace {
+
+
+enum class VerboseLevels
+{
+   none = 0,
+   low = 1,
+   medium = 2,
+   high = 3
+};
+
+
+class EnumFormatter: public celma::prog_args::detail::IFormat
+{
+public:
+   /// Empty, virtual destructor.
+   ///
+   /// @since  x.y.z, 09.04.2019
+   virtual ~EnumFormatter() = default;
+
+   /// Returns the value of the enum as string in \a val.
+   ///
+   /// @param[in,out]  val  The value to change the formatting of.
+   /// @since  x.y.z, 09.04.2019
+   virtual void formatValue( std::string& val) const override
+   {
+      if (val == "none")
+         val = "0";
+      else if (val == "low")
+         val = "1";
+      else if (val == "medium")
+         val = "2";
+      else if (val == "high")
+         val = "3";
+      else
+         throw std::runtime_error( "'" + val + "' is not a valid enum name");
+   } // EnumFormatter::formatValue
+
+}; // EnumFormatter
+
+
+} // namespace
 
 
 
@@ -316,6 +360,28 @@ BOOST_AUTO_TEST_CASE( mixing_arguments)
    } // end scope
 
 } // mixing_arguments
+
+
+
+/// Use the symbolic names of an enum to set the level.
+///
+/// @since  x.y.z, 09.04.2019
+BOOST_AUTO_TEST_CASE( level_through_enum)
+{
+
+   Handler       ah( 0);
+   LevelCounter  verbose_level;
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
+      "verbose level")->addFormat( new EnumFormatter()));
+
+   const ArgString2Array  as2a( "-v low", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_EQUAL( verbose_level.value(), 1);
+
+} // level_through_enum
 
 
 
