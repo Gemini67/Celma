@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
 /// Test feature to format the values before they are inserted into the vector.
 ///
-/// @since  x.y.z, 09.04.2019
+/// @since  1.23.0, 09.04.2019
 BOOST_AUTO_TEST_CASE( format_values)
 {
 

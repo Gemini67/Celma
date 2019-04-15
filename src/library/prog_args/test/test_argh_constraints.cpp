@@ -39,7 +39,7 @@ using celma::prog_args::Handler;
 
 /// Check that errors are caught.
 ///
-/// @since  x.y.z 04.04.2019
+/// @since  1.23.0 04.04.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 

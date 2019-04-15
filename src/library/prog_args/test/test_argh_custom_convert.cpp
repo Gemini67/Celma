@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE( vector_conversion)
 
 
 /// Checks of some destination-vector specific features.
-/// @since  x.y.z, 10.04.2019
+/// @since  1.23.0, 10.04.2019
 BOOST_AUTO_TEST_CASE( vector_features)
 {
 
@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_CASE( vector_features)
 
 
 /// UsAge features with the vector of cutom enum.
-/// @since  x.y.z, 10.04.2019
+/// @since  1.23.0, 10.04.2019
 BOOST_AUTO_TEST_CASE( vector_usage)
 {
 

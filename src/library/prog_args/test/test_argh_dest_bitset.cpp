@@ -58,19 +58,19 @@ enum bit_names
 
 /// Helper class to convert an enum name into its value.
 ///
-/// @since  x.y.z, 05.04.2019
+/// @since  1.23.0, 05.04.2019
 class EnumFormatter: public celma::prog_args::detail::IFormat
 {
 public:
    /// Empty, virtual destructor.
    ///
-   /// @since  x.y.z, 05.04.2019
+   /// @since  1.23.0, 05.04.2019
    virtual ~EnumFormatter() = default;
 
    /// Returns the value of the enum as string in \a val.
    ///
    /// @param[in,out]  val  The value to change the formatting of.
-   /// @since  x.y.z, 05.04.2019
+   /// @since  1.23.0, 05.04.2019
    virtual void formatValue( std::string& val) const override
    {
       if (val == "zero")

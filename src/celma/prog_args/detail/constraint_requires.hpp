@@ -44,7 +44,7 @@ public:
 
    /// Empty, virtual destructor.
    ///
-   /// @since  x.y.z, 05.04.2019
+   /// @since  1.23.0, 05.04.2019
    virtual ~ConstraintRequires() = default;
 
    /// Adds the 'required' constraint to the current argument handler.

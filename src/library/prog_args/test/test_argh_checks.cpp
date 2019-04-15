@@ -1433,7 +1433,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
 
 /// Verifies that the 'minimum length' check works correctly.
 ///
-/// @since  x.y.z, 11.04.2019
+/// @since  1.23.0, 11.04.2019
 BOOST_AUTO_TEST_CASE( minimum_length)
 {
 
@@ -1480,7 +1480,7 @@ BOOST_AUTO_TEST_CASE( minimum_length)
 
 /// Verifies that the 'maximum length' check works correctly.
 ///
-/// @since  x.y.z, 12.04.2019
+/// @since  1.23.0, 12.04.2019
 BOOST_AUTO_TEST_CASE( maximum_length)
 {
 
@@ -1528,7 +1528,7 @@ BOOST_AUTO_TEST_CASE( maximum_length)
 /// Verifies that combinations of the 'minimum length' and 'maximum length'
 /// checks work correctly.
 ///
-/// @since  x.y.z, 12.04.2019
+/// @since  1.23.0, 12.04.2019
 BOOST_AUTO_TEST_CASE( min_max_length)
 {
 

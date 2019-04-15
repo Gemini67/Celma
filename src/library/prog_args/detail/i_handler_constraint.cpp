@@ -112,7 +112,7 @@ bool IHandlerConstraint::isConstraintArgument( const std::string& constraint_arg
 /// @param[in]  arg_spec
 ///    The list of arguments affected by the constraint.
 /// @since
-///    x.y.z, 04.04.2019
+///    1.23.0, 04.04.2019
 IHandlerConstraint::IHandlerConstraint( const std::string& constraint_name,
    const std::string& arg_spec):
       mConstraintName( constraint_name),

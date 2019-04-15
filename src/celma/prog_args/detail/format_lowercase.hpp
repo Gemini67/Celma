@@ -32,7 +32,7 @@ class FormatLowercase: public IFormat
 public:
    /// Virtual, empty destructor.
    ///
-   /// @since  x.y.z, 11.04.2019
+   /// @since  1.23.0, 11.04.2019
    virtual ~FormatLowercase() = default;
 
    /// Converts the text in \a val to lowercase.

@@ -28,7 +28,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Formats the characters in a string according to the given pattern.
 ///
-/// @since  x.y.z, 11.04.2019
+/// @since  1.23.0, 11.04.2019
 class FormatAnycase: public IFormat
 {
 public:
@@ -40,12 +40,12 @@ public:
    /// - anything else: character remains unchanged.
    ///
    /// @param[in]  pattern  The format pattern to use.
-   /// @since  x.y.z, 11.04.2019
+   /// @since  1.23.0, 11.04.2019
    explicit FormatAnycase( const std::string& pattern) noexcept( false);
 
    /// Virtual, empty destructor.
    ///
-   /// @since  x.y.z, 11.04.2019
+   /// @since  1.23.0, 11.04.2019
    virtual ~FormatAnycase() = default;
 
    /// Converts the text in \a val according to the pattern given in the 
@@ -56,7 +56,7 @@ public:
    /// characters will be formatted.
    ///
    /// @param[in,out]  val  The text to convert, returns the adapted satring.
-   /// @since  x.y.z, 11.04.2019
+   /// @since  1.23.0, 11.04.2019
    virtual void formatValue( std::string& val) const override;
 
 private:
@@ -77,7 +77,7 @@ private:
 /// Usage: addArgument( ...)->addFormat( anycase( "Ulll"));
 ///
 /// @return  The newly created FormatAnycase object.
-/// @since  x.y.z, 11.04.2016
+/// @since  1.23.0, 11.04.2016
 inline detail::IFormat* anycase( const std::string& pattern)
 {
    return new detail::FormatAnycase( pattern);

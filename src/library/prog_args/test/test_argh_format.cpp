@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE( format_case)
 
 /// Check any-case formatting.
 ///
-/// @since  x.y.z, 11.04.2019
+/// @since  1.23.0, 11.04.2019
 BOOST_AUTO_TEST_CASE( format_anycase)
 {
 

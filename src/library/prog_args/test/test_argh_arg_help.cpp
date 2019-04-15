@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE( unknown_argument)
 
 /// Request help for a non-existing sub-group.
 ///
-/// @since  x.y.z, 05.04.2019
+/// @since  1.23.0, 05.04.2019
 BOOST_AUTO_TEST_CASE( unknown_subgroup)
 {
 

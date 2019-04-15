@@ -68,7 +68,7 @@ UsageText( postUsage2, afterArgs,
 
 /// Wrong setup of the usage texts should be detected.
 ///
-/// @since  x.y.z, 04.04.2019
+/// @since  1.23.0, 04.04.2019
 BOOST_AUTO_TEST_CASE( wrong_setup)
 {
 
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE( wrong_setup)
 
 /// Print the usage without, with one or with two usage texts.
 ///
-/// @since  x.y.z, 04.04.2019
+/// @since  1.23.0, 04.04.2019
 BOOST_AUTO_TEST_CASE( usage)
 {
 

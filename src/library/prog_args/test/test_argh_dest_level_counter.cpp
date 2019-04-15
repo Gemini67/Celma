@@ -55,13 +55,13 @@ class EnumFormatter: public celma::prog_args::detail::IFormat
 public:
    /// Empty, virtual destructor.
    ///
-   /// @since  x.y.z, 09.04.2019
+   /// @since  1.23.0, 09.04.2019
    virtual ~EnumFormatter() = default;
 
    /// Returns the value of the enum as string in \a val.
    ///
    /// @param[in,out]  val  The value to change the formatting of.
-   /// @since  x.y.z, 09.04.2019
+   /// @since  1.23.0, 09.04.2019
    virtual void formatValue( std::string& val) const override
    {
       if (val == "none")
@@ -365,7 +365,7 @@ BOOST_AUTO_TEST_CASE( mixing_arguments)
 
 /// Use the symbolic names of an enum to set the level.
 ///
-/// @since  x.y.z, 09.04.2019
+/// @since  1.23.0, 09.04.2019
 BOOST_AUTO_TEST_CASE( level_through_enum)
 {
 

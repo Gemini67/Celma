@@ -39,7 +39,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// - anything else: character remains unchanged.
 ///
 /// @param[in]  pattern  The format pattern to use.
-/// @since  x.y.z, 11.04.2019
+/// @since  1.23.0, 11.04.2019
 FormatAnycase::FormatAnycase( const std::string& pattern):
    mPattern( pattern)
 {
@@ -55,7 +55,7 @@ FormatAnycase::FormatAnycase( const std::string& pattern):
 /// constructor.
 ///
 /// @param[in,out]  val  The text to convert, returns the adapted satring.
-/// @since  x.y.z, 11.04.2019
+/// @since  1.23.0, 11.04.2019
 void FormatAnycase::formatValue( std::string& val) const
 {
 

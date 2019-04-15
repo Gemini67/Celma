@@ -1104,7 +1104,7 @@ public:
    /// @throws
    ///    "logic error" when called since setting a format for a tuple is never
    ///    allowed.
-   /// @since  x.y.z, 09.04.2019
+   /// @since  1.23.0, 09.04.2019
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false) override;
 
    /// Specifies the list separator character to use for splitting lists of

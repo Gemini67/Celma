@@ -28,7 +28,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Checks that a given string value has a minimum length.
 ///
-/// @since  x.y.z, 11.04.2019
+/// @since  1.23.0, 11.04.2019
 class CheckMinLength : public ICheck
 {
 public:
@@ -36,25 +36,25 @@ public:
    ///
    /// @param[in]  min_length  The minimum length to check against.
    /// @throws  "invalid argument" if the given length is 0.
-   /// @since  x.y.z, 11.04.2019
+   /// @since  1.23.0, 11.04.2019
    explicit CheckMinLength( std::string::size_type min_length) noexcept( false);
 
    /// Default destructor is fine.
-   /// @since  x.y.z, 11.04.2019
+   /// @since  1.23.0, 11.04.2019
    virtual ~CheckMinLength() = default;
 
    /// Checks if the value in \a val meets the "minimum length" requirement.
    ///
    /// @param[in]  val  The value to check.
    /// @throws "underflow error" if the given string is too short.
-   /// @since  x.y.z, 11.04.2019
+   /// @since  1.23.0, 11.04.2019
    virtual void checkValue( const std::string& val) const noexcept( false)
       override;
 
    /// Returns a text description of the check.
    ///
    /// @return  A string with the text description of the check.
-   /// @since  x.y.z, 11.04.2019
+   /// @since  1.23.0, 11.04.2019
    virtual std::string toString() const override;
 
 private:
@@ -76,7 +76,7 @@ private:
 ///
 /// @param[in]  min_length  The minimum length check against.
 /// @return  The newly created CheckMinLength object.
-/// @since  x.y.z, 11.04.2019
+/// @since  1.23.0, 11.04.2019
 inline detail::ICheck* minLength( std::string::size_type min_length)
 {
    return new detail::CheckMinLength( min_length);

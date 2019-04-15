@@ -86,7 +86,7 @@ BOOST_GLOBAL_FIXTURE( TestEnvironment);
 
 /// Error when specifying a file that does not exist.
 ///
-/// @since  x.y.z, 05.04.2019
+/// @since  1.23.0, 05.04.2019
 BOOST_AUTO_TEST_CASE( invalid_file)
 {
 
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE( invalid_file)
 
 /// Test that no error is generated when the file does not exist.
 ///
-/// @since  x.y.z, 05.04.2019
+/// @since  1.23.0, 05.04.2019
 BOOST_AUTO_TEST_CASE( file_through_flag)
 {
 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE( file_through_flag)
 
 /// Use the argument with the complete path and filename.
 ///
-/// @since  x.y.z, 05.04.2019
+/// @since  1.23.0, 05.04.2019
 BOOST_AUTO_TEST_CASE( file_through_arg)
 {
 
