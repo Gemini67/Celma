@@ -33,6 +33,7 @@ celma_add_celma_boost_testprogram( test_argh_separate_values )
 celma_add_celma_boost_testprogram( test_argh_summary )
 celma_add_celma_boost_testprogram( test_argh_usage_texts )
 celma_add_celma_boost_testprogram( test_argh_value_arg )
+celma_add_celma_boost_testprogram( test_arg_list_element )
 celma_add_celma_boost_testprogram( test_arg_list_parser )
 celma_add_celma_boost_testprogram( test_argument_groups )
 celma_add_celma_boost_testprogram( test_argument_key )
@@ -44,6 +45,7 @@ celma_add_celma_boost_testprogram( test_value_handler )
 
 # test-programs for output or start parameters
 add_executable( test_arg_groups_usage           test_arg_groups_usage.cpp )
+add_executable( test_argg_eval_error_exit       test_argg_eval_error_exit.cpp )
 add_executable( test_argh_arg_file              test_argh_arg_file.cpp )
 add_executable( test_argh_env_var               test_argh_env_var.cpp )
 add_executable( test_argh_eval_error_exit       test_argh_eval_error_exit.cpp )
@@ -56,6 +58,7 @@ add_executable( test_long_arg_desc              test_long_arg_desc.cpp )
 add_executable( test_sub_groups_usage           test_sub_groups_usage.cpp )
 
 target_link_libraries( test_arg_groups_usage             celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argg_eval_error_exit         celma ${Boost_Test_Link_Libs} )
 target_link_libraries( test_argh_arg_file                celma ${Boost_Test_Link_Libs} )
 target_link_libraries( test_argh_env_var                 celma ${Boost_Test_Link_Libs} )
 target_link_libraries( test_argh_eval_error_exit         celma ${Boost_Test_Link_Libs} )
@@ -68,8 +71,19 @@ target_link_libraries( test_long_arg_desc                celma ${Boost_Test_Link
 target_link_libraries( test_sub_groups_usage             celma ${Boost_Test_Link_Libs} )
 
 add_test( test_arg_groups_usage                   ${CMAKE_CURRENT_BINARY_DIR}/test_arg_groups_usage -h )
+add_test( test_argg_eval_error_exit_boost_lex     ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -b )
+add_test( test_argg_eval_error_exit_exception     ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -e )
+add_test( test_argg_eval_error_exit_flag          ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -f )
+add_test( test_argg_eval_error_exit_integer       ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -i )
+add_test( test_argg_eval_error_exit_inv_arg       ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -v )
+add_test( test_argg_eval_error_exit_logic         ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -l )
+add_test( test_argg_eval_error_exit_out_of_range  ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -o )
+add_test( test_argg_eval_error_exit_overflow      ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -O )
+add_test( test_argg_eval_error_exit_runtime       ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -r )
+add_test( test_argg_eval_error_exit_underflow     ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -U )
 add_test( test_argh_arg_file                      ${CMAKE_CURRENT_BINARY_DIR}/test_argh_arg_file -- ${CMAKE_CURRENT_SOURCE_DIR} )
 add_test( test_argh_env_var                       ${CMAKE_CURRENT_BINARY_DIR}/test_argh_env_var -- ${CMAKE_CURRENT_SOURCE_DIR} )
+add_test( test_argh_eval_error_exit_boost_lex     ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -b )
 add_test( test_argh_eval_error_exit_exception     ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -e )
 add_test( test_argh_eval_error_exit_flag          ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -f )
 add_test( test_argh_eval_error_exit_integer       ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -i )
@@ -95,7 +109,19 @@ add_test( test_sub_groups_usage_input             ${CMAKE_CURRENT_BINARY_DIR}/te
 add_test( test_sub_groups_usage_main              ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -h )
 add_test( test_sub_groups_usage_output            ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -oh )
 
-set_tests_properties( test_argh_eval_error_exit_exception
+set_tests_properties(
+   test_argg_eval_error_exit_boost_lex
+   test_argg_eval_error_exit_exception
+   test_argg_eval_error_exit_integer
+   test_argg_eval_error_exit_logic
+   test_argg_eval_error_exit_out_of_range
+   test_argg_eval_error_exit_runtime
+   test_argg_eval_error_exit_inv_arg
+   test_argg_eval_error_exit_overflow
+   test_argg_eval_error_exit_underflow
+
+   test_argh_eval_error_exit_boost_lex
+   test_argh_eval_error_exit_exception
    test_argh_eval_error_exit_integer
    test_argh_eval_error_exit_logic
    test_argh_eval_error_exit_out_of_range

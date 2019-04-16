@@ -250,6 +250,7 @@ BOOST_AUTO_TEST_CASE( vector_conversion)
 
 
 /// Checks of some destination-vector specific features.
+///
 /// @since  1.23.0, 10.04.2019
 BOOST_AUTO_TEST_CASE( vector_features)
 {
@@ -270,14 +271,16 @@ BOOST_AUTO_TEST_CASE( vector_features)
       BOOST_REQUIRE_EQUAL( enumedValue[ 1], meVal3);
    } // end scope
 
+   // entries must be sorted
    {
       Handler               ah( 0);
       std::vector< MyEnum>  enumedValue = { initVal, meVal2 };
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
-         "Enum")->setClearBeforeAssign()->setUniqueData()->setSortData());
+         "Enum")->setClearBeforeAssign()->setUniqueData()->setSortData()
+         ->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-e meVal3,meVal1", nullptr);
+      const ArgString2Array  as2a( "-e meVal3 meVal1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !enumedValue.empty());

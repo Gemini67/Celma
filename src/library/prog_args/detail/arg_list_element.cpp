@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,18 +27,25 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 
-/// Constructor.
+/// Returns the name/description of the given element type.
 ///
-/// @since  0.2, 09.04.2016
-ArgListElement::ArgListElement():
-   mArgIndex( -1),
-   mArgCharPos( -1),
-   mElementType( ElementType::invalid),
-   mArgChar( '-'),
-   mArgString(),
-   mValue()
+/// @param[in]  et  The type of the element to return the name of.
+/// @return  The name of the element.
+/// @since  x.y.z, 16.04.2019
+/* static */ const char* ArgListElement::typeName( ElementType et)
 {
-} // ArgListElement::ArgListElement
+
+   switch (et)
+   {
+   case ElementType::singleCharArg:  return "single character argument";
+   case ElementType::stringArg:      return "string/long argument";
+   case ElementType::value:          return "value";
+   case ElementType::control:        return "control character";
+   default:                          break;
+   } // end switch
+
+   return "invalid";
+} // ArgListElement::typeName
 
 
 
@@ -124,6 +131,25 @@ void ArgListElement::setControl( int argi, int argp, char ctrlChar)
 
 
 
+/// Prints the name and value of the given element type.
+///
+/// @param[in]  os
+///    The stream to print to.
+/// @param[in]  et
+///    The element type to print.
+/// @return
+///    The stream as passed in.
+/// @since
+///    x.y.z, 16.04.2019
+std::ostream& operator <<( std::ostream& os, ArgListElement::ElementType et)
+{
+
+   return os << ArgListElement::typeName( et) << " (" << static_cast< int>( et)
+      << ")";
+} // operator <<
+
+
+
 /// Prints the contents of an argument list element.
 ///
 /// @param[out]  os   The stream to write to.
@@ -135,11 +161,15 @@ std::ostream& operator <<( std::ostream& os, const ArgListElement& ale)
 
    using std::endl;
 
-   os << "argument index     = " << ale.mArgIndex << endl;
+   if (ale.mElementType == ArgListElement::ElementType::invalid)
+      return os << "invalid argument list element";
+
+   os << "element type       = " << ale.mElementType << endl
+      << "argument index     = " << ale.mArgIndex << endl;
 
    if (ale.mElementType == ArgListElement::ElementType::value)
    {
-      os << "free value         = " << ale.mValue << endl;
+      os << "value              = " << ale.mValue << endl;
    } else if (ale.mElementType == ArgListElement::ElementType::singleCharArg)
    {
       os << "character position = " << ale.mArgCharPos << endl
@@ -148,12 +178,9 @@ std::ostream& operator <<( std::ostream& os, const ArgListElement& ale)
    {
       os << "ctrl char position = " << ale.mArgCharPos << endl
          << "control character  = " << ale.mArgChar << endl;
-   } else if (ale.mElementType == ArgListElement::ElementType::stringArg)
-   {
-      os << "argument string    = " << ale.mArgString << endl;
    } else
    {
-      os << "invalid argument list element" << endl;
+      os << "argument string    = " << ale.mArgString << endl;
    } // end if
 
    return os;

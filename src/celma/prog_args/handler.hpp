@@ -593,7 +593,8 @@ public:
    /// The arguments specified in the constraint must already be defined.
    ///
    /// @param[in]  ihc
-   ///    Pointer to the object that handles the constraint.
+   ///    Pointer to the object that handles the constraint. Is deleted when an
+   ///    error occurs.
    /// @since  0.2, 10.04.2016
    void addConstraint( detail::IHandlerConstraint* ihc) noexcept( false);
 

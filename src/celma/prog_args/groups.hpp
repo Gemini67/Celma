@@ -76,11 +76,12 @@ public:
 
    /// Returns the argument handler for the specified group name.<br>
    /// If the argument handler does not exist yet, a new handler object will be
-   /// created. If the handler object exists already, it must a 'plain' handler
-   /// object, not a value handler.<br>
+   /// created. If the handler object exists already, it must be a 'plain'
+   /// handler object, not a value handler.<br>
    /// The output streams will be passed as specified when calling instance()
    /// for this group object, and the flags parameter will be a combination of
    /// this object's flag and the flags passed in \a this_handler_flags.
+   ///
    /// @param[in]  grpName             The symbolic name of this handler, used
    ///                                 for identification and printing the
    ///                                 usage.
@@ -214,7 +215,7 @@ public:
 
    /// When argument groups are used, it is necessary to check that the same
    /// argument is only used in one of the handlers.<br>
-   /// This is achieved by stting the Handler::hfInGroup flag for each handler
+   /// This is achieved by setting the Handler::hfInGroup flag for each handler
    /// that is created. Then, when an argument is added to the handler, it calls
    /// this method.<br>
    /// Here, since we don't know which argument was the new one, compare each

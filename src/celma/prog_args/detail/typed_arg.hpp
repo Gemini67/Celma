@@ -1099,7 +1099,7 @@ public:
    virtual TypedArgBase* setTakesMultiValue() override;
 
    /// Overload for destination tuple: Format not allowed.
-   /// @param[in]  f  Ignored.
+   /// @param[in]  f  Pointer to the format to add, the object is deleted.
    /// @return  Never returns anything.
    /// @throws
    ///    "logic error" when called since setting a format for a tuple is never
@@ -1195,8 +1195,9 @@ template< typename... T>
 
 
 template< typename... T>
-   TypedArgBase* TypedArg< std::tuple< T...>>::addFormat( IFormat*)
+   TypedArgBase* TypedArg< std::tuple< T...>>::addFormat( IFormat* f)
 {
+   delete f;
    throw std::logic_error( "not allowed to add a format for a tuple");
 } // TypedArgBase* TypedArg< std::tuple< T...>>::addFormat
 

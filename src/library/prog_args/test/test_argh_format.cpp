@@ -38,6 +38,43 @@ using celma::prog_args::Handler;
 
 
 
+/// Verify that errors regarding formats are caught.
+///
+/// @since  x.y.z, 15.04.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   // ensure that calling addFormat() with a NULL object pointer throws
+   {
+      Handler  ah( 0);
+      bool     dummy;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( dummy), "flag")
+         ->addFormat( nullptr), std::logic_error);
+   } // end scope
+
+   // ensure that calling addFormat() on a wrong type throws
+   {
+      Handler  ah( 0);
+      bool     dummy;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( dummy), "flag")
+         ->addFormat( celma::prog_args::uppercase()), std::logic_error);
+   } // end scope
+
+   // ensure that calling addFormat() with an empty format pattern throws
+   {
+      Handler      ah( 0);
+      std::string  dummy;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dummy), "string")
+         ->addFormat( celma::prog_args::anycase( "")), std::invalid_argument);
+   } // end scope
+
+} // errors
+
+
+
 /// Check formatting to upper- and lowercase.
 ///
 /// @since  0.2, 10.04.2016

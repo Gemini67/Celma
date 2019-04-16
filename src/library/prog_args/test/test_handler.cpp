@@ -144,30 +144,6 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
                            invalid_argument);
    } // end scope
 
-   // specify an invalid range
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
-                                         ->addCheck( celma::prog_args::range( 5, 5)),
-                           invalid_argument);
-   } // end scope
-
-   // specify another invalid range
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
-                                         ->addCheck( celma::prog_args::range( 5, 2)),
-                           invalid_argument);
-   } // end scope
-
-   // specify an empty list of values
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
-                                         ->addCheck( celma::prog_args::values( "")),
-                           invalid_argument);
-   } // end scope
-
    // specify to use standard short help argument and then specify an application
    // argument
    {
@@ -258,22 +234,60 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
                            logic_error);
    } // end scope
 
-   // ensure that calling addFormat() on a wrong type throws
+   // ensure that calling setSortData() on a wrong type throws.
    {
       Handler  ah( 0);
-      bool     dummy;
+      bool     flag = false;
 
-      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( dummy), "flag")
-         ->addFormat( celma::prog_args::uppercase()), logic_error);
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
+                                         ->setSortData(),
+                           logic_error);
    } // end scope
 
-   // ensure that calling addFormat() with an empty format pattern throws
+   {
+      Handler  ah( 0);
+      int      i_val = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i_val), "int")
+                                         ->setSortData(),
+                           logic_error);
+   } // end scope
+
    {
       Handler      ah( 0);
-      std::string  dummy;
+      std::string  str;
 
-      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dummy), "string")
-         ->addFormat( celma::prog_args::anycase( "")), invalid_argument);
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( str), "string")
+                                         ->setSortData(),
+                           logic_error);
+   } // end scope
+
+   // ensure that calling setUniqueData() on a wrong type throws.
+   {
+      Handler  ah( 0);
+      bool     flag = false;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
+                                         ->setUniqueData(),
+                           logic_error);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      int      i_val = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i_val), "int")
+                                         ->setUniqueData(),
+                           logic_error);
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  str;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( str), "string")
+                                         ->setUniqueData(),
+                           logic_error);
    } // end scope
 
 } // argument_setup_errors
@@ -2290,183 +2304,6 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
    } // end scope
 
 } // missing_mandatory
-
-
-
-/// Helper class to check the implementation and usage of application specific
-/// check classes.
-/// @since  0.2, 10.04.2016
-class ApplCheckTriple: public celma::prog_args::detail::ICheck
-{
-public:
-   /// Constructor.
-   /// @param[in]  first   The first value to accept.
-   /// @param[in]  second  The second value to accept.
-   /// @param[in]  third   The third value to accept.
-   /// @since  0.2, 10.04.2016
-   ApplCheckTriple( int first, int second, int third):
-      m1( first),
-      m2( second),
-      m3( third)
-   {
-   }
-
-   /// Checks if the value in \a val equals one of the three check values.
-   /// @param[in]  val  The value to check in string format.
-   /// @since  0.2, 10.04.2016
-   virtual void checkValue( const string& val) const noexcept( false) override
-   {
-      int  checkVal = boost::lexical_cast< int>( val);
-      if ((checkVal != m1) && (checkVal != m2) && (checkVal != m3))
-         throw runtime_error( "not in tripple");
-   }
-
-   /// Returns a text description of the check.
-   /// @return  A string with the text description of the check.
-   /// @since  0.16.0, 12.08.2017
-   virtual std::string toString() const override
-   {
-      return "";
-   }
-
-private:
-   int  m1;
-   int  m2;
-   int  m3;
-}; // ApplCheckTriple
-
-
-
-/// Helper function to use the application specific check function just like
-/// the standard check functions from the library.
-/// @param[in]  first   The first allowed value.
-/// @param[in]  second  The second allowed value.
-/// @param[in]  third   The third allowed value.
-/// @return  Pointer to the newly created check object.
-/// @since  0.2, 10.04.2016
-static celma::prog_args::detail::ICheck* tripple( int first, int second, int third)
-{
-   return new ApplCheckTriple( first, second, third);
-} // tripple
-
-
-
-/// Application specific limit check.
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( application_check)
-{
-
-   {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
-                                            ->addCheck( tripple( 11, 111, 1111)));
-
-      const ArgString2Array  as2a( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( !iVal.hasValue());
-   } // end scope
-
-   {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
-                                            ->addCheck( tripple( 11, 111, 1111)));
-
-      const ArgString2Array  as2a( "-i 1", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-      BOOST_REQUIRE( !iVal.hasValue());
-   } // end scope
-
-   {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
-                                            ->addCheck( tripple( 11, 111, 1111)));
-
-      const ArgString2Array  as2a( "-i 110", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-      BOOST_REQUIRE( !iVal.hasValue());
-   } // end scope
-
-   {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
-                                            ->addCheck( tripple( 11, 111, 1111)));
-
-      const ArgString2Array  as2a( "-i 11", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
-      BOOST_REQUIRE_EQUAL( iVal.value(), 11);
-   } // end scope
-
-   {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
-                                            ->addCheck( tripple( 11, 111, 1111)));
-
-      const ArgString2Array  as2a( "-i 111", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
-      BOOST_REQUIRE_EQUAL( iVal.value(), 111);
-   } // end scope
-
-   {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
-                                            ->addCheck( tripple( 11, 111, 1111)));
-
-      const ArgString2Array  as2a( "-i 1111", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
-      BOOST_REQUIRE_EQUAL( iVal.value(), 1111);
-   } // end scope
-
-} // application_check
-
-
-
-/// Test handling of control characters.
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( control_check)
-{
-
-
-   Handler  ah( 0);
-   int      value = -1;
-
-
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( value), "some value"));
-
-   {
-      const ArgString2Array  as2a( "-v 45 ! -v 47", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-      BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
-   } // end scope
-
-} // control_check
 
 
 

@@ -288,12 +288,16 @@ public:
    bool takesMultiValue() const;
 
    /// Adds a value formatter: The value from the argument list (command line)
-   /// is formatted before it is checked and/or stored.<br>
-   /// Throws when called for an argument that does not accept values.
+   /// is formatted before it is checked and/or stored.
+   ///
    /// @param[in]  f
-   ///    Pointer to the formatter to add.
-   /// @return
-   ///    Pointer to this object.
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      values.
+   ///    - "invalid argument" when the given object pointer is NULL.
    /// @since
    ///    0.2, 10.04.2016
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false);
@@ -306,12 +310,16 @@ public:
    ///    0.2, 10.04.2016
    void format( std::string& val) const;
 
-   /// Adds a value check.<br>
-   /// Throws when called for an argument that does not accept values.
+   /// Adds a value check.
+   ///
    /// @param[in]  c
-   ///    Pointer to the object that checks the value.
-   /// @return
-   ///    Pointer to this object.
+   ///    Pointer to the object that checks the value, is deleted when it could
+   ///    not be stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      values.
+   ///    - "invalid argument" when the given object pointer is NULL.
    /// @since
    ///    0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
@@ -650,11 +658,11 @@ constexpr const char* TypedArgBase::valueMode2str( ValueMode vm)
 {
    switch (vm)
    {
+   default:
    case ValueMode::none:      return "none";
    case ValueMode::optional:  return "optional";
    case ValueMode::required:  return "required";
    case ValueMode::command:   return "command";
-   default:                   return "unknown";
    } // end switch
 } // TypedArgBase::valueMode2str
 

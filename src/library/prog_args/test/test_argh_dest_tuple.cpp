@@ -55,6 +55,26 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
          std::logic_error);
    } // end scope
 
+   // not possible to add a format for a tuple
+   {
+      Handler                                ah( 0);
+      std::tuple< int, std::string, double>  myTuple;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+         "Key and value")->addFormat( celma::prog_args::lowercase()),
+         std::logic_error);
+   } // end scope
+
+   // not possible to add a format for a tuple
+   {
+      Handler                             ah( 0);
+      std::tuple< int, std::string, int>  myTuple;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+         "Key and value")->addFormat( celma::prog_args::lowercase()),
+         std::logic_error);
+   } // end scope
+
    // not enough values for the tuple
    {
       Handler                ah( 0);
@@ -214,6 +234,62 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
          "Argument summary:\n"
          "   Value <4711, \"foobar\" [std::tuple<int,std::string>]> set on variable 'myTuple' by argument '-p,--pair'.\n"));
+   } // end scope
+
+   // test usage with a tuple with an integer and a string value
+   {
+      std::ostringstream             std_out;
+      std::ostringstream             std_err;
+      Handler                        ah( std_out, std_err, Handler::hfHelpShort
+         | Handler::hfListArgVar | Handler::hfUsageCont);
+      std::tuple< int, std::string>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+         "Key and value")->setListSep( ';')->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "-h", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h                Prints the program usage.\n"
+         "   --list-arg-vars   Prints the list of arguments and their destination\n"
+         "                     variables.\n"
+         "   -p,--pair         Key and value\n"
+         "\n"));
+   } // end scope
+
+   // test usage and other features with a tuple with an integer and a string
+   // value
+   {
+      std::ostringstream             std_out;
+      std::ostringstream             std_err;
+      Handler                        ah( std_out, std_err, Handler::hfHelpShort
+         | Handler::hfListArgVar | Handler::hfUsageCont);
+      std::tuple< int, std::string>  myTuple;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+         "Key and value")->setListSep( ';')->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "--pair 4711;foobar --list-arg-vars", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Arguments:\n"
+         "'-h' calls function/method 'Handler::usage'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-p,--pair' value type 'std::tuple<int,std::string>', destination 'myTuple', value = <4711, \"foobar\">.\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"));
    } // end scope
 
    // test with a tuple with two integer values that are passed as two separate

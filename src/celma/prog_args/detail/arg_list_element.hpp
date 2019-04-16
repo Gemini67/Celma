@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -52,10 +52,17 @@ public:
      invalid          //!< Initialisation value.
    }; // ElementType
 
-   /// Constructor.
+   /// Returns the name/description of the given element type.
+   ///
+   /// @param[in]  et  The type of the element to return the name of.
+   /// @return  The name of the element.
+   /// @since  x.y.z, 16.04.2019
+   static const char* typeName( ElementType et);
+
+   /// Default constructor.
    ///
    /// @since  0.2, 09.04.2016
-   ArgListElement();
+   ArgListElement() = default;
 
    /// Default copy constructor is fine.
    ///
@@ -97,6 +104,19 @@ public:
    /// @since  0.2, 09.04.2016
    void setControl( int argi, int argp, char ctrlChar);
 
+   /// Prints the name and value of the given element type.
+   ///
+   /// @param[in]  os
+   ///    The stream to print to.
+   /// @param[in]  et
+   ///    The element type to print.
+   /// @return
+   ///    The stream as passed in.
+   /// @since
+   ///    x.y.z, 16.04.2019
+   friend std::ostream& operator <<( std::ostream& os,
+      ArgListElement::ElementType et);
+
    /// Prints the contents of an argument list element.
    ///
    /// @param[out]  os   The stream to write to.
@@ -108,13 +128,13 @@ public:
 
    /// The index of the argument string in the list in which the current
    /// argument was found.
-   int          mArgIndex;
+   int          mArgIndex = -1;
    /// For single argument characters: The position of the character.
-   int          mArgCharPos;
+   int          mArgCharPos = -1;
    /// The type of this element.
-   ElementType  mElementType;
+   ElementType  mElementType = ElementType::invalid;
    /// The single argument character.
-   char         mArgChar;
+   char         mArgChar = '-';
    /// The long argument string.
    std::string  mArgString;
    /// The value.

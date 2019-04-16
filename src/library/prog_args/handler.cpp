@@ -45,6 +45,7 @@
 #include "celma/common/tokenizer.hpp"
 #include "celma/format/text_block.hpp"
 #include "celma/prog_args/destination.hpp"
+#include "celma/prog_args/detail/eval_arguments_error_exit.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
@@ -502,7 +503,8 @@ void Handler::addControlHandler( char ctrlChar, HandlerFunc hf)
 /// The arguments specified in the constraint must already be defined.
 ///
 /// @param[in]  ihc
-///    Pointer to the object that handles the constraint.
+///    Pointer to the object that handles the constraint. Is deleted when an
+///    error occurs.
 /// @since  0.2, 10.04.2016
 void Handler::addConstraint( detail::IHandlerConstraint* ihc)
 {
@@ -511,7 +513,10 @@ void Handler::addConstraint( detail::IHandlerConstraint* ihc)
       throw invalid_argument( "invalid NULL pointer passed");
 
    if (!validArguments( ihc->argumentList()))
+   {
+      delete ihc;
       throw invalid_argument( "constraint contains invalid argument(s)");
+   } // end if
 
    // in case the argument list was updated through validArguments(), the
    // constraints may need to be notified about the new content
@@ -588,39 +593,8 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
    const string& prefix)
 {
 
-   try
-   {
+   detail::evalArgumentsErrorExit( *this, mErrorOutput, argc, argv, prefix);
 
-      evalArguments( argc, argv);
-      return;   // return here, easier error exit below
-
-   } catch (const invalid_argument& ia)
-   {
-      mErrorOutput << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
-   } catch (const out_of_range& re)
-   {
-      mErrorOutput << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
-   } catch (const logic_error& le)
-   {
-      mErrorOutput << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
-   } catch (const overflow_error& oe)
-   {
-      mErrorOutput << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
-   } catch (const underflow_error& ue)
-   {
-      mErrorOutput << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;
-   } catch (const runtime_error& rte)
-   {
-      mErrorOutput << prefix << "Caught 'runtime error' exception: " << rte.what() << "!" << endl;
-   } catch (const exception& e)
-   {
-      mErrorOutput << prefix << "Caught unspecific std::exception: " << e.what() << "!" << endl;
-   } catch (...)
-   {
-      mErrorOutput << prefix << "Caught unknown exception!" << endl;
-   } // end try
-
-   exit( EXIT_FAILURE);
 } // Handler::evalArgumentsErrorExit
 
 
