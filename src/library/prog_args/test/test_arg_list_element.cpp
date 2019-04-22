@@ -36,7 +36,7 @@ using celma::test::multilineStringCompare;
 
 /// Default initialisation.
 ///
-/// @since  x.y.z, 16.04.2019
+/// @since  1.23.1, 16.04.2019
 BOOST_AUTO_TEST_CASE( default_ctor)
 {
 
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE( default_ctor)
 
 /// Printing the element types.
 ///
-/// @since  x.y.z, 16.04.2019
+/// @since  1.23.1, 16.04.2019
 BOOST_AUTO_TEST_CASE( element_types)
 {
 

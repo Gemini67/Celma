@@ -46,7 +46,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  prefix
 ///    Prefix to print before the error messages.
 /// @since
-///    x.y.z, 16.04.2019  (extracted from handler)
+///    1.23.1, 16.04.2019  (extracted from handler)
 template< typename T>
    void evalArgumentsErrorExit( T& arg_obj, std::ostream& err_out, int argc,
       char* argv[], const std::string& prefix)

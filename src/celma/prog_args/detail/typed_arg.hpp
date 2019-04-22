@@ -299,7 +299,7 @@ protected:
    virtual void dump( std::ostream& os) const override
    {
       os << "boolean flag, destination '" << mVarName << "', "
-         << (mHasValueSet ? "not set." : "set.") << std::endl
+         << (mHasValueSet ? "set." : "not set.") << std::endl
          << "   " << static_cast< const TypedArgBase&>( *this);
    } // TypedArg< bool>::dump
 

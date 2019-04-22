@@ -40,7 +40,7 @@ using celma::prog_args::Handler;
 
 /// Verify that errors regarding formats are caught.
 ///
-/// @since  x.y.z, 15.04.2019
+/// @since  1.23.1, 15.04.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 

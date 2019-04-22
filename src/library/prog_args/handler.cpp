@@ -1148,6 +1148,7 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
          if (!p_arg_hdl->replacedBy().empty())
             mOutput << "   replaced by:                "
                     << p_arg_hdl->replacedBy() << std::endl;
+         mOutput << std::endl;
       } // end if
    } else
    {

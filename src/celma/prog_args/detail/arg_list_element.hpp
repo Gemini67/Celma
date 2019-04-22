@@ -56,7 +56,7 @@ public:
    ///
    /// @param[in]  et  The type of the element to return the name of.
    /// @return  The name of the element.
-   /// @since  x.y.z, 16.04.2019
+   /// @since  1.23.1, 16.04.2019
    static const char* typeName( ElementType et);
 
    /// Default constructor.
@@ -113,7 +113,7 @@ public:
    /// @return
    ///    The stream as passed in.
    /// @since
-   ///    x.y.z, 16.04.2019
+   ///    1.23.1, 16.04.2019
    friend std::ostream& operator <<( std::ostream& os,
       ArgListElement::ElementType et);
 

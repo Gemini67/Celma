@@ -163,7 +163,8 @@ BOOST_AUTO_TEST_CASE( flag_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // flag_full
@@ -231,7 +232,8 @@ BOOST_AUTO_TEST_CASE( mandatory_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // mandatory_full
@@ -272,7 +274,8 @@ BOOST_AUTO_TEST_CASE( pair_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // pair_full
@@ -327,7 +330,8 @@ BOOST_AUTO_TEST_CASE( subgroup_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    // std::cerr << "\n" << err_out.str() << std::endl;
    BOOST_REQUIRE( err_out.str().empty());
 
@@ -383,7 +387,8 @@ BOOST_AUTO_TEST_CASE( subgroup_arg_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // subgroup_arg_full
@@ -457,7 +462,8 @@ BOOST_AUTO_TEST_CASE( vector_max_values_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      true\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // vector_max_values_full

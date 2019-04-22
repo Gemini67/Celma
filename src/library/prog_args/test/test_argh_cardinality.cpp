@@ -20,6 +20,7 @@
 
 
 // C++ Standard Library includes
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -32,6 +33,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -108,6 +110,193 @@ BOOST_AUTO_TEST_CASE( unused_args)
 
       const ArgString2Array  as2a( "-x", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+} // unused_args
+
+
+
+/// Cardinality information should be printed in 
+///
+/// @since  1.23.1, 17.04.2019
+BOOST_AUTO_TEST_CASE( cardinality_printed)
+{
+
+   // test with default cardinality
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfHelpArgFull
+         | Handler::hfListArgVar | Handler::hfUsageCont);
+      std::vector< int>   vec;
+      bool                dummy = false;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "--list-arg-vars -v 3,9 --list-arg-vars --help-arg-full v",
+         nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Arguments:\n"
+         "'--help-arg-full' calls function/method 'Prints the usage for the given argument.'.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-v' value type 'std::vector<int>', destination vector 'vec', currently no values.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-x' boolean flag, destination 'dummy', not set.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"
+         "Arguments:\n"
+         "'--help-arg-full' calls function/method 'Prints the usage for the given argument.'.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-v' value type 'std::vector<int>', destination vector 'vec', currently 2 values.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-x' boolean flag, destination 'dummy', not set.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"
+         "Argument '-v', usage:\n"
+         "   A vector of ints\n"
+         "Properties:\n"
+         "   destination variable name:  vec\n"
+         "   destination variable type:  std::vector<int>\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                none\n"
+         "   checks:                     -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+   // test with "exact" cardinality
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfHelpArgFull
+         | Handler::hfUsageCont);
+      std::vector< int>   vec;
+      bool                dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_exact( 3)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-v 13,14 --help-arg-full v", nullptr);
+      // does not throw despite the missing value for the vector
+      // since "help-arg-full" sets the "usage printed flag"
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-v', usage:\n"
+         "   A vector of ints\n"
+         "Properties:\n"
+         "   destination variable name:  vec\n"
+         "   destination variable type:  std::vector<int>\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                exactly 3\n"
+         "   checks:                     -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+   // test with "max" cardinality
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfHelpArgFull
+         | Handler::hfUsageCont);
+      std::vector< int>   vec;
+      bool                dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_max( 4)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-v 13,14 --help-arg-full v", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-v', usage:\n"
+         "   A vector of ints\n"
+         "Properties:\n"
+         "   destination variable name:  vec\n"
+         "   destination variable type:  std::vector<int>\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 4\n"
+         "   checks:                     -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+   // test with "range" cardinality
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfHelpArgFull
+         | Handler::hfUsageCont);
+      std::vector< int>  vec;
+      bool               dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( vec),
+         "A vector of ints")->setCardinality(
+         celma::prog_args::cardinality_range( 3, 7)));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
+         "Another argument"));
+
+      const ArgString2Array  as2a( "-v 13,14 --help-arg-full v", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-v', usage:\n"
+         "   A vector of ints\n"
+         "Properties:\n"
+         "   destination variable name:  vec\n"
+         "   destination variable type:  std::vector<int>\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                between 3 and 7\n"
+         "   checks:                     -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
    } // end scope
 
 } // unused_args
