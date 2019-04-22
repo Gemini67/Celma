@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,7 +39,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///    The argument specification of the required argument.
 /// @since  0.2, 10.04.2016
 ConstraintRequires::ConstraintRequires( const std::string& reqArgSpec):
-   mRequiredArgSpec( reqArgSpec)
+   IArgConstraint( "requires", reqArgSpec)
 {
 } // ConstraintRequires::ConstraintRequires
 
@@ -56,7 +56,7 @@ void ConstraintRequires::executeConstraint( const ArgumentKey& key)
 
    ConstraintContainer::mpCurrentConstraints->
       addConstraint( ConstraintContainer::Constraint::required,
-                     mRequiredArgSpec, format::toString( key));
+                     mConstraints, format::toString( key));
 
 } // ConstraintRequires::executeConstraint
 
@@ -71,7 +71,7 @@ std::string ConstraintRequires::toString() const
 
    std::ostringstream  oss;
 
-   oss << "Requires " << mRequiredArgSpec;
+   oss << "Requires " << mConstraints;
 
    return oss.str();
 } // ConstraintRequires::toString

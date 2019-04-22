@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,6 @@
 namespace celma { namespace prog_args { namespace detail {
 
 
-using std::logic_error;
 using std::ostream;
 using std::string;
 
@@ -131,24 +130,30 @@ void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
 
 
 /// Adds a value formatter: The value from the argument list (command line)
-/// is formatted before it is checked and/or stored.<br>
-/// Throws when called for an argument that does not accept values.
+/// is formatted before it is checked and/or stored.
+///
 /// @param[in]  f
-///    Pointer to the formatter to add.
-/// @return
-///    Pointer to this object.
+///    Pointer to the formatter to add, is deleted when it could not be
+///    stored.
+/// @return  Pointer to this object.
+///    - "logic error" when called for an argument that does not accept
+///      values.
+///    - "invalid argument" when the given object pointer is NULL.
 /// @since
 ///    0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addFormat( IFormat* f) noexcept( false)
 {
 
    if (mValueMode == ValueMode::none)
-      throw logic_error( "calling addFormat() not allowed for variable '" +
-                           mVarName + "' (because it doesn't accept values)");
+   {
+      delete f;
+      throw std::logic_error( "calling addFormat() not allowed for variable '"
+         + mVarName + "' (because it doesn't accept values)");
+   } // end if
 
    if (f == nullptr)
-      throw logic_error( "must provide valid object for formatting on variable '" +
-                         mVarName + "'");
+      throw std::invalid_argument( "must provide valid object for formatting on"
+         " variable '" + mVarName + "'");
 
    mFormats.push_back( f);
 
@@ -176,22 +181,30 @@ void TypedArgBase::format( string& val) const
 
 
 /// Adds a value check.
+///
 /// @param[in]  c
-///    Pointer to the object that checks the value.
-/// @return
-///    Pointer to this object.
+///    Pointer to the object that checks the value, is deleted when it could
+///    not be stored.
+/// @return  Pointer to this object.
+/// @throws
+///    - "logic error" when called for an argument that does not accept
+///      values.
+///    - "invalid argument" when the given object pointer is NULL.
 /// @since
 ///    0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addCheck( ICheck* c)
 {
 
    if (mValueMode == ValueMode::none)
-      throw logic_error( "calling addCheck() not allowed for variable '" +
-                         mVarName + "' (because it doesn't accept values)");
+   {
+      delete c;
+      throw std::logic_error( "calling addCheck() not allowed for variable '"
+         + mVarName + "' (because it doesn't accept values)");
+   } // end if
 
    if (c == nullptr)
-      throw logic_error( "must provide valid object for value checks on variable '" +
-                         mVarName + "'");
+      throw std::invalid_argument( "must provide valid object for value checks "
+         "on variable '" + mVarName + "'");
 
    mChecks.push_back( c);
 
@@ -261,6 +274,9 @@ string TypedArgBase::constraintStr() const
 ///    0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addConstraint( IArgConstraint* iac)
 {
+
+   if (iac == nullptr)
+      throw std::invalid_argument( "invalid NULL pointer added as constraint");
 
    mConstraints.push_back( iac);
 

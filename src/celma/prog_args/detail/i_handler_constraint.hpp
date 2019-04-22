@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -95,6 +95,23 @@ protected:
    /// @since  0.2, 10.04.2016
    static bool isConstraintArgument( const std::string& constraint_arg_list,
                                      const ArgumentKey& key);
+
+   /// Constructor.
+   ///
+   /// @param[in]  constraint_name
+   ///    The name of the constraint for error messages.
+   /// @param[in]  arg_spec
+   ///    The list of arguments affected by the constraint.
+   /// @since
+   ///    1.23.0, 04.04.2019
+   IHandlerConstraint( const std::string& constraint_name,
+      const std::string& arg_spec) noexcept( false);
+
+   /// The name of the constraint for error messages.
+   const std::string  mConstraintName;
+   /// The argument specifications of the arguments.<br>
+   /// Non-const because non-complete argument specifications may be expanded.
+   std::string        mArgSpecList;
 
 }; // IHandlerConstraint
 

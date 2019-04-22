@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,7 +37,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  reqArgSpec  The list of arguments of which one must be used.
 /// @since  0.2, 10.04.2016
 ConstraintOneOf::ConstraintOneOf( const std::string& reqArgSpec):
-   mArgSpecList( reqArgSpec),
+   IHandlerConstraint( "one of", reqArgSpec),
    mUsedArgument()
 {
 } // ConstraintOneOf::ConstraintOneOf

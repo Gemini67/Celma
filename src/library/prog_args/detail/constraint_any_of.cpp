@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,9 +28,6 @@
 #include "celma/prog_args/detail/argument_key.hpp"
 
 
-using std::string;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
@@ -39,9 +36,12 @@ namespace celma { namespace prog_args { namespace detail {
 ///
 /// @param[in]  reqArgSpec
 ///    The list of arguments of which at most one may be used.
-/// @since  1.1, 01.03.2016
-ConstraintAnyOf::ConstraintAnyOf( const string& reqArgSpec):
-   mArgSpecList( reqArgSpec),
+/// @throws
+///    "invalid argument" if the string is empty or does not contain at least
+///    two arguments.
+/// @since  0.2, 10.04.2016
+ConstraintAnyOf::ConstraintAnyOf( const std::string& reqArgSpec):
+   IHandlerConstraint( "any of", reqArgSpec),
    mUsedArgument()
 {
 } // ConstraintAnyOf::ConstraintAnyOf
@@ -76,7 +76,7 @@ void ConstraintAnyOf::executeConstraint( const ArgumentKey& key)
 ///
 /// @return  The list of argument as passed in the constructor.
 /// @since  0.2, 10.04.2016
-string& ConstraintAnyOf::argumentList()
+std::string& ConstraintAnyOf::argumentList()
 {
 
    return mArgSpecList;

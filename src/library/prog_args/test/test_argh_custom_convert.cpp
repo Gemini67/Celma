@@ -21,6 +21,8 @@
 
 // C++ Standard Template Library includes
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -34,10 +36,14 @@
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::ArgString2Array;
+using celma::common::operator |;
 using celma::prog_args::Handler;
+using celma::prog_args::SummaryOptions;
+using celma::test::multilineStringCompare;
 
 
 // module definitions
@@ -116,22 +122,98 @@ BOOST_AUTO_TEST_CASE( basic_conversion)
 
 /// Checks if user-supplied conversion to a user-defined data type wrapped
 /// in a CheckAssign<> object works.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( check_assign_conversion)
 {
 
-   Handler                              ah( 0);
-   celma::common::CheckAssign< MyEnum>  enumedValue( initVal);
+   {
+      Handler                              ah( 0);
+      celma::common::CheckAssign< MyEnum>  enumedValue( initVal);
 
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum"));
 
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
-      "Enum"));
+      const ArgString2Array  as2a( "-e meVal2", nullptr);
 
-   const ArgString2Array  as2a( "-e meVal2", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( enumedValue.hasValue());
+      BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
+   } // end scope
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( enumedValue.hasValue());
-   BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
+   // test usage
+   {
+      std::ostringstream                   std_out;
+      std::ostringstream                   std_err;
+      Handler                              ah( std_out, std_err,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfListArgVar);
+      celma::common::CheckAssign< MyEnum>  enumedValue( initVal);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum"));
+
+      const ArgString2Array  as2a( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help         Prints the program usage.\n"
+         "   --help-arg        Prints the usage for the given argument.\n"
+         "   --list-arg-vars   Prints the list of arguments and their destination\n"
+         "                     variables.\n"
+         "   -e,--enum         Enum\n"
+         "\n"));
+   } // end scope
+
+   // test list arguments and variables and print summary
+   {
+      std::ostringstream                   std_out;
+      std::ostringstream                   std_err;
+      Handler                              ah( std_out, std_err,
+         Handler::AllHelp | Handler::hfUsageCont | Handler::hfListArgVar);
+      celma::common::CheckAssign< MyEnum>  enumedValue( initVal);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum"));
+
+      const ArgString2Array  as2a( "-e meVal2 --list-arg-vars", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Arguments:\n"
+         "'-h,--help' calls function/method 'Handler::usage'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-e,--enum' value type 'unknown', destination 'CheckAssign< enumedValue>', value = 2.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"));
+
+      using celma::common::operator |;
+
+      std_out.str( "");
+      ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key,
+         std_out);
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Argument summary:\n"
+         "   Value <[callable]> set on variable 'Handler::listArgVars' by argument '--list-arg-vars'.\n"
+         "   Value <2 [unknown]> set on variable 'enumedValue' by argument '-e,--enum'.\n"));
+
+   } // end scope
 
 } // check_assign_conversion
 
@@ -164,6 +246,172 @@ BOOST_AUTO_TEST_CASE( vector_conversion)
    BOOST_REQUIRE_EQUAL( str, "1, 3");
 
 } // vector_conversion
+
+
+
+/// Checks of some destination-vector specific features.
+///
+/// @since  1.23.0, 10.04.2019
+BOOST_AUTO_TEST_CASE( vector_features)
+{
+
+   {
+      Handler               ah( 0);
+      std::vector< MyEnum>  enumedValue = { initVal, meVal2 };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum")->setClearBeforeAssign()->setUniqueData()->setSortData());
+
+      const ArgString2Array  as2a( "-e meVal1,meVal3", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !enumedValue.empty());
+      BOOST_REQUIRE_EQUAL( enumedValue.size(), 2);
+      BOOST_REQUIRE_EQUAL( enumedValue[ 0], meVal1);
+      BOOST_REQUIRE_EQUAL( enumedValue[ 1], meVal3);
+   } // end scope
+
+   // entries must be sorted
+   {
+      Handler               ah( 0);
+      std::vector< MyEnum>  enumedValue = { initVal, meVal2 };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum")->setClearBeforeAssign()->setUniqueData()->setSortData()
+         ->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "-e meVal3 meVal1", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !enumedValue.empty());
+      BOOST_REQUIRE_EQUAL( enumedValue.size(), 2);
+      BOOST_REQUIRE_EQUAL( enumedValue[ 0], meVal1);
+      BOOST_REQUIRE_EQUAL( enumedValue[ 1], meVal3);
+   } // end scope
+
+   {
+      Handler               ah( 0);
+      std::vector< MyEnum>  enumedValue = { initVal, meVal2 };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum")->setClearBeforeAssign()->setUniqueData()->setSortData());
+
+      const ArgString2Array  as2a( "-e meVal1,meVal3,meVal1", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !enumedValue.empty());
+      BOOST_REQUIRE_EQUAL( enumedValue.size(), 2);
+      BOOST_REQUIRE_EQUAL( enumedValue[ 0], meVal1);
+      BOOST_REQUIRE_EQUAL( enumedValue[ 1], meVal3);
+   } // end scope
+
+   {
+      Handler               ah( 0);
+      std::vector< MyEnum>  enumedValue = { initVal, meVal2 };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum")->setClearBeforeAssign()->setUniqueData( true)->setSortData());
+
+      const ArgString2Array  as2a( "-e meVal1,meVal3,meVal1", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+} // vector_features
+
+
+
+/// UsAge features with the vector of cutom enum.
+/// @since  1.23.0, 10.04.2019
+BOOST_AUTO_TEST_CASE( vector_usage)
+{
+
+   using celma::test::multilineStringCompare;
+
+   {
+      std::ostringstream    std_out;
+      std::ostringstream    std_err;
+      Handler               ah( std_out, std_err, Handler::AllHelp
+         | Handler::hfUsageCont | Handler::hfListArgVar);
+      std::vector< MyEnum>  enumedValue;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum")->setListSep( ';'));
+
+      const ArgString2Array  as2a( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Usage:\n"
+         "Optional arguments:\n"
+         "   -h,--help         Prints the program usage.\n"
+         "   --help-arg        Prints the usage for the given argument.\n"
+         "   --list-arg-vars   Prints the list of arguments and their destination\n"
+         "                     variables.\n"
+         "   -e,--enum         Enum\n"
+         "\n"));
+   } // end scope
+
+   {
+      std::ostringstream    std_out;
+      std::ostringstream    std_err;
+      Handler               ah( std_out, std_err, Handler::AllHelp
+         | Handler::hfUsageCont | Handler::hfListArgVar);
+      std::vector< MyEnum>  enumedValue;
+
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum")->setListSep( ';'));
+
+      const ArgString2Array  as2a( "-e meVal1;meVal3 --list-arg-vars", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Arguments:\n"
+         "'-h,--help' calls function/method 'Handler::usage'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-e,--enum' value type 'std::vector<unknown>', destination vector 'enumedValue', currently 2 values.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"));
+   } // end scope
+
+   {
+      std::ostringstream    std_out;
+      std::ostringstream    std_err;
+      Handler               ah( std_out, std_err, 0);
+      std::vector< MyEnum>  enumedValue;
+
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
+         "Enum")->setListSep( ';'));
+
+      const ArgString2Array  as2a( "-e meVal1;meVal3", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( std_out.str().empty());
+
+      ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key,
+         std_out);
+
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+         "Argument summary:\n"
+         "   Value <1, 3 [std::vector<unknown>]> set on variable 'enumedValue' by argument '-e,--enum'.\n"));
+   } // end scope
+
+} // vector_usage
 
 
 

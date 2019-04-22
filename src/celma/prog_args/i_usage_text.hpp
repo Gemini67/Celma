@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -47,48 +47,63 @@ class IUsageText
 {
 public:
    /// Constructor.
-   /// @param[in]  up  The position of the text, provided by this object, in the
-   ///                 usage.
+   ///
+   /// @param[in]  up
+   ///    The position of the text, provided by this object, in the usage.
    /// @since  0.2, 10.04.2016
    IUsageText( Handler::UsagePos up):
       mUsagePos( up)
    {
-   } // end IUsageText::IUsageText
+   } // IUsageText::IUsageText
+
+   // Copying or moving is not allowed.
+   IUsageText( const IUsageText&) = delete;
+   IUsageText( IUsageText&&) = delete;
 
    /// Empty, virtual destructor.
+   ///
    /// @since  0.2, 10.04.2016
    virtual ~IUsageText() = default;
 
+   // Copy/Move-assignment not allowed.
+   IUsageText& operator =( const IUsageText&) = delete;
+   IUsageText& operator =( IUsageText&&) = delete;
+
    /// Defines the interface function.
+   ///
    /// @param[out]  os  The stream to write the output to.
    /// @since  0.2, 10.04.2016
    virtual void print( std::ostream& os) const = 0;
 
    /// Returns the position of the text in the usage as specified in the
    /// constructor.
+   ///
    /// @return  The defined position for the text.
    /// @since  0.2, 10.04.2016
    Handler::UsagePos usagePos() const
    {
       return mUsagePos;
-   } // end IUsageText::usagePos
+   } // IUsageText::usagePos
 
    /// Prints the contents of the class/object derived from this base class.
-   /// @param[out]  os    The stream to write to.
-   /// @param[in]   pObj  Pointer to the object to dumpt the contents of.
+   ///
+   /// @param[out]  os
+   ///    The stream to write to.
+   /// @param[in]   pObj
+   ///    Pointer to the object to dumpt the contents of.
    /// @return  The stream as passed as parameter.
    /// @since  0.2, 10.04.2016
    friend std::ostream& operator <<( std::ostream& os, IUsageText* pObj)
    {
       pObj->print( os);
       return os;
-   } // end ostream& operator <<
+   } // ostream& operator <<
 
 private:
    /// The position of the text in the usage.
    const Handler::UsagePos  mUsagePos;
 
-}; // end IUsageText
+}; // IUsageText
 
 
 } // namespace prog_args
@@ -115,11 +130,11 @@ private:
          os << t; \
       } \
    }; \
-   static c ## _class*  c = new c ## _class ( celma::prog_args::Handler:: p)
+   static c ## _class*  c = new c ## _class ( celma::prog_args::Handler::UsagePos:: p)
 
 
 #endif   // CELMA_PROG_ARGS_I_USAGE_TEXT_HPP
 
 
-// =========================  END OF i_usage_text.hpp  =========================
+// =====  END OF i_usage_text.hpp  =====
 

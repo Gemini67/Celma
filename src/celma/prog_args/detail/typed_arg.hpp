@@ -35,6 +35,7 @@
 #include <vector>
 #include <boost/lexical_cast.hpp>
 #include "celma/common/check_assign.hpp"
+#include "celma/common/contains.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
 #include "celma/format/to_string.hpp"
@@ -298,7 +299,7 @@ protected:
    virtual void dump( std::ostream& os) const override
    {
       os << "boolean flag, destination '" << mVarName << "', "
-         << (mHasValueSet ? "not set." : "set.") << std::endl
+         << (mHasValueSet ? "set." : "not set.") << std::endl
          << "   " << static_cast< const TypedArgBase&>( *this);
    } // TypedArg< bool>::dump
 
@@ -972,8 +973,7 @@ template< typename T>
       auto const  dest_value = boost::lexical_cast< T>( listVal);
       if (mUniqueData)
       {
-         if (std::find( mDestVar.begin(), mDestVar.end(), dest_value)
-            != mDestVar.end())
+         if (common::contains( mDestVar, dest_value))
          {
             if (mTreatDuplicatesAsErrors)
                throw std::runtime_error( "refuse to store duplicate values in"
@@ -1098,6 +1098,15 @@ public:
    /// @since  0.11, 04.01.2017
    virtual TypedArgBase* setTakesMultiValue() override;
 
+   /// Overload for destination tuple: Format not allowed.
+   /// @param[in]  f  Pointer to the format to add, the object is deleted.
+   /// @return  Never returns anything.
+   /// @throws
+   ///    "logic error" when called since setting a format for a tuple is never
+   ///    allowed.
+   /// @since  1.23.0, 09.04.2019
+   virtual TypedArgBase* addFormat( IFormat* f) noexcept( false) override;
+
    /// Specifies the list separator character to use for splitting lists of
    /// values.
    ///
@@ -1186,6 +1195,14 @@ template< typename... T>
 
 
 template< typename... T>
+   TypedArgBase* TypedArg< std::tuple< T...>>::addFormat( IFormat* f)
+{
+   delete f;
+   throw std::logic_error( "not allowed to add a format for a tuple");
+} // TypedArgBase* TypedArg< std::tuple< T...>>::addFormat
+
+
+template< typename... T>
    TypedArgBase* TypedArg< std::tuple< T...>>::setListSep( char sep)
 {
    mListSep = sep;
@@ -1222,26 +1239,17 @@ template< typename... T>
 
       check( listVal);
 
-      if (!mFormats.empty())
-      {
-         std::string  valCopy( listVal);
-         format( valCopy);
-         TupleElementValueAssign  teva( valCopy);
-         common::tuple_at_index( mNumValuesSet, mDestVar, teva);
-      } else
-      {
-         TupleElementValueAssign  teva( listVal);
-         common::tuple_at_index( mNumValuesSet, mDestVar, teva);
+      TupleElementValueAssign  teva( listVal);
+      common::tuple_at_index( mNumValuesSet, mDestVar, teva);
 
 #if 0
-         // this should work ...
-         common::tuple_at_index( mNumValuesSet, mDestVar,
-                                 [&listVal]( auto& tuple_value)
-           {
-              tuple_value = boost::lexical_cast< std::decltype( tuple_value)>( listVal);
-           });
+      // this should work ...
+      common::tuple_at_index( mNumValuesSet, mDestVar,
+                              [&listVal]( auto& tuple_value)
+        {
+           tuple_value = boost::lexical_cast< std::decltype( tuple_value)>( listVal);
+        });
 #endif
-      } // end if
       ++mNumValuesSet;
    } // end for
 } // TypedArg< std::tuple< T...>>::assign
@@ -1445,7 +1453,7 @@ template< size_t N>
    common::Tokenizer  tok( value, mListSep);
    for (auto it = tok.begin(); it != tok.end(); ++it)
    {
-      if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
+      if (mpCardinality && (it != tok.begin()))
          mpCardinality->gotValue();
 
       auto const&  listVal( *it);
@@ -1457,14 +1465,14 @@ template< size_t N>
          auto  valCopy( listVal);
          format( valCopy);
          auto const  pos = boost::lexical_cast< size_t>( valCopy);
-         if (pos > N)
+         if (pos >= N)
             throw std::runtime_error( "position " + std::to_string( pos)
                + " is outside the range of the bitset");
          mDestVar[ pos] = !mResetFlags;
       } else
       {
          auto const  pos = boost::lexical_cast< size_t>( listVal);
-         if (pos > N)
+         if (pos >= N)
             throw std::runtime_error( "position " + std::to_string( pos)
                + " is outside the range of the bitset");
          mDestVar[ pos] = !mResetFlags;

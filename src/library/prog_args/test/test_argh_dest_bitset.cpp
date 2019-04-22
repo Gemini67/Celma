@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,6 +37,74 @@ using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 
 
+namespace {
+
+
+enum bit_names
+{
+   zero,
+   first,
+   second,
+   third,
+   fourth,
+   fifth,
+   sixth,
+   seventh,
+   eighth,
+   nineth,
+   tenth
+};
+
+
+/// Helper class to convert an enum name into its value.
+///
+/// @since  1.23.0, 05.04.2019
+class EnumFormatter: public celma::prog_args::detail::IFormat
+{
+public:
+   /// Empty, virtual destructor.
+   ///
+   /// @since  1.23.0, 05.04.2019
+   virtual ~EnumFormatter() = default;
+
+   /// Returns the value of the enum as string in \a val.
+   ///
+   /// @param[in,out]  val  The value to change the formatting of.
+   /// @since  1.23.0, 05.04.2019
+   virtual void formatValue( std::string& val) const override
+   {
+      if (val == "zero")
+         val = "0";
+      else if (val == "first")
+         val = "1";
+      else if (val == "second")
+         val = "2";
+      else if (val == "third")
+         val = "3";
+      else if (val == "fourth")
+         val = "4";
+      else if (val == "fifth")
+         val = "5";
+      else if (val == "sixth")
+         val = "6";
+      else if (val == "seventh")
+         val = "7";
+      else if (val == "eighth")
+         val = "8";
+      else if (val == "nineth")
+         val = "9";
+      else if (val == "tenth")
+         val = "10";
+      else
+         throw std::runtime_error( "'" + val + "' is not a valid enum name");
+   } // EnumFormatter::formatValue
+
+}; // EnumFormatter
+
+
+} // namespace
+
+
 
 /// Test error case that can occur with a bitset.
 /// @since
@@ -64,7 +132,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
-      const ArgString2Array  as2a( "-b 25", nullptr);
+      const ArgString2Array  as2a( "-b 10", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -78,6 +146,20 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
       const ArgString2Array  as2a( "-b 3,25", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   // enum value is out of range
+   {
+      Handler           ah( 0);
+      std::bitset< 10>  b;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
+         ->addFormat( new EnumFormatter()));
+
+      const ArgString2Array  as2a( "-b first,tenth", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -222,6 +304,50 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE( b[ 6]);
       BOOST_REQUIRE( b[ 7]);
       BOOST_REQUIRE_EQUAL( free, 8);
+   } // end scope
+
+   // allow a maximum of 3 bits to be set
+   {
+      Handler           ah( 0);
+      std::bitset< 10>  b;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
+         ->setCardinality( celma::prog_args::cardinality_max( 3)));
+
+      const ArgString2Array  as2a( "-b 4,5,6", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // allow a maximum of 3 bits to be set, try to set 4
+   {
+      Handler           ah( 0);
+      std::bitset< 10>  b;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
+         ->setCardinality( celma::prog_args::cardinality_max( 3)));
+
+      const ArgString2Array  as2a( "-b 4,5,6,7", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   // set the bits through the values of an enum
+   {
+      Handler           ah( 0);
+      std::bitset< 10>  b;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
+         ->addFormat( new EnumFormatter()));
+
+      const ArgString2Array  as2a( "-b second,fifth,seventh", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( b.count(), 3);
+      BOOST_REQUIRE( b[ 2]);
+      BOOST_REQUIRE( b[ 5]);
+      BOOST_REQUIRE( b[ 7]);
    } // end scope
 
 } // test_multi_values

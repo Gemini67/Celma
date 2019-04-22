@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,9 +37,15 @@ public:
    /// Constructor.
    ///
    /// @param[in]  reqArgSpec  The list of arguments of which one must be used.
+   /// @throws
+   ///    "invalid argument" if the string is empty or does not contain at least
+   ///    two arguments.
    /// @since  0.2, 10.04.2016
-   explicit ConstraintOneOf( const std::string& reqArgSpec);
+   explicit ConstraintOneOf( const std::string& reqArgSpec) noexcept( false);
    
+   // Default destructor is fine.
+   virtual ~ConstraintOneOf() = default;
+
    /// Called when an argument was identified. If the argument is one of those
    /// in the specified list, check if it is the first of these arguments that
    /// is used, i.e. #mUsedArgument is empty.
@@ -74,9 +80,6 @@ public:
    virtual std::string toString() const override;
 
 private:
-   /// The argument specifications of the arguments.<br>
-   /// Non-const because non-complete argument specifications may be expanded.
-   std::string  mArgSpecList;
    /// Contains the argument that was actually used on the command line.<br>
    /// Used to determine if an argument was used, may be used and for error
    /// reporting.

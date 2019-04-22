@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,31 +28,21 @@
 #include "celma/format/to_string.hpp"
 
 
-using std::runtime_error;
-using std::string;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
 
 /// Constructor, does a basic validation of the argument list.
 ///
-/// @param[in]  reqArgSpec    The list of arguments that must be used.
+/// @param[in]  reqArgSpec  The list of arguments that must be used.
+/// @throws
+///    "invalid argument" if the string is empty or does not contain at least
+///    two arguments.
 /// @since  0.2, 10.04.2016
-ConstraintAllOf::ConstraintAllOf( const string& reqArgSpec):
-   mArgSpecList( reqArgSpec),
+ConstraintAllOf::ConstraintAllOf( const std::string& reqArgSpec):
+   IHandlerConstraint( "all of", reqArgSpec),
    mRemainingArguments()
 {
-
-   if (mArgSpecList.empty())
-      throw runtime_error( "Constraint 'all of' cannot be created with an empty "
-                           "list of arguments");
-
-   if (mArgSpecList.find( ';') == string::npos)
-      throw runtime_error( "List of needed arguments for constraint 'all of' "
-                           "must contain at least two arguments separated by ';'");
-
 } // ConstraintAllOf::ConstraintAllOf
 
 
@@ -72,14 +62,14 @@ void ConstraintAllOf::executeConstraint( const ArgumentKey& key)
       return;
 
    if (mRemainingArguments.empty())
-      throw runtime_error( "Argument '" + format::toString( key)
-                           + "' was already used");
+      throw std::runtime_error( "Argument '" + format::toString( key)
+         + "' was already used");
 
    auto  argpos = mRemainingArguments.find( key);
 
    if (argpos == mRemainingArguments.end())
-      throw runtime_error( "Argument '" + format::toString( key)
-                           + "' was already used");
+      throw std::runtime_error( "Argument '" + format::toString( key)
+         + "' was already used");
 
    mRemainingArguments.erase( argpos);
 
@@ -91,7 +81,7 @@ void ConstraintAllOf::executeConstraint( const ArgumentKey& key)
 ///
 /// @return  The list of arguments as passed to the constructor.
 /// @since  0.2, 10.04.2016
-string& ConstraintAllOf::argumentList()
+std::string& ConstraintAllOf::argumentList()
 {
 
    return mArgSpecList;
@@ -123,7 +113,7 @@ void ConstraintAllOf::checkEndCondition() const
 
    if (!mRemainingArguments.empty())
    {
-      string  remaining;
+      std::string  remaining;
       for (auto const& arg : mRemainingArguments)
       {
          if (!remaining.empty())
@@ -131,7 +121,8 @@ void ConstraintAllOf::checkEndCondition() const
          remaining.append( format::toString( arg.key()));
       } // end for
 
-      throw runtime_error( "Argument(s) '" + remaining + "' required but missing");
+      throw std::runtime_error( "Argument(s) '" + remaining
+         + "' required but missing");
    } // end if
 
 } // ConstraintAllOf::checkEndCondition
@@ -142,7 +133,7 @@ void ConstraintAllOf::checkEndCondition() const
 ///
 /// @return  A string with the text description of the constraint.
 /// @since  0.16.0, 15.08.2017
-string ConstraintAllOf::toString() const
+std::string ConstraintAllOf::toString() const
 {
 
    std::ostringstream  oss;

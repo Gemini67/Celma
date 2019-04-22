@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,7 +41,12 @@ public:
    ///    The argument specification of the required argument.
    /// @since  0.2, 10.04.2016
    explicit ConstraintRequires( const std::string& reqArgSpec);
-   
+
+   /// Empty, virtual destructor.
+   ///
+   /// @since  1.23.0, 05.04.2019
+   virtual ~ConstraintRequires() = default;
+
    /// Adds the 'required' constraint to the current argument handler.
    ///
    /// @param[in]  key  The argument that sets this constraint.
@@ -53,10 +58,6 @@ public:
    /// @return  A string with the text description of the constraint.
    /// @since  0.16.0, 15.08.2017
    virtual std::string toString() const override;
-
-private:
-   /// The argument specification of the other, required argument.
-   const std::string  mRequiredArgSpec;
 
 }; // ConstraintRequires
 

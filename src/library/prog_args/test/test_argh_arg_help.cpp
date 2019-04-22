@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -62,6 +62,32 @@ BOOST_AUTO_TEST_CASE( unknown_argument)
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( std_out.str().empty());
    BOOST_REQUIRE( !err_out.str().empty());
+
+} // unknown_argument
+
+
+
+/// Request help for a non-existing sub-group.
+///
+/// @since  1.23.0, 05.04.2019
+BOOST_AUTO_TEST_CASE( unknown_subgroup)
+{
+
+   ostringstream   std_out;
+   ostringstream   err_out;
+   Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
+   bool            bool_arg;
+
+
+   ah.addArgument( "f", DEST_VAR( bool_arg), "A boolean flag");
+
+   const ArgString2Array  as2a( "--help-arg=-g/x", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   // std::cerr << "\n" << err_out.str() << std::endl;
+   BOOST_REQUIRE( std_out.str().empty());
+   BOOST_REQUIRE( multilineStringCompare( err_out.str(),
+      "*** ERROR: Sub-group argument '-g/x' is unknown!\n"));
 
 } // unknown_argument
 
@@ -137,7 +163,8 @@ BOOST_AUTO_TEST_CASE( flag_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // flag_full
@@ -205,7 +232,8 @@ BOOST_AUTO_TEST_CASE( mandatory_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // mandatory_full
@@ -246,7 +274,8 @@ BOOST_AUTO_TEST_CASE( pair_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // pair_full
@@ -301,7 +330,8 @@ BOOST_AUTO_TEST_CASE( subgroup_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    // std::cerr << "\n" << err_out.str() << std::endl;
    BOOST_REQUIRE( err_out.str().empty());
 
@@ -357,7 +387,8 @@ BOOST_AUTO_TEST_CASE( subgroup_arg_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      false\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // subgroup_arg_full
@@ -431,7 +462,8 @@ BOOST_AUTO_TEST_CASE( vector_max_values_full)
                         "   is hidden:                  false\n"
                         "   takes multiple values:      true\n"
                         "   is deprecated:              false\n"
-                        "   is replaced:                false\n"));
+                        "   is replaced:                false\n"
+                        "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // vector_max_values_full

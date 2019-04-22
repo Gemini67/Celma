@@ -30,6 +30,7 @@
 #include <iostream>
 #include <iomanip>
 #include <memory>
+#include <stdexcept>
 
 
 // Boost library includes
@@ -44,6 +45,7 @@
 #include "celma/common/tokenizer.hpp"
 #include "celma/format/text_block.hpp"
 #include "celma/prog_args/destination.hpp"
+#include "celma/prog_args/detail/eval_arguments_error_exit.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
@@ -479,7 +481,7 @@ detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
 /// @param[in]  hf        The handler to call when the control character is
 ///                       detected on the argument list.
 /// @since  0.2, 10.04.2016
-void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
+void Handler::addControlHandler( char ctrlChar, HandlerFunc hf)
 {
 
    switch (ctrlChar)
@@ -501,19 +503,20 @@ void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
 /// The arguments specified in the constraint must already be defined.
 ///
 /// @param[in]  ihc
-///    Pointer to the object that handles the constraint.
+///    Pointer to the object that handles the constraint. Is deleted when an
+///    error occurs.
 /// @since  0.2, 10.04.2016
-void Handler::addConstraint( detail::IHandlerConstraint* ihc) noexcept( false)
+void Handler::addConstraint( detail::IHandlerConstraint* ihc)
 {
 
    if (ihc == nullptr)
-      throw runtime_error( "invalid NULL pointer passed");
-
-   if (ihc->argumentList().empty())
-      throw runtime_error( "may not specify constraint with empty argument list");
+      throw invalid_argument( "invalid NULL pointer passed");
 
    if (!validArguments( ihc->argumentList()))
-      throw runtime_error( "constraint contains invalid argument(s)");
+   {
+      delete ihc;
+      throw invalid_argument( "constraint contains invalid argument(s)");
+   } // end if
 
    // in case the argument list was updated through validArguments(), the
    // constraints may need to be notified about the new content
@@ -590,39 +593,8 @@ void Handler::evalArgumentsErrorExit( int argc, char* argv[],
    const string& prefix)
 {
 
-   try
-   {
+   detail::evalArgumentsErrorExit( *this, mErrorOutput, argc, argv, prefix);
 
-      evalArguments( argc, argv);
-      return;   // return here, easier error exit below
-
-   } catch (const invalid_argument& ia)
-   {
-      mErrorOutput << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
-   } catch (const out_of_range& re)
-   {
-      mErrorOutput << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
-   } catch (const logic_error& le)
-   {
-      mErrorOutput << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
-   } catch (const overflow_error& oe)
-   {
-      mErrorOutput << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
-   } catch (const underflow_error& ue)
-   {
-      mErrorOutput << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;
-   } catch (const runtime_error& rte)
-   {
-      mErrorOutput << prefix << "Caught 'runtime error' exception: " << rte.what() << "!" << endl;
-   } catch (const exception& e)
-   {
-      mErrorOutput << prefix << "Caught unspecific std::exception: " << e.what() << "!" << endl;
-   } catch (...)
-   {
-      mErrorOutput << prefix << "Caught unknown exception!" << endl;
-   } // end try
-
-   exit( EXIT_FAILURE);
 } // Handler::evalArgumentsErrorExit
 
 
@@ -1176,6 +1148,7 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
          if (!p_arg_hdl->replacedBy().empty())
             mOutput << "   replaced by:                "
                     << p_arg_hdl->replacedBy() << std::endl;
+         mOutput << std::endl;
       } // end if
    } else
    {
@@ -1264,6 +1237,20 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
    else if (flag_set & hfHelpLong)
       args = "help";
 
+   if ((txt1 == nullptr) && (txt2 != nullptr))
+      throw std::invalid_argument( "Use first usage text argument to specify a "
+         "single usage text");
+   if ((txt1 != nullptr) && (txt2 != nullptr))
+   {
+      if (txt1->usagePos() == txt2->usagePos())
+         throw std::invalid_argument( "Cannot have two usage texts with the "
+            "same position");
+      if ((txt1->usagePos() == UsagePos::afterArgs)
+          && (txt2->usagePos() == UsagePos::beforeArgs))
+         throw std::invalid_argument( "Invalid order of usage texts "
+            "(after/before)");
+   } // end if
+
    if (!args.empty())
       addArgument( args, new detail::TypedArgCallable(
          [=]() { usage( txt1, txt2); }, "Handler::usage"),
@@ -1311,10 +1298,6 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
 /// @since  0.2, 10.04.2016
 void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 {
-
-   if ((txt2 != nullptr) && (txt1 == nullptr))
-      throw std::invalid_argument( "second usage text can only be used if first"
-         " usage text is used too");
 
    if (Groups::instance().evaluatedByArgGroups() && !mIsSubGroupHandler)
        Groups::instance().displayUsage( txt1, txt2);

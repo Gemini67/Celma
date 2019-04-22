@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -280,6 +280,31 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
    } // end scope
 
 } // test_clear_dest
+
+
+
+/// Test feature to format the values before they are inserted into the vector.
+///
+/// @since  1.23.0, 09.04.2019
+BOOST_AUTO_TEST_CASE( format_values)
+{
+
+   Handler                    ah( 0);
+   std::vector< std::string>  v;
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+      ->addFormat( celma::prog_args::lowercase()));
+
+   const ArgString2Array  as2a( "-v monday,TUESDAY,wEdNeSdAy", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_EQUAL( v.size(), 3);
+   BOOST_REQUIRE_EQUAL( v[ 0], "monday");
+   BOOST_REQUIRE_EQUAL( v[ 1], "tuesday");
+   BOOST_REQUIRE_EQUAL( v[ 2], "wednesday");
+
+} // format_values
 
 
 

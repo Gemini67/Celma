@@ -593,7 +593,8 @@ public:
    /// The arguments specified in the constraint must already be defined.
    ///
    /// @param[in]  ihc
-   ///    Pointer to the object that handles the constraint.
+   ///    Pointer to the object that handles the constraint. Is deleted when an
+   ///    error occurs.
    /// @since  0.2, 10.04.2016
    void addConstraint( detail::IHandlerConstraint* ihc) noexcept( false);
 
@@ -620,7 +621,7 @@ public:
    ///                     space at the end as separator to the following text.
    /// @since  0.2, 10.04.2016
    void evalArgumentsErrorExit( int argc, char* argv[],
-                                const std::string& prefix);
+      const std::string& prefix);
 
    /// After calling evalArguments(), prints the list of arguments that were
    /// used and the values that were set.

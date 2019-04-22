@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,6 +34,8 @@
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
+#include "celma/prog_args/detail/check_max_length.hpp"
+#include "celma/prog_args/detail/check_min_length.hpp"
 #include "celma/prog_args/detail/check_parent_directory_exists.hpp"
 #include "celma/prog_args/detail/check_pattern.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
@@ -42,6 +44,7 @@
 
 // also the specific formatters are not actually needed here, but they are also
 // included anyway for convenience of the user
+#include "celma/prog_args/detail/format_anycase.hpp"
 #include "celma/prog_args/detail/format_lowercase.hpp"
 #include "celma/prog_args/detail/format_uppercase.hpp"
 
@@ -285,12 +288,16 @@ public:
    bool takesMultiValue() const;
 
    /// Adds a value formatter: The value from the argument list (command line)
-   /// is formatted before it is checked and/or stored.<br>
-   /// Throws when called for an argument that does not accept values.
+   /// is formatted before it is checked and/or stored.
+   ///
    /// @param[in]  f
-   ///    Pointer to the formatter to add.
-   /// @return
-   ///    Pointer to this object.
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      values.
+   ///    - "invalid argument" when the given object pointer is NULL.
    /// @since
    ///    0.2, 10.04.2016
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false);
@@ -303,12 +310,16 @@ public:
    ///    0.2, 10.04.2016
    void format( std::string& val) const;
 
-   /// Adds a value check.<br>
-   /// Throws when called for an argument that does not accept values.
+   /// Adds a value check.
+   ///
    /// @param[in]  c
-   ///    Pointer to the object that checks the value.
-   /// @return
-   ///    Pointer to this object.
+   ///    Pointer to the object that checks the value, is deleted when it could
+   ///    not be stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      values.
+   ///    - "invalid argument" when the given object pointer is NULL.
    /// @since
    ///    0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
@@ -508,7 +519,7 @@ public:
    ///    Pointer to this object.
    /// @since
    ///    0.2, 10.04.2016
-   virtual TypedArgBase* addConstraint( IArgConstraint* iac);
+   virtual TypedArgBase* addConstraint( IArgConstraint* iac) noexcept( false);
 
    /// Returns if the argument has a constraint specified.
    /// @return
@@ -647,11 +658,11 @@ constexpr const char* TypedArgBase::valueMode2str( ValueMode vm)
 {
    switch (vm)
    {
+   default:
    case ValueMode::none:      return "none";
    case ValueMode::optional:  return "optional";
    case ValueMode::required:  return "required";
    case ValueMode::command:   return "command";
-   default:                   return "unknown";
    } // end switch
 } // TypedArgBase::valueMode2str
 

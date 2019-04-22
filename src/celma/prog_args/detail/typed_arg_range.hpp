@@ -73,11 +73,13 @@ public:
    ///    1.8.0, 05.07.2018
    virtual void printValue( std::ostream& os, bool print_type) const override;
 
-   /// Throws.
+   /// Adding checks is not allowed for a range.
+   ///
+   /// @param[in]  c  Pointer to the check to add, is deleted.
    /// @return  Nothing, always throws.
-   /// @throw  logic_error.
+   /// @throws  "logic_error" since checks are not allowed for ranges.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* addCheck( ICheck* /* c */) noexcept( false) override;
+   virtual TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -140,8 +142,9 @@ template< typename T, typename C>
 
 
 template< typename T, typename C> TypedArgBase*
-   TypedArgRange< T, C>::addCheck( ICheck*) noexcept( false)
+   TypedArgRange< T, C>::addCheck( ICheck* c) noexcept( false)
 {
+   delete c;
    throw std::logic_error( "cannot add value-check to destination type 'range'");
 } // TypedArgRange< T, C>::addCheck
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,6 +20,7 @@
 
 
 // C++ Standard Library includes
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -31,6 +32,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -42,6 +44,62 @@ using std::runtime_error;
 using std::string;
 using std::underflow_error;
 using std::vector;
+
+
+
+/// Verify that general errors regarding checks are caught.
+///
+/// @since  1.23.1, 15.04.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   {
+      Handler  ah( 0);
+      bool     dummy = false;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( dummy), "flag")
+         ->addCheck( nullptr), std::logic_error);
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  dummy;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dummy), "string")
+         ->addCheck( nullptr), std::invalid_argument);
+   } // end scope
+
+   // specify an invalid range
+   {
+      Handler  ah( 0);
+      int      iVal = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
+                                         ->addCheck( celma::prog_args::range( 5, 5)),
+                           std::invalid_argument);
+   } // end scope
+
+   // specify another invalid range
+   {
+      Handler  ah( 0);
+      int      iVal = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
+                                         ->addCheck( celma::prog_args::range( 5, 2)),
+                           std::invalid_argument);
+   } // end scope
+
+   // specify an empty list of values
+   {
+      Handler  ah( 0);
+      int      iVal = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
+                                         ->addCheck( celma::prog_args::values( "")),
+                           std::invalid_argument);
+   } // end scope
+
+} // errors
 
 
 
@@ -91,16 +149,39 @@ BOOST_AUTO_TEST_CASE( lower_limit)
    } // end scope
 
    {
-      Handler            ah( 0);
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
       CheckAssign< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      const ArgString2Array  as2a( "-i 10000", nullptr);
+      const ArgString2Array  as2a( "-i 10000 --help-arg-full i", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( iVal.hasValue());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10000);
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-i', usage:\n"
+         "   Integer\n"
+         "Properties:\n"
+         "   destination variable name:  iVal\n"
+         "   destination variable type:  int\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     Value >= 10\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
    } // end scope
 
 } // lower_limit
@@ -245,16 +326,39 @@ BOOST_AUTO_TEST_CASE( upper_limit)
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      CheckAssign< int>   iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      const ArgString2Array  as2a( "-i 1", nullptr);
+      const ArgString2Array  as2a( "-i 1 --help-arg-full i", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( iVal.hasValue());
       BOOST_REQUIRE_EQUAL( iVal.value(), 1);
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-i', usage:\n"
+         "   Integer\n"
+         "Properties:\n"
+         "   destination variable name:  iVal\n"
+         "   destination variable type:  int\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     Value < 100\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
    } // end scope
 
 } // upper_limit
@@ -403,17 +507,40 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      CheckAssign< int>   iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      const ArgString2Array  as2a( "-i 99", nullptr);
+      const ArgString2Array  as2a( "-i 99 --help-arg-full i", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( iVal.hasValue());
       BOOST_REQUIRE_EQUAL( iVal.value(), 99);
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-i', usage:\n"
+         "   Integer\n"
+         "Properties:\n"
+         "   destination variable name:  iVal\n"
+         "   destination variable type:  int\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     Value >= 10, Value < 100\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
    } // end scope
 
    {
@@ -722,18 +849,41 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      vector< int>        iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      const ArgString2Array  as2a( "-i 99", nullptr);
+      const ArgString2Array  as2a( "-i 99 --help-arg-full i", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 99);
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-i', usage:\n"
+         "   Integer\n"
+         "Properties:\n"
+         "   destination variable name:  iVal\n"
+         "   destination variable type:  std::vector<int>\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                none\n"
+         "   checks:                     10 <= value < 100\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
    } // end scope
 
    {
@@ -891,17 +1041,40 @@ BOOST_AUTO_TEST_CASE( check_values_string)
    } // end scope
 
    {
-      Handler               ah( 0);
+      std::ostringstream    std_out;
+      std::ostringstream    std_err;
+      Handler               ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
       CheckAssign< string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
 
-      const ArgString2Array  as2a( "-n Mary", nullptr);
+      const ArgString2Array  as2a( "-n Mary --help-arg-full n", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( name.hasValue());
       BOOST_REQUIRE_EQUAL( name.value(), "Mary");
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-n', usage:\n"
+         "   Name\n"
+         "Properties:\n"
+         "   destination variable name:  name\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     Value in ( \"Mary\", \"Paul\", \"Peter\")\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
    } // end scope
 
 } // check_values_string
@@ -915,7 +1088,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
 
    using celma::prog_args::values;
 
-   { 
+   {
       Handler            ah( 0);
       CheckAssign< int>  iVal;
 
@@ -1136,7 +1309,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
    using celma::prog_args::isDirectory;
    using celma::prog_args::isFile;
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1148,7 +1321,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
          runtime_error);
    } // end scope
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1160,7 +1333,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
    } // end scope
 
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1173,7 +1346,42 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
          runtime_error);
    } // end scope
 
-   { 
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      string              dest;
+
+      ah.addArgument( "d", DEST_VAR( dest), "Directory")
+         ->addCheck( isDirectory());
+
+      const ArgString2Array  as2a( "-d /tmp --help-arg-full d", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-d', usage:\n"
+         "   Directory\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     is a directory\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1196,7 +1404,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
 
    using celma::prog_args::isAbsolutePath;
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1208,7 +1416,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
          runtime_error);
    } // end scope
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1220,7 +1428,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
          runtime_error);
    } // end scope
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1232,7 +1440,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
          runtime_error);
    } // end scope
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1243,6 +1451,39 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler              ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      string              dest;
+
+      ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
+
+      const ArgString2Array  as2a( "-p /etc/passwd --help-arg-full p", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-p', usage:\n"
+         "   Path\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     is an absolute path\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
 
 } // correctly_check_absolute_path
 
@@ -1257,7 +1498,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
    using celma::prog_args::isAbsolutePath;
    using celma::prog_args::isDirectory;
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1270,7 +1511,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
          runtime_error);
    } // end scope
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1283,7 +1524,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
          runtime_error);
    } // end scope
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1296,7 +1537,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
          runtime_error);
    } // end scope
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1306,6 +1547,41 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       const ArgString2Array  as2a( "-d /etc", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      string              dest;
+
+      ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
+         ->addCheck( isDirectory());
+
+      const ArgString2Array  as2a( "-d /etc --help-arg-full d", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-d', usage:\n"
+         "   Dir\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     is an absolute path, is a directory\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
    } // end scope
 
 } // check_directory_and_absolute_path
@@ -1321,7 +1597,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
    using celma::prog_args::parentDirectoryExists;
 
    // should throw when the path does not exist
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1335,7 +1611,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
    } // end scope
 
    // should throw when the path does exist but is not a directory
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1348,7 +1624,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
          std::runtime_error);
    } // end scope
 
-   { 
+   {
       Handler  ah( 0);
       string   dest;
 
@@ -1358,6 +1634,42 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
       const ArgString2Array  as2a( "-f /etc/textfile.txt", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      string              dest;
+
+      ah.addArgument( "f", DEST_VAR( dest), "path and filename")
+         ->addCheck( parentDirectoryExists());
+
+      const ArgString2Array  as2a( "-f /etc/textfile.txt --help-arg-full f",
+         nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-f', usage:\n"
+         "   path and filename\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     parent directory exists\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
    } // end scope
 
 } // correctly_check_parent_diretory_exists
@@ -1373,7 +1685,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
    using celma::prog_args::pattern;
 
    // check against a pattern for a name: one word starting with an uppercase
-   { 
+   {
       Handler  ah( 0);
       string   name;
 
@@ -1386,7 +1698,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
    } // end scope
 
    // check against a pattern for a name: one word starting with an uppercase
-   { 
+   {
       Handler  ah( 0);
       string   name;
 
@@ -1400,7 +1712,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
    } // end scope
 
    // check against a pattern for a name: one word starting with an uppercase
-   { 
+   {
       Handler  ah( 0);
       string   name;
 
@@ -1414,7 +1726,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
    } // end scope
 
    // check against a pattern for a name: one word starting with an uppercase
-   { 
+   {
       Handler  ah( 0);
       string   name;
 
@@ -1427,7 +1739,473 @@ BOOST_AUTO_TEST_CASE( pattern_check)
          std::out_of_range);
    } // end scope
 
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      string              name;
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( "^[A-Z][a-z]+"));
+
+      const ArgString2Array  as2a( "-n Peterchen --help-arg-full n", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-n', usage:\n"
+         "   A name\n"
+         "Properties:\n"
+         "   destination variable name:  name\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     Value matches '^[A-Z][a-z]+'\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
 } // pattern_check
+
+
+
+/// Verifies that the 'minimum length' check works correctly.
+///
+/// @since  1.23.0, 11.04.2019
+BOOST_AUTO_TEST_CASE( minimum_length)
+{
+
+   using celma::prog_args::minLength;
+
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 0)), std::invalid_argument);
+   } // end scope
+
+   // value too short
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6)));
+
+      const ArgString2Array  as2a( "-s hello", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::underflow_error);
+   } // end scope
+
+   // value just about long enough
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6)));
+
+      const ArgString2Array  as2a( "-s worlds", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6)));
+
+      const ArgString2Array  as2a( "-s worlds --help-arg-full s", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-s', usage:\n"
+         "   string\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     Length >= 6\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // minimum_length
+
+
+
+/// Verifies that the 'maximum length' check works correctly.
+///
+/// @since  1.23.0, 12.04.2019
+BOOST_AUTO_TEST_CASE( maximum_length)
+{
+
+   using celma::prog_args::maxLength;
+
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( maxLength( 0)), std::invalid_argument);
+   } // end scope
+
+   // value too long
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( maxLength( 6)));
+
+      const ArgString2Array  as2a( "-s wonderful", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::overflow_error);
+   } // end scope
+
+   // value just about short enough
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( maxLength( 6)));
+
+      const ArgString2Array  as2a( "-s worlds", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( maxLength( 6)));
+
+      const ArgString2Array  as2a( "-s worlds --help-arg-full s", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-s', usage:\n"
+         "   string\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     Length <= 6\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // maximum_length
+
+
+
+/// Verifies that combinations of the 'minimum length' and 'maximum length'
+/// checks work correctly.
+///
+/// @since  1.23.0, 12.04.2019
+BOOST_AUTO_TEST_CASE( min_max_length)
+{
+
+   using celma::prog_args::maxLength;
+   using celma::prog_args::minLength;
+
+   // value too short
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
+
+      const ArgString2Array  as2a( "-s hello", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::underflow_error);
+   } // end scope
+
+   // value length in range
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
+
+      const ArgString2Array  as2a( "-s wonderful", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // value too long
+   {
+      Handler      ah( 0);
+      std::string  dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
+
+      const ArgString2Array  as2a( "-s outstandingly", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::overflow_error);
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         dest;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
+         ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
+
+      const ArgString2Array  as2a( "-s wonderful --help-arg-full s", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-s', usage:\n"
+         "   string\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     Length >= 6, Length <= 12\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // min_max_length
+
+
+
+/// Helper class to check the implementation and usage of application specific
+/// check classes.
+/// @since  0.2, 10.04.2016
+class ApplCheckTriple: public celma::prog_args::detail::ICheck
+{
+public:
+   /// Constructor.
+   /// @param[in]  first   The first value to accept.
+   /// @param[in]  second  The second value to accept.
+   /// @param[in]  third   The third value to accept.
+   /// @since  0.2, 10.04.2016
+   ApplCheckTriple( int first, int second, int third):
+      m1( first),
+      m2( second),
+      m3( third)
+   {
+   }
+
+   /// Checks if the value in \a val equals one of the three check values.
+   /// @param[in]  val  The value to check in string format.
+   /// @since  0.2, 10.04.2016
+   virtual void checkValue( const string& val) const noexcept( false) override
+   {
+      int  checkVal = boost::lexical_cast< int>( val);
+      if ((checkVal != m1) && (checkVal != m2) && (checkVal != m3))
+         throw runtime_error( "not in tripple");
+   }
+
+   /// Returns a text description of the check.
+   /// @return  A string with the text description of the check.
+   /// @since  0.16.0, 12.08.2017
+   virtual std::string toString() const override
+   {
+      return "";
+   }
+
+private:
+   int  m1;
+   int  m2;
+   int  m3;
+}; // ApplCheckTriple
+
+
+
+/// Helper function to use the application specific check function just like
+/// the standard check functions from the library.
+/// @param[in]  first   The first allowed value.
+/// @param[in]  second  The second allowed value.
+/// @param[in]  third   The third allowed value.
+/// @return  Pointer to the newly created check object.
+/// @since  0.2, 10.04.2016
+static celma::prog_args::detail::ICheck* tripple( int first, int second, int third)
+{
+   return new ApplCheckTriple( first, second, third);
+} // tripple
+
+
+
+/// Application specific limit check.
+/// @since  0.2, 10.04.2016
+BOOST_AUTO_TEST_CASE( application_check)
+{
+
+   {
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
+                                            ->addCheck( tripple( 11, 111, 1111)));
+
+      const ArgString2Array  as2a( "", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !iVal.hasValue());
+   } // end scope
+
+   {
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
+
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
+                                            ->addCheck( tripple( 11, 111, 1111)));
+
+      const ArgString2Array  as2a( "-i 1", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           runtime_error);
+      BOOST_REQUIRE( !iVal.hasValue());
+   } // end scope
+
+   {
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
+                                            ->addCheck( tripple( 11, 111, 1111)));
+
+      const ArgString2Array  as2a( "-i 110", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           runtime_error);
+      BOOST_REQUIRE( !iVal.hasValue());
+   } // end scope
+
+   {
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
+
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
+                                            ->addCheck( tripple( 11, 111, 1111)));
+
+      const ArgString2Array  as2a( "-i 11", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE_EQUAL( iVal.value(), 11);
+   } // end scope
+
+   {
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
+
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
+                                            ->addCheck( tripple( 11, 111, 1111)));
+
+      const ArgString2Array  as2a( "-i 111", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE_EQUAL( iVal.value(), 111);
+   } // end scope
+
+   {
+      Handler            ah( 0);
+      CheckAssign< int>  iVal;
+
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
+                                            ->addCheck( tripple( 11, 111, 1111)));
+
+      const ArgString2Array  as2a( "-i 1111", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE_EQUAL( iVal.value(), 1111);
+   } // end scope
+
+} // application_check
+
+
+
+/// Test handling of control characters.
+/// @since  0.2, 10.04.2016
+BOOST_AUTO_TEST_CASE( control_check)
+{
+
+
+   Handler  ah( 0);
+   int      value = -1;
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( value), "some value"));
+
+   {
+      const ArgString2Array  as2a( "-v 45 ! -v 47", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           runtime_error);
+      BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
+   } // end scope
+
+} // control_check
 
 
 

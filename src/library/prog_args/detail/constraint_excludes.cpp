@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -42,7 +42,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///    The argument specification of the forbidden argument(s).
 /// @since  0.2, 10.04.2016
 ConstraintExcludes::ConstraintExcludes( const std::string& reqArgSpec):
-   mExcludedArgSpec( reqArgSpec)
+   IArgConstraint( "excludes", reqArgSpec)
 {
 } // ConstraintExcludes::ConstraintExcludes
 
@@ -59,7 +59,7 @@ void ConstraintExcludes::executeConstraint( const ArgumentKey& key)
 
    ConstraintContainer::mpCurrentConstraints->
       addConstraint( ConstraintContainer::Constraint::excluded,
-                     mExcludedArgSpec, format::toString( key));
+                     mConstraints, format::toString( key));
 
 } // ConstraintExcludes::executeConstraint
 
@@ -75,7 +75,7 @@ std::string ConstraintExcludes::toString() const
    std::ostringstream  oss;
 
 
-   oss << "excludes (" << mExcludedArgSpec << ")";
+   oss << "excludes (" << mConstraints << ")";
 
    return oss.str();
 } // ConstraintExcludes::toString

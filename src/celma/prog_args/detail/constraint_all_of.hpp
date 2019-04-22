@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,10 +39,16 @@ class ConstraintAllOf: public IHandlerConstraint
 public:
    /// Constructor, does a basic validation of the argument list.
    ///
-   /// @param[in]  reqArgSpec    The list of arguments that must be used.
+   /// @param[in]  reqArgSpec  The list of arguments that must be used.
+   /// @throws
+   ///    "invalid argument" if the string is empty or does not contain at least
+   ///    two arguments.
    /// @since  0.2, 10.04.2016
-   explicit ConstraintAllOf( const std::string& reqArgSpec);
-   
+   explicit ConstraintAllOf( const std::string& reqArgSpec) noexcept( false);
+
+   // Default destructor is fine.
+   virtual ~ConstraintAllOf() = default;
+
    /// Called when any argument was identified. Procedure:
    /// - Check if the argument is one of the arguments for which the constraint
    ///   is defined.
@@ -80,13 +86,10 @@ private:
    /// Container for the keys, only keys needed.
    using key_cont_t = Storage< std::nullptr_t>;
 
-   /// The argument specifications of the arguments.<br>
-   /// Non-const because non-complete argument specifications may be expanded.
-   std::string  mArgSpecList;
    /// When validated() is called, the arguments from #mArgSpecList are copied
    /// here. Afterwards, executeConstraint() will delete the used argument from
    /// it
-   key_cont_t   mRemainingArguments;
+   key_cont_t  mRemainingArguments;
 
 }; // ConstraintAllOf
 
