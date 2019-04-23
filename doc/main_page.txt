@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.24.0
+   \mainpage  CELMA v1.24.1
 
    \tableofcontents
 
@@ -47,6 +47,7 @@
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
 
+   |   1.24.1 | 2019-04-23        | Fixed analyze build, fixed found problems. |
    |   1.24.0 | 2019-04-22        | Added functions to format byte sizes. |
    |   1.23.1 | 2019-04-22        | Extracted functionality of evalArgumentsErrorExit(), fixed some minor errors and improved coverage. |
    |   1.23.0 | 2019-04-12        | Added new check "maximum length" to argument handler. |

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,9 +20,9 @@
 
 
 // C++ Standard Library includes
-#include <string>
-#include <iostream>
 #include <bitset>
+#include <iostream>
+#include <string>
 
 
 // Boost includes
@@ -73,13 +73,13 @@ public:
    /// Stores the value in the destination variable.
    /// @param[in]  value  The value to store in string format.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const string& value);
+   virtual void assign( const string& value) override;
 
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
    ///          value, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const;
+   virtual bool hasValue() const override;
 
    /// Writes the contents of the destination variable into the stream.
    /// @param[in]  os
@@ -96,7 +96,7 @@ public:
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setListSep( char sep);
+   virtual TypedArgBase* setListSep( char sep) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
