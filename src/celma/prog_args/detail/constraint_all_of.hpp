@@ -59,12 +59,6 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void executeConstraint( const ArgumentKey& key) override;
 
-   /// Returns the list of arguments that must be used.
-   ///
-   /// @return  The list of arguments as passed to the constructor.
-   /// @since  0.2, 10.04.2016
-   virtual std::string& argumentList() override;
-
    /// Called after the argument list was validated.
    ///
    /// @since  0.2, 10.04.2016

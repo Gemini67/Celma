@@ -34,9 +34,38 @@ using celma::prog_args::Handler;
 
 
 /// Test error case that can occur with a vector.
+///
 /// @since  1.2.0, 28.12.2017
 BOOST_AUTO_TEST_CASE( test_vector_errors)
 {
+
+   // try to set invalid value mode
+   {
+      Handler            ah( 0);
+      std::vector< int>  v;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->setValueMode( Handler::ValueMode::none), std::logic_error);
+   } // end scope
+
+   // valid value mode, but "clear before assign" not set
+   {
+      Handler            ah( 0);
+      std::vector< int>  v;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->setValueMode( Handler::ValueMode::optional), std::logic_error);
+   } // end scope
+
+   // valid value mode, "clear before assign" set, but vector empty
+   {
+      Handler            ah( 0);
+      std::vector< int>  v;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->setClearBeforeAssign()->setValueMode( Handler::ValueMode::optional),
+         std::logic_error);
+   } // end scope
 
    // assign wrong value types
    {
@@ -79,6 +108,23 @@ BOOST_AUTO_TEST_CASE( vector_features_on_non_vector_dest)
       ->setUniqueData(), std::invalid_argument);
 
 } // vector_features_on_non_vector_dest
+
+
+
+/// For completeness: Set value mode "required" again.
+///
+/// @since  1.24.2, 23.04.2019
+BOOST_AUTO_TEST_CASE( value_mode)
+{
+
+   Handler            ah( 0);
+   std::vector< int>  v = { 1, 2, 3};
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+      ->setValueMode( Handler::ValueMode::required));
+
+} // value_mode
 
 
 
@@ -277,6 +323,21 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       BOOST_REQUIRE_EQUAL( v[ 2], 6);
       BOOST_REQUIRE_EQUAL( v[ 3], 7);
       BOOST_REQUIRE_EQUAL( v[ 4], 8);
+   } // end scope
+
+   // set default values, make argument optional, vector should be empty when
+   // argument is used with value(s)
+   {
+      Handler            ah( 0);
+      std::vector< int>  v = { 1, 2, 3};
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->setClearBeforeAssign()->setValueMode( Handler::ValueMode::optional));
+
+      const ArgString2Array  as2a( "-v", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( v.empty());
    } // end scope
 
 } // test_clear_dest

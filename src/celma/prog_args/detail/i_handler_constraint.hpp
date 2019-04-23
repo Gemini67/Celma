@@ -32,6 +32,8 @@ class ArgumentKey;
 /// Base class for constraints which affect multiple arguments and are stored/
 /// handled in the argument handler itself.
 ///
+/// @since  1.24.2, 23.10.2018
+///    (arg list returned from here, some methods now pure virtual)
 /// @since  1.22.1, 25.10.2018
 ///    (moved from IConstraint, special version for handler arguments)
 /// @since  0.2, 10.04.2016
@@ -52,23 +54,26 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void executeConstraint( const ArgumentKey& key) = 0;
 
-   /// Needed on global constraints: The list of arguments for which the
-   /// constraint is defined.
+   /// The list of arguments for which the constraint is defined.
    ///
    /// @return  The list arguments affected by the constraint.
    /// @since  0.2, 10.04.2016
-   virtual std::string& argumentList();
+   std::string& argumentList();
 
    /// Called after the argument list in a global constraint was validated.
    ///
+   /// @since  1.24.2, 23.04.2019
+   ///    (now pure virtual here)
    /// @since  0.2, 10.04.2016
-   virtual void validated();
+   virtual void validated() = 0;
 
-   /// Needed on global constraints: Called when all arguments were evaluated,
-   /// has to check if the constraint was fulfilled.
+   /// Called when all arguments were evaluated, has to check if the constraint
+   /// was fulfilled.
    ///
+   /// @since  1.24.2, 23.04.2019
+   ///    (now pure virtual here)
    /// @since  0.2, 10.04.2016
-   virtual void checkEndCondition() const;
+   virtual void checkEndCondition() const = 0;
 
    /// Returns a text description of the constraint.
    ///
@@ -118,6 +123,12 @@ protected:
 
 // inlined methods
 // ===============
+
+
+inline std::string& IHandlerConstraint::argumentList()
+{
+   return mArgSpecList;
+} // IHandlerConstraint::argumentList
 
 
 inline std::ostream& operator <<( std::ostream& os, IHandlerConstraint* pc)

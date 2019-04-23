@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,45 +29,6 @@
 
 
 namespace celma { namespace prog_args { namespace detail {
-
-
-using std::runtime_error;
-
-
-
-/// Needed on global constraints: The list of arguments for which the
-/// constraint is defined.
-///
-/// @return  The list arguments affected by the constraint.
-/// @since  0.2, 10.04.2016
-std::string& IHandlerConstraint::argumentList()
-{
-
-   throw runtime_error( "should not be called");
-} // IHandlerConstraint::argumentList
-
-
-
-/// Called after the argument list in a global constraint was validated.
-///
-/// @since  0.2, 10.04.2016
-void IHandlerConstraint::validated()
-{
-
-   throw runtime_error( "should not be called");
-} // IHandlerConstraint::validated
-
-
-
-/// Needed on global constraints: Called when all arguments were evaluated,
-/// has to check if the constraint was fulfilled.
-///
-/// @since  0.2, 10.04.2016
-void IHandlerConstraint::checkEndCondition() const
-{
-
-   throw runtime_error( "should not be called");
-} // IHandlerConstraint::checkEndCondition
 
 
 

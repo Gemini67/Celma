@@ -61,31 +61,15 @@ void ConstraintAllOf::executeConstraint( const ArgumentKey& key)
    if (!isConstraintArgument( mArgSpecList, key))
       return;
 
-   if (mRemainingArguments.empty())
-      throw std::runtime_error( "Argument '" + format::toString( key)
-         + "' was already used");
-
+   // don't have to check for multiple calls:
+   // - normally not allowed anyway
+   // - if allowed and it happens: so what?
    auto  argpos = mRemainingArguments.find( key);
 
-   if (argpos == mRemainingArguments.end())
-      throw std::runtime_error( "Argument '" + format::toString( key)
-         + "' was already used");
-
-   mRemainingArguments.erase( argpos);
+   if (argpos != mRemainingArguments.end())
+      mRemainingArguments.erase( argpos);
 
 } // ConstraintAllOf::executeConstraint
-
-
-
-/// Returns the list of arguments that must be used.
-///
-/// @return  The list of arguments as passed to the constructor.
-/// @since  0.2, 10.04.2016
-std::string& ConstraintAllOf::argumentList()
-{
-
-   return mArgSpecList;
-} // ConstraintAllOf::argumentList
 
 
 

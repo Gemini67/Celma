@@ -1774,6 +1774,20 @@ BOOST_AUTO_TEST_CASE( pattern_check)
          "\n"));
    } // end scope
 
+   // pass the pattern directly
+   {
+      Handler     ah( 0);
+      string      name;
+      std::regex  reg_ex( "^[A-Z][a-z]+");
+
+      ah.addArgument( "n", DEST_VAR( name), "A name")
+         ->addCheck( pattern( reg_ex));
+
+      const ArgString2Array  as2a( "-n Peter", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
 } // pattern_check
 
 

@@ -286,8 +286,23 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       std::string  str;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( str), "string")
-                                         ->setUniqueData(),
-                           logic_error);
+         ->setUniqueData(), logic_error);
+   } // end scope
+
+   // ensure that calling "check original value" on a wrong type throws.
+   {
+      Handler  ah( 0);
+      bool     flag = false;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
+         ->checkOriginalValue( true), logic_error);
+   } // end scope
+   {
+      Handler  ah( 0);
+      int      int_val = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( int_val), "integer")
+         ->checkOriginalValue( false), logic_error);
    } // end scope
 
 } // argument_setup_errors
@@ -304,7 +319,7 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
       const ArgString2Array  as2a( "--help", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+         runtime_error);
    } // end scope
 
    {
@@ -312,7 +327,7 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
       const ArgString2Array  as2a( "-h", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+         runtime_error);
    } // end scope
 
 } // std_args_not_matching
@@ -1974,6 +1989,15 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
 /// @since  0.13.2, 17.02.2017
 BOOST_AUTO_TEST_CASE( test_value_mode)
 {
+
+   // re-set the same value mode
+   {
+      Handler         ah( 0);
+      int             value = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( value), "int value")
+         ->setValueMode( Handler::ValueMode::required));
+   } // end scope
 
    using callable_int_t = TripleLogic< int>;
 

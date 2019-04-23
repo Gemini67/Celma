@@ -735,6 +735,9 @@ private:
 /// Specialisation of TypedArg<> for values wrapped in a vector.
 ///
 /// @tparam  T  The type of the value(s) stored in the vector.
+/// @since  1.24.2, 23.04.2019
+///    (allow to change value mode to optional when "clear before assign" is
+///     already set)
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
@@ -753,6 +756,26 @@ public:
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( vector_type& dest, const std::string& vname);
+
+   /// By default, the value mode for vectors is set to "required". Here it can
+   /// be changed to "optional" if "clear before assign" has been set before and
+   /// the destination vector contains (default) values.<br>
+   /// This allows the following scenario:
+   /// - Assign default values to the destination vector.
+   /// - Define the argument with "clear before assign" and value mode
+   ///   "optional".
+   /// - If the argument is not used: Default values are used.
+   /// - If the argument is used without value(s): The vector is cleared.
+   /// - Argument used with values: Only the values are stored in the vector.
+   ///
+   /// @param[in]  vm
+   ///    The new value mode, only allowed value is actually "optional".
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    "logic error" if the value mode is not "optional", or "clear before
+   ///    assign" is not set.
+   /// @since  1.24.2, 23.04.2019
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false);
 
    /// Returns the name of the type of the destination variable (vector of
    /// something).
@@ -867,6 +890,19 @@ template< typename T>
 {
    mpCardinality.reset();
 } // TypedArg< std::vector< T>>::TypedArg
+
+
+template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::setValueMode( ValueMode vm)
+{
+   if (vm == mValueMode)
+      return this;
+   if ((vm != ValueMode::optional) || !mClearB4Assign || mDestVar.empty())
+      throw std::logic_error( "can only set value mode 'optional' for vector, "
+         "and ony if 'clear before assign' is set and the vector is not empty");
+   mValueMode = vm;
+   return this;
+} // TypedArg< std::vector< T>>::setValueMode
 
 
 template< typename T>

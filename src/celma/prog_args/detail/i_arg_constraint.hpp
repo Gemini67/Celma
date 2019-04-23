@@ -59,25 +59,6 @@ public:
    virtual std::string toString() const = 0;
 
 protected:
-   /// Checks if the argument specified in \a arg_spec is one of the argument(s)
-   /// specified in the \a constraint_arg_list.<br>
-   /// This method is used by global constraints derived from this base class,
-   /// because their executeConstraint() method is called for each argument
-   /// found on the command line.
-   ///
-   /// @param[in]  constraint_arg_list
-   ///    The list of argument(s) for which the constraint is defined.
-   /// @param[in]  key
-   ///    The specification of the argument just found in the argument string.
-   /// @return
-   ///    \c true if the specified argument is in the list of constrained
-   ///    arguments.
-   /// @since  0.15.0, 18.07.2017
-   ///    (use ArgumentKey as parameter type)
-   /// @since  0.2, 10.04.2016
-   static bool isConstraintArgument( const std::string& constraint_arg_list,
-                                     const ArgumentKey& key);
-
    /// Constructor, verifies the constraint string.
    ///
    /// @param[in]  name

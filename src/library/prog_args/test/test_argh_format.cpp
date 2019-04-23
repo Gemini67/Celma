@@ -53,6 +53,15 @@ BOOST_AUTO_TEST_CASE( errors)
          ->addFormat( nullptr), std::logic_error);
    } // end scope
 
+   // ensure that calling addFormat() with a NULL object pointer throws
+   {
+      Handler  ah( 0);
+      int      dummy = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( dummy), "int")
+         ->addFormat( nullptr), std::invalid_argument);
+   } // end scope
+
    // ensure that calling addFormat() on a wrong type throws
    {
       Handler  ah( 0);

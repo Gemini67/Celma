@@ -25,7 +25,6 @@
 #include <string>
 #include "celma/prog_args.hpp"
 #include "celma/prog_args/detail/argument_value.hpp"
-#include "celma/prog_args/detail/value_storage.hpp"
 
 
 namespace celma { namespace prog_args {

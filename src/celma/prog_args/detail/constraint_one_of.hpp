@@ -54,13 +54,6 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void executeConstraint( const ArgumentKey& key) override;
 
-   /// Required for global constraints to make sure that the argument list
-   /// contains both the short and long argument.
-   ///
-   /// @return  The list of argument as passed in the constructor.
-   /// @since  0.2, 10.04.2016
-   virtual std::string& argumentList() override;
-
    /// Called after the argument list was validated.
    ///
    /// @since  0.2, 10.04.2016

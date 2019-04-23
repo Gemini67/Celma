@@ -77,8 +77,11 @@ void TypedArgBase::setKey( const ArgumentKey& key)
 ///    Pointer to this object.
 /// @since
 ///    0.2, 10.04.2016
-TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
+TypedArgBase* TypedArgBase::setValueMode( ValueMode vm)
 {
+
+   if (vm == mValueMode)
+      return this;
 
    if (vm != ValueMode::required)
       throw std::invalid_argument( std::string( "may not set value mode '") +
@@ -141,7 +144,7 @@ void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
 ///    - "invalid argument" when the given object pointer is NULL.
 /// @since
 ///    0.2, 10.04.2016
-TypedArgBase* TypedArgBase::addFormat( IFormat* f) noexcept( false)
+TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 {
 
    if (mValueMode == ValueMode::none)
@@ -492,8 +495,8 @@ ostream& operator <<( ostream& os, const TypedArgBase& tab)
       if (tab.mReplacedBy.empty())
          deprecated_str = "deprecated, ";
       else
-         deprecated_str = "replaced by '"
-            + format::toString( tab.mReplacedBy) + "', ";
+         deprecated_str = "replaced by "
+            + format::toString( tab.mReplacedBy) + ", ";
    } // end if
 
    os << "value " << tab.mValueMode << ", "

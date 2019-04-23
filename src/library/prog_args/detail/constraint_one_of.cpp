@@ -70,19 +70,6 @@ void ConstraintOneOf::executeConstraint( const ArgumentKey& key)
 
 
 
-/// Required for global constraints to make sure that the argument list
-/// contains both the short and long argument.
-///
-/// @return  The list of argument as passed in the constructor.
-/// @since  0.2, 10.04.2016
-std::string& ConstraintOneOf::argumentList()
-{
-
-   return mArgSpecList;
-} // ConstraintOneOf::argumentList
-
-
-
 /// Called after the argument list in a global constraint was validated.
 /// @since  0.2, 10.04.2016
 void ConstraintOneOf::validated()
