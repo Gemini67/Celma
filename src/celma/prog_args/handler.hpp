@@ -395,7 +395,7 @@ public:
 
    /// Destructor, deletes dynamically allocated objects.
    /// @since  0.2, 10.04.2016
-   ~Handler();
+   virtual ~Handler();
 
    /// Activates the check for program arguments in an environment variable,
    /// plus allows to specify the name of the environment variable o use.<br>

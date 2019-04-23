@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,6 +38,7 @@ using std::ostream;
 using std::ostringstream;
 using std::string;
 using celma::common::extractFuncname;
+
 
 
 static void testVoidFunc( string& funcname)
@@ -395,7 +396,7 @@ BOOST_AUTO_TEST_CASE( methods_test)
       tc += 9;
       BOOST_REQUIRE_EQUAL( TestClass::mLastFuncName, "TestClass::operator+=");
 
-      static_cast< const char*>( tc);
+      BOOST_REQUIRE( static_cast< const char*>( tc) == nullptr);
       BOOST_REQUIRE( (TestClass::mLastFuncName == "TestClass::operator const char *") ||
                      (TestClass::mLastFuncName == "TestClass::operator const char*"));
 
@@ -444,7 +445,7 @@ BOOST_AUTO_TEST_CASE( methods_namespace_test)
       BOOST_REQUIRE_EQUAL( project::TestClassProject::mLastFuncName,
                           string( "project::TestClassProject::operator+="));
 
-      static_cast< const char*>( tc);
+      BOOST_REQUIRE( static_cast< const char*>( tc) == nullptr);
       BOOST_REQUIRE( (project::TestClassProject::mLastFuncName ==
                       string( "project::TestClassProject::operator const char *")) ||
                      (project::TestClassProject::mLastFuncName ==

@@ -43,11 +43,6 @@ public:
       return mValue - other.mValue;
    }
  
-   friend std::ostream& operator <<( std::ostream& os, const Number& n)
-   {
-      return os << n.mValue;
-   } // operator <<
- 
 private:
    int  mValue;
  

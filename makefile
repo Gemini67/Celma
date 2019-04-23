@@ -51,8 +51,8 @@ analyze:
 	@if [ ! -d build/analyze ]; then \
 	   mkdir -p build/analyze; \
 	   cd build/analyze; \
-	   export CC=/usr/bin/clang; \
-	   export CXX=/usr/bin/clang++; \
+	   export CC=clang-7; \
+	   export CXX=clang++-7; \
 	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
 	         -DBOOST_VERSION=${BOOST_VERSION} \
 	         -DCMAKE_BUILD_TYPE=Debug \

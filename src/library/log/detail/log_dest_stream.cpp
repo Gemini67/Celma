@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,13 +36,12 @@ namespace celma { namespace log { namespace detail {
 /// A default stream formatter (FormatStreamDefault) is created for
 /// formatting the log messages. Use setFormatter() to specify another
 /// formatter if necessary.
-/// @param[in]  dest         The stream to write into.
-/// @param[in]  add_newline  Set to \c true if a newline character should be
-///                          added to log message(s).
+///
+/// @param[in]  dest  The stream to write into.
+/// @since  1.24.1, 22.04.2019  (removed unused parameter add_newline)
 /// @since  1.0.0, 19.06.2016
-LogDestStream::LogDestStream( std::ostream& dest, bool add_newline):
+LogDestStream::LogDestStream( std::ostream& dest):
    mDest( dest),
-   mAddNewline( add_newline),
    mpFormatter( new FormatStreamDefault())
 {
 } // LogDestStream::LogDestStream
@@ -85,5 +84,5 @@ void LogDestStream::message( const LogMsg& msg)
 } // namespace celma
 
 
-// =======================  END OF log_dest_stream.cpp  =======================
+// =====  END OF log_dest_stream.cpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,7 +32,7 @@ namespace celma { namespace detail {
 /// @tparam  T  The type to return the name of.
 /// @return  The name of the given type, using the corresponding type<> template.
 /// @since  1.16.0, 01.11.2018
-template< class T> constexpr const auto typeNameList()
+template< class T> constexpr auto typeNameList()
 {
    return type< T>::mName;
 } // typeNameList
@@ -54,7 +54,7 @@ template< class T> constexpr const auto typeNameList()
 /// @return  The string with the comma separated list of all type names.
 /// @since  1.16.0, 01.11.2018
 template< typename T0, typename T1, typename... Tp>
-   constexpr const auto typeNameList()
+   constexpr auto typeNameList()
 {
    return common::string_concat( type< T0>::mName, ",", typeNameList< T1, Tp...>());
 } // typeNameList
