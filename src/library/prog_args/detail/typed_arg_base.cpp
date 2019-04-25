@@ -209,6 +209,12 @@ TypedArgBase* TypedArgBase::addCheck( ICheck* c)
       throw std::invalid_argument( "must provide valid object for value checks "
          "on variable '" + mVarName + "'");
 
+   for (auto const& check_iter : mChecks)
+   {
+      if (!check_iter->combinationAllowed( c))
+         throw std::logic_error( "two checks of the same kind are not allowed");
+   } // end for
+
    mChecks.push_back( c);
 
    return this;

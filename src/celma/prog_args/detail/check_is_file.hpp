@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,7 +32,12 @@ namespace celma { namespace prog_args { namespace detail {
 class CheckIsFile: public ICheck
 {
 public:
-   CheckIsFile() = default;
+   /// Constructor, sets the symbolic name in the base class.
+   ///
+   /// @since  x.y.z, 24.04.2019
+   CheckIsFile();
+
+   /// Default destructor isa fine.
    virtual ~CheckIsFile() = default;
 
    /// Checks if the value in \a val contains the (path and) name of an existing
@@ -51,6 +56,12 @@ public:
 
 // inlined methods
 // ===============
+
+
+inline CheckIsFile::CheckIsFile():
+   ICheck( "is file")
+{
+} // CheckIsFile::CheckIsFile
 
 
 inline void CheckIsFile::checkValue( const std::string& val) const

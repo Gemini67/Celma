@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,6 +36,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  valueList  The list of allowed values in string format.
 /// @since  0.2, 10.04.2016
 CheckValues::CheckValues( const std::string& valueList):
+   ICheck( "values"),
    mValues()
 {
 
@@ -88,5 +89,5 @@ std::string CheckValues::toString() const
 } // namespace celma
 
 
-// =========================  END OF check_values.cpp  =========================
+// =====  END OF check_values.cpp  =====
 

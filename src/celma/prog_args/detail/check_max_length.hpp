@@ -32,7 +32,7 @@ namespace celma { namespace prog_args { namespace detail {
 class CheckMaxLength : public ICheck
 {
 public:
-   /// Constructor, stores the maximum length that will be checked,
+   /// Constructor, stores the maximum length that will be checked.
    ///
    /// @param[in]  min_length  The maximum length to check against.
    /// @throws  "invalid argument" if the given length is 0.

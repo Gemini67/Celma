@@ -99,6 +99,50 @@ BOOST_AUTO_TEST_CASE( errors)
                            std::invalid_argument);
    } // end scope
 
+   // adding two minimum/lower checks should throw
+   {
+      Handler  ah( 0);
+      int      iVal = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
+         ->addCheck( celma::prog_args::lower( 20))
+         ->addCheck( celma::prog_args::lower( 30)),
+         std::logic_error);
+   } // end scope
+
+   // adding two range checks should throw
+   {
+      Handler  ah( 0);
+      int      iVal = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
+         ->addCheck( celma::prog_args::range( 20, 100))
+         ->addCheck( celma::prog_args::range( 50, 90)),
+         std::logic_error);
+   } // end scope
+
+   // adding two maximum/upper checks should throw
+   {
+      Handler  ah( 0);
+      int      iVal = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
+         ->addCheck( celma::prog_args::upper( 20))
+         ->addCheck( celma::prog_args::upper( 30)),
+         std::logic_error);
+   } // end scope
+
+   // adding two values checks should throw
+   {
+      Handler  ah( 0);
+      int      iVal = -1;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer")
+         ->addCheck( celma::prog_args::values( "10,20,30"))
+         ->addCheck( celma::prog_args::values( "11,12,13")),
+         std::logic_error);
+   } // end scope
+
 } // errors
 
 
@@ -2058,6 +2102,7 @@ public:
    /// @param[in]  third   The third value to accept.
    /// @since  0.2, 10.04.2016
    ApplCheckTriple( int first, int second, int third):
+      ICheck( "application check triple"),
       m1( first),
       m2( second),
       m3( third)

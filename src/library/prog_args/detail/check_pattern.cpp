@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,6 +37,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///    The pattern/regular expression to use for the check.
 /// @since  1.19.0, 27.11.2018
 CheckPattern::CheckPattern( const std::string& pattern_str):
+   ICheck( "pattern"),
    mRegExStr( pattern_str),
    mRegEx( pattern_str)
 {
@@ -49,6 +50,7 @@ CheckPattern::CheckPattern( const std::string& pattern_str):
 /// @param[in]  reg_ex  The regular expression to use for the check.
 /// @since  1.19.0, 27.11.2018
 CheckPattern::CheckPattern( const std::regex& reg_ex):
+   ICheck( "pattern"),
    mRegExStr( "unknown"),
    mRegEx( reg_ex)
 {

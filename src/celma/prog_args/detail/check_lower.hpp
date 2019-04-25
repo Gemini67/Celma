@@ -39,7 +39,7 @@ public:
    /// @since  0.2, 10.04.2016
    explicit CheckLower( T value);
 
-   // Default destructor is fine.
+   /// Default destructor is fine.
    virtual ~CheckLower() = default;
 
    /// Checks if the value in \a val is greater-than or equal to the stored
@@ -65,6 +65,7 @@ private:
 
 
 template< typename T> CheckLower< T>::CheckLower( T value):
+   ICheck( "lower"),
    mCheckValue( value)
 {
 } // CheckLower< T>::CheckLower
@@ -74,18 +75,15 @@ template< typename T> void CheckLower< T>::checkValue( const std::string& val) c
 {
    T  native = boost::lexical_cast< T>( val);
    if (native < mCheckValue)
-      throw std::underflow_error( "Value " + val + " is below limit " +
-                                  boost::lexical_cast< std::string>( mCheckValue));
+      throw std::underflow_error( "Value " + val + " is below limit "
+         + boost::lexical_cast< std::string>( mCheckValue));
 } // CheckLower< T>::checkValue
 
 
 template< typename T> std::string CheckLower< T>::toString() const
 {
-
    std::ostringstream  oss;
-
    oss << "Value >= " << mCheckValue;
-
    return oss.str();
 } // CheckLower< T>::toString
 

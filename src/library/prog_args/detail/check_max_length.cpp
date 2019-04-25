@@ -38,6 +38,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @throws  "invalid argument" if the given length is 0.
 /// @since  1.23.0, 12.04.2019
 CheckMaxLength::CheckMaxLength( std::string::size_type max_length):
+   ICheck( "maximum length"),
    mMaxLength( max_length)
 {
 
