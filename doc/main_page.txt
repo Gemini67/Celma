@@ -47,6 +47,7 @@
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
 
+   |   1.25.0 | 2019-0?-??        | Added destination type "std::array" to argument handler. |
    |   1.24.2 | 2019-04-23        | Improved coverage. |
    |   1.24.1 | 2019-04-23        | Fixed analyze build, fixed found problems. |
    |   1.24.0 | 2019-04-22        | Added functions to format byte sizes. |
