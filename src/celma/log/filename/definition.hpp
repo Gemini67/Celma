@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -61,6 +61,13 @@ public:
    /// @since  1.0.0, 21.12.2017
    bool hasDateField() const;
 
+   /// Returns if the current filename definition is empty, i.e. contains no
+   /// parts yet.
+   ///
+   /// @return  \c true if the current definition is (still) empty.
+   /// @since  1.25.0, 03.05.2019
+   bool empty() const;
+
 protected:
    friend class Creator;
 
@@ -107,6 +114,12 @@ inline bool Definition::hasDateField() const
          return part.mType == PartTypes::date;
       }) != mParts.end();
 } // Definition::hasDateField
+
+
+inline bool Definition::empty() const
+{
+   return mParts.empty();
+} // Definition::empty
 
 
 } // namespace filename

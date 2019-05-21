@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -185,15 +185,15 @@ private:
    /// Constant text string.
    std::string  mString;
    /// Value set for the 'fixed width', will be stored in the next field.
-   int          mFixedWidth;
+   int          mFixedWidth = 0;
    /// The 'fill character' to use for the log file number if a fixed width is
    /// specified.
-   char         mFillChar;
+   char         mFillChar = '0';
    /// If this flag is set when a constant text part should be appended to an
    /// existing constant text part, check that either the existing part ends
    /// with a path separator, or the text to append begins with one, otherwise
    /// add one.
-   bool         mCheckPathSep;
+   bool         mCheckPathSep = false;
 
 }; // Creator
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -57,9 +57,11 @@ public:
       time_t timestamp = ::time( nullptr));
 
    /// Constructor.
+   ///
    /// @param[in]  def  The object with the format definition.
+   /// @throws  when the definition object contains no parts.
    /// @since  1.0.0, 16.10.2017
-   explicit Builder( const Definition& def);
+   explicit Builder( const Definition& def) noexcept( false);
 
    /// Creates a log file number according to the format definition given in the
    /// constructor.
