@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -182,6 +182,8 @@ public:
          "a pair of string and integer");
       ah.addArgument( "o,opt-int", DEST_VAR( optional_int), "an optional integer");
       ah.addArgument( "opt-bool", DEST_VAR( optional_bool), "an optional boolean");
+      ah.addArgument( "c,c-array", DEST_VAR( my_c_array), "C array of ints");
+      ah.addArgument( "a,array", DEST_VAR( my_array), "array of ints");
 
       tcb.addVoidMember( ah);
       tcb.addValueMember( ah);
@@ -189,7 +191,8 @@ public:
       const ArgString2Array  as2a( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
          "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
          "--void-method --value-method another_value -t 28,unbelievable,12.75 "
-         "--void-member --value-member=last_value -vv --pair juhu -o 0 --opt-bool",
+         "--void-member --value-member=last_value -vv --pair juhu -o 0 "
+         "--opt-bool -c 9,19,29 -a 5,4,3",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // AllTypesFixture::AllTypesFixture
@@ -209,6 +212,8 @@ public:
    int                                pair_second_arg = -1;
    celma::common::CheckAssign< int>   optional_int;
    celma::common::CheckAssign< bool>  optional_bool;
+   int                                my_c_array[ 3] = { 0, 0, 0 };
+   std::array< int, 3>                my_array = { 0, 0, 0 };
 
    std::tuple< int, std::string, double>  tuple_dest;
 
@@ -313,6 +318,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types, AllTypesFixture)
       "   Value <\"juhu\", destination 2 = 42> set on variable 'pair_first_arg'.\n"
       "   Value <0> set on variable 'optional_int'.\n"
       "   Value <true> set on variable 'optional_bool'.\n"
+      "   Value <9, 19, 29> set on variable 'my_c_array'.\n"
+      "   Value <5, 4, 3> set on variable 'my_array'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -459,6 +466,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_type,
       "   Value <\"juhu\" [std::string], destination 2 = 42 [int]> set on variable 'pair_first_arg'.\n"
       "   Value <0 [int]> set on variable 'optional_int'.\n"
       "   Value <true [bool]> set on variable 'optional_bool'.\n"
+      "   Value <9, 19, 29 [int[3]]> set on variable 'my_c_array'.\n"
+      "   Value <5, 4, 3 [std::array<int,3>]> set on variable 'my_array'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -606,6 +615,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_key,
       "   Value <\"juhu\", destination 2 = 42> set on variable 'pair_first_arg' by argument '-p,--pair'.\n"
       "   Value <0> set on variable 'optional_int' by argument '-o,--opt-int'.\n"
       "   Value <true> set on variable 'optional_bool' by argument '--opt-bool'.\n"
+      "   Value <9, 19, 29> set on variable 'my_c_array' by argument '-c,--c-array'.\n"
+      "   Value <5, 4, 3> set on variable 'my_array' by argument '-a,--array'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));
@@ -751,6 +762,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_full,
       "   Value <\"juhu\" [std::string], destination 2 = 42 [int]> set on variable 'pair_first_arg' by argument '-p,--pair'.\n"
       "   Value <0 [int]> set on variable 'optional_int' by argument '-o,--opt-int'.\n"
       "   Value <true [bool]> set on variable 'optional_bool' by argument '--opt-bool'.\n"
+      "   Value <9, 19, 29 [int[3]]> set on variable 'my_c_array' by argument '-c,--c-array'.\n"
+      "   Value <5, 4, 3 [std::array<int,3>]> set on variable 'my_array' by argument '-a,--array'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));

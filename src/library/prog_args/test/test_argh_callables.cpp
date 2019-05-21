@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,6 +23,8 @@
 
 
 // STL includes
+#include <sstream>
+#include <stdexcept>
 #include <string>
 
 
@@ -34,26 +36,26 @@
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/multi_setter.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
-using std::runtime_error;
 using std::string;
 
 
-// module definitions
+namespace {
+
 
 /// Global variable used for the argument function handler check.
-static bool    gotCalled = false;
-static string  gotVal;
-
+bool    gotCalled = false;
+string  gotVal;
 
 
 /// This function should be called when the corresponding argument is set on
 /// the command line.
 /// @since  0.2, 10.04.2016
-static void handlerFun()
+void handlerFun()
 {
 
    gotCalled = true;
@@ -61,197 +63,19 @@ static void handlerFun()
 } // handlerFun
 
 
-
 /// This function should be called when the corresponding argument is set on
 /// the command line.
 /// @param[in]  v  The value.
 /// @since  0.2, 10.04.2016
-static void handlerFunValue( const string& v)
+void handlerFunValue( const string& v)
 {
 
    if (v.empty())
-      throw runtime_error( "handlerFun() always expects a value!");
+      throw std::runtime_error( "handlerFun() always expects a value!");
 
    gotVal = v;
 
 } // handlerFunValue
-
-
-
-/// Test function for an optional argument that results in a function call.
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( function_check)
-{
-
-   // function that does not accept a value
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION( handlerFun), "Function"));
-
-      const ArgString2Array  as2a( "-f", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( gotCalled);
-   } // end scope
-
-   gotCalled = false;
-
-   // function that does not accept a value, value is (unexpected) free value
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION( handlerFun), "Function"));
-
-      const ArgString2Array  as2a( "-f hello", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-   } // end scope
-
-   gotCalled = false;
-
-   // function that does expect a value
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function"));
-
-      const ArgString2Array  as2a( "-f", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-   } // end scope
-
-   // function that does expect a value
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function"));
-
-      const ArgString2Array  as2a( "-f hello", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE_EQUAL( gotVal, "hello");
-   } // end scope
-
-   // function with value mode optional, actually expects a value (without value)
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional));
-
-      const ArgString2Array  as2a( "-f", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-   } // end scope
-
-   gotVal.clear();
-
-   // function with value mode optional, actually expects a value (with value)
-   {
-      Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional));
-
-      const ArgString2Array  as2a( "-f v1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE_EQUAL( gotVal, "v1");
-   } // end scope
-
-   gotVal.clear();
-
-} // function_check
-
-
-
-/// Test function for a mandatory argument that results in a function call.
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( mandatory_function_check)
-{
-
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional)
-                                            ->setIsMandatory());
-
-      const ArgString2Array  as2a( "", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-   } // end scope
-
-   gotVal.clear();
-
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional)
-                                            ->setIsMandatory());
-
-      const ArgString2Array  as2a( "-f", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-   } // end scope
-
-   gotVal.clear();
-
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional)
-                                            ->setIsMandatory());
-
-      const ArgString2Array  as2a( "-f v1", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE_EQUAL( gotVal, "v1");
-   } // end scope
-
-   gotVal.clear();
-
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional)
-                                            ->setIsMandatory());
-
-      const ArgString2Array  as2a( "--fun", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
-   } // end scope
-
-   gotVal.clear();
-
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional)
-                                            ->setIsMandatory());
-
-      const ArgString2Array  as2a( "--fun v2", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE_EQUAL( gotVal, "v2");
-   } // end scope
-
-   gotVal.clear();
-
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun", DEST_FUNCTION_VALUE( handlerFunValue), "Function")
-                                            ->setValueMode( Handler::ValueMode::optional)
-                                            ->setIsMandatory());
-
-      const ArgString2Array  as2a( "--fun=v3", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE_EQUAL( gotVal, "v3");
-   } // end scope
-
-} // mandatory_function_check
-
 
 
 /// Helper class to test the argument handler feature with a class method.
@@ -267,7 +91,8 @@ public:
    void handlerFunc( const string& s)
    {
       if (s.empty())
-         throw runtime_error( "TestArgFunc::handlerFunc() always expects a value!");
+         throw std::runtime_error( "TestArgFunc::handlerFunc() always expects "
+            "a value!");
 
       mValue = s;
    } // TestArgFunc::handlerFunc
@@ -280,13 +105,14 @@ public:
       mValue.clear();
    } // TestArgFunc::resetValue
 
-   /// 
-   /// @param[in]  optValue  .
+   /// Called when a value was passed to the argument.
+   /// @param[in]  optValue  The value from the command line.
    /// @since  0.2, 10.04.2016
    void boolFunc( const string& optValue)
    {
       if (!optValue.empty())
-         throw runtime_error( "TestArgFunc::boolFunc() must not be called with a value!");
+         throw std::runtime_error( "TestArgFunc::boolFunc() must not be called "
+            "with a value!");
 
       mBoolValue = true;
    } // TestArgFunc::boolFunc
@@ -308,6 +134,314 @@ private:
 }; // TestArgFunc
 
 
+/// Helper class to test a method that accepts no values.
+///
+/// @since  1.25.0, 30.04.2019
+class NoValueTest
+{
+public:
+   NoValueTest() = default;
+
+   /// Called when the argument was used on the command line.
+   ///
+   /// @since  1.25.0, 30.04.2019
+   void assign()
+   {
+      ++mNumCalls;
+   } // NoValueTest::assign
+
+   /// Returns how many times the assign() method was called.
+   ///
+   /// @return  Number of times that assign() was called.
+   /// @since  1.25.0, 30.04.2019
+   int numCalls() const
+   {
+      return mNumCalls;
+   } // MultiValueTest::numCalls
+
+private:
+   /// Counter for the calls of assign().
+   int  mNumCalls = 0;
+
+}; // NoValueTest
+
+
+/// Helper class to test a method that accepts multiple values.
+///
+/// @since  1.25.0, 30.04.2019
+class MultiValueTest
+{
+public:
+   MultiValueTest() = default;
+
+   /// Called with the value(s) from the command line.
+   ///
+   /// @param[in]  Value from the command line, real value is ignored.
+   /// @since  1.25.0, 30.04.2019
+   void assign( const std::string&)
+   {
+      ++mNumValues;
+   } // MultiValueTest::assign
+
+   /// Returns how many times the assign() method was called.
+   ///
+   /// @return  Number of times that assign() was called.
+   /// @since  1.25.0, 30.04.2019
+   int numValues() const
+   {
+      return mNumValues;
+   } // MultiValueTest::numValues
+
+private:
+   /// Counter for the calls of assign().
+   int  mNumValues = 0;
+
+}; // MultiValueTest
+
+
+} // namespace
+
+
+
+/// Check that errors are handler properly.
+///
+/// @since  1.25.0, 30.04.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function with value")
+         ->setValueMode( Handler::ValueMode::none), std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function with value")
+         ->setValueMode( Handler::ValueMode::unknown), std::invalid_argument);
+   } // end scope
+
+   // pass a value to a method that does not accept values
+   {
+      Handler      ah( 0);
+      NoValueTest  nvt;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
+         DEST_METHOD( NoValueTest, assign, nvt), "Method without value"));
+
+      const ArgString2Array  as2a( "-v juhu", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   // pass no value to a method that does require values
+   {
+      Handler         ah( 0);
+      MultiValueTest  mvt;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
+         DEST_METHOD_VALUE( MultiValueTest, assign, mvt), "Method with value"));
+
+      const ArgString2Array  as2a( "-f", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+} // errors
+
+
+
+/// Test function for an optional argument that results in a function call.
+/// @since  0.2, 10.04.2016
+BOOST_AUTO_TEST_CASE( function_check)
+{
+
+   // function that does not accept a value
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION( handlerFun), "Function"));
+
+      const ArgString2Array  as2a( "-f", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( gotCalled);
+   } // end scope
+
+   gotCalled = false;
+
+   // function that does not accept a value, value is (unexpected) free value
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION( handlerFun), "Function"));
+
+      const ArgString2Array  as2a( "-f hello", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   gotCalled = false;
+
+   // function that does expect a value
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function"));
+
+      const ArgString2Array  as2a( "-f", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   // function that does expect a value
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function"));
+
+      const ArgString2Array  as2a( "-f hello", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( gotVal, "hello");
+   } // end scope
+
+   // function with value mode optional, actually expects a value (without value)
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function")
+         ->setValueMode( Handler::ValueMode::optional));
+
+      const ArgString2Array  as2a( "-f", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   gotVal.clear();
+
+   // function with value mode optional, actually expects a value (with value)
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function")
+         ->setValueMode( Handler::ValueMode::optional));
+
+      const ArgString2Array  as2a( "-f v1", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( gotVal, "v1");
+   } // end scope
+
+   gotVal.clear();
+
+} // function_check
+
+
+
+/// Test function for a mandatory argument that results in a function call.
+/// @since  0.2, 10.04.2016
+BOOST_AUTO_TEST_CASE( mandatory_function_check)
+{
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function")
+         ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
+
+      const ArgString2Array  as2a( "", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   gotVal.clear();
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function")
+         ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
+
+      const ArgString2Array  as2a( "-f", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   gotVal.clear();
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function")
+         ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
+
+      const ArgString2Array  as2a( "-f v1", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( gotVal, "v1");
+   } // end scope
+
+   gotVal.clear();
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function")
+         ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
+
+      const ArgString2Array  as2a( "--fun", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   gotVal.clear();
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function")
+         ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
+
+      const ArgString2Array  as2a( "--fun v2", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( gotVal, "v2");
+   } // end scope
+
+   gotVal.clear();
+
+   {
+      Handler  ah( 0);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
+         DEST_FUNCTION_VALUE( handlerFunValue), "Function")
+         ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
+
+      const ArgString2Array  as2a( "--fun=v3", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( gotVal, "v3");
+   } // end scope
+
+} // mandatory_function_check
+
+
 
 /// Test function for an optional argument that results in a method call of a
 /// method that requires a value.
@@ -321,11 +455,13 @@ BOOST_AUTO_TEST_CASE( value_method_check)
    // value mode unknown
    {
       Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method"));
 
       const ArgString2Array  as2a( "-m", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+         std::runtime_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -333,12 +469,14 @@ BOOST_AUTO_TEST_CASE( value_method_check)
    // value mode optional, but no value
    {
       Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "-m", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -346,8 +484,10 @@ BOOST_AUTO_TEST_CASE( value_method_check)
    // value mode optional, value
    {
       Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "-m v1", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -359,11 +499,13 @@ BOOST_AUTO_TEST_CASE( value_method_check)
    // value mode unknown
    {
       Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method"));
 
       const ArgString2Array  as2a( "--method", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -371,12 +513,14 @@ BOOST_AUTO_TEST_CASE( value_method_check)
    // value mode optional, but no value
    {
       Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "--method", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+         std::runtime_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -384,8 +528,10 @@ BOOST_AUTO_TEST_CASE( value_method_check)
    // value mode optional, value
    {
       Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "--method v1", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -397,12 +543,40 @@ BOOST_AUTO_TEST_CASE( value_method_check)
    // value mode optional, value
    {
       Handler  ah( 0);
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+      
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "--method=v1", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
+   } // end scope
+
+   // check list arg vars feature
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfListArgVar);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
+
+      const ArgString2Array  as2a( "--method=v1 --list-arg-var", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << '\n' << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "'-m,--method' calls function/method 'TestArgFunc::handlerFunc'.\n"
+         "   value 'optional' (1), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "\n"));
    } // end scope
 
 } // value_method_check
@@ -419,8 +593,9 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
       Handler      ah( 0);
       TestArgFunc  myTestObj;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool", DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool",
+         DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "-b", nullptr);
 
@@ -432,20 +607,22 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
       Handler      ah( 0);
       TestArgFunc  myTestObj;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool", DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool",
+         DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "-m true", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
    {
       Handler      ah( 0);
       TestArgFunc  myTestObj;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool", DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool",
+         DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "--bool", nullptr);
 
@@ -457,26 +634,28 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
       Handler      ah( 0);
       TestArgFunc  myTestObj;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool", DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool",
+         DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "--bool true", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
    {
       Handler      ah( 0);
       TestArgFunc  myTestObj;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool", DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::optional));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b,bool",
+         DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::optional));
 
       const ArgString2Array  as2a( "--bool=true", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
    } // end scope
 
 } // bool_method_check
@@ -497,8 +676,7 @@ BOOST_AUTO_TEST_CASE( multi_setter2_check)
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,multi",
-                                           DEST_METHOD_VALUE( my_setter, assign, ms),
-                                           "multi-setter2"));
+      DEST_METHOD_VALUE( my_setter, assign, ms), "multi-setter2"));
 
    const ArgString2Array  as2a( "-m 42", nullptr);
 
@@ -526,8 +704,7 @@ BOOST_AUTO_TEST_CASE( multi_setter3_check)
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,multi",
-                                           DEST_METHOD_VALUE( my_setter, assign, ms),
-                                           "multi-setter3"));
+      DEST_METHOD_VALUE( my_setter, assign, ms), "multi-setter3"));
 
    const ArgString2Array  as2a( "-m now", nullptr);
 
@@ -561,8 +738,9 @@ BOOST_AUTO_TEST_CASE( free_value)
       Handler      ah( 0);
       TestArgFunc  myTestObj;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
-                                            ->setValueMode( Handler::ValueMode::required));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-",
+         DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
+         ->setValueMode( Handler::ValueMode::required));
 
       const ArgString2Array  as2a( "again", nullptr);
 
@@ -571,6 +749,135 @@ BOOST_AUTO_TEST_CASE( free_value)
    } // end scope
 
 } // free_value
+
+
+
+/// Test passing multiple values to the same callable.
+///
+/// @since  1.25.0, 30.04.2019
+BOOST_AUTO_TEST_CASE( multi_values)
+{
+
+   {
+      Handler         ah( 0);
+      MultiValueTest  mvt;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
+         DEST_METHOD_VALUE( MultiValueTest, assign, mvt),
+         "Method that can be called multiple times")->setCardinality( nullptr));
+
+      const ArgString2Array  as2a( "-v 1 -v 2 -v 3", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( mvt.numValues(), 3);
+   } // end scope
+
+   {
+      Handler         ah( 0);
+      MultiValueTest  mvt;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
+         DEST_METHOD_VALUE( MultiValueTest, assign, mvt),
+         "Method that can be called multiple times")->setCardinality( nullptr)
+         ->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "-v 1 2 3", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( mvt.numValues(), 3);
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      MultiValueTest      mvt;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
+         DEST_METHOD_VALUE( MultiValueTest, assign, mvt),
+         "Method that can be called multiple times")->setCardinality( nullptr)
+         ->setTakesMultiValue());
+
+      const ArgString2Array  as2a( "--help-arg v", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << '\n' << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-v', usage:\n"
+         "   Method that can be called multiple times\n"
+         "Properties:\n"
+         "   destination variable name:  MultiValueTest::assign\n"
+         "   destination variable type:  callable-value\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                none\n"
+         "   checks:                     -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      true\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // multi_values
+
+
+
+/// Check using a method that does not accept values.
+///
+/// @since  1.25.0, 30.04.2019
+BOOST_AUTO_TEST_CASE( no_value_method)
+{
+
+   {
+      Handler      ah( 0);
+      NoValueTest  nvt;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
+         DEST_METHOD( NoValueTest, assign, nvt), "Method for flag"));
+
+      const ArgString2Array  as2a( "-f", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( nvt.numCalls(), 1);
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      NoValueTest         nvt;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
+         DEST_METHOD( NoValueTest, assign, nvt), "Method for flag"));
+
+      const ArgString2Array  as2a( "--help-arg f", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << '\n' << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+         "Argument '-f', usage:\n"
+         "   Method for flag\n"
+         "Properties:\n"
+         "   destination variable name:  NoValueTest::assign\n"
+         "   destination variable type:  callable\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'none' (0)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // no_value_method
 
 
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,6 +26,7 @@
 // C++ Standard Library include
 #include <iomanip>
 #include <ostream>
+#include <sstream>
 
 
 // project includes
@@ -79,7 +80,11 @@ void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
          append( dest, field_def, std::to_string( msg.getProcessId()));
          break;
       case FieldTypes::threadId:
-         append( dest, field_def, std::to_string( msg.getThreadId()));
+         {
+            std::ostringstream  oss;
+            oss << "0x" << std::hex << msg.getThreadId();
+            append( dest, field_def, oss.str());
+         } // end scope
          break;
       case FieldTypes::lineNbr:
          append( dest, field_def, std::to_string( msg.getLineNbr()));

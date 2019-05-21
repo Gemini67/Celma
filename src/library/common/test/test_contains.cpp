@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -185,6 +185,96 @@ BOOST_AUTO_TEST_CASE( hash_container)
    } // end scope
 
 } // hash_container
+
+
+
+/// Verify that contains() works on C arrays.
+///
+/// @since  x.y.z, 29.04.2019
+BOOST_AUTO_TEST_CASE( c_array)
+{
+
+   {
+      int  arr[ 3];
+
+      arr[ 0] = 13;
+      arr[ 1] = 42;
+      arr[ 2] = 4711;
+
+      BOOST_REQUIRE( !contains( arr, 12));
+      BOOST_REQUIRE( contains( arr, 13));
+      BOOST_REQUIRE( !contains( arr, 14));
+
+      BOOST_REQUIRE( !contains( arr, 41));
+      BOOST_REQUIRE( contains( arr, 42));
+      BOOST_REQUIRE( !contains( arr, 43));
+
+      BOOST_REQUIRE( !contains( arr, 4710));
+      BOOST_REQUIRE( contains( arr, 4711));
+      BOOST_REQUIRE( !contains( arr, 4712));
+   } // end scope
+
+   {
+      int  arr[ 3];
+
+      arr[ 0] = 4711;
+      arr[ 1] = 42;
+      arr[ 2] = 13;
+
+      BOOST_REQUIRE( !contains( arr, 12));
+      BOOST_REQUIRE( contains( arr, 13));
+      BOOST_REQUIRE( !contains( arr, 14));
+
+      BOOST_REQUIRE( !contains( arr, 41));
+      BOOST_REQUIRE( contains( arr, 42));
+      BOOST_REQUIRE( !contains( arr, 43));
+
+      BOOST_REQUIRE( !contains( arr, 4710));
+      BOOST_REQUIRE( contains( arr, 4711));
+      BOOST_REQUIRE( !contains( arr, 4712));
+   } // end scope
+
+   {
+      int  arr[ 5];
+
+      arr[ 0] = 13;
+      arr[ 1] = 42;
+      arr[ 2] = 4711;
+
+      BOOST_REQUIRE( !contains( arr, 3, 12));
+      BOOST_REQUIRE( contains( arr, 3, 13));
+      BOOST_REQUIRE( !contains( arr, 3, 14));
+
+      BOOST_REQUIRE( !contains( arr, 3, 41));
+      BOOST_REQUIRE( contains( arr, 3, 42));
+      BOOST_REQUIRE( !contains( arr, 3, 43));
+
+      BOOST_REQUIRE( !contains( arr, 3, 4710));
+      BOOST_REQUIRE( contains( arr, 3, 4711));
+      BOOST_REQUIRE( !contains( arr, 3, 4712));
+   } // end scope
+
+   {
+      int  arr[ 5];
+
+      arr[ 0] = 4711;
+      arr[ 1] = 42;
+      arr[ 2] = 13;
+
+      BOOST_REQUIRE( !contains( arr, 3, 12));
+      BOOST_REQUIRE( contains( arr, 3, 13));
+      BOOST_REQUIRE( !contains( arr, 3, 14));
+
+      BOOST_REQUIRE( !contains( arr, 3, 41));
+      BOOST_REQUIRE( contains( arr, 3, 42));
+      BOOST_REQUIRE( !contains( arr, 3, 43));
+
+      BOOST_REQUIRE( !contains( arr, 3, 4710));
+      BOOST_REQUIRE( contains( arr, 3, 4711));
+      BOOST_REQUIRE( !contains( arr, 3, 4712));
+   } // end scope
+
+} // c_array
 
 
 

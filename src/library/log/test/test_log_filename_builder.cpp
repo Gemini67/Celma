@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -65,12 +65,8 @@ BOOST_AUTO_TEST_CASE( test_empty)
 {
 
    DefinitionAccess  my_def;
-   Builder           log_filename( my_def);
-   std::string       filename;
 
-
-   BOOST_REQUIRE_THROW( log_filename.filename( filename, 13, ::time( nullptr)),
-                        std::runtime_error);
+   BOOST_REQUIRE_THROW( Builder  log_filename( my_def), std::invalid_argument);
 
 } // test_empty
 

@@ -533,6 +533,125 @@ BOOST_AUTO_TEST_CASE( vector_exact_3)
 
 
 
+/// Handling of a C array that expects exactly 3 values.
+///
+/// @since  x.y.z, 29.04.2019
+BOOST_AUTO_TEST_CASE( c_array_exact_3)
+{
+
+   using celma::prog_args::cardinality_exact;
+   using std::runtime_error;
+
+   /// Helper class used to create/initialise the objects for the test.
+   ///
+   /// @since  x.y.z, 29.04.2019
+   class TestData
+   {
+   public:
+      /// Constructor, does all the work.
+      ///
+      /// @param[in]  argstring  The argument string for this test.
+      /// @since  x.y.z, 29.04.2019
+      explicit TestData( const std::string& argstring):
+         ah( 0),
+         values(),
+         as2a( argstring, nullptr)
+      {
+         ah.addArgument( "a", DEST_VAR( values), "integer values")
+            ->setCardinality( cardinality_exact( 3))->setTakesMultiValue();
+      } // TestData::TestData
+
+      /// The argument handler object for the test.
+      Handler                ah;
+      /// Destination variable.
+      int                    values[ 3];
+      /// Argument string split into argc, argv.
+      const ArgString2Array  as2a;
+
+   }; // TestData
+
+   {
+      TestData  td( "-a 1,2");
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+         runtime_error);
+   } // end scope
+
+   {
+      TestData  td( "-a 1,2,3");
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC,
+         td.as2a.mpArgV));
+   } // end scope
+
+   {
+      TestData  td( "-a 1,2,3,4");
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+         runtime_error);
+   } // end scope
+
+} // c_array_exact_3
+
+
+
+/// Handling of an array that expects exactly 3 values.
+///
+/// @since  x.y.z, 28.04.2019
+BOOST_AUTO_TEST_CASE( array_exact_3)
+{
+
+   using celma::prog_args::cardinality_exact;
+   using std::runtime_error;
+
+   /// Helper class used to create/initialise the objects for the test.
+   ///
+   /// @since  x.y.z, 28.04.2019
+   class TestData
+   {
+   public:
+      /// Constructor, does all the work.
+      ///
+      /// @param[in]  argstring  The argument string for this test.
+      /// @since  x.y.z, 28.04.2019
+      explicit TestData( const std::string& argstring):
+         ah( 0),
+         values(),
+         as2a( argstring, nullptr)
+      {
+         ah.addArgument( "a", DEST_VAR( values), "integer values")
+                       ->setCardinality( cardinality_exact( 3))
+                       ->setTakesMultiValue();
+      } // TestData::TestData
+
+      /// The argument handler object for the test.
+      Handler                ah;
+      /// Destination variable.
+      std::array< int, 3>    values;
+      /// Argument string split into argc, argv.
+      const ArgString2Array  as2a;
+
+   }; // TestData
+
+   {
+      TestData  td( "-a 1,2");
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+         runtime_error);
+   } // end scope
+
+   {
+      TestData  td( "-a 1,2,3");
+      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC,
+         td.as2a.mpArgV));
+   } // end scope
+
+   {
+      TestData  td( "-a 1,2,3,4");
+      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+         runtime_error);
+   } // end scope
+
+} // array_exact_3
+
+
+
 /// Handling of a vector that expects 2 to 5 values.
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( vector_range_2_5)

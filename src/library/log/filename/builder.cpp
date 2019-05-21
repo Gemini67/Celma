@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -65,11 +65,17 @@ std::string Builder::filename( const Definition& def, int logfile_nbr,
 
 
 /// Constructor.
+///
 /// @param[in]  def  The object with the format definition.
+/// @throws  when the definition object contains no parts.
 /// @since  1.0.0, 16.10.2017
 Builder::Builder( const Definition& def):
    Definition( def)
 {
+
+   if (mParts.empty())
+      throw std::invalid_argument( "definition for filename is empty");
+
 } // Builder::Builder
 
 
@@ -85,9 +91,6 @@ Builder::Builder( const Definition& def):
 void Builder::filename( std::string& dest, int logfile_nbr,
                         time_t timestamp) const
 {
-
-   if (mParts.empty())
-      throw std::runtime_error( "no path parts defined");
 
    for (auto const& part_def : mParts)
    {
@@ -176,5 +179,5 @@ void Builder::formatNumber( std::string& dest, const Part& part_def,
 } // namespace celma
 
 
-// ===========================  END OF builder.cpp  ===========================
+// =====  END OF builder.cpp  =====
 

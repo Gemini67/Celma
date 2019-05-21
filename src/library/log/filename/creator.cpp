@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,10 +28,7 @@ namespace celma { namespace log { namespace filename {
 /// @since  1.0.0, 11.10.2017
 Creator::Creator( Definition& dest_def):
    mDefs( dest_def),
-   mString(),
-   mFixedWidth( 0),
-   mFillChar( '0'),
-   mCheckPathSep( false)
+   mString()
 {
 } // Creator::Creator
 
@@ -296,5 +293,5 @@ void Creator::addPart( const Definition::Part& part)
 } // namespace celma
 
 
-// ===========================  END OF creator.cpp  ===========================
+// =====  END OF creator.cpp  =====
 

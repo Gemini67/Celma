@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.24.2
+   \mainpage  CELMA v1.25.0
 
    \tableofcontents
 
@@ -47,6 +47,7 @@
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
 
+   |   1.25.0 | 2019-05-21        | Added destination types "C array" and "std::array" to argument handler. |
    |   1.24.2 | 2019-04-23        | Improved coverage. |
    |   1.24.1 | 2019-04-23        | Fixed analyze build, fixed found problems. |
    |   1.24.0 | 2019-04-22        | Added functions to format byte sizes. |
