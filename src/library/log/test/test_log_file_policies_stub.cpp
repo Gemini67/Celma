@@ -106,7 +106,7 @@ public:
    /// @param[in]  mode
    ///    The permissions to create the directory with.
    /// @return  The result code of the %mkdir operation.
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    virtual int mkdir( const std::string&, int) override
    {
       // nothing to do here

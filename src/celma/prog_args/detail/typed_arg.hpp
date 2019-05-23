@@ -1042,7 +1042,7 @@ template< typename T>
 ///    The type of the value(s) stored in the array.
 /// @tparam  N
 ///    Number of elements the array can hold.
-/// @since  x.y.z, 29.04.2019
+/// @since  1.26.0, 29.04.2019
 template< typename T, size_t N> class TypedArg< T[ N]>: public TypedArgBase
 {
 public:
@@ -1052,21 +1052,21 @@ public:
    ///    The destination variable to store the values in.
    /// @param[in]  aname
    ///    The name of the destination variable to store the values in.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    TypedArg( T (&dest)[ N], const std::string& aname);
 
    /// Returns the name of the type of the destination variable (array of
    /// something).
    ///
    /// @return  The name of the type of the destination variable/array.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
    ///
    /// @return
    ///    \c true if the destination variable contains (at least) one value.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual bool hasValue() const override;
 
    /// Prints the current values of the destination variable.<br>
@@ -1078,14 +1078,14 @@ public:
    /// @param[in]  print_type
    ///    Specifies if the type of the destination variable should be printed
    ///    too.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().<br>
    /// For arrays it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual TypedArgBase* setTakesMultiValue() override;
 
    /// Specifies the list separator character to use for splitting lists of
@@ -1093,13 +1093,13 @@ public:
    ///
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual TypedArgBase* setListSep( char sep) override;
 
    /// Special feature for destination variable type array:<br>
    /// Sort the contents of the array.
    ///
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual TypedArgBase* setSortData() override;
 
    /// Special feature for destination variable type array:<br>
@@ -1108,7 +1108,7 @@ public:
    /// @param[in]  duplicates_are_errors
    ///    Set this flag if duplicate values should be treated as errors,
    ///    otherwise they will be silently discarded.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
       override;
 
@@ -1116,13 +1116,13 @@ protected:
    /// Used for printing an argument and its destination variable.
    ///
    /// @param[out]  os  The stream to print to.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual void dump( std::ostream& os) const override;
 
    /// Stores the value in the destination variable.
    ///
    /// @param[in]  value  The value to store in string format.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    virtual void assign( const std::string& value) override;
 
 private:
@@ -1276,7 +1276,7 @@ template< typename T, size_t N>
 ///    The type of the value(s) stored in the array.
 /// @tparam  N
 ///    Number of elements the array can hold.
-/// @since  x.y.z, 26.04.2019
+/// @since  1.26.0, 26.04.2019
 template< typename T, size_t N>
    class TypedArg< std::array< T, N>>: public TypedArgBase
 {
@@ -1290,21 +1290,21 @@ public:
    ///    The destination variable to store the values in.
    /// @param[in]  aname
    ///    The name of the destination variable to store the values in.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    TypedArg( array_type& dest, const std::string& aname);
 
    /// Returns the name of the type of the destination variable (array of
    /// something).
    ///
    /// @return  The name of the type of the destination variable/array.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
    ///
    /// @return
    ///    \c true if the destination variable contains (at least) one value.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual bool hasValue() const override;
 
    /// Prints the current values of the destination variable.<br>
@@ -1316,14 +1316,14 @@ public:
    /// @param[in]  print_type
    ///    Specifies if the type of the destination variable should be printed
    ///    too.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().<br>
    /// For arrays it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual TypedArgBase* setTakesMultiValue() override;
 
    /// Specifies the list separator character to use for splitting lists of
@@ -1331,13 +1331,13 @@ public:
    ///
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual TypedArgBase* setListSep( char sep) override;
 
    /// Special feature for destination variable type array:<br>
    /// Sort the contents of the array.
    ///
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual TypedArgBase* setSortData() override;
 
    /// Special feature for destination variable type array:<br>
@@ -1346,7 +1346,7 @@ public:
    /// @param[in]  duplicates_are_errors
    ///    Set this flag if duplicate values should be treated as errors,
    ///    otherwise they will be silently discarded.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
       override;
 
@@ -1354,13 +1354,13 @@ protected:
    /// Used for printing an argument and its destination variable.
    ///
    /// @param[out]  os  The stream to print to.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual void dump( std::ostream& os) const override;
 
    /// Stores the value in the destination variable.
    ///
    /// @param[in]  value  The value to store in string format.
-   /// @since  x.y.z, 26.04.2019
+   /// @since  1.26.0, 26.04.2019
    virtual void assign( const std::string& value) override;
 
 private:

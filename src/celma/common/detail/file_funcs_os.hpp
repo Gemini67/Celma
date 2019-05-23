@@ -28,7 +28,7 @@ namespace celma { namespace common { namespace detail {
 
 /// Implementation of file functions for really calling the OS functions.
 ///
-/// @since  x.y.z, 21.05.2019
+/// @since  1.26.0, 21.05.2019
 ///    (re-added mkdir, originally implemented 08.03.2018)
 /// @since  1.4.0, 20.02.2018
 class FileFuncsOs: public FileFuncsBase
@@ -63,7 +63,7 @@ public:
    /// @param[in]  mode
    ///    The permissions to create the directory with.
    /// @return  The result code of the %mkdir operation.
-   /// @since  x.y.z, 21.05.2019
+   /// @since  1.26.0, 21.05.2019
    virtual int mkdir( const std::string& dir_name, int mode) override;
 
 }; // FileFuncsOs

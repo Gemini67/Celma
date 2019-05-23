@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE( max_level)
 
 /// Check that only levels above the minimum level are accepted.
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( min_level)
 {
 
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE( min_level)
 
 /// Check that only the exact specified level is accepted.
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( one_level)
 {
 
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE( one_level)
 
 /// Check that only levels below the maximum level are accepted.
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( max_level_replaced)
 {
 
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( max_level_replaced)
 
 /// Check that only levels above the minimum level are accepted.
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( min_level_replaced)
 {
 
@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_CASE( min_level_replaced)
 
 /// Check that only the exact specified level is accepted.
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( one_level_replaced)
 {
 
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE( one_level_replaced)
 
 /// Check filter for one log message class.
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( filter_one_class)
 {
 
@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE( filter_one_class)
 
 /// Check filter for multiple log message classes.
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( filter_classes)
 {
 

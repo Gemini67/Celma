@@ -29,7 +29,7 @@ namespace celma { namespace log {
 /// This module calls the functions of the "normal" FileFuncsOs class, only in
 /// the function that is called when a directory should be created, it
 /// additionally calls the function in the object given in the constructor.
-/// @since  x.y.z, 08.03.2018
+/// @since  1.26.0, 08.03.2018
 class TestFileFuncsImpl: public common::detail::FileFuncsBase
 {
 public:
@@ -37,7 +37,7 @@ public:
    /// a directory is created.
    /// @param[in]  dir_handler  The object whose callback should be called when
    ///                          a directory is created.
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    TestFileFuncsImpl( TestIDirList* dir_handler):
       mOsFuncs(),
       mpDirHandler( dir_handler)
@@ -53,7 +53,7 @@ public:
    /// @param[in]  src   The (path and) name of the existing file that should be
    ///                   renamed.
    /// @return  The result of the %rename operation.
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    virtual int rename( const std::string& dest, const std::string& src) override
    {
       return mOsFuncs.rename( dest, src);
@@ -62,7 +62,7 @@ public:
    /// Gets called when a %file should be removed.
    /// @param[in]  file  The (path and) name of the %file to delete.
    /// @return  The result code of the %remove operation.
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    virtual int remove( const std::string& file) override
    {
       return mOsFuncs.remove( file);
@@ -72,7 +72,7 @@ public:
    /// @param[in]  dir_name  The (path and) name of the directory to create.
    /// @param[in]  mode      The permissions to create the directory with.
    /// @return  The result code of the %mkdir operation.
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    virtual int mkdir( const std::string& dir_name, int mode) override
    {
       // insert the name of the directory into the directory list

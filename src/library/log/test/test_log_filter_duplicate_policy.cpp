@@ -38,7 +38,7 @@ using celma::log::LogLevel;
 
 /// Test some errors conditions.
 ///
-/// @since  x.y.z, 22.05.2019
+/// @since  1.26.0, 22.05.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 

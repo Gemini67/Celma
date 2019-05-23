@@ -31,7 +31,7 @@ namespace celma { namespace common {
 /// are directly passed on to their OS/C-library counterpart, but a different
 /// file functions implementation can be specified that does something else.
 ///
-/// @since  x.y.z, 21.05.2019
+/// @since  1.26.0, 21.05.2019
 ///    (re-added mkdir, originally implemnted 08.03.2018)
 /// @since  1.4.0, 20.02.2018
 class FileOperations
@@ -74,7 +74,7 @@ public:
    /// @param[in]  mode
    ///    The permissions to create the directory with.
    /// @return  The result code from ::remove().
-   /// @since  x.y.z, 21.05.2019
+   /// @since  1.26.0, 21.05.2019
    static int mkdir( const std::string& dir_name, int mode = 0755);
 
 private:

@@ -152,7 +152,7 @@ template< typename K, typename V, typename H, typename E, typename A,
 /// @return
 ///    \c true if the array contains the given value.
 /// @since
-///    x.y.z, 29.04.2019
+///    1.26.0, 29.04.2019
 template< typename T, size_t N> bool contains( const T (&arr)[ N], const T& v)
 {
    return std::find( arr, arr + N, v) != arr + N;
@@ -174,7 +174,7 @@ template< typename T, size_t N> bool contains( const T (&arr)[ N], const T& v)
 /// @return
 ///    \c true if the array contains the given value.
 /// @since
-///    x.y.z, 29.04.2019
+///    1.26.0, 29.04.2019
 template< typename T, size_t N>
    bool contains( const T (&arr)[ N], size_t n, const T& v)
 {

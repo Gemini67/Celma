@@ -64,7 +64,7 @@ int FileFuncsOs::remove( const std::string& file)
 /// @param[in]  mode
 ///    The permissions to create the directory with.
 /// @return  The result code of the %mkdir operation.
-/// @since  x.y.z, 21.05.2019
+/// @since  1.26.0, 21.05.2019
 int FileFuncsOs::mkdir( const std::string& dir_name, int mode)
 {
    return ::mkdir( dir_name.c_str(), mode);

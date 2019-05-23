@@ -69,7 +69,7 @@ using env_var = common::Manipulator< std::string, 31>;
 /// - \c pid:<br>
 ///   inserts the current pid into the path.
 ///
-/// @since  x.y.z, 21.02.2018  (added pid)
+/// @since  1.26.0, 21.02.2018  (added pid)
 /// @since  1.0.0, 11.10.2017
 class Creator
 {
@@ -271,7 +271,7 @@ inline Creator& path_sep( Creator& in)
 ///
 /// @param[in]  in  The object to use to add the part to the definition.
 /// @return  The object as passed in.
-/// @since  x.y.z, 21.02.2018
+/// @since  1.26.0, 21.02.2018
 inline Creator& pid( Creator& in)
 {
    in.part( Definition::PartTypes::pid);

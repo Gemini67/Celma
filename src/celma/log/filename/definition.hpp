@@ -28,7 +28,7 @@ namespace celma { namespace log { namespace filename {
 
 
 /// Stores the definition of the format of a log filename.
-/// @since  x.y.z, 21.02.2018  (pid added)
+/// @since  1.26.0, 21.02.2018  (pid added)
 /// @since  1.0.0, 11.10.2017
 class Definition
 {

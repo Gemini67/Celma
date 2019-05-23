@@ -58,7 +58,7 @@ namespace {
 /// Stores the list of all directories that are created during the test and
 /// deletes them afterwards.
 ///
-/// @since  x.y.z, 08.03.2018
+/// @since  1.26.0, 08.03.2018
 class GlobalFixture: public celma::log::TestIDirList
 {
 public:
@@ -66,20 +66,20 @@ public:
    /// of the directories, that are created during a test, in the internal
    /// container.
    ///
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    GlobalFixture();
 
    /// Destructor, removes all the directories that were created during the
    /// tests.
    ///
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    ~GlobalFixture();
 
    /// Gets called when a directory is created.
    ///
    /// @param[in]  dir_name
    ///    The (path and) name of the directory that is created.
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    virtual void dirCreated( const std::string& dir_name) override;
 
 private:
@@ -101,7 +101,7 @@ BOOST_GLOBAL_FIXTURE( GlobalFixture);
 
 /// Test writing log messages into simple log files.
 ///
-/// @since  x.y.z, 09.03.2018
+/// @since  1.26.0, 09.03.2018
 BOOST_AUTO_TEST_CASE( test_simple)
 {
 
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE( test_simple)
 
 /// Test writing log messages into log files with a maximum size.
 ///
-/// @since  x.y.z, 21.02.2018
+/// @since  1.26.0, 21.02.2018
 BOOST_AUTO_TEST_CASE( test_max_size)
 {
 
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE( test_max_size)
 /// Test writing log messages into log files organizing their contents by
 /// timestamp.
 ///
-/// @since  x.y.z, 09.03.2018
+/// @since  1.26.0, 09.03.2018
 BOOST_AUTO_TEST_CASE( test_timestamped)
 {
 
@@ -220,7 +220,7 @@ namespace {
 /// of the directories, that are created during a test, in the internal
 /// container.
 ///
-/// @since  x.y.z, 08.03.2018
+/// @since  1.26.0, 08.03.2018
 GlobalFixture::GlobalFixture()
 {
 
@@ -234,7 +234,7 @@ GlobalFixture::GlobalFixture()
 /// Destructor, removes all the directories that were created during the
 /// tests.
 ///
-/// @since  x.y.z, 08.03.2018
+/// @since  1.26.0, 08.03.2018
 GlobalFixture::~GlobalFixture()
 {
 
@@ -251,7 +251,7 @@ GlobalFixture::~GlobalFixture()
 ///
 /// @param[in]  dir_name
 ///    The (path and) name of the directory that is created.
-/// @since  x.y.z, 08.03.2018
+/// @since  1.26.0, 08.03.2018
 void GlobalFixture::dirCreated( const std::string& dir_name)
 {
 

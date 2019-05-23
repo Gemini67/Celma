@@ -32,7 +32,7 @@ namespace celma { namespace log { namespace detail {
 
 /// Class to store all the data of a log message.
 ///
-/// @since  x.y.z, 21.05.2019
+/// @since  1.26.0, 21.05.2019
 ///    (use std::chrono::system_clock for timestamp)
 /// @since  1.15.0, 17.10.2018
 ///    (removed properties, added support for attributes)
@@ -99,7 +99,7 @@ public:
 
    /// Updates the timestamp for the log message with the current date/time.
    ///
-   /// @since  x.y.z, 06.03.2018
+   /// @since  1.26.0, 06.03.2018
    void setTimestamp();
 
    /// Returns the timestamp when the log message was created.
@@ -111,13 +111,13 @@ public:
    /// Returns the microseconds part of the timestamp.
    ///
    /// @return  Number of microseconds in the timestamp.
-   /// @since  x.y.z, 07.03.2018
+   /// @since  1.26.0, 07.03.2018
    uint32_t getTimeMicroSecs() const;
 
    /// Returns the milliseconds part of the timestamp.
    ///
    /// @return  Number of milliseconds in the timestamp.
-   /// @since  x.y.z, 07.03.2018
+   /// @since  1.26.0, 07.03.2018
    uint32_t getTimeMilliSecs() const;
 
    /// Returns the process id.

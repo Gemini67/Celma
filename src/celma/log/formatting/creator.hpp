@@ -358,7 +358,7 @@ inline Creator& time( Creator& in)
 /// Adds a 'milliseconds-time' field to the format definition.
 /// @param[in]  in  The object to use to add the field to the definition.
 /// @return  The object as passed in.
-/// @since  x.y.z, 07.03.2018
+/// @since  1.26.0, 07.03.2018
 inline Creator& time_ms( Creator& in)
 {
    in.field( Definition::FieldTypes::time_ms);
@@ -369,7 +369,7 @@ inline Creator& time_ms( Creator& in)
 /// Adds a 'microseconds-time' field to the format definition.
 /// @param[in]  in  The object to use to add the field to the definition.
 /// @return  The object as passed in.
-/// @since  x.y.z, 07.03.2018
+/// @since  1.26.0, 07.03.2018
 inline Creator& time_us( Creator& in)
 {
    in.field( Definition::FieldTypes::time_us);

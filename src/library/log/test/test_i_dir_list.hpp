@@ -30,20 +30,20 @@ namespace celma { namespace log {
 /// This class defines the interface of a function that is called when a new
 /// directory is created.
 ///
-/// @since  x.y.z, 08.03.2018
+/// @since  1.26.0, 08.03.2018
 class TestIDirList
 {
 public:
    /// Default empty, virtual destructor.
    ///
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    virtual ~TestIDirList() = default;
 
    /// Interface of the callback functions. Called when a new directory was
    /// created.
    ///
    /// @param[in]  dir_name  The name of the directory that was created.
-   /// @since  x.y.z, 08.03.2018
+   /// @since  1.26.0, 08.03.2018
    virtual void dirCreated( const std::string&) = 0;
 
 }; // TestIDirList

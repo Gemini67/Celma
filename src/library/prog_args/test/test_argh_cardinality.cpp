@@ -535,7 +535,7 @@ BOOST_AUTO_TEST_CASE( vector_exact_3)
 
 /// Handling of a C array that expects exactly 3 values.
 ///
-/// @since  x.y.z, 29.04.2019
+/// @since  1.26.0, 29.04.2019
 BOOST_AUTO_TEST_CASE( c_array_exact_3)
 {
 
@@ -544,14 +544,14 @@ BOOST_AUTO_TEST_CASE( c_array_exact_3)
 
    /// Helper class used to create/initialise the objects for the test.
    ///
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    class TestData
    {
    public:
       /// Constructor, does all the work.
       ///
       /// @param[in]  argstring  The argument string for this test.
-      /// @since  x.y.z, 29.04.2019
+      /// @since  1.26.0, 29.04.2019
       explicit TestData( const std::string& argstring):
          ah( 0),
          values(),
@@ -594,7 +594,7 @@ BOOST_AUTO_TEST_CASE( c_array_exact_3)
 
 /// Handling of an array that expects exactly 3 values.
 ///
-/// @since  x.y.z, 28.04.2019
+/// @since  1.26.0, 28.04.2019
 BOOST_AUTO_TEST_CASE( array_exact_3)
 {
 
@@ -603,14 +603,14 @@ BOOST_AUTO_TEST_CASE( array_exact_3)
 
    /// Helper class used to create/initialise the objects for the test.
    ///
-   /// @since  x.y.z, 28.04.2019
+   /// @since  1.26.0, 28.04.2019
    class TestData
    {
    public:
       /// Constructor, does all the work.
       ///
       /// @param[in]  argstring  The argument string for this test.
-      /// @since  x.y.z, 28.04.2019
+      /// @since  1.26.0, 28.04.2019
       explicit TestData( const std::string& argstring):
          ah( 0),
          values(),

@@ -35,7 +35,7 @@ using celma::log::filter::detail::LogFilterLevel;
 
 /// Test the log filter for one specific log level.
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( one_level)
 {
 
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE( one_level)
 
 /// Same test, but this time using the standard filter method passFilter().
 ///
-/// @since  x.y.z, 23.05.2019
+/// @since  1.26.0, 23.05.2019
 BOOST_AUTO_TEST_CASE( one_level_pass_filter)
 {
 

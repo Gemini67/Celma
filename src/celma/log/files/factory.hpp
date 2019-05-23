@@ -50,7 +50,7 @@ enum class LogFileTypes
 ///    The object that provides the path and name for the logfiles.
 /// @return
 ///    Pointer to the newly created object with the requested log file type.
-/// @since  x.y.z, 13.03.2018
+/// @since  1.26.0, 13.03.2018
 template< LogFileTypes> detail::ILogDest*
    factory( filename::Definition& name_def);
 
@@ -61,7 +61,7 @@ template< LogFileTypes> detail::ILogDest*
 /// @param[in]  name_def
 ///    The object that provides the path and name for the logfiles.
 /// @return  Pointer to the newly created object for a simple log file.
-/// @since  x.y.z, 13.03.2018
+/// @since  1.26.0, 13.03.2018
 template<>
    detail::ILogDest*
       factory< LogFileTypes::simple>( filename::Definition& name_def)
@@ -76,7 +76,7 @@ template<>
 /// @param[in]  name_def
 ///    The object that provides the path and name for the logfiles.
 /// @return  Pointer to the newly created object for a "timestamped" log file.
-/// @since  x.y.z, 13.03.2018
+/// @since  1.26.0, 13.03.2018
 template<>
    detail::ILogDest*
       factory< LogFileTypes::timestamped>( filename::Definition& name_def)
@@ -98,7 +98,7 @@ template<>
 /// @param[in]  max_gen
 ///    Maximum number of generations of log files to keep.
 /// @return  Pointer to the newly created object for a "maximum size" log file.
-/// @since  x.y.z, 13.03.2018
+/// @since  1.26.0, 13.03.2018
 detail::ILogDest* factory( filename::Definition& name_def,
    size_t max_file_size, int max_gen)
 {

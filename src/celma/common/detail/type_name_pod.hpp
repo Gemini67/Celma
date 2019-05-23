@@ -67,14 +67,14 @@ PROVIDE_SIMPLE_TYPE_NAME( wchar_t);
 ///
 /// @tparam  T  The type of the data stored in the array.
 /// @tparam  N  The number of values stored in the array.
-/// @since  x.y.z, 29.04.2019
+/// @since  1.26.0, 29.04.2019
 template< typename T, std::size_t N> class type< T[ N]>
 {
 public:
    /// Returns the name of the type.
    ///
    /// @return  'T[N]'.
-   /// @since  x.y.z, 29.04.2019
+   /// @since  1.26.0, 29.04.2019
    static constexpr const char* name()
    {
       return &mName[ 0];

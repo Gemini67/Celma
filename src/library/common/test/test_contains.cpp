@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE( hash_container)
 
 /// Verify that contains() works on C arrays.
 ///
-/// @since  x.y.z, 29.04.2019
+/// @since  1.26.0, 29.04.2019
 BOOST_AUTO_TEST_CASE( c_array)
 {
 

@@ -40,7 +40,7 @@ using celma::prog_args::Handler;
 
 /// Test error case that can occur with an array.
 ///
-/// @since  x.y.z, 26.04.2019
+/// @since  1.26.0, 26.04.2019
 BOOST_AUTO_TEST_CASE( test_array_errors)
 {
 
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE( test_array_errors)
 
 /// Test feature to set another character as list separator.
 ///
-/// @since  x.y.z, 26.04.2019
+/// @since  1.26.0, 26.04.2019
 BOOST_AUTO_TEST_CASE( test_list_sep)
 {
 
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
 /// Test feature to handle multiple values.
 ///
-/// @since  x.y.z, 26.04.2019
+/// @since  1.26.0, 26.04.2019
 BOOST_AUTO_TEST_CASE( test_multi_values)
 {
 
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
 /// Test feature to format the values before they are inserted into the array.
 ///
-/// @since  x.y.z, 26.04.2019
+/// @since  1.26.0, 26.04.2019
 BOOST_AUTO_TEST_CASE( format_values)
 {
 
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE( format_values)
 
 /// Test feature to sort the values in the array.
 ///
-/// @since  x.y.z, 26.04.2019
+/// @since  1.26.0, 26.04.2019
 BOOST_AUTO_TEST_CASE( test_sort_values)
 {
 
@@ -387,7 +387,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
 /// Test feature that only unique values should be stored in the array.
 ///
-/// @since  x.y.z, 26.04.2019
+/// @since  1.26.0, 26.04.2019
 BOOST_AUTO_TEST_CASE( test_unique_values)
 {
 

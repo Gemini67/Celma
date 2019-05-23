@@ -87,7 +87,7 @@ int FileOperations::remove( const std::string& file)
 /// @param[in]  mode
 ///    The permissions to create the directory with.
 /// @return  The result code from ::remove().
-/// @since  x.y.z, 21.05.2019
+/// @since  1.26.0, 21.05.2019
 int FileOperations::mkdir( const std::string& dir_name, int mode)
 {
 
