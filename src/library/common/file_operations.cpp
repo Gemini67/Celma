@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,16 +26,17 @@
 namespace celma { namespace common {
 
 
-
 std::unique_ptr< detail::FileFuncsBase>
    FileOperations::mpFileFuncs( std::make_unique< detail::FileFuncsOs>());
 
 
 
 /// Sets a new object which implements the file functions to use.
-/// @param[in]  obj  Pointer to the object that implements the file
-///                  functions. May not be NULL.
-/// @throws  if the given object pointer is NULL.
+///
+/// @param[in]  obj
+///    Pointer to the object that implements the file functions. May not be
+///    NULL.
+/// @throws  runtime error if the given object pointer is NULL.
 /// @since  1.4.0, 20.02.2018
 void FileOperations::setFuncImpl( detail::FileFuncsBase* obj)
 {
@@ -51,9 +52,11 @@ void FileOperations::setFuncImpl( detail::FileFuncsBase* obj)
 
 
 /// Renames a file from \a src to \a dest.
-/// @param[in]  dest  The new (path and) name for the file.
-/// @param[in]  src   The (path and) name of the existing file that should be
-///                   renamed.
+///
+/// @param[in]  dest
+///    The new (path and) name for the file.
+/// @param[in]  src
+///    The (path and) name of the existing file that should be renamed.
 /// @return  The result code from ::rename().
 /// @since  1.4.0, 20.02.2018
 int FileOperations::rename( const std::string& dest, const std::string& src)
@@ -65,6 +68,7 @@ int FileOperations::rename( const std::string& dest, const std::string& src)
 
 
 /// Removes (deletes) a file.
+///
 /// @param[in]  file  The (path and) name of the %file to delete.
 /// @return  The result code from ::remove().
 /// @since  1.4.0, 28.02.2018
@@ -73,6 +77,22 @@ int FileOperations::remove( const std::string& file)
 
    return mpFileFuncs->remove( file);
 } // FileOperations::remove
+
+
+
+/// Creates a directory.
+///
+/// @param[in]  dir_name
+///    The (path and) name of the directory to create.
+/// @param[in]  mode
+///    The permissions to create the directory with.
+/// @return  The result code from ::remove().
+/// @since  x.y.z, 21.05.2019
+int FileOperations::mkdir( const std::string& dir_name, int mode)
+{
+
+   return mpFileFuncs->mkdir( dir_name, mode);
+} // FileOperations::mkdir
 
 
 

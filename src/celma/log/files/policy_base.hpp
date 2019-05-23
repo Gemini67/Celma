@@ -46,7 +46,7 @@ public:
    /// Constructor. Stores the object to use to create the log file names.
    ///
    /// @param[in]  fname_def  Log filename definition.
-   /// @throws  when the filename definition contains no parts.
+   /// @throws  invalid argument when the filename definition contains no parts.
    /// @since  1.0.0, 13.12.2017
    explicit PolicyBase( const filename::Definition& fname_def) noexcept( false);
 

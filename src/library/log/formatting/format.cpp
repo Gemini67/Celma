@@ -76,6 +76,20 @@ void Format::format( std::ostream& dest, const detail::LogMsg& msg) const
       case FieldTypes::dateTime:
          formatDateTime( dest, field_def, "%F %T", msg.getTimestamp());
          break;
+      case FieldTypes::time_ms:
+         {
+            std::ostringstream  oss;
+            oss << std::setw( 3) << std::setfill( '0') << msg.getTimeMilliSecs();
+            append( dest, field_def, oss.str());
+         } // end scope
+         break;
+      case FieldTypes::time_us:
+         {
+            std::ostringstream  oss;
+            oss << std::setw( 6) << std::setfill( '0') << msg.getTimeMicroSecs();
+            append( dest, field_def, oss.str());
+         } // end scope
+         break;
       case FieldTypes::pid:
          append( dest, field_def, std::to_string( msg.getProcessId()));
          break;

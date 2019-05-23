@@ -44,13 +44,19 @@ using celma::log::filename::Builder;
 namespace {
 
 
+/// Helper class to access data within the definition class.
+/// @since  1.0.0, 20.10.2017
 class DefinitionAccess: public Definition
 {
 public:
+   /// Returns the size of the parts container, i.e. the number of path/filename
+   /// fields in the definition.
+   /// @return  Number of part fields in the container.
+   /// @since  1.0.0, 20.10.2017
    size_t size() const
    {
       return mParts.size();
-   } // size
+   } // DefinitionAccess::size
    
 }; // DefinitionAccess
 
@@ -160,6 +166,42 @@ BOOST_AUTO_TEST_CASE( test_parts)
                                                    test_timestamp));
       BOOST_REQUIRE_EQUAL( filename, "___13");
       BOOST_REQUIRE_EQUAL( Builder::filename( my_def, 13), filename);
+   } // end scope
+
+   // test only with an unformatted pid
+   {
+      DefinitionAccess  my_def;
+      Creator           fn_def_creator( my_def);
+
+      fn_def_creator << clf::pid;
+
+      Builder            fn_builder( my_def);
+      const std::string  exp_filename = std::to_string( ::getpid());
+      std::string        filename;
+
+      BOOST_REQUIRE_NO_THROW( fn_builder.filename( filename, 13,
+                                                   test_timestamp));
+      BOOST_REQUIRE_EQUAL( filename, exp_filename);
+      BOOST_REQUIRE_EQUAL( Builder::filename( my_def, 13), exp_filename);
+   } // end scope
+
+   // test only with a pid part with size but no fill character
+   {
+      DefinitionAccess  my_def;
+      Creator           fn_def_creator( my_def);
+
+      fn_def_creator << 5 << clf::pid;
+
+      Builder      fn_builder( my_def);
+      std::string  filename;
+      char         exp_filename[ 20];
+
+      ::sprintf( exp_filename, "%05d", ::getpid());
+
+      BOOST_REQUIRE_NO_THROW( fn_builder.filename( filename, 13,
+                                                   test_timestamp));
+      BOOST_REQUIRE_EQUAL( filename, exp_filename);
+      BOOST_REQUIRE_EQUAL( Builder::filename( my_def, 13), exp_filename);
    } // end scope
 
 } // test_fields

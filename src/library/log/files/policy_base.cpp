@@ -30,6 +30,7 @@
 
 
 // project includes
+#include "celma/common/file_operations.hpp"
 #include "celma/log/detail/log_msg.hpp"
 #include "celma/log/filename/builder.hpp"
 
@@ -41,7 +42,7 @@ namespace celma { namespace log { namespace files {
 /// Constructor. Stores the object to use to create the log file names.
 ///
 /// @param[in]  fname_def  Log filename definition.
-/// @throws  when the filename definition contains no parts.
+/// @throws  invalid argument when the filename definition contains no parts.
 /// @since  1.0.0, 13.12.2017
 PolicyBase::PolicyBase( const filename::Definition& fname_def):
    mFilenameDefinition( fname_def),
@@ -82,6 +83,21 @@ void PolicyBase::open( bool from_reopen)
    mFile.open( filename, std::ios_base::out | std::ios_base::ate);
 
    if (!mFile || !mFile.is_open())
+   {
+      // check if the file should be created in a directory that does not exist
+      // and if so, try to create the directory
+      const auto  pos = filename.find_last_of( '/');
+      if (pos != std::string::npos)
+      {
+         const auto  path = filename.substr( 0, pos);
+         common::FileOperations::mkdir( path);
+
+         // try again
+         mFile.open( filename, std::ios_base::out | std::ios_base::ate);
+      } // end if
+   } // end if
+
+   if (!mFile || !mFile.is_open())
       throw std::runtime_error( "could not open file '" + filename
          + "': " + ::strerror( errno));
 
@@ -117,7 +133,7 @@ void PolicyBase::writeMessage( const detail::LogMsg& msg,
    if (!writeCheck( msg, msg_text))
       reOpenFile();
 
-   mFile << msg_text;
+   mFile << msg_text << std::endl;
 
    written( msg, msg_text);
 

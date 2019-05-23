@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,6 +33,19 @@ using celma::log::detail::LogMsg;
 using celma::log::filter::detail::DuplicatePolicy;
 using celma::log::filter::Filters;
 using celma::log::LogLevel;
+
+
+
+/// Test some errors conditions.
+///
+/// @since  x.y.z, 22.05.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   BOOST_REQUIRE_THROW( Filters::setDuplicatePolicy(
+      static_cast< DuplicatePolicy>( 10)), celma::common::CelmaRuntimeError);
+
+} // errors
 
 
 
@@ -124,3 +137,4 @@ BOOST_AUTO_TEST_CASE( policy_replace)
 
 
 // =====  END OF test_log_filter_duplicate_policy.cpp  =====
+

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,6 +26,7 @@
 
 // project includes
 #include "celma/log/detail/log_msg.hpp"
+#include "celma/common/celma_exception.hpp"
 
 
 using celma::log::detail::LogMsg;
@@ -33,7 +34,25 @@ using celma::log::filter::detail::LogFilterClasses;
 
 
 
+/// Test some error cases.
+///
+/// @since  x.y.z, 22.05.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   BOOST_REQUIRE_THROW( LogFilterClasses classFilter( ""),
+      celma::common::CelmaRuntimeError);
+   BOOST_REQUIRE_THROW( LogFilterClasses classFilter( "noclass"),
+      celma::common::CelmaRuntimeError);
+   BOOST_REQUIRE_THROW( LogFilterClasses classFilter( "noclass1,noclass2"),
+      celma::common::CelmaRuntimeError);
+
+} // errors
+
+
+
 /// Test the filter for log classes with a single log class (name).
+///
 /// @since  0.3, 19.06.2016
 BOOST_AUTO_TEST_CASE( single_class)
 {
@@ -96,3 +115,4 @@ BOOST_AUTO_TEST_CASE( alternating)
 
 
 // =====  END OF test_log_filter_classes.cpp  =====
+

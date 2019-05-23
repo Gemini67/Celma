@@ -28,6 +28,7 @@ namespace celma { namespace log { namespace filename {
 
 
 /// Stores the definition of the format of a log filename.
+/// @since  x.y.z, 21.02.2018  (pid added)
 /// @since  1.0.0, 11.10.2017
 class Definition
 {
@@ -39,7 +40,8 @@ public:
       env,        //!< An environment variable whose value is evaluated only
                   //!< when a logfile name is created.
       date,       //!< Date as part of the path/filename.
-      number      //!< Log file number.
+      number,     //!< Log file number.
+      pid         //!< Process-id as part of the path/filename.
    };
 
    // Default constructor, copy constructor and destructor are fine.
@@ -52,11 +54,13 @@ public:
 
    /// Returns if this file name definition includes a log file generation
    /// number.
+   ///
    /// @return  \c true if the definition includes a (generation) number.
    /// @since  1.0.0, 20.12.2017
    bool hasGenerationNbr() const;
 
    /// Returns if this file name definition includes a date field.
+   ///
    /// @return  \c true if the definition includes a date field.
    /// @since  1.0.0, 21.12.2017
    bool hasDateField() const;
@@ -72,6 +76,7 @@ protected:
    friend class Creator;
 
    /// The data that is stored for each part.
+   ///
    /// @since  1.0.0, 11.10.2017
    struct Part
    {

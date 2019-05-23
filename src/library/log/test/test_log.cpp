@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -116,8 +116,12 @@ int main()
    cout << "Trace:     " << trace_output.str() << endl;
    trace_output.str( "");
 
-}
+   Logging::reset();
+
+   return EXIT_SUCCESS;
+} // main 
 
 
-// ===========================  END OF test_log.cpp  ===========================
+
+// =====  END OF test_log.cpp  =====
 
