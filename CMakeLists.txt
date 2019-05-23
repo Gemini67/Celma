@@ -12,8 +12,8 @@ cmake_minimum_required( VERSION 3.5 )
 project( Celma )
 
 set( MAJORVERSION    1 )
-set( MINORVERSION    24 )
-set( RELEASE_VERSION 2 )
+set( MINORVERSION    26 )
+set( RELEASE_VERSION 0 )
 set( PATCHLEVEL      0 )
 
 set( CMAKE_CXX_STANDARD 17 )
@@ -45,6 +45,7 @@ endif (CMAKE_BUILD_TYPE MATCHES Coverage)
 
 # Boost stuff ------------------------------------------------------------------
 find_package( Boost ${BOOST_VERSION} REQUIRED
+   filesystem
    thread
    system
    unit_test_framework
@@ -53,7 +54,7 @@ find_package( Boost ${BOOST_VERSION} REQUIRED
 message( STATUS "Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIRS}" )
 message( STATUS "Boost_LIBRARY_DIRS ${Boost_LIBRARY_DIRS}" )
 
-set( Boost_Link_Libs       boost_thread boost_system )
+set( Boost_Link_Libs       boost_filesystem boost_thread boost_system )
 set( Boost_Test_Link_Libs  boost_unit_test_framework ${Boost_Link_Libs} )
 
 # include directories ----------------------------------------------------------

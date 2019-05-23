@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,6 +20,7 @@
 
 
 // C++ Standard Library includes
+#include <iomanip>
 #include <sstream>
 
 
@@ -243,6 +244,40 @@ BOOST_AUTO_TEST_CASE( test_date_time)
    } // end scope
 
 } // test_date_time
+
+
+
+/// Test formatting the remaining fields.
+///
+/// @since  1.25.0, 02.05.2019
+BOOST_AUTO_TEST_CASE( pid_level)
+{
+
+   namespace clf = celma::log::formatting;
+
+   DefinitionAccess  my_def;
+   Creator           format_creator( my_def);
+
+   format_creator << 5 << clf::pid << "|" << clf::thread_id << "|" << clf::level
+      << "|" << clf::log_class << "|" << clf::error_nbr;
+
+   LogMsg              msg( "filename.cpp", "test_one", 1234);
+   std::ostringstream  oss;
+   Format              log_format( my_def);
+
+   msg.setLevel( celma::log::LogLevel::warning);
+   msg.setClass( celma::log::LogClass::application);
+   msg.setErrorNumber( 13);
+
+   log_format.format( oss, msg);
+
+   std::ostringstream  oss_exp;
+   oss_exp << std::setw( 5) << ::getpid() << "|0x" << std::hex << ::pthread_self()
+      << "|Warning|Application|13";
+
+   BOOST_REQUIRE_EQUAL( oss.str(), oss_exp.str());
+
+} // pid_level
 
 
 

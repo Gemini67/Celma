@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -108,7 +108,6 @@ template< typename K, typename V, typename C, typename A,
 } // contains
 
 
-
 /// Overload for containers using a hash function to store the key/values pairs,
 /// e.g. std::unordered_map<>: Check if the container contains the given value.
 ///
@@ -137,6 +136,49 @@ template< typename K, typename V, typename H, typename E, typename A,
          bool contains( const S< K, V, H, E, A>& container, const K& k)
 {
    return container.find( k) != container.end();
+} // contains
+
+
+/// Overload for C arrays.
+///
+/// @tparam  T
+///    The type of the values stored in the array.
+/// @tparam  N
+///    Number of elements in the array.
+/// @param[in]  arr
+///    The array to search the value in.
+/// @param[in]  v
+///    The value to search for.
+/// @return
+///    \c true if the array contains the given value.
+/// @since
+///    1.26.0, 29.04.2019
+template< typename T, size_t N> bool contains( const T (&arr)[ N], const T& v)
+{
+   return std::find( arr, arr + N, v) != arr + N;
+} // contains
+
+
+/// Overload for partially filled C arrays.
+///
+/// @tparam  T
+///    The type of the values stored in the array.
+/// @tparam  N
+///    Number of elements in the array.
+/// @param[in]  arr
+///    The array to search the value in.
+/// @param[in]  n
+///    Number of elements in the array to check.
+/// @param[in]  v
+///    The value to search for.
+/// @return
+///    \c true if the array contains the given value.
+/// @since
+///    1.26.0, 29.04.2019
+template< typename T, size_t N>
+   bool contains( const T (&arr)[ N], size_t n, const T& v)
+{
+   return std::find( arr, arr + n, v) != arr + n;
 } // contains
 
 
