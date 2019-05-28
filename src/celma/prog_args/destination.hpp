@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,7 +18,7 @@
 /// create the corresponding typed arg classes/objects.<br>
 /// List of the macros provided by this module:
 /// - \c DEST_VAR: Destination is a 'normal' int, string etc., but also a
-///   bitset or a vector.
+///   bitset, an array or a vector.
 /// - \c DEST_VAR_VALUE: Value for the destination variable is provided with
 ///   the argument, not on the command line.
 /// - \c DEST_PAIR: Pair of destination variables, the value for the second

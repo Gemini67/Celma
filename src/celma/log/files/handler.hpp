@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,18 +34,23 @@ namespace celma { namespace log { namespace files {
 
 /// Handles log files as log destinations.<br>
 /// The path and file name of the log files is defined through a
-/// filename::Definition object that is passed to the log file policy.<br>
-/// The policy defines when a nw log file should be opened and knows how to
+/// celma::log::filename::Definition object that is passed to the log file
+/// policy.<br>
+/// The policy defines when a new log file should be opened and knows how to
 /// roll the log file generations, if necessary.<br>
 /// The formatting for the log messages is defined through classes that
-/// implement the IFormatBase interfac.<br>
+/// implement the celma::log::detail::IFormatBase interface.<br>
 /// This class finally brings all this together.
-/// @tparam  P  The policy used to generate and handle the log files.
-/// @tparam  L  The lock type to use when writing into the logfile.<br>
-///             The default \a NoLock type provides no real locking. If multiple
-///             threads write into the logfile, provide an appropriate locking
-///             mechanism (i.e. a mutex).
-/// @since  1.15.1, 01.01.2018  (added lock policy for writing into the file)
+///
+/// @tparam  P
+///    The policy used to generate and handle the log files.
+/// @tparam  L
+///    The lock type to use when writing into the logfile.<br>
+///    The default \a NoLock type provides no real locking. If multiple threads
+///    write into the logfile, provide an appropriate locking mechanism (i.e.
+///    a mutex).
+/// @since  1.15.1, 01.01.2018
+///    (added lock policy for writing into the file)
 /// @since  1.0.0, 13.12.2017
 template< typename P, typename L = common::NoLock> class Handler:
    public detail::ILogDest
@@ -54,9 +59,9 @@ public:
    /// Constructor. Tries to open the current log file according to the given
    /// policy.
    ///
-   /// @param[in]  file_policy  Pointer to the policy for handling the log
-   ///                          file(s). This class takes ownership of the
-   ///                          object.
+   /// @param[in]  file_policy
+   ///    Pointer to the policy for handling the log file(s). This class takes
+   ///    ownership of the object.
    /// @since  1.0.0, 13.12.2017
    explicit Handler( P* file_policy);
 
@@ -67,15 +72,18 @@ public:
    /// Sets the new formatter to use.<br>
    /// Although the pointer type is \a IFormatBase only, objects passed here
    /// must be derived from the \a IFormatStream class.
-   /// @param[in]  formatter  Pointer to the new formatter object to use. If a
-   ///                        NULL pointer is passed, the previous formatter is
-   ///                        replaced by the default stream formatter.
+   ///
+   /// @param[in]  formatter
+   ///    Pointer to the new formatter object to use. If a NULL pointer is
+   ///    passed, the previous formatter is replaced by the default stream
+   ///    formatter.
    /// @since  1.0.0, 14.12.2017
    virtual void setFormatter( detail::IFormatBase* formatter = nullptr) override;
 
 private:
    /// Implementation of the ILogDest interface: Formats the given log message
    /// and writes the log message text into the log file.
+   ///
    /// @param[in]  msg  The object with the data of the log message to write.
    /// @since  1.0.0, 13.12.2017
    virtual void message( const detail::LogMsg& msg) override;

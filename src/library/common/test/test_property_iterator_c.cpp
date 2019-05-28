@@ -533,5 +533,5 @@ BOOST_AUTO_TEST_CASE( linked_map)
 
 
 
-// =====  END OF test_property_iterator.cpp  =====
+// =====  END OF test_property_iterator_c.cpp  =====
 
