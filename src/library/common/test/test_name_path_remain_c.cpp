@@ -99,5 +99,5 @@ BOOST_AUTO_TEST_CASE( split)
 
 
 
-// =====  END OF test_name_path_remain.cpp  =====
+// =====  END OF test_name_path_remain_c.cpp  =====
 

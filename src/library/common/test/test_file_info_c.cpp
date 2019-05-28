@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -119,5 +119,5 @@ BOOST_AUTO_TEST_CASE( parent_directory)
 
 
 
-// =====  END OF test_file_info.cpp  =====
+// =====  END OF test_file_info_c.cpp  =====
 

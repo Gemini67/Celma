@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -69,5 +69,5 @@ BOOST_AUTO_TEST_CASE( test_basics)
 
 
 
-// =====  END OF test_sleep_on_error.cpp  =====
+// =====  END OF test_sleep_on_error_mt.cpp  =====
 

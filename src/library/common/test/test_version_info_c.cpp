@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -50,5 +50,5 @@ BOOST_AUTO_TEST_CASE( stream_output)
 
 
 
-// =====  END OF test_version_info.cpp  =====
+// =====  END OF test_version_info_c.cpp  =====
 

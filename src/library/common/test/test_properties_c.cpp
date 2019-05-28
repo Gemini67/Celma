@@ -298,5 +298,5 @@ BOOST_AUTO_TEST_CASE( multiple_links)
 
 
 
-// =====  END OF test_properties.cpp  =====
+// =====  END OF test_properties_c.cpp  =====
 
