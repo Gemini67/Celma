@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.26.0
+   \mainpage  CELMA v1.26.1
 
    \tableofcontents
 
@@ -47,6 +47,7 @@
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
 
+   |   1.26.1 | 2019-05-28        | Improved build setup and cmake configuration files. |
    |   1.26.0 | 2019-05-23        | Added factory to create log file types.<br>(Re-) Added milli- and microseconds to log file names.<br>Improved coverage. |
    |   1.25.0 | 2019-05-21        | Added destination types "C array" and "std::array" to argument handler. |
    |   1.24.2 | 2019-04-23        | Improved coverage. |
