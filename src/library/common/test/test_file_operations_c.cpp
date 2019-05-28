@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -62,5 +62,5 @@ BOOST_AUTO_TEST_CASE( rename_existing_file_and_remove)
 
 
 
-// =====  END OF test_file_operations.cpp  =====
+// =====  END OF test_file_operations_c.cpp  =====
 

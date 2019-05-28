@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -256,5 +256,5 @@ BOOST_AUTO_TEST_CASE( test_rethrow)
 
 
 
-// =====  END OF test_exception.cpp  =====
+// =====  END OF test_exception_c.cpp  =====
 
