@@ -136,6 +136,7 @@ BOOST_AUTO_TEST_CASE( file_through_arg)
 
    BOOST_REQUIRE_EQUAL( TestEnvironment::object().argC(), 2);
    BOOST_REQUIRE( TestEnvironment::object().argV() != nullptr);
+   BOOST_REQUIRE( TestEnvironment::object().argV()[ 1] != nullptr);
 
    Handler  ah( 0);
    int      int_val = 6;
@@ -154,6 +155,30 @@ BOOST_AUTO_TEST_CASE( file_through_arg)
    BOOST_REQUIRE_EQUAL( int_val, 42);
 
 } // file_through_arg
+
+
+
+/// No error when the HOME environment variable is not set.
+///
+/// @since  1.27.0, 28.05.2019
+BOOST_AUTO_TEST_CASE( no_home)
+{
+
+
+   Handler  ah( Handler::hfReadProgArg);
+   int      int_val = 6;
+
+
+   ah.addArgument( "i", DEST_VAR( int_val), "An integer");
+
+   const ArgString2Array  as2a( "", "testprogname");
+
+   ::unsetenv( "HOME");
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_EQUAL( int_val, 6);
+
+} // no_home
 
 
 

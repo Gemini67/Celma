@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -590,20 +590,17 @@ BOOST_AUTO_TEST_CASE( control_characters)
    BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
    BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
 
-   BOOST_REQUIRE_NO_THROW( secondAH->addControlHandler( '(', std::bind( &TestControlArgs::open, &tca)));
-   BOOST_REQUIRE_NO_THROW( secondAH->addControlHandler( ')', std::bind( &TestControlArgs::close, &tca)));
-   BOOST_REQUIRE_NO_THROW( secondAH->addControlHandler( '!', std::bind( &TestControlArgs::exclamation, &tca)));
-   BOOST_REQUIRE_THROW(    secondAH->addControlHandler( '#', std::bind( &TestControlArgs::open, &tca)),
-                           invalid_argument);
+   BOOST_REQUIRE_NO_THROW( secondAH->addBracketHandler( 
+      std::bind( &TestControlArgs::open, &tca),
+      std::bind( &TestControlArgs::close, &tca)));
 
-   const ArgString2Array  as2a( "-f ( ! -s )", nullptr);
+   const ArgString2Array  as2a( "-f ( -s )", nullptr);
 
    BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( firstFlag);
    BOOST_REQUIRE( secondFlag);
    BOOST_REQUIRE_EQUAL( tca.getOpen(), 1);
    BOOST_REQUIRE_EQUAL( tca.getClose(), 1);
-   BOOST_REQUIRE_EQUAL( tca.getExclamation(), 1);
 
    // singleton Groups: have to clean up
    Groups::instance().removeAllArgHandler();

@@ -31,7 +31,7 @@ namespace {
 /// Throws an integer value.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_integer_error()
+void throw_integer_error( bool)
 {
 
    throw 42;
@@ -41,7 +41,7 @@ void throw_integer_error()
 /// Throws a standard exception.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_exception()
+void throw_exception( bool)
 {
 
    throw std::exception();
@@ -51,7 +51,7 @@ void throw_exception()
 /// Throws an invalid argument exception.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_invalid_argument()
+void throw_invalid_argument( bool)
 {
 
    throw std::invalid_argument( "invalid argument");
@@ -61,7 +61,7 @@ void throw_invalid_argument()
 /// Throws a logic error exception.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_logic_error()
+void throw_logic_error( bool)
 {
 
    throw std::logic_error( "logic");
@@ -71,7 +71,7 @@ void throw_logic_error()
 /// Throws an out-of-range exception.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_out_of_range()
+void throw_out_of_range( bool)
 {
 
    throw std::out_of_range( "out of range");
@@ -81,7 +81,7 @@ void throw_out_of_range()
 /// Throws an overflow error exception.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_overflow_error()
+void throw_overflow_error( bool)
 {
 
    throw std::overflow_error( "overflow");
@@ -91,7 +91,7 @@ void throw_overflow_error()
 /// Throws a runtime error exception.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_runtime_error()
+void throw_runtime_error( bool)
 {
 
    throw std::runtime_error( "runtime");
@@ -101,7 +101,7 @@ void throw_runtime_error()
 /// Throws an underflow error exception.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_underflow_error()
+void throw_underflow_error( bool)
 {
 
    throw std::underflow_error( "underflow");
@@ -111,7 +111,7 @@ void throw_underflow_error()
 /// Throws a n underflow error exception.
 ///
 /// @since  1.22.0, 03.04.2019
-void throw_boost_bad_lexical_cast()
+void throw_boost_bad_lexical_cast( bool)
 {
 
    throw boost::bad_lexical_cast();

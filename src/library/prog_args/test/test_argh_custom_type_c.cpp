@@ -71,9 +71,13 @@ public:
    virtual const std::string varTypeName() const override;
 
    /// Stores the value in the destination variable.
-   /// @param[in]  value  The value to store in string format.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Ignored.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const string& value) override;
+   virtual void assign( const string& value, bool inverted) override;
 
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
@@ -125,7 +129,7 @@ const std::string TypedArgBitset::varTypeName() const
 } // TypedArgBitset::varTypeName
 
 
-void TypedArgBitset::assign( const string& value)
+void TypedArgBitset::assign( const string& value, bool)
 {
 
    celma::common::Tokenizer  tok( value, mListSep);

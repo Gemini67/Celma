@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -31,7 +31,7 @@ using std::exception;
 using std::string;
 
 
-static void callable_function();
+static void callable_function( bool);
 
 
 /// 
@@ -147,7 +147,7 @@ int main( int /* argc */, char* argv[])
 
 
 
-static void callable_function()
+static void callable_function( bool)
 {
 }
 
