@@ -33,7 +33,7 @@
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using celma::prog_args::SummaryOptions;
 using celma::test::multilineStringCompare;
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "-p 3", nullptr);
+      auto const  as2a = make_arg_array( "-p 3", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "-p 3,4,5", nullptr);
+      auto const  as2a = make_arg_array( "-p 3,4,5", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "-p 3,hello", nullptr);
+      auto const  as2a = make_arg_array( "-p 3,hello", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::bad_cast);
    } // end scope
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value")->setIsMandatory());
 
-      const ArgString2Array  as2a( "", nullptr);
+      auto const  as2a = make_arg_array( "", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
          "Key and value")->setPrintDefault(true));
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( oss_err.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "-p 3,9", nullptr);
+      auto const  as2a = make_arg_array( "-p 3,9", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "", nullptr);
+      auto const  as2a = make_arg_array( "", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
          "Key and value")->setListSep( '-'));
 
-      const ArgString2Array  as2a( "-p 3-9", nullptr);
+      auto const  as2a = make_arg_array( "-p 3-9", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "--pair 4711,foobar", nullptr);
+      auto const  as2a = make_arg_array( "--pair 4711,foobar", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 4711);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), "foobar");
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
          "Key and value")->setListSep( ';')->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
          "Key and value")->setListSep( ';')->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "--pair 4711;foobar --list-arg-vars", nullptr);
+      auto const  as2a = make_arg_array( "--pair 4711;foobar --list-arg-vars", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -302,7 +302,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
                                               "Key and value")
                                             ->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-p 3 9", nullptr);
+      auto const  as2a = make_arg_array( "-p 3 9", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
@@ -321,7 +321,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s,string-pair",
          DEST_VAR( myTuple2), "Key and string value")->setListSep( '-'));
 
-      const ArgString2Array  as2a( "--list-arg-vars -p 13,42 -s 7-wonderful --list-arg-vars",
+      auto const  as2a = make_arg_array( "--list-arg-vars -p 13,42 -s 7-wonderful --list-arg-vars",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
@@ -362,7 +362,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "-p 3,9,27", nullptr);
+      auto const  as2a = make_arg_array( "-p 3,9,27", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
@@ -379,7 +379,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
          "Key and value")->setPrintDefault( true));
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
          "Usage:\n"
@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "--pair 4711,foobar,42", nullptr);
+      auto const  as2a = make_arg_array( "--pair 4711,foobar,42", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 4711);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), "foobar");
@@ -417,7 +417,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
                                               "Key and value"));
 
-      const ArgString2Array  as2a( "--list-arg-vars --pair 4711,foobar,42 --list-arg-vars",
+      auto const  as2a = make_arg_array( "--list-arg-vars --pair 4711,foobar,42 --list-arg-vars",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 4711);
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
                                               "Key and value")
                                             ->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-p 3 9 27", nullptr);
+      auto const  as2a = make_arg_array( "-p 3 9 27", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( std::get< 0>( myTuple), 3);
       BOOST_REQUIRE_EQUAL( std::get< 1>( myTuple), 9);
@@ -472,7 +472,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
                                               "Key and value")
                                             ->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "--list-arg-vars -t 13,42,4711 --list-arg-vars",
+      auto const  as2a = make_arg_array( "--list-arg-vars -t 13,42,4711 --list-arg-vars",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
@@ -513,7 +513,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
          "Key and value")->setTakesMultiValue()->setPrintDefault( true));
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
@@ -537,7 +537,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
          "Key and value")->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "--list-arg-vars -t 13,'hello world',4711 --list-arg-vars",
+      auto const  as2a = make_arg_array( "--list-arg-vars -t 13,'hello world',4711 --list-arg-vars",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
@@ -566,7 +566,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
          "Key and value")->setTakesMultiValue()->setPrintDefault( true));
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
       // std::cerr << oss.str() << std::endl;
@@ -591,7 +591,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
          "Key and value")->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "--list-arg-vars -t 13,'hello world',3.1415 --list-arg-vars",
+      auto const  as2a = make_arg_array( "--list-arg-vars -t 13,'hello world',3.1415 --list-arg-vars",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
@@ -615,5 +615,5 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
 
 
 
-// =====  END OF test_argh_dest_tuple.cpp  =====
+// =====  END OF test_argh_dest_tuple_c.cpp  =====
 

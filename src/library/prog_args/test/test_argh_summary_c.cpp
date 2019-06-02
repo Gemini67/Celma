@@ -35,7 +35,7 @@
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::common::operator |;
 using celma::prog_args::Handler;
 using celma::prog_args::SummaryOptions;
@@ -188,7 +188,7 @@ public:
       tcb.addVoidMember( ah);
       tcb.addValueMember( ah);
 
-      const ArgString2Array  as2a( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
+      auto const  as2a = make_arg_array( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
          "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
          "--void-method --value-method another_value -t 28,unbelievable,12.75 "
          "--void-member --value-member=last_value -vv --pair juhu -o 0 "
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE( no_argument_used)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   const ArgString2Array  as2a( "", nullptr);
+   auto const  as2a = make_arg_array( "", nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( oss);
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   const ArgString2Array  as2a( "-f 34", nullptr);
+   auto const  as2a = make_arg_array( "-f 34", nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( oss);
@@ -346,7 +346,7 @@ BOOST_AUTO_TEST_CASE( groups_summary)
    ah_input->addArgument( "input-name", DEST_VAR( input_name), "input name");
    ah_output->addArgument( "output-name", DEST_VAR( output_name), "output name");
 
-   const ArgString2Array  as2a( "--input-name source --output-name destination",
+   auto const  as2a = make_arg_array( "--input-name source --output-name destination",
       nullptr);
    BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -388,7 +388,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary)
    ah.addArgument( "i,input", ah_input, "input parameters");
    ah.addArgument( "o,output", ah_output, "output parameters");
 
-   const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
+   auto const  as2a = make_arg_array( "-if input_file_name --output --queue output_queue_name",
       nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -424,7 +424,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_with_type)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   const ArgString2Array  as2a( "-f 34", nullptr);
+   auto const  as2a = make_arg_array( "-f 34", nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type, oss);
@@ -495,7 +495,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_type)
    ah_input->addArgument( "input-name", DEST_VAR( input_name), "input name");
    ah_output->addArgument( "output-name", DEST_VAR( output_name), "output name");
 
-   const ArgString2Array  as2a( "--input-name source --output-name destination",
+   auto const  as2a = make_arg_array( "--input-name source --output-name destination",
       nullptr);
    BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -537,7 +537,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_type)
    ah.addArgument( "i,input", ah_input, "input parameters");
    ah.addArgument( "o,output", ah_output, "output parameters");
 
-   const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
+   auto const  as2a = make_arg_array( "-if input_file_name --output --queue output_queue_name",
       nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -573,7 +573,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_with_key)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   const ArgString2Array  as2a( "-f 34", nullptr);
+   auto const  as2a = make_arg_array( "-f 34", nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_key, oss);
@@ -644,7 +644,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_key)
    ah_input->addArgument( "input-name", DEST_VAR( input_name), "input name");
    ah_output->addArgument( "output-name", DEST_VAR( output_name), "output name");
 
-   const ArgString2Array  as2a( "--input-name source --output-name destination",
+   auto const  as2a = make_arg_array( "--input-name source --output-name destination",
       nullptr);
    BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -686,7 +686,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_key)
    ah.addArgument( "i,input", ah_input, "input parameters");
    ah.addArgument( "o,output", ah_output, "output parameters");
 
-   const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
+   auto const  as2a = make_arg_array( "-if input_file_name --output --queue output_queue_name",
       nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -721,7 +721,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_full)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   const ArgString2Array  as2a( "-f 34", nullptr);
+   auto const  as2a = make_arg_array( "-f 34", nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
@@ -791,7 +791,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_full)
    ah_input->addArgument( "input-name", DEST_VAR( input_name), "input name");
    ah_output->addArgument( "output-name", DEST_VAR( output_name), "output name");
 
-   const ArgString2Array  as2a( "--input-name source --output-name destination",
+   auto const  as2a = make_arg_array( "--input-name source --output-name destination",
       nullptr);
    BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -834,7 +834,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
    ah.addArgument( "i,input", ah_input, "input parameters");
    ah.addArgument( "o,output", ah_output, "output parameters");
 
-   const ArgString2Array  as2a( "-if input_file_name --output --queue output_queue_name",
+   auto const  as2a = make_arg_array( "-if input_file_name --output --queue output_queue_name",
       nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -850,5 +850,5 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
 
 
 
-// =====  END OF test_argh_summary.cpp  =====
+// =====  END OF test_argh_summary_c.cpp  =====
 

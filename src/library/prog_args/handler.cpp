@@ -982,7 +982,8 @@ void Handler::checkReadEnvVarArgs( const char* arg0)
       return;
 
    const common::ScopedFlag< uint8_t>  sf( mReadMode, ReadMode::envVar);
-   const appl::ArgString2Array         as2a( arg_env, nullptr);
+   auto const                          as2a = appl::make_arg_array( arg_env,
+      nullptr);
    detail::ArgListParser               alp( as2a.mArgC, as2a.mpArgV);
 
    iterateArguments( alp);
@@ -1018,8 +1019,8 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       if (line.empty() || (line[ 0] == '#'))
          continue;   // while
 
-      const appl::ArgString2Array  as2a( line, nullptr);
-      detail::ArgListParser        alp( as2a.mArgC, as2a.mpArgV);
+      auto const             as2a = appl::make_arg_array( line, nullptr);
+      detail::ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
 
       iterateArguments( alp);
    } // end while

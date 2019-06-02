@@ -203,5 +203,5 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
 
 
 
-// =====  END OF test_argh_custom_type.cpp  =====
+// =====  END OF test_argh_custom_type_c.cpp  =====
 

@@ -33,7 +33,7 @@
 #include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE( format_case)
 
    {
       Handler                ah( 0);
-      const ArgString2Array  as2a( "-n process1", nullptr);
+      auto const  as2a = make_arg_array( "-n process1", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
          ->addFormat( celma::prog_args::uppercase());
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE( format_case)
 
    {
       Handler                ah( 0);
-      const ArgString2Array  as2a( "-n PROceSS1", nullptr);
+      auto const  as2a = make_arg_array( "-n PROceSS1", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
          ->addFormat( celma::prog_args::lowercase());
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( format_case)
    // test with a string directly
    {
       Handler                ah( 0);
-      const ArgString2Array  as2a( "-a PROceSS1", nullptr);
+      auto const  as2a = make_arg_array( "-a PROceSS1", nullptr);
       std::string            my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    // must throw when the format string is empty
    {
       Handler                ah( 0);
-      const ArgString2Array  as2a( "-a bigSmAlL", nullptr);
+      auto const  as2a = make_arg_array( "-a bigSmAlL", nullptr);
       std::string            my_string;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "a", DEST_VAR( my_string),
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    // test special anycase formatting
    {
       Handler                ah( 0);
-      const ArgString2Array  as2a( "-a bigSmAlL", nullptr);
+      auto const  as2a = make_arg_array( "-a bigSmAlL", nullptr);
       std::string            my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    // format string longer than input string
    {
       Handler                ah( 0);
-      const ArgString2Array  as2a( "-a bigS", nullptr);
+      auto const  as2a = make_arg_array( "-a bigS", nullptr);
       std::string            my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    // format string shorter than input string
    {
       Handler                ah( 0);
-      const ArgString2Array  as2a( "-a bigSmAlL", nullptr);
+      auto const  as2a = make_arg_array( "-a bigSmAlL", nullptr);
       std::string            my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
@@ -200,5 +200,5 @@ BOOST_AUTO_TEST_CASE( format_anycase)
 
 
 
-// =====  END OF test_argh_format.cpp  =====
+// =====  END OF test_argh_format_c.cpp  =====
 

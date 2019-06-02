@@ -35,7 +35,7 @@
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE( usage)
       std::ostringstream  oss_err;
       Handler             ah( oss_out, oss_err,
          Handler::AllHelp | Handler::hfUsageCont);
-      ArgString2Array     as2a( "-h", nullptr);
+      auto const          as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE( usage)
       std::ostringstream  oss_err;
       Handler             ah( oss_out, oss_err,
          Handler::AllHelp | Handler::hfUsageCont, preUsage1);
-      ArgString2Array     as2a( "-h", nullptr);
+      auto const          as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE( usage)
       std::ostringstream  oss_err;
       Handler             ah( oss_out, oss_err,
          Handler::AllHelp | Handler::hfUsageCont, postUsage1);
-      ArgString2Array     as2a( "-h", nullptr);
+      auto const          as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE( usage)
       std::ostringstream  oss_err;
       Handler             ah( oss_out, oss_err,
          Handler::AllHelp | Handler::hfUsageCont, preUsage1, postUsage1);
-      ArgString2Array     as2a( "-h", nullptr);
+      auto const          as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -186,4 +186,4 @@ BOOST_AUTO_TEST_CASE( usage)
 
 
 
-// =====  END OF test_argh_usage_texts.cpp  =====
+// =====  END OF test_argh_usage_texts_c.cpp  =====

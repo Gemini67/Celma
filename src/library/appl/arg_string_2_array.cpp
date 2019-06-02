@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -53,9 +53,12 @@ void copyArguments( int& argc, char* argv[], const StringVec& arguments);
 /// So, if you want to create an argument string that contains only a free
 /// argument (not preceeded by an argument with one or two dashes), you need
 /// to set a program name before it.
-/// @param[in]  argstring  The argument string to split.
-/// @param[in]  progname   Optional program name to set. If not set,
-///                        'programname' is set as mpArgV[ 0].
+///
+/// @param[in]  argstring
+///    The argument string to split.
+/// @param[in]  progname
+///    Optional program name to set. If not set, 'programname' is set
+///    as mpArgV[ 0].
 /// @since  0.2, 05.0.4.2016
 ArgString2Array::ArgString2Array( const std::string& argstring,
    const char* progname)
@@ -87,6 +90,7 @@ ArgString2Array::ArgString2Array( const std::string& argstring,
 /// Constructor, splits the string into separate arguments.<br>
 /// The program file name must be first word/argument in the string,
 /// otherwise you should use the constructor with two parameters.
+///
 /// @param[in]  cmdLine  The argument string to split.
 /// @since  0.2, 05.0.4.2016
 ArgString2Array::ArgString2Array( const std::string& cmdLine)
@@ -120,13 +124,64 @@ ArgString2Array::~ArgString2Array()
 
 
 
+/// Move constructor.
+///
+/// @param[in]  other
+///    The other object to move the data from.
+/// @since  x.y.z, 29.05.2019
+ArgString2Array::ArgString2Array( ArgString2Array&& other):
+   mpArgV( other.mpArgV),
+   mArgC( other.mArgC)
+{
+
+   other.mpArgV = nullptr;
+   other.mArgC  = 0;
+
+} // ArgString2Array::ArgString2Array
+
+
+
+/// Returns an \c ArgString2Array object with the arguments from the given
+/// command line.
+///
+/// @param[in]  cmd_line
+///    The arguments from the command line to split into an argument array.
+/// @return  ArgString2Array object with the argument arrays.
+/// @since  x.y.z, 29.05.2019
+ArgString2Array make_arg_array( const std::string& cmd_line)
+{
+   return std::move( ArgString2Array( cmd_line));
+} // make_arg_array
+
+
+/// Returns an \c ArgString2Array object with the arguments from the given
+/// command line.
+///
+/// @param[in]  cmd_line
+///    The arguments from the command line to split into an argument array.
+/// @param[in]prog_name
+///    The (path and) name of the program file.
+/// @return  ArgString2Array object with the argument arrays.
+/// @since  x.y.z, 29.05.2019
+ArgString2Array make_arg_array( const std::string& cmd_line,
+   const char* prog_name)
+{
+
+   return std::move( ArgString2Array( cmd_line, prog_name));
+} // make_arg_array
+
+
+
 namespace {
 
 
 
 /// Splits the complete argument string into list of arguments.
-/// @param[out]  arguments  Returns the arguments as separate strings.
-/// @param[in]   argstring  The complete argument argument string.
+///
+/// @param[out]  arguments
+///    Returns the arguments as separate strings.
+/// @param[in]   argstring
+///    The complete argument argument string.
 /// @since  0.2, 05.0.4.2016
 void splitString( StringVec& arguments, const std::string& argstring)
 {
@@ -185,12 +240,14 @@ void splitString( StringVec& arguments, const std::string& argstring)
 
 /// Copies all the arguments (and values) from the vector into the array of
 /// argument string.
-/// @param[in,out]  argc       Number of arguments already stored in \a argv,
-///                            at the end returns the number of arguments
-///                            finally in \a argv.
-/// @param[out]     argv       List of arguments/values.
-/// @param[in]      arguments  The separated list of arguments and values to
-///                            store in \a argv.
+///
+/// @param[in,out]  argc
+///    Number of arguments already stored in \a argv, at the end returns the
+///    number of arguments finally in \a argv.
+/// @param[out]     argv
+///    List of arguments/values.
+/// @param[in]      arguments
+///    The separated list of arguments and values to store in \a argv.
 /// @since  0.2, 05.04.2016
 void copyArguments( int& argc, char* argv[], const StringVec& arguments)
 {

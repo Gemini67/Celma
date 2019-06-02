@@ -35,6 +35,7 @@
 
 
 using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using celma::test::multilineStringCompare;
 using std::ostringstream;
@@ -53,7 +54,7 @@ BOOST_AUTO_TEST_CASE( help_usage)
    Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
 
 
-   const ArgString2Array  as2a( "-h", nullptr);
+   auto const  as2a = make_arg_array( "-h", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
@@ -81,7 +82,7 @@ BOOST_AUTO_TEST_CASE( custom_help_usage)
 
    ah.addHelpArgument( "u,usage", "Custom arguments for help");
 
-   const ArgString2Array  as2a( "-u", nullptr);
+   auto const  as2a = make_arg_array( "-u", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -110,7 +111,7 @@ BOOST_AUTO_TEST_CASE( argument_output)
    ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")->setIsMandatory();
    ah.addArgument( "i,index", DEST_VAR( opt_int_arg), "Integer argument");
 
-   const ArgString2Array  as2a( "-h", nullptr);
+   auto const  as2a = make_arg_array( "-h", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -413,7 +414,7 @@ BOOST_AUTO_TEST_CASE( argument_output_custom_help)
    ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")->setIsMandatory();
    ah.addArgument( "i,index", DEST_VAR( opt_int_arg), "Integer argument");
 
-   const ArgString2Array  as2a( "--usage", nullptr);
+   auto const  as2a = make_arg_array( "--usage", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -478,7 +479,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
                  ->addCheck( celma::prog_args::pattern( "^[A-Z][a-z]+"))
                  ->setPrintDefault( false);
 
-   const ArgString2Array  as2a( "-h", nullptr);
+   auto const  as2a = make_arg_array( "-h", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -544,7 +545,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
    ah.addArgument( "opt-bool",   DEST_VAR( optional_bool), "Optional boolean argument");
    ah.addArgument( "v,verbose",  DEST_VAR( verbose_level), "Verbose level counter");
 
-   const ArgString2Array  as2a( "-s text --list-arg-vars --index 4711 -o 13 --opt-bool -vv --list-arg-vars",
+   auto const  as2a = make_arg_array( "-s text --list-arg-vars --index 4711 -o 13 --opt-bool -vv --list-arg-vars",
       nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -619,7 +620,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
       ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -652,7 +653,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
       ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
 
-      const ArgString2Array  as2a( "--help-short -h", nullptr);
+      auto const  as2a = make_arg_array( "--help-short -h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -683,7 +684,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
       ah.addArgumentUsageShort( "S");
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -718,7 +719,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
       ah.addArgumentUsageShort( "S", "Short usage only.");
 
-      const ArgString2Array  as2a( "-S -h", nullptr);
+      auto const  as2a = make_arg_array( "-S -h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -757,7 +758,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
       ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -790,7 +791,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
       ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
 
-      const ArgString2Array  as2a( "--help-long -h", nullptr);
+      auto const  as2a = make_arg_array( "--help-long -h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -823,7 +824,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
       ah.addArgumentUsageLong( "L");
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -858,7 +859,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
       ah.addArgumentUsageLong( "L", "Long arguments only.");
 
-      const ArgString2Array  as2a( "-L -h", nullptr);
+      auto const  as2a = make_arg_array( "-L -h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -913,7 +914,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", subOutput, "output arguments");
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -959,7 +960,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", subOutput, "output arguments");
 
-      const ArgString2Array  as2a( "-ih", nullptr);
+      auto const  as2a = make_arg_array( "-ih", nullptr);
 
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -1005,7 +1006,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", subOutput, "output arguments");
 
-      const ArgString2Array  as2a( "--help-short -ih", nullptr);
+      auto const  as2a = make_arg_array( "--help-short -ih", nullptr);
 
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( multilineStringCompare( std_out.str(),
@@ -1022,4 +1023,4 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
 
 
 
-// =====  END OF test_argh_output_streams.cpp  =====
+// =====  END OF test_argh_output_streams_c.cpp  =====

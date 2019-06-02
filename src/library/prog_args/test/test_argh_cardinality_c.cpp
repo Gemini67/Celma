@@ -37,6 +37,7 @@
 
 
 using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 
@@ -60,7 +61,7 @@ BOOST_AUTO_TEST_CASE( unused_args)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
          "Another argument"));
 
-      const ArgString2Array  as2a( "-x", nullptr);
+      auto const  as2a = make_arg_array( "-x", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
@@ -76,7 +77,7 @@ BOOST_AUTO_TEST_CASE( unused_args)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
          "Another argument"));
 
-      const ArgString2Array  as2a( "-x", nullptr);
+      auto const  as2a = make_arg_array( "-x", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
@@ -92,7 +93,7 @@ BOOST_AUTO_TEST_CASE( unused_args)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
          "Another argument"));
 
-      const ArgString2Array  as2a( "-x", nullptr);
+      auto const  as2a = make_arg_array( "-x", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
@@ -108,7 +109,7 @@ BOOST_AUTO_TEST_CASE( unused_args)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
          "Another argument"));
 
-      const ArgString2Array  as2a( "-x", nullptr);
+      auto const  as2a = make_arg_array( "-x", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
@@ -136,7 +137,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
          "Another argument"));
 
-      const ArgString2Array  as2a( "--list-arg-vars -v 3,9 --list-arg-vars --help-arg-full v",
+      auto const  as2a = make_arg_array( "--list-arg-vars -v 3,9 --list-arg-vars --help-arg-full v",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -196,7 +197,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
          "Another argument"));
 
-      const ArgString2Array  as2a( "-v 13,14 --help-arg-full v", nullptr);
+      auto const  as2a = make_arg_array( "-v 13,14 --help-arg-full v", nullptr);
       // does not throw despite the missing value for the vector
       // since "help-arg-full" sets the "usage printed flag"
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -237,7 +238,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
          "Another argument"));
 
-      const ArgString2Array  as2a( "-v 13,14 --help-arg-full v", nullptr);
+      auto const  as2a = make_arg_array( "-v 13,14 --help-arg-full v", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -275,7 +276,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "x", DEST_VAR( dummy),
          "Another argument"));
 
-      const ArgString2Array  as2a( "-v 13,14 --help-arg-full v", nullptr);
+      auto const  as2a = make_arg_array( "-v 13,14 --help-arg-full v", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( std_err.str().empty());
@@ -314,7 +315,7 @@ BOOST_AUTO_TEST_CASE( boolean_used_twice)
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
 
-   const ArgString2Array  as2a( "-f -f", nullptr);
+   auto const  as2a = make_arg_array( "-f -f", nullptr);
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
       std::runtime_error);
@@ -334,7 +335,7 @@ BOOST_AUTO_TEST_CASE( int_set_twice)
 
    ah.addArgument( "v", DEST_VAR( value), "integer value");
 
-   const ArgString2Array  as2a( "-v 1 -v 2", nullptr);
+   auto const  as2a = make_arg_array( "-v 1 -v 2", nullptr);
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
       std::runtime_error);
@@ -359,7 +360,7 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( cardinality_max( 2));
 
-      const ArgString2Array  as2a( "-v 1", nullptr);
+      auto const  as2a = make_arg_array( "-v 1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -372,7 +373,7 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( cardinality_max( 2));
 
-      const ArgString2Array  as2a( "-v 1 -v 2", nullptr);
+      auto const  as2a = make_arg_array( "-v 1 -v 2", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -385,7 +386,7 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( cardinality_max( 2));
 
-      const ArgString2Array  as2a( "-v 1 -v 2 -v 3", nullptr);
+      auto const  as2a = make_arg_array( "-v 1 -v 2 -v 3", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -406,7 +407,7 @@ BOOST_AUTO_TEST_CASE( vector_multiple)
 
    ah.addArgument( "v", DEST_VAR( values), "integer values");
 
-   const ArgString2Array  as2a( "-v 1 -v 2,3,4 -v 5", nullptr);
+   auto const  as2a = make_arg_array( "-v 1 -v 2,3,4 -v 5", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
@@ -723,4 +724,5 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
 
 
 
-// =====  END OF test_argh_cardinality.cpp  =====
+// =====  END OF test_argh_cardinality_c.cpp  =====
+

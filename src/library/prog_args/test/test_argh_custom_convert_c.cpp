@@ -39,7 +39,7 @@
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::common::operator |;
 using celma::prog_args::Handler;
 using celma::prog_args::SummaryOptions;
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE( basic_conversion)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
       "Enum")->setIsMandatory());
 
-   const ArgString2Array  as2a( "-e meVal2", nullptr);
+   auto const  as2a = make_arg_array( "-e meVal2", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));
 
-      const ArgString2Array  as2a( "-e meVal2", nullptr);
+      auto const  as2a = make_arg_array( "-e meVal2", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( enumedValue.hasValue());
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( std_err.str().empty());
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));
 
-      const ArgString2Array  as2a( "-e meVal2 --list-arg-vars", nullptr);
+      auto const  as2a = make_arg_array( "-e meVal2 --list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE( vector_conversion)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
       "Enum"));
 
-   const ArgString2Array  as2a( "-e meVal1,meVal3", nullptr);
+   auto const  as2a = make_arg_array( "-e meVal1,meVal3", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !enumedValue.empty());
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE( vector_features)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum")->setClearBeforeAssign()->setUniqueData()->setSortData());
 
-      const ArgString2Array  as2a( "-e meVal1,meVal3", nullptr);
+      auto const  as2a = make_arg_array( "-e meVal1,meVal3", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !enumedValue.empty());
@@ -280,7 +280,7 @@ BOOST_AUTO_TEST_CASE( vector_features)
          "Enum")->setClearBeforeAssign()->setUniqueData()->setSortData()
          ->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-e meVal3 meVal1", nullptr);
+      auto const  as2a = make_arg_array( "-e meVal3 meVal1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !enumedValue.empty());
@@ -296,7 +296,7 @@ BOOST_AUTO_TEST_CASE( vector_features)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum")->setClearBeforeAssign()->setUniqueData()->setSortData());
 
-      const ArgString2Array  as2a( "-e meVal1,meVal3,meVal1", nullptr);
+      auto const  as2a = make_arg_array( "-e meVal1,meVal3,meVal1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !enumedValue.empty());
@@ -312,7 +312,7 @@ BOOST_AUTO_TEST_CASE( vector_features)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum")->setClearBeforeAssign()->setUniqueData( true)->setSortData());
 
-      const ArgString2Array  as2a( "-e meVal1,meVal3,meVal1", nullptr);
+      auto const  as2a = make_arg_array( "-e meVal1,meVal3,meVal1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE( vector_usage)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum")->setListSep( ';'));
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( std_err.str().empty());
@@ -367,7 +367,7 @@ BOOST_AUTO_TEST_CASE( vector_usage)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum")->setListSep( ';'));
 
-      const ArgString2Array  as2a( "-e meVal1;meVal3 --list-arg-vars", nullptr);
+      auto const  as2a = make_arg_array( "-e meVal1;meVal3 --list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( std_err.str().empty());
@@ -396,7 +396,7 @@ BOOST_AUTO_TEST_CASE( vector_usage)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum")->setListSep( ';'));
 
-      const ArgString2Array  as2a( "-e meVal1;meVal3", nullptr);
+      auto const  as2a = make_arg_array( "-e meVal1;meVal3", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( std_err.str().empty());
@@ -415,5 +415,5 @@ BOOST_AUTO_TEST_CASE( vector_usage)
 
 
 
-// =====  END OF test_argh_custom_convert.cpp  =====
+// =====  END OF test_argh_custom_convert_c.cpp  =====
 

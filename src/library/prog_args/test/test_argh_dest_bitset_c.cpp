@@ -33,7 +33,7 @@
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
-      const ArgString2Array  as2a( "-b this,should,throw", nullptr);
+      auto const  as2a = make_arg_array( "-b this,should,throw", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::bad_cast);
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
-      const ArgString2Array  as2a( "-b 10", nullptr);
+      auto const  as2a = make_arg_array( "-b 10", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
-      const ArgString2Array  as2a( "-b 3,25", nullptr);
+      auto const  as2a = make_arg_array( "-b 3,25", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->addFormat( new EnumFormatter()));
 
-      const ArgString2Array  as2a( "-b first,tenth", nullptr);
+      auto const  as2a = make_arg_array( "-b first,tenth", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
-      const ArgString2Array  as2a( "-b 4,5,6", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 3);
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setListSep( '.'));
 
-      const ArgString2Array  as2a( "-b 4.5.6", nullptr);
+      auto const  as2a = make_arg_array( "-b 4.5.6", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 3);
@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
-      const ArgString2Array  as2a( "-b 4,5,6 7", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6 7", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
 
-      const ArgString2Array  as2a( "-b 4,5,6 7", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6 7", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 3);
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-b 4,5,6 7 8", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6 7 8", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 5);
@@ -279,7 +279,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
 
-      const ArgString2Array  as2a( "-b 4,5,6 7 --endvalues 8", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6 7 --endvalues 8", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -295,7 +295,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
 
-      const ArgString2Array  as2a( "-b 4,5,6 7 --endvalues 8", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6 7 --endvalues 8", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 4);
@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setCardinality( celma::prog_args::cardinality_max( 3)));
 
-      const ArgString2Array  as2a( "-b 4,5,6", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -327,7 +327,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setCardinality( celma::prog_args::cardinality_max( 3)));
 
-      const ArgString2Array  as2a( "-b 4,5,6,7", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6,7", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -341,7 +341,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->addFormat( new EnumFormatter()));
 
-      const ArgString2Array  as2a( "-b second,fifth,seventh", nullptr);
+      auto const  as2a = make_arg_array( "-b second,fifth,seventh", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 3);
@@ -370,7 +370,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
-      const ArgString2Array  as2a( "-b 4,5,6", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 5);
@@ -392,7 +392,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setClearBeforeAssign());
 
-      const ArgString2Array  as2a( "-b 4,5", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 2);
@@ -424,7 +424,7 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->unsetFlag());
 
-      const ArgString2Array  as2a( "-b 4,5,6", nullptr);
+      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 2);
@@ -446,7 +446,7 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->unsetFlag()->setTakesMultiValue()->setListSep( '.'));
 
-      const ArgString2Array  as2a( "-b 4.5.6 7", nullptr);
+      auto const  as2a = make_arg_array( "-b 4.5.6 7", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( b.count(), 1);
@@ -472,7 +472,7 @@ BOOST_AUTO_TEST_CASE( list_var)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
 
-   const ArgString2Array  as2a( "--list-arg-var -b 4,5,6 --list-arg-var",
+   auto const  as2a = make_arg_array( "--list-arg-var -b 4,5,6 --list-arg-var",
       nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -501,5 +501,5 @@ BOOST_AUTO_TEST_CASE( list_var)
 
 
 
-// =====  END OF test_argh_dest_bitset.cpp  =====
+// =====  END OF test_argh_dest_bitset_c.cpp  =====
 
