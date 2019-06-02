@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE( usage)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( oss_err.str().empty());
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help    Prints the program usage.\n"
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE( usage)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( oss_err.str().empty());
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_out,
          "First pre-args usage text.\n"
          "\n"
          "Usage:\n"
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE( usage)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( oss_err.str().empty());
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help    Prints the program usage.\n"
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE( usage)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( oss_err.str().empty());
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_out,
          "First pre-args usage text.\n"
          "\n"
          "Usage:\n"

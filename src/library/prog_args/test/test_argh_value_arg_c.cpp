@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Handler::usage: is set\n"
          "Usage:\n"
          "Optional arguments:\n"
@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"

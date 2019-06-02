@@ -130,12 +130,12 @@ ArgString2Array::~ArgString2Array()
 ///    The other object to move the data from.
 /// @since  x.y.z, 29.05.2019
 ArgString2Array::ArgString2Array( ArgString2Array&& other):
-   mpArgV( other.mpArgV),
-   mArgC( other.mArgC)
+   mArgC( other.mArgC),
+   mpArgV( other.mpArgV)
 {
 
    other.mpArgV = nullptr;
-   other.mArgC  = 0;
+   other.mArgC  = -1;
 
 } // ArgString2Array::ArgString2Array
 
@@ -150,6 +150,7 @@ ArgString2Array::ArgString2Array( ArgString2Array&& other):
 /// @since  x.y.z, 29.05.2019
 ArgString2Array make_arg_array( const std::string& cmd_line)
 {
+
    return std::move( ArgString2Array( cmd_line));
 } // make_arg_array
 
@@ -273,4 +274,3 @@ void copyArguments( int& argc, char* argv[], const StringVec& arguments)
 
 
 // =====  END OF arg_string_2_array.cpp  =====
-

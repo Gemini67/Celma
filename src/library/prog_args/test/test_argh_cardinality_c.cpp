@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'--help-arg-full' calls function/method 'Prints the usage for the given argument.'.\n"
          "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-v', usage:\n"
          "   A vector of ints\n"
          "Properties:\n"
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-v', usage:\n"
          "   A vector of ints\n"
          "Properties:\n"
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-v', usage:\n"
          "   A vector of ints\n"
          "Properties:\n"
@@ -725,4 +725,3 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
 
 
 // =====  END OF test_argh_cardinality_c.cpp  =====
-

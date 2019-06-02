@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( unknown_subgroup)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << err_out.str() << std::endl;
    BOOST_REQUIRE( std_out.str().empty());
-   BOOST_REQUIRE( multilineStringCompare( err_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( err_out,
       "*** ERROR: Sub-group argument '-g/x' is unknown!\n"));
 
 } // unknown_argument
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE( flag_usage)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-f', usage:\n"
                         "   A boolean flag with a very long, but meaningless description, just used to\n"
                         "   check text formatting in this context.\n"
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( flag_full)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-f', usage:\n"
                         "   A boolean flag with a very long, but meaningless description, just used to\n"
                         "   check text formatting in this context.\n"
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE( mandatory_usage)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-s', usage:\n"
                         "   Some funny string argument.\n"));
    BOOST_REQUIRE( err_out.str().empty());
@@ -218,7 +218,7 @@ BOOST_AUTO_TEST_CASE( mandatory_full)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-s', usage:\n"
                         "   Some funny string argument.\n"
                         "Properties:\n"
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE( pair_full)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '--pair', usage:\n"
                         "   A pair of a string and an integer argument.\n"
                         "Properties:\n"
@@ -316,7 +316,7 @@ BOOST_AUTO_TEST_CASE( subgroup_full)
 
    BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-o', usage:\n"
                         "   output arguments\n"
                         "Properties:\n"
@@ -373,7 +373,7 @@ BOOST_AUTO_TEST_CASE( subgroup_arg_full)
 
    BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-f', usage:\n"
                         "   file name\n"
                         "Properties:\n"
@@ -417,7 +417,7 @@ BOOST_AUTO_TEST_CASE( vector_max_values_usage)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '--values', usage:\n"
                         "   3 values in the range 1..10.\n"));
    BOOST_REQUIRE( err_out.str().empty());
@@ -448,7 +448,7 @@ BOOST_AUTO_TEST_CASE( vector_max_values_full)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '--values', usage:\n"
                         "   3 values in the range 1..10.\n"
                         "Properties:\n"
@@ -471,4 +471,3 @@ BOOST_AUTO_TEST_CASE( vector_max_values_full)
 
 
 // =====  END OF test_argh_arg_help_c.cpp  =====
-

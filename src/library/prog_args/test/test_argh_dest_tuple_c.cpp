@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( oss_err.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h          Prints the program usage.\n"
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
          std_out);
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Argument summary:\n"
          "   Value <3, 9 [std::tuple<int,int>]> set on variable 'myTuple' by argument '-p,--pair'.\n"));
    } // end scope
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
          std_out);
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Argument summary:\n"
          "   Value <4711, \"foobar\" [std::tuple<int,std::string>]> set on variable 'myTuple' by argument '-p,--pair'.\n"));
    } // end scope
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE( !std_out.str().empty());
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h                Prints the program usage.\n"
@@ -281,7 +281,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE( !std_out.str().empty());
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
       // std::cerr << oss.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -381,7 +381,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
 
       auto const  as2a = make_arg_array( "-h", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help     Prints the program usage.\n"
@@ -426,7 +426,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
 
       BOOST_REQUIRE( oss_err.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -476,7 +476,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
          std_out);
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Argument summary:\n"
          "   Value <[callable]> set on variable 'Handler::listArgVars' by argument '--list-arg-vars'.\n"
          "   Value <13, 42, 4711 [std::tuple<int,int,int>]> set on variable 'myTuple' by argument '-t,--triple'.\n"));
@@ -516,7 +516,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       auto const  as2a = make_arg_array( "-h", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help     Prints the program usage.\n"
@@ -541,7 +541,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -570,7 +570,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
       // std::cerr << oss.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help     Prints the program usage.\n"
@@ -596,7 +596,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !oss.str().empty());
       // std::cerr << oss.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -616,4 +616,3 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
 
 
 // =====  END OF test_argh_dest_tuple_c.cpp  =====
-

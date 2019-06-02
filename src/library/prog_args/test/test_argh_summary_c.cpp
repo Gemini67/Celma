@@ -300,7 +300,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types, AllTypesFixture)
    ah.printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
    // std::cerr << "\n" << oss.str() << std::endl;
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <42> set on variable 'int1'.\n"
       "   Value <true> set on variable 'flag1'.\n"
@@ -352,7 +352,7 @@ BOOST_AUTO_TEST_CASE( groups_summary)
 
    Groups::instance().printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <\"source\"> set on variable 'input_name'.\n"
       "   Value <\"destination\"> set on variable 'output_name'.\n"
@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary)
 
    ah.printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <\"input_file_name\"> set on variable 'input_filename'.\n"
       "   Value <\"output_queue_name\"> set on variable 'output_queuename'.\n"
@@ -448,7 +448,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_type,
    ah.printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
    // std::cerr << std::endl << oss.str() << std::endl;
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <42 [int]> set on variable 'int1'.\n"
       "   Value <true [bool]> set on variable 'flag1'.\n"
@@ -501,7 +501,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_type)
 
    Groups::instance().printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <\"source\" [std::string]> set on variable 'input_name'.\n"
       "   Value <\"destination\" [std::string]> set on variable 'output_name'.\n"
@@ -543,7 +543,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_type)
 
    ah.printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <\"input_file_name\" [std::string]> set on variable 'input_filename'.\n"
       "   Value <\"output_queue_name\" [std::string]> set on variable 'output_queuename'.\n"
@@ -597,7 +597,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_key,
    ah.printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
    // std::cerr << std::endl << oss.str() << std::endl;
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <42> set on variable 'int1' by argument '-i,--integer'.\n"
       "   Value <true> set on variable 'flag1' by argument '-f,--flag'.\n"
@@ -650,7 +650,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_key)
 
    Groups::instance().printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <\"source\"> set on variable 'input_name' by argument '--input-name'.\n"
       "   Value <\"destination\"> set on variable 'output_name' by argument '--output-name'.\n"
@@ -692,7 +692,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_key)
 
    ah.printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <\"input_file_name\"> set on variable 'input_filename' by argument '-i,--input'/'-f,--file'.\n"
       "   Value <\"output_queue_name\"> set on variable 'output_queuename' by argument '-o,--output'/'-q,--queue'.\n"
@@ -744,7 +744,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_full,
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
    // std::cerr << std::endl << oss.str() << std::endl;
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <42 [int]> set on variable 'int1' by argument '-i,--integer'.\n"
       "   Value <true [bool]> set on variable 'flag1' by argument '-f,--flag'.\n"
@@ -799,7 +799,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_full)
      SummaryOptions::with_type | SummaryOptions::with_key,
      oss);
    BOOST_REQUIRE( !oss.str().empty());
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <\"source\" [std::string]> set on variable 'input_name' by argument '--input-name'.\n"
       "   Value <\"destination\" [std::string]> set on variable 'output_name' by argument '--output-name'.\n"
@@ -840,7 +840,7 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
 
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Argument summary:\n"
       "   Value <\"input_file_name\" [std::string]> set on variable 'input_filename' by argument '-i,--input'/'-f,--file'.\n"
       "   Value <\"output_queue_name\" [std::string]> set on variable 'output_queuename' by argument '-o,--output'/'-q,--queue'.\n"
@@ -851,4 +851,3 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
 
 
 // =====  END OF test_argh_summary_c.cpp  =====
-

@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-i', usage:\n"
          "   Integer\n"
          "Properties:\n"
@@ -343,7 +343,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-i', usage:\n"
          "   Integer\n"
          "Properties:\n"
@@ -525,7 +525,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-i', usage:\n"
          "   Integer\n"
          "Properties:\n"
@@ -868,7 +868,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-i', usage:\n"
          "   Integer\n"
          "Properties:\n"
@@ -1059,7 +1059,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-n', usage:\n"
          "   Name\n"
          "Properties:\n"
@@ -1363,7 +1363,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-d', usage:\n"
          "   Directory\n"
          "Properties:\n"
@@ -1467,7 +1467,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-p', usage:\n"
          "   Path\n"
          "Properties:\n"
@@ -1566,7 +1566,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-d', usage:\n"
          "   Dir\n"
          "Properties:\n"
@@ -1654,7 +1654,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-f', usage:\n"
          "   path and filename\n"
          "Properties:\n"
@@ -1756,7 +1756,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-n', usage:\n"
          "   A name\n"
          "Properties:\n"
@@ -1852,7 +1852,7 @@ BOOST_AUTO_TEST_CASE( minimum_length)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-s', usage:\n"
          "   string\n"
          "Properties:\n"
@@ -1934,7 +1934,7 @@ BOOST_AUTO_TEST_CASE( maximum_length)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-s', usage:\n"
          "   string\n"
          "Properties:\n"
@@ -2024,7 +2024,7 @@ BOOST_AUTO_TEST_CASE( min_max_length)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-s', usage:\n"
          "   string\n"
          "Properties:\n"
@@ -2224,4 +2224,3 @@ BOOST_AUTO_TEST_CASE( control_check)
 
 
 // =====  END OF test_argh_checks_c.cpp  =====
-

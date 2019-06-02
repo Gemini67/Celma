@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       BOOST_REQUIRE( !std_out.str().empty());
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help         Prints the program usage.\n"
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       BOOST_REQUIRE( !std_out.str().empty());
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
          std_out);
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Argument summary:\n"
          "   Value <[callable]> set on variable 'Handler::listArgVars' by argument '--list-arg-vars'.\n"
          "   Value <2 [unknown]> set on variable 'enumedValue' by argument '-e,--enum'.\n"));
@@ -345,7 +345,7 @@ BOOST_AUTO_TEST_CASE( vector_usage)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help         Prints the program usage.\n"
@@ -373,7 +373,7 @@ BOOST_AUTO_TEST_CASE( vector_usage)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -406,7 +406,7 @@ BOOST_AUTO_TEST_CASE( vector_usage)
          std_out);
 
       // std::cerr << "\n" << std_out.str() << std::endl;
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Argument summary:\n"
          "   Value <1, 3 [std::vector<unknown>]> set on variable 'enumedValue' by argument '-e,--enum'.\n"));
    } // end scope
@@ -416,4 +416,3 @@ BOOST_AUTO_TEST_CASE( vector_usage)
 
 
 // =====  END OF test_argh_custom_convert_c.cpp  =====
-

@@ -479,7 +479,7 @@ BOOST_AUTO_TEST_CASE( list_var)
 
    BOOST_REQUIRE( oss_err.str().empty());
    // std::cerr << "\n" << oss_std.str() << std::endl;
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
       "Arguments:\n"
       "'-h' calls function/method 'Handler::usage'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -502,4 +502,3 @@ BOOST_AUTO_TEST_CASE( list_var)
 
 
 // =====  END OF test_argh_dest_bitset_c.cpp  =====
-

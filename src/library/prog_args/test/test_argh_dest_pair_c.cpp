@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE( destination_bool)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE( destination_bool)
       auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
       auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -280,7 +280,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -306,7 +306,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -330,7 +330,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
       auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -386,7 +386,7 @@ BOOST_AUTO_TEST_CASE( destination_vector)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -411,7 +411,7 @@ BOOST_AUTO_TEST_CASE( destination_vector)
       auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -486,7 +486,7 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -510,7 +510,7 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
       auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -563,4 +563,3 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
 
 
 // =====  END OF test_argh_dest_pair_c.cpp  =====
-

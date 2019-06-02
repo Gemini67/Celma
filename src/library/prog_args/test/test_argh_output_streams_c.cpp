@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( help_usage)
    auto const  as2a = make_arg_array( "-h", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
       "Usage:\n"
       "Optional arguments:\n"
       "   -h,--help    Prints the program usage.\n"
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE( custom_help_usage)
    auto const  as2a = make_arg_array( "-u", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
       "Usage:\n"
       "Optional arguments:\n"
       "   -u,--usage   Custom arguments for help\n"
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE( argument_output)
    auto const  as2a = make_arg_array( "-h", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Usage:\nMandatory arguments:\n"
                         "   -s           String argument\n"
                         "\n"
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s           String argument\n"
          "\n"
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s           String argument\n"
          "\n"
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s             String argument\n"
          "\n"
@@ -255,7 +255,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s             String argument\n"
          "\n"
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s           String argument\n"
          "\n"
@@ -304,7 +304,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s           String argument\n"
          "\n"
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s               String argument\n"
          "\n"
@@ -346,7 +346,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s                   String argument\n"
          "\n"
@@ -371,7 +371,7 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
       BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
          td.mAs2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( td.mStdOut.str(),
+      BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s                   String argument\n"
          "\n"
@@ -417,7 +417,7 @@ BOOST_AUTO_TEST_CASE( argument_output_custom_help)
    auto const  as2a = make_arg_array( "--usage", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
       "Usage:\nMandatory arguments:\n"
       "   -s           String argument\n"
       "\n"
@@ -482,7 +482,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
    auto const  as2a = make_arg_array( "-h", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
       "Usage:\nMandatory arguments:\n"
             "   -s           String argument\n"
             "                Check: Value in ( \"dragon\", \"tiger\")\n"
@@ -550,7 +550,7 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << std::endl << std_out.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+   BOOST_REQUIRE( multilineStringCompare( std_out,
       "string_arg: value 'text' is assigned\n"
       "Handler::listArgVars: is set\n"
       "Arguments:\n"
@@ -623,7 +623,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help      Prints the program usage.\n"
@@ -656,7 +656,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       auto const  as2a = make_arg_array( "--help-short -h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -687,7 +687,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help     Prints the program usage.\n"
@@ -722,7 +722,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
       auto const  as2a = make_arg_array( "-S -h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"
@@ -761,7 +761,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help     Prints the program usage.\n"
@@ -794,7 +794,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       auto const  as2a = make_arg_array( "--help-long -h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   --help        Prints the program usage.\n"
@@ -827,7 +827,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help     Prints the program usage.\n"
@@ -862,7 +862,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
       auto const  as2a = make_arg_array( "-L -h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   --help       Prints the program usage.\n"
@@ -917,7 +917,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help      Prints the program usage.\n"
@@ -963,7 +963,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       auto const  as2a = make_arg_array( "-ih", nullptr);
 
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h,--help    Prints the program usage.\n"
@@ -1009,7 +1009,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
       auto const  as2a = make_arg_array( "--help-short -ih", nullptr);
 
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
          "   -h   Prints the program usage.\n"

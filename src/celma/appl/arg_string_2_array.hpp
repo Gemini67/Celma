@@ -115,4 +115,3 @@ ArgString2Array make_arg_array( const std::string& cmd_line,
 
 
 // =====  END OF arg_string_2_array.hpp  =====
-

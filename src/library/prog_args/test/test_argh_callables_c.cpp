@@ -882,4 +882,3 @@ BOOST_AUTO_TEST_CASE( no_value_method)
 
 
 // =====  END OF test_argh_callables_c.cpp  =====
-

@@ -309,7 +309,7 @@ BOOST_AUTO_TEST_CASE( format_values)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << '\n' << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -464,4 +464,3 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
 
 // =====  END OF test_argh_dest_array_c.cpp  =====
-
