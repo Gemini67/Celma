@@ -33,6 +33,7 @@
 
 
 using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -129,9 +130,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
 
    // constraint is not activated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
@@ -142,9 +142,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
 
    // constraint error: second argument not used/set
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
@@ -156,9 +155,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
 
    // constraint met, no error
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 5", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 5", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
@@ -184,9 +182,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 
    // constraint is not activated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i;o,opt"));
@@ -198,9 +195,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 
    // constraint error: second argument not used/set
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i;o,opt"));
@@ -213,9 +209,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 
    // constraint error: third argument not used/set
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 5", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 5", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i;o,opt"));
@@ -228,9 +223,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 
    // constraint met with character argument, no error
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 5 -o all", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 5 -o all", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i;o,opt"));
@@ -242,9 +236,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 
    // constraint met with log argument, no error
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 5 --opt all", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 5 --opt all", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i;o,opt"));
@@ -256,9 +249,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 
    // constraint met with character argument, no error, different argument order
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -o all -i 5", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -o all -i 5", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i;o,opt"));
@@ -270,9 +262,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 
    // constraint met with log argument, no error, different argument order
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 --opt all -i 5", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 --opt all -i 5", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i;o,opt"));
@@ -301,9 +292,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 
    // constraint is not activated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
@@ -316,9 +306,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 
    // constraint error: second argument not used/set
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
@@ -332,9 +321,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 
    // constraint error: third argument not used/set
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 5", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 5", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
@@ -348,9 +336,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 
    // constraint met with character argument, no error
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 5 -o all", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 5 -o all", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
@@ -363,9 +350,8 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 
    // constraint met with log argument, no error
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 5 --opt all", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 5 --opt all", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "i"));
@@ -393,9 +379,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint is not activated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
@@ -408,9 +393,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint required once, first arg
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
@@ -424,9 +408,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint required once, second arg
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-i 56", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-i 56", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
@@ -440,9 +423,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint required twice
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 56", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 56", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
@@ -456,9 +438,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint required once, fulfilled, short arg
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -o 1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -o 1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
@@ -471,9 +452,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint required once, fulfilled, short arg
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-i 56 -o 1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-i 56 -o 1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
@@ -486,9 +466,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint required twice, fulfilled, short arg
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 56 -o 1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 56 -o 1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
@@ -501,9 +480,8 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
    // constraint required twice, fulfilled, long arg
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 56 --opt=1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 56 --opt=1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::requires( "o,opt"));
@@ -529,9 +507,8 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
 
    // constraint is not activated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
@@ -542,9 +519,8 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
 
    // constraint not activated, use now not forbidden argument
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-i 5", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-i 5", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
@@ -555,9 +531,8 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
 
    // constraint error: try to use excluded argument
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n name1 -i 5", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n name1 -i 5", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
@@ -569,9 +544,8 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
 
    // constraint not activated yet ...
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-i 7 -n name1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-i 7 -n name1", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
@@ -582,9 +556,8 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
 
    // both arguments exclude each other
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-i 7 -n name1", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-i 7 -n name1", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addConstraint( celma::prog_args::excludes( "i"));
@@ -611,9 +584,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // invalid list of arguments: unknown argument
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -625,9 +597,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // invalid list of arguments: short/long mixed
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -640,9 +611,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // none of the specified arguments used: constraint is not fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -656,10 +626,9 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
    // none of the specified arguments used, only another/not relevant:
    // constraint is not fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-a 7", nullptr);
-      int                    valueA;
-      
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-a 7", nullptr);
+      int         valueA;
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value A");
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
@@ -673,9 +642,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // one of the specified arguments used: constraint is not fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n myname", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n myname", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -688,9 +656,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // not all of the specified arguments used: constraint is not fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-i 5 -r 17", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-i 5 -r 17", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -703,9 +670,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // all of the specified arguments used: constraint is fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n myname -i 5 -r 17", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n myname -i 5 -r 17", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -717,9 +683,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // same but: specify mix of argument specs
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n myname -i 5 -r 17", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n myname -i 5 -r 17", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -731,9 +696,8 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // same but: use combination of short and long arguments
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "--name myname -i 5 --rate 17", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "--name myname -i 5 --rate 17", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -746,11 +710,11 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
    // same but: mixed in other arguments not relevant for the constraint
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-a 5 -b 7 -n myname -i 5 -c 5 -r 17", nullptr);
-      int                    valueA;
-      int                    valueB;
-      int                    valueC;
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-a 5 -b 7 -n myname -i 5 -c 5 -r 17", nullptr);
+      int         valueA;
+      int         valueB;
+      int         valueC;
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value a");
       ah.addArgument( "b",       DEST_VAR( valueB), "Value b");
@@ -780,9 +744,8 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
 
    // none of the arguments is used: constraint is fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -795,10 +758,9 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
    // none of the arguments is used, only another/not relevant argument:
    // constraint is fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-a 756", nullptr);
-      int                    valueA;
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-a 756", nullptr);
+      int         valueA;
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value a");
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
@@ -811,9 +773,8 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
 
    // one of the arguments is used: constraint is fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n myname", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n myname", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -825,9 +786,8 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
 
    // try to use two of the specified arguments: constraint is violated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n myname -i 7", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n myname -i 7", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -840,9 +800,8 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
 
    // try to use two of the specified arguments: constraint is violated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-i 7 -r 545", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-i 7 -r 545", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -855,10 +814,9 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
 
    // try to use two of the specified arguments: constraint is violated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "--rate 5 -a 77 -i 7", nullptr);
-      int                    valueA;
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "--rate 5 -a 77 -i 7", nullptr);
+      int         valueA;
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value a");
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
@@ -886,9 +844,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
 
    // no argument used: constraint is not fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name), "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),  "Index");
@@ -901,10 +858,9 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
 
    // no/another argument used: constraint is not fulfilled
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-a 6", nullptr);
-      int                    valueA;
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-a 6", nullptr);
+      int         valueA;
 
       ah.addArgument( "a",       DEST_VAR( valueA), "Value a");
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
@@ -918,9 +874,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
 
    // use one of the arguments: constraint is met
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n myname", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n myname", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),    "Index");
@@ -932,9 +887,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
 
    // use one of the arguments: constraint is met
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "--index 5", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "--index 5", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),    "Index");
@@ -946,9 +900,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
 
    // use one of the arguments: constraint is met
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-i 17", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-i 17", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),    "Index");
@@ -960,9 +913,8 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
 
    // try to use two of the arguments: constraint violated
    {
-      Handler                ah( 0);
-      const ArgString2Array  as2a( "-n myname --index=8", nullptr);
-
+      Handler     ah( 0);
+      auto const  as2a = make_arg_array( "-n myname --index=8", nullptr);
 
       ah.addArgument( "n,name",  DEST_VAR( name),   "Name");
       ah.addArgument( "i,index", DEST_VAR( idx),    "Index");
@@ -1104,5 +1056,5 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
 
 
 
-// =====  END OF test_argh_constraints.cpp  =====
+// =====  END OF test_argh_constraints_c.cpp  =====
 

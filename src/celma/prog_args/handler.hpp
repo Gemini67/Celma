@@ -568,14 +568,20 @@ public:
    detail::TypedArgBase* addArgumentHelpArgument( const std::string& arg_spec,
       bool full = false);
 
-   /// Specifies the callback function for a control argument.<br>
-   /// If no handler is defined for a control character, it is treated as error
-   /// when found in an argument list.
-   /// @param[in]  ctrlChar  The control character to specify the handler for.
-   /// @param[in]  hf        The handler to call when the control character is
-   ///                       detected on the argument list.
+   /// Specifies the callback functions for handling brackets on the command
+   /// line.
+   ///
+   /// @param[in]  open_bracket
+   ///    The handler to call when an opening round bracket is detected on the
+   ///    command line.
+   /// @param[in]  closing_bracket
+   ///    The handler to call when a closing round bracket is detected in the
+   ///    argument list.
+   /// @since  1.27.0, 28.05.2019
+   ///    (renamed from addControlHandler)
    /// @since  0.2, 10.04.2016
-   void addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false);
+   void addBracketHandler( HandlerFunc open_bracket,
+      HandlerFunc closing_bracket) noexcept( false);
 
    /// Specifies the line length to use when printing the usage.
    /// @param[in]  useLen  The new line length to use.<br>
@@ -678,11 +684,13 @@ protected:
 
    /// Compares the arguments defined in this object with those in \a otherAH
    /// and throws an exception if duplicates are detected.
-   /// @param[in]  ownName    The symbolic name of this objects arguments.
-   /// @param[in]  otherName  The symbolic name of the the other objects
-   ///                        arguments.
-   /// @param[in]  otherAH    The other object to check the argument list
-   ///                        against.
+   ///
+   /// @param[in]  ownName
+   ///    The symbolic name of this objects arguments.
+   /// @param[in]  otherName
+   ///    The symbolic name of the the other objects arguments.
+   /// @param[in]  otherAH
+   ///    The other object to check the argument list against.
    /// @since  0.2, 10.04.2016
    void crossCheckArguments( const std::string ownName,
                              const std::string& otherName,
@@ -935,8 +943,6 @@ private:
    HandlerFunc                    mpOpeningBracketHdlr;
    /// Function called for a closing bracket ')'.
    HandlerFunc                    mpClosingBracketHdlr;
-   /// Function called for an exclamation mark '!'.
-   HandlerFunc                    mpExclamationMarkHdlr;
    /// Set when this object is used as argument handler for a sub-group.
    bool                           mIsSubGroupHandler = false;
    /// The current constraints, dynamically created through the arguments that
@@ -977,6 +983,10 @@ private:
    /// Flag, set when this argument handler object was created by a Groups
    /// object.
    bool                           mUsedByGroup;
+   /// Set when an exclamation mark was found on the command line.<br>
+   /// This inverts the meaning of the following argument. Afterwards the flag
+   /// is reset again.
+   bool                           mInverted = false;
 
 }; // Handler
 

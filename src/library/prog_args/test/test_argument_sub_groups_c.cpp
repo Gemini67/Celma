@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,7 +33,7 @@
 #include "celma/prog_args.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using std::string;
 
@@ -44,11 +44,11 @@ using std::string;
 BOOST_AUTO_TEST_CASE( one_sub_group)
 {
 
-   const ArgString2Array  as2a( "-oc mycache", nullptr);
-   Handler                masterAH( 0);
-   Handler                subAH( 0);
-   string                 outputName;
-   int                    outputType = 0;
+   auto const  as2a = make_arg_array( "-oc mycache", nullptr);
+   Handler     masterAH( 0);
+   Handler     subAH( 0);
+   string      outputName;
+   int         outputType = 0;
 
 
    BOOST_REQUIRE_NO_THROW( subAH.addArgument( "c",
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_NO_THROW( subOutputAH = masterAH.addArgument( "o",
          subOutput, "output arguments"));
 
-      const ArgString2Array  as2a( "-oc mycache", nullptr);
+      auto const  as2a = make_arg_array( "-oc mycache", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( !subInputAH->hasValue());
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_NO_THROW( subOutputAH = masterAH.addArgument( "o",
          subOutput, "output arguments"));
 
-      const ArgString2Array  as2a( "-if myfile -o -q myqueue", nullptr);
+      auto const  as2a = make_arg_array( "-if myfile -o -q myqueue", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( subInputAH->hasValue());
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
-      const ArgString2Array  as2a( "-c valc -oc mycache -l last", nullptr);
+      auto const  as2a = make_arg_array( "-c valc -oc mycache -l last", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( paramC, "valc");
       BOOST_REQUIRE_EQUAL( inputType,  0);
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
-      const ArgString2Array  as2a( "-c otherValC -if myfile -a howdy -o "
+      auto const  as2a = make_arg_array( "-c otherValC -if myfile -a howdy -o "
          "-q myqueue -l lastagain", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( paramC, "otherValC");
@@ -328,7 +328,8 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
-      const ArgString2Array  as2a( "-c valc -oc mycache -v -l last", nullptr);
+      auto const  as2a = make_arg_array( "-c valc -oc mycache -v -l last",
+         nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( paramC, "valc");
       BOOST_REQUIRE_EQUAL( inputType,  0);
@@ -392,7 +393,7 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
-      const ArgString2Array  as2a( "-c otherValC -if myfile -z -a howdy "
+      auto const  as2a = make_arg_array( "-c otherValC -if myfile -z -a howdy "
          "-ovq myqueue -l lastagain", nullptr);
       BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( paramC, "otherValC");
@@ -412,4 +413,4 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
 
 
 
-// =====  END OF test_argument_sub_groups.cpp  =====
+// =====  END OF test_argument_sub_groups_c.cpp  =====

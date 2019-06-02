@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,7 +33,7 @@
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "left", DEST_VAR_VALUE( my_dest, -1), "left"));
 
-      const ArgString2Array  as2a( "--left --left", nullptr);
+      auto const  as2a = make_arg_array( "--left --left", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right"));
 
-      const ArgString2Array  as2a( "--left", nullptr);
+      auto const  as2a = make_arg_array( "--left", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( my_dest, -1);
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right"));
 
-      const ArgString2Array  as2a( "--right", nullptr);
+      auto const  as2a = make_arg_array( "--right", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( my_dest, 1);
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right"));
 
-      const ArgString2Array  as2a( "--right --left", nullptr);
+      auto const  as2a = make_arg_array( "--right --left", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right")
             ->checkOriginalValue( false));
 
-      const ArgString2Array  as2a( "--right --left", nullptr);
+      auto const  as2a = make_arg_array( "--right --left", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( my_dest, -1);
@@ -177,14 +177,14 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
          ah.addArgument( "r,right", DEST_VAR_VALUE( my_dest, 1), "right")
             ->setPrintDefault( false));
 
-      const ArgString2Array  as2a( "-h", nullptr);
+      auto const  as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Handler::usage: is set\n"
          "Usage:\n"
          "Optional arguments:\n"
@@ -209,14 +209,14 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
          ah.addArgument( "r,right", DEST_VAR_VALUE( my_dest, 1), "right")
             ->setPrintDefault( false));
 
-      const ArgString2Array  as2a( "--list-arg-vars", nullptr);
+      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -244,14 +244,14 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
          ah.addArgument( "r,right", DEST_VAR_VALUE( my_dest, 1), "right")
             ->setPrintDefault( false));
 
-      const ArgString2Array  as2a( "-r --list-arg-vars", nullptr);
+      auto const  as2a = make_arg_array( "-r --list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());
       // std::cerr << "\n" << oss_std.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -270,5 +270,5 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
 
 
 
-// =====  END OF test_argh_value_arg.cpp  =====
+// =====  END OF test_argh_value_arg_c.cpp  =====
 

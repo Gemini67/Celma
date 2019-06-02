@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -60,6 +60,27 @@ inline bool multilineStringCompare( const std::string& result,
    } // end if
 
    return true;
+} // multilineStringCompare
+
+
+/// Helper function for test programs: Compare two strings and report, where the
+/// difference was found (if any).<br>
+/// This function accepts a std::ostringstream as first parameter and takes the
+/// string from this stream.
+///
+/// @param[in]  result
+///    The stream with the result string that was e.g. created by the function
+///    to test.
+/// @param[in]  expect
+///    The expected result string.
+/// @return
+///    \c true if both strings are equal.
+/// @since
+///    1.27.0, 27.05.2019
+inline bool multilineStringCompare( const std::ostringstream& result,
+   const std::string& expect)
+{
+   return multilineStringCompare( result.str(), expect);
 } // multilineStringCompare
 
 

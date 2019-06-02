@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -71,9 +71,16 @@ protected:
 
 private:
    /// Executes the specified function.
-   /// @param[in]  value  Ignored.
+   ///
+   /// @param[in]  value
+   ///    Ignored.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    ArgHandlerCallable  mFun;
@@ -120,9 +127,9 @@ inline void TypedArgCallable::dump( std::ostream& os) const
 } // TypedArgCallable::dump
 
 
-inline void TypedArgCallable::assign( const std::string&)
+inline void TypedArgCallable::assign( const std::string&, bool inverted)
 {
-   mFun();
+   mFun( inverted);
    mWasCalled = true;
 } // TypedArgCallable::assign
 

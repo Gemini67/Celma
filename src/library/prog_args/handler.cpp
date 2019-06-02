@@ -110,7 +110,6 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
-   mpExclamationMarkHdlr(),
    mConstraints(),
    mGlobalConstraints(),
    mCheckEnvVar( (flag_set & hfEnvVarArgs) != 0),
@@ -160,7 +159,6 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
    mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
-   mpExclamationMarkHdlr(),
    mConstraints(),
    mGlobalConstraints(),
    mCheckEnvVar(),
@@ -254,7 +252,7 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 {
 
    return addArgument( arg_spec,
-      new detail::TypedArgCallable( [=]() { usage( txt1, txt2); },
+      new detail::TypedArgCallable( [=]( bool) { usage( txt1, txt2); },
          "Handler::usage"),
       desc);
 } // Handler::addHelpArgument
@@ -285,7 +283,10 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallableValue(
-      [&](auto const& filename) { this->readArgumentFile( filename, true); },
+      [&](auto const& filename, bool)
+      {
+         this->readArgumentFile( filename, true);
+      },
       "Handler::readArgumentFile");
 
 
@@ -375,7 +376,7 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallable(
-      [&]() { this->listArgVars(); }, "Handler::listArgVars");
+      [&]( bool) { this->listArgVars(); }, "Handler::listArgVars");
 
 
    arg_hdl->setKey( key);
@@ -406,7 +407,7 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallable(
-      [&]() { this->listArgGroups(); }, desc);
+      [&]( bool) { this->listArgGroups(); }, desc);
 
    arg_hdl->setKey( key);
    arg_hdl->setCardinality();
@@ -430,7 +431,10 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 
    const detail::ArgumentKey  key( arg_spec);
    detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallable( [&]() { this->endValueList(); }, desc);
+      = new detail::TypedArgCallable( [&]( bool)
+      {
+         this->endValueList();
+      }, desc);
 
 
    arg_hdl->setKey( key);
@@ -464,8 +468,11 @@ detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
 
    const detail::ArgumentKey  key( arg_spec);
    detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallableValue( [&,full=full]( auto const& help_arg_key)
-        { this->helpArgument( help_arg_key, full); }, desc);
+      = new detail::TypedArgCallableValue(
+         [&, full=full]( auto const& help_arg_key, bool)
+         {
+            this->helpArgument( help_arg_key, full);
+         }, desc);
 
    arg_hdl->setKey( key);
 
@@ -474,27 +481,26 @@ detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
 
 
 
-/// Specifies the callback function for a control argument.<br>
-/// If no handler is defined for a control character, it is treated as error
-/// when found in an argument list.
-/// @param[in]  ctrlChar  The control character to specify the handler for.
-/// @param[in]  hf        The handler to call when the control character is
-///                       detected on the argument list.
+/// Specifies the callback functions for handling brackets on the command
+/// line.
+///
+/// @param[in]  open_bracket
+///    The handler to call when an opening round bracket is detected on the
+///    command line.
+/// @param[in]  closing_bracket
+///    The handler to call when a closing round bracket is detected in the
+///    argument list.
+/// @since  1.27.0, 28.05.2019
+///    (renamed from addControlHandler)
 /// @since  0.2, 10.04.2016
-void Handler::addControlHandler( char ctrlChar, HandlerFunc hf)
+void Handler::addBracketHandler( HandlerFunc open_bracket,
+      HandlerFunc closing_bracket)
 {
 
-   switch (ctrlChar)
-   {
-   case '(':  mpOpeningBracketHdlr  = hf;  break;
-   case ')':  mpClosingBracketHdlr  = hf;  break;
-   case '!':  mpExclamationMarkHdlr = hf;  break;
-   default:
-      throw invalid_argument( "Invalid control character '" + string( 1, ctrlChar)
-                              + "' specified!");
-   } // end switch
+   mpOpeningBracketHdlr = open_bracket;
+   mpClosingBracketHdlr = closing_bracket;
 
-} // Handler::addControlHandler
+} // Handler::addBracketHandler
 
 
 
@@ -677,11 +683,13 @@ detail::TypedArgBase* Handler::getArgHandler( const string& arg_spec)
 
 /// Compares the arguments defined in this object with those in \a otherAH
 /// and throws an exception if duplicates are detected.
-/// @param[in]  ownName    The symbolic name of this objects arguments.
-/// @param[in]  otherName  The symbolic name of the the other objects
-///                        arguments.
-/// @param[in]  otherAH    The other object to check the argument list
-///                        against.
+///
+/// @param[in]  ownName
+///    The symbolic name of this objects arguments.
+/// @param[in]  otherName
+///    The symbolic name of the the other objects arguments.
+/// @param[in]  otherAH
+///    The other object to check the argument list against.
 /// @since  0.2, 10.04.2016
 void Handler::crossCheckArguments( const string ownName,
                                    const string& otherName,
@@ -702,10 +710,6 @@ void Handler::crossCheckArguments( const string ownName,
                               "'");
    if (mpClosingBracketHdlr && otherAH.mpClosingBracketHdlr)
       throw invalid_argument( "Control argument handler for ')' from group '" +
-                              otherName + "' is already used by '" + ownName +
-                              "'");
-   if (mpExclamationMarkHdlr && otherAH.mpExclamationMarkHdlr)
-      throw invalid_argument( "Control argument handler for '!' from group '" +
                               otherName + "' is already used by '" + ownName +
                               "'");
 
@@ -833,7 +837,8 @@ Handler::ArgResult
    case detail::ArgListElement::ElementType::value:
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
-         mpLastArg->assignValue( mReadMode != ReadMode::commandLine, ai->mValue);
+         mpLastArg->assignValue( mReadMode != ReadMode::commandLine, ai->mValue,
+            mInverted);
          return ArgResult::consumed;
       } // end if
       if (detail::TypedArgBase* hdl = mArguments.findArg( mPosKey))
@@ -869,9 +874,7 @@ Handler::ArgResult
          mpClosingBracketHdlr();
       } else
       {
-         if (!mpExclamationMarkHdlr)
-            return ArgResult::unknown;
-         mpExclamationMarkHdlr();
+         mInverted = true;
       } // end if
 
       return ArgResult::consumed;
@@ -979,7 +982,8 @@ void Handler::checkReadEnvVarArgs( const char* arg0)
       return;
 
    const common::ScopedFlag< uint8_t>  sf( mReadMode, ReadMode::envVar);
-   const appl::ArgString2Array         as2a( arg_env, nullptr);
+   auto const                          as2a = appl::make_arg_array( arg_env,
+      nullptr);
    detail::ArgListParser               alp( as2a.mArgC, as2a.mpArgV);
 
    iterateArguments( alp);
@@ -1015,8 +1019,8 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       if (line.empty() || (line[ 0] == '#'))
          continue;   // while
 
-      const appl::ArgString2Array  as2a( line, nullptr);
-      detail::ArgListParser        alp( as2a.mArgC, as2a.mpArgV);
+      auto const             as2a = appl::make_arg_array( line, nullptr);
+      detail::ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
 
       iterateArguments( alp);
    } // end while
@@ -1253,7 +1257,7 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
 
    if (!args.empty())
       addArgument( args, new detail::TypedArgCallable(
-         [=]() { usage( txt1, txt2); }, "Handler::usage"),
+         [=]( bool) { usage( txt1, txt2); }, "Handler::usage"),
          "Prints the program usage.");
 
    if (flag_set & hfHelpArg)
@@ -1479,7 +1483,9 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
                  << endl;
    } // end if
 
-   hdl->assignValue( mReadMode != 0, value);
+   hdl->assignValue( mReadMode != 0, value, mInverted);
+
+   mInverted = false;
 
 } // Handler::handleIdentifiedArg
 

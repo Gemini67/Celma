@@ -230,7 +230,8 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @param[in]  f  The name of the function.
 /// @since  0.16.0, 10.11.2017  (adapted for new destination concept)
 /// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION( f)  celma::prog_args::destination( std::bind( &f), #f)
+#define  DEST_FUNCTION( f)  \
+   celma::prog_args::destination( std::bind( &f, std::placeholders::_1), #f)
 
 /// Macro used to call the celma::prog_args::destination() function for a
 /// function that accepts a value.
@@ -239,7 +240,7 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @since  0.2, 10.04.2016
 #define  DEST_FUNCTION_VALUE( f)  \
    celma::prog_args::destination( \
-      std::bind( &f, std::placeholders::_1), #f, true)
+      std::bind( &f, std::placeholders::_1, std::placeholders::_2), #f, true)
 
 /// Macro used to call the celma::prog_args::destination() function for a
 /// method (class member function) of the current object that takes no value.
@@ -248,7 +249,8 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @since  0.16.0, 10.11.2017  (adapted for new destination concept)
 /// @since  0.13.1, 07.02.2017
 #define  DEST_MEMBER_METHOD( c, m)  \
-   celma::prog_args::destination( std::bind( & c :: m, this), #c "::" #m)
+   celma::prog_args::destination( \
+      std::bind( & c :: m, this, std::placeholders::_1), #c "::" #m)
 
 /// Macro used to call the celma::prog_args::destination() function for a
 /// method (class member function) that takes no value.
@@ -258,7 +260,8 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @since  0.16.0, 10.11.2017  (adapted for new destination concept)
 /// @since  0.2, 10.04.2016
 #define  DEST_METHOD( c, m, o)  \
-   celma::prog_args::destination( std::bind( & c :: m, &o), #c "::" #m)
+   celma::prog_args::destination( \
+      std::bind( & c :: m, &o, std::placeholders::_1), #c "::" #m)
 
 /// Macro used to call the celma::prog_args::destination() function for a
 /// method (class member function) of the current object, that accepts a value.
@@ -268,8 +271,8 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @since  0.13.1, 07.02.2017
 #define  DEST_MEMBER_METHOD_VALUE( c, m)  \
    celma::prog_args::destination( \
-      std::bind( & c :: m, this, std::placeholders::_1), #c "::" #m, \
-         true)
+      std::bind( & c :: m, this, std::placeholders::_1, std::placeholders::_2), \
+         #c "::" #m, true)
 
 /// Macro used to call the celma::prog_args::destination() function for a
 /// method (class member function) that accepts a value.
@@ -280,8 +283,8 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @since  0.2, 10.04.2016
 #define  DEST_METHOD_VALUE( c, m, o)  \
    celma::prog_args::destination( \
-      std::bind( & c :: m, &o, std::placeholders::_1), #c "::" #m, \
-         true)
+      std::bind( & c :: m, &o, std::placeholders::_1, std::placeholders::_2), \
+         #c "::" #m, true)
 
 
 #endif   // CELMA_PROG_ARGS_DESTINATION_HPP
