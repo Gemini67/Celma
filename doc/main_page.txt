@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.27.0
+   \mainpage  CELMA v1.27.1
 
    \tableofcontents
 
@@ -47,6 +47,7 @@
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
 
+   |   1.27.1 | 2019-06-01        | Added variant of multilineStringCompare() that takes a stream as parameter. |
    |   1.27.0 | 2019-06-01        | Moved handling of exclamation mark on command line into destination argument handlers. |
    |   1.26.1 | 2019-05-28        | Improved build setup and cmake configuration files. |
    |   1.26.0 | 2019-05-23        | Added factory to create log file types.<br>(Re-) Added milli- and microseconds to log file names.<br>Improved coverage. |
