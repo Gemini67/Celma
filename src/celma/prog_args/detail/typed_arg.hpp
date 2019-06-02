@@ -16,9 +16,9 @@
 /// This file contains the base template plus all specialisations:
 /// - TypedArg< bool>
 /// - TypedArg< CheckAssign< T>>
-/// - TypedArg< CheckAssign< bool> >
+/// - TypedArg< CheckAssign< bool>>
 /// - TypedArg< T[ N]>
-/// - TypedArg< std::array< T, N>
+/// - TypedArg< std::array< T, N>>
 /// - TypedArg< std::bitset< T...>>
 /// - TypedArg< std::tuple< T...>>
 /// - TypedArg< std::vector< T>>
@@ -122,9 +122,15 @@ protected:
 
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    T&    mDestVar;
@@ -205,7 +211,7 @@ template< typename T> void TypedArg< T>::dump( std::ostream& os) const
 
 
 template< typename T>
-   void TypedArg< T>::assign( const std::string& value)
+   void TypedArg< T>::assign( const std::string& value, bool)
 {
    check( value);
    if (!mFormats.empty())
@@ -310,7 +316,7 @@ protected:
    ///
    /// @param  Ignored.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */) override
+   virtual void assign( const std::string&, bool) override
    {
       mDestVar     = mValue2Set;
       mHasValueSet = true;
@@ -386,9 +392,13 @@ protected:
 private:
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    common::CheckAssign< T>&  mDestVar;
@@ -445,7 +455,8 @@ template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostrea
 
 
 template< typename T>
-   void TypedArg< common::CheckAssign< T>>::assign( const std::string& value)
+   void TypedArg< common::CheckAssign< T>>::assign( const std::string& value,
+      bool)
 {
    check( value);
    if (!mFormats.empty())
@@ -557,7 +568,8 @@ private:
    /// Stores the value in the destination variable.
    ///
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */) override
+   virtual void assign( const std::string& /* value */, bool /* inverted */)
+      override
    {
       mDestVar = mValue2Set;
    } // TypedArg< common::CheckAssign< bool>>::assign
@@ -682,7 +694,8 @@ protected:
    ///    Either an empty string, in which case the current value is
    ///    incremented, otherwise value to store/assign.
    /// @since  1.10.0, 11.08.2018
-   virtual void assign( const std::string& value) noexcept( false) override
+   virtual void assign( const std::string& value, bool /* inverted */)
+      noexcept( false) override
    {
       if (value.empty())
       {
@@ -859,8 +872,13 @@ protected:
    /// Stores the value in the destination variable.
    ///
    /// @param[in]  value  The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
@@ -985,7 +1003,7 @@ template< typename T>
 
 
 template< typename T>
-   void TypedArg< std::vector< T>>::assign( const std::string& value)
+   void TypedArg< std::vector< T>>::assign( const std::string& value, bool)
 {
    if (mClearB4Assign)
    {
@@ -1121,9 +1139,15 @@ protected:
 
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  1.26.0, 29.04.2019
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
@@ -1222,7 +1246,7 @@ template< typename T, size_t N>
 
 
 template< typename T, size_t N>
-   void TypedArg< T[ N]>::assign( const std::string& value)
+   void TypedArg< T[ N]>::assign( const std::string& value, bool)
 {
    common::Tokenizer  tok( value, mListSep);
    for (auto it = tok.begin(); it != tok.end(); ++it)
@@ -1359,9 +1383,15 @@ protected:
 
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  1.26.0, 26.04.2019
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
@@ -1464,7 +1494,7 @@ template< typename T, size_t N>
 
 
 template< typename T, size_t N>
-   void TypedArg< std::array< T, N>>::assign( const std::string& value)
+   void TypedArg< std::array< T, N>>::assign( const std::string& value, bool)
 {
    common::Tokenizer  tok( value, mListSep);
    for (auto it = tok.begin(); it != tok.end(); ++it)
@@ -1640,9 +1670,15 @@ protected:
 private:
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.11, 19.12.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    std::tuple< T...>&  mDestVar;
@@ -1742,7 +1778,7 @@ template< typename... T>
 
 
 template< typename... T>
-   void TypedArg< std::tuple< T...>>::assign( const std::string& value)
+   void TypedArg< std::tuple< T...>>::assign( const std::string& value, bool)
 {
    common::Tokenizer  tok( value, mListSep);
    for (auto it = tok.begin_counting(); it != tok.end_counting(); ++it)
@@ -1857,9 +1893,15 @@ protected:
 
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  1.4.3, 29.04.2018
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
@@ -1956,7 +1998,7 @@ template< size_t N>
 
 
 template< size_t N>
-   void TypedArg< std::bitset< N>>::assign( const std::string& value)
+   void TypedArg< std::bitset< N>>::assign( const std::string& value, bool)
 {
    if (mClearB4Assign)
    {

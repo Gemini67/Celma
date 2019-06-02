@@ -53,14 +53,14 @@ public:
    /// Callback function without value.
    ///
    /// @since  1.8.0, 11.07.2018
-   void void_method()
+   void void_method( bool)
    {
    } // TestCallbacks::void_method
 
    /// Callback function with (unused) value.
    ///
    /// @since  1.8.0, 11.07.2018
-   void value_method( const std::string&)
+   void value_method( const std::string&, bool)
    {
    } // TestCallbacks::value_method
 
@@ -89,14 +89,14 @@ public:
    /// Callback member function without value.
    ///
    /// @since  1.8.0, 11.07.2018
-   void void_member()
+   void void_member( bool)
    {
    } // TestCallbacks::void_member
 
    /// Callback member function with (unused) value.
    ///
    /// @since  1.8.0, 11.07.2018
-   void value_member( const std::string&)
+   void value_member( const std::string&, bool)
    {
    } // TestCallbacks::value_member
 
@@ -114,7 +114,7 @@ std::string  func_value;
 /// Callback function without a value.
 ///
 /// @since  1.8.0, 11.07.2018
-void void_func()
+void void_func( bool)
 {
 
    void_func_called = true;
@@ -126,7 +126,7 @@ void void_func()
 ///
 /// @param[in]  value  The value from the command line.
 /// @since  1.8.0, 11.07.2018
-void value_func( const std::string& value)
+void value_func( const std::string& value, bool)
 {
 
    value_func_called = true;

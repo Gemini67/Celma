@@ -474,6 +474,71 @@ BOOST_AUTO_TEST_CASE( unexpected_free_value)
 
 
 
+/// Exclamation mark on command line used on argument that does not support
+/// this.
+///
+/// @since  1.27.0, 28.05.2019
+BOOST_AUTO_TEST_CASE( unsupported_exclamation_mark)
+{
+
+   // try to set exclamation mark on a destination type that does not support it
+   {
+      Handler  ah( 0);
+      bool     flag = false;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "a flag")
+         ->allowsInversion(), std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      int      ival = 42;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( ival),
+         "an integer value")->allowsInversion(), std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      bool     flag = false;
+
+      ah.addArgument( "f", DEST_VAR( flag), "a flag");
+
+      const ArgString2Array  as2a( "! -f", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           runtime_error);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      int      ival = 42;
+
+      ah.addArgument( "i", DEST_VAR( ival), "an integer value");
+
+      const ArgString2Array  as2a( "! -i 42", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           runtime_error);
+   } // end scope
+
+   // exclamation mark used between argument and value
+   {
+      Handler  ah( 0);
+      int      ival = 42;
+
+      ah.addArgument( "i", DEST_VAR( ival), "an integer value");
+
+      const ArgString2Array  as2a( "-i ! 42", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           runtime_error);
+   } // end scope
+
+} // unsupported_exclamation_mark
+
+
+
 /// Verify that the handling of free values is correct:
 /// - detect mandatory free value missing
 /// - correctly handle free value after argument without value
@@ -2514,12 +2579,10 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 class TestControlArgs
 {
 public:
-   TestControlArgs():
-      mOpen( 0),
-      mClose( 0),
-      mNot( 0)
+   TestControlArgs( bool exp_inversion):
+      mExpectInversion( exp_inversion)
    {
-   } // end TestControlArgs::TestControlArgs
+   }
 
    void open()
    {
@@ -2531,11 +2594,6 @@ public:
       ++mClose;
    }
 
-   void exclamation()
-   {
-      ++mNot;
-   }
-
    int getOpen() const
    {
       return mOpen;
@@ -2544,45 +2602,78 @@ public:
    {
       return mClose;
    }
-   int getExclamation() const
+
+   void assign( const std::string&, bool inverted)
    {
-      return mNot;
+      if (inverted != mExpectInversion)
+         throw std::logic_error( "'inverted' not set as expected");
+      mExpectInversion = false;
    }
 
 private:
-   int  mOpen;
-   int  mClose;
-   int  mNot;
+   bool  mExpectInversion;
+   int   mOpen = 0;
+   int   mClose = 0;
 
 }; // TestControlArgs
 
 
 
 /// Checks handling of control characters.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( control_args)
 {
 
-   Handler          ah( 0);
-   int              intArg1;
-   int              intArg2;
-   TestControlArgs  tca;
+   {
+      Handler          ah( 0);
+      int              intArg1;
+      int              intArg2;
+      TestControlArgs  tca( true);
 
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intArg1), "Integer argument 1"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "j", DEST_VAR( intArg2), "Integer argument 2"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c",
+         DEST_METHOD_VALUE( TestControlArgs, assign, tca), "check")
+         ->allowsInversion());
+      BOOST_REQUIRE_NO_THROW( ah.addBracketHandler(
+         std::bind( &TestControlArgs::open, &tca),
+         std::bind( &TestControlArgs::close, &tca)));
 
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intArg1), "Integer argument 1"));
-   BOOST_REQUIRE_NO_THROW( ah.addArgument( "j", DEST_VAR( intArg2), "Integer argument 2"));
-   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( '(', std::bind( &TestControlArgs::open, &tca)));
-   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( ')', std::bind( &TestControlArgs::close, &tca)));
-   BOOST_REQUIRE_NO_THROW( ah.addControlHandler( '!', std::bind( &TestControlArgs::exclamation, &tca)));
-   BOOST_REQUIRE_THROW(    ah.addControlHandler( '#', std::bind( &TestControlArgs::open, &tca)),
-                           invalid_argument);
+      const ArgString2Array  as2a( "-i 11 ( -j 13 ) ! -c 42", nullptr);
 
-   const ArgString2Array  as2a( "-i 11 ( ! -j 13 )", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( tca.getOpen(), 1);
+      BOOST_REQUIRE_EQUAL( tca.getClose(), 1);
+   } // end scope
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE_EQUAL( tca.getOpen(), 1);
-   BOOST_REQUIRE_EQUAL( tca.getClose(), 1);
-   BOOST_REQUIRE_EQUAL( tca.getExclamation(), 1);
+   {
+      Handler          ah( 0);
+      TestControlArgs  tca( false);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c",
+         DEST_METHOD_VALUE( TestControlArgs, assign, tca), "check")
+         ->allowsInversion());
+
+      const ArgString2Array  as2a( "-c ! 42", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   {
+      Handler          ah( 0);
+      TestControlArgs  tca( false);
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c",
+         DEST_METHOD_VALUE( TestControlArgs, assign, tca), "check")
+         ->allowsInversion());
+
+      const ArgString2Array  as2a( "! -c 42 -c 13", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
 
 } // control_args
 

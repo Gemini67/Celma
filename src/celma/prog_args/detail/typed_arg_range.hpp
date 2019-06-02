@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -89,9 +89,15 @@ protected:
 
 private:
    /// Stores the value in the destination variable.
-   /// @param[in]  value  The value to store in string format.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Actually evaluates the range string.
    /// @param[in]  value  The value string to evaluate.
@@ -159,7 +165,7 @@ template< typename T, typename C>
 
 
 template< typename T, typename C>
-   void TypedArgRange< T, C>::assign( const std::string& value)
+   void TypedArgRange< T, C>::assign( const std::string& value, bool)
 {
    if (!mFormats.empty())
    {

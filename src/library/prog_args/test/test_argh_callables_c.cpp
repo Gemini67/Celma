@@ -55,7 +55,7 @@ string  gotVal;
 /// This function should be called when the corresponding argument is set on
 /// the command line.
 /// @since  0.2, 10.04.2016
-void handlerFun()
+void handlerFun( bool)
 {
 
    gotCalled = true;
@@ -67,7 +67,7 @@ void handlerFun()
 /// the command line.
 /// @param[in]  v  The value.
 /// @since  0.2, 10.04.2016
-void handlerFunValue( const string& v)
+void handlerFunValue( const string& v, bool)
 {
 
    if (v.empty())
@@ -88,7 +88,7 @@ public:
    {
    } // TestArgFunc::TestArgFunc
 
-   void handlerFunc( const string& s)
+   void handlerFunc( const string& s, bool)
    {
       if (s.empty())
          throw std::runtime_error( "TestArgFunc::handlerFunc() always expects "
@@ -108,7 +108,7 @@ public:
    /// Called when a value was passed to the argument.
    /// @param[in]  optValue  The value from the command line.
    /// @since  0.2, 10.04.2016
-   void boolFunc( const string& optValue)
+   void boolFunc( const string& optValue, bool)
    {
       if (!optValue.empty())
          throw std::runtime_error( "TestArgFunc::boolFunc() must not be called "
@@ -145,7 +145,7 @@ public:
    /// Called when the argument was used on the command line.
    ///
    /// @since  1.25.0, 30.04.2019
-   void assign()
+   void assign( bool)
    {
       ++mNumCalls;
    } // NoValueTest::assign
@@ -178,7 +178,7 @@ public:
    ///
    /// @param[in]  Value from the command line, real value is ignored.
    /// @since  1.25.0, 30.04.2019
-   void assign( const std::string&)
+   void assign( const std::string&, bool)
    {
       ++mNumValues;
    } // MultiValueTest::assign
@@ -570,7 +570,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << '\n' << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -803,7 +803,7 @@ BOOST_AUTO_TEST_CASE( multi_values)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << '\n' << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-v', usage:\n"
          "   Method that can be called multiple times\n"
          "Properties:\n"
@@ -859,7 +859,7 @@ BOOST_AUTO_TEST_CASE( no_value_method)
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << '\n' << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Argument '-f', usage:\n"
          "   Method for flag\n"
          "Properties:\n"

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,10 +46,16 @@ public:
 
    /// Called when the argument was used, assigns the value from \a new_value if
    /// it is a valid value, assigns #mNoValue otherwise.
-   /// @param[in]  new_value  The value passed on the command line, may be an
-   ///                        empty string (i.e. no value was set).
+   ///
+   /// @param[in]  new_value
+   ///    The value passed on the command line, may be an empty string (i.e. no
+   ///    value was set).
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 27.05.2019
+   ///    (added ignored parameter inverted)
    /// @since  0.13.2, 17.02.2017
-   void assign( const std::string& new_value)
+   void assign( const std::string& new_value, bool /* inverted */)
    {
       if (new_value.empty())
          mDestVar = mNoValue;
@@ -74,5 +80,5 @@ private:
 #endif   // CELMA_PROG_ARGS_HELPERS_TRIPLE_LOGIC_HPP
 
 
-// =========================  END OF triple_logic.hpp  =========================
+// =====  END OF triple_logic.hpp  =====
 

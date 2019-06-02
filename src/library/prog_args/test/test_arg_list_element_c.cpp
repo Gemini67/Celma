@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE( default_ctor)
 
    oss << ele;
    // std::cerr << '\n' << oss.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( multilineStringCompare( oss,
       "invalid argument list element"));
 
 } // default_ctor
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE( test_character)
 
    oss << ele;
    // std::cerr << '\n' << oss.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( multilineStringCompare( oss,
       "element type       = single character argument (0)\n"
       "argument index     = 3\n"
       "character position = 1\n"
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( test_word)
 
    oss << ele;
    // std::cerr << '\n' << oss.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( multilineStringCompare( oss,
       "element type       = string/long argument (1)\n"
       "argument index     = 4\n"
       "argument string    = name\n"));
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE( test_value)
 
    oss << ele;
    // std::cerr << '\n' << oss.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( multilineStringCompare( oss,
       "element type       = value (2)\n"
       "argument index     = 5\n"
       "value              = my name\n"));
@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE( test_control)
 
    oss << ele;
    // std::cerr << '\n' << oss.str() << std::endl;
-   BOOST_REQUIRE( multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( multilineStringCompare( oss,
       "element type       = control character (3)\n"
       "argument index     = 6\n"
       "ctrl char position = 1\n"
