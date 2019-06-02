@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE( test_env)
    ProjectRoot::instance( ProjectRoot::ProjRootSrc::env, "TEST_PROJ_ROOT_DIR");
 
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
-                        ProjectRoot::instance().ProjRootSrc::env);
+                        ProjectRoot::ProjRootSrc::env);
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), env);
 
    ProjectRoot::reset();
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE( test_env)
                                            "TEST_PROJ_ROOT_DIR");
 
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
-                        ProjectRoot::instance().ProjRootSrc::env);
+                        ProjectRoot::ProjRootSrc::env);
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), env);
 
 } // test_env
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE( test_cwd)
    ProjectRoot::instance( ProjectRoot::ProjRootSrc::cwd);
 
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
-                        ProjectRoot::instance().ProjRootSrc::cwd);
+                        ProjectRoot::ProjRootSrc::cwd);
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), cwd);
 
    ProjectRoot::reset();
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE( test_cwd)
    ProjectRoot::instance().setProjectRoot( ProjectRoot::ProjRootSrc::cwd);
 
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
-                        ProjectRoot::instance().ProjRootSrc::cwd);
+                        ProjectRoot::ProjRootSrc::cwd);
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), cwd);
 
 } // test_cwd
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE( test_prog_path)
    ProjectRoot::instance( ProjectRoot::ProjRootSrc::bin, arg0.c_str());
 
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
-                        ProjectRoot::instance().ProjRootSrc::bin);
+                        ProjectRoot::ProjRootSrc::bin);
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), projroot);
 
    ProjectRoot::reset();
@@ -177,12 +177,12 @@ BOOST_AUTO_TEST_CASE( test_prog_path)
    ProjectRoot::instance().setProjectRoot( ProjectRoot::ProjRootSrc::bin, arg0.c_str());
 
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().projectRootSrc(),
-                        ProjectRoot::instance().ProjRootSrc::bin);
+                        ProjectRoot::ProjRootSrc::bin);
    BOOST_REQUIRE_EQUAL( ProjectRoot::instance().path(), projroot);
 
 } // test_prog_path
 
 
 
-// ======================  END OF test_project_root.cpp  ======================
+// =====  END OF test_project_root.cpp  =====
 

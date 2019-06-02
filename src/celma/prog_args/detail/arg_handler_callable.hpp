@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,12 +30,12 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Type of the callables (functions, methods) that can be defined as argument
 /// handlers for arguments without values.
-using ArgHandlerCallable = std::function< void( void)>;
+using ArgHandlerCallable = std::function< void( bool)>;
 
 
 /// Type of the callables (functions, methods) that can be defined as argument
 /// handlers for arguments with values.
-using ArgHandlerCallableValue = std::function< void( const std::string&)>;
+using ArgHandlerCallableValue = std::function< void( const std::string&, bool)>;
 
 
 } // namespace detail

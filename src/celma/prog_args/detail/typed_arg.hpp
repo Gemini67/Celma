@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,7 +16,9 @@
 /// This file contains the base template plus all specialisations:
 /// - TypedArg< bool>
 /// - TypedArg< CheckAssign< T>>
-/// - TypedArg< CheckAssign< bool> >
+/// - TypedArg< CheckAssign< bool>>
+/// - TypedArg< T[ N]>
+/// - TypedArg< std::array< T, N>>
 /// - TypedArg< std::bitset< T...>>
 /// - TypedArg< std::tuple< T...>>
 /// - TypedArg< std::vector< T>>
@@ -28,6 +30,7 @@
 
 #include <cstring>
 #include <algorithm>
+#include <array>
 #include <bitset>
 #include <iomanip>
 #include <iostream>
@@ -35,6 +38,7 @@
 #include <vector>
 #include <boost/lexical_cast.hpp>
 #include "celma/common/check_assign.hpp"
+#include "celma/common/contains.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
 #include "celma/format/to_string.hpp"
@@ -118,9 +122,15 @@ protected:
 
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    T&    mDestVar;
@@ -184,7 +194,7 @@ template< typename T>
 
 template< typename T> void TypedArg< T>::defaultValue( std::string& dest) const
 {
-   dest.append( boost::lexical_cast< std::string>( mDestVar));
+   dest.append( format::toString( mDestVar));
 } // TypedArg< T>::defaultValue
 
 
@@ -193,7 +203,7 @@ template< typename T> void TypedArg< T>::dump( std::ostream& os) const
    os << "value type '" << type< T>::name() << "', destination '"
       << mVarName << "', ";
    if (mHasValueSet)
-      os << "value = " << mDestVar << "." << std::endl;
+      os << "value = " << format::toString( mDestVar) << "." << std::endl;
    else 
       os << "value not set." << std::endl;
    os << "   " << static_cast< const TypedArgBase&>( *this);
@@ -201,7 +211,7 @@ template< typename T> void TypedArg< T>::dump( std::ostream& os) const
 
 
 template< typename T>
-   void TypedArg< T>::assign( const std::string& value)
+   void TypedArg< T>::assign( const std::string& value, bool)
 {
    check( value);
    if (!mFormats.empty())
@@ -298,7 +308,7 @@ protected:
    virtual void dump( std::ostream& os) const override
    {
       os << "boolean flag, destination '" << mVarName << "', "
-         << (mHasValueSet ? "not set." : "set.") << std::endl
+         << (mHasValueSet ? "set." : "not set.") << std::endl
          << "   " << static_cast< const TypedArgBase&>( *this);
    } // TypedArg< bool>::dump
 
@@ -306,7 +316,7 @@ protected:
    ///
    /// @param  Ignored.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */) override
+   virtual void assign( const std::string&, bool) override
    {
       mDestVar     = mValue2Set;
       mHasValueSet = true;
@@ -382,9 +392,13 @@ protected:
 private:
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    common::CheckAssign< T>&  mDestVar;
@@ -441,7 +455,8 @@ template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostrea
 
 
 template< typename T>
-   void TypedArg< common::CheckAssign< T>>::assign( const std::string& value)
+   void TypedArg< common::CheckAssign< T>>::assign( const std::string& value,
+      bool)
 {
    check( value);
    if (!mFormats.empty())
@@ -553,7 +568,8 @@ private:
    /// Stores the value in the destination variable.
    ///
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */) override
+   virtual void assign( const std::string& /* value */, bool /* inverted */)
+      override
    {
       mDestVar = mValue2Set;
    } // TypedArg< common::CheckAssign< bool>>::assign
@@ -678,7 +694,8 @@ protected:
    ///    Either an empty string, in which case the current value is
    ///    incremented, otherwise value to store/assign.
    /// @since  1.10.0, 11.08.2018
-   virtual void assign( const std::string& value) noexcept( false) override
+   virtual void assign( const std::string& value, bool /* inverted */)
+      noexcept( false) override
    {
       if (value.empty())
       {
@@ -734,6 +751,9 @@ private:
 /// Specialisation of TypedArg<> for values wrapped in a vector.
 ///
 /// @tparam  T  The type of the value(s) stored in the vector.
+/// @since  1.24.2, 23.04.2019
+///    (allow to change value mode to optional when "clear before assign" is
+///     already set)
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
@@ -752,6 +772,26 @@ public:
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( vector_type& dest, const std::string& vname);
+
+   /// By default, the value mode for vectors is set to "required". Here it can
+   /// be changed to "optional" if "clear before assign" has been set before and
+   /// the destination vector contains (default) values.<br>
+   /// This allows the following scenario:
+   /// - Assign default values to the destination vector.
+   /// - Define the argument with "clear before assign" and value mode
+   ///   "optional".
+   /// - If the argument is not used: Default values are used.
+   /// - If the argument is used without value(s): The vector is cleared.
+   /// - Argument used with values: Only the values are stored in the vector.
+   ///
+   /// @param[in]  vm
+   ///    The new value mode, only allowed value is actually "optional".
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    "logic error" if the value mode is not "optional", or "clear before
+   ///    assign" is not set.
+   /// @since  1.24.2, 23.04.2019
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false);
 
    /// Returns the name of the type of the destination variable (vector of
    /// something).
@@ -832,8 +872,13 @@ protected:
    /// Stores the value in the destination variable.
    ///
    /// @param[in]  value  The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
@@ -866,6 +911,19 @@ template< typename T>
 {
    mpCardinality.reset();
 } // TypedArg< std::vector< T>>::TypedArg
+
+
+template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::setValueMode( ValueMode vm)
+{
+   if (vm == mValueMode)
+      return this;
+   if ((vm != ValueMode::optional) || !mClearB4Assign || mDestVar.empty())
+      throw std::logic_error( "can only set value mode 'optional' for vector, "
+         "and ony if 'clear before assign' is set and the vector is not empty");
+   mValueMode = vm;
+   return this;
+} // TypedArg< std::vector< T>>::setValueMode
 
 
 template< typename T>
@@ -945,7 +1003,7 @@ template< typename T>
 
 
 template< typename T>
-   void TypedArg< std::vector< T>>::assign( const std::string& value)
+   void TypedArg< std::vector< T>>::assign( const std::string& value, bool)
 {
    if (mClearB4Assign)
    {
@@ -972,8 +1030,7 @@ template< typename T>
       auto const  dest_value = boost::lexical_cast< T>( listVal);
       if (mUniqueData)
       {
-         if (std::find( mDestVar.begin(), mDestVar.end(), dest_value)
-            != mDestVar.end())
+         if (common::contains( mDestVar, dest_value))
          {
             if (mTreatDuplicatesAsErrors)
                throw std::runtime_error( "refuse to store duplicate values in"
@@ -989,6 +1046,494 @@ template< typename T>
       std::sort( mDestVar.begin(), mDestVar.end());
 
 } // TypedArg< std::vector< T>>::assign
+
+
+// Template TypedArg< T[ N]>
+// =========================
+
+
+/// Specialisation of TypedArg<> for values wrapped in an POD array.<br>
+/// Arrays are always filled from the first element up to the maximum number of
+/// elements that the array can store.
+///
+/// @tparam  T
+///    The type of the value(s) stored in the array.
+/// @tparam  N
+///    Number of elements the array can hold.
+/// @since  1.26.0, 29.04.2019
+template< typename T, size_t N> class TypedArg< T[ N]>: public TypedArgBase
+{
+public:
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  aname
+   ///    The name of the destination variable to store the values in.
+   /// @since  1.26.0, 29.04.2019
+   TypedArg( T (&dest)[ N], const std::string& aname);
+
+   /// Returns the name of the type of the destination variable (array of
+   /// something).
+   ///
+   /// @return  The name of the type of the destination variable/array.
+   /// @since  1.26.0, 29.04.2019
+   virtual const std::string varTypeName() const override;
+
+   /// Returns if the destination has (at least) one value set.
+   ///
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  1.26.0, 29.04.2019
+   virtual bool hasValue() const override;
+
+   /// Prints the current values of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the values to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.26.0, 29.04.2019
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
+   /// Overloads TypedArgBase::setTakesMultiValue().<br>
+   /// For arrays it is possible/allowed to activate this feature.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.26.0, 29.04.2019
+   virtual TypedArgBase* setTakesMultiValue() override;
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   ///
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @since  1.26.0, 29.04.2019
+   virtual TypedArgBase* setListSep( char sep) override;
+
+   /// Special feature for destination variable type array:<br>
+   /// Sort the contents of the array.
+   ///
+   /// @since  1.26.0, 29.04.2019
+   virtual TypedArgBase* setSortData() override;
+
+   /// Special feature for destination variable type array:<br>
+   /// Make sure only unique values are stored in the array.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since  1.26.0, 29.04.2019
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      override;
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   ///
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.26.0, 29.04.2019
+   virtual void dump( std::ostream& os) const override;
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
+   /// @since  1.26.0, 29.04.2019
+   virtual void assign( const std::string& value, bool inverted) override;
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   T            (&mDestVar)[ N];
+   /// The index of the next value to store in the array.
+   size_t       mIndex = 0;
+   /// The character to use as a list separator, default: ,
+   char         mListSep = ',';
+   /// If set, the contents of the array are sorted.
+   bool         mSortData = false;
+   /// If set, makes sure that the data in the array contains no duplicates.
+   bool         mUniqueData = false;
+   /// If set, trying to add a duplicate value to the array is treated as an
+   /// error, otherwise (the default) it is silently discarded.
+   bool         mTreatDuplicatesAsErrors = false;
+
+}; // TypedArg< T[ N]>
+
+
+// inlined methods
+// ===============
+
+
+template< typename T, size_t N>
+   TypedArg< T[ N]>::TypedArg( T (&dest)[N], const std::string& vname):
+      TypedArgBase( vname, ValueMode::required, false),
+      mDestVar( dest)
+{
+   mpCardinality.reset();
+} // TypedArg< T[ N]>::TypedArg
+
+
+template< typename T, size_t N>
+   const std::string TypedArg< T[ N]>::varTypeName() const
+{
+   return type< T[ N]>::name();
+} // TypedArg< T[ N]>::varTypeName
+
+
+template< typename T, size_t N> bool TypedArg< T[ N]>::hasValue() const
+{
+   return mIndex > 0;
+} // TypedArg< T[ N]>::hasValue
+
+
+template< typename T, size_t N>
+   void TypedArg< T[ N]>::printValue( std::ostream& os, bool print_type) const
+{
+   os << format::toString( mDestVar, mDestVar + mIndex);
+   if (print_type)
+      os << " [" << varTypeName() << "]";
+} // TypedArg< T[ N]>::printValue
+
+
+template< typename T, size_t N>
+   TypedArgBase* TypedArg< T[ N]>::setTakesMultiValue()
+{
+   mTakeMultipleValues = true;
+   return this;
+} // TypedArg< T[ N]>::setTakesMultiValue
+
+
+template< typename T, size_t N>
+   TypedArgBase* TypedArg< T[ N]>::setListSep( char sep)
+{
+   mListSep = sep;
+   return this;
+} // TypedArg< T[ N]>::setListSep
+
+
+template< typename T, size_t N> TypedArgBase* TypedArg< T[ N]>::setSortData()
+{
+   mSortData = true;
+   return this;
+} // TypedArg< T[ N]>::setSortData
+
+
+template< typename T, size_t N>
+   TypedArgBase* TypedArg< T[ N]>::setUniqueData( bool duplicates_are_errors)
+{
+   mUniqueData = true;
+   mTreatDuplicatesAsErrors = duplicates_are_errors;
+   return this;
+} // TypedArg< T[ N]>::setUniqueData
+
+
+template< typename T, size_t N>
+   void TypedArg< T[ N]>::dump( std::ostream& os) const
+{
+   os << "value type '" << varTypeName()
+      << "', destination array '" << mVarName << "', currently "
+      << ((mIndex == 0) ? "no" : std::to_string( mIndex))
+      << " values." << std::endl
+      << "   " << static_cast< const TypedArgBase&>( *this);
+} // TypedArg< T[ N]>::dump
+
+
+template< typename T, size_t N>
+   void TypedArg< T[ N]>::assign( const std::string& value, bool)
+{
+   common::Tokenizer  tok( value, mListSep);
+   for (auto it = tok.begin(); it != tok.end(); ++it)
+   {
+      if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
+         mpCardinality->gotValue();
+
+      if (mIndex == N)
+         throw std::runtime_error( "too many values for fixed-size array "
+            "variable '" + mVarName + "'");
+
+      auto  listVal( *it);
+
+      check( listVal);
+
+      if (!mFormats.empty())
+      {
+         format( listVal);
+      } // end if
+
+      auto const  dest_value = boost::lexical_cast< T>( listVal);
+      if (mUniqueData)
+      {
+         if (common::contains( mDestVar, dest_value))
+         {
+            if (mTreatDuplicatesAsErrors)
+               throw std::runtime_error( "refuse to store duplicate values in"
+                  " variable '" + mVarName + "'");
+            continue; // for
+         } // end if
+      } // end if
+
+      mDestVar[ mIndex++] = dest_value;
+   } // end for
+
+   if (mSortData)
+      std::sort( mDestVar, mDestVar + mIndex);
+
+} // TypedArg< T[ N]>::assign
+
+
+// Template TypedArg< std::array< T, N>>
+// =====================================
+
+
+/// Specialisation of TypedArg<> for values wrapped in an std::array.<br>
+/// Arrays are always filled from the first element up to the maximum number of
+/// elements that the array can store.
+///
+/// @tparam  T
+///    The type of the value(s) stored in the array.
+/// @tparam  N
+///    Number of elements the array can hold.
+/// @since  1.26.0, 26.04.2019
+template< typename T, size_t N>
+   class TypedArg< std::array< T, N>>: public TypedArgBase
+{
+public:
+   /// The type of the destination variable.
+   using array_type = typename std::array< T, N>;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  aname
+   ///    The name of the destination variable to store the values in.
+   /// @since  1.26.0, 26.04.2019
+   TypedArg( array_type& dest, const std::string& aname);
+
+   /// Returns the name of the type of the destination variable (array of
+   /// something).
+   ///
+   /// @return  The name of the type of the destination variable/array.
+   /// @since  1.26.0, 26.04.2019
+   virtual const std::string varTypeName() const override;
+
+   /// Returns if the destination has (at least) one value set.
+   ///
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  1.26.0, 26.04.2019
+   virtual bool hasValue() const override;
+
+   /// Prints the current values of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the values to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.26.0, 26.04.2019
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
+   /// Overloads TypedArgBase::setTakesMultiValue().<br>
+   /// For arrays it is possible/allowed to activate this feature.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.26.0, 26.04.2019
+   virtual TypedArgBase* setTakesMultiValue() override;
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   ///
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @since  1.26.0, 26.04.2019
+   virtual TypedArgBase* setListSep( char sep) override;
+
+   /// Special feature for destination variable type array:<br>
+   /// Sort the contents of the array.
+   ///
+   /// @since  1.26.0, 26.04.2019
+   virtual TypedArgBase* setSortData() override;
+
+   /// Special feature for destination variable type array:<br>
+   /// Make sure only unique values are stored in the array.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @since  1.26.0, 26.04.2019
+   virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      override;
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   ///
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.26.0, 26.04.2019
+   virtual void dump( std::ostream& os) const override;
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
+   /// @since  1.26.0, 26.04.2019
+   virtual void assign( const std::string& value, bool inverted) override;
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   array_type&  mDestVar;
+   /// The index of the next value to store in the array.
+   size_t       mIndex = 0;
+   /// The character to use as a list separator, default: ,
+   char         mListSep = ',';
+   /// If set, the contents of the array are sorted.
+   bool         mSortData = false;
+   /// If set, makes sure that the data in the array contains no duplicates.
+   bool         mUniqueData = false;
+   /// If set, trying to add a duplicate value to the array is treated as an
+   /// error, otherwise (the default) it is silently discarded.
+   bool         mTreatDuplicatesAsErrors = false;
+
+}; // TypedArg< std::array< T, N>>
+
+
+// inlined methods
+// ===============
+
+
+template< typename T, size_t N>
+   TypedArg< std::array< T, N>>::TypedArg( array_type& dest,
+      const std::string& vname):
+         TypedArgBase( vname, ValueMode::required, false),
+         mDestVar( dest)
+{
+   mpCardinality.reset();
+} // TypedArg< std::array< T, N>>::TypedArg
+
+
+template< typename T, size_t N>
+   const std::string TypedArg< std::array< T, N>>::varTypeName() const
+{
+   return type< std::array< T, N>>::name();
+} // TypedArg< std::array< T, N>>::varTypeName
+
+
+template< typename T, size_t N> bool TypedArg< std::array< T, N>>::hasValue() const
+{
+   return mIndex > 0;
+} // TypedArg< std::array< T, N>>::hasValue
+
+
+template< typename T, size_t N>
+   void TypedArg< std::array< T, N>>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( mDestVar.begin(), mDestVar.end());
+   if (print_type)
+      os << " [" << varTypeName() << "]";
+} // TypedArg< std::array< T, N>>::printValue
+
+
+template< typename T, size_t N>
+   TypedArgBase* TypedArg< std::array< T, N>>::setTakesMultiValue()
+{
+   mTakeMultipleValues = true;
+   return this;
+} // TypedArg< std::array< T, N>>::setTakesMultiValue
+
+
+template< typename T, size_t N>
+   TypedArgBase* TypedArg< std::array< T, N>>::setListSep( char sep)
+{
+   mListSep = sep;
+   return this;
+} // TypedArg< std::array< T, N>>::setListSep
+
+
+template< typename T, size_t N>
+   TypedArgBase* TypedArg< std::array< T, N>>::setSortData()
+{
+   mSortData = true;
+   return this;
+} // TypedArg< std::array< T, N>>::setSortData
+
+
+template< typename T, size_t N>
+   TypedArgBase*
+      TypedArg< std::array< T, N>>::setUniqueData( bool duplicates_are_errors)
+{
+   mUniqueData = true;
+   mTreatDuplicatesAsErrors = duplicates_are_errors;
+   return this;
+} // TypedArg< std::array< T, N>>::setUniqueData
+
+
+template< typename T, size_t N>
+   void TypedArg< std::array< T, N>>::dump( std::ostream& os) const
+{
+   os << "value type '" << type< array_type>::name()
+      << "', destination array '" << mVarName << "', currently "
+      << (mDestVar.empty() ? "no" : std::to_string( mIndex))
+      << " values." << std::endl
+      << "   " << static_cast< const TypedArgBase&>( *this);
+} // TypedArg< std::array< T, N>>::dump
+
+
+template< typename T, size_t N>
+   void TypedArg< std::array< T, N>>::assign( const std::string& value, bool)
+{
+   common::Tokenizer  tok( value, mListSep);
+   for (auto it = tok.begin(); it != tok.end(); ++it)
+   {
+      if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
+         mpCardinality->gotValue();
+
+      if (mIndex == N)
+         throw std::runtime_error( "too many values for fixed-size array "
+            "variable '" + mVarName + "'");
+
+      auto  listVal( *it);
+
+      check( listVal);
+
+      if (!mFormats.empty())
+      {
+         format( listVal);
+      } // end if
+
+      auto const  dest_value = boost::lexical_cast< T>( listVal);
+      if (mUniqueData)
+      {
+         if (common::contains( mDestVar, dest_value))
+         {
+            if (mTreatDuplicatesAsErrors)
+               throw std::runtime_error( "refuse to store duplicate values in"
+                  " variable '" + mVarName + "'");
+            continue; // for
+         } // end if
+      } // end if
+
+      mDestVar[ mIndex++] = dest_value;
+   } // end for
+
+   if (mSortData)
+      std::sort( mDestVar.begin(), mDestVar.begin() + mIndex);
+
+} // TypedArg< std::array< T, N>>::assign
 
 
 namespace {
@@ -1098,6 +1643,15 @@ public:
    /// @since  0.11, 04.01.2017
    virtual TypedArgBase* setTakesMultiValue() override;
 
+   /// Overload for destination tuple: Format not allowed.
+   /// @param[in]  f  Pointer to the format to add, the object is deleted.
+   /// @return  Never returns anything.
+   /// @throws
+   ///    "logic error" when called since setting a format for a tuple is never
+   ///    allowed.
+   /// @since  1.23.0, 09.04.2019
+   virtual TypedArgBase* addFormat( IFormat* f) noexcept( false) override;
+
    /// Specifies the list separator character to use for splitting lists of
    /// values.
    ///
@@ -1116,9 +1670,15 @@ protected:
 private:
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.11, 19.12.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    std::tuple< T...>&  mDestVar;
@@ -1173,19 +1733,7 @@ template< typename... T>
 template< typename... T>
    void TypedArg< std::tuple< T...>>::defaultValue( std::string& dest) const
 {
-   dest.append( "<");
-   for (size_t i = 0; i < mTupleLength; ++i)
-   {
-      if (i > 0)
-         dest.append(",");
-
-      common::tuple_at_index( i, mDestVar, [&dest]( auto const& value)
-         {
-            dest.append( boost::lexical_cast< std::string>( value));
-         });
-   } // end for
-
-   dest.append( ">");
+   dest.append( "<").append( format::toString( mDestVar)).append( ">");
 } // TypedArg< std::tuple< T...>>::defaultValue
 
 
@@ -1195,6 +1743,14 @@ template< typename... T>
    mTakeMultipleValues = true;
    return this;
 } // TypedArg< std::tuple< T...>>::setTakesMultiValue
+
+
+template< typename... T>
+   TypedArgBase* TypedArg< std::tuple< T...>>::addFormat( IFormat* f)
+{
+   delete f;
+   throw std::logic_error( "not allowed to add a format for a tuple");
+} // TypedArgBase* TypedArg< std::tuple< T...>>::addFormat
 
 
 template< typename... T>
@@ -1212,18 +1768,7 @@ template< typename... T>
       << "', ";
    if (hasValue())
    {
-      os << "value = <";
-      for (size_t i = 0; i < mTupleLength; ++i)
-      {
-         if (i > 0)
-            os << ",";
-
-         common::tuple_at_index( i, mDestVar, [&os]( auto const& value)
-            {
-               os << value;
-            });
-      } // end for
-      os << ">." << std::endl;
+      os << "value = <" << format::toString( mDestVar) << ">." << std::endl;
    } else
    { 
       os << "value not set." << std::endl;
@@ -1233,7 +1778,7 @@ template< typename... T>
 
 
 template< typename... T>
-   void TypedArg< std::tuple< T...>>::assign( const std::string& value)
+   void TypedArg< std::tuple< T...>>::assign( const std::string& value, bool)
 {
    common::Tokenizer  tok( value, mListSep);
    for (auto it = tok.begin_counting(); it != tok.end_counting(); ++it)
@@ -1245,26 +1790,17 @@ template< typename... T>
 
       check( listVal);
 
-      if (!mFormats.empty())
-      {
-         std::string  valCopy( listVal);
-         format( valCopy);
-         TupleElementValueAssign  teva( valCopy);
-         common::tuple_at_index( mNumValuesSet, mDestVar, teva);
-      } else
-      {
-         TupleElementValueAssign  teva( listVal);
-         common::tuple_at_index( mNumValuesSet, mDestVar, teva);
+      TupleElementValueAssign  teva( listVal);
+      common::tuple_at_index( mNumValuesSet, mDestVar, teva);
 
 #if 0
-         // this should work ...
-         common::tuple_at_index( mNumValuesSet, mDestVar,
-                                 [&listVal]( auto& tuple_value)
-           {
-              tuple_value = boost::lexical_cast< std::decltype( tuple_value)>( listVal);
-           });
+      // this should work ...
+      common::tuple_at_index( mNumValuesSet, mDestVar,
+                              [&listVal]( auto& tuple_value)
+        {
+           tuple_value = boost::lexical_cast< std::decltype( tuple_value)>( listVal);
+        });
 #endif
-      } // end if
       ++mNumValuesSet;
    } // end for
 } // TypedArg< std::tuple< T...>>::assign
@@ -1357,9 +1893,15 @@ protected:
 
    /// Stores the value in the destination variable.
    ///
-   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  1.4.3, 29.04.2018
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
@@ -1456,7 +1998,7 @@ template< size_t N>
 
 
 template< size_t N>
-   void TypedArg< std::bitset< N>>::assign( const std::string& value)
+   void TypedArg< std::bitset< N>>::assign( const std::string& value, bool)
 {
    if (mClearB4Assign)
    {
@@ -1468,7 +2010,7 @@ template< size_t N>
    common::Tokenizer  tok( value, mListSep);
    for (auto it = tok.begin(); it != tok.end(); ++it)
    {
-      if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
+      if (mpCardinality && (it != tok.begin()))
          mpCardinality->gotValue();
 
       auto const&  listVal( *it);
@@ -1480,14 +2022,14 @@ template< size_t N>
          auto  valCopy( listVal);
          format( valCopy);
          auto const  pos = boost::lexical_cast< size_t>( valCopy);
-         if (pos > N)
+         if (pos >= N)
             throw std::runtime_error( "position " + std::to_string( pos)
                + " is outside the range of the bitset");
          mDestVar[ pos] = !mResetFlags;
       } else
       {
          auto const  pos = boost::lexical_cast< size_t>( listVal);
-         if (pos > N)
+         if (pos >= N)
             throw std::runtime_error( "position " + std::to_string( pos)
                + " is outside the range of the bitset");
          mDestVar[ pos] = !mResetFlags;

@@ -23,7 +23,11 @@ namespace celma { namespace common {
 
 
 /// Helper class that provides all relational comparison operators for a class
-/// that only provides the less comparison operator.
+/// that only provides the less comparison operator.<br>
+/// Use this class as base class of the class to extend (CRTP):<br>
+///   <pre>class MyComparableClass: public RelOpsFromLess< MyComparableClass></pre><br>
+/// If your class provides a compare method instead of a less-than operator, use
+/// celma::common::RelOpsFromCompare<> instead.
 ///
 /// @tparam  T  The type of the class to provide the relational operators for.
 /// @since  1.11.0, 24.08.2018

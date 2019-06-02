@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -105,9 +105,14 @@ public:
 
    /// Assigns the specified value to the first variable, and the value
    /// specified in the constructor to the second variable.
-   /// @param[in]  value1  The value to assign.
+   /// @param[in]  value1
+   ///    The value to assign.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 27.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   void assign( const std::string& value1)
+   void assign( const std::string& value1, bool /* inverted */)
    {
       mDestVar1 = boost::lexical_cast< T1>( value1);
       mDestVar2.assign();
@@ -158,11 +163,16 @@ public:
 
    /// Assigns the specified value to the first variable, and the values
    /// specified in the constructor to the second and third variable.
-   /// @param[in]  value1  The value to assign.
+   /// @param[in]  value1
+   ///    The value to assign.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 27.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   void assign( const std::string& value1)
+   void assign( const std::string& value1, bool /* inverted */)
    {
-      MultiSetter2< T1, T2>::assign( value1);
+      MultiSetter2< T1, T2>::assign( value1, false);
       mDestVar3.assign();
    } // end MultiSetter3< T1, T2, T3>::assign
 
@@ -185,5 +195,5 @@ private:
 #endif   // CELMA_COMMON_MULTI_SETTER_HPP
 
 
-// =========================  END OF multi_setter.hpp  =========================
+// =====  END OF multi_setter.hpp  =====
 

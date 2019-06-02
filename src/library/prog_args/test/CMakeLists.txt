@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -11,38 +11,30 @@ cmake_minimum_required( VERSION 3.5 )
 
 add_definitions( -DBOOST_TEST_DYN_LINK)
 
-celma_add_celma_boost_testprogram( test_argh_arg_help )
-celma_add_celma_boost_testprogram( test_argh_callables )
-celma_add_celma_boost_testprogram( test_argh_cardinality )
-celma_add_celma_boost_testprogram( test_argh_checks )
-celma_add_celma_boost_testprogram( test_argh_command_arg )
-celma_add_celma_boost_testprogram( test_argh_constraints )
-celma_add_celma_boost_testprogram( test_argh_custom_convert )
-celma_add_celma_boost_testprogram( test_argh_custom_type )
-celma_add_celma_boost_testprogram( test_argh_dest_bitset )
-celma_add_celma_boost_testprogram( test_argh_dest_level_counter )
-celma_add_celma_boost_testprogram( test_argh_dest_pair )
-celma_add_celma_boost_testprogram( test_argh_dest_tuple )
-celma_add_celma_boost_testprogram( test_argh_dest_vector )
-celma_add_celma_boost_testprogram( test_argh_longarg_abbr )
-celma_add_celma_boost_testprogram( test_argh_migration )
-celma_add_celma_boost_testprogram( test_argh_output_streams)
-celma_add_celma_boost_testprogram( test_argh_range )
-celma_add_celma_boost_testprogram( test_argh_separate_values )
-celma_add_celma_boost_testprogram( test_argh_summary )
-celma_add_celma_boost_testprogram( test_argh_value_arg )
-celma_add_celma_boost_testprogram( test_arg_list_parser )
-celma_add_celma_boost_testprogram( test_argument_groups )
-celma_add_celma_boost_testprogram( test_argument_key )
-celma_add_celma_boost_testprogram( test_argument_sub_groups )
-celma_add_celma_boost_testprogram( test_constraint_container )
-celma_add_celma_boost_testprogram( test_handler )
-celma_add_celma_boost_testprogram( test_storage )
-celma_add_celma_boost_testprogram( test_value_handler )
 
-# test-programs for output
+# search for all test programs and build them depending on their names:
+# - test programs ending in _c are using the standard setup and are just against
+#   the Celam and Boost (Test) library
+# - all remainng test programs are set up "manually" due to special requirements
+#   (start arguments)
+
+FILE( GLOB progargs_testprograms *.cpp )
+
+FOREACH( testsource ${progargs_testprograms} )
+   GET_FILENAME_COMPONENT( filename ${testsource} NAME_WE )
+   IF (filename MATCHES ^test_.*_c$)
+      celma_add_celma_boost_testprogram( ${filename} )
+   ENDIF()
+ENDFOREACH()
+
+
+# test-programs for output or start parameters
 add_executable( test_arg_groups_usage           test_arg_groups_usage.cpp )
-add_executable( test_argh_hidden_output         test_argh_hidden_output )
+add_executable( test_argg_eval_error_exit       test_argg_eval_error_exit.cpp )
+add_executable( test_argh_arg_file              test_argh_arg_file.cpp )
+add_executable( test_argh_env_var               test_argh_env_var.cpp )
+add_executable( test_argh_eval_error_exit       test_argh_eval_error_exit.cpp )
+add_executable( test_argh_hidden_output         test_argh_hidden_output.cpp )
 add_executable( test_argh_list_arg_vars_output  test_argh_list_arg_vars_output.cpp )
 add_executable( test_argh_print_def             test_argh_print_def.cpp )
 add_executable( test_argh_verbose_output        test_argh_verbose_output )
@@ -50,31 +42,81 @@ add_executable( test_groups_sub_groups_usage    test_groups_sub_groups_usage.cpp
 add_executable( test_long_arg_desc              test_long_arg_desc.cpp )
 add_executable( test_sub_groups_usage           test_sub_groups_usage.cpp )
 
-target_link_libraries( test_arg_groups_usage             celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_hidden_output           celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_list_arg_vars_output    celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_print_def               celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_verbose_output          celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_groups_sub_groups_usage      celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_long_arg_desc                celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_sub_groups_usage             celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_arg_groups_usage           celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argg_eval_error_exit       celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_arg_file              celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_env_var               celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_eval_error_exit       celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_hidden_output         celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_list_arg_vars_output  celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_print_def             celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_verbose_output        celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_groups_sub_groups_usage    celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_long_arg_desc              celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_sub_groups_usage           celma ${Boost_Test_Link_Libs} )
 
-add_test( test_arg_groups_usage                ${CMAKE_CURRENT_BINARY_DIR}/test_arg_groups_usage -h )
-add_test( test_argh_hidden_output              ${CMAKE_CURRENT_BINARY_DIR}/test_argh_hidden_output -h )
-add_test( test_argh_list_arg_vars_output       ${CMAKE_CURRENT_BINARY_DIR}/test_argh_list_arg_vars_output )
-add_test( test_argh_print_def                  ${CMAKE_CURRENT_BINARY_DIR}/test_argh_print_def -h )
-add_test( test_argh_verbose_output             ${CMAKE_CURRENT_BINARY_DIR}/test_argh_verbose_output -f -i 36 -s myname )
-add_test( test_groups_sub_groups_usage_input   ${CMAKE_CURRENT_BINARY_DIR}/test_groups_sub_groups_usage -ih )
-add_test( test_groups_sub_groups_usage_main    ${CMAKE_CURRENT_BINARY_DIR}/test_groups_sub_groups_usage -h )
-add_test( test_groups_sub_groups_usage_output  ${CMAKE_CURRENT_BINARY_DIR}/test_groups_sub_groups_usage -o -h )
-add_test( test_long_arg_desc_long_desc         ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc 1 )
-add_test( test_long_arg_desc_long_name         ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc 2 )
-add_test( test_long_arg_desc_long_name_desc    ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc 3 )
-add_test( test_long_arg_desc_long_name_4       ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc 4 )
-add_test( test_long_arg_desc_main              ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc )
-add_test( test_sub_groups_usage_input          ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -i -h )
-add_test( test_sub_groups_usage_main           ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -h )
-add_test( test_sub_groups_usage_output         ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -oh )
+add_test( test_arg_groups_usage                   ${CMAKE_CURRENT_BINARY_DIR}/test_arg_groups_usage -h )
+add_test( test_argg_eval_error_exit_boost_lex     ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -b )
+add_test( test_argg_eval_error_exit_exception     ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -e )
+add_test( test_argg_eval_error_exit_flag          ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -f )
+add_test( test_argg_eval_error_exit_integer       ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -i )
+add_test( test_argg_eval_error_exit_inv_arg       ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -v )
+add_test( test_argg_eval_error_exit_logic         ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -l )
+add_test( test_argg_eval_error_exit_out_of_range  ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -o )
+add_test( test_argg_eval_error_exit_overflow      ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -O )
+add_test( test_argg_eval_error_exit_runtime       ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -r )
+add_test( test_argg_eval_error_exit_underflow     ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -U )
+add_test( test_argh_arg_file                      ${CMAKE_CURRENT_BINARY_DIR}/test_argh_arg_file -- ${CMAKE_CURRENT_SOURCE_DIR} )
+add_test( test_argh_env_var                       ${CMAKE_CURRENT_BINARY_DIR}/test_argh_env_var -- ${CMAKE_CURRENT_SOURCE_DIR} )
+add_test( test_argh_eval_error_exit_boost_lex     ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -b )
+add_test( test_argh_eval_error_exit_exception     ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -e )
+add_test( test_argh_eval_error_exit_flag          ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -f )
+add_test( test_argh_eval_error_exit_integer       ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -i )
+add_test( test_argh_eval_error_exit_inv_arg       ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -v )
+add_test( test_argh_eval_error_exit_logic         ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -l )
+add_test( test_argh_eval_error_exit_out_of_range  ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -o )
+add_test( test_argh_eval_error_exit_overflow      ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -O )
+add_test( test_argh_eval_error_exit_runtime       ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -r )
+add_test( test_argh_eval_error_exit_underflow     ${CMAKE_CURRENT_BINARY_DIR}/test_argh_eval_error_exit -U )
+add_test( test_argh_hidden_output                 ${CMAKE_CURRENT_BINARY_DIR}/test_argh_hidden_output -h )
+add_test( test_argh_list_arg_vars_output          ${CMAKE_CURRENT_BINARY_DIR}/test_argh_list_arg_vars_output )
+add_test( test_argh_print_def                     ${CMAKE_CURRENT_BINARY_DIR}/test_argh_print_def -h )
+add_test( test_argh_verbose_output                ${CMAKE_CURRENT_BINARY_DIR}/test_argh_verbose_output -f -i 36 -s myname )
+add_test( test_groups_sub_groups_usage_input      ${CMAKE_CURRENT_BINARY_DIR}/test_groups_sub_groups_usage -ih )
+add_test( test_groups_sub_groups_usage_main       ${CMAKE_CURRENT_BINARY_DIR}/test_groups_sub_groups_usage -h )
+add_test( test_groups_sub_groups_usage_output     ${CMAKE_CURRENT_BINARY_DIR}/test_groups_sub_groups_usage -o -h )
+add_test( test_long_arg_desc_long_desc            ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc 1 )
+add_test( test_long_arg_desc_long_name_4          ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc 4 )
+add_test( test_long_arg_desc_long_name            ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc 2 )
+add_test( test_long_arg_desc_long_name_desc       ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc 3 )
+add_test( test_long_arg_desc_main                 ${CMAKE_CURRENT_BINARY_DIR}/test_long_arg_desc )
+add_test( test_sub_groups_usage_input             ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -i -h )
+add_test( test_sub_groups_usage_main              ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -h )
+add_test( test_sub_groups_usage_output            ${CMAKE_CURRENT_BINARY_DIR}/test_sub_groups_usage -oh )
+
+set_tests_properties(
+   test_argg_eval_error_exit_boost_lex
+   test_argg_eval_error_exit_exception
+   test_argg_eval_error_exit_integer
+   test_argg_eval_error_exit_logic
+   test_argg_eval_error_exit_out_of_range
+   test_argg_eval_error_exit_runtime
+   test_argg_eval_error_exit_inv_arg
+   test_argg_eval_error_exit_overflow
+   test_argg_eval_error_exit_underflow
+
+   test_argh_eval_error_exit_boost_lex
+   test_argh_eval_error_exit_exception
+   test_argh_eval_error_exit_integer
+   test_argh_eval_error_exit_logic
+   test_argh_eval_error_exit_out_of_range
+   test_argh_eval_error_exit_runtime
+   test_argh_eval_error_exit_inv_arg
+   test_argh_eval_error_exit_overflow
+   test_argh_eval_error_exit_underflow
+   PROPERTIES WILL_FAIL TRUE
+)
+
 
 # test_arg_groups_usage
 # ---------------------
@@ -119,7 +161,7 @@ set( test_argh_print_def_result
      "   -o,--optional          Optional integer argument, \\*with\\* default\n"
      "                          Default value: 4711\n"
      "   -p,--optional-string   Optional string argument, \\*with\\* default\n"
-     "                          Default value: hello world\n"
+     "                          Default value: \"hello world\"\n"
      "   -l,--list              Optional vector argument, don't print default\n"
      "   -c,--checked           Optional integer argument, using CheckAssign<>, \\*with\\*\n"
      "                          default\n"
@@ -279,7 +321,7 @@ set( test_long_arg_desc_long_desc_output_result
    "                  This description spawns multiple lines by itself, and contains\n"
    "                  lines that are so long that they must be split unto multiple\n"
    "                  lines in order to get a decent output.\n"
-   "                  Default value:\n"
+   "                  Default value: \"\"\n"
    "\n$"
 )
 
@@ -298,7 +340,7 @@ set( test_long_arg_desc_long_name_output_result
    "      Prints the usage for the given argument.\n"
    "   -i,--include-from-this-absolute-directory-path\n"
    "      Long parameter\n"
-   "      Default value:\n"
+   "      Default value: \"\"\n"
    "\n$"
 )
 
@@ -320,7 +362,7 @@ set( test_long_arg_desc_long_name_desc_output_result
    "      This description spawns multiple lines by itself, and contains lines that\n"
    "      are so long that they must be split unto multiple lines in order to get a\n"
    "      decent output.\n"
-   "      Default value:\n"
+   "      Default value: \"\"\n"
    "\n$"
 )
 
@@ -343,7 +385,7 @@ set( test_long_arg_desc_long_name_4_output_result
    "      This description spawns multiple lines by itself, and\n"
    "      contains lines that are so long that they must be split\n"
    "      unto multiple lines in order to get a decent output.\n"
-   "      Default value:\n"
+   "      Default value: \"\"\n"
    "\n$"
 )
 
@@ -366,7 +408,7 @@ set( test_argh_hidden_output_result
    "   --int-opt        integer optional\n"
    "                    Default value: 0\n"
    "   --string-opt     string optional\n"
-   "                    Default value:\n"
+   "                    Default value: \"\"\n"
    "\n"
    "\n"
    "--------------------------------------------------------------------------------\n"
@@ -386,14 +428,14 @@ set( test_argh_hidden_output_result
    "   --int-opt             integer optional\n"
    "                         Default value: 0\n"
    "   --string-opt          string optional\n"
-   "                         Default value:\n"
+   "                         Default value: \"\"\n"
    "   --hidden-flag         hidden flag\n"
    "                         \\[hidden\\]\n"
    "   --hidden-int-opt      hidden integer optional\n"
    "                         Default value: 0\n"
    "                         \\[hidden\\]\n"
    "   --hidden-string-opt   hidden string optional\n"
-   "                         Default value:\n"
+   "                         Default value: \"\"\n"
    "                         \\[hidden\\]\n"
    "\n"
    "\n"
@@ -415,14 +457,14 @@ set( test_argh_hidden_output_result
    "   --int-opt             integer optional\n"
    "                         Default value: 0\n"
    "   --string-opt          string optional\n"
-   "                         Default value:\n"
+   "                         Default value: \"\"\n"
    "   --hidden-flag         hidden flag\n"
    "                         \\[hidden\\]\n"
    "   --hidden-int-opt      hidden integer optional\n"
    "                         Default value: 0\n"
    "                         \\[hidden\\]\n"
    "   --hidden-string-opt   hidden string optional\n"
-   "                         Default value:\n"
+   "                         Default value: \"\"\n"
    "                         \\[hidden\\]\n"
    "\n$"
 )
@@ -437,7 +479,7 @@ set( test_argh_list_arg_vars_output_result
    "^Arguments:\n"
    "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
-   "'-f' boolean flag, destination 'my_flag', set.\n"
+   "'-f' boolean flag, destination 'my_flag', not set.\n"
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
    "'--integer' value type 'int', destination 'my_int', value not set.\n"
    "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
@@ -449,7 +491,7 @@ set( test_argh_list_arg_vars_output_result
    "Arguments:\n"
    "'-V' calls function/method 'Handler::listArgVars'.\n"
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
-   "'-f' boolean flag, destination 'my_flag', set.\n"
+   "'-f' boolean flag, destination 'my_flag', not set.\n"
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
    "'--integer' value type 'int', destination 'my_int', value not set.\n"
    "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
@@ -469,7 +511,7 @@ set( test_argh_list_arg_vars_output_result
    "Arguments:\n"
    "'-V' calls function/method 'Handler::listArgVars'.\n"
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
-   "'-f' boolean flag, destination 'my_flag', set.\n"
+   "'-f' boolean flag, destination 'my_flag', not set.\n"
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
    "'--integer' value type 'int', destination 'my_int', value = 42.\n"
    "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"

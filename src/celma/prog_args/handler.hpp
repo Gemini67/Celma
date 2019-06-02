@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,6 +29,7 @@
 #include "celma/prog_args/detail/argument_desc.hpp"
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
+#include "celma/prog_args/detail/i_handler_constraint.hpp"
 #include "celma/prog_args/summary_options.hpp"
 
 
@@ -54,7 +55,7 @@ class ValueHandler;
 ///   The short (character) and long argument format are order independent in
 ///   the argument string.<br>
 ///   The object to handle the destination variable is created using a function
-///   of the template family celma::prg_args::destinaion().<br>
+///   of the template family celma::prg_args::destination().<br>
 ///   Use one of the \c DEST_... macros to easily create the second and third
 ///   parameter of the function, the destination variable object plus the name
 ///   of the destination variable.<br>
@@ -116,7 +117,7 @@ class ValueHandler;
 ///   - setCardinality(): Allows to change or delete the cardinality check that
 ///     is applied to this argument.
 ///   - checkOriginalValue(): For value arguments, i.e. 'flag' arguments where
-///     the value to set on the destinaion variable is part of the argument
+///     the value to set on the destination variable is part of the argument
 ///     itself, multiple changes to the same destination variable are prevented
 ///     by checking the original value before changing it. Set
 ///     checkOriginalValue() to \c false to allow multiple changes.
@@ -265,8 +266,12 @@ public:
       /// before parsing the command line arguments.<br>
       /// File: $HOME/.progargs/\<progfilename\>.pa
       hfReadProgArg     = hfHelpArgFull  << 1,
+      /// Set this when additional program arguments should be read from an
+      /// environment variable. Default name of the environment variable is the
+      /// name of the program file in uppercase letters.
+      hfEnvVarArgs = hfReadProgArg << 1,
       /// Produces verbose output when a value is assigned to a variable.
-      hfVerboseArgs     = hfReadProgArg << 1,
+      hfVerboseArgs     = hfEnvVarArgs << 1,
       /// Specifies that hidden arguments should be printed too in the usage.
       hfUsageHidden     = hfVerboseArgs << 1,
       /// Allows the argument '--print-hidden' to print the hidden arguments in
@@ -329,7 +334,7 @@ public:
    static const int  DebugFlags = hfVerboseArgs | hfListArgVar;
    /// Complete set of all available arguments.
    static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfHelpArg
-                                   | hfReadProgArg | hfVerboseArgs
+                                   | hfReadProgArg | hfEnvVarArgs | hfVerboseArgs
                                    | hfUsageHidden | hfArgHidden | hfListArgVar
                                    | hfUsageCont;
 
@@ -390,7 +395,15 @@ public:
 
    /// Destructor, deletes dynamically allocated objects.
    /// @since  0.2, 10.04.2016
-   ~Handler();
+   virtual ~Handler();
+
+   /// Activates the check for program arguments in an environment variable,
+   /// plus allows to specify the name of the environment variable o use.<br>
+   /// The default is the name of the program file, all in uppercase letters.
+   ///
+   /// @param[in]  env_var_name  Optional, the name of the environment variable.
+   /// @since  1.22.0, 01.04.2019
+   void checkEnvVarArgs( std::string env_var_name = "");
 
    /// Adds an argument with short and/or long arguments.<br>
    /// For positional arguments, i.e. arguments not preceeded by a an argument
@@ -451,14 +464,17 @@ public:
    /// parameter.<br>
    /// When the flag #hfReadProgArg is passed to the constructor, the program
    /// arguments file with the predefined name is always read if it exists.<br>
-   /// With the method it is possible to specify an argument with which the
+   /// With this method it is possible to specify an argument with which the
    /// (path and) name of the arguments file can be specified. Only if this
    /// given argument is then used on the command line, the argument file is
    /// read.
-   /// @param[in]  arg_spec  The arguments on the command line for specifying
-   ///                       the file with the arguments.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line for specifying the file with the
+   ///    arguments.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentFile( const std::string& arg_spec);
 
@@ -552,14 +568,20 @@ public:
    detail::TypedArgBase* addArgumentHelpArgument( const std::string& arg_spec,
       bool full = false);
 
-   /// Specifies the callback function for a control argument.<br>
-   /// If no handler is defined for a control character, it is treated as error
-   /// when found in an argument list.
-   /// @param[in]  ctrlChar  The control character to specify the handler for.
-   /// @param[in]  hf        The handler to call when the control character is
-   ///                       detected on the argument list.
+   /// Specifies the callback functions for handling brackets on the command
+   /// line.
+   ///
+   /// @param[in]  open_bracket
+   ///    The handler to call when an opening round bracket is detected on the
+   ///    command line.
+   /// @param[in]  closing_bracket
+   ///    The handler to call when a closing round bracket is detected in the
+   ///    argument list.
+   /// @since  1.27.0, 28.05.2019
+   ///    (renamed from addControlHandler)
    /// @since  0.2, 10.04.2016
-   void addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false);
+   void addBracketHandler( HandlerFunc open_bracket,
+      HandlerFunc closing_bracket) noexcept( false);
 
    /// Specifies the line length to use when printing the usage.
    /// @param[in]  useLen  The new line length to use.<br>
@@ -575,9 +597,12 @@ public:
    /// Adds a constraint to the argument handler itself that affects multiple
    /// arguments.<br>
    /// The arguments specified in the constraint must already be defined.
-   /// @param[in]  ic  Pointer to the object that handles the constraint.
+   ///
+   /// @param[in]  ihc
+   ///    Pointer to the object that handles the constraint. Is deleted when an
+   ///    error occurs.
    /// @since  0.2, 10.04.2016
-   void addConstraint( detail::IConstraint* ic) noexcept( false);
+   void addConstraint( detail::IHandlerConstraint* ihc) noexcept( false);
 
    /// Iterates over the list of arguments and their values and stores the
    /// values in the corresponding destination variables.<br>
@@ -602,7 +627,7 @@ public:
    ///                     space at the end as separator to the following text.
    /// @since  0.2, 10.04.2016
    void evalArgumentsErrorExit( int argc, char* argv[],
-                                const std::string& prefix);
+      const std::string& prefix);
 
    /// After calling evalArguments(), prints the list of arguments that were
    /// used and the values that were set.
@@ -659,11 +684,13 @@ protected:
 
    /// Compares the arguments defined in this object with those in \a otherAH
    /// and throws an exception if duplicates are detected.
-   /// @param[in]  ownName    The symbolic name of this objects arguments.
-   /// @param[in]  otherName  The symbolic name of the the other objects
-   ///                        arguments.
-   /// @param[in]  otherAH    The other object to check the argument list
-   ///                        against.
+   ///
+   /// @param[in]  ownName
+   ///    The symbolic name of this objects arguments.
+   /// @param[in]  otherName
+   ///    The symbolic name of the the other objects arguments.
+   /// @param[in]  otherAH
+   ///    The other object to check the argument list against.
    /// @since  0.2, 10.04.2016
    void crossCheckArguments( const std::string ownName,
                              const std::string& otherName,
@@ -732,7 +759,7 @@ private:
    static const detail::ArgumentKey  mPosKey;
 
    /// Type of the container to store the global constrainst in.
-   using ConstraintCont = std::vector< detail::IConstraint*>;
+   using ConstraintCont = std::vector< detail::IHandlerConstraint*>;
 
    /// Called by the constructors to evaluate the set of flags given.
    ///
@@ -784,6 +811,14 @@ private:
    /// @param[in]  arg0  The (path and) name of the program file.
    /// @since  0.2, 10.04.2016
    void readEvalFileArguments( const char* arg0);
+
+   /// If no environment variable name is given, the name of the program file is
+   /// used. Then check if an environment variable with this name exists and is
+   /// not empty. If so the evaluate the program arguments from the variable.
+   ///
+   /// @param[in]  arg0  The (path and) name of the program file.
+   /// @since  1.22.0, 01.04.2019
+   void checkReadEnvVarArgs( const char* arg0);
 
    /// Function to read arguments from a file.
    /// @param[in]  pathFilename   The (path and) file name to read from.
@@ -908,8 +943,6 @@ private:
    HandlerFunc                    mpOpeningBracketHdlr;
    /// Function called for a closing bracket ')'.
    HandlerFunc                    mpClosingBracketHdlr;
-   /// Function called for an exclamation mark '!'.
-   HandlerFunc                    mpExclamationMarkHdlr;
    /// Set when this object is used as argument handler for a sub-group.
    bool                           mIsSubGroupHandler = false;
    /// The current constraints, dynamically created through the arguments that
@@ -918,17 +951,42 @@ private:
    /// Global constraints, i.e. constraints that affect multiple arguments
    /// and/or are not triggered by a specific argument.
    ConstraintCont                 mGlobalConstraints;
+   /// Set when the flag #hfEnvVarArgs is passed to the constructor, or when
+   /// checkEnvVarArgs() is called: Checks for additional program arguments in
+   /// the given environment variable.
+   bool                           mCheckEnvVar = false;
+   /// Contains the name of the environment variable to check for additional
+   /// program arguments. By default, the name of the program file is used, all
+   /// in uppercase letters.
+   std::string                    mEnvVarName;
 
    /// Pointer to the last argument handler that was used. Needed for
    /// processing multiple, separate values.
    detail::TypedArgBase*          mpLastArg = nullptr;
-   /// Reading arguments from a file should not influence the cardinality
-   /// checks, i.e. it should be possible to overwrite a value from a file
-   /// without triggering a 'too many values' exception.
-   bool                           mReadingArgumentFile = false;
+
+   /// List of values/flags for the different read mode.<br>
+   /// The flags for "reading from file" and "processing environment variable"
+   /// may be set in parallel.
+   enum ReadMode
+   {
+      commandLine,   //!< Normal evaluation of command line arguments.
+      file,          //!< Flag/Bit set when evaluating an argument file.
+      envVar         //!< Flag/Bit set when evaluating an environment variable.
+   };
+
+   /// Reading arguments from a file or an environment variable should not
+   /// influence the cardinality checks, i.e. it should be possible to overwrite
+   /// a value from a file without triggering a 'too many values' exception.<br>
+   /// Since arguments from the environment variable could trigger reading an
+   /// argument file, these two states must be managd separately.
+   uint8_t                        mReadMode = ReadMode::commandLine;
    /// Flag, set when this argument handler object was created by a Groups
    /// object.
    bool                           mUsedByGroup;
+   /// Set when an exclamation mark was found on the command line.<br>
+   /// This inverts the meaning of the following argument. Afterwards the flag
+   /// is reset again.
+   bool                           mInverted = false;
 
 }; // Handler
 

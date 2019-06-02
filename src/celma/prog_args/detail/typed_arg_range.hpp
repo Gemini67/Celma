@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -73,11 +73,13 @@ public:
    ///    1.8.0, 05.07.2018
    virtual void printValue( std::ostream& os, bool print_type) const override;
 
-   /// Throws.
+   /// Adding checks is not allowed for a range.
+   ///
+   /// @param[in]  c  Pointer to the check to add, is deleted.
    /// @return  Nothing, always throws.
-   /// @throw  logic_error.
+   /// @throws  "logic_error" since checks are not allowed for ranges.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* addCheck( ICheck* /* c */) noexcept( false) override;
+   virtual TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -87,9 +89,15 @@ protected:
 
 private:
    /// Stores the value in the destination variable.
-   /// @param[in]  value  The value to store in string format.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Actually evaluates the range string.
    /// @param[in]  value  The value string to evaluate.
@@ -140,8 +148,9 @@ template< typename T, typename C>
 
 
 template< typename T, typename C> TypedArgBase*
-   TypedArgRange< T, C>::addCheck( ICheck*) noexcept( false)
+   TypedArgRange< T, C>::addCheck( ICheck* c) noexcept( false)
 {
+   delete c;
    throw std::logic_error( "cannot add value-check to destination type 'range'");
 } // TypedArgRange< T, C>::addCheck
 
@@ -156,7 +165,7 @@ template< typename T, typename C>
 
 
 template< typename T, typename C>
-   void TypedArgRange< T, C>::assign( const std::string& value)
+   void TypedArgRange< T, C>::assign( const std::string& value, bool)
 {
    if (!mFormats.empty())
    {

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -108,9 +108,15 @@ protected:
 
 private:
    /// Stores the value in the destination variable.
-   /// @param[in]  value  Ignored.
+   ///
+   /// @param[in]  value
+   ///    Ignored.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  1.1.0, 25.09.2017
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    T&       mDestVar;
@@ -200,7 +206,7 @@ template< typename T> void TypedArgValue< T>::dump( std::ostream& os) const
 } // TypedArgValue< T>::dump
 
 
-template< typename T> void TypedArgValue< T>::assign( const std::string&)
+template< typename T> void TypedArgValue< T>::assign( const std::string&, bool)
 {
    if (mCheckOrigValue && (mDestVar != mOrigValue))
       throw std::runtime_error( "destination variable '" + mVarName

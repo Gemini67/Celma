@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -188,8 +188,8 @@ std::ostream& operator <<( std::ostream& os, UsageParams::Contents c)
    switch (c)
    {
    case UsageParams::Contents::all:        os << "all";         break;
-   case UsageParams::Contents::shortOnly:  os << "long only";   break;
-   case UsageParams::Contents::longOnly:   os << "short only";  break;
+   case UsageParams::Contents::shortOnly:  os << "short only";  break;
+   case UsageParams::Contents::longOnly:   os << "long only";   break;
    } // end switch
 
    return os << " (" << static_cast< int>( c) << ")";

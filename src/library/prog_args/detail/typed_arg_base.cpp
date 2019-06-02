@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,6 @@
 namespace celma { namespace prog_args { namespace detail {
 
 
-using std::logic_error;
 using std::ostream;
 using std::string;
 
@@ -78,8 +77,11 @@ void TypedArgBase::setKey( const ArgumentKey& key)
 ///    Pointer to this object.
 /// @since
 ///    0.2, 10.04.2016
-TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
+TypedArgBase* TypedArgBase::setValueMode( ValueMode vm)
 {
+
+   if (vm == mValueMode)
+      return this;
 
    if (vm != ValueMode::required)
       throw std::invalid_argument( std::string( "may not set value mode '") +
@@ -94,36 +96,48 @@ TypedArgBase* TypedArgBase::setValueMode( ValueMode vm) noexcept( false)
 
 /// Assigns a value.<br>
 /// Checks if the argument is deprecated, or if a cardinality constraint is
-/// violated. If not, the virtual method assign() is called to actually
-/// assign the value, and finally activateConstraints() is called to activate
-/// the contrainst (sic!) triggered by this argument.
+/// violated.<br>
+/// If not and the flag \a inverted is set, checks if the argument supports
+/// inverted logic.<br>
+/// Finally the virtual method assign() is called to actually assign the
+/// value, and afterwards activateConstraints() is called to activate the
+/// constraints (sic!) triggered by this argument.
 ///
 /// @param[in]  ignore_cardinality
 ///    Specifies if the cardinality of calls/value assignments should be
 ///    ignored.
 /// @param[in]  value
 ///    The value to assign, in string format.
-/// @since
-///    1.6.0, 29.06.2018  (renamed from calledAssign)
-/// @since
-///    0.2, 10.04.2016
-void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
+/// @param[in]  inverted
+///    Is set when the argument was preceeded by an exclamation mark which
+///    means that the logic of the argument should be inverted.
+/// @since  1.27.0, 24.05.2019
+///    (added parameter inverted)
+/// @since  1.6.0, 29.06.2018
+///    (renamed from calledAssign)
+/// @since  0.2, 10.04.2016
+void TypedArgBase::assignValue( bool ignore_cardinality, const string& value,
+   bool inverted)
 {
 
    if (mIsDeprecated)
    {
       if (mReplacedBy.empty())
          throw std::runtime_error( "argument '" + format::toString( mKey)
-            + "' is deprecated!");
+            + "' is deprecated");
       else
          throw std::runtime_error( "argument '" + format::toString( mKey)
-            + "' has been replaced by '" + mReplacedBy + "'!");
+            + "' has been replaced by '" + mReplacedBy + "'");
    } // end if
 
    if (!ignore_cardinality && mpCardinality)
       mpCardinality->gotValue();
 
-   assign( value);
+   if (inverted && !mAllowsInverting)
+      throw std::runtime_error( "argument '" + format::toString( mKey)
+            + "' does not support invertion");
+
+   assign( value, inverted);
    activateConstraints();
 
 } // TypedArgBase::assignValue
@@ -131,24 +145,30 @@ void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
 
 
 /// Adds a value formatter: The value from the argument list (command line)
-/// is formatted before it is checked and/or stored.<br>
-/// Throws when called for an argument that does not accept values.
+/// is formatted before it is checked and/or stored.
+///
 /// @param[in]  f
-///    Pointer to the formatter to add.
-/// @return
-///    Pointer to this object.
+///    Pointer to the formatter to add, is deleted when it could not be
+///    stored.
+/// @return  Pointer to this object.
+///    - "logic error" when called for an argument that does not accept
+///      values.
+///    - "invalid argument" when the given object pointer is NULL.
 /// @since
 ///    0.2, 10.04.2016
-TypedArgBase* TypedArgBase::addFormat( IFormat* f) noexcept( false)
+TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 {
 
    if (mValueMode == ValueMode::none)
-      throw logic_error( "calling addFormat() not allowed for variable '" +
-                           mVarName + "' (because it doesn't accept values)");
+   {
+      delete f;
+      throw std::logic_error( "calling addFormat() not allowed for variable '"
+         + mVarName + "' (because it doesn't accept values)");
+   } // end if
 
    if (f == nullptr)
-      throw logic_error( "must provide valid object for formatting on variable '" +
-                         mVarName + "'");
+      throw std::invalid_argument( "must provide valid object for formatting on"
+         " variable '" + mVarName + "'");
 
    mFormats.push_back( f);
 
@@ -176,22 +196,30 @@ void TypedArgBase::format( string& val) const
 
 
 /// Adds a value check.
+///
 /// @param[in]  c
-///    Pointer to the object that checks the value.
-/// @return
-///    Pointer to this object.
+///    Pointer to the object that checks the value, is deleted when it could
+///    not be stored.
+/// @return  Pointer to this object.
+/// @throws
+///    - "logic error" when called for an argument that does not accept
+///      values.
+///    - "invalid argument" when the given object pointer is NULL.
 /// @since
 ///    0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addCheck( ICheck* c)
 {
 
    if (mValueMode == ValueMode::none)
-      throw logic_error( "calling addCheck() not allowed for variable '" +
-                         mVarName + "' (because it doesn't accept values)");
+   {
+      delete c;
+      throw std::logic_error( "calling addCheck() not allowed for variable '"
+         + mVarName + "' (because it doesn't accept values)");
+   } // end if
 
    if (c == nullptr)
-      throw logic_error( "must provide valid object for value checks on variable '" +
-                         mVarName + "'");
+      throw std::invalid_argument( "must provide valid object for value checks "
+         "on variable '" + mVarName + "'");
 
    mChecks.push_back( c);
 
@@ -252,16 +280,20 @@ string TypedArgBase::constraintStr() const
 
 /// Adds a constraint to this argument. The constraint is only evaluated when
 /// the argument is actually used.
-/// @param[in]  ic
+///
+/// @param[in]  iac
 ///    Pointer to the contraint object to add to this argument.
 /// @return
 ///    Pointer to this object.
 /// @since
 ///    0.2, 10.04.2016
-TypedArgBase* TypedArgBase::addConstraint( IConstraint* ic)
+TypedArgBase* TypedArgBase::addConstraint( IArgConstraint* iac)
 {
 
-   mConstraints.push_back( ic);
+   if (iac == nullptr)
+      throw std::invalid_argument( "invalid NULL pointer added as constraint");
+
+   mConstraints.push_back( iac);
 
    return this;
 } // TypedArgBase::addConstraint
@@ -475,8 +507,8 @@ ostream& operator <<( ostream& os, const TypedArgBase& tab)
       if (tab.mReplacedBy.empty())
          deprecated_str = "deprecated, ";
       else
-         deprecated_str = "replaced by '"
-            + format::toString( tab.mReplacedBy) + "', ";
+         deprecated_str = "replaced by "
+            + format::toString( tab.mReplacedBy) + ", ";
    } // end if
 
    os << "value " << tab.mValueMode << ", "

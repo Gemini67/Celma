@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,6 +39,10 @@ public:
       constant,       //!< Constant text.
       date,           //!< The date of the log message.
       time,           //!< The time when the message was created.
+      time_ms,        //!< The milliseconds part of the time when the message
+                      //!< was created.
+      time_us,        //!< The microsecond part of the time when the message was
+                      //!< created.
       dateTime,       //!< The timestamp of the message.
       pid,            //!< The id of the process that created the message.
       threadId,       //!< The if od the thread that created this message.
@@ -66,6 +70,7 @@ protected:
    friend class Creator;
 
    /// The data that is stored for each field.
+   ///
    /// @since  1.0.0, 07.12.2016
    struct Field
    {

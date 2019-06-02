@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,19 +28,20 @@
 #include "celma/prog_args/detail/argument_key.hpp"
 
 
-using std::string;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
 
 /// Constructor.
-/// @param[in]  reqArgSpec  The list of arguments of which at most one may be
-///                         used.
-/// @since  1.1, 01.03.2016
-ConstraintAnyOf::ConstraintAnyOf( const string& reqArgSpec):
-   mArgSpecList( reqArgSpec),
+///
+/// @param[in]  reqArgSpec
+///    The list of arguments of which at most one may be used.
+/// @throws
+///    "invalid argument" if the string is empty or does not contain at least
+///    two arguments.
+/// @since  0.2, 10.04.2016
+ConstraintAnyOf::ConstraintAnyOf( const std::string& reqArgSpec):
+   IHandlerConstraint( "any of", reqArgSpec),
    mUsedArgument()
 {
 } // ConstraintAnyOf::ConstraintAnyOf
@@ -50,6 +51,7 @@ ConstraintAnyOf::ConstraintAnyOf( const string& reqArgSpec):
 /// Called when an argument was identified. If the argument is one of those
 /// in the specified list, check if it is the first of these arguments that
 /// is used, i.e. #mUsedArgument is empty.
+///
 /// @param[in]  key  The argument that was used/identified.
 /// @since  1.1, 01.03.2016
 void ConstraintAnyOf::executeConstraint( const ArgumentKey& key)
@@ -69,19 +71,8 @@ void ConstraintAnyOf::executeConstraint( const ArgumentKey& key)
 
 
 
-/// Required for global constraints to make sure that the argument list
-/// contains both the short and long argument.
-/// @return  The list of argument as passed in the constructor.
-/// @since  0.2, 10.04.2016
-string& ConstraintAnyOf::argumentList()
-{
-
-   return mArgSpecList;
-} // ConstraintAnyOf::argumentList
-
-
-
 /// Called after the argument list in a global constraint was validated.
+///
 /// @since  0.2, 10.04.2016
 void ConstraintAnyOf::validated()
 {
@@ -91,6 +82,7 @@ void ConstraintAnyOf::validated()
 
 /// Called after all arguments were evaluated. No check done here, but the
 /// method from the base class must be overwritten.
+///
 /// @since  0.2, 10.04.2016
 void ConstraintAnyOf::checkEndCondition() const
 {
@@ -99,6 +91,7 @@ void ConstraintAnyOf::checkEndCondition() const
 
 
 /// Returns a text description of the constraint.
+///
 /// @return  A string with the text description of the constraint.
 /// @since  0.16.0, 15.08.2017
 std::string ConstraintAnyOf::toString() const
@@ -118,5 +111,5 @@ std::string ConstraintAnyOf::toString() const
 } // namespace celma
 
 
-// ======================  END OF constraint_any_of.cpp  ======================
+// =====  END OF constraint_any_of.cpp  =====
 

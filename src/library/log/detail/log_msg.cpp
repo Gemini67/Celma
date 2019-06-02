@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,13 +35,17 @@ namespace celma { namespace log { namespace detail {
 
 /// Constructor, sets the properties where this log message was created.<br>
 /// Internally, also the process id is set.
-/// @param[in]  file_name             The name of the source file.
-/// @param[in]  pretty_function_name  The name of the function.
-/// @param[in]  line_nbr              The line number.
+///
+/// @param[in]  file_name
+///    The name of the source file.
+/// @param[in]  pretty_function_name
+///    The name of the function.
+/// @param[in]  line_nbr
+///    The line number.
 /// @since  1.0.0, 19.06.2016
 LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_name,
                 int line_nbr):
-   mTimestamp( ::time( nullptr)),
+   mTimestamp( std::chrono::system_clock::now()),
    mProcessId( ::getpid()),
    mThreadId( ::pthread_self()),
    mFileName( file_name),
@@ -58,6 +62,7 @@ LogMsg::LogMsg( const std::string& file_name, const char* const pretty_function_
 
 /// Stores the data of an exception.<br>
 /// Note that also the line number, function name etc. are copied.
+///
 /// @param[in]  eb  The exception to copy the data from.
 /// @since  1.0.0, 19.06.2016
 void LogMsg::assign( const common::ExceptionBase& eb)

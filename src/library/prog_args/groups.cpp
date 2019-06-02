@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,6 +25,7 @@
 
 
 // project includes
+#include "celma/prog_args/detail/eval_arguments_error_exit.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
 
 
@@ -39,11 +40,12 @@ using std::string;
 
 /// Returns the argument handler for the specified group name.<br>
 /// If the argument handler does not exist yet, a new handler object will be
-/// created. If the handler object exists already, it must a 'plain' handler
-/// object, not a value handler.<br>
+/// created. If the handler object exists already, it must be a 'plain'
+/// handler object, not a value handler.<br>
 /// The output streams will be passed as specified when calling instance()
 /// for this group object, and the flags parameter will be a combination of
 /// this object's flag and the flags passed in \a this_handler_flags.
+///
 /// @param[in]  grpName             The symbolic name of this handler, used
 ///                                 for identification and printing the
 ///                                 usage.
@@ -213,39 +215,8 @@ void Groups::evalArgumentsErrorExit( int argc, char* argv[],
    const std::string& prefix)
 {
 
-   try
-   {
+   detail::evalArgumentsErrorExit( *this, mErrorOutput, argc, argv, prefix);
 
-      evalArguments( argc, argv);
-      return;   // return here, easier error exit below
-
-   } catch (const std::invalid_argument& ia)
-   {
-      mErrorOutput << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
-   } catch (const std::out_of_range& re)
-   {
-      mErrorOutput << prefix << "Caught 'out of range error' exception: " << re.what() << "!" << endl;
-   } catch (const std::logic_error& le)
-   {
-      mErrorOutput << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
-   } catch (const std::overflow_error& oe)
-   {
-      mErrorOutput << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
-   } catch (const std::underflow_error& ue)
-   {
-      mErrorOutput << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;
-   } catch (const std::runtime_error& rte)
-   {
-      mErrorOutput << prefix << "Caught 'runtime error' exception: " << rte.what() << "!" << endl;
-   } catch (const std::exception& e)
-   {
-      mErrorOutput << prefix << "Caught unspecific std::exception: " << e.what() << "!" << endl;
-   } catch (...)
-   {
-      mErrorOutput << prefix << "Caught unknown exception!" << endl;
-   } // end try
-
-   exit( EXIT_FAILURE);
 } // Groups::evalArgumentsErrorExit
 
 
@@ -379,7 +350,7 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
    else if ((txt2 != nullptr) && (txt2->usagePos() == Handler::UsagePos::afterArgs))
       mOutput << txt2 << endl << endl;
 
-   exit( EXIT_SUCCESS);
+   ::exit( EXIT_SUCCESS);
 
 } // Groups::displayUsage
 
@@ -387,7 +358,7 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 
 /// When argument groups are used, it is necessary to check that the same
 /// argument is only used in one of the handlers.<br>
-/// This is achieved by stting the Handler::hfInGroup flag for each handler
+/// This is achieved by setting the Handler::hfInGroup flag for each handler
 /// that is created. Then, when an argument is added to the handler, it calls
 /// this method.<br>
 /// Here, since we don't know which argument was the new one, compare each

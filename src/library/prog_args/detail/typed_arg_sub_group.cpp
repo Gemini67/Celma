@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -62,7 +62,8 @@ const std::string TypedArgSubGroup::varTypeName() const
 
 /// Required by framework, does nothing except setting the #mWasCalled flag.
 /// @since  0.2, 10.04.2016
-void TypedArgSubGroup::assign( const std::string& /* value */)
+void TypedArgSubGroup::assign( const std::string& /* value */,
+   bool /* inverted */)
 {
 
    mWasCalled = true;

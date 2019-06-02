@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,6 +20,7 @@
 
 
 #include <iosfwd>
+#include <memory>
 #include "celma/log/detail/i_log_dest.hpp"
 #include "celma/log/detail/i_format_stream.hpp"
 
@@ -31,6 +32,8 @@ class LogMsg;
 
 
 /// Log destination: (o) Stream.
+///
+/// @since  1.24.1, 22.04.2019  (removed unused feature "add newline")
 /// @since  1.0.0, 19.06.2016
 class LogDestStream: public ILogDest
 {
@@ -39,11 +42,11 @@ public:
    /// A default stream formatter (FormatStreamDefault) is created for
    /// formatting the log messages. Use setFormatter() to specify another
    /// formatter if necessary.
-   /// @param[in]  dest         The stream to write into.
-   /// @param[in]  add_newline  Set to \c true if a newline character should be
-   ///                          added to log message(s).
+   ///
+   /// @param[in]  dest  The stream to write into.
+   /// @since  1.24.1, 22.04.2019  (removed unused parameter add_newline)
    /// @since  1.0.0, 19.06.2016
-   explicit LogDestStream( std::ostream& dest, bool add_newline = false);
+   explicit LogDestStream( std::ostream& dest);
 
    /// Empty, virtual destructor.
    /// @since  1.0.0, 19.06.2016
@@ -67,8 +70,6 @@ private:
 
    /// The stream to write into.
    std::ostream&                    mDest;
-   /// Flag if a newline should be added to the output stream.
-   const bool                       mAddNewline;
    /// The object used for formatting stream output.
    std::unique_ptr< IFormatStream>  mpFormatter;
 
@@ -83,5 +84,5 @@ private:
 #endif   // CELMA_LOG_DETAIL_LOG_DEST_STREAM_HPP
 
 
-// =======================  END OF log_dest_stream.hpp  =======================
+// =====  END OF log_dest_stream.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,7 +25,6 @@
 #include <string>
 #include "celma/prog_args.hpp"
 #include "celma/prog_args/detail/argument_value.hpp"
-#include "celma/prog_args/detail/value_storage.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -78,7 +77,7 @@ public:
                  IUsageText* txt2 = nullptr);
 
    // default destructor will do just fine
-   ~ValueHandler() = default;
+   virtual ~ValueHandler() = default;
    // don't want to allow copying nor assignment
    ValueHandler( const ValueHandler&) = delete;
    ValueHandler& operator =( const ValueHandler&) = delete;

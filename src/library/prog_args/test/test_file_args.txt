@@ -1,0 +1,3 @@
+# test file for reading arguments from a file
+
+-i 42

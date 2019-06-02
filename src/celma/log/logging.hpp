@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -82,6 +82,9 @@ class Logging: public common::Singleton< Logging>
 {
 public:
    friend class common::Singleton< Logging>;
+
+   /// Empty, virtual default destructor.
+   virtual ~Logging() = default;
 
    /// Checks if there already exists a log with the specified name. If not, a
    /// new log is created.

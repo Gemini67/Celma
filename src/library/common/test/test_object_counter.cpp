@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -52,7 +52,7 @@ class CountedTwo: public ObjectCounter< CountedTwo>
 /// @since  1.11.0, 22.08.2018
 CountedOne creator()
 {
-   return std::move( CountedOne());
+   return CountedOne();
 } // creator
 
 
