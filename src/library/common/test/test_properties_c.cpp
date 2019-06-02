@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE( simple_properties)
    std::ostringstream  oss;
    oss << myProperties;
 
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Address:\n"
       "   Country = Switzerland\n"
       "   House Number = 123\n"
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE( property_link)
    std::ostringstream  oss;
    oss << myProperties;
 
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Family Name -> Name\n"
       "Name = Hugentobler\n"
    ));
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE( multiple_links)
    std::ostringstream  oss;
    oss << myProperties;
 
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Address:\n"
       "   Country = Switzerland\n"
       "   House Number = 123\n"
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE( multiple_links)
    oss.str( "");
    oss << myProperties;
 
-   BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+   BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
       "Address:\n"
       "   Country = Switzerland\n"
       "   House Number = 123\n"
@@ -299,4 +299,3 @@ BOOST_AUTO_TEST_CASE( multiple_links)
 
 
 // =====  END OF test_properties_c.cpp  =====
-

@@ -35,7 +35,7 @@
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using std::ostringstream;
 
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE( invalid_use_of_deprecated_argument)
       ->setIsDeprecated());
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( new_arg), "string"));
 
-   const ArgString2Array  as2a( "-i 25", nullptr);
+   auto const  as2a = make_arg_array( "-i 25", nullptr);
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
       std::runtime_error);
@@ -132,13 +132,13 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
          ->setIsDeprecated());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( new_arg), "string"));
 
-      const ArgString2Array  as2a( "--list-arg-vars", nullptr);
+      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( err_out.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << '\n' << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -165,13 +165,13 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
          ->setReplacedBy( "-s"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( new_arg), "string"));
 
-      const ArgString2Array  as2a( "--list-arg-vars", nullptr);
+      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( err_out.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << '\n' << std_out.str() << std::endl;
-      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out.str(),
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE( invalid_use_of_replaced_argument)
       ->setReplacedBy( "-s"));
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( new_arg), "string"));
 
-   const ArgString2Array  as2a( "-i 25", nullptr);
+   auto const  as2a = make_arg_array( "-i 25", nullptr);
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
       std::runtime_error);
@@ -216,4 +216,4 @@ BOOST_AUTO_TEST_CASE( invalid_use_of_replaced_argument)
 
 
 
-// =====  END OF test_argh_migration.cpp  =====
+// =====  END OF test_argh_migration_c.cpp  =====

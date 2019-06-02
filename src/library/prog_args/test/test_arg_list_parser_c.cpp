@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,7 +27,7 @@
 #include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::detail::ArgListElement;
 using celma::prog_args::detail::ArgListParser;
 
@@ -42,8 +42,8 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( ArgListElement::ElementType)
 BOOST_AUTO_TEST_CASE( error_single_dash_only)
 {
 
-   const ArgString2Array  as2a( "-", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
+   auto const     as2a = make_arg_array( "-", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
 
 
    BOOST_REQUIRE_THROW( alp.cbegin(), std::runtime_error);
@@ -57,9 +57,9 @@ BOOST_AUTO_TEST_CASE( error_single_dash_only)
 BOOST_AUTO_TEST_CASE( single_char)
 {
 
-   const ArgString2Array  as2a( "-v", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-v", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -77,9 +77,9 @@ BOOST_AUTO_TEST_CASE( single_char)
 BOOST_AUTO_TEST_CASE( two_single_char)
 {
 
-   const ArgString2Array  as2a( "-lv", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-lv", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -103,9 +103,9 @@ BOOST_AUTO_TEST_CASE( two_single_char)
 BOOST_AUTO_TEST_CASE( two_single_char_sep)
 {
 
-   const ArgString2Array  as2a( "-l -v", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-l -v", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -130,9 +130,9 @@ BOOST_AUTO_TEST_CASE( two_single_char_sep)
 BOOST_AUTO_TEST_CASE( error_single_dash)
 {
 
-   const ArgString2Array  as2a( "-l - -v", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-l - -v", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -149,9 +149,9 @@ BOOST_AUTO_TEST_CASE( error_single_dash)
 BOOST_AUTO_TEST_CASE( three_single_char)
 {
 
-   const ArgString2Array  as2a( "-lva", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-lva", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -181,9 +181,9 @@ BOOST_AUTO_TEST_CASE( three_single_char)
 BOOST_AUTO_TEST_CASE( three_single_char_sep)
 {
 
-   const ArgString2Array  as2a( "-l -v -a", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-l -v -a", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -213,9 +213,9 @@ BOOST_AUTO_TEST_CASE( three_single_char_sep)
 BOOST_AUTO_TEST_CASE( three_single_char_mixed1)
 {
 
-   const ArgString2Array  as2a( "-lv -a", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-lv -a", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -245,9 +245,9 @@ BOOST_AUTO_TEST_CASE( three_single_char_mixed1)
 BOOST_AUTO_TEST_CASE( three_single_char_mixed2)
 {
 
-   const ArgString2Array  as2a( "-l -va", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-l -va", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -277,9 +277,9 @@ BOOST_AUTO_TEST_CASE( three_single_char_mixed2)
 BOOST_AUTO_TEST_CASE( single_long)
 {
 
-   const ArgString2Array  as2a( "--verbose", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--verbose", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -297,9 +297,9 @@ BOOST_AUTO_TEST_CASE( single_long)
 BOOST_AUTO_TEST_CASE( two_long)
 {
 
-   const ArgString2Array  as2a( "--verbose --careful", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--verbose --careful", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -323,9 +323,9 @@ BOOST_AUTO_TEST_CASE( two_long)
 BOOST_AUTO_TEST_CASE( short_long)
 {
 
-   const ArgString2Array  as2a( "-v --verbose -s0l --careful -x", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-v --verbose -s0l --careful -x", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -379,9 +379,9 @@ BOOST_AUTO_TEST_CASE( short_long)
 BOOST_AUTO_TEST_CASE( short_value)
 {
 
-   const ArgString2Array  as2a( "-f filename", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-f filename", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -405,9 +405,9 @@ BOOST_AUTO_TEST_CASE( short_value)
 BOOST_AUTO_TEST_CASE( long_value)
 {
 
-   const ArgString2Array  as2a( "--inputfile filename", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--inputfile filename", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -431,9 +431,9 @@ BOOST_AUTO_TEST_CASE( long_value)
 BOOST_AUTO_TEST_CASE( two_long_value)
 {
 
-   const ArgString2Array  as2a( "--verboselevel 8 --inputfile=filename", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--verboselevel 8 --inputfile=filename", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -469,9 +469,9 @@ BOOST_AUTO_TEST_CASE( two_long_value)
 BOOST_AUTO_TEST_CASE( three_long_value)
 {
 
-   const ArgString2Array  as2a( "--verboselevel 8 --inputfile=filename --another=attempt", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--verboselevel 8 --inputfile=filename --another=attempt", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -519,9 +519,9 @@ BOOST_AUTO_TEST_CASE( three_long_value)
 BOOST_AUTO_TEST_CASE( short_long_long_short)
 {
 
-   const ArgString2Array  as2a( "-i input --outputfile filename --filter=everything -q always", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-i input --outputfile filename --filter=everything -q always", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -581,9 +581,9 @@ BOOST_AUTO_TEST_CASE( short_long_long_short)
 BOOST_AUTO_TEST_CASE( single_value)
 {
 
-   const ArgString2Array  as2a( "my_value", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "my_value", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
@@ -601,9 +601,9 @@ BOOST_AUTO_TEST_CASE( single_value)
 BOOST_AUTO_TEST_CASE( short_value_value)
 {
 
-   const ArgString2Array  as2a( "-f value my_value", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-f value my_value", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -634,9 +634,9 @@ BOOST_AUTO_TEST_CASE( short_value_value)
 BOOST_AUTO_TEST_CASE( long_eq_value_value)
 {
 
-   const ArgString2Array  as2a( "--longarg=value my_value", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--longarg=value my_value", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -666,9 +666,9 @@ BOOST_AUTO_TEST_CASE( long_eq_value_value)
 BOOST_AUTO_TEST_CASE( multiple_pos_values)
 {
 
-   const ArgString2Array  as2a( "my_value other_value", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "my_value other_value", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE( it != alp.cend());
@@ -692,9 +692,9 @@ BOOST_AUTO_TEST_CASE( multiple_pos_values)
 BOOST_AUTO_TEST_CASE( multiple_pos_values_numbers)
 {
 
-   const ArgString2Array  as2a( "42 4711 90125", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "42 4711 90125", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE( it != alp.cend());
@@ -723,9 +723,9 @@ BOOST_AUTO_TEST_CASE( multiple_pos_values_numbers)
 BOOST_AUTO_TEST_CASE( short_dashed_value)
 {
 
-   const ArgString2Array  as2a( "-f -- -minusfile", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-f -- -minusfile", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -749,9 +749,9 @@ BOOST_AUTO_TEST_CASE( short_dashed_value)
 BOOST_AUTO_TEST_CASE( long_dashed_value)
 {
 
-   const ArgString2Array  as2a( "--filename -- -minusfile", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--filename -- -minusfile", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -776,9 +776,9 @@ BOOST_AUTO_TEST_CASE( long_dashed_value)
 BOOST_AUTO_TEST_CASE( long_equal_dashed_value)
 {
 
-   const ArgString2Array  as2a( "--filename=-minusfile", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--filename=-minusfile", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -802,9 +802,9 @@ BOOST_AUTO_TEST_CASE( long_equal_dashed_value)
 BOOST_AUTO_TEST_CASE( control)
 {
 
-   const ArgString2Array  as2a( "--filter plus ( ! --filter minus )", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "--filter plus ( ! --filter minus )", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
@@ -859,9 +859,9 @@ BOOST_AUTO_TEST_CASE( control)
 BOOST_AUTO_TEST_CASE( multiple_iterators)
 {
 
-   const ArgString2Array  as2a( "-a --long1 -b value --long2=value -c -def value --extra value value", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   int                    numArgs = 0;
+   auto const     as2a = make_arg_array( "-a --long1 -b value --long2=value -c -def value --extra value value", nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   int            numArgs = 0;
 
 
    for (auto it = alp.cbegin(); it != alp.cend(); ++it)
@@ -895,9 +895,10 @@ BOOST_AUTO_TEST_CASE( multiple_iterators)
 BOOST_AUTO_TEST_CASE( value_after_arg)
 {
 
-   const ArgString2Array  as2a( "-ffilename -f filename -f --nofile -affilename", nullptr);
-   ArgListParser          alp( as2a.mArgC, as2a.mpArgV);
-   auto                   it = alp.cbegin();
+   auto const     as2a = make_arg_array( "-ffilename -f filename -f --nofile -affilename",
+      nullptr);
+   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+   auto           it = alp.cbegin();
 
 
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
@@ -962,4 +963,5 @@ BOOST_AUTO_TEST_CASE( value_after_arg)
 
 
 
-// =====  END OF test_arg_list_parser.cpp  =====
+// =====  END OF test_arg_list_parser_c.cpp  =====
+

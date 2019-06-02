@@ -1,6 +1,6 @@
 # Celma
 C++ Extension Library Modules for Application<br>
-Version: 1.26.1
+Version: 1.27.1
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Gemini67_Celma&metric=alert_status)](https://sonarcloud.io/dashboard?id=Gemini67_Celma)
 

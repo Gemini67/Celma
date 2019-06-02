@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,7 @@
 #include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using std::vector;
 
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer")
                                             ->setIsMandatory());
-      const ArgString2Array  as2a( "", nullptr);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
 
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
 
-      const ArgString2Array  as2a( "", nullptr);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( myVec.empty());
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
 
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
 
-      const ArgString2Array  as2a( "-v 10,20,40", nullptr);
+      auto const  as2a = make_arg_array( "-v 10,20,40", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !myVec.empty());
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE( test_vector)
 
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
 
-      const ArgString2Array  as2a( "-v 3-9", nullptr);
+      auto const  as2a = make_arg_array( "-v 3-9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !myVec.empty());
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
 
       ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
-      const ArgString2Array  as2a( "", nullptr);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( myVec.empty());
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
 
       ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
-      const ArgString2Array  as2a( "10,20,40", nullptr);
+      auto const  as2a = make_arg_array( "10,20,40", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !myVec.empty());
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
 
       ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
 
-      const ArgString2Array  as2a( "3-9", nullptr);
+      auto const  as2a = make_arg_array( "3-9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !myVec.empty());
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
 
       ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
-      const ArgString2Array  as2a( "", nullptr);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( myBitset.none());
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
 
       ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
-      const ArgString2Array  as2a( "-v 10,20,40", nullptr);
+      auto const  as2a = make_arg_array( "-v 10,20,40", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !myBitset.none());
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE( test_bitset)
 
       ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
-      const ArgString2Array  as2a( "-v 3-9", nullptr);
+      auto const  as2a = make_arg_array( "-v 3-9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !myBitset.none());
@@ -295,7 +295,7 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      const ArgString2Array  as2a( "", nullptr);
+      auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( myVec.empty());
@@ -308,7 +308,7 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      const ArgString2Array  as2a( "-v 10,20", nullptr);
+      auto const  as2a = make_arg_array( "-v 10,20", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !myVec.empty());
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
       ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      const ArgString2Array  as2a( "-v all", nullptr);
+      auto const  as2a = make_arg_array( "-v all", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !myVec.empty());
@@ -336,5 +336,5 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
 
 
 
-// =====  END OF test_argh_range.cpp  =====
+// =====  END OF test_argh_range_c.cpp  =====
 

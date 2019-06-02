@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,7 +28,7 @@
 #include "celma/appl/arg_string_2_array.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 
@@ -50,21 +50,21 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "output",  DEST_VAR( outputVal),  "Integer"));
 
    {
-      const ArgString2Array  as2a( "--in 5", nullptr);
+      auto const  as2a = make_arg_array( "--in 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
 
    {
-      const ArgString2Array  as2a( "--inp 5", nullptr);
+      auto const  as2a = make_arg_array( "--inp 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
    } // end scope
 
    {
-      const ArgString2Array  as2a( "--inpu 5", nullptr);
+      auto const  as2a = make_arg_array( "--inpu 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( inputVal.hasValue());
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    outputVal.reset();
 
    {
-      const ArgString2Array  as2a( "--inpl 5", nullptr);
+      auto const  as2a = make_arg_array( "--inpl 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( inplaceVal.hasValue());
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    outputVal.reset();
 
    {
-      const ArgString2Array  as2a( "--ou 5", nullptr);
+      auto const  as2a = make_arg_array( "--ou 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( outputVal.hasValue());
@@ -108,5 +108,5 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
 
 
 
-// =====  END OF test_argh_longarg_abbr.cpp  =====
+// =====  END OF test_argh_longarg_abbr_c.cpp  =====
 

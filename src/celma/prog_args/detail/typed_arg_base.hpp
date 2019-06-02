@@ -138,21 +138,28 @@ public:
 
    /// Assigns a value.<br>
    /// Checks if the argument is deprecated, or if a cardinality constraint is
-   /// violated. If not, the virtual method assign() is called to actually
-   /// assign the value, and finally activateConstraints() is called to activate
-   /// the contrainst (sic!) triggered by this argument.
+   /// violated.<br>
+   /// If not and the flag \a inverted is set, checks if the argument supports
+   /// inverted logic.<br>
+   /// Finally the virtual method assign() is called to actually assign the
+   /// value, and afterwards activateConstraints() is called to activate the
+   /// constraints (sic!) triggered by this argument.
    ///
    /// @param[in]  ignore_cardinality
    ///    Specifies if the cardinality of calls/value assignments should be
    ///    ignored.
    /// @param[in]  value
    ///    The value to assign, in string format.
-   /// @since
-   ///    1.6.0, 29.06.2018  (renamed from calledAssign)
-   /// @since
-   ///    0.2, 10.04.2016
-   void assignValue( bool ignore_cardinality, const std::string& value)
-      noexcept( false);
+   /// @param[in]  inverted
+   ///    Is set when the argument was preceeded by an exclamation mark which
+   ///    means that the logic of the argument should be inverted.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
+   /// @since  1.6.0, 29.06.2018
+   ///    (renamed from calledAssign)
+   /// @since  0.2, 10.04.2016
+   void assignValue( bool ignore_cardinality, const std::string& value,
+      bool inverted) noexcept( false);
 
    /// Should return if the argument was used/parameter was set.
    /// @return
@@ -467,6 +474,15 @@ public:
    ///    1.6.0, 03.07.2018
    const std::string& replacedBy() const;
 
+   /// Marks an argument that inverted logic is supported, i.e. the argument may
+   /// be proceeded by an exclamation mark.<br>
+   /// By default this is not allowed/supported.
+   ///
+   /// @return  Pointer to this object.
+   /// @throw  invalid argument.
+   /// @since  1.27.0, 28.05.2019
+   virtual TypedArgBase* allowsInversion() noexcept( false);
+
 /*
    /// Adds a value conversion: The value from the argument list (command line)
    /// is converted before it is checked and/or stored.
@@ -608,6 +624,9 @@ protected:
    /// Set if an argument is deprecated. Issues an error message
    /// "argument is deprecated" instead of "unknown argument".
    bool                            mIsDeprecated = false;
+   /// Set when the argument supports logic inversion by a preceeding
+   /// exclamation makr.
+   bool                            mAllowsInverting = false;
    /// The key of the argument that replaced this argument.
    std::string                     mReplacedBy;
    /// Stores all the checks (objects) defined for this argument.
@@ -620,12 +639,23 @@ protected:
    std::vector< IArgConstraint*>   mConstraints;
 
 private:
-   /// Should assign a value to the specified destination variable.
+   /// Should assign a value to the specified destination variable.<br>
+   /// Value parameter is obviously always passed, if the destination type
+   /// doesn't accept values or supports usage without value(s), the string is/
+   /// may be empty.<br>
+   /// Also the inverted parameter is always present, but it may only be set
+   /// when the argument does support logic inversion. In all other cases the
+   /// value need not be checked.
+   ///
    /// @param[in]  value
    ///    The value to assign in string format.
-   /// @since
-   ///    0.2, 10.04.2016
-   virtual void assign( const std::string& value = "") = 0;
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
+   /// @since  0.2, 10.04.2016
+   virtual void assign( const std::string& value, bool inverted) = 0;
 
    /// Used for printing an argument and its destination variable.<br>
    /// This function should be overloaded by derived classes.
@@ -798,6 +828,13 @@ inline const std::string& TypedArgBase::replacedBy() const
 {
    return mReplacedBy;
 } // TypedArgBase::replacedBy
+
+
+inline TypedArgBase* TypedArgBase::allowsInversion()
+{
+   throw std::invalid_argument( "setting 'allows inversion' not allowed for "
+                                "variable '" + mVarName + "'");
+} // TypedArgBase::allowsInversion
 
 
 inline bool TypedArgBase::hasConstraint() const

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,6 +33,7 @@
 
 
 using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using std::string;
 using std::vector;
@@ -69,7 +70,7 @@ BOOST_AUTO_TEST_CASE( feature_unused)
                                            "multiple integers allowed")->
                                          setTakesMultiValue());
 
-   const ArgString2Array  as2a( "-v 1,2,3", nullptr);
+   auto const  as2a = make_arg_array( "-v 1,2,3", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !dest.empty());
@@ -95,7 +96,7 @@ BOOST_AUTO_TEST_CASE( feature_used_once)
                                            "multiple integers allowed")->
                                          setTakesMultiValue());
 
-   const ArgString2Array  as2a( "-v 1,2 3", nullptr);
+   auto const  as2a = make_arg_array( "-v 1,2 3", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !dest.empty());
@@ -121,7 +122,7 @@ BOOST_AUTO_TEST_CASE( feature_used_often)
                                            "multiple integers allowed")->
                                          setTakesMultiValue());
 
-   const ArgString2Array  as2a( "-v 1,2 3 4,5,6 7 8 9", nullptr);
+   auto const  as2a = make_arg_array( "-v 1,2 3 4,5,6 7 8 9", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE( !dest.empty());
@@ -158,7 +159,7 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-i 1,2,3", nullptr);
+      auto const  as2a = make_arg_array( "-i 1,2,3", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !dest1.empty());
@@ -183,7 +184,7 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-s hello,world", nullptr);
+      auto const  as2a = make_arg_array( "-s hello,world", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( dest1.empty());
@@ -207,7 +208,7 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-i 1,2,3 4 5 6", nullptr);
+      auto const  as2a = make_arg_array( "-i 1,2,3 4 5 6", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !dest1.empty());
@@ -235,7 +236,7 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-s hello,world nice to meet you", nullptr);
+      auto const  as2a = make_arg_array( "-s hello,world nice to meet you", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( dest1.empty());
@@ -263,7 +264,7 @@ BOOST_AUTO_TEST_CASE( two_destinations)
                                               "multiple strings allowed")->
                                             setTakesMultiValue());
 
-      const ArgString2Array  as2a( "-i 1,2,3 4 5 6 -s hello,world nice to meet you",
+      auto const  as2a = make_arg_array( "-i 1,2,3 4 5 6 -s hello,world nice to meet you",
                              nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -619,5 +620,5 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
 
 
 
-// =====  END OF test_argh_separate_values.cpp  =====
+// =====  END OF test_argh_separate_values_c.cpp  =====
 

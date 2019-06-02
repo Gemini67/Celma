@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -357,5 +357,5 @@ BOOST_AUTO_TEST_CASE( combinations)
 
 
 
-// ==================  END OF test_constraint_container.cpp  ==================
+// =====  END OF test_constraint_container_c.cpp  =====
 
