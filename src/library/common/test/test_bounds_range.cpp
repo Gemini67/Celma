@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE( single_value_range)
    mm.insert( { 3, 27});
 
    int  i = 0;
-   for (auto it : bounds_range( mm, 0))
+   for ([[maybe_unused]] auto it : bounds_range( mm, 0))
    {
       BOOST_REQUIRE( false);
    } // end for
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE( single_value_range)
    } // end for
 
    i = 0;
-   for (auto it : bounds_range( mm, 4))
+   for ([[maybe_unused]] auto it : bounds_range( mm, 4))
    {
       BOOST_REQUIRE( false);
    } // end for
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE( two_value_range)
    mm.insert( { 3, 27});
 
    int  i = 0;
-   for (auto it : bounds_range( mm, -1, 0))
+   for ([[maybe_unused]] auto it : bounds_range( mm, -1, 0))
    {
       BOOST_REQUIRE( false);
    } // end for
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE( two_value_range)
    } // end for
 
    i = 0;
-   for (auto it : bounds_range( mm, 4, 10))
+   for ([[maybe_unused]] auto it : bounds_range( mm, 4, 10))
    {
       BOOST_REQUIRE( false);
    } // end for
