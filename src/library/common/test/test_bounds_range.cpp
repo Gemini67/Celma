@@ -33,7 +33,7 @@ using celma::common::bounds_range;
 
 /// Search range with one value.
 ///
-/// @since  x.y.z, 22.06.2019
+/// @since  1.29.0, 22.06.2019
 BOOST_AUTO_TEST_CASE( single_value_range)
 {
 
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE( single_value_range)
 
 /// Search range with two values.
 ///
-/// @since  x.y.z, 23.06.2019
+/// @since  1.29.0, 23.06.2019
 BOOST_AUTO_TEST_CASE( two_value_range)
 {
 

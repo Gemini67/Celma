@@ -72,7 +72,7 @@ public:
    ///
    /// @param[in]  other
    ///    The other object to move the data from.
-   /// @since  x.y.z, 29.05.2019
+   /// @since  1.27.0, 29.05.2019
    ArgString2Array( ArgString2Array&& other);
 
    /// The number of arguments in the string array.
@@ -90,7 +90,7 @@ public:
 /// @param[in]  cmd_line
 ///    The arguments from the command line to split into an argument array.
 /// @return  ArgString2Array object with the argument arrays.
-/// @since  x.y.z, 29.05.2019
+/// @since  1.27.0, 29.05.2019
 ArgString2Array make_arg_array( const std::string& cmd_line);
 
 
@@ -102,7 +102,7 @@ ArgString2Array make_arg_array( const std::string& cmd_line);
 /// @param[in]prog_name
 ///    The (path and) name of the program file.
 /// @return  ArgString2Array object with the argument arrays.
-/// @since  x.y.z, 29.05.2019
+/// @since  1.27.0, 29.05.2019
 ArgString2Array make_arg_array( const std::string& cmd_line,
    const char* prog_name);
 

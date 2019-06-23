@@ -35,7 +35,7 @@ namespace celma { namespace common {
 /// @tparam  T
 ///    The type of the (key) values in the container.
 ///
-/// @since  x.y.z, 22.06.2019
+/// @since  1.29.0, 22.06.2019
 template< typename C, typename T> class BoundsRangeOne
 {
 public:
@@ -46,7 +46,7 @@ public:
    ///    The container to search in.
    /// @param[in]  value
    ///    The value to search for.
-   /// @since  x.y.z, 22.06.2019
+   /// @since  1.29.0, 22.06.2019
    BoundsRangeOne( const C& container, const T& value):
       mEqualRange( container.equal_range( value))
    {
@@ -55,7 +55,7 @@ public:
    /// Returns the iterator pointing the first entry with the given (key) value.
    ///
    /// @return  Iterator pointing to the first value or end().
-   /// @since  x.y.z, 22.06.2019
+   /// @since  1.29.0, 22.06.2019
    typename C::const_iterator begin() const
    {
       return mEqualRange.first;
@@ -66,7 +66,7 @@ public:
    /// @return
    ///    Iterator pointing to the first value after the search-value or to
    //     end().
-   /// @since  x.y.z, 22.06.2019
+   /// @since  1.29.0, 22.06.2019
    typename C::const_iterator end() const
    {
       return mEqualRange.second;
@@ -87,7 +87,7 @@ private:
 /// @tparam  T
 ///    The type of the (key) values in the container.
 ///
-/// @since  x.y.z, 22.06.2019
+/// @since  1.29.0, 22.06.2019
 template< typename C, typename T> class BoundsRangeTwo
 {
 public:
@@ -103,7 +103,7 @@ public:
    ///    The lower bound of the range to search.
    /// @param[in]  upper
    ///    The upper bound of the range to search.
-   /// @since  x.y.z, 23.06.2019
+   /// @since  1.29.0, 23.06.2019
    BoundsRangeTwo( const C& container, const T& lower, const T& upper):
       mLower( container.lower_bound( lower)),
       mUpper( container.upper_bound( upper))
@@ -114,7 +114,7 @@ public:
    /// range.
    ///
    /// @return  Iterator pointing ot the first entry.
-   /// @since  x.y.z, 23.06.2019
+   /// @since  1.29.0, 23.06.2019
    typename C::const_iterator begin() const
    {
       return mLower;
@@ -125,7 +125,7 @@ public:
    /// @return
    ///    Iterator pointing to the first value after the search-range or to
    ///    end().
-   /// @since  x.y.z, 23.06.2019
+   /// @since  1.29.0, 23.06.2019
    typename C::const_iterator end() const
    {
       return mUpper;
@@ -158,7 +158,7 @@ private:
 /// @return
 ///    Object that provides the begin() and end() methods needed for the range
 ///    based for loop.
-/// @since  x.y.z, 22.06.2019
+/// @since  1.29.0, 22.06.2019
 template< typename C, typename T>
    BoundsRangeOne< C, T> bounds_range( const C& container, const T& value)
 {
@@ -182,7 +182,7 @@ template< typename C, typename T>
 /// @return
 ///    Object that provides the begin() and end() methods needed for the range
 ///    based for loop.
-/// @since  x.y.z, 23.06.2019
+/// @since  1.29.0, 23.06.2019
 template< typename C, typename T>
    BoundsRangeTwo< C, T> bounds_range( const C& container, const T& lower,
       const T& upper)
