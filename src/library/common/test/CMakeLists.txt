@@ -30,3 +30,5 @@ FOREACH( testsource ${common_testprograms} )
    ENDIF()
 ENDFOREACH()
 
+add_test( test_execute_statistic_erase_path  ${CMAKE_CURRENT_BINARY_DIR}/test_execute_statistic_c -- ${PROJECT_SOURCE_DIR} )
+
