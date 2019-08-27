@@ -12,16 +12,17 @@
 
 
 /// @file
-/// See documentation of template celma::prog_args::detail::TypedArg.<br>
+/// See documentation of template celma::prog_args::detail::TypedArg<>.<br>
 /// This file contains the base template plus all specialisations:
 /// - TypedArg< bool>
 /// - TypedArg< CheckAssign< T>>
 /// - TypedArg< CheckAssign< bool>>
+/// - TypedArg< LevelCounter>
+/// - TypedArg< std::vector< T>>
 /// - TypedArg< T[ N]>
 /// - TypedArg< std::array< T, N>>
-/// - TypedArg< std::bitset< T...>>
 /// - TypedArg< std::tuple< T...>>
-/// - TypedArg< std::vector< T>>
+/// - TypedArg< std::bitset< T...>>
 
 
 #ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
@@ -72,6 +73,11 @@ public:
    /// @since  0.16.0, 10.11.2017 (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( T& dest, const std::string& vname);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
 
    /// Returns the type of the destination variable as string.
    ///
@@ -255,6 +261,11 @@ public:
       mpCardinality.reset( new CardinalityMax( 1));
    } // TypedArg< bool>::TypedArg
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
+
    /// Returns "bool".
    /// @return  The string "bool".
    /// @since  1.14.0, 28.09.2018
@@ -356,6 +367,11 @@ public:
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArg( common::CheckAssign< T>& dest, const std::string& vname);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
 
    /// Returns the name of the type of the variable handled by the CheckAssign<>
    /// object.
@@ -497,6 +513,11 @@ public:
    {
    } // TypedArg< common::CheckAssign< bool>>::TypedArg
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
+
    /// Always returns "bool".
    /// @return  The string "bool".
    /// @since  1.14.0, 28.09.2018
@@ -610,6 +631,11 @@ public:
    {
       mpCardinality.reset();
    } // TypedArg< LevelCounter>::TypedArg
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
 
    /// Always returns "LevelCounter".
    /// @return  The string "LevelCounter".
@@ -773,6 +799,11 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArg( vector_type& dest, const std::string& vname);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
+
    /// By default, the value mode for vectors is set to "required". Here it can
    /// be changed to "optional" if "clear before assign" has been set before and
    /// the destination vector contains (default) values.<br>
@@ -825,6 +856,33 @@ public:
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setTakesMultiValue() override;
+
+   /// Adds a value formatter for the value at the given position: The value
+   /// from the argument list (command line) is formatted before it is checked
+   /// and/or stored.<br>
+   /// The "value index" refers to the position of the new/additional value in
+   /// the destination vector, i.e. if the vector contains some default values
+   /// these ust be taken into account.<br>
+   /// Since the numbers of values that will be passed on the command line is
+   /// not necessarily known, the range of the value index is not checked
+   /// against any upper bound.
+   ///
+   /// @param[in]  val_idx
+   ///    The index of the value to apply the format to.<br>
+   ///    A value of -1 means that the format should be applied to all values,
+   ///    index 0 means the first value etc.
+   /// @param[in]  f
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      multiple values.
+   ///    - "invalid argument" when the given object pointer is NULL.
+   /// @since
+   ///    x.y.z, 20.08.2019
+   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false)
+      override;
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
@@ -958,6 +1016,14 @@ template< typename T>
 
 
 template< typename T>
+   TypedArgBase* TypedArg< std::vector< T>>::addFormat( int val_idx,
+      IFormat* f)
+{
+   return internAddFormat( val_idx + 1, f);
+} // TypedArg< std::vector< T>>::addFormat
+
+
+template< typename T>
    TypedArgBase* TypedArg< std::vector< T>>::setListSep( char sep)
 {
    mListSep = sep;
@@ -1025,6 +1091,11 @@ template< typename T>
       if (!mFormats.empty())
       {
          format( listVal);
+         // we use the position of the new value in the destination vector to
+         // determine which formatter should be used
+         // this works with multiple, separate values as well as a vector with
+         // default values
+         format( listVal, mDestVar.size());
       } // end if
 
       auto const  dest_value = boost::lexical_cast< T>( listVal);
@@ -1073,6 +1144,11 @@ public:
    /// @since  1.26.0, 29.04.2019
    TypedArg( T (&dest)[ N], const std::string& aname);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
+
    /// Returns the name of the type of the destination variable (array of
    /// something).
    ///
@@ -1105,6 +1181,29 @@ public:
    /// @return  Pointer to this object.
    /// @since  1.26.0, 29.04.2019
    virtual TypedArgBase* setTakesMultiValue() override;
+
+   /// Adds a value formatter for the value at the given position: The value
+   /// from the argument list (command line) is formatted before it is checked
+   /// and/or stored.<br>
+   /// The "value index" refers to the position of the new/additional value in
+   /// the destination array.
+   ///
+   /// @param[in]  val_idx
+   ///    The index of the value to apply the format to.<br>
+   ///    A value of -1 means that the format should be applied to all values,
+   ///    index 0 means the first value etc.
+   /// @param[in]  f
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      multiple values.
+   ///    - "invalid argument" when the given object pointer is NULL.
+   /// @since
+   ///    x.y.z, 20.08.2019
+   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false)
+      override;
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
@@ -1211,6 +1310,15 @@ template< typename T, size_t N>
 
 
 template< typename T, size_t N>
+   TypedArgBase* TypedArg< T[ N]>::addFormat( int val_idx, IFormat* f)
+{
+   if (val_idx >= static_cast< int>( N))
+      throw std::range_error( "formatter value index is out of range");
+   return internAddFormat( val_idx + 1, f);
+} // TypedArg< T[ N]>::addFormat
+
+
+template< typename T, size_t N>
    TypedArgBase* TypedArg< T[ N]>::setListSep( char sep)
 {
    mListSep = sep;
@@ -1265,6 +1373,7 @@ template< typename T, size_t N>
       if (!mFormats.empty())
       {
          format( listVal);
+         format( listVal, mIndex);
       } // end if
 
       auto const  dest_value = boost::lexical_cast< T>( listVal);
@@ -1317,6 +1426,11 @@ public:
    /// @since  1.26.0, 26.04.2019
    TypedArg( array_type& dest, const std::string& aname);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
+
    /// Returns the name of the type of the destination variable (array of
    /// something).
    ///
@@ -1342,6 +1456,29 @@ public:
    ///    too.
    /// @since  1.26.0, 26.04.2019
    virtual void printValue( std::ostream& os, bool print_type) const override;
+
+   /// Adds a value formatter for the value at the given position: The value
+   /// from the argument list (command line) is formatted before it is checked
+   /// and/or stored.<br>
+   /// The "value index" refers to the position of the new/additional value in
+   /// the destination array.
+   ///
+   /// @param[in]  val_idx
+   ///    The index of the value to apply the format to.<br>
+   ///    A value of -1 means that the format should be applied to all values,
+   ///    index 0 means the first value etc.
+   /// @param[in]  f
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      multiple values.
+   ///    - "invalid argument" when the given object pointer is NULL.
+   /// @since
+   ///    x.y.z, 26.08.2019
+   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false)
+      override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().<br>
    /// For arrays it is possible/allowed to activate this feature.
@@ -1432,7 +1569,8 @@ template< typename T, size_t N>
 } // TypedArg< std::array< T, N>>::varTypeName
 
 
-template< typename T, size_t N> bool TypedArg< std::array< T, N>>::hasValue() const
+template< typename T, size_t N>
+   bool TypedArg< std::array< T, N>>::hasValue() const
 {
    return mIndex > 0;
 } // TypedArg< std::array< T, N>>::hasValue
@@ -1446,6 +1584,16 @@ template< typename T, size_t N>
    if (print_type)
       os << " [" << varTypeName() << "]";
 } // TypedArg< std::array< T, N>>::printValue
+
+
+template< typename T, size_t N>
+   TypedArgBase* TypedArg< std::array< T, N>>::addFormat( int val_idx,
+      IFormat* f)
+{
+   if (val_idx >= static_cast< int>( N))
+      throw std::range_error( "formatter value index is out of range");
+   return internAddFormat( val_idx + 1, f);
+} // TypedArg< std::array< T, N>>::addFormat
 
 
 template< typename T, size_t N>
@@ -1513,6 +1661,7 @@ template< typename T, size_t N>
       if (!mFormats.empty())
       {
          format( listVal);
+         format( listVal, mIndex);
       } // end if
 
       auto const  dest_value = boost::lexical_cast< T>( listVal);
@@ -1557,6 +1706,11 @@ public:
       mValue( value)
    {
    } // TupleElementValueAssign::TupleElementValueAssign
+
+   /// Empty default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TupleElementValueAssign() = default;
 
    /// Operator called for the tuple element. Converts the value from #mValue to
    /// the required destination type and assigns it to \a tuple_value, i.e. the
@@ -1606,6 +1760,11 @@ public:
    /// @since  0.11, 19.12.2016
    TypedArg( std::tuple< T...>& dest, const std::string& vname);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
+
    /// Returns the name of the type of the destination variable, the tuple.
    ///
    /// @return  String with the name of the complete type.
@@ -1651,6 +1810,27 @@ public:
    ///    allowed.
    /// @since  1.23.0, 09.04.2019
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false) override;
+
+   /// Adds a value formatter for the value at the given position: The value
+   /// from the argument list (command line) is formatted before it is checked
+   /// and/or stored.<br>
+   /// The "value index" refers to the position of the new/additional value in
+   /// the destination tuple.
+   ///
+   /// @param[in]  val_idx
+   ///    The index of the value to apply the format to.
+   /// @param[in]  f
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      multiple values.
+   ///    - "invalid argument" when the given object pointer is NULL.
+   ///    - "range error" when the given value index is too big for this tuple.
+   /// @since  x.y.z, 10.04.2019
+   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false)
+      override;
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
@@ -1750,7 +1930,30 @@ template< typename... T>
 {
    delete f;
    throw std::logic_error( "not allowed to add a format for a tuple");
-} // TypedArgBase* TypedArg< std::tuple< T...>>::addFormat
+} // TypedArg< std::tuple< T...>>::addFormat
+
+
+template< typename... T>
+   TypedArgBase* TypedArg< std::tuple< T...>>::addFormat( int val_idx,
+      IFormat* f)
+{
+   if (val_idx == -1)
+   {
+      // reject? or test if all elements of the tuple have the same type?
+      // if all elements had the same type, it would be easier to use a vector
+      // or an array or ...
+      // so, reject
+      throw std::logic_error( "general formatter for all values not allowed "
+         "with tuples");
+   } // end if
+
+   if (val_idx >= static_cast< int>( mTupleLength))
+      throw std::range_error( "cannot add a formatter for position "
+         + format::toString( val_idx) + " for a tuple with only "
+         + format::toString( mTupleLength) + " elements");
+
+   return internAddFormat( val_idx + 1, f);
+} // TypedArg< std::tuple< T...>>::addFormat
 
 
 template< typename... T>
@@ -1786,9 +1989,14 @@ template< typename... T>
       if ((it.currentNum() > 0) && (mpCardinality.get() != nullptr))
          mpCardinality->gotValue();
 
-      const std::string&  listVal( *it);
+      std::string  listVal( *it);
 
       check( listVal);
+
+      if (!mFormats.empty())
+      {
+         format( listVal, mNumValuesSet);
+      } // end if
 
       TupleElementValueAssign  teva( listVal);
       common::tuple_at_index( mNumValuesSet, mDestVar, teva);
@@ -1828,6 +2036,11 @@ public:
    ///    The name of the destination variable to store the value in.
    /// @since  1.4.3, 29.04.2018
    TypedArg( bitset_type& dest, const std::string& vname);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArg() = default;
 
    /// Returns the type of the destination variable.
    ///

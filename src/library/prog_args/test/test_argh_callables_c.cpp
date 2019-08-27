@@ -573,9 +573,9 @@ BOOST_AUTO_TEST_CASE( value_method_check)
       BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-m,--method' calls function/method 'TestArgFunc::handlerFunc'.\n"
-         "   value 'optional' (1), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'optional' (1), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 

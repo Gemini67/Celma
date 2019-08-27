@@ -43,6 +43,11 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgCallable( ArgHandlerCallable fun, const std::string& fname);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArgCallable() = default;
+
    /// Returns "callable" as type name.
    /// @return  The string "callable".
    /// @since  1.14.0, 28.09.2018

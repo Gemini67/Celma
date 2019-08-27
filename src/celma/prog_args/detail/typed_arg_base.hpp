@@ -295,7 +295,8 @@ public:
    bool takesMultiValue() const;
 
    /// Adds a value formatter: The value from the argument list (command line)
-   /// is formatted before it is checked and/or stored.
+   /// is formatted before it is checked and/or stored.<br>
+   /// Use this function for destination types that can store only one value.
    ///
    /// @param[in]  f
    ///    Pointer to the formatter to add, is deleted when it could not be
@@ -309,13 +310,39 @@ public:
    ///    0.2, 10.04.2016
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false);
 
+   /// Adds a value formatter for the value at the given position: The value
+   /// from the argument list (command line) is formatted before it is checked
+   /// and/or stored.<br>
+   /// Use this function for destination types that can store multiple values
+   /// with the same or even with different types.
+   ///
+   /// @param[in]  val_idx
+   ///    The index of the value to apply the format to.<br>
+   ///    A value of -1 means that the format should be applied to all values,
+   ///    index 0 means the first value etc.
+   /// @param[in]  f
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      multiple values.
+   ///    - "invalid argument" when the given object pointer is NULL.
+   /// @since
+   ///    x.y.z, 25.04.2019
+   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false);
+
    /// Calls all formatter methods defined for this argument. The formatter
    /// methods should throw an exception when a formatting failed.
+   ///
    /// @param[in,out]  val
-   ///    The value to format.
+   ///    The value to format, may be modified by the defined formatters.
+   /// @param[in]      value_idx
+   ///    The index of the value to format, -1 to call the single/general
+   ///    formatter.
    /// @since
    ///    0.2, 10.04.2016
-   void format( std::string& val) const;
+   void format( std::string& val, int value_idx = -1) const;
 
    /// Adds a value check.
    ///
@@ -599,6 +626,25 @@ protected:
    ///    0.2, 10.04.2016
    void activateConstraints();
 
+   /// Finally adds the given formatter to the container of formatters.
+   ///
+   /// @param[in]  val_idx
+   ///    The index of the value to apply the format on, plus 1.
+   /// @param[in]  f
+   ///    Pointer to the formatter object to store.
+   /// @return  This object.
+   /// @throws
+   ///    - "logic error" when called for an argument that does not accept
+   ///      values.
+   ///    - "invalid argument" when the given object pointer is NULL.
+   /// @since  x.y.z, 25.04.2019
+   TypedArgBase* internAddFormat( int val_idx, IFormat* f) noexcept( false);
+
+   /// Storage type for formatters for one value type/position.
+   using value_format_cont_t = std::vector< std::unique_ptr< IFormat>>;
+   /// Storage type for all formatters for multiple value types/positions.
+   using format_cont_t = std::vector< value_format_cont_t>;
+
    /// The complete argument specification: short and/or long argument.
    ArgumentKey                     mKey;
    /// Contains the name of the variable in which the value(s) are stored.
@@ -631,8 +677,11 @@ protected:
    std::string                     mReplacedBy;
    /// Stores all the checks (objects) defined for this argument.
    std::vector< ICheck*>           mChecks;
-   /// Stores all the formatters (objects) defined for this argument.
-   std::vector< IFormat*>          mFormats;
+   /// Stores all the formatters (objects) defined for this argument.<br>
+   /// Index 0 is used for formatters for single-value destinations and for
+   /// formatters that apply to all positions of a multi-value destination.<br>
+   /// Index 1 is then used for values at position 0 of the destination etc.
+   format_cont_t                   mFormats;
    /// Pointer to the object that manages the cardinality check.
    std::unique_ptr< ICardinality>  mpCardinality;
    /// Stores the constraints defined for this argument.
@@ -664,6 +713,13 @@ private:
    /// @since
    ///    0.2, 10.04.2016
    virtual void dump( std::ostream& os) const;
+
+   /// 
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 19.08.2019
+   size_t numFormats() const;
 
 }; // TypedArgBase
 

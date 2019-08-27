@@ -93,6 +93,16 @@ BOOST_AUTO_TEST_CASE( test_array_errors)
          std::runtime_error);
    } // end scope
 
+   // try to specify a formatter for a value index that is greater than the size
+   // of the array
+   {
+      Handler              ah( 0);
+      std::array< int, 3>  arr;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "a", DEST_VAR( arr), "values")
+         ->addFormat( 3, celma::prog_args::lowercase()), std::range_error);
+   } // end scope
+
 } // test_array_errors
 
 
@@ -277,16 +287,18 @@ BOOST_AUTO_TEST_CASE( format_values)
       std::array< std::string, 3>  arr;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( arr), "values")
-         ->addFormat( celma::prog_args::lowercase())->setListSep( '.')
-         ->setUniqueData()->setSortData()->setTakesMultiValue());
+         ->addFormat( 0, celma::prog_args::lowercase())
+         ->addFormat( 1, celma::prog_args::uppercase())
+         ->addFormat( 2, celma::prog_args::anycase( "Ullllllllllll"))
+         ->setListSep( '.')->setTakesMultiValue());
 
-      auto const  as2a = make_arg_array( "-a monday.monDAY TUESDAY.wEdNeSdAy",
+      auto const  as2a = make_arg_array( "-a MONDAY tuesday.wEdNeSdAy",
          nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( arr[ 0], "monday");
-      BOOST_REQUIRE_EQUAL( arr[ 1], "tuesday");
-      BOOST_REQUIRE_EQUAL( arr[ 2], "wednesday");
+      BOOST_REQUIRE_EQUAL( arr[ 1], "TUESDAY");
+      BOOST_REQUIRE_EQUAL( arr[ 2], "Wednesday");
    } // end scope
 
    {
@@ -312,9 +324,9 @@ BOOST_AUTO_TEST_CASE( format_values)
       BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-a' value type 'std::array<std::string,3>', destination array 'arr', currently 3 values.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, 1 formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, 1 formats.\n"
          "\n"));
    } // end scope
 

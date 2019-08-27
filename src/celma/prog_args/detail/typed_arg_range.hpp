@@ -49,6 +49,11 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgRange( const dest_type& dest, const std::string& vname);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArgRange() = default;
+
    /// Returns the name of the type of the destination container.
    ///
    /// @return  The destination container's type name.

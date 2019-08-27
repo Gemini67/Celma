@@ -65,6 +65,17 @@ BOOST_AUTO_TEST_CASE( test_errors)
          std::logic_error);
    } // end scope
 
+   // wrong setup: value formatter not allowed on value argument
+   {
+      Handler  ah( 0);
+      int      my_dest = 0;
+
+      BOOST_REQUIRE_THROW(
+         ah.addArgument( "left", DEST_VAR_VALUE( my_dest, -1),
+             "left")->addFormat( celma::prog_args::lowercase()),
+         std::logic_error);
+   } // end scope
+
    // wrong usage: argument used two times
    {
       Handler  ah( 0);
@@ -219,15 +230,15 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-l,--left' value type 'int', destination 'my_dest', set-value '-1', value not set.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
          "'-r,--right' value type 'int', destination 'my_dest', set-value '1', value not set.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 
@@ -254,15 +265,15 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-l,--left' value type 'int', destination 'my_dest', set-value '-1', value not set.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
          "'-r,--right' value type 'int', destination 'my_dest', set-value '1', value = 1.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 

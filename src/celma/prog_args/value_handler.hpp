@@ -45,6 +45,7 @@ namespace celma { namespace prog_args {
 /// In a value handler object, all arguments must be set to use a destination
 /// variable in this object, tho ensure that the corresponding methods of the
 /// base Handler class are hidden here.
+///
 /// @since  0.14.0, 09.02.2017
 class ValueHandler: public Handler
 {
@@ -222,7 +223,7 @@ template< typename T>
 
 template< typename T>
    detail::TypedArgBase* ValueHandler::addValueArgument( const std::string desc)
-                                                        noexcept( false)
+      noexcept( false)
 {
    return addValueArgument< T>( "-", desc);
 } // ValueHandler::addValueArgument
@@ -231,8 +232,7 @@ template< typename T>
 template< typename T, typename C>
    detail::TypedArgBase*
       ValueHandler::addRangeValueArgument( const std::string& args,
-                                            const std::string desc)
-                                          noexcept( false)
+         const std::string desc) noexcept( false)
 {
 
    auto  value = std::make_shared< detail::ArgumentValue< C>>();
@@ -248,7 +248,7 @@ template< typename T, typename C>
 template< typename T, typename C>
    detail::TypedArgBase*
       ValueHandler::addRangeValueArgument( const std::string desc)
-                                          noexcept( false)
+         noexcept( false)
 {
    return addValueArgument< T, C>( "-", desc);
 } // ValueHandler::addRangeValueArgument
@@ -256,7 +256,7 @@ template< typename T, typename C>
 
 template< typename T>
    void ValueHandler::getValue( T& dest, const std::string& args) const
-                               noexcept( false)
+      noexcept( false)
 {
 
    auto  value_iter = mValues.find( detail::ArgumentKey( args));

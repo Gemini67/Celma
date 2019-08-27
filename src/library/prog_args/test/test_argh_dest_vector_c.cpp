@@ -19,6 +19,10 @@
 #include "celma/prog_args.hpp"
 
 
+// C++ Standard Library includes
+#include <sstream>
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ArgHandlerDestVectorTest
 #include <boost/test/unit_test.hpp>
@@ -26,6 +30,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::make_arg_array;
@@ -366,6 +371,156 @@ BOOST_AUTO_TEST_CASE( format_values)
    BOOST_REQUIRE_EQUAL( v[ 2], "wednesday");
 
 } // format_values
+
+
+
+/// Test feature to format the values before they are inserted into the vector,
+/// depending on their position in the vector.
+///
+/// @since  x.y.z, 20.08.2019
+BOOST_AUTO_TEST_CASE( different_format_values)
+{
+
+   {
+      Handler                    ah( 0);
+      std::vector< std::string>  v;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->addFormat( 0, celma::prog_args::lowercase())
+         ->addFormat( 1, celma::prog_args::uppercase())
+         ->addFormat( 2, celma::prog_args::anycase( "Ulllllllllll")));
+
+      auto const  as2a = make_arg_array( "-v MONDAY,tuesday,wEdNeSdAy", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( v.size(), 3);
+      BOOST_REQUIRE_EQUAL( v[ 0], "monday");
+      BOOST_REQUIRE_EQUAL( v[ 1], "TUESDAY");
+      BOOST_REQUIRE_EQUAL( v[ 2], "Wednesday");
+   } // end scope
+
+   // almost the same but with a gap
+   {
+      Handler                    ah( 0);
+      std::vector< std::string>  v;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->addFormat( 0, celma::prog_args::lowercase())
+         ->addFormat( 1, celma::prog_args::uppercase())
+         ->addFormat( 3, celma::prog_args::anycase( "Ulllllllllll")));
+
+      auto const  as2a = make_arg_array( "-v MONDAY,tuesday,wEdNeSdAy,thursDAY", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( v.size(), 4);
+      BOOST_REQUIRE_EQUAL( v[ 0], "monday");
+      BOOST_REQUIRE_EQUAL( v[ 1], "TUESDAY");
+      BOOST_REQUIRE_EQUAL( v[ 2], "wEdNeSdAy");
+      BOOST_REQUIRE_EQUAL( v[ 3], "Thursday");
+   } // end scope
+
+   // a default format plus one special format
+   {
+      Handler                    ah( 0);
+      std::vector< std::string>  v;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->addFormat( celma::prog_args::lowercase())
+         ->addFormat( 1, celma::prog_args::uppercase()));
+
+      auto const  as2a = make_arg_array( "-v MONDAY,tuesday,wEdNeSdAy", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( v.size(), 3);
+      BOOST_REQUIRE_EQUAL( v[ 0], "monday");
+      BOOST_REQUIRE_EQUAL( v[ 1], "TUESDAY");
+      BOOST_REQUIRE_EQUAL( v[ 2], "wednesday");
+   } // end scope
+
+   // multiple formattings should also work correctly with multiple, separate
+   // values
+   {
+      Handler                    ah( 0);
+      std::vector< std::string>  v;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->addFormat( 0, celma::prog_args::lowercase())
+         ->addFormat( 1, celma::prog_args::uppercase())
+         ->addFormat( 3, celma::prog_args::anycase( "Ulllllllllll"))
+         ->setTakesMultiValue());
+
+      auto const  as2a = make_arg_array( "-v MONDAY,tuesday wEdNeSdAy,thursDAY", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( v.size(), 4);
+      BOOST_REQUIRE_EQUAL( v[ 0], "monday");
+      BOOST_REQUIRE_EQUAL( v[ 1], "TUESDAY");
+      BOOST_REQUIRE_EQUAL( v[ 2], "wEdNeSdAy");
+      BOOST_REQUIRE_EQUAL( v[ 3], "Thursday");
+   } // end scope
+
+   // multiple formattings should also work correctly when the vector contains
+   // default values
+   // values
+   {
+      Handler                    ah( 0);
+      std::vector< std::string>  v = { "some", "default", "values" };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->addFormat( 3, celma::prog_args::lowercase())
+         ->addFormat( 4, celma::prog_args::uppercase())
+         ->addFormat( 6, celma::prog_args::anycase( "Ulllllllllll"))
+         ->setTakesMultiValue());
+
+      auto const  as2a = make_arg_array( "-v MONDAY,tuesday wEdNeSdAy,thursDAY", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( v.size(), 7);
+      BOOST_REQUIRE_EQUAL( v[ 3], "monday");
+      BOOST_REQUIRE_EQUAL( v[ 4], "TUESDAY");
+      BOOST_REQUIRE_EQUAL( v[ 5], "wEdNeSdAy");
+      BOOST_REQUIRE_EQUAL( v[ 6], "Thursday");
+   } // end scope
+
+
+   // test output of "list argument variables"
+   {
+      std::ostringstream         std_out;
+      std::ostringstream         std_err;
+      Handler                    ah( std_out, std_err, Handler::hfListArgVar);
+      std::vector< std::string>  v;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->addFormat( celma::prog_args::lowercase())
+         ->addFormat( 1, celma::prog_args::uppercase()));
+
+      auto const  as2a = make_arg_array( "--list-arg-vars "
+         "-v MONDAY,tuesday,wEdNeSdAy --list-arg-vars", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( v.size(), 3);
+      BOOST_REQUIRE_EQUAL( v[ 0], "monday");
+      BOOST_REQUIRE_EQUAL( v[ 1], "TUESDAY");
+      BOOST_REQUIRE_EQUAL( v[ 2], "wednesday");
+
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
+         "'-v' value type 'std::vector<std::string>', destination vector 'v', currently no values.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, 2 formats.\n"
+         "\n"
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
+         "'-v' value type 'std::vector<std::string>', destination vector 'v', currently 3 values.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, 2 formats.\n"
+         "\n"));
+   } // end scope
+
+} // different_format_values
 
 
 

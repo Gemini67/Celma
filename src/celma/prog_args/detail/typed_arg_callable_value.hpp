@@ -42,7 +42,12 @@ public:
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArgCallableValue( ArgHandlerCallableValue fun,
-                          const std::string& fname);
+      const std::string& fname);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArgCallableValue() = default;
 
    /// Returns "callable-value".
    /// @return  The string "callable-value".

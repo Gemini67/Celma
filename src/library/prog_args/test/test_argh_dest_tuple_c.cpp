@@ -45,7 +45,7 @@ using celma::test::multilineStringCompare;
 BOOST_AUTO_TEST_CASE( test_tuple_errors)
 {
 
-   // not possible to add a format for a tuple
+   // not possible to add a general format for a tuple
    {
       Handler                        ah( 0);
       std::tuple< int, std::string>  myTuple;
@@ -55,24 +55,35 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
          std::logic_error);
    } // end scope
 
-   // not possible to add a format for a tuple
+   // not possible to add a general format for a tuple
    {
       Handler                                ah( 0);
       std::tuple< int, std::string, double>  myTuple;
 
-      BOOST_REQUIRE_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+      BOOST_REQUIRE_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
          "Key and value")->addFormat( celma::prog_args::lowercase()),
          std::logic_error);
    } // end scope
 
-   // not possible to add a format for a tuple
+   // not possible to add a general format for a tuple
    {
       Handler                             ah( 0);
       std::tuple< int, std::string, int>  myTuple;
 
-      BOOST_REQUIRE_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
+      BOOST_REQUIRE_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
          "Key and value")->addFormat( celma::prog_args::lowercase()),
          std::logic_error);
+   } // end scope
+
+   // try to specify a formatter for a value index that is greater than the size
+   // of the tuple
+   {
+      Handler                             ah( 0);
+      std::tuple< int, std::string, int>  myTuple;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
+         "Key and value")
+         ->addFormat( 3, celma::prog_args::lowercase()), std::range_error);
    } // end scope
 
    // not enough values for the tuple
@@ -145,7 +156,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
          Handler::hfHelpShort | Handler::hfUsageCont);
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( myTuple),
-         "Key and value")->setPrintDefault(true));
+         "Key and value")->setPrintDefault( true));
 
       auto const  as2a = make_arg_array( "-h", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -284,11 +295,11 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-p,--pair' value type 'std::tuple<int,std::string>', destination 'myTuple', value = <4711, \"foobar\">.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 
@@ -329,19 +340,19 @@ BOOST_AUTO_TEST_CASE( test_tuple_two)
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-p,--pair' value type 'std::tuple<int,int>', destination 'myTuple', value not set.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-s,--string-pair' value type 'std::tuple<int,std::string>', destination 'myTuple2', value not set.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-p,--pair' value type 'std::tuple<int,int>', destination 'myTuple', value = <13, 42>.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-s,--string-pair' value type 'std::tuple<int,std::string>', destination 'myTuple2', value = <7, \"wonderful\">.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 
@@ -429,19 +440,19 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-p,--pair' value type 'std::tuple<int,std::string,int>', destination 'myTuple', value not set.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-p,--pair' value type 'std::tuple<int,std::string,int>', destination 'myTuple', value = <4711, \"foobar\", 42>.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 
@@ -479,15 +490,15 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-t,--triple' value type 'std::tuple<int,int,int>', destination 'myTuple', value not set.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-t,--triple' value type 'std::tuple<int,int,int>', destination 'myTuple', value = <13, 42, 4711>.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
 
       using celma::common::operator |;
@@ -544,15 +555,15 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-t,--triple' value type 'std::tuple<int,std::string,int>', destination 'myTuple', value not set.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-t,--triple' value type 'std::tuple<int,std::string,int>', destination 'myTuple', value = <13, \"hello world\", 4711>.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 
@@ -599,19 +610,43 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
       BOOST_REQUIRE( celma::test::multilineStringCompare( oss,
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-t,--triple' value type 'std::tuple<int,std::string,double>', destination 'myTuple', value not set.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-t,--triple' value type 'std::tuple<int,std::string,double>', destination 'myTuple', value = <13, \"hello world\", 3.141500>.\n"
-         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, takes multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 
 } // test_tuple_three
+
+
+
+/// Specify a formatter for the string value in the tuple.
+///
+/// @since  x.y.z, 21.08.2019
+BOOST_AUTO_TEST_CASE( test_tuple_format)
+{
+
+   std::tuple< int, std::string>  my_tuple;
+   Handler                        ah( 0);
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( my_tuple),
+      "Key and value")->setPrintDefault( true)
+      ->addFormat( 1, celma::prog_args::lowercase()));
+
+   auto const  as2a = make_arg_array( "-p 7,SeVeN", nullptr);
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+   BOOST_REQUIRE_EQUAL( std::get< 0>( my_tuple), 7);
+   BOOST_REQUIRE_EQUAL( std::get< 1>( my_tuple), "seven");
+
+} // test_tuple_format
 
 
 

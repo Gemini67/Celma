@@ -63,6 +63,11 @@ public:
    TypedArgPair( T1& dest1, const std::string& vname1, T2& dest2,
       const std::string& vname2, const T2& value2);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArgPair() = default;
+
    /// Prints the two current values of the destination variables.<br>
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.

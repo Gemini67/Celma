@@ -482,19 +482,19 @@ BOOST_AUTO_TEST_CASE( list_var)
    BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std,
       "Arguments:\n"
       "'-h' calls function/method 'Handler::usage'.\n"
-      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "'-b' value type 'std::bitset<10>', destination bitset 'b', currently no values.\n"
-      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "\n"
       "Arguments:\n"
       "'-h' calls function/method 'Handler::usage'.\n"
-      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "'-b' value type 'std::bitset<10>', destination bitset 'b', currently 3 values.\n"
-      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "\n"));
 
 } // list_var

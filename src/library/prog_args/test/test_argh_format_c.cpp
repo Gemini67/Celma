@@ -20,6 +20,7 @@
 
 
 // C++ Standard Library includes
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -31,10 +32,66 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/detail/i_format.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
+
+
+namespace {
+
+
+/// Helper class: An additional formatter.
+///
+/// @since  x.y.z, 19.08.2019
+class RemoveDigitFormatter: public celma::prog_args::detail::IFormat
+{
+public:
+   /// Default constructor.
+   ///
+   /// @since  x.y.z, 19.08.2019
+   RemoveDigitFormatter() = default;
+
+   /// Empty, default destructor.
+   ///
+   /// @since  x.y.z, 19.08.2019
+   virtual ~RemoveDigitFormatter() = default;
+
+   /// The formatting function: Remove all digits from the string.
+   ///
+   /// @param[in,out]  val  The string to format.
+   /// @since  x.y.z, 19.08.2019
+   virtual void formatValue( std::string& val) const override
+   {
+      auto  i = val.begin();
+      while (i != val.end())
+      {
+         if (std::isdigit( *i))
+         {
+            i = val.erase( i);
+         } else
+         {
+            ++i;
+         } // end if
+      }
+   } // RemoveDigitFormatter::formatValue
+
+}; // RemoveDigitFormatter
+
+
+/// Helper function to use the formatting class easily with addFormat().
+///
+/// @return  A new object of the formatting class RemoveDigitFormatter.
+/// @since  x.y.z, 19.08.2019
+celma::prog_args::detail::IFormat* noDigit()
+{
+   return new RemoveDigitFormatter();
+} // noDigit
+
+
+} // namespace
 
 
 
@@ -94,7 +151,7 @@ BOOST_AUTO_TEST_CASE( format_case)
 
 
    {
-      Handler                ah( 0);
+      Handler     ah( 0);
       auto const  as2a = make_arg_array( "-n process1", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
@@ -108,7 +165,7 @@ BOOST_AUTO_TEST_CASE( format_case)
    name.reset();
 
    {
-      Handler                ah( 0);
+      Handler     ah( 0);
       auto const  as2a = make_arg_array( "-n PROceSS1", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
@@ -121,9 +178,9 @@ BOOST_AUTO_TEST_CASE( format_case)
 
    // test with a string directly
    {
-      Handler                ah( 0);
-      auto const  as2a = make_arg_array( "-a PROceSS1", nullptr);
-      std::string            my_string;
+      Handler      ah( 0);
+      auto const   as2a = make_arg_array( "-a PROceSS1", nullptr);
+      std::string  my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
          ->addFormat( celma::prog_args::uppercase());
@@ -145,9 +202,9 @@ BOOST_AUTO_TEST_CASE( format_anycase)
 
    // must throw when the format string is empty
    {
-      Handler                ah( 0);
-      auto const  as2a = make_arg_array( "-a bigSmAlL", nullptr);
-      std::string            my_string;
+      Handler      ah( 0);
+      auto const   as2a = make_arg_array( "-a bigSmAlL", nullptr);
+      std::string  my_string;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "a", DEST_VAR( my_string),
          "another string")->addFormat( celma::prog_args::anycase( "")),
@@ -156,9 +213,9 @@ BOOST_AUTO_TEST_CASE( format_anycase)
 
    // test special anycase formatting
    {
-      Handler                ah( 0);
-      auto const  as2a = make_arg_array( "-a bigSmAlL", nullptr);
-      std::string            my_string;
+      Handler      ah( 0);
+      auto const   as2a = make_arg_array( "-a bigSmAlL", nullptr);
+      std::string  my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
          ->addFormat( celma::prog_args::anycase( "UUUlllll"));
@@ -170,9 +227,9 @@ BOOST_AUTO_TEST_CASE( format_anycase)
 
    // format string longer than input string
    {
-      Handler                ah( 0);
-      auto const  as2a = make_arg_array( "-a bigS", nullptr);
-      std::string            my_string;
+      Handler      ah( 0);
+      auto const   as2a = make_arg_array( "-a bigS", nullptr);
+      std::string  my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
          ->addFormat( celma::prog_args::anycase( "UUUlllll"));
@@ -184,9 +241,9 @@ BOOST_AUTO_TEST_CASE( format_anycase)
 
    // format string shorter than input string
    {
-      Handler                ah( 0);
-      auto const  as2a = make_arg_array( "-a bigSmAlL", nullptr);
-      std::string            my_string;
+      Handler      ah( 0);
+      auto const   as2a = make_arg_array( "-a bigSmAlL", nullptr);
+      std::string  my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
          ->addFormat( celma::prog_args::anycase( "UUUl"));
@@ -197,6 +254,61 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    } // end scope
 
 } // format_anycase
+
+
+
+/// Add multiple formatters.
+///
+/// @since  x.y.z, 19.08.2019
+BOOST_AUTO_TEST_CASE( multiple_formatters)
+{
+
+   {
+      Handler      ah( 0);
+      auto const   as2a = make_arg_array( "-a Hello123World", nullptr);
+      std::string  my_string;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( my_string),
+         "another string")->addFormat( celma::prog_args::lowercase())
+         ->addFormat( noDigit()));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !my_string.empty());
+      BOOST_REQUIRE_EQUAL( my_string, "helloworld");
+   } // end if
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfListArgVar);
+      auto const          as2a = make_arg_array( "--list-arg-vars -a Hello123World "
+         "--list-arg-vars", nullptr);
+      std::string         my_string;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( my_string),
+         "another string")->addFormat( celma::prog_args::lowercase())
+         ->addFormat( noDigit()));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
+         "'-a' value type 'std::string', destination 'my_string', value not set.\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, 2 formats.\n"
+         "\n"
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
+         "'-a' value type 'std::string', destination 'my_string', value = \"helloworld\".\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, 2 formats.\n"
+         "\n"));
+   } // end scope
+
+} // multiple_formatters
 
 
 

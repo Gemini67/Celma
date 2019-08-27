@@ -21,6 +21,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 #include <boost/lexical_cast.hpp>
 #include "celma/common/check_assign.hpp"
 #include "celma/common/tokenizer.hpp"
@@ -38,24 +39,34 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Helper class to handle a 'value' argument: Only the argument needs to be
-/// set on the command line, the value to set is specified on the argument.<br>
-/// Use this when multiple arguments are used to set different values in the
-/// same destination variable.
-/// By default is checked that the original value of the destination variable is
-/// modified only once. To allow multiple changes, i.e. the last argument that
-/// modifies the value wins, set checkOriginalValue() to \c false.
+/// set on the command line, the value to set is specified when the argument is
+/// added.<br>
+/// Use this e.g. when multiple arguments are used to set different values in
+/// the same destination variable.
+/// By default it is checked that the original value of the destination variable
+/// is modified only once. To allow multiple changes, i.e. the last argument
+/// that modifies the value wins, set checkOriginalValue() to \c false.
+///
 /// @tparam  T  The type of the value.
 /// @since  1.1.0, 25.09.2017
 template< typename T> class TypedArgValue: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  dest   The destination variable to store the value in.
-   /// @param[in]  vname  The name of the destination variable to store the
-   ///                    value in.
-   /// @param[in]  value  The value to set.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the value in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @param[in]  value
+   ///    The value to set.
    /// @since  1.1.0, 25.09.2017
    TypedArgValue( T& dest, const std::string& vname, const T& value);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArgValue() = default;
 
    /// Returns the name of the type of the destination variable.
    ///
@@ -64,7 +75,9 @@ public:
    virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has a value set.<br>
-   /// Of course this applies only when the value through the current object.
+   /// Of course this applies only when the value was set through the current
+   /// object.
+   ///
    /// @return  \c true if the destination variable contains a value.
    /// @since  1.1.0, 25.09.2017
    virtual bool hasValue() const override;
@@ -72,6 +85,7 @@ public:
    /// Prints the current value of the destination variable.<br>
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
+   ///
    /// @param[in]  os
    ///    The stream to print the value to.
    /// @param[in]  print_type
@@ -82,6 +96,7 @@ public:
    virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// This type doesn't allow to change the value mode: Throws always.
+   ///
    /// @param[in]  vm  Ignored.
    /// @return  Pointer to this object.
    /// @throw  std::logic_error.
@@ -89,11 +104,13 @@ public:
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Adds the value of the destination variable to the string.
+   ///
    /// @param[out]  dest  The string to append the default value to.
    /// @since  1.1.0, 25.09.2017
    virtual void defaultValue( std::string& dest) const override;
 
    /// Allows to change the "original value check" mode.
+   ///
    /// @param[in]  yesNo  Set to \c false for turning the value check off.
    /// @return  Pointer to this object.
    /// @since  1.1.0, 16.11.2017
@@ -102,6 +119,7 @@ public:
 
 protected:
    /// Used for printing an argument and its destination variable.
+   ///
    /// @param[out]  os  The stream to print to.
    /// @since  1.1.0, 25.09.2017
    virtual void dump( std::ostream& os) const override;
@@ -172,7 +190,7 @@ template< typename T>
 
 
 template< typename T>
-   TypedArgBase* TypedArgValue< T>::setValueMode( ValueMode) noexcept( false)
+   TypedArgBase* TypedArgValue< T>::setValueMode( ValueMode)
 {
    throw std::logic_error( "cannot change the value mode on variable '"
                            + mVarName + "'");

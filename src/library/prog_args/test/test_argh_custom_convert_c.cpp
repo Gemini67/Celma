@@ -192,13 +192,13 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-e,--enum' value type 'unknown', destination 'CheckAssign< enumedValue>', value = 2.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
 
       using celma::common::operator |;
@@ -376,13 +376,13 @@ BOOST_AUTO_TEST_CASE( vector_usage)
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-e,--enum' value type 'std::vector<unknown>', destination vector 'enumedValue', currently 2 values.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 

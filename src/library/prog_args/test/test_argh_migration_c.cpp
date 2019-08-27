@@ -141,15 +141,15 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
       BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-i' value type 'int', destination 'old_arg', value not set.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, deprecated, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, deprecated, no checks, no formats.\n"
          "'-s' value type 'std::string', destination 'new_arg', value not set.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 
@@ -174,15 +174,15 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
       BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h,--help' calls function/method 'Handler::usage'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--help-arg' calls function/method 'Prints the usage for the given argument.'.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-i' value type 'int', destination 'old_arg', value not set.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, replaced by \"-s\", no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, replaced by \"-s\", no checks, no formats.\n"
          "'-s' value type 'std::string', destination 'new_arg', value not set.\n"
-         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope
 

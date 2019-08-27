@@ -47,6 +47,11 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgSubGroup( const ArgumentKey& key, Handler& ah_obj);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 27.08.2019
+   virtual ~TypedArgSubGroup() = default;
+
    /// Returns "subgroup".
    ///
    /// @return  Constant string "subgroup".
