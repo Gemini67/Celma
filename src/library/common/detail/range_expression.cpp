@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,17 +38,6 @@ using std::string;
 
 
 
-/// Constructor, initialises the regular expression.
-/// @since  0.2, 07.04.2016
-RangeExpression::RangeExpression():
-   mRangeString(),
-   mMatchedExpression(),
-   mExcludeValue()
-{
-} // RangeExpression::RangeExpression
-
-
-
 /// Parses the (first) range expression in the string.<br>
 /// The string must begin with a valid range expression. Everything after
 /// the parts that could be identified is ignored.
@@ -66,8 +55,8 @@ void RangeExpression::parseString( const string& s)
    mExcludeValue.clear();
 
    if (!parse())
-      throw CELMA_RuntimeError( string( "invalid/unexpected character at position ").
-                                        append( boost::lexical_cast< string>( mNextPos)));
+      throw CELMA_RuntimeError( string( "invalid/unexpected character at "
+         "position ").append( boost::lexical_cast< string>( mNextPos)));
 
    mMatchedExpression.assign( mRangeString, 0, mNextPos);
 
@@ -92,66 +81,77 @@ bool RangeExpression::parse()
    mFound = miStartValue;
 
    // range?
-   if ((mNextPos < mRangeString.length()) && (mRangeString[ mNextPos] == '-'))
+   if (mNextPos < mRangeString.length())
    {
-      // have a range, need at least one digit now
-      if (!::isdigit( mRangeString[ ++mNextPos]))
-         return false;
-
-      readNumber( mEndValue);
-      mFound |= miEndValue;
-
-      // increment and/or exclude-string can only be used together with a range
-
-      // increment?
-      if ((mNextPos < mRangeString.length()) && (mRangeString[ mNextPos] == '['))
+      if (mRangeString[ mNextPos] == RangeSeparator)
       {
-         // have an increment, need at least one digit now
+         // have a range, need at least one digit now
          if (!::isdigit( mRangeString[ ++mNextPos]))
             return false;
 
-         readNumber( mIncrementValue);
+         readNumber( mEndValue);
+         mFound |= miEndValue;
 
-         if (mRangeString[ mNextPos] != ']')
-            return false;
+         // increment and/or exclude-string can only be used together with a
+         // range
 
-         ++mNextPos;
-         mFound |= miIncrement;
-      } // end if
-
-      // exclude-range?
-      if ((mNextPos < mRangeString.length()) && (mRangeString[ mNextPos] == '{'))
-      {
-         auto const  exclude_begin = ++mNextPos;
-         auto        inner_exclude = 0;
-
-         // find the end of the exclude range
-         // since the exclude-range itself can be a range that contains an
-         // exclude range, have to keep track of the { } we find
-         while (mNextPos < mRangeString.length())
+         // increment?
+         if ((mNextPos < mRangeString.length())
+             && (mRangeString[ mNextPos] == IncrementStart))
          {
-            if (mRangeString[ mNextPos] == '{')
-            {
-               ++inner_exclude;
-            } else if (mRangeString[ mNextPos] == '}')
-            {
-               if (inner_exclude > 0)
-               {
-                  --inner_exclude;
-               } else
-               {
-                  break;   // while
-               } // end if
-            } // end if
+            // have an increment, need at least one digit now
+            if (!::isdigit( mRangeString[ ++mNextPos]))
+               return false;
+
+            readNumber( mIncrementValue);
+
+            if (mRangeString[ mNextPos] != IncrementEnd)
+               return false;
+
             ++mNextPos;
-         } // end while
+            mFound |= miIncrement;
+         } // end if
 
-         if (mRangeString[ mNextPos] != '}')
-            return false;
+         // exclude-range?
+         if ((mNextPos < mRangeString.length())
+             && (mRangeString[ mNextPos] == ExcludeStart))
+         {
+            auto const  exclude_begin = ++mNextPos;
+            auto        inner_exclude = 0;
 
-         mExcludeValue.assign( mRangeString, exclude_begin, mNextPos - exclude_begin);
-         ++mNextPos;
-         mFound |= miExclude;
+            // find the end of the exclude range
+            // since the exclude-range itself can be a range that contains an
+            // exclude range, have to keep track of the { } we find
+            while (mNextPos < mRangeString.length())
+            {
+               if (mRangeString[ mNextPos] == ExcludeStart)
+               {
+                  ++inner_exclude;
+               } else if (mRangeString[ mNextPos] == ExcludeEnd)
+               {
+                  if (inner_exclude > 0)
+                  {
+                     --inner_exclude;
+                  } else
+                  {
+                     break;   // while
+                  } // end if
+               } // end if
+               ++mNextPos;
+            } // end while
+
+            if (mRangeString[ mNextPos] != ExcludeEnd)
+               return false;
+
+            mExcludeValue.assign( mRangeString, exclude_begin,
+               mNextPos - exclude_begin);
+            ++mNextPos;
+            mFound |= miExclude;
+         } // end if
+      } else if (mRangeString[ mNextPos] != NextRangeSeparator)
+      {
+         throw CELMA_RuntimeError( string( "invalid character at position ")
+            .append( boost::lexical_cast< string>( mNextPos)));
       } // end if
    } // end if
 
@@ -166,12 +166,12 @@ bool RangeExpression::parse()
 void RangeExpression::readNumber( int64_t& value)
 {
 
-   value = mRangeString[ mNextPos++] - '0';
+   value = mRangeString[ mNextPos] - '0';
 
-   while ((mNextPos < mRangeString.length()) &&
+   while ((++mNextPos < mRangeString.length()) &&
           ::isdigit( mRangeString[ mNextPos]))
    {
-      value = (value * 10) + (mRangeString[ mNextPos++] - '0');
+      value = (value * 10) + (mRangeString[ mNextPos] - '0');
    } // end while
 
 } // RangeExpression::readNumber

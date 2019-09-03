@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,9 +41,23 @@ namespace celma { namespace common { namespace detail {
 class RangeExpression
 {
 public:
+   /// Delimiter between ranges and single values.
+   static constexpr char  NextRangeSeparator = ',';
+   /// The character that separates the two values of a range: A dash/minus/
+   /// hyphen.
+   static constexpr char  RangeSeparator = '-';
+   /// The start character for an increment expression: Opening square bracket.
+   static constexpr char  IncrementStart = '[';
+   /// The end character for an increment expression: Closing square bracket.
+   static constexpr char  IncrementEnd = ']';
+   /// The start character for an exclude expression: Opening curly brace.
+   static constexpr char  ExcludeStart = '{';
+   /// The end character for an exclude expression: Closing curly brace.
+   static constexpr char  ExcludeEnd = '}';
+
    /// Constructor, initialises the regular expression.
    /// @since  0.2, 07.04.2016
-   RangeExpression();
+   RangeExpression() = default;
 
    /// Parses the (first) range expression in the string.<br>
    /// The string must begin with a valid range expression. Everything after

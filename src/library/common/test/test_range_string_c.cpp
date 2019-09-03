@@ -28,6 +28,40 @@ using celma::common::RangeString;
 
 
 
+/// Check that wrongly formatted ranges are recognised.
+///
+/// @since  x.y.z, 28.08.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   {
+      RangeString<>  rs( "1[2]");
+
+      BOOST_REQUIRE_THROW( rs.begin(), std::runtime_error);
+   } // end scope
+
+   {
+      RangeString<>  rs( "hello");
+
+      BOOST_REQUIRE_THROW( rs.begin(), std::runtime_error);
+   } // end scope
+
+   {
+      RangeString<>  rs( "13ab");
+
+      BOOST_REQUIRE_THROW( rs.begin(), std::runtime_error);
+   } // end scope
+
+   {
+      RangeString<>  rs( "11-10");
+
+      BOOST_REQUIRE_THROW( rs.begin(), std::logic_error);
+   } // end scope
+
+} // errors
+
+
+
 /// Single value.
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_one)

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,17 +32,19 @@ namespace celma { namespace common { namespace detail {
 
 /// Range string iterator, returning the next value computed from the specified
 /// range.
-/// @tparam  T   The object with the range expression: An std::string.
-/// @tparam  TF  The type of the values to generate.
+///
+/// @tparam  T
+///    The object with the range expression: An std::string.
+/// @tparam  TF
+///    The type of the values to generate.
 /// @since  0.2, 07.04.2016
-template< typename T, typename TF>
-   class RangeStringIterator: public std::iterator< std::forward_iterator_tag,
-                                                    void*>
+template< typename T, typename TF> class RangeStringIterator:
+   public std::iterator< std::forward_iterator_tag, void*>
 {
 public:
    /// End-of-range constructor.
    /// @since  0.2, 07.04.2016
-   RangeStringIterator();
+   RangeStringIterator() = default;
 
    /// Constructor.
    /// @param[in]  src  The object with the range expression to handle.
@@ -108,7 +110,7 @@ private:
    const T                   mSource;
    /// Start position of the current expression in the string, set to
    /// \c std::string::npos when the complete expression was handled.
-   std::string::size_type    mPos;
+   std::string::size_type    mPos = std::string::npos;
    /// The current expression.
    RangeExpression           mMainExpression;
    /// Value generator for the current range.
@@ -121,17 +123,6 @@ private:
 
 // inlined methods
 // ===============
-
-
-template< typename T, typename TF>
-   RangeStringIterator< T, TF>::RangeStringIterator():
-      mSource(),
-      mPos( std::string::npos),
-      mMainExpression(),
-      mpRanger(),
-      mCurrentValue()
-{
-} // RangeStringIterator< T, TF>::RangeStringIterator
 
 
 template< typename T, typename TF>
@@ -182,7 +173,7 @@ template< typename T, typename TF>
          return *this;
       } // end if
 
-      if (mSource[ mPos] != ',')
+      if (mSource[ mPos] != RangeExpression::NextRangeSeparator)
          throw std::runtime_error( "invalid character in range string");
 
       mPos++;
@@ -263,12 +254,12 @@ template< typename T, typename TF>
    if (re.hasIncrement())
       // range with increment
       newRanger = new Ranger( static_cast< TF>( re.startValue()),
-                              static_cast< TF>( re.endValue()),
-                              static_cast< TF>( re.incrementValue()));
+         static_cast< TF>( re.endValue()),
+         static_cast< TF>( re.incrementValue()));
    else
       // range without increment
       newRanger = new Ranger( static_cast< TF>( re.startValue()),
-                              static_cast< TF>( re.endValue()));
+         static_cast< TF>( re.endValue()));
 
    if (re.hasExcludeExpr())
    {
