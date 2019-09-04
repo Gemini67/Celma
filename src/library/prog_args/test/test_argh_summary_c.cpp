@@ -362,7 +362,7 @@ BOOST_AUTO_TEST_CASE( groups_summary)
 
 
 
-/// Test the summary output for an argument handler ith sub-groups, with
+/// Test the summary output for an argument handler with sub-groups, with
 /// default (minimal) content.
 ///
 /// @since  1.8.0, 26.07.2018
@@ -511,7 +511,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_type)
 
 
 
-/// Test the summary output for an argument handler ith sub-groups, with type
+/// Test the summary output for an argument handler with sub-groups, with type
 /// information.
 ///
 /// @since  1.8.0, 27.07.2018
@@ -660,7 +660,7 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_key)
 
 
 
-/// Test the summary output for an argument handler ith sub-groups, including
+/// Test the summary output for an argument handler with sub-groups, including
 /// the argument key
 ///
 /// @since  1.8.0, 27.07.2018

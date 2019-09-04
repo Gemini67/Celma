@@ -28,6 +28,7 @@
 
    Module Name       | Description
    ----------------  | ----------------
+   Application       | Modules to be used in the context of an application, i.e. handling the project root directory.
    Argument handling | Contains the class celma::prog_args::Handler which provides easy and feature-rich argument handling.
    Common            | Contains miscellaneous helper classes for your everyday tasks.
    Format            | Formatting-related stuff like fast integer-to-string conversion, printing data in an ASCII table, or format a text block.
@@ -47,6 +48,7 @@
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
 
+   |   1.31.0 | 2019-09-??        | Allow multiple formatters for command line (argument) values.<br>Added function "starts with" for checking strings. |
    |   1.30.0 | 2019-08-19        | Added module "execute statistic". |
    |   1.29.0 | 2019-06-23        | Added module "bounds range". |
    |   1.28.0 | 2019-06-18        | Added module "scope exit execute". |

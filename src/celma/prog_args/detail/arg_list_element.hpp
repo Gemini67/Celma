@@ -43,21 +43,21 @@ class ArgListElement
 {
 public:
    /// Element types to be found/identified in an argument list:
-   enum class ElementType
+   enum class Type
    {
      singleCharArg,   //!< Single character argument.
      stringArg,       //!< String/long argument.
      value,           //!< Value (after argument or positional).
      control,         //!< Control character.
      invalid          //!< Initialisation value.
-   }; // ElementType
+   }; // Type
 
    /// Returns the name/description of the given element type.
    ///
    /// @param[in]  et  The type of the element to return the name of.
    /// @return  The name of the element.
    /// @since  1.23.1, 16.04.2019
-   static const char* typeName( ElementType et);
+   static const char* typeName( Type et);
 
    /// Default constructor.
    ///
@@ -114,8 +114,7 @@ public:
    ///    The stream as passed in.
    /// @since
    ///    1.23.1, 16.04.2019
-   friend std::ostream& operator <<( std::ostream& os,
-      ArgListElement::ElementType et);
+   friend std::ostream& operator <<( std::ostream& os, ArgListElement::Type et);
 
    /// Prints the contents of an argument list element.
    ///
@@ -132,7 +131,7 @@ public:
    /// For single argument characters: The position of the character.
    int          mArgCharPos = -1;
    /// The type of this element.
-   ElementType  mElementType = ElementType::invalid;
+   Type         mElementType = Type::invalid;
    /// The single argument character.
    char         mArgChar = '-';
    /// The long argument string.
@@ -141,6 +140,10 @@ public:
    std::string  mValue;
 
 }; // ArgListElement
+
+
+// inlined methods
+// ===============
 
 
 } // namespace detail

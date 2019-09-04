@@ -32,7 +32,7 @@ using celma::prog_args::detail::ArgListElement;
 using celma::prog_args::detail::ArgListParser;
 
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE( ArgListElement::ElementType)
+BOOST_TEST_DONT_PRINT_LOG_VALUE( ArgListElement::Type)
 
 
 
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE( single_char)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
@@ -82,13 +82,13 @@ BOOST_AUTO_TEST_CASE( two_single_char)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
@@ -108,13 +108,13 @@ BOOST_AUTO_TEST_CASE( two_single_char_sep)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE( error_single_dash)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    BOOST_REQUIRE_THROW( ++it, std::runtime_error);
@@ -154,19 +154,19 @@ BOOST_AUTO_TEST_CASE( three_single_char)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
@@ -186,19 +186,19 @@ BOOST_AUTO_TEST_CASE( three_single_char_sep)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
@@ -218,19 +218,19 @@ BOOST_AUTO_TEST_CASE( three_single_char_mixed1)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
@@ -250,19 +250,19 @@ BOOST_AUTO_TEST_CASE( three_single_char_mixed2)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE( single_long)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verbose");
 
    ++it;
@@ -302,13 +302,13 @@ BOOST_AUTO_TEST_CASE( two_long)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verbose");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "careful");
 
    ++it;
@@ -328,43 +328,43 @@ BOOST_AUTO_TEST_CASE( short_long)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'v');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verbose");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 's');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, '0');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "careful");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'x');
 
    ++it;
@@ -384,13 +384,13 @@ BOOST_AUTO_TEST_CASE( short_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
@@ -410,13 +410,13 @@ BOOST_AUTO_TEST_CASE( long_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
@@ -436,25 +436,25 @@ BOOST_AUTO_TEST_CASE( two_long_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verboselevel");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "8");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
@@ -474,37 +474,37 @@ BOOST_AUTO_TEST_CASE( three_long_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "verboselevel");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "8");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "another");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "attempt");
 
    ++it;
@@ -524,49 +524,49 @@ BOOST_AUTO_TEST_CASE( short_long_long_short)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'i');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "input");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "outputfile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filter");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "everything");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'q');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "always");
 
    ++it;
@@ -586,7 +586,7 @@ BOOST_AUTO_TEST_CASE( single_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "my_value");
 
    ++it;
@@ -606,19 +606,19 @@ BOOST_AUTO_TEST_CASE( short_value_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "value");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "my_value");
 
    ++it;
@@ -639,19 +639,19 @@ BOOST_AUTO_TEST_CASE( long_eq_value_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "longarg");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "value");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "my_value");
 
    ++it;
@@ -672,12 +672,12 @@ BOOST_AUTO_TEST_CASE( multiple_pos_values)
 
 
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "my_value");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "other_value");
 
    ++it;
@@ -698,17 +698,17 @@ BOOST_AUTO_TEST_CASE( multiple_pos_values_numbers)
 
 
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "42");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "4711");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "90125");
 
    ++it;
@@ -728,13 +728,13 @@ BOOST_AUTO_TEST_CASE( short_dashed_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "-minusfile");
 
    ++it;
@@ -754,13 +754,13 @@ BOOST_AUTO_TEST_CASE( long_dashed_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "-minusfile");
 
    ++it;
@@ -781,13 +781,13 @@ BOOST_AUTO_TEST_CASE( long_equal_dashed_value)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "-minusfile");
 
    ++it;
@@ -807,43 +807,43 @@ BOOST_AUTO_TEST_CASE( control)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filter");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "plus");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::control);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::control);
    BOOST_REQUIRE_EQUAL( it->mArgChar, '(');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::control);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::control);
    BOOST_REQUIRE_EQUAL( it->mArgChar, '!');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "filter");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "minus");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::control);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::control);
    BOOST_REQUIRE_EQUAL( it->mArgChar, ')');
 
    ++it;
@@ -901,59 +901,59 @@ BOOST_AUTO_TEST_CASE( value_after_arg)
    auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    it.remArgStrAsVal();
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    it.remArgStrAsVal();
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    it.remArgStrAsVal();
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( it->mArgString, "nofile");
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'a');
 
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
    it.remArgStrAsVal();
    ++it;
    BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::ElementType::value);
+   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
    ++it;

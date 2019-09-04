@@ -789,8 +789,8 @@ Handler::ArgResult
       ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((ait2 == end) ||
-       (ait2->mElementType != detail::ArgListElement::ElementType::value))
+   if ((ait2 == end)
+       || (ait2->mElementType != detail::ArgListElement::Type::value))
    {
       // no next value
       if (p_arg_hdl->valueMode() == ValueMode::optional)
@@ -834,7 +834,7 @@ Handler::ArgResult
 
    switch (ai->mElementType)
    {
-   case detail::ArgListElement::ElementType::value:
+   case detail::ArgListElement::Type::value:
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
          mpLastArg->assignValue( mReadMode != ReadMode::commandLine, ai->mValue,
@@ -855,13 +855,13 @@ Handler::ArgResult
       } // end if
       break;
 
-   case detail::ArgListElement::ElementType::singleCharArg:
+   case detail::ArgListElement::Type::singleCharArg:
       return processArg( detail::ArgumentKey( ai->mArgChar), ai, end);
 
-   case detail::ArgListElement::ElementType::stringArg:
+   case detail::ArgListElement::Type::stringArg:
       return processArg( detail::ArgumentKey( ai->mArgString), ai, end);
 
-   case detail::ArgListElement::ElementType::control:
+   case detail::ArgListElement::Type::control:
       if (ai->mArgChar == '(')
       {
          if (!mpOpeningBracketHdlr)
@@ -1186,10 +1186,10 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
       auto const  result = evalSingleArgument( ai, alp.end());
       if (result == ArgResult::unknown)
       {
-         if (ai->mElementType == detail::ArgListElement::ElementType::value)
+         if (ai->mElementType == detail::ArgListElement::Type::value)
             throw runtime_error( "Unknown argument '" + ai->mValue + "'");
-         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg) ||
-             (ai->mElementType == detail::ArgListElement::ElementType::control))
+         if ((ai->mElementType == detail::ArgListElement::Type::singleCharArg) ||
+             (ai->mElementType == detail::ArgListElement::Type::control))
             throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
          throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
@@ -1220,10 +1220,10 @@ std::ostream& operator <<( std::ostream& os, const Handler& ah)
 /// @param[in]  flag_set
 ///    The set of flags to set.
 /// @param[in]  txt1
-///    Optional pointer to the object to provide additional text for the
+///    Optional pointer to the object that provides additional text for the
 ///    usage.
 /// @param[in]  txt2
-///    Optional pointer to the object to provide additional text for the
+///    Optional pointer to the object that provides additional text for the
 ///    usage.
 /// @since
 ///    1.11.0, 16.02.2018

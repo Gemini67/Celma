@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE( default_ctor)
 
    BOOST_REQUIRE_EQUAL( ele.mArgIndex, -1);
    BOOST_REQUIRE_EQUAL( ele.mArgCharPos, -1);
-   BOOST_REQUIRE( ele.mElementType == ArgListElement::ElementType::invalid);
+   BOOST_REQUIRE( ele.mElementType == ArgListElement::Type::invalid);
    BOOST_REQUIRE_EQUAL( ele.mArgChar, '-');
    BOOST_REQUIRE( ele.mArgString.empty());
    BOOST_REQUIRE( ele.mValue.empty());
@@ -70,23 +70,23 @@ BOOST_AUTO_TEST_CASE( element_types)
    std::ostringstream  oss;
 
 
-   oss << ArgListElement::ElementType::singleCharArg;
+   oss << ArgListElement::Type::singleCharArg;
    BOOST_REQUIRE_EQUAL( oss.str(), "single character argument (0)");
 
    oss.str( "");
-   oss << ArgListElement::ElementType::stringArg;
+   oss << ArgListElement::Type::stringArg;
    BOOST_REQUIRE_EQUAL( oss.str(), "string/long argument (1)");
 
    oss.str( "");
-   oss << ArgListElement::ElementType::value;
+   oss << ArgListElement::Type::value;
    BOOST_REQUIRE_EQUAL( oss.str(), "value (2)");
 
    oss.str( "");
-   oss << ArgListElement::ElementType::control;
+   oss << ArgListElement::Type::control;
    BOOST_REQUIRE_EQUAL( oss.str(), "control character (3)");
 
    oss.str( "");
-   oss << ArgListElement::ElementType::invalid;
+   oss << ArgListElement::Type::invalid;
    BOOST_REQUIRE_EQUAL( oss.str(), "invalid (4)");
 
 } // element_types
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE( test_character)
 
    BOOST_REQUIRE_EQUAL( ele.mArgIndex, 3);
    BOOST_REQUIRE_EQUAL( ele.mArgCharPos, 1);
-   BOOST_REQUIRE( ele.mElementType == ArgListElement::ElementType::singleCharArg);
+   BOOST_REQUIRE( ele.mElementType == ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( ele.mArgChar, 'n');
    BOOST_REQUIRE( ele.mArgString.empty());
    BOOST_REQUIRE( ele.mValue.empty());
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE( test_word)
 
    BOOST_REQUIRE_EQUAL( ele.mArgIndex, 4);
    BOOST_REQUIRE_EQUAL( ele.mArgCharPos, -1);
-   BOOST_REQUIRE( ele.mElementType == ArgListElement::ElementType::stringArg);
+   BOOST_REQUIRE( ele.mElementType == ArgListElement::Type::stringArg);
    BOOST_REQUIRE_EQUAL( ele.mArgChar, '-');
    BOOST_REQUIRE_EQUAL( ele.mArgString, "name");
    BOOST_REQUIRE( ele.mValue.empty());
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE( test_value)
 
    BOOST_REQUIRE_EQUAL( ele.mArgIndex, 5);
    BOOST_REQUIRE_EQUAL( ele.mArgCharPos, -1);
-   BOOST_REQUIRE( ele.mElementType == ArgListElement::ElementType::value);
+   BOOST_REQUIRE( ele.mElementType == ArgListElement::Type::value);
    BOOST_REQUIRE_EQUAL( ele.mArgChar,  '-');
    BOOST_REQUIRE( ele.mArgString.empty());
    BOOST_REQUIRE_EQUAL( ele.mValue, "my name");
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE( test_control)
 
    BOOST_REQUIRE_EQUAL( ele.mArgIndex, 6);
    BOOST_REQUIRE_EQUAL( ele.mArgCharPos, 1);
-   BOOST_REQUIRE( ele.mElementType == ArgListElement::ElementType::control);
+   BOOST_REQUIRE( ele.mElementType == ArgListElement::Type::control);
    BOOST_REQUIRE_EQUAL( ele.mArgChar, '!');
    BOOST_REQUIRE( ele.mArgString.empty());
    BOOST_REQUIRE( ele.mValue.empty());

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,6 +36,12 @@ namespace celma { namespace prog_args { namespace detail {
 class ArgumentKey
 {
 public:
+   /// The character on the command line that starts an argument.
+   static constexpr char  StartChar = '-';
+   /// Character that separates a short from a long argument in a key
+   /// specification.
+   static constexpr char  KeySeparator = ',';
+
    /// Constructor, splits the specified string into short and/or long specifier
    /// and checks for all kind of format errors, content errors etc.<br>
    /// Dashes are silently ignored.
@@ -157,5 +163,5 @@ inline const std::string& ArgumentKey::argString() const
 #endif   // CELMA_PROG_ARGS_DETAIL_ARGUMENT_KEY_HPP
 
 
-// =========================  END OF argument_key.hpp  =========================
+// =====  END OF argument_key.hpp  =====
 

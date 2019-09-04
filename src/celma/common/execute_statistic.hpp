@@ -28,6 +28,7 @@
 #include "boost/preprocessor/cat.hpp"
 #include "celma/common/extract_funcname.hpp"
 #include "celma/common/singleton.hpp"
+#include "celma/common/string_util.hpp"
 
 
 namespace celma { namespace common {
@@ -91,7 +92,7 @@ public:
    size_t getExecutions( std::string file_name,
       const std::string& func_name, int line_nbr)
    {
-      if (!mPrefix.empty() && (file_name.compare( 0, mPrefix.length(), mPrefix) == 0))
+      if (startsWith( file_name, mPrefix, false))
       {
          file_name.erase( 0, mPrefix.length());
       } // end if
@@ -183,7 +184,7 @@ private:
    map_t::iterator callpoint( std::string file_name,
       const std::string& func_name, int line_nbr)
    {
-      if (!mPrefix.empty() && (file_name.compare( 0, mPrefix.length(), mPrefix) == 0))
+      if (startsWith( file_name, mPrefix, false))
       {
          file_name.erase( 0, mPrefix.length());
       } // end if

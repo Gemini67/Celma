@@ -129,6 +129,29 @@ inline void remove_to_if_last_excl( std::string& str, char pred)
 } // remove_to_if_last_excl
 
 
+/// Returns if the string in \a str starts with the string in \a starts.
+///
+/// @param[in]  str
+///    The string to check the text at the beginning of.
+/// @param[in]  starts
+///    The expected text at the beginning of \a str.
+/// @param[in]  allow_empty
+///    By default, the function also returns true for two empty strings. If it
+///    required that the strings are non-empty, set this parameter to \c false.
+/// @return
+///    \c true if \a str starts with \a starts or when both strings are empty
+///    and \a allow_empty is set.
+/// @since
+///    x.y.z, 03.09.2019
+inline bool startsWith( const std::string& str, const std::string& starts,
+   bool allow_empty = true)
+{
+   return (allow_empty && str.empty() && starts.empty())
+          || (!str.empty() && !starts.empty()
+              && (str.compare( 0, starts.length(), starts) == 0));
+} // startsWith
+
+
 } // namespace common
 } // namespace celma
 

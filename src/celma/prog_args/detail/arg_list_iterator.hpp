@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -146,10 +146,10 @@ private:
    /// value is found (--\<long_arg\>=\<value\>).<br>
    /// In this case, the argument is returned and this flag set so that the
    /// next call of the iterator returns the value.
-   bool  mNextIsValue;
+   bool      mNextIsValue;
    /// If set, the operator++ may treat the remaining part of the current
    /// argument string as value.
-   bool  mRemainingArgumentStringAsValue;
+   bool      mRemainingArgumentStringAsValue;
 
 }; // ArgListIterator< T, E>
 
@@ -374,7 +374,7 @@ template< typename T, typename E>
    bool ArgListIterator< T, E>::isSingleArg() const noexcept( false)
 {
 
-   return (mCurrElement.mElementType == E::ElementType::singleCharArg)
+   return (mCurrElement.mElementType == E::Type::singleCharArg)
       && (mCurrElement.mArgCharPos == 1)
       && (mpArgV[ mCurrElement.mArgIndex][ 2] == '\0');
 } // ArgListIterator< T, E>::isSingleArg

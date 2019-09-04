@@ -102,8 +102,8 @@ class ValueHandler;
 ///     a value must be accepted by all checks. The checks are executed in the
 ///     order in which they were added.<br>
 ///     Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
-///   - usetFlag(): For destination variable type boolean: Instead of setting the
-///     variable to \c true when the argument is used, set it to \c false.
+///   - unsetFlag(): For destination variable type boolean: Instead of setting
+///     the variable to \c true when the argument is used, set it to \c false.
 ///   - setPrintDefault(): Specifies if the default value (of the destination
 ///     variable) should be printed in the usage.
 ///   - setIsHidden(): Can be used to make an argument a hidden argument, i.e.
@@ -116,6 +116,12 @@ class ValueHandler;
 ///     separator character by which a list of values is split.
 ///   - setCardinality(): Allows to change or delete the cardinality check that
 ///     is applied to this argument.
+///   - addConstraint(): Allows to add constraints between this argument and
+///     other(s). Pre-defined constraints are:
+///     - excludes: Specifies other argument(s) that may not be used on the
+///       command line anymore after this argument was used.
+///     - requires: Specifies Specifies other argument(s) that must also be used
+///       on the command line after this argument was used.
 ///   - checkOriginalValue(): For value arguments, i.e. 'flag' arguments where
 ///     the value to set on the destination variable is part of the argument
 ///     itself, multiple changes to the same destination variable are prevented
@@ -143,26 +149,29 @@ class ValueHandler;
 ///   - setAllowMixIncSet(): For destination type level counter, allows to mix
 ///     arguments that increment the value or assign a new value.
 ///   .
+/// - If necessary it is possible to add constraints that are always active, not
+///   only after a specific argument was set. These constraints are:
+///   - all of: Specifies that either all arguments from the given list msut be
+///     used , or none.
+///   - any of: Specifies that either none or at most exactly one of the given
+///     list of arguments must be used on the command line.
+///   - one of: Specifies that exactly one of the given list of arguments must
+///     be used on the command line.
 /// - Finally, when all arguments were specified, call evalArguments() to
 ///   actually evaluate the command line arguments.
 /// - You can use this class to print a list of the arguments and their
 ///   descriptions with usage(). The arguments are printed in the order in which
 ///   they were added.
 /// - You can extend arguments with your own checks. Simply implement a class
-///   which implements the CheckBase interface, and pass an object of this class
-///   to addCheck().
+///   which implements the ICheck interface, and pass an object of this class to
+///   addCheck().
+/// - Also you can implement your own formatters. Simply implement a class which
+///   implements the IFormat interface, and pass an object of this class to
+///   addFormat().
 /// - In order to support other data types, you just need to implement a
 ///   conversion function which reads the value from a istream and stores it in
 ///   a variable of the corresponding type.<br>
 ///   Example interface: <code>istream& operator >>( istream& source, <type>& dest);</code>
-///
-/// When used together with the Application() template, use this class as base
-/// class of your application main class, then evalArguments() is called
-/// automatically. The arguments must be specified in the constructor of your
-/// class then.
-///
-/// Please refer to the documentation for a complete description of all
-/// features.
 ///
 /// @todo  Don't use special member variables for control character handlers,
 ///        implement them as 'starting characters' in a general way, so that
@@ -188,7 +197,14 @@ class ValueHandler;
 ///           << Argument( ...)-> ...
 /// @todo  Argument constraints: Value relations.
 ///        Support constraints like 'value of argument x must be less than value
-///        of argument y', e.g. start time < end time.
+///        of argument y', e.g. start time < end time.<br>
+///        This constraint must be added to the handler since it needs to access
+///        two arguments, and it can only be checked after both arguments were
+///        used. But there is still the problem of how the values should be
+///        compared, since the values cannot be accessed from the "outside".
+///        Maybe like this: Find the argument with the constraint, search the
+///        second argument, then call checkConstraint() with the pointer to the
+///        other arguments handler. Then ... ?
 /// @todo  Change the logic of addCheck(): If multiple checks are added, a value
 ///        is accepted if it matches at least one of these checks.
 ///        Since lower and upper bound are already combined in the range check,
@@ -233,7 +249,10 @@ class ValueHandler;
 /// @todo  Add feature to specify the behaviour when the same argument is used
 ///        multiple times (and cardinality is 1):<br>
 ///        Error/Exception (as is), store the first value (ignore additional
-///        calls), store the last value.
+///        calls), store the last value.<br>
+///        On the other hand, if somebody wants to allow multiple usage(s) of
+///        the same argument, so that the last value that is set is the one that
+///        is kept, he/she could simply remove the "exactly once" constraint.
 /// @todo  Use different exit codes from evalArgumentErrorExit(), depending on
 ///        the type of the exception that was called.
 /// @todo  Add pre- and post-argument list help texts also to argument handlers
@@ -327,41 +346,49 @@ public:
    using ValueMode = detail::TypedArgBase::ValueMode;
 
    /// Set of all help arguments.
-   static const int  AllHelp = hfHelpShort | hfHelpLong | hfHelpArg;
+   static constexpr int  AllHelp = hfHelpShort | hfHelpLong | hfHelpArg;
    /// Set of available standard/commonly used arguments.
-   static const int  AllFlags = hfHelpShort | hfHelpLong | hfReadProgArg;
+   static constexpr int  AllFlags = hfHelpShort | hfHelpLong | hfReadProgArg;
    /// Flags for testing/debugging the module itself.
-   static const int  DebugFlags = hfVerboseArgs | hfListArgVar;
+   static constexpr int  DebugFlags = hfVerboseArgs | hfListArgVar;
    /// Complete set of all available arguments.
-   static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfHelpArg
-                                   | hfReadProgArg | hfEnvVarArgs | hfVerboseArgs
-                                   | hfUsageHidden | hfArgHidden | hfListArgVar
-                                   | hfUsageCont;
+   static constexpr int  FullFlagSet = hfHelpShort | hfHelpLong | hfHelpArg
+      | hfReadProgArg | hfEnvVarArgs | hfVerboseArgs | hfUsageHidden
+      | hfArgHidden | hfListArgVar | hfUsageCont;
 
    /// (Default) Constructor.
-   /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
-   ///                      possible values.
-   /// @param[in]  txt1     Optional pointer to the object to provide additional
-   ///                      text for the usage.
-   /// @param[in]  txt2     Optional pointer to the object to provide additional
-   ///                      text for the usage.
-   /// @since  0.3, 04.06.2016  (same interface, now implemented as delegating
-   ///                           constructor)
+   ///
+   /// @param[in]  flagSet
+   ///    The set of flags. See enum HandleFlags for a list of possible values.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object that provides additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object that provides additional text for the
+   ///    usage.
+   /// @since  0.3, 04.06.2016
+   ///    (same interface, now implemented as delegating constructor)
    /// @since  0.2, 10.04.2016
    explicit Handler( int flagSet = hfHelpShort | hfHelpLong,
                      IUsageText* txt1 = nullptr,
                      IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor that allows to specify the output streams to write to.
-   /// @param[in]  os        The stream to write normal output to.
-   /// @param[in]  error_os  The stream to write error output to.
-   /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
-   ///                       of possible values.
-   /// @param[in]  txt1      Optional pointer to the object to provide
-   ///                       additional text for the usage.
-   /// @param[in]  txt2      Optional pointer to the object to provide
-   ///                       additional text for the usage.
-   /// @since  0.3, 04.06.2016  (added parameters for output streams)
+   ///
+   /// @param[in]  os
+   ///    The stream to write normal output to.
+   /// @param[in]  error_os
+   ///    The stream to write error output to.
+   /// @param[in]  flag_set
+   ///    The set of flags. See enum HandleFlags for a list of possible values.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object that provides additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object that provides additional text for the
+   ///    usage.
+   /// @since  0.3, 04.06.2016
+   ///    (added parameters for output streams)
    /// @since  0.2, 10.04.2016
    Handler( std::ostream& os, std::ostream& error_os,
             int flag_set = hfHelpShort | hfHelpLong,
@@ -376,14 +403,17 @@ public:
    /// argument handler:<br>
    /// #hfReadProgArg, #hfVerboseArgs, #hfUsageHidden, #hfUsageShort,
    /// #hfUsageLong and #hfUsageCont.
-   /// @param[in]  main_ah   The main argument handler to copy the settings
-   ///                       from.
-   /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
-   ///                       of possible values.
-   /// @param[in]  txt1      Optional pointer to the object to provide
-   ///                       additional text for the usage.
-   /// @param[in]  txt2      Optional pointer to the object to provide
-   ///                       additional text for the usage.
+   ///
+   /// @param[in]  main_ah
+   ///    The main argument handler to copy the settings from.
+   /// @param[in]  flag_set
+   ///    The set of flags. See enum HandleFlags for a list of possible values.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object that provides additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object that provides additional text for the
+   ///    usage.
    /// @since  1.1.0, 04.12.2017
    Handler( Handler& main_ah, int flag_set, IUsageText* txt1 = nullptr,
             IUsageText* txt2 = nullptr) noexcept( false);
@@ -446,10 +476,10 @@ public:
    /// @param[in]  desc
    ///    The description of this argument.
    /// @param[in]  txt1
-   ///    Optional pointer to the object to provide additional text for the
+   ///    Optional pointer to the object that provides additional text for the
    ///    usage.
    /// @param[in]  txt2
-   ///    Optional pointer to the object to provide additional text for the
+   ///    Optional pointer to the object that provides additional text for the
    ///    usage.
    /// @return
    ///    The object managing the argument, may be used to apply further
@@ -766,10 +796,10 @@ private:
    /// @param[in]  flag_set
    ///    The set of flags to set.
    /// @param[in]  txt1
-   ///    Optional pointer to the object to provide additional text for the
+   ///    Optional pointer to the object that provides additional text for the
    ///    usage.
    /// @param[in]  txt2
-   ///    Optional pointer to the object to provide additional text for the
+   ///    Optional pointer to the object that provides additional text for the
    ///    usage.
    /// @since
    ///    1.11.0, 16.02.2018
