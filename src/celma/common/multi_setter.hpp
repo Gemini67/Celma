@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -76,10 +76,9 @@ private:
 } // namespace detail
 
 
-/// Template to use together with the class \c ArgumentHandler:<br>
+/// Template to use together with the class celma::prog_args::Handler:<br>
 /// When assign is called, sets the passed value on the first variable, and sets
-/// the value specified in the constructor on the second variable.<br>
-/// Use the macro \c DEST_VAR() to easily initialise objects of this class.
+/// the value specified in the constructor on the second variable.
 /// @tparam  T1  The type of the first variable.
 /// @tparam  T2  The type of the second variable.
 /// @since  0.2, 10.04.2016
@@ -106,9 +105,14 @@ public:
 
    /// Assigns the specified value to the first variable, and the value
    /// specified in the constructor to the second variable.
-   /// @param[in]  value1  The value to assign.
+   /// @param[in]  value1
+   ///    The value to assign.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 27.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   void assign( const std::string& value1)
+   void assign( const std::string& value1, bool /* inverted */)
    {
       mDestVar1 = boost::lexical_cast< T1>( value1);
       mDestVar2.assign();
@@ -125,10 +129,9 @@ private:
 }; // MultiSetter2< T1, T2>
 
 
-/// Template to use together with the class \c ArgumentHandler:<br>
+/// Template to use together with the class celma::prog_args::Handler:<br>
 /// When assign is called, sets the passed value on the first variable, and sets
-/// the values specified in the constructor on the second and third variable.<br>
-/// Use the macro \c DEST_VAR() to easily initialise objects of this class.
+/// the values specified in the constructor on the second and third variable.
 /// @tparam  T1  The type of the first variable.
 /// @tparam  T2  The type of the second variable.
 /// @tparam  T3  The type of the third variable.
@@ -160,11 +163,16 @@ public:
 
    /// Assigns the specified value to the first variable, and the values
    /// specified in the constructor to the second and third variable.
-   /// @param[in]  value1  The value to assign.
+   /// @param[in]  value1
+   ///    The value to assign.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 27.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   void assign( const std::string& value1)
+   void assign( const std::string& value1, bool /* inverted */)
    {
-      MultiSetter2< T1, T2>::assign( value1);
+      MultiSetter2< T1, T2>::assign( value1, false);
       mDestVar3.assign();
    } // end MultiSetter3< T1, T2, T3>::assign
 
@@ -179,8 +187,13 @@ private:
 } // namespace selma
 
 
+#define DEST_MULTI_SETTER2( dv1, dv2, val2)  dv1, #dv1, dv2, #dv2, val2
+#define DEST_MULTI_SETTER3( dv1, dv2, val2, dv3, val3)  \
+   dv1, #dv1, dv2, #dv2, val2, dv3, #dv3, val3
+
+
 #endif   // CELMA_COMMON_MULTI_SETTER_HPP
 
 
-// =========================  END OF multi_setter.hpp  =========================
+// =====  END OF multi_setter.hpp  =====
 

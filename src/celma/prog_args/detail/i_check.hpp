@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,7 +33,7 @@ class ICheck
 public:
    /// Empty, virtual destructor.
    /// @since  0.2, 10.04.2016
-   virtual ~ICheck() { }
+   virtual ~ICheck() = default;
 
    /// The method that must be implemented by the derived classes: Should check
    /// the passed value and throw an exception if the value is invalid/out of
@@ -69,5 +69,5 @@ inline std::ostream& operator <<( std::ostream& os, ICheck* pc)
 #endif   // CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP
 
 
-// ===========================  END OF i_check.hpp  ===========================
+// =====  END OF i_check.hpp  =====
 

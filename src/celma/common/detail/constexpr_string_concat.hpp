@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,8 +22,8 @@
 #define CELMA_COMMON_DETAIL_CONSTEXPR_STRING_CONCAT_HPP
 
 
-#include <utility>
 #include <array>
+#include <utility>
 
 
 namespace celma { namespace common { namespace detail {
@@ -59,9 +59,12 @@ template< unsigned N> using gen_seq = typename gen_seq_x< N>::type;
 template< size_t S> using size = std::integral_constant< size_t, S>;
 
 
-/// Returns the length of an array.
-/// @tparam  T  The type of the elements in the array.
-/// @tparam  N  The size of the array.
+/// Returns the length of a C array.
+///
+/// @tparam  T
+///    The type of the elements in the array.
+/// @tparam  N
+///    The size of the array.
 /// @param[in]  Unnamed array.
 /// @return  The length of the array.
 /// @since  0.10, 02.01.2017
@@ -71,9 +74,12 @@ template< class T, size_t N> constexpr size< N> length( const T (&)[N])
 } // length
 
 
-/// Returns the length of an array.
-/// @tparam  T  The type of the elements in the array.
-/// @tparam  N  The size of the array.
+/// Returns the length of an std::array.
+///
+/// @tparam  T
+///    The type of the elements in the array.
+/// @tparam  N
+///    The size of the array.
 /// @param[in]  Unnamed array.
 /// @return  The length of the array.
 /// @since  0.10, 02.01.2017
@@ -89,6 +95,7 @@ template< class T> using length_t = decltype( length( std::declval< T>()));
 
 
 /// Returns the size of an empty string.
+///
 /// @return  Always 0.
 /// @since  0.10, 02.01.2017
 constexpr size_t string_size()
@@ -97,10 +104,15 @@ constexpr size_t string_size()
 } // string_size
 
 
-/// Recursively calculates the length of a string.
-/// @tparam  Ts  The type of the parameter pack.
-/// @param[in]  i   Current index.
-/// @param[in]  ts  The remaining string to determine the length of.
+/// Recursively calculates the length of a "string", which is here actually a
+/// parameter pack.
+///
+/// @tparam  Ts
+///    The type of the parameter pack.
+/// @param[in]  i
+///    Current index.
+/// @param[in]  ts
+///    The remaining string to determine the length of.
 /// @return  The length of the string.
 /// @since  0.10, 02.01.2017
 template< class... Ts> constexpr size_t string_size( size_t i, Ts... ts)
@@ -120,14 +132,23 @@ template< class... Ts>
 
 
 /// This one actually concats the strings.
-/// @tparam  Lhs  The type of the first string.
-/// @tparam  Rhs  The type of the second string.
-/// @tparam  I1   The first sequence.
-/// @tparam  I2   The second sequence.
-/// @param[in]  lhs  The first string.
-/// @param[in]  rhs  The second string.
-/// @param[in]       First unnamed sequence.
-/// @param[in]       Second unnamed sequence.
+///
+/// @tparam  Lhs
+///    The type of the first string.
+/// @tparam  Rhs
+///    The type of the second string.
+/// @tparam  I1
+///    The first sequence.
+/// @tparam  I2
+///    The second sequence.
+/// @param[in]  lhs
+///    The first string.
+/// @param[in]  rhs
+///    The second string.
+/// @param[in]
+///    First unnamed sequence.
+/// @param[in]
+///    Second unnamed sequence.
 /// @return  All the strings concatenated to one string.
 /// @since  0.10, 02.01.2017
 template< class Lhs, class Rhs, unsigned... I1, unsigned... I2>
@@ -147,5 +168,5 @@ template< class Lhs, class Rhs, unsigned... I1, unsigned... I2>
 #endif   // CELMA_COMMON_DETAIL_CONSTEXPR_STRING_CONCAT_HPP
 
 
-// ===================  END OF constexpr_string_concat.hpp  ===================
+// =====  END OF constexpr_string_concat.hpp  =====
 

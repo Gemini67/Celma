@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -31,6 +31,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Helper class to store a destination variable that is a container in which a
 /// range of values can be stored.
+///
 /// @tparam  T  The type of the value(s) to be stored in the container.
 /// @tparam  C  The type of the container to store the values in.
 /// @since  0.2, 10.04.2016
@@ -38,17 +39,21 @@ template< typename T, typename C> class TypedArgRange: public TypedArgBase
 {
 public:
    /// The type of the destination variable.
-   typedef common::RangeDest< T, C>  dest_type;
+   using dest_type = common::RangeDest< T, C>;
 
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  dest   The destination variable to store the values in.
    /// @param[in]  vname  The name of the destination variable to store the
    ///                       value in.
+   /// @since  0.16.0, 13.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArgRange( const ArgumentKey& key, const dest_type& dest,
-                  const std::string& vname);
+   TypedArgRange( const dest_type& dest, const std::string& vname);
+
+   /// Returns the name of the type of the destination container.
+   ///
+   /// @return  The destination container's type name.
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
@@ -56,11 +61,25 @@ public:
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
 
-   /// Throws.
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
+   /// Adding checks is not allowed for a range.
+   ///
+   /// @param[in]  c  Pointer to the check to add, is deleted.
    /// @return  Nothing, always throws.
-   /// @throw  logic_error.
+   /// @throws  "logic_error" since checks are not allowed for ranges.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* addCheck( ICheck* /* c */) noexcept( false) override;
+   virtual TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -70,9 +89,15 @@ protected:
 
 private:
    /// Stores the value in the destination variable.
-   /// @param[in]  value  The value to store in string format.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Actually evaluates the range string.
    /// @param[in]  value  The value string to evaluate.
@@ -91,13 +116,19 @@ private:
 
 
 template< typename T, typename C>
-   TypedArgRange< T, C>::TypedArgRange( const ArgumentKey& key,
-                                        const dest_type& dest,
+   TypedArgRange< T, C>::TypedArgRange( const dest_type& dest,
                                         const std::string& vname):
-      TypedArgBase( key, vname, ValueMode::required, false),
+      TypedArgBase( vname, ValueMode::required, false),
       mDestVar( dest)
 {
 } // TypedArgRange< T, C>::TypedArgRange
+
+
+template< typename T, typename C>
+   const std::string TypedArgRange< T, C>::varTypeName() const
+{
+   return type< C>::name();
+} // TypedArgRange< T, C>::varTypeName
 
 
 template< typename T, typename C> bool TypedArgRange< T, C>::hasValue() const
@@ -106,9 +137,20 @@ template< typename T, typename C> bool TypedArgRange< T, C>::hasValue() const
 } // TypedArgRange< T, C>::hasValue
 
 
-template< typename T, typename C> TypedArgBase*
-   TypedArgRange< T, C>::addCheck( ICheck*) noexcept( false)
+template< typename T, typename C>
+   void TypedArgRange< T, C>::printValue( std::ostream& os,
+      bool print_type) const
 {
+   os << format::toString( mDestVar);
+   if (print_type)
+      os << " [" << varTypeName() << "]";
+} // TypedArgRange< T, C>::printValue
+
+
+template< typename T, typename C> TypedArgBase*
+   TypedArgRange< T, C>::addCheck( ICheck* c) noexcept( false)
+{
+   delete c;
    throw std::logic_error( "cannot add value-check to destination type 'range'");
 } // TypedArgRange< T, C>::addCheck
 
@@ -123,7 +165,7 @@ template< typename T, typename C>
 
 
 template< typename T, typename C>
-   void TypedArgRange< T, C>::assign( const std::string& value)
+   void TypedArgRange< T, C>::assign( const std::string& value, bool)
 {
    if (!mFormats.empty())
    {
@@ -158,5 +200,5 @@ template< typename T, typename C>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_RANGE_HPP
 
 
-// =======================  END OF typed_arg_range.hpp  =======================
+// =====  END OF typed_arg_range.hpp  =====
 

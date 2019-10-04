@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,7 +16,6 @@
 /// - celma::common::detail::FilterBase
 /// - celma::common::detail::SingleValue
 /// - celma::common::detail::ValueRange
-/// - celma::common::detail::ValueList
 /// - celma::common::detail::MinimumValue
 /// - celma::common::detail::MaximumValue
 
@@ -40,18 +39,12 @@ namespace celma { namespace common { namespace detail {
 /// Defines the methods that the specific filter classes must implement.<br>
 /// Since all filters combined in one celma::common::Filter are filters for the
 /// same type, we can define the base class as template too.
+///
 /// @tparam  T  The type of the values to create the filters for.
 /// @since  x.y.z, 31.10.2017
 template< typename T> class FilterBase
 {
 public:
-   enum class Result
-   {
-      matches,
-      no_match,
-      excluded
-   };
-
    /// Empty, virtual destructor, required for base class.
    /// @since  x.y.z, 31.10.2017
    virtual ~FilterBase() = default;
@@ -63,7 +56,12 @@ public:
    /// @return  \c true if the given \a value matches the defined filter
    ///          %value(s).
    /// @since  x.y.z, 31.10.2017
-   virtual Result matches( const T& value) const = 0;
+   virtual bool matches( const T& value) const = 0;
+
+protected:
+   /// 
+   /// @since  x.y.z, 04.10.2019
+   FilterBase() = default;
 
 }; // FilterBase< T>
 
@@ -77,12 +75,13 @@ public:
 template< typename T> class SingleValue: public FilterBase< T>
 {
 public:
-   using typename FilterBase< T>::Result;
-
    /// Constructor.
-   /// @param[in]  value     The %value to filter by.
-   /// @param[in]  inverted  Set to invert the filter logic (matches if the
-   ///                       test %value differs from this %value).
+   ///
+   /// @param[in]  value
+   ///    The %value to filter by.
+   /// @param[in]  inverted
+   ///    Set to invert the filter logic (matches if the test %value differs
+   ///    from this %value).
    /// @since  x.y.z, 31.10.2017
    SingleValue( const T& value, bool inverted = false):
       mValue( value),
@@ -95,23 +94,19 @@ public:
    virtual ~SingleValue() = default;
 
    /// Returns if the given %value matches the filter %value.
+   ///
    /// @param[in]  value  The %value to compare against the filter %value.
    /// @return
-   /// - \c Result::matches for normal logic when the given %value is equal to
-   ///   the filter %value.
-   /// - \c Result::excluded for inverted logic when the given %value is equal
-   ///   to the filter %value.
-   /// - \c Result::no_match otherwise.
+   ///    \c true if the given %value is equal to the filter %value, or, when
+   ///    the filter logic is inverted, when the value is defferent.
    /// @since  x.y.z, 31.10.2017
-   virtual Result matches( const T& value) const override
+   virtual bool matches( const T& value) const override
    {
-      if (mInverted)
-         return (value == mValue) ? Result::excluded : Result::matches;
-      return (mValue == value) ? Result::matches : Result::no_match;
+      return mInverted ? (value != mValue) : (value == mValue);
    } // SingleValue< T>::matches
 
 private:
-   /// The value to filter by.
+   /// The value to compare against.
    const T     mValue;
    /// \c true for inverted logic (different from filter %value).
    const bool  mInverted;
@@ -128,8 +123,6 @@ private:
 template< typename T> class ValueRange: public FilterBase< T>
 {
 public:
-   using typename FilterBase< T>::Result;
-
    /// 
    /// @param[in]  min_val   .
    /// @param[in]  max_val   .
@@ -146,13 +139,10 @@ public:
 
    virtual ~ValueRange() = default;
 
-   virtual Result matches( const T& value) const override
+   virtual bool matches( const T& value) const override
    {
-      if (mInverted)
-         return ((mMinValue <= value) && (value <= mMaxValue))
-            ? Result::excluded : Result::matches;
-      return ((mMinValue <= value) && (value <= mMaxValue))
-         ? Result::matches : Result::no_match;
+      const bool  result = (mMinValue <= value) && (value <= mMaxValue);
+      return mInverted ? !result : result;
    } // ValueRange< T>::matches
 
 private:
@@ -163,47 +153,6 @@ private:
 }; // ValueRange< T>
 
 
-// Template ValueList
-// ==================
-
-
-template< typename T> class ValueList: public FilterBase< T>
-{
-public:
-   using typename FilterBase< T>::Result;
-   using value_cont_t = std::vector< T>;
-
-   /// 
-   /// @param[in]  values    .
-   /// @param[in]  inverted  .
-   /// @since  x.y.z, 01.11.2017
-   ValueList( const value_cont_t& values, bool inverted = false):
-      mValues( values),
-      mInverted( inverted)
-   {
-      if (values.empty())
-         throw std::runtime_error( "empty value list is not allowed");
-   } // ValueList< T>::ValueList
-
-   virtual ~ValueList() = default;
-
-   virtual Result matches( const T& value) const override
-   {
-      for (auto const& list_value : mValues)
-      {
-         if (list_value == value)
-            return mInverted ? Result::excluded : Result::matches;
-      } // end for
-      return mInverted ? Result::matches : Result::no_match;
-   } // ValueList< T>::matches
-
-private:
-   const value_cont_t  mValues;
-   const bool          mInverted;
-
-}; // ValueList< T>
-
-
 // Template MinimumValue
 // =====================
 
@@ -211,8 +160,6 @@ private:
 template< typename T> class MinimumValue: public FilterBase< T>
 {
 public:
-   using typename FilterBase< T>::Result;
-
    /// 
    /// @param[in]  min_val   .
    /// @since  x.y.z, 01.11.2017
@@ -223,9 +170,9 @@ public:
 
    virtual ~MinimumValue() = default;
 
-   virtual Result matches( const T& value) const override
+   virtual bool matches( const T& value) const override
    {
-      return (value >= mMinValue) ? Result::matches : Result::no_match;
+      return value > mMinValue;
    } // MinimumValue< T>::matches
 
 private:
@@ -241,8 +188,6 @@ private:
 template< typename T> class MaximumValue: public FilterBase< T>
 {
 public:
-   using typename FilterBase< T>::Result;
-
    /// 
    /// @param[in]  max_val   .
    /// @since  x.y.z, 01.11.2017
@@ -253,9 +198,9 @@ public:
 
    virtual ~MaximumValue() = default;
 
-   virtual Result matches( const T& value) const override
+   virtual bool matches( const T& value) const override
    {
-      return (value < mMaxValue) ? Result::matches : Result::no_match;
+      return value < mMaxValue;
    } // MaximumValue< T>::matches
 
 private:

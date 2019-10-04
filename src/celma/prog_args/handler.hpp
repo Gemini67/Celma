@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,24 +20,17 @@
 
 
 #include <functional>
-#include <ostream>
+#include <iosfwd>
 #include <string>
 #include <vector>
-
-#include "celma/common/check_assign.hpp"
-#include "celma/common/range_dest.hpp"
 
 #include "celma/prog_args/detail/arg_list_parser.hpp"
 #include "celma/prog_args/detail/argument_container.hpp"
 #include "celma/prog_args/detail/argument_desc.hpp"
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/constraint_container.hpp"
-#include "celma/prog_args/detail/typed_arg_callable.hpp"
-#include "celma/prog_args/detail/typed_arg_callable_value.hpp"
-#include "celma/prog_args/detail/typed_arg.hpp"
-#include "celma/prog_args/detail/typed_arg_pair.hpp"
-#include "celma/prog_args/detail/typed_arg_range.hpp"
-#include "celma/prog_args/detail/typed_arg_sub_group.hpp"
+#include "celma/prog_args/detail/i_handler_constraint.hpp"
+#include "celma/prog_args/summary_options.hpp"
 
 
 namespace celma { namespace prog_args {
@@ -48,19 +41,28 @@ class Groups;
 class ValueHandler;
 
 
-/// Class to store all command line argument descriptions as well as the
+/// Class to store all command line argument, their descriptions as well as the
 /// destination variables to store the values in.<br>
 /// To set up an argument handler, simply follow these steps:
 /// - Create object, specify the HandleFlags to get the desired behaviour.
-/// - For each argument, call addArgument() with the strings that specify the
-///   short and/or long arguments, the destination variable to store the value
-///   in when the argument is used (using the macro DEST_VAR()) plus a description
-///   of the argument and its value (for the usage).<br>
+/// - For each argument, call addArgument() with the parameters that specify
+///   - the short and/or long argument keys;
+///   - the handler for the destination variable to store the value in when the
+///     argument is used;
+///   - the name of the destination variable;
+///   - plus a description of the argument and its value (for the usage).
+///   .
 ///   The short (character) and long argument format are order independent in
-///   the argument string.
+///   the argument string.<br>
+///   The object to handle the destination variable is created using a function
+///   of the template family celma::prg_args::destination().<br>
+///   Use one of the \c DEST_... macros to easily create the second and third
+///   parameter of the function, the destination variable object plus the name
+///   of the destination variable.<br>
 ///   Example:  <code>addArgument( "s,silent", DEST_VAR( mRunSilent), "Set to suppress output");</code>
-/// - For free (i.e. positional) arguments, simply pass an empty string for the arguments:<br>
-///   Example:  <code>addArgument( "", DEST_VAR( mHostname), "The name of the host to connect to");</code>
+/// - For free (i.e. positional) arguments, simply pass a string with just a
+///   dash as 'argument key':<br>
+///   Example:  <code>addArgument( "-", DEST_VAR( mHostname), "The name of the host to connect to");</code>
 /// - For each argument, you can specify if it requires a value or not.<br>
 ///   Internally, the following defaults are applied:
 ///   - Arguments used to set a boolean variable don't accept a value.
@@ -68,7 +70,16 @@ class ValueHandler;
 ///   .
 ///   To change this 'value mode', call the function setValueMode() with the
 ///   desired value.<br>
-///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent), "Specifies the verbose level, if set without value default is 'low'")->setValueMode( vmOptional);</code>
+///   Example: <code>addArgument( "v,verbose-level", DEST_VAR( mRunSilent),
+///                               "Specifies the verbose level, if set without "
+///                               "value default is 'low'")
+///                             ->setValueMode( vmOptional);</code>
+/// - The value mode can also be used to flag a parameter that means:
+///   The remaining command line arguments are not for this program/
+///   application.<br>
+///   Use the vakue mode 'command' for this.<br>
+///   If such an argument is used, the remaining argument string is passed as
+///   value to its destination variable.
 /// - Additionally you can use the following modifiers for each argument to
 ///   further specify the handling of the argument and its value:
 ///   - setIsMandatory(): specifies that this argument is mandatory
@@ -77,6 +88,20 @@ class ValueHandler;
 ///     - upper: Upper limit for values to accept (exclusive).
 ///     - range: Range of values for scalar types to accept.
 ///     - values: List of values to accept.
+///     - pattern: Compares values from the command line against a regular
+///       expression pattern.
+///     - is file: Value must be the (path and) file name of an existing regular
+///       file.
+///     - is directory: Value must be the path and name of an existing
+///       directory.
+///     - is absolute path: The value must be an absolute path.
+///     - parent directory exists: The parent directory of the given path/file
+///       name must exist (the file itself not).
+///     .
+///     It is possible to add multiple checks to the same argument. In this case,
+///     a value must be accepted by all checks. The checks are executed in the
+///     order in which they were added.<br>
+///     Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
 ///   - usetFlag(): For destination variable type boolean: Instead of setting the
 ///     variable to \c true when the argument is used, set it to \c false.
 ///   - setPrintDefault(): Specifies if the default value (of the destination
@@ -91,11 +116,33 @@ class ValueHandler;
 ///     separator character by which a list of values is split.
 ///   - setCardinality(): Allows to change or delete the cardinality check that
 ///     is applied to this argument.
+///   - checkOriginalValue(): For value arguments, i.e. 'flag' arguments where
+///     the value to set on the destination variable is part of the argument
+///     itself, multiple changes to the same destination variable are prevented
+///     by checking the original value before changing it. Set
+///     checkOriginalValue() to \c false to allow multiple changes.
+///   - setIsDeprecated(): When an argument is no longer available, you may want
+///     to give the user this information instead of just saying "unknown
+///     argument". So, just mark an argument as deprecated, then it will no
+///     longer appear in the usage, and if the argument is used on the command
+///     line, the proper error message is printed.<br>
+///     If the argument was mandatory before, remove this flag. Setting a
+///     deprecated argument to mandatory, or vice versa, will throw in
+///     addArgument().
+///   - setReplacedBy(): When an argument is replaced by another, you may want
+///     to give the user this information instead of just saying "unknown
+///     argument". So, just mark an argument as "replaced by", then it will no
+///     longer appear in the usage, and if the argument is used on the command
+///     line, the proper error message is printed.<br>
+///     Internally the argument is handled like a deprecated argument, so
+///     features related to deprecated arguments apply to replaced arguments
+///     too.<br>
+///     If the argument was mandatory before, remove this flag. Setting a
+///     deprecated argument to mandatory, or vice versa, will throw in
+///     addArgument().
+///   - setAllowMixIncSet(): For destination type level counter, allows to mix
+///     arguments that increment the value or assign a new value.
 ///   .
-///   It is possible to add multiple checks to the same argument. In this case,
-///   a value must be accepted by all checks. The checks are executed in the
-///   order in which they were added.<br>
-///   Example:  <code>addArgument( "f,factor>", DEST_VAR( myFactor), "Factor")->addCheck( range( 1.0, 100.0));</code>
 /// - Finally, when all arguments were specified, call evalArguments() to
 ///   actually evaluate the command line arguments.
 /// - You can use this class to print a list of the arguments and their
@@ -131,12 +178,6 @@ class ValueHandler;
 ///        This could be used to make sure that an argument is handled by the
 ///        main object and not in the sub-group.
 /// @todo  Additional flag for Handler: Sort arguments for usage.
-/// @todo  Arguments that means: Everything that follows should not be treated
-///        as real program arguments anymore.<br>
-///        Example (here: first argument without a -):
-///           cmd [options ...] \<servername\> \<cmd\> [args ...]
-///        All following arguments are stored in the string provided with this
-///        parameter.
 /// @todo  Due to the fact that addArgument() does not return the Handler
 ///        object but the newly created TypedArg... object, it is not possible
 ///        to use function call chaining like boost::program_options does.<br>
@@ -171,20 +212,6 @@ class ValueHandler;
 /// @todo  Pass the verbose flag to the assign methods and then print the
 ///        verbose output there. This will cover all cases and also allows e.g.
 ///        to print the second assignment if a pair is used.
-/// @todo  For destination type vector: Add flag/feature that the contents of
-///        the vector should be cleared before the first value from the command
-///        line is assigned.
-///        Idea: vector is filled with default value(s), if the argument is
-///        used the default should be replaced by the new values.
-/// @todo  Clean up the interface by removing all special addArgument()s for
-///        free values and
-///        a) simply document the case that an empty string should be passed
-///        b) and/or provide a constant 'free_value' (or so) that can be used.
-/// @todo  Instead of having containers with short and/or the long argument as
-///        key, and multiple places to split an argument specification string
-///        into short and long string: Call ArgSpec, takes the string as
-///        parameter, stores it internally and splits it into short and/or long
-///        argument, finally can be used for comparison etc.
 /// @todo  Flag and/or argument that changes the processing: Process all
 ///        arguments and throw/exit at the end only. This would help to detect
 ///        multiple errors in the argument string.
@@ -207,7 +234,6 @@ class ValueHandler;
 ///        multiple times (and cardinality is 1):<br>
 ///        Error/Exception (as is), store the first value (ignore additional
 ///        calls), store the last value.
-/// @todo  Add test-feature: Process all arguments, print all errors.
 /// @todo  Use different exit codes from evalArgumentErrorExit(), depending on
 ///        the type of the exception that was called.
 /// @todo  Add pre- and post-argument list help texts also to argument handlers
@@ -220,47 +246,67 @@ class Handler
 public:
    /// Type of the (storage handler of the) functions to call for control
    /// characters.
-   typedef std::function< void()>  HandlerFunc;
+   using HandlerFunc = std::function< void()>;
 
    /// List of flags to control the behaviour of this class:
    enum HandleFlags
    {
       /// Allows the argument '-h' to print the usage of the program.
-      hfHelpShort     = 0x01,
+      hfHelpShort       = 0x01,
       /// Allows the argument '--help' to print the usage of the program.
-      hfHelpLong      = hfHelpShort << 1,
+      hfHelpLong        = hfHelpShort << 1,
+      /// Allows the argument "--help-arg=<arg>" to get the usage of one
+      /// specific argument.
+      hfHelpArg         = hfHelpLong << 1,
+      /// Allows the argument "--help-arg-full=<arg>" to get the usage of one
+      /// specific argument, plus a description of all properties of the
+      /// argument and its destination variable.
+      hfHelpArgFull     = hfHelpArg << 1,
       /// Specifies to read arguments from the optional program arguments file
       /// before parsing the command line arguments.<br>
       /// File: $HOME/.progargs/\<progfilename\>.pa
-      hfReadProgArg   = hfHelpLong  << 1,
+      hfReadProgArg     = hfHelpArgFull  << 1,
+      /// Set this when additional program arguments should be read from an
+      /// environment variable. Default name of the environment variable is the
+      /// name of the program file in uppercase letters.
+      hfEnvVarArgs = hfReadProgArg << 1,
       /// Produces verbose output when a value is assigned to a variable.
-      hfVerboseArgs   = hfReadProgArg << 1,
+      hfVerboseArgs     = hfEnvVarArgs << 1,
       /// Specifies that hidden arguments should be printed too in the usage.
-      hfUsageHidden   = hfVerboseArgs << 1,
+      hfUsageHidden     = hfVerboseArgs << 1,
       /// Allows the argument '--print-hidden' to print the hidden arguments in
       /// the usage.
-      hfArgHidden     = hfUsageHidden << 1,
+      hfArgHidden       = hfUsageHidden << 1,
+      /// Specifies that deprecated arguments should be printed too in the usage.
+      hfUsageDeprecated =  hfArgHidden << 1,
+      /// Allows the argument '--print-deprecated' to print the deprecated
+      /// arguments in he usage.
+      hfArgDeprecated   = hfUsageDeprecated << 1,
+      /// Only print the arguments with their short argument in the usage.
+      hfUsageShort      = hfArgDeprecated << 1,
+      /// Only print the arguments with their long argument in the usage.
+      hfUsageLong       = hfUsageShort << 1,
       /// Adds the argument '--list-arg-vars' which, when used, prints the list
       /// of arguments and the names of the destination variables and their
       /// values.
-      hfListArgVar    = hfArgHidden << 1,
+      hfListArgVar      = hfUsageLong << 1,
       /// Special flag originally for testing: Don't exit after printing the
       /// usage.
-      hfUsageCont     = hfListArgVar << 1,
+      hfUsageCont       = hfListArgVar << 1,
       /// Activates the argument '--endvalues' that is used to signal the end of
       /// a separate value list.
-      hfEndValues     = hfUsageCont << 1,
+      hfEndValues       = hfUsageCont << 1,
       /// Activates the argument '--list-arg-groups' which lists the names of
       /// all known argument groups.<br>
       /// If argument groups are used, set this argument when creating the
       /// Groups singleton object.
-      hfListArgGroups = hfEndValues << 1,
+      hfListArgGroups   = hfEndValues << 1,
       /// This flag is set by the Groups class when it creates a Handler object.
       /// Don't use otherwise!
-      hfInGroup       = hfListArgGroups << 1
+      hfInGroup         = hfListArgGroups << 1
    }; // HandleFlags
 
-   /// List of possible positions for the additional output 
+   /// List of possible positions for the additional output.
    enum class UsagePos
    {
       unused,       //!< Initialization value.
@@ -268,21 +314,31 @@ public:
       afterArgs     //!< Position after the list of arguments.
    }; // UsagePos
 
+   /// List of possible settings for printing the usage:
+   enum class UsageContents
+   {
+      all,         //!< Default: Display all arguments with their short and/or
+                   //!< long argument keys.
+      shortOnly,   //!< Display only those arguments with a short key.
+      longOnly     //!< Display only those arguments with a long key.
+   }; // UsageContents
+
    /// Make the type 'ValueMode' available through this class too.
-   typedef detail::TypedArgBase::ValueMode  ValueMode;
+   using ValueMode = detail::TypedArgBase::ValueMode;
 
    /// Set of all help arguments.
-   static const int  AllHelp = hfHelpShort | hfHelpLong;
+   static const int  AllHelp = hfHelpShort | hfHelpLong | hfHelpArg;
    /// Set of available standard/commonly used arguments.
    static const int  AllFlags = hfHelpShort | hfHelpLong | hfReadProgArg;
    /// Flags for testing/debugging the module itself.
    static const int  DebugFlags = hfVerboseArgs | hfListArgVar;
    /// Complete set of all available arguments.
-   static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfReadProgArg |
-                                   hfVerboseArgs | hfUsageHidden | hfArgHidden |
-                                   hfListArgVar | hfUsageCont;
+   static const int  FullFlagSet = hfHelpShort | hfHelpLong | hfHelpArg
+                                   | hfReadProgArg | hfEnvVarArgs | hfVerboseArgs
+                                   | hfUsageHidden | hfArgHidden | hfListArgVar
+                                   | hfUsageCont;
 
-   /// Constructor.
+   /// (Default) Constructor.
    /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
    ///                      possible values.
    /// @param[in]  txt1     Optional pointer to the object to provide additional
@@ -294,7 +350,7 @@ public:
    /// @since  0.2, 10.04.2016
    explicit Handler( int flagSet = hfHelpShort | hfHelpLong,
                      IUsageText* txt1 = nullptr,
-                     IUsageText* txt2 = nullptr);
+                     IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor that allows to specify the output streams to write to.
    /// @param[in]  os        The stream to write normal output to.
@@ -310,171 +366,94 @@ public:
    Handler( std::ostream& os, std::ostream& error_os,
             int flag_set = hfHelpShort | hfHelpLong,
             IUsageText* txt1 = nullptr,
-            IUsageText* txt2 = nullptr);
+            IUsageText* txt2 = nullptr) noexcept( false);
+
+   /// Constructor to be used by a sub-group. Copies some settings from the main
+   /// argument handler object.<br>
+   /// It is possible to create a sub-group argument handler using one of the
+   /// other constructors, but then the settings are of course not copied.<br>
+   /// The following flags are ignored, the settings are taken from the main
+   /// argument handler:<br>
+   /// #hfReadProgArg, #hfVerboseArgs, #hfUsageHidden, #hfUsageShort,
+   /// #hfUsageLong and #hfUsageCont.
+   /// @param[in]  main_ah   The main argument handler to copy the settings
+   ///                       from.
+   /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
+   ///                       of possible values.
+   /// @param[in]  txt1      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @param[in]  txt2      Optional pointer to the object to provide
+   ///                       additional text for the usage.
+   /// @since  1.1.0, 04.12.2017
+   Handler( Handler& main_ah, int flag_set, IUsageText* txt1 = nullptr,
+            IUsageText* txt2 = nullptr) noexcept( false);
+
+   /// Don't allow copying.
+   Handler( const Handler&) = delete;
+   /// Don't allow assignments.
+   Handler& operator =( const Handler&) = delete;
 
    /// Destructor, deletes dynamically allocated objects.
    /// @since  0.2, 10.04.2016
-   ~Handler();
+   virtual ~Handler();
 
-   /// Adds a single-value argument.
-   /// @tparam  T  The native type of the variable to store the value in.
+   /// Activates the check for program arguments in an environment variable,
+   /// plus allows to specify the name of the environment variable o use.<br>
+   /// The default is the name of the program file, all in uppercase letters.
+   ///
+   /// @param[in]  env_var_name  Optional, the name of the environment variable.
+   /// @since  1.22.0, 01.04.2019
+   void checkEnvVarArgs( std::string env_var_name = "");
+
+   /// Adds an argument with short and/or long arguments.<br>
+   /// For positional arguments, i.e. arguments not preceeded by a an argument
+   /// character/name, specify "-" as \a arg_spec.
    /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The variable to store the value in.
-   /// @param[in]  vname     The name of the variable to store the value in.<br>
-   ///                       Used for error reporting.
+   /// @param[in]  dest      The object that handles the type-specific stuff.<br>
+   ///                       Use the celma::prog_args::destination() template
+   ///                       functions to obtain the correct object.
    /// @param[in]  desc      The description of this argument.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T>
-      detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                         T& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds a single-value argument where an additional value is set on a
-   /// second variable when the parameter is used.
-   /// @tparam  T1  The native type of the variable to store the argument value in.
-   /// @tparam  T2  The native type of the second variable.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest1     The variable to store the argument value in.
-   /// @param[in]  vname1    The name of the variable to store the argument value
-   ///                       in.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  dest2     The variable to store the given value in.
-   /// @param[in]  vname2    The name of the variable to store the given value in.
-   /// @param[in]  value2    The value to store in the second variable.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T1, typename T2>
-      detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                         T1& dest1, const std::string vname1,
-                                         T2& dest2, const std::string vname2,
-                                         const T2& value2,
-                                         const std::string& desc);
-
-   /// Adds a free, single-value argument.
-   /// @tparam  T  The native type of the variable to store the value in.
-   /// @param[in]  dest   The variable to store the value in.
-   /// @param[in]  vname  The name of the variable to store the value in.<br>
-   ///                    Used for error reporting.
-   /// @param[in]  desc   The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T>
-      detail::TypedArgBase* addArgument( T& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds a multi-value argument that supports a range definition string for
-   /// the values.
-   /// @tparam  T  The native type of the variable to store the value(s) in.
-   /// @tparam  C  The type of the container used to store the values in.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The variable to store the value(s) in.
-   /// @param[in]  vname     The name of the variable to store the value in.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T, typename C>
-      detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                         const common::RangeDest< T, C>& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds a free, multi-value argument that supports a range definition string
-   /// for the values.
-   /// @tparam  T  The native type of the variable to store the value(s) in.
-   /// @tparam  C  The type of the container used to store the values in.
-   /// @param[in]  dest   The variable to store the value(s) in.
-   /// @param[in]  vname  The name of the variable to store the value in.<br>
-   ///                    Used for error reporting.
-   /// @param[in]  desc   The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename T, typename C>
-      detail::TypedArgBase* addArgument( const common::RangeDest< T, C>& dest,
-                                         const std::string vname,
-                                         const std::string& desc);
-
-   /// Adds an argument handler function that is called when an argument that
-   /// does not accept any value is set.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  fun       The function to call for this argument.<br>
-   ///                       Use the macros DEST_FUNCTION or DEST_METHOD to
-   ///                       easily set up the correct call.
-   /// @param[in]  fname     The name of the function to call.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
+   /// @since  0.16.0, 09.11.2017
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      detail::ArgHandlerCallable fun,
-                                      const std::string fname,
+                                      detail::TypedArgBase* dest,
                                       const std::string& desc);
 
-   /// Adds an argument handler function that is called when an argument that
-   /// may accept or requires a parameter is set.<br>
-   /// Due to ambiguity problems there is no addArgument() version for using a
-   /// free value for a callable. But you can achieve this easily by passing an
-   /// empty string ("") as \a arg_spec.
-   /// @param[in]  arg_spec     The arguments on the command line for this
-   ///                          argument.
-   /// @param[in]  fun          The function to call for this argument.<br>
-   ///                          This function must take an std::string as
-   ///                          parameter.<br>
-   ///                          Use the macros DEST_FUNCTION_VALUE or
-   ///                          DEST_METHOD_VALUE to easily set up the correct
-   ///                          call.
-   /// @param[in]  fname        The name of the function to call.<br>
-   ///                          Used for error reporting.
-   /// @param[in]  takes_value  Dummy parameter used to distinguish from the
-   ///                          non-value variant.
-   /// @param[in]  desc         The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// Adds a sub-group.
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line to enter/start the sub-group.
+   /// @param[in]  subGroup
+   ///    The object to handle the sub-group arguments.
+   /// @param[in]  desc
+   ///    The description of this sub-group argument.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      detail::ArgHandlerCallableValue fun,
-                                      const std::string fname,
-                                      bool takes_value,
-                                      const std::string& desc);
-
-   /// Adds a sub-group.<br>
-   /// Note: Theoretically we could pass the object by reference, but then the
-   /// compiler cannot distinguish anymore between this function and the variant
-   /// to add an argument resulting in a function call.
-   /// @param[in]  arg_spec  The arguments on the command line to enter/start
-   ///                       the sub-group.
-   /// @param[in]  subGroup  The object to handle the sub-group arguments.
-   /// @param[in]  desc      The description of this sub-group argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      Handler* subGroup,
+                                      Handler& subGroup,
                                       const std::string& desc);
 
    /// Adds an argument that behaves like the -h/--help arguments. Use this if
    /// the help argument should e.g. be in another language.<br>
    /// The standard help arguments may still be set in the constructor, then
    /// both arguments can be used to get the usage displayed.
-   /// @param[in]  arg_spec  The arguments on the command line for the help
-   ///                       feature.
-   /// @param[in]  desc      The description of this argument.
-   /// @param[in]  txt1      Optional pointer to the object to provide
-   ///                       additional text for the usage.
-   /// @param[in]  txt2      Optional pointer to the object to provide
-   ///                       additional text for the usage.
-   /// @return  The object managing the argument, may be used to apply further
-   ///          settings (normally not necessary).
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line for the help feature.
+   /// @param[in]  desc
+   ///    The description of this argument.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @return
+   ///    The object managing the argument, may be used to apply further
+   ///    settings (normally not necessary).
    /// @since  0.10, 22.12.2016
    detail::TypedArgBase* addHelpArgument( const std::string& arg_spec,
                                           const std::string& desc,
@@ -482,23 +461,64 @@ public:
                                           IUsageText* txt2 = nullptr);
 
    /// Adds an argument that takes the path/filename of an argument file as
-   /// parameter.
-   /// @param[in]  arg_spec  The arguments on the command line for specifying the
-   ///                       file with the arguments.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// parameter.<br>
+   /// When the flag #hfReadProgArg is passed to the constructor, the program
+   /// arguments file with the predefined name is always read if it exists.<br>
+   /// With this method it is possible to specify an argument with which the
+   /// (path and) name of the arguments file can be specified. Only if this
+   /// given argument is then used on the command line, the argument file is
+   /// read.
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line for specifying the file with the
+   ///    arguments.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentFile( const std::string& arg_spec);
 
-   /// Adds an argument that activates printing of hidden arguments in the usage.<br>
+   /// Adds an argument that activates printing of hidden arguments in the
+   /// usage.<br>
    /// Same as setting the flag #hfArgHidden, but allows to specify the
-   /// argument.
+   /// argument and its description.
    /// @param[in]  arg_spec  The argument(s) on the command line for activating
    ///                       printing the hidden arguments.
+   /// @param[in]  desc      Optional text for the description of the argument
+   ///                       in the usage. If not set, the default description
+   ///                       is used.
    /// @return  The object managing this argument, may be used to apply further
    ///          settings.
+   /// @since  1.1.0, 06.12.2017  (adapted to using usage parameters object)
    /// @since  0.2, 10.04.2016
-   detail::TypedArgBase* addArgumentPrintHidden( const std::string& arg_spec);
+   detail::TypedArgBase* addArgumentPrintHidden( const std::string& arg_spec,
+      const char* desc = nullptr);
+
+   /// Adds an argument that activates printing of usage with arguments with
+   /// short argument key only.
+   /// @param[in]  arg_spec  The argument(s) on the command line for activating
+   ///                       printing the usage with short arguments only.
+   /// @param[in]  desc      Optional text for the description of the argument
+   ///                       in the usage. If not set, the default description
+   ///                       is used.
+   /// @return  The object managing this argument, may be used to apply further
+   ///          settings.
+   /// @since  1.1.0, 25.09.2017
+   detail::TypedArgBase* addArgumentUsageShort( const std::string& arg_spec,
+      const char* desc = nullptr);
+
+   /// Adds an argument that activates printing of usage with arguments with
+   /// long argument key only.
+   /// @param[in]  arg_spec  The argument(s) on the command line for activating
+   ///                       printing the usage with long arguments only.
+   /// @param[in]  desc      Optional text for the description of the argument
+   ///                       in the usage. If not set, the default description
+   ///                       is used.
+   /// @return  The object managing this argument, may be used to apply further
+   ///          settings.
+   /// @since  1.1.0, 25.09.2017
+   detail::TypedArgBase* addArgumentUsageLong( const std::string& arg_spec,
+      const char* desc = nullptr);
 
    /// Adds an argument that prints the list of arguments, their destination
    /// variables and their values.<br>
@@ -530,33 +550,38 @@ public:
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentEndValues( const std::string& arg_spec);
 
-   /// Adds an argument with a custom destination type.
-   /// @tparam  C  The custom class used to handle variables of the custom
-   ///             destination type. This class must be derived from the class
-   ///             TypedArgBase.
-   /// @tparam  T  The custom type of the destination variable to handle.
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The variable to store the value(s) in.
-   /// @param[in]  vname     The name of the variable to store the value in.<br>
-   ///                       Used for error reporting.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
-   /// @since  0.2, 10.04.2016
-   template< typename C, typename T>
-      detail::TypedArgBase* addCustomArgument( const std::string& arg_spec,
-                                               T& dest,
-                                               const std::string vname,
-                                               const std::string& desc);
+   /// Adds an argument that can be used to get the usage for exactly one
+   /// argument.
+   ///
+   /// @param[in]  arg_spec
+   ///    The argument(s) on the command line to request the usage for an
+   ///    argument.
+   /// @param[in]  full
+   ///    Set this flag if the argument should invoke the function to print the
+   ///    usage and a complee description of the argument and its destination
+   ///    variable.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
+   /// @since
+   ///    1.14.0, 25.09.2018
+   detail::TypedArgBase* addArgumentHelpArgument( const std::string& arg_spec,
+      bool full = false);
 
-   /// Specifies the callback function for a control argument.<br>
-   /// If no handler is defined for a control character, it is treated as error
-   /// when found in an argument list.
-   /// @param[in]  ctrlChar  The control character to specify the handler for.
-   /// @param[in]  hf        The handler to call when the control character is
-   ///                       detected on the argument list.
+   /// Specifies the callback functions for handling brackets on the command
+   /// line.
+   ///
+   /// @param[in]  open_bracket
+   ///    The handler to call when an opening round bracket is detected on the
+   ///    command line.
+   /// @param[in]  closing_bracket
+   ///    The handler to call when a closing round bracket is detected in the
+   ///    argument list.
+   /// @since  1.27.0, 28.05.2019
+   ///    (renamed from addControlHandler)
    /// @since  0.2, 10.04.2016
-   void addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false);
+   void addBracketHandler( HandlerFunc open_bracket,
+      HandlerFunc closing_bracket) noexcept( false);
 
    /// Specifies the line length to use when printing the usage.
    /// @param[in]  useLen  The new line length to use.<br>
@@ -564,12 +589,20 @@ public:
    /// @since  0.2, 10.04.2016
    void setUsageLineLength( int useLen);
 
+   /// Re-sets the usage parameters to use for displaying the usage.
+   /// @param[in]  usage_params  Shared object to share for the usage parameters.
+   /// @since  1.1.0, 04.12.2017
+   void setUsageParams( detail::shared_usage_params_t& usage_params);
+
    /// Adds a constraint to the argument handler itself that affects multiple
    /// arguments.<br>
    /// The arguments specified in the constraint must already be defined.
-   /// @param[in]  ic  Pointer to the object that handles the constraint.
+   ///
+   /// @param[in]  ihc
+   ///    Pointer to the object that handles the constraint. Is deleted when an
+   ///    error occurs.
    /// @since  0.2, 10.04.2016
-   void addConstraint( detail::IConstraint* ic) noexcept( false);
+   void addConstraint( detail::IHandlerConstraint* ihc) noexcept( false);
 
    /// Iterates over the list of arguments and their values and stores the
    /// values in the corresponding destination variables.<br>
@@ -594,7 +627,24 @@ public:
    ///                     space at the end as separator to the following text.
    /// @since  0.2, 10.04.2016
    void evalArgumentsErrorExit( int argc, char* argv[],
-                                const std::string& prefix);
+      const std::string& prefix);
+
+   /// After calling evalArguments(), prints the list of arguments that were
+   /// used and the values that were set.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @since 1.8.0, 25.07.2018 (version with less parameters)
+   void printSummary( sumoptset_t contents_set = sumoptset_t(), std::ostream& os = std::cout);
+
+   /// Same as before, but only the output stream to write to can/must be
+   /// specified.
+   ///
+   /// @param[out]  os  The stream to write the summary to.
+   /// @since 1.8.0, 26.07.2018 (version with even less parameters)
+   void printSummary( std::ostream&);
 
    /// Helps to determine if an object is a 'plain' Handler object or a
    /// ValueHandler object.
@@ -614,10 +664,11 @@ public:
    /// @return  Pointer to the object handling the specified argument.
    /// @since  0.14.0, 16.03.2017
    detail::TypedArgBase* getArgHandler( const std::string& arg_spec)
-                                      noexcept( false);
+      noexcept( false);
 
 protected:
-	/// Class needs access to internals.
+	/// Classes need access to internals.
+   friend class detail::ArgumentContainer;
    friend class Groups;
 
    /// Function call result for evalSingleArgument():
@@ -633,11 +684,13 @@ protected:
 
    /// Compares the arguments defined in this object with those in \a otherAH
    /// and throws an exception if duplicates are detected.
-   /// @param[in]  ownName    The symbolic name of this objects arguments.
-   /// @param[in]  otherName  The symbolic name of the the other objects
-   ///                        arguments.
-   /// @param[in]  otherAH    The other object to check the argument list
-   ///                        against.
+   ///
+   /// @param[in]  ownName
+   ///    The symbolic name of this objects arguments.
+   /// @param[in]  otherName
+   ///    The symbolic name of the the other objects arguments.
+   /// @param[in]  otherAH
+   ///    The other object to check the argument list against.
    /// @since  0.2, 10.04.2016
    void crossCheckArguments( const std::string ownName,
                              const std::string& otherName,
@@ -665,13 +718,6 @@ protected:
    /// @since  0.2, 10.04.2016
    void checkMissingMandatoryCardinality() const;
 
-   /// Checks and sets the maximum argument length, needed to format the usage.
-   /// @param[in,out]  maxArgLen  Maximum argument length as needed so far, may
-   ///                            be increased if this class contains longer
-   ///                            arguments.
-   /// @since  0.2, 10.04.2016
-   void checkMaxArgLen( size_t& maxArgLen) const;
-
    /// Checks if the specified argument is already used.
    /// @param[in]  argChar  The argument character to check.
    /// @return  \c true if the argument is already in use.
@@ -683,6 +729,23 @@ protected:
    /// @return  \c true if the argument is already in use.
    /// @since  0.2, 10.04.2016
    bool argumentExists( const std::string& argString) const;
+
+   /// After calling evalArguments(), prints the list of arguments that were
+   /// used and the values that were set.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @param[in]   standalone
+   ///    If set, prints a title and a line if no arguments were found,
+   ///    otherwise only prints the list of arguments used (or nothing).
+   /// @param[in]   arg_prefix
+   ///    Specifies the prefix for the arguments of this handler. Used when the
+   ///    argument handler handles the arguments of a sub-group.
+   /// @since 1.8.0, 03.07.2018
+   void printSummary( sumoptset_t contents_set, std::ostream& os,
+      bool standalone, const char* arg_prefix) const;
 
    /// Prints the usage of this class.
    /// @param[out]  os  The stream to print to.
@@ -696,20 +759,33 @@ private:
    static const detail::ArgumentKey  mPosKey;
 
    /// Type of the container to store the global constrainst in.
-   typedef std::vector< detail::IConstraint*>  ConstraintCont;
+   using ConstraintCont = std::vector< detail::IHandlerConstraint*>;
 
-   /// Don't allow copying.
-   Handler( const Handler&) = delete;
-   /// Don't allow assignments.
-   Handler& operator =( const Handler&) = delete;
+   /// Called by the constructors to evaluate the set of flags given.
+   ///
+   /// @param[in]  flag_set
+   ///    The set of flags to set.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @since
+   ///    1.11.0, 16.02.2018
+   void handleStartFlags( int flag_set, IUsageText* txt1, IUsageText* txt2)
+      noexcept( false);
 
    /// Function to print the usage of a program (when requested through the
    /// arguments). The additional parameters allow to print additional
    /// information.
-   /// @param[in]  txt1  Pointer to the object that prints the first text.
-   /// @param[in]  txt2  Pointer to the object that prints the second text.
+   ///
+   /// @param[in]  txt1
+   ///    Pointer to the object that prints the first text.
+   /// @param[in]  txt2
+   ///    Pointer to the object that prints the second text.
    /// @since  0.2, 10.04.2016
-   void usage( IUsageText* txt1, IUsageText* txt2);
+   void usage( IUsageText* txt1, IUsageText* txt2) noexcept( false);
 
    /// Sets the flag that this object is used as sub-group handler.
    /// @since  0.2, 10.04.2016
@@ -736,6 +812,14 @@ private:
    /// @since  0.2, 10.04.2016
    void readEvalFileArguments( const char* arg0);
 
+   /// If no environment variable name is given, the name of the program file is
+   /// used. Then check if an environment variable with this name exists and is
+   /// not empty. If so the evaluate the program arguments from the variable.
+   ///
+   /// @param[in]  arg0  The (path and) name of the program file.
+   /// @since  1.22.0, 01.04.2019
+   void checkReadEnvVarArgs( const char* arg0);
+
    /// Function to read arguments from a file.
    /// @param[in]  pathFilename   The (path and) file name to read from.
    /// @param[in]  reportMissing  If set, the file should exist, an exception is
@@ -751,9 +835,23 @@ private:
    /// @since  0.13.1, 07.02.2017
    void listArgGroups();
 
-   /// Called to mark the end of a value list: Sets mpLastArg to NULL.
+   /// Called to mark the end of a value list: Sets #mpLastArg to NULL.
+   ///
    /// @since  0.2, 10.04.2016
    void endValueList();
+
+   /// Searches if the given argment key belongs to a known argument, and if so
+   /// prints its usage.<br>
+   /// If the argument key is unknown, an error message is printed.<br>
+   /// At the end, the function calls exit(), unless "usage continues" is set.
+   ///
+   /// @param[in]  help_arg_key
+   ///    The key of the argument to print the usage of.
+   /// @param[in]  full
+   ///    If set, also prints information about the argument and its destination
+   ///    variable.
+   /// @since  1.14.0, 25.09.2018
+   void helpArgument( const std::string& help_arg_key, bool full);
 
    /// Iterates over the arguments and evaluates them.
    /// @param[in]  alp  The parser object used to access the arguments.
@@ -805,7 +903,7 @@ private:
    /// - Check argument constraints.
    /// - Check global constraints.
    /// - Produce verbose output if required.
-   /// - Finally call calledAssign() for this argument.
+   /// - Finally call assignValue() for this argument.
    ///
    /// @param[in]  hdl    Pointer to the object that handles this argument.
    /// @param[in]  key    The short and/or long argument keys.
@@ -816,261 +914,96 @@ private:
                              const std::string& value = "");
 
    /// Stream to write output to.
-   std::ostream&                mOutput;
+   std::ostream&                  mOutput;
    /// Stream to write error output to.
-   std::ostream&                mErrorOutput;
+   std::ostream&                  mErrorOutput;
    /// Set when the flag #hfReadProgArg was passed to the constructor. Then the
    /// default program arguments file is read before the command line arguments
    /// are evaluated.
-   const bool                   mReadProgramArguments;
+   const bool                     mReadProgramArguments;
    /// Set when the flag #hfVerboseArgs was passed to the constructor. Produces
    /// verbose output when a value is assigned to a variable.
-   const bool                   mVerbose;
-   /// Set when the flag #hfUsageHidden was passed to the constructor. Specifies
-   /// if hidden arguments should be printed in the usage or not.
-   bool                         mPrintHidden;
+   const bool                     mVerbose;
    /// Set when the flag #hfUsageCont was passed to the constructor. Specifies
    /// that the program flow should continue after printing the usage.
-   const bool                   mUsageContinues;
+   const bool                     mUsageContinues;
    /// Set when the usage was printed.<br>
    /// Needed together with the flag #mUsageContinues to bypass end-of-arguments
    /// checks so that evalArgument() can return.
-   bool                         mUsagePrinted = false;
+   bool                           mUsagePrinted = false;
+   /// Defines the contents of the usage.
+   detail::shared_usage_params_t  mpUsageParams;
    /// The (top-level) arguments known by this class.
-   detail::ArgumentContainer    mArguments;
+   detail::ArgumentContainer      mArguments;
    /// Argument sub-groups.
-   detail::ArgumentContainer    mSubGroupArgs;
+   detail::ArgumentContainer      mSubGroupArgs;
    /// Storage for the arguments and their descriptions.
-   detail::ArgumentDesc         mDescription;
+   detail::ArgumentDesc           mDescription;
    /// Function called for an opening bracket '('.
-   HandlerFunc                  mpOpeningBracketHdlr;
+   HandlerFunc                    mpOpeningBracketHdlr;
    /// Function called for a closing bracket ')'.
-   HandlerFunc                  mpClosingBracketHdlr;
-   /// Function called for an exclamation mark '!'.
-   HandlerFunc                  mpExclamationMarkHdlr;
+   HandlerFunc                    mpClosingBracketHdlr;
    /// Set when this object is used as argument handler for a sub-group.
-   bool                         mIsSubGroupHandler = false;
+   bool                           mIsSubGroupHandler = false;
    /// The current constraints, dynamically created through the arguments that
    /// were processed so far.
-   detail::ConstraintContainer  mConstraints;
+   detail::ConstraintContainer    mConstraints;
    /// Global constraints, i.e. constraints that affect multiple arguments
    /// and/or are not triggered by a specific argument.
-   ConstraintCont               mGlobalConstraints;
+   ConstraintCont                 mGlobalConstraints;
+   /// Set when the flag #hfEnvVarArgs is passed to the constructor, or when
+   /// checkEnvVarArgs() is called: Checks for additional program arguments in
+   /// the given environment variable.
+   bool                           mCheckEnvVar = false;
+   /// Contains the name of the environment variable to check for additional
+   /// program arguments. By default, the name of the program file is used, all
+   /// in uppercase letters.
+   std::string                    mEnvVarName;
 
    /// Pointer to the last argument handler that was used. Needed for
    /// processing multiple, separate values.
-   detail::TypedArgBase*        mpLastArg = nullptr;
-   /// Reading arguments from a file should not influence the cardinality
-   /// checks, i.e. it should be possible to overwrite a value from a file
-   /// without triggering a 'too many values' exception.
-   bool                         mReadingArgumentFile = false;
+   detail::TypedArgBase*          mpLastArg = nullptr;
+
+   /// List of values/flags for the different read mode.<br>
+   /// The flags for "reading from file" and "processing environment variable"
+   /// may be set in parallel.
+   enum ReadMode
+   {
+      commandLine,   //!< Normal evaluation of command line arguments.
+      file,          //!< Flag/Bit set when evaluating an argument file.
+      envVar         //!< Flag/Bit set when evaluating an environment variable.
+   };
+
+   /// Reading arguments from a file or an environment variable should not
+   /// influence the cardinality checks, i.e. it should be possible to overwrite
+   /// a value from a file without triggering a 'too many values' exception.<br>
+   /// Since arguments from the environment variable could trigger reading an
+   /// argument file, these two states must be managd separately.
+   uint8_t                        mReadMode = ReadMode::commandLine;
    /// Flag, set when this argument handler object was created by a Groups
    /// object.
-   bool                         mUsedByGroup;
+   bool                           mUsedByGroup;
+   /// Set when an exclamation mark was found on the command line.<br>
+   /// This inverts the meaning of the following argument. Afterwards the flag
+   /// is reset again.
+   bool                           mInverted = false;
 
 }; // Handler
-
-
-// macros
-// ======
-
-
-/// Macro used to pass the destination variable and its name.
-/// @param  n  The destination variable.
-/// @since  0.2, 10.04.2016
-#define DEST_VAR( n)  n, #n
-
-/// Macro used to pass a destination variable that accepts a range string as
-/// value.
-/// @param  n  The destination variable.
-/// @param  t  The value type of the destination variable.
-/// @param  c  The type of the container/the destination variable.
-/// @todo  Try to change this (and the class RangeDest?) so that the type of
-///        the destination variable (container type) does not need to be
-///        set separately.
-/// @since  0.2, 10.04.2016
-#define DEST_RANGE( n, t, c)  celma::common::RangeDest< t, c < t > >( n), #n
-
-/// Macro used to pass a destination variable that accepts a range string as
-/// value.
-/// @param  n  The destination variable.
-/// @param  s  The size of the bitset.
-/// @since  0.2, 10.04.2016
-#define DEST_BITSET( n, s)  \
-   celma::common::RangeDest< size_t, std::bitset< s> >( n), #n
-
-/// Use this define to pass a function that takes no value as argument handler.
-/// @param[in]  f  The name of the function.
-/// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION( f)  std::bind( &f), #f
-
-/// Use this define to pass a function that accepts a value as argument handler.
-/// @param[in]  f  The name of the function.
-/// @since  0.2, 10.04.2016
-#define  DEST_FUNCTION_VALUE( f)  \
-   std::bind( &f, std::placeholders::_1), #f, true
-
-/// Use this define to pass a method (class member function) of the current
-/// object, that takes no value, as argument handler.
-/// @param[in]  c  The name of the class.
-/// @param[in]  m  The name of the method.
-/// @since  0.13.1, 07.02.2017
-#define  DEST_MEMBER_METHOD( c, m)  std::bind( & c :: m, this), #c "::" #m
-
-/// Use this define to pass a method (class member function) that takes no value
-/// as argument handler.
-/// @param[in]  c  The name of the class.
-/// @param[in]  m  The name of the method.
-/// @param[in]  o  The object to call the method for.
-/// @since  0.2, 10.04.2016
-#define  DEST_METHOD( c, m, o)  std::bind( & c :: m, &o), #c "::" #m
-
-/// Use this define to pass a method (class member function) of the current
-/// object, that accepts a value, as argument handler.
-/// @param[in]  c  The name of the class.
-/// @param[in]  m  The name of the method.
-/// @since  0.13.1, 07.02.2017
-#define  DEST_MEMBER_METHOD_VALUE( c, m)  \
-   std::bind( & c :: m, this, std::placeholders::_1), #c "::" #m, true
-
-
-/// Use this define to pass a method (class member function) that accepts a
-/// value as argument handler.
-/// @param[in]  c  The name of the class.
-/// @param[in]  m  The name of the method.
-/// @param[in]  o  The object to call the method for.
-/// @since  0.2, 10.04.2016
-#define  DEST_METHOD_VALUE( c, m, o)  \
-   std::bind( & c :: m, &o, std::placeholders::_1), #c "::" #m, true
 
 
 // inlined methods
 // ===============
 
 
-template< typename T>
-   detail::TypedArgBase*
-      Handler::addArgument( const std::string& arg_spec,
-                            T& dest,
-                            const std::string vname,
-                            const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl = new detail::TypedArg< T>( key, dest,
-                                                                  vname);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addArgument
-
-
-template< typename T1, typename T2>
-   detail::TypedArgBase*
-      Handler::addArgument( const std::string& arg_spec,
-                            T1& dest1,
-                            const std::string vname1,
-                            T2& dest2,
-                            const std::string vname2,
-                            const T2& value2,
-                            const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl =
-      new detail::TypedArgPair< T1, T2>( key, dest1, vname1, dest2, vname2,
-                                         value2);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addArgument
-
-
-template< typename T>
-   detail::TypedArgBase*
-      Handler::addArgument( T& dest, const std::string vname,
-                            const std::string& desc)
-{
-   detail::TypedArgBase*  arg_hdl = new detail::TypedArg< T>( mPosKey, dest,
-                                                              vname);
-   return internAddArgument( arg_hdl, mPosKey, desc);
-} // Handler::addArgument
-
-
-template< typename T, typename C>
-   detail::TypedArgBase*
-      Handler::addArgument( const std::string& arg_spec,
-                            const common::RangeDest< T, C>& dest,
-                            const std::string vname,
-                            const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-       = new detail::TypedArgRange< T, C>( key, dest, vname);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addArgument
-
-
-template< typename T, typename C>
-   detail::TypedArgBase*
-      Handler::addArgument( const common::RangeDest< T, C>& dest,
-                            const std::string vname,
-                            const std::string& desc)
-{
-   detail::TypedArgBase*  arg_hdl
-      = new detail::TypedArgRange< T, C>( mPosKey, dest, vname);
-   return internAddArgument( arg_hdl, mPosKey, desc);
-} // Handler::addArgument
-
-
 inline detail::TypedArgBase*
    Handler::addArgument( const std::string& arg_spec,
-                         detail::ArgHandlerCallable fun,
-                         const std::string fname,
+                         detail::TypedArgBase* dest,
                          const std::string& desc)
 {
    const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallable( key, fun, fname);
-   return internAddArgument( arg_hdl, key, desc);
+   dest->setKey( key);
+   return internAddArgument( dest, key, desc);
 } // Handler::addArgument
-
-
-inline detail::TypedArgBase*
-   Handler::addArgument( const std::string& arg_spec,
-                         detail::ArgHandlerCallableValue fun,
-                         const std::string fname,
-                         bool,
-                         const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-       = new detail::TypedArgCallableValue( key, fun, fname);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addArgument
-
-
-inline detail::TypedArgBase*
-   Handler::addArgument( const std::string& arg_spec, Handler* subGroup,
-                         const std::string& desc)
-{
-   if (subGroup == nullptr)
-      throw std::runtime_error( "Sub-group object pointer is NULL");
-   subGroup->setIsSubGroupHandler();
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgSubGroup( key, subGroup);
-   mSubGroupArgs.addArgument( arg_hdl, key);
-   mDescription.addArgument( key, desc, arg_hdl);
-   return arg_hdl;
-} // Handler::addArgument
-
-
-template< typename C, typename T>
-   detail::TypedArgBase*
-      Handler::addCustomArgument( const std::string& arg_spec,
-                                  T& dest,
-                                  const std::string vname,
-                                  const std::string& desc)
-{
-   const detail::ArgumentKey  key( arg_spec);
-   detail::TypedArgBase*      arg_hdl = new C( key, dest, vname);
-   return internAddArgument( arg_hdl, key, desc);
-} // Handler::addCustomArgument
 
 
 inline void Handler::setUsageLineLength( int useLen)
@@ -1080,10 +1013,28 @@ inline void Handler::setUsageLineLength( int useLen)
 } // Handler::setUsageLineLength
 
 
+inline void Handler::setUsageParams( detail::shared_usage_params_t& usage_params)
+{
+   mpUsageParams = usage_params;
+} // Handler::setUsageParams
+
+
 inline void Handler::setIsSubGroupHandler()
 {
    mIsSubGroupHandler = true;
 } // Handler::setIsSubGroupHandler
+
+
+inline void Handler::printSummary( sumoptset_t contents_set, std::ostream& os)
+{
+   printSummary( contents_set, os, true, nullptr);
+} // Handler::printSummary
+
+
+inline void Handler::printSummary( std::ostream& os)
+{
+   printSummary( sumoptset_t(), os, true, nullptr);
+} // Handler::printSummary
 
 
 } // namespace prog_args
@@ -1093,5 +1044,5 @@ inline void Handler::setIsSubGroupHandler()
 #endif   // CELMA_PROG_ARGS_HANDLER_HPP
 
 
-// ===========================  END OF handler.hpp  ===========================
+// =====  END OF handler.hpp  =====
 

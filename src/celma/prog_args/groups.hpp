@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -56,7 +56,6 @@ class Handler;
 /// object whose lifetimes lasts at least until evalArguments() was called!
 /// @since  0.13.0, 05.02.2017  (redesign to handle special parameters)
 /// @since  0.2, 10.04.2016
-/// @todo  Add method evalArgumentsErrorExit() like in Handler class.
 class Groups: public common::Singleton< Groups>
 {
 
@@ -64,7 +63,7 @@ class Groups: public common::Singleton< Groups>
 
 public:
    /// The type used to store an argument handler object.
-   typedef std::shared_ptr< Handler>  SharedArgHndl;
+   using SharedArgHndl = std::shared_ptr< Handler>;
 
    /// Set of the flags that may be set on the argument groups object, which
    /// will be passed on to each Handler object that is created afterwards.
@@ -77,11 +76,12 @@ public:
 
    /// Returns the argument handler for the specified group name.<br>
    /// If the argument handler does not exist yet, a new handler object will be
-   /// created. If the handler object exists already, it must a 'plain' handler
-   /// object, not a value handler.<br>
+   /// created. If the handler object exists already, it must be a 'plain'
+   /// handler object, not a value handler.<br>
    /// The output streams will be passed as specified when calling instance()
    /// for this group object, and the flags parameter will be a combination of
    /// this object's flag and the flags passed in \a this_handler_flags.
+   ///
    /// @param[in]  grpName             The symbolic name of this handler, used
    ///                                 for identification and printing the
    ///                                 usage.
@@ -132,6 +132,41 @@ public:
    /// @since  0.2, 10.04.2016
    void evalArguments( int argc, char* argv[]) noexcept( false);
 
+   /// Same as evalArguments(). Difference is that this method catches
+   /// exceptions, reports them on \c stderr and then exits the program.<br>
+   /// In other words: If the function returns, all argument requirements and
+   /// constraints were met.
+   /// @param[in]  argc
+   ///    Number of arguments passed to the process.
+   /// @param[in]  argv
+   ///    List of argument strings.
+   /// @param[in]  prefix
+   ///    Prefix text to print before the error message.<br>
+   ///    The prefix may be an empty string. If not, add a space at the end as
+   ///    separator to the following text.
+   /// @since
+   ///    1.8.0, 03.07.2018
+   void evalArgumentsErrorExit( int argc, char* argv[],
+                                const std::string& prefix);
+
+   /// After calling evalArguments(), prints the list of arguments that were
+   /// used and the values that were set.
+   ///
+   /// @param[in]  contents_set
+   ///    Set of flags that specify the contents of the summary to print.
+   /// @param[out]  os
+   ///    The stream to write the summary to.
+   /// @since  1.8.0, 03.07.2018
+   void printSummary( sumoptset_t contents_set = sumoptset_t(),
+      std::ostream& os = std::cout) const;
+
+   /// Same as before, but only the output stream to write to can/must be
+   /// specified.
+   ///
+   /// @param[out]  os  The stream to write the summary to.
+   /// @since  1.8.0, 03.07.2018
+   void printSummary( std::ostream& os) const;
+
    /// Needed for testing purposes, but may be used in 'normal' programs too:
    /// Removes a previously added argument handler object.
    /// @param[in]  grpName  The symbolic name of the argument handler to remove.
@@ -180,7 +215,7 @@ public:
 
    /// When argument groups are used, it is necessary to check that the same
    /// argument is only used in one of the handlers.<br>
-   /// This is achieved by stting the Handler::hfInGroup flag for each handler
+   /// This is achieved by setting the Handler::hfInGroup flag for each handler
    /// that is created. Then, when an argument is added to the handler, it calls
    /// this method.<br>
    /// Here, since we don't know which argument was the new one, compare each
@@ -200,13 +235,23 @@ public:
 
 protected:
    /// Constructor.
-   /// @param[in]  os        The stream to write normal output to.
-   /// @param[in]  error_os  The stream to write error output to.
+   ///
    /// @param[in]  flag_set  Set of the flags to pass to all handler objects.
+   /// @since  1.8.0, 11.07.2018
+   explicit Groups( int flag_set);
+
+   /// Constructor.
+   ///
+   /// @param[in]  os
+   ///    The stream to write normal output to.
+   /// @param[in]  error_os
+   ///    The stream to write error output to.
+   /// @param[in]  flag_set
+   ///    Set of the flags to pass to all handler objects.
    /// @since  0.13.0, 05.02.2017  (added parameters)
    /// @since  0.2, 10.04.2016
-   Groups( std::ostream& os = std::cout, std::ostream& error_os = std::cerr,
-           int flag_set = 0);
+   explicit Groups( std::ostream& os = std::cout,
+      std::ostream& error_os = std::cerr, int flag_set = 0);
 
 private:
    /// Internal class used to store an argument handler with its symbolic name.
@@ -238,20 +283,22 @@ private:
    }; // Storage
 
    /// Container to store the argument handlers.
-   typedef std::vector< Storage>  ArgHandlerCont;
+   using ArgHandlerCont = std::vector< Storage>;
 
    /// Stream to write output to.
-   std::ostream&   mOutput;
+   std::ostream&                  mOutput;
    /// Stream to write error output to.
-   std::ostream&   mErrorOutput;
+   std::ostream&                  mErrorOutput;
    /// The set of flags to pass on to all handler objects that are created.
-   int             mHandlerFlags;
+   int                            mHandlerFlags;
    /// The argument handlers.
-   ArgHandlerCont  mArgGroups;
+   ArgHandlerCont                 mArgGroups;
    /// Set to \c true when the method evalArguments() of this class is used.
-   bool            mEvaluating;
+   bool                           mEvaluating = false;
    /// The line length to use when printing the usage.
-   int             mUsageLineLength;
+   int                            mUsageLineLength;
+   /// Defines the contents of the usage.
+   detail::shared_usage_params_t  mpUsageParams;
 
 }; // Groups
 
@@ -264,6 +311,12 @@ inline bool Groups::evaluatedByArgGroups() const
 {
    return mEvaluating;
 } // Groups::evaluatedByArgGroups
+
+
+inline void Groups::printSummary( std::ostream& os) const
+{
+   printSummary( sumoptset_t(), os);
+} // Groups::printSummary
 
 
 inline void Groups::setUsageLineLength( int useLen)
@@ -279,5 +332,5 @@ inline void Groups::setUsageLineLength( int useLen)
 #endif   // CELMA_PROG_ARGS_GROUPS_HPP
 
 
-// ============================  END OF groups.hpp  ============================
+// =====  END OF groups.hpp  =====
 

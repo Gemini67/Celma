@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,7 +20,6 @@
 
 
 #include <iostream>
-#include <boost/lexical_cast.hpp>
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
@@ -33,49 +32,70 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Helper class to store two destination variables with their native types.
 /// For the second variable, the value to set must be specified.
-/// @tparam  T1  The type of the first value.
-/// @tparam  T2  The type of the second value.
-/// @since  0.2, 10.04.2016
-template< typename T1, typename T2> class TypedArgPair : public TypedArgBase
+/// @tparam  T1
+///    The type of the first value.
+/// @tparam  T2
+///    The type of the second value.
+/// @since
+///    1.5.0, 20.06.2018  (derived from TypedArg<> instead of TypedArgBase).
+/// @since
+///    0.2, 10.04.2016
+template< typename T1, typename T2> class TypedArgPair: public TypedArg< T1>
 {
 public:
    /// Constructor.
-   /// @param[in]  key     The complete argument specification with short and/or
-   ///                     long argument.
-   /// @param[in]  dest1   The first destination variable to store the
-   ///                     parameter value in.
-   /// @param[in]  vname1  The name of the first destination variable to store
-   ///                     the parameter value in.
-   /// @param[in]  dest2   The second destination variable to store the given
-   ///                     value in.
-   /// @param[in]  vname2  The name of the second destination variable to store
-   ///                     the given value in.
-   /// @param[in]  value2  The value to set for the second variable.
-   /// @since  0.2, 10.04.2016
-   TypedArgPair( const ArgumentKey& key,
-                 T1& dest1, const std::string& vname1, T2& dest2,
-                 const std::string& vname2, const T2& value2);
+   /// @param[in]  dest1
+   ///    The first destination variable to store the parameter value in.
+   /// @param[in]  vname1
+   ///    The name of the first destination variable to store the parameter
+   ///    value in.
+   /// @param[in]  dest2
+   ///    The second destination variable to store the given value in.
+   /// @param[in]  vname2
+   ///    The name of the second destination variable to store the given value
+   ///    in.
+   /// @param[in]  value2
+   ///    The value to set for the second variable.
+   /// @since
+   ///    0.16.0, 10.11.2017  (removed key parameter)
+   /// @since
+   ///    0.2, 10.04.2016
+   TypedArgPair( T1& dest1, const std::string& vname1, T2& dest2,
+      const std::string& vname2, const T2& value2);
 
-   /// Returns if the destination has a value set.
-   /// @return  \c true if the destination variable contains a value,
-   ///          \c false otherwise.
-   /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const override;
+   /// Prints the two current values of the destination variables.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
-   /// @param[out]  os  The stream to print to.
-   /// @since  0.2, 10.04.2016
+   /// @param[out]  os
+   ///    The stream to print to.
+   /// @since
+   ///    0.2, 10.04.2016
    virtual void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
-   /// @param[in]  value  The value to store in string format.
-   /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
+   /// @since
+   ///    0.2, 10.04.2016
+   virtual void assign( const std::string& value, bool inverted) override;
 
-   /// Reference of the destination variable to store the value in.
-   T1&                mDestVar1;
    /// Reference of the destination variable to store the value in.
    T2&                mDestVar2;
    /// The name of the variable to store the second value in.
@@ -84,8 +104,6 @@ private:
    /// Must be copied when the object is created, otherwise we risk keeping a
    /// reference to a temporary value/variable.
    const T2           mValue2;
-   /// Flag, set when the argument was found/the value is set.
-   bool               mValueSet;  
 
 }; // TypedArgPair< T1, T2>
 
@@ -95,51 +113,42 @@ private:
 
 
 template< typename T1, typename T2>
-   TypedArgPair< T1, T2>::TypedArgPair( const ArgumentKey& key,
-                                        T1& dest1, const std::string& vname1,
-                                        T2& dest2, const std::string& vname2,
-                                        const T2& value2):
-      TypedArgBase( key, vname1, ValueMode::required, false),
-      mDestVar1( dest1),
-      mDestVar2( dest2),
-      mVarName2( vname2),
-      mValue2( value2),
-      mValueSet( false)
+   TypedArgPair< T1, T2>::TypedArgPair( T1& dest1, const std::string& vname1,
+      T2& dest2, const std::string& vname2, const T2& value2):
+         TypedArg< T1>( dest1, vname1),
+         mDestVar2( dest2),
+         mVarName2( vname2),
+         mValue2( value2)
 {
 } // TypedArgPair< T1, T2>::TypedArgPair
 
 
-template< typename T1, typename T2> bool TypedArgPair< T1, T2>::hasValue() const
+template< typename T1, typename T2>
+   void TypedArgPair< T1, T2>::printValue( std::ostream& os,
+      bool print_type) const
 {
-   return mValueSet;
-} // TypedArgPair< T1, T2>::hasValue
+   TypedArg< T1>::printValue( os, print_type);
+   os << ", destination 2 = " << mDestVar2;
+   if (print_type)
+     os << " [" << type< T2>::name() << "]";
+} // TypedArgPair< T1, T2>::printValue
 
 
 template< typename T1, typename T2>
    void TypedArgPair< T1, T2>::dump( std::ostream& os) const
 {
    os << "store first value with type '" << type< T1>::name() << "' in '"
-      << mVarName << "', second value with type '" << type< T2>::name()
-      << "' in '" << mVarName2  << "'." << std::endl
+      << TypedArg< T1>::mVarName << "', second value with type '"
+      << type< T2>::name() << "' in '" << mVarName2  << "'." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
 } // TypedArgPair< T1, T2>::dump
 
 
 template< typename T1, typename T2>
-   void TypedArgPair< T1, T2>::assign( const std::string& value)
+   void TypedArgPair< T1, T2>::assign( const std::string& value, bool inverted)
 {
-   check( value);
-   if (!mFormats.empty())
-   {
-      std::string  valCopy( value);
-      format( valCopy);
-      mDestVar1 = boost::lexical_cast< T1>( valCopy);
-   } else
-   {
-      mDestVar1 = boost::lexical_cast< T1>( value);
-   } // end if
+   TypedArg< T1>::assign( value, inverted);
    mDestVar2 = mValue2;
-   mValueSet = true;
 } // TypedArgPair< T1, T2>::assign
 
 
@@ -151,5 +160,5 @@ template< typename T1, typename T2>
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_PAIR_HPP
 
 
-// ========================  END OF typed_arg_pair.hpp  ========================
+// =====  END OF typed_arg_pair.hpp  =====
 

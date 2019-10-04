@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,7 +23,7 @@
 #include "celma/format/detail/int16_to_string.hpp"
 
 
-// C/OS library includes
+// OS/C library includes
 #include <climits>
 
 
@@ -53,10 +53,10 @@ inline void convert( char* buffer, uint16_t value, uint8_t result_len)
    // but then it's easy to convert digit by digit
    switch (result_len)
    {
-   case  5:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  4:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  3:  *buffer-- = '0' + (value % 10);  value /= 10;
-   case  2:  *buffer-- = '0' + (value % 10);  value /= 10;
+   case  5:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  4:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  3:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
+   case  2:  *buffer-- = '0' + (value % 10);  value /= 10;  [[fallthrough]];
    default:  *buffer   = '0' + value;
    } // end switch
 
@@ -194,5 +194,5 @@ int int16negToString( char* buffer, int16_t value)
 } // namespace celma
 
 
-// =======================  END OF int16_to_string.cpp  =======================
+// =====  END OF int16_to_string.cpp  =====
 

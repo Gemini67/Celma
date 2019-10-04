@@ -24,12 +24,6 @@
 #include <boost/test/unit_test.hpp>
 
 
-using celma::common::detail::FilterBase;
-
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE( FilterBase< int>::Result)
-
-
 
 /// 
 /// @since  x.y.z, 31.10.2017
@@ -41,17 +35,17 @@ BOOST_AUTO_TEST_CASE( test_single_value)
    {
       SingleValue< int>  sv( 42);
 
-      BOOST_REQUIRE_EQUAL( sv.matches( 41), FilterBase< int>::Result::no_match);
-      BOOST_REQUIRE_EQUAL( sv.matches( 42), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( sv.matches( 43), FilterBase< int>::Result::no_match);
+      BOOST_REQUIRE( !sv.matches( 41));
+      BOOST_REQUIRE( sv.matches( 42));
+      BOOST_REQUIRE( !sv.matches( 43));
    } // end scope
 
    {
       SingleValue< int>  sv( 42, true);
 
-      BOOST_REQUIRE_EQUAL( sv.matches( 41), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( sv.matches( 42), FilterBase< int>::Result::excluded);
-      BOOST_REQUIRE_EQUAL( sv.matches( 43), FilterBase< int>::Result::matches);
+      BOOST_REQUIRE( sv.matches( 41));
+      BOOST_REQUIRE( !sv.matches( 42));
+      BOOST_REQUIRE( sv.matches( 43));
    } // end scope
 
 } // test_single_value
@@ -72,70 +66,28 @@ BOOST_AUTO_TEST_CASE( test_value_range)
    {
       ValueRange< int>  vr( 100, 200);
 
-      BOOST_REQUIRE_EQUAL( vr.matches( 99), FilterBase< int>::Result::no_match);
-      BOOST_REQUIRE_EQUAL( vr.matches( 100), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( vr.matches( 101), FilterBase< int>::Result::matches);
+      BOOST_REQUIRE( !vr.matches( 99));
+      BOOST_REQUIRE( vr.matches( 100));
+      BOOST_REQUIRE( vr.matches( 101));
 
-      BOOST_REQUIRE_EQUAL( vr.matches( 199), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( vr.matches( 200), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( vr.matches( 201), FilterBase< int>::Result::no_match);
+      BOOST_REQUIRE( vr.matches( 199));
+      BOOST_REQUIRE( vr.matches( 200));
+      BOOST_REQUIRE( !vr.matches( 201));
    } // end scope
 
    {
       ValueRange< int>  vr( 100, 200, true);
 
-      BOOST_REQUIRE_EQUAL( vr.matches( 99), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( vr.matches( 100), FilterBase< int>::Result::excluded);
-      BOOST_REQUIRE_EQUAL( vr.matches( 101), FilterBase< int>::Result::excluded);
+      BOOST_REQUIRE( vr.matches( 99));
+      BOOST_REQUIRE( !vr.matches( 100));
+      BOOST_REQUIRE( !vr.matches( 101));
 
-      BOOST_REQUIRE_EQUAL( vr.matches( 199), FilterBase< int>::Result::excluded);
-      BOOST_REQUIRE_EQUAL( vr.matches( 200), FilterBase< int>::Result::excluded);
-      BOOST_REQUIRE_EQUAL( vr.matches( 201), FilterBase< int>::Result::matches);
+      BOOST_REQUIRE( !vr.matches( 199));
+      BOOST_REQUIRE( !vr.matches( 200));
+      BOOST_REQUIRE( vr.matches( 201));
    } // end scope
 
 } // test_value_range
-
-
-
-/// 
-/// @since  x.y.z, 01.11.2017
-BOOST_AUTO_TEST_CASE( test_value_list)
-{
-
-   using celma::common::detail::ValueList;
-
-   {
-      std::vector< int>  empty;
-      BOOST_REQUIRE_THROW( ValueList< int> vl( empty), std::runtime_error);
-   } // end scope
-
-   {
-      std::vector< int>  values = { 13, 42 };
-      ValueList< int>    vl( values);
-
-      BOOST_REQUIRE_EQUAL( vl.matches( 12), FilterBase< int>::Result::no_match);
-      BOOST_REQUIRE_EQUAL( vl.matches( 13), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( vl.matches( 14), FilterBase< int>::Result::no_match);
-
-      BOOST_REQUIRE_EQUAL( vl.matches( 41), FilterBase< int>::Result::no_match);
-      BOOST_REQUIRE_EQUAL( vl.matches( 42), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( vl.matches( 43), FilterBase< int>::Result::no_match);
-   } // end scope
-
-   {
-      std::vector< int>  values = { 13, 42 };
-      ValueList< int>    vl( values, true);
-
-      BOOST_REQUIRE_EQUAL( vl.matches( 12), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( vl.matches( 13), FilterBase< int>::Result::excluded);
-      BOOST_REQUIRE_EQUAL( vl.matches( 14), FilterBase< int>::Result::matches);
-
-      BOOST_REQUIRE_EQUAL( vl.matches( 41), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( vl.matches( 42), FilterBase< int>::Result::excluded);
-      BOOST_REQUIRE_EQUAL( vl.matches( 43), FilterBase< int>::Result::matches);
-   } // end scope
-
-} // test_value_list
 
 
 
@@ -149,10 +101,10 @@ BOOST_AUTO_TEST_CASE( test_minimum_value)
    {
       MinimumValue< int>  mv( 100);
 
-      BOOST_REQUIRE_EQUAL( mv.matches( 98), FilterBase< int>::Result::no_match);
-      BOOST_REQUIRE_EQUAL( mv.matches( 99), FilterBase< int>::Result::no_match);
-      BOOST_REQUIRE_EQUAL( mv.matches( 100), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( mv.matches( 101), FilterBase< int>::Result::matches);
+      BOOST_REQUIRE( !mv.matches( 98));
+      BOOST_REQUIRE( !mv.matches( 99));
+      BOOST_REQUIRE( !mv.matches( 100));
+      BOOST_REQUIRE( mv.matches( 101));
    } // end scope
 
 } // test_minimum_value
@@ -169,10 +121,10 @@ BOOST_AUTO_TEST_CASE( test_maximum_value)
    {
       MaximumValue< int>  mv( 100);
 
-      BOOST_REQUIRE_EQUAL( mv.matches( 98), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( mv.matches( 99), FilterBase< int>::Result::matches);
-      BOOST_REQUIRE_EQUAL( mv.matches( 100), FilterBase< int>::Result::no_match);
-      BOOST_REQUIRE_EQUAL( mv.matches( 101), FilterBase< int>::Result::no_match);
+      BOOST_REQUIRE( mv.matches( 98));
+      BOOST_REQUIRE( mv.matches( 99));
+      BOOST_REQUIRE( !mv.matches( 100));
+      BOOST_REQUIRE( !mv.matches( 101));
    } // end scope
 
 } // test_minimum_value

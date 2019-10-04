@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,7 +19,13 @@
 #include "celma/prog_args/groups.hpp"
 
 
+// C++ Standard Library includes
+#include <sstream>
+#include <stdexcept>
+
+
 // project includes
+#include "celma/prog_args/detail/eval_arguments_error_exit.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
 
 
@@ -34,11 +40,12 @@ using std::string;
 
 /// Returns the argument handler for the specified group name.<br>
 /// If the argument handler does not exist yet, a new handler object will be
-/// created. If the handler object exists already, it must a 'plain' handler
-/// object, not a value handler.<br>
+/// created. If the handler object exists already, it must be a 'plain'
+/// handler object, not a value handler.<br>
 /// The output streams will be passed as specified when calling instance()
 /// for this group object, and the flags parameter will be a combination of
 /// this object's flag and the flags passed in \a this_handler_flags.
+///
 /// @param[in]  grpName             The symbolic name of this handler, used
 ///                                 for identification and printing the
 ///                                 usage.
@@ -75,6 +82,7 @@ Groups::SharedArgHndl Groups::getArgHandler( const string& grpName,
                                                   mHandlerFlags | this_handler_flags,
                                                   txt1, txt2);
 
+   new_handler->setUsageParams( mpUsageParams);
    mArgGroups.push_back( Storage( grpName, new_handler));
 
    // pass the argument 'list argument groups' only to the first Handler object
@@ -128,6 +136,7 @@ Groups::SharedArgHndl Groups::getArgValueHandler( const string& grpName,
                                                        mHandlerFlags | this_handler_flags,
                                                        txt1, txt2);
 
+   new_handler->setUsageParams( mpUsageParams);
    mArgGroups.push_back( Storage( grpName, new_handler));
 
    // pass the argument 'list argument groups' only to the first Handler object
@@ -185,6 +194,59 @@ void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
    } // end for
 
 } // Groups::evalArguments
+
+
+
+/// Same as evalArguments(). Difference is that this method catches
+/// exceptions, reports them on \c stderr and then exits the program.<br>
+/// In other words: If the function returns, all argument requirements and
+/// constraints were met.
+/// @param[in]  argc
+///    Number of arguments passed to the process.
+/// @param[in]  argv
+///    List of argument strings.
+/// @param[in]  prefix
+///    Prefix text to print before the error message.<br>
+///    The prefix may be an empty string. If not, add a space at the end as
+///    separator to the following text.
+/// @since
+///    1.8.0, 03.07.2018
+void Groups::evalArgumentsErrorExit( int argc, char* argv[],
+   const std::string& prefix)
+{
+
+   detail::evalArgumentsErrorExit( *this, mErrorOutput, argc, argv, prefix);
+
+} // Groups::evalArgumentsErrorExit
+
+
+
+/// After calling evalArguments(), prints the list of arguments that were
+/// used and the values that were set.
+///
+/// @param[in]  contents_set
+///    Set of flags that specify the contents of the summary to print.
+/// @param[out]  os
+///    The stream to write the summary to.
+/// @since  1.8.0, 03.07.2018
+void Groups::printSummary( sumoptset_t contents_set, std::ostream& os) const
+{
+
+   os << "Argument summary:" << std::endl;
+
+   std::ostringstream  oss;
+
+   for (auto const& argh : mArgGroups)
+   {
+      argh.mpArgHandler->printSummary( contents_set, oss, false, nullptr);
+   } // end for
+
+   if (oss.str().empty())
+      os << "   No arguments used/values set." << std::endl;
+   else
+      os << oss.str();
+
+} // Groups::printSummary
 
 
 
@@ -267,14 +329,6 @@ bool Groups::argumentExists( const string& argString) const
 void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 {
 
-   size_t  maxArgLen = 0;
-
-
-   for (auto const& stored_group : mArgGroups)
-   {
-      stored_group.mpArgHandler->checkMaxArgLen( maxArgLen);
-   } // end for
-
    if ((txt1 != nullptr) && (txt1->usagePos() == Handler::UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
 
@@ -282,7 +336,6 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 
    for (auto & stored_group : mArgGroups)
    {
-      stored_group.mpArgHandler->mDescription.setMinArgLen( maxArgLen);
       stored_group.mpArgHandler->mDescription.setLineLength( mUsageLineLength);
       stored_group.mpArgHandler->mDescription.setCaption( "Mandatory:",
                                                             "Optional:");
@@ -297,7 +350,7 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
    else if ((txt2 != nullptr) && (txt2->usagePos() == Handler::UsagePos::afterArgs))
       mOutput << txt2 << endl << endl;
 
-   exit( EXIT_SUCCESS);
+   ::exit( EXIT_SUCCESS);
 
 } // Groups::displayUsage
 
@@ -305,7 +358,7 @@ void Groups::displayUsage( IUsageText* txt1, IUsageText* txt2) const
 
 /// When argument groups are used, it is necessary to check that the same
 /// argument is only used in one of the handlers.<br>
-/// This is achieved by stting the Handler::hfInGroup flag for each handler
+/// This is achieved by setting the Handler::hfInGroup flag for each handler
 /// that is created. Then, when an argument is added to the handler, it calls
 /// this method.<br>
 /// Here, since we don't know which argument was the new one, compare each
@@ -366,9 +419,24 @@ void Groups::listArgGroups()
 
 
 /// Constructor.
-/// @param[in]  os        The stream to write normal output to.
-/// @param[in]  error_os  The stream to write error output to.
+///
 /// @param[in]  flag_set  Set of the flags to pass to all handler objects.
+/// @since  1.8.0, 11.07.2018
+Groups::Groups( int flag_set):
+   Groups( std::cout, std::cerr, flag_set)
+{
+} // Groups::Groups
+
+
+
+/// Constructor.
+///
+/// @param[in]  os
+///    The stream to write normal output to.
+/// @param[in]  error_os
+///    The stream to write error output to.
+/// @param[in]  flag_set
+///    Set of the flags to pass to all handler objects.
 /// @since  0.13.0, 05.02.2017  (added parameters)
 /// @since  0.2, 10.04.2016
 Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
@@ -376,8 +444,8 @@ Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
    mErrorOutput( error_os),
    mHandlerFlags( (flag_set & Groups2HandlerFlags) | Handler::hfInGroup),
    mArgGroups(),
-   mEvaluating( false),
-   mUsageLineLength( detail::ArgumentDesc::DefaultLineLength)
+   mUsageLineLength( detail::ArgumentDesc::DefaultLineLength),
+   mpUsageParams( new detail::UsageParams())
 {
 } // Groups::Groups
 
@@ -387,5 +455,5 @@ Groups::Groups( std::ostream& os, std::ostream& error_os, int flag_set):
 } // namespace celma
 
 
-// ============================  END OF groups.cpp  ============================
+// =====  END OF groups.cpp  =====
 
