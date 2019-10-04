@@ -1,0 +1,91 @@
+
+Fall 1:
+(Mehrfache) Single Value Filter:   32, 88, 289
+true wenn ein Filter passt, sofort return
+
+Fall 2:
+Minimum-Wert und Maximum-Wert:     >100, <500
+Beide muessen geprueft werden, beide true  --> true
+
+Fall 3:
+Minimum-Wert und Single-Value-Auschlus::  >100,!500,!700
+Wenn der erste Check fehl schlaegt: abbrechen
+ansonsten alle pruefen, true wenn alle 3 true sind
+
+
+
+
+D.h. Pruef-Logik:
+
+matches()
+{
+
+   bool  result = true;
+
+   for (auto const& next_fiter : mFilters)
+   {
+      if ((*next_fiter)->matches( value))
+      {
+         if ((*next_fiter)->isExclusive())
+            return true;
+      } else if (!(*next_fiter)->isExclusive())
+      {
+         return false;
+      } else
+      {
+         // not return yet, a matching exclusive filter could follow
+         result = false;
+      }
+   }
+   return result;
+}
+
+
+
+Variante 2:
+
+must match
+- Single value filter:            false
+- Single value filter, inverted:  true
+- Minimum value:                  true
+- Maximum value:                  false
+
+
+Variante 3:
+
+Levels!
+Jeder Filter bekommt einen Level zugewiesen
+limit < range < list, single value
+
+wenn ein Wert einen Filter nicht matcht, wird der Level des Filters gespeichert
+ein Wert kann anschliessend nur von einem Filter mit einem hoeheren Level
+wieder gematcht werden
+
+Aber:
+range  100 - 300, exclude 200-210
+andere Logik: matcht zuerst, danach ev. nicht mehr -> passt
+
+range exclude 100 - 300, include 200 - 250
+limit < range-exclude < range-include < list, single value  ???
+
+
+
+
+Variante 4:
+, bedeutet: oder
++ bedeutet: und
+
+5,6,7      -> 5 oder 6 oder 7
+>100+!200  -> groesser als 100 und nicht 200
+<100,>200  -> kleiner als 100 oder groesser als 200
+>=100+<200 -> groesser-gleich 100 und kleiner als 200
+
+speichern als Liste von Listen von checks
+- Liste 1: eine Unterliste muss true zurueckgeben (or)
+- Unterliste: alle Checks muessen true zurueck geben
+
+
+
+Variante 5
+Range-String verwenden
+Problem: Grosse Ranges  (1'000'000 - 2'000'000) erzeugen viele Werte
