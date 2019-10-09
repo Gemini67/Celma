@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,7 +25,8 @@
 
 
 
-/// 
+/// Check the results of a single value filter.
+///
 /// @since  x.y.z, 31.10.2017
 BOOST_AUTO_TEST_CASE( test_single_value)
 {
@@ -52,7 +53,8 @@ BOOST_AUTO_TEST_CASE( test_single_value)
 
 
 
-/// 
+/// Check the results of a value range filter.
+///
 /// @since  x.y.z, 31.10.2017
 BOOST_AUTO_TEST_CASE( test_value_range)
 {
@@ -91,7 +93,8 @@ BOOST_AUTO_TEST_CASE( test_value_range)
 
 
 
-/// 
+/// Check the resuts of a minimum value filter.
+///
 /// @since  x.y.z, 01.11.2017
 BOOST_AUTO_TEST_CASE( test_minimum_value)
 {
@@ -103,7 +106,7 @@ BOOST_AUTO_TEST_CASE( test_minimum_value)
 
       BOOST_REQUIRE( !mv.matches( 98));
       BOOST_REQUIRE( !mv.matches( 99));
-      BOOST_REQUIRE( !mv.matches( 100));
+      BOOST_REQUIRE( mv.matches( 100));
       BOOST_REQUIRE( mv.matches( 101));
    } // end scope
 
@@ -111,7 +114,8 @@ BOOST_AUTO_TEST_CASE( test_minimum_value)
 
 
 
-/// 
+/// Check the results of a maximum value filter.
+///
 /// @since  x.y.z, 02.11.2017
 BOOST_AUTO_TEST_CASE( test_maximum_value)
 {
