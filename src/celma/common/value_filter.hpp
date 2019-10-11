@@ -147,6 +147,18 @@ public:
    /// @since  x.y.z, 07.10.2019
    bool matches( const T& value) const noexcept( false);
 
+   /// Normal assignent is not possible.
+   ValueFilter& operator =( const ValueFilter&) = delete;
+
+   /// 
+   /// @param[in]  other
+   ///    .
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 10.10.2019
+   ValueFilter& operator =( ValueFilter&& other);
+
 private:
    /// The type of the top-level filter container.
    using filter_group = detail::Filter< T>;
@@ -249,6 +261,15 @@ template< typename T> bool ValueFilter< T>::matches( const T& value) const
    } // end for
    return false;
 } // ValueFilter< T>::matches
+
+
+template< typename T>
+   ValueFilter< T>& ValueFilter< T>::operator =( ValueFilter&& other)
+{
+   mFilters = other.mFilters;
+   other.mFilters.clear();
+   return *this;
+} // ValueFilter< T>::operator =
 
 
 } // namespace common

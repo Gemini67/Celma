@@ -39,7 +39,7 @@ public:
    /// Default constructor is fine.
    ///
    /// @since  x.y.z, 31.10.2017
-   Filter();
+   Filter() = default;
 
    /// Copying is not allowed.
    Filter( const Filter&) = delete;
@@ -108,12 +108,6 @@ private:
 
 // inlined methods
 // ===============
-
-
-template< typename T> Filter< T>::Filter():
-   mFilters()
-{
-} // Filter< T>::Filter
 
 
 template< typename T> Filter< T>::~Filter()
