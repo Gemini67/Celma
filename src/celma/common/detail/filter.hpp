@@ -28,8 +28,8 @@
 namespace celma { namespace common { namespace detail {
 
 
-/// Handles multiple filters on the same level, i.e. filters which must all
-/// match a value.
+/// Handles multiple filters on the same level.
+/// A value must match all these filters, i.e. like an "and" condition.
 ///
 /// @tparam  T  The type of the value to store the filters for.
 /// @since  x.y.z, 31.10.2017
@@ -46,7 +46,7 @@ public:
    /// Moving is allowed.
    Filter( Filter&&) = default;
 
-   /// Empty, virtual destrctor.
+   /// Destructor.
    ///
    /// @since  x.y.z, 31.10.2017
    ~Filter();

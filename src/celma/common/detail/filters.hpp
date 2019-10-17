@@ -35,7 +35,7 @@ namespace celma { namespace common { namespace detail {
 // ===================
 
 
-/// Base class for all filters.<br>
+/// Base class for all filters.
 /// Defines the methods that the specific filter classes must implement.<br>
 /// Since all filters combined in one celma::common::Filter are filters for the
 /// same type, we can define the base class as template too.
@@ -49,7 +49,7 @@ public:
    /// @since  x.y.z, 31.10.2017
    virtual ~FilterBase() = default;
 
-   /// Interface method that must be implemented by derived class.<br>
+   /// Interface method that must be implemented by derived class.
    /// Compares the given \a value with the defined filter value(s) and returns
    /// if they match.
    ///
@@ -100,7 +100,7 @@ public:
    /// @param[in]  value  The value to compare against the filter value.
    /// @return
    ///    \c true if the given value is equal to the filter value, or, when the
-   ///    filter logic is inverted, when the value is defferent.
+   ///    filter logic is inverted, when the value is different.
    /// @since  x.y.z, 31.10.2017
    virtual bool matches( const T& value) const override
    {
@@ -135,7 +135,7 @@ public:
    ///    The upper bound of the range.
    /// @param[in]  inverted
    ///    If set, the check will be succesful for values outside of the range.
-   /// @hrow  \c range_error if the parameters for the range are invalid.
+   /// @throw  std::range_error if the parameters for the range are invalid.
    /// @since  x.y.z, 31.10.2017
    ValueRange( const T& min_val, const T& max_val, bool inverted = false):
       mMinValue( min_val),

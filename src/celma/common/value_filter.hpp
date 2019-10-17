@@ -26,17 +26,17 @@
 namespace celma { namespace common {
 
 
-/// Stores multiple filters and checks values against those filters.<br>
-/// There are two way to add a filter:
-/// - Using add... methods: The filter is added as top-level filters. When
+/// Stores multiple filters and checks values against those filters.
+/// There are two ways to add a filter:
+/// - Using add... methods: The filter is added as top-level filter. When
 ///   checking with values, at least one of the top-level filters must match the
-///   value, i.e. an or combination.
+///   value, i.e. an "or" combination.
 /// - Using append... methods: The filter is appended to the last top-level
 ///   filter, in other words at least one filter must have been added before
 ///   using add...(). When checking with values, all filters of the same group
 ///   must match a value, i.e. the first filter that was added using add... plus
 ///   all filters directly afterwards added using append...(). This corresponds
-///   to an and combination.
+///   to an "and" combination.
 ///
 /// Any kind and numbers of filters may be combined, however you have to make
 /// sure to not define combinations that are always or never true:
@@ -150,14 +150,8 @@ public:
    /// Normal assignent is not possible.
    ValueFilter& operator =( const ValueFilter&) = delete;
 
-   /// 
-   /// @param[in]  other
-   ///    .
-   /// @return
-   ///    .
-   /// @since
-   ///    x.y.z, 10.10.2019
-   ValueFilter& operator =( ValueFilter&& other);
+   /// But move-assignment is allowed.
+   ValueFilter& operator =( ValueFilter&&) = default;
 
 private:
    /// The type of the top-level filter container.
@@ -261,15 +255,6 @@ template< typename T> bool ValueFilter< T>::matches( const T& value) const
    } // end for
    return false;
 } // ValueFilter< T>::matches
-
-
-template< typename T>
-   ValueFilter< T>& ValueFilter< T>::operator =( ValueFilter&& other)
-{
-   mFilters = other.mFilters;
-   other.mFilters.clear();
-   return *this;
-} // ValueFilter< T>::operator =
 
 
 } // namespace common
