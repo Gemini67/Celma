@@ -90,7 +90,7 @@ IHandlerConstraint::IHandlerConstraint( const std::string& constraint_name,
 /// check there internally which type of constraint we are dealing with.
 ///
 /// @return  Always \c false here.
-/// @since  x.y.z, 23.10.2019
+/// @since  1.31.0, 23.10.2019
 bool IHandlerConstraint::isValueConstraint() const
 {
 

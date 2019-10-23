@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -202,8 +202,8 @@ template< typename T, typename E>
 template< typename T, typename E>
    bool ArgListIterator< T, E>::operator ==( const ArgListIterator& other) const
 {
-   return (mpSource == other.mpSource) && (mArgIndex == other.mArgIndex) &&
-          (mArgCharPos == other.mArgCharPos);
+   return (mpSource == other.mpSource) && (mArgIndex == other.mArgIndex)
+          && (mArgCharPos == other.mArgCharPos);
 } // ArgListIterator< T, E>::operator ==
 
 
@@ -248,8 +248,8 @@ template< typename T, typename E>
    {
       // reached the end
       *this = ArgListIterator( *mpSource, true);
-   } else if (mNextIsValue ||
-              (mRemainingArgumentStringAsValue && (mArgCharPos > 0)))
+   } else if (mNextIsValue
+              || (mRemainingArgumentStringAsValue && (mArgCharPos > 0)))
    {
       // reached the end of the argument string in the previous call,
       // and determined already that this must be a value (no dash in front)

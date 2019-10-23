@@ -31,7 +31,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// Returns \c true.
 ///
 /// @return  Always \c true.
-/// @since  x.y.z, 23.10.2019
+/// @since  1.31.0, 23.10.2019
 bool IHandlerValueConstraint::isValueConstraint() const
 {
 
@@ -46,7 +46,7 @@ bool IHandlerValueConstraint::isValueConstraint() const
 /// compare the values.
 ///
 /// @param[in]  handler  Pointer to the argument handler object.
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 void IHandlerValueConstraint::storeArgumentHandler( TypedArgBase* handler)
 {
 
@@ -64,7 +64,7 @@ void IHandlerValueConstraint::storeArgumentHandler( TypedArgBase* handler)
 ///    The list of arguments affected by the constraint.<br>
 ///    Must already be checked by the calling function (not empty, no invalid
 ///    arguments).
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 IHandlerValueConstraint::IHandlerValueConstraint(
    const std::string& constraint_name,
    const std::string& arg_spec):

@@ -43,7 +43,7 @@ using celma::prog_args::differ;
 /// Errors processed in te handler class can be checked with any constraint
 /// type.
 ///
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
 /// Verify that a "differ" constraint on two strings works correctly.
 ///
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 BOOST_AUTO_TEST_CASE( constraint_differ_string)
 {
 
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_string)
 
 /// Verify that a "differ" constraint on two integer variables works correctly.
 /// 
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 BOOST_AUTO_TEST_CASE( constraint_differ_int)
 {
 
@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int)
 
 /// Verify that a "differ" constraint on three integer variables works correctly.
 /// 
-/// @since  x.y.z, 23.10.2019
+/// @since  1.31.0, 23.10.2019
 BOOST_AUTO_TEST_CASE( constraint_differ_int3)
 {
 

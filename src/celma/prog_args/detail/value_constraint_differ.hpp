@@ -33,7 +33,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// Constraint: The values of the given arguments must be different.
 ///
 /// @tparam  T  The type of the values of the arguments to check.
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 template< typename T> class ValueConstraintDiffer:
    public IHandlerValueConstraint
 {
@@ -45,7 +45,7 @@ public:
    /// @throws
    ///    "invalid argument" if the string is empty or does not contain at least
    ///    two arguments.
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    explicit ValueConstraintDiffer( const std::string& reqArgSpec) noexcept( false);
    
    // Default destructor is fine.
@@ -54,12 +54,12 @@ public:
    /// Empty here, all the work is done in checkEndCondition().
    ///
    /// @param[in]  key  Ignored.
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    virtual void executeConstraint( const ArgumentKey& key) override;
 
    /// Does nothing here.
    ///
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    virtual void validated() override;
 
    /// Iterates over all the defined arguments and compares the values set for
@@ -68,19 +68,19 @@ public:
    /// @throw
    ///    std::runtime_error when the same value is found in two different
    ///    arguments.
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    virtual void checkEndCondition() const noexcept( false) override;
 
    /// Returns the type set for the constraint as string.
    ///
    /// @return  String with the type of the destination variable.
-   /// @since  x.y.z, 23.10.2019
+   /// @since  1.31.0, 23.10.2019
    virtual const std::string varTypeName() const override;
 
    /// Returns a text description of the constraint.
    ///
    /// @return  A string with the text description of the constraint.
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    virtual std::string toString() const override;
 
 }; // ValueConstraintDiffer
@@ -171,7 +171,7 @@ template< typename T> std::string ValueConstraintDiffer< T>::toString() const
 ///    The list of arguments (argument keys) of which the values must be
 ///    different.
 /// @return  The newly created constraint object.
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 template< typename T>
    detail::IHandlerValueConstraint* differ( const std::string& argSpec)
 {

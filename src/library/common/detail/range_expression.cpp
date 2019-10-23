@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -168,8 +168,8 @@ void RangeExpression::readNumber( int64_t& value)
 
    value = mRangeString[ mNextPos++] - '0';
 
-   while ((mNextPos < mRangeString.length()) &&
-          ::isdigit( mRangeString[ mNextPos]))
+   while ((mNextPos < mRangeString.length())
+          && (::isdigit( mRangeString[ mNextPos]) != 0))
    {
       value = (value * 10) + (mRangeString[ mNextPos++] - '0');
    } // end while

@@ -39,25 +39,25 @@ class TypedArgBase;
 /// constraints that compare the value(s) of arguments. For this, the
 /// constraints need access to the argument handler objects.
 ///
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 class IHandlerValueConstraint: public IHandlerConstraint
 {
 public:
    /// Empty, virtual destructor required for base classes.
    ///
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    virtual ~IHandlerValueConstraint() = default;
 
    /// Returns \c true.
    ///
    /// @return  Always \c true.
-   /// @since  x.y.z, 23.10.2019
+   /// @since  1.31.0, 23.10.2019
    virtual bool isValueConstraint() const override;
 
    /// Returns the type set for the constraint as string.
    ///
    /// @return  String with the type of the destination variable.
-   /// @since  x.y.z, 23.10.2019
+   /// @since  1.31.0, 23.10.2019
    virtual const std::string varTypeName() const = 0;
 
    /// Stores the pointer to the handler object for one of the arguments in the
@@ -66,7 +66,7 @@ public:
    /// compare the values.
    ///
    /// @param[in]  handler  Pointer to the argument handler object.
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    void storeArgumentHandler( TypedArgBase* handler);
 
    /// Returns the number of arguments (argument handler objects) stored
@@ -76,7 +76,7 @@ public:
    ///
    /// @return
    ///    Number of arguments (argument handler objects) are stored internally.
-   /// @since  x.y.z, 23.10.2019
+   /// @since  1.31.0, 23.10.2019
    size_t numArguments() const;
 
 protected:
@@ -88,7 +88,7 @@ protected:
    ///    The list of arguments affected by the constraint.<br>
    ///    Must already be checked by the calling function (not empty, no invalid
    ///    arguments).
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    IHandlerValueConstraint( const std::string& constraint_name,
       const std::string& arg_spec);
 

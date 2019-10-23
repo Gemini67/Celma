@@ -120,7 +120,7 @@ public:
    /// @param[in]  dest
    ///    .
    /// @since
-   ///    x.y.z, 23.10.2019
+   ///    1.31.0, 23.10.2019
    void getValue( T& dest) const;
 
 protected:

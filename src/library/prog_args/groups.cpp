@@ -180,8 +180,8 @@ void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
       {
          if (ai->mElementType == detail::ArgListElement::ElementType::value)
             throw runtime_error( "Unknown argument '" + ai->mValue + "'");
-         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg) ||
-             (ai->mElementType == detail::ArgListElement::ElementType::control))
+         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg)
+             || (ai->mElementType == detail::ArgListElement::ElementType::control))
             throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
          throw runtime_error( "Unknown argument '" + ai->mArgString + "'");

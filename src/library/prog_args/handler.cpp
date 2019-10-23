@@ -761,8 +761,8 @@ Handler::ArgResult
       // we may only advance the main iterator if the argument is (still)
       // handled by the sub-argument
       auto  subAI( ai);
-      while ((subAI != end) &&
-             (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
+      while ((subAI != end)
+             && (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
       {
          ai = subAI++;
       } // end while
@@ -803,8 +803,8 @@ Handler::ArgResult
       ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((ait2 == end) ||
-       (ait2->mElementType != detail::ArgListElement::ElementType::value))
+   if ((ait2 == end)
+       || (ait2->mElementType != detail::ArgListElement::ElementType::value))
    {
       // no next value
       if (p_arg_hdl->valueMode() == ValueMode::optional)
@@ -1202,8 +1202,8 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
       {
          if (ai->mElementType == detail::ArgListElement::ElementType::value)
             throw runtime_error( "Unknown argument '" + ai->mValue + "'");
-         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg) ||
-             (ai->mElementType == detail::ArgListElement::ElementType::control))
+         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg)
+             || (ai->mElementType == detail::ArgListElement::ElementType::control))
             throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
          throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
@@ -1434,7 +1434,7 @@ bool Handler::validArguments( string& constraint_arg_list) const
 ///    std::invalid_argument if the given string is empty, contains an
 ///    invalid argument key or invalid combination of short and long keys,
 ///    contains less than 2 arguments or the same argument more than once.
-/// @since  x.y.z, 22.10.2019
+/// @since  1.31.0, 22.10.2019
 bool Handler::validValueArguments( detail::IHandlerValueConstraint* ihc) const
 {
 
@@ -1520,8 +1520,8 @@ bool Handler::invalidCombination( const detail::ArgumentKey& key) const
          throw runtime_error( "unknown argument '" + key.argString() + "'");
    } // end if
 
-   return (short_arg != nullptr) && (long_arg != nullptr) &&
-          (short_arg != long_arg);
+   return (short_arg != nullptr) && (long_arg != nullptr)
+          && (short_arg != long_arg);
 } // Handler::invalidCombination
 
 

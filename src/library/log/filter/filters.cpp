@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -100,8 +100,8 @@ boost::scoped_ptr< detail::IDuplicatePolicy>  Filters::mpDuplicatePolicy;
 void Filters::setDuplicatePolicy( detail::DuplicatePolicy policy)
 {
 
-   if ((mpDuplicatePolicy.get() == nullptr) ||
-       (mpDuplicatePolicy->policy() != policy))
+   if ((mpDuplicatePolicy.get() == nullptr)
+       || (mpDuplicatePolicy->policy() != policy))
       mpDuplicatePolicy.reset( detail::DuplicatePolicyFactory::createPolicy( policy));
 
 } // Filters::setDuplicatePolicy

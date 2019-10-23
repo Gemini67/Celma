@@ -905,7 +905,7 @@ private:
    ///    std::invalid_argument if the given string is empty, contains an
    ///    invalid argument key or invalid combination of short and long keys,
    ///    contains less than 2 arguments or the same argument more than once.
-   /// @since  x.y.z, 22.10.2019
+   /// @since  1.31.0, 22.10.2019
    bool validValueArguments( detail::IHandlerValueConstraint* ihc) const
       noexcept( false);
 

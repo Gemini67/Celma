@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -88,8 +88,8 @@ ArgumentKey::ArgumentKey( const string& arg_spec) noexcept( false):
          throw invalid_argument( "too many leading dashes in argument specification");
 
       // only one type of argument specification given
-      if ((arg_spec.length() - ignore_leading_dashes == 1) &&
-          (ignore_leading_dashes < 2))
+      if ((arg_spec.length() - ignore_leading_dashes == 1)
+          && (ignore_leading_dashes < 2))
          mChar = arg_spec[ ignore_leading_dashes];
       else
          mWord = arg_spec.substr( ignore_leading_dashes);
@@ -152,8 +152,8 @@ bool ArgumentKey::operator ==( const ArgumentKey& other) const
       return mWord == other.mWord;
 
    // positional arguments have all fields cleared
-   if ((mChar == '\0') && (other.mChar == '\0') &&
-       mWord.empty() && other.mWord.empty())
+   if ((mChar == '\0') && (other.mChar == '\0') && mWord.empty()
+       && other.mWord.empty())
       return true;
 
    // actually we could not really verify if it is the same argument ...
@@ -194,8 +194,8 @@ bool ArgumentKey::mismatch( const ArgumentKey& other) const
    // other doesn't
 
    // both short and long argument specifiers must be set in both keys
-   if ((mChar != '\0') && (other.mChar != '\0') &&
-       !mWord.empty() && !other.mWord.empty())
+   if ((mChar != '\0') && (other.mChar != '\0') && !mWord.empty()
+       && !other.mWord.empty())
    {
       return (mChar == other.mChar) != (mWord == other.mWord);
    } // end if
@@ -213,8 +213,8 @@ bool ArgumentKey::mismatch( const ArgumentKey& other) const
 /// @since  0.15.0, 12.07.2017
 bool ArgumentKey::startsWith( const ArgumentKey& other) const
 {
-   return !mWord.empty() && !other.mWord.empty() &&
-          (mWord.compare( 0, other.mWord.length(), other.mWord) == 0);
+   return !mWord.empty() && !other.mWord.empty()
+          && (mWord.compare( 0, other.mWord.length(), other.mWord) == 0);
 } // ArgumentKey::startsWith
 
 
@@ -249,5 +249,5 @@ std::ostream& operator <<( std::ostream& os, const ArgumentKey& ak)
 } // namespace celma
 
 
-// =========================  END OF argument_key.cpp  =========================
+// =====  END OF argument_key.cpp  =====
 
