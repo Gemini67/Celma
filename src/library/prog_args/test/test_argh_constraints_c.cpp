@@ -39,6 +39,8 @@ using celma::prog_args::Handler;
 
 
 /// Check that errors are caught.
+/// Errors processed in te handler class can be checked with any constraint
+/// type.
 ///
 /// @since  1.23.0 04.04.2019
 BOOST_AUTO_TEST_CASE( errors)
@@ -60,35 +62,33 @@ BOOST_AUTO_TEST_CASE( errors)
    {
       Handler  ah( 0);
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::all_of( "one_arg")),
-         std::invalid_argument);
-   } // end scope
-
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::any_of( "")),
-         std::invalid_argument);
-   } // end scope
-
-   {
-      Handler  ah( 0);
-
       BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::any_of( "one_arg")),
          std::invalid_argument);
    } // end scope
 
    {
       Handler  ah( 0);
+      int      dummy;
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::one_of( "")),
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "d", DEST_VAR( dummy), "no name"));
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::one_of( "d;d")),
          std::invalid_argument);
    } // end scope
 
    {
       Handler  ah( 0);
+      int      dummy1;
+      int      dummy2;
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::one_of( "one_arg")),
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "d,dummy1", DEST_VAR( dummy1),
+         "no name"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "y,dummy2", DEST_VAR( dummy2),
+         "no name"));
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::one_of( "d,dummy2;y")),
+         std::invalid_argument);
+      BOOST_REQUIRE_THROW( ah.addConstraint( celma::prog_args::one_of( "y,dummy1;d")),
          std::invalid_argument);
    } // end scope
 
@@ -120,6 +120,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
 
 /// Check the argument-constraint 'requires'.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_requires)
 {
@@ -171,6 +172,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
 
 /// Check the argument-constraint 'requires' with one argument that requires two
 /// other arguments.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_requires_two)
 {
@@ -281,6 +283,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
 /// second one, which in turn requires a third one.<br>
 /// Logic-wise this is the same as the previous test case, but the runtime
 /// implications are different.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 {
@@ -368,6 +371,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
 
 /// Check the argument-constraint 'requires' with two different arguments that
 /// both require a third argument.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_required_twice)
 {
@@ -497,6 +501,7 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
 
 
 /// Check the argument-constraint 'excludes'.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_excludes)
 {
@@ -573,6 +578,7 @@ BOOST_AUTO_TEST_CASE( constraint_excludes)
 
 
 /// Check the constraint 'all of'.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_all_of)
 {
@@ -606,7 +612,7 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
       BOOST_REQUIRE_THROW( ah.addConstraint(
                               celma::prog_args::all_of( "n;i,name;r")),
-                           std::runtime_error);
+                           std::invalid_argument);
    } // end scope
 
    // none of the specified arguments used: constraint is not fulfilled
@@ -733,6 +739,7 @@ BOOST_AUTO_TEST_CASE( constraint_all_of)
 
 
 /// Check the constraint 'any of'.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_any_of)
 {
@@ -833,6 +840,7 @@ BOOST_AUTO_TEST_CASE( constraint_any_of)
 
 
 /// Check the constraint 'one of'.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_one_of)
 {
@@ -930,6 +938,7 @@ BOOST_AUTO_TEST_CASE( constraint_one_of)
 
 
 /// Try a mix of various constraints.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( constraint_mix)
 {

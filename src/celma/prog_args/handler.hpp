@@ -40,6 +40,10 @@ class IUsageText;
 class Groups;
 class ValueHandler;
 
+namespace detail {
+class IHandlerValueConstraint;
+} // namespace
+
 
 /// Class to store all command line argument, their descriptions as well as the
 /// destination variables to store the values in.<br>
@@ -594,13 +598,16 @@ public:
    /// @since  1.1.0, 04.12.2017
    void setUsageParams( detail::shared_usage_params_t& usage_params);
 
-   /// Adds a constraint to the argument handler itself that affects multiple
-   /// arguments.<br>
+   /// Adds a (value) constraint to the argument handler itself that affects
+   /// multiple arguments.
    /// The arguments specified in the constraint must already be defined.
    ///
    /// @param[in]  ihc
    ///    Pointer to the object that handles the constraint. Is deleted when an
    ///    error occurs.
+   /// @throw
+   ///    std::invalid_argument if a NULL pointer is passed, or the argument
+   ///    list contains invalid arguments.
    /// @since  0.2, 10.04.2016
    void addConstraint( detail::IHandlerConstraint* ihc) noexcept( false);
 
@@ -869,14 +876,38 @@ private:
                                             const detail::ArgumentKey& key,
                                             const std::string& desc);
 
-   /// Checks each argument in the list if it is a valid/known argument.<br>
+   /// Checks each argument in the list if it is a valid/known argument.
    /// If the argument specification in the list does not match the original
    /// specification of the argument (short and/or long), it is replaced in the
    /// \a constraint_arg_list.
+   ///
    /// @param[in]  constraint_arg_list  The list of arguments to check.
    /// @return  \c true if all arguments in the list are valid.
+   /// @throw
+   ///    std::invalid_argument if the given string is empty, contains an
+   ///    invalid argument key or invalid combination of short and long keys,
+   ///    contains less than 2 arguments or the same argument more than once.
    /// @since  0.2, 10.04.2016
-   bool validArguments( std::string& constraint_arg_list) const;
+   bool validArguments( std::string& constraint_arg_list) const
+      noexcept( false);
+
+   /// Checks each argument in the list of the constraint if it is a valid/known
+   /// argument.
+   /// The (pointer to the) argument handlers are also stored in the constraint
+   /// object, they are needed later to check the constraint.<br>
+   /// If the argument specification in the list does not match the original
+   /// specification of the argument (short and/or long), it is replaced in the
+   /// \a constraint_arg_list.
+   ///
+   /// @param[in]  ihc  Pointer to the value constraint constraint object.
+   /// @return  \c true if all arguments in the list are valid.
+   /// @throw
+   ///    std::invalid_argument if the given string is empty, contains an
+   ///    invalid argument key or invalid combination of short and long keys,
+   ///    contains less than 2 arguments or the same argument more than once.
+   /// @since  x.y.z, 22.10.2019
+   bool validValueArguments( detail::IHandlerValueConstraint* ihc) const
+      noexcept( false);
 
    /// Checks if the provided argument specification contains an invalid
    /// combination, i.e. a short and a long argument that are already used on
@@ -889,12 +920,14 @@ private:
 
    /// When an argument was identified, passes the argument specification to all
    /// global constraint objects to check if a constraint is violated.
+   ///
    /// @param[in]  key  The argument specification.
    /// @since  0.2, 10.04.2016
    void executeGlobalConstraints( const detail::ArgumentKey& key);
 
    /// After all arguments were processed, call this method to iterate over all
    /// global constraints to check e.g. if a required argument is missing.
+   ///
    /// @since  0.2, 10.04.2016
    void checkGlobalConstraints() const;
 

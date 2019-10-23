@@ -15,12 +15,8 @@
 /// See documentation of class celma::prog_args::detail::IHandlerConstraint.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/detail/i_handler_constraint.hpp"
-
-
-// C++ Standard Library includes
-#include <stdexcept>
 
 
 // project includes
@@ -33,7 +29,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Checks if the argument specified in \a arg_spec is one of the argument(s)
-/// specified in the \a constraint_arg_list.<br>
+/// specified in the \a constraint_arg_list.
 /// This method is used by global constraints derived from this base class,
 /// because their executeConstraint() method is called for each argument
 /// found on the command line.
@@ -71,7 +67,9 @@ bool IHandlerConstraint::isConstraintArgument( const std::string& constraint_arg
 /// @param[in]  constraint_name
 ///    The name of the constraint for error messages.
 /// @param[in]  arg_spec
-///    The list of arguments affected by the constraint.
+///    The list of arguments affected by the constraint.<br>
+///    Must already be checked by the calling function (not empty, no invalid
+///    arguments).
 /// @since
 ///    1.23.0, 04.04.2019
 IHandlerConstraint::IHandlerConstraint( const std::string& constraint_name,
@@ -79,17 +77,25 @@ IHandlerConstraint::IHandlerConstraint( const std::string& constraint_name,
       mConstraintName( constraint_name),
       mArgSpecList( arg_spec)
 {
-
-   if (mArgSpecList.empty())
-      throw std::invalid_argument( "Constraint '" + mConstraintName
-         + "' cannot be created with an empty list of arguments");
-
-   if (mArgSpecList.find( ';') == std::string::npos)
-      throw std::invalid_argument( "List of needed arguments for constraint '"
-         + mConstraintName + "' must contain at least two arguments separated "
-         "by ';'");
-
 } // IHandlerConstraint::IHandlerConstraint
+
+
+
+/// Helper function needed to distinguish between a "normal" constraint and a
+/// value constraint.
+/// Since the interface for value constraints is derived from this class, it
+/// is possible to pass a value contraint to the interface that expects
+/// "normal" constraints. So, instead of traing to force the user to use the
+/// correct interface, we provide only one method in the handler class and
+/// check there internally which type of constraint we are dealing with.
+///
+/// @return  Always \c false here.
+/// @since  x.y.z, 23.10.2019
+bool IHandlerConstraint::isValueConstraint() const
+{
+
+   return false;
+} // IHandlerConstraint::isValueConstraint
 
 
 
