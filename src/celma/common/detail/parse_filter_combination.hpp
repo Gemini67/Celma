@@ -41,7 +41,7 @@ namespace celma { namespace common { namespace detail {
 /// @throw
 ///    boost::bad_lexical_cast when an expected filter value cannot be
 ///    converted into the filter value type.
-/// @since  x.y.z, 09.10.2019
+/// @since  1.31.0, 09.10.2019
 template< typename T>
    void parseFilterCombination( ValueFilter< T>& vf, const std::string& cond)
       noexcept( false)

@@ -47,7 +47,7 @@ namespace celma { namespace common {
 /// - two inverted single value filters at top level: always \c true.
 ///
 /// @tparam  T  The type of the values to store the filters for.
-/// @since  x.y.z, 07.10.2019
+/// @since  1.31.0, 07.10.2019
 template< typename T> class ValueFilter
 {
 public:
@@ -66,7 +66,7 @@ public:
    ///    The value to check for.
    /// @param[in]  inverted
    ///    If set, the filter matches all values not equal to \a value.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    void addSingleValueFilter( const T& value, bool inverted = false);
 
    /// Appends a single value filter to the last top-level filter.
@@ -76,7 +76,7 @@ public:
    /// @param[in]  inverted
    ///    If set, the filter matches all values not equal to \a value.
    /// @throw  std::runtime_error if no top-level filter was added before.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    void appendSingleValueFilter( const T& value, bool inverted = false)
       noexcept( false);
 
@@ -88,7 +88,7 @@ public:
    ///    The upper bound of the range to check for.
    /// @param[in]  inverted
    ///    If set, the filter matches all values not within the range.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    void addRangeFilter( const T& min_value, const T& max_value,
       bool inverted = false);
 
@@ -101,7 +101,7 @@ public:
    /// @param[in]  inverted
    ///    If set, the filter matches all values not within the range.
    /// @throw  \c runtime_error if no top-level filter was added before.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    void appendRangeFilter( const T& min_value, const T& max_value,
       bool inverted = false) noexcept( false);
 
@@ -110,7 +110,7 @@ public:
    /// @param[in]  min_val
    ///    The minimum value to check against, i.e. a value x must be greater
    ///    than or equal to \a min_val.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    void addMinimumFilter( const T& min_val);
 
    /// Appends a minimum filter to the last top-level filter.
@@ -119,7 +119,7 @@ public:
    ///    The minimum value to check against, i.e. a value x must be greater
    ///    than or equal to \a min_val.
    /// @throw  std::runtime_error if no top-level filter was added before.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    void appendMinimumFilter( const T& min_val) noexcept( false);
 
    /// Adds a maximum filter as top-level filter.
@@ -127,7 +127,7 @@ public:
    /// @param[in]  max_val
    ///    The maximum value to check against, i.e. a value x must be less than
    ///    \a max_val.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    void addMaximumFilter( const T& max_val);
 
    /// Appends a maximum filter to the last top-level filter.
@@ -136,7 +136,7 @@ public:
    ///    The maximum value to check against, i.e. a value x must be less than
    ///    \a max_val.
    /// @throw  std::runtime_error if no top-level filter was added before.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    void appendMaximumFilter( const T& max_val) noexcept( false);
 
    /// Compares the given value against the defined filters:
@@ -147,7 +147,7 @@ public:
    /// @param[in]  value  The value to check against the filters.
    /// @return  \c true if the value matched the filters as described above.
    /// @throw  std::runtime_error if filters are defined.
-   /// @since  x.y.z, 07.10.2019
+   /// @since  1.31.0, 07.10.2019
    bool matches( const T& value) const noexcept( false);
 
    /// Normal assignent is not possible.
@@ -158,25 +158,25 @@ public:
 
    /// Clears all internally stored filters.
    ///
-   /// @since  x.y.z, 17.10.2019
+   /// @since  1.31.0, 17.10.2019
    void clear();
 
    /// Returns if the filter container is empty or not.
    ///
    /// @return  \c true if the filter container is empty.
-   /// @since  x.y.z, 18.10.2019
+   /// @since  1.31.0, 18.10.2019
    bool empty() const;
 
    /// Returns the number of top-level filters stored internally.
    ///
    /// @return   Number of top-level filters stored internally.
-   /// @since  x.y.z, 18.10.2019
+   /// @since  1.31.0, 18.10.2019
    size_t size() const;
 
    /// Returns a string with the list of filters.
    ///
    /// @return  String with the list of filters.
-   /// @since  x.y.z, 18.10.2019
+   /// @since  1.31.0, 18.10.2019
    std::string str() const;
 
 private:
@@ -323,7 +323,7 @@ template< typename T> std::string ValueFilter< T>::str() const
 ///    The object to print the value filters of.
 /// @return
 ///    The stream as passed in.
-/// @since  x.y.z, 18.10.2019
+/// @since  1.31.0, 18.10.2019
 template< typename T>
    std::ostream& operator <<( std::ostream& os, const ValueFilter< T>& vf)
 {
@@ -337,14 +337,14 @@ template< typename T>
 /// Specialisation of type<> for type 'celma::common::ValueFilter<>'.
 ///
 /// @tparam  T  The type of the values for which filters may be stored.
-/// @since  x.y.z, 17.10.2019
+/// @since  1.31.0, 17.10.2019
 template< typename T> class type< common::ValueFilter< T>>
 {
 public:
    /// Returns the name of the type.
    ///
    /// @return  'celma::common::ValueFilter< <type-name> >' (without the spaces).
-   /// @since  x.y.z, 17.10.2019
+   /// @since  1.31.0, 17.10.2019
    static constexpr const char* name()
    {
       return &mName[ 0];

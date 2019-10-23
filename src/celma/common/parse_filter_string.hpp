@@ -53,7 +53,7 @@ namespace celma { namespace common {
 ///    The object that contains all the filters.
 /// @throw
 ///    std::invalid_argument if the contents of the filter string are invalid.
-/// @since  x.y.z, 09.10.2019
+/// @since  1.31.0, 09.10.2019
 template< typename T>
    ValueFilter< T> parseFilterString( const std::string& str) noexcept( false)
 {

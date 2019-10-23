@@ -3,20 +3,20 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
-**    Test program for the template class celma::common::RelOpsFromLess, using
+**    Test program for the template class celma::common::RelOpsFromLess<>, using
 **    the Boost.Test framework.
 **
 --*/
 
 
 // module to test header file include
-#include "celma/common/rel_ops_from_less.hpp"
+#include "celma/common/comparable.hpp"
 
 
 // Boost includes

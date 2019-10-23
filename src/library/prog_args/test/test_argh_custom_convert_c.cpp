@@ -127,9 +127,13 @@ BOOST_AUTO_TEST_CASE( basic_conversion)
 BOOST_AUTO_TEST_CASE( check_assign_conversion)
 {
 
+   using celma::common::CheckAssign;
+
+   using enum_check_assign = CheckAssign< MyEnum>;
+
    {
-      Handler                              ah( 0);
-      celma::common::CheckAssign< MyEnum>  enumedValue( initVal);
+      Handler            ah( 0);
+      enum_check_assign  enumedValue;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));
@@ -143,11 +147,11 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
 
    // test usage
    {
-      std::ostringstream                   std_out;
-      std::ostringstream                   std_err;
-      Handler                              ah( std_out, std_err,
-         Handler::AllHelp | Handler::hfUsageCont | Handler::hfListArgVar);
-      celma::common::CheckAssign< MyEnum>  enumedValue( initVal);
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::AllHelp
+         | Handler::hfUsageCont | Handler::hfListArgVar);
+      enum_check_assign  enumedValue;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));
@@ -172,11 +176,11 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
 
    // test list arguments and variables and print summary
    {
-      std::ostringstream                   std_out;
-      std::ostringstream                   std_err;
-      Handler                              ah( std_out, std_err,
-         Handler::AllHelp | Handler::hfUsageCont | Handler::hfListArgVar);
-      celma::common::CheckAssign< MyEnum>  enumedValue( initVal);
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::AllHelp
+         | Handler::hfUsageCont | Handler::hfListArgVar);
+      enum_check_assign   enumedValue;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));

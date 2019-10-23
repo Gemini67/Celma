@@ -27,7 +27,7 @@
 
 /// Check the results of a single value filter.
 ///
-/// @since  x.y.z, 31.10.2017
+/// @since  1.31.0, 31.10.2017
 BOOST_AUTO_TEST_CASE( test_single_value)
 {
 
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE( test_single_value)
 
 /// Check the results of a value range filter.
 ///
-/// @since  x.y.z, 31.10.2017
+/// @since  1.31.0, 31.10.2017
 BOOST_AUTO_TEST_CASE( test_value_range)
 {
 
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE( test_value_range)
 
 /// Check the resuts of a minimum value filter.
 ///
-/// @since  x.y.z, 01.11.2017
+/// @since  1.31.0, 01.11.2017
 BOOST_AUTO_TEST_CASE( test_minimum_value)
 {
 
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE( test_minimum_value)
 
 /// Check the results of a maximum value filter.
 ///
-/// @since  x.y.z, 02.11.2017
+/// @since  1.31.0, 02.11.2017
 BOOST_AUTO_TEST_CASE( test_maximum_value)
 {
 

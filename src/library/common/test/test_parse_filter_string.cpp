@@ -30,7 +30,7 @@ using celma::common::parseFilterString;
 
 /// Verify that errors are handled correctly.
 ///
-/// @since  x.y.z, 09.10.2019
+/// @since  1.31.0, 09.10.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
 /// Filter for a single value.
 ///
-/// @since  x.y.z, 10.10.2019
+/// @since  1.31.0, 10.10.2019
 BOOST_AUTO_TEST_CASE( test_single_value)
 {
 
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( test_single_value)
 
 /// Filter for a range of values.
 ///
-/// @since  x.y.z, 10.10.2019
+/// @since  1.31.0, 10.10.2019
 BOOST_AUTO_TEST_CASE( test_value_range)
 {
 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE( test_value_range)
 
 /// Filter for a minimum or maximum value.
 ///
-/// @since  x.y.z, 10.10.2019
+/// @since  1.31.0, 10.10.2019
 BOOST_AUTO_TEST_CASE( test_min_max_value)
 {
 
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE( test_min_max_value)
 
 /// Filter for two single values.
 ///
-/// @since  x.y.z, 10.10.2019
+/// @since  1.31.0, 10.10.2019
 BOOST_AUTO_TEST_CASE( test_single_values_combined)
 {
 
@@ -236,7 +236,7 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
 
 /// Filter combinations with a range.
 ///
-/// @since  x.y.z, 10.10.2019
+/// @since  1.31.0, 10.10.2019
 BOOST_AUTO_TEST_CASE( test_range_combinations)
 {
 
@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE( test_range_combinations)
 
 /// Test multiple combinations.
 ///
-/// @since  x.y.z, 10.10.2019
+/// @since  1.31.0, 10.10.2019
 BOOST_AUTO_TEST_CASE( multiple_combinations)
 {
 

@@ -30,7 +30,7 @@ using celma::common::detail::Filter;
 
 /// Test that error conditions are handled correctly.
 ///
-/// @since  x.y.z, 09.10.2019
+/// @since  1.31.0, 09.10.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
 /// Single value filter.
 ///
-/// @since  x.y.z, 31.10.2017
+/// @since  1.31.0, 31.10.2017
 BOOST_AUTO_TEST_CASE( test_single_value)
 {
 
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE( test_single_value)
 
 /// Value range filter.
 ///
-/// @since  x.y.z, 31.10.2017
+/// @since  1.31.0, 31.10.2017
 BOOST_AUTO_TEST_CASE( test_value_range)
 {
 
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( test_value_range)
 
 /// Minimum or maximum value filter.
 ///
-/// @since  x.y.z, 02.11.2017
+/// @since  1.31.0, 02.11.2017
 BOOST_AUTO_TEST_CASE( test_min_max_value)
 {
 
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE( test_min_max_value)
 
 /// Single value filters combined.
 ///
-/// @since  x.y.z, 06.11.2017
+/// @since  1.31.0, 06.11.2017
 BOOST_AUTO_TEST_CASE( test_single_values_combined)
 {
 
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
 
 /// Combinations of/with ranges.
 ///
-/// @since  x.y.z, 06.11.2017
+/// @since  1.31.0, 06.11.2017
 BOOST_AUTO_TEST_CASE( test_range_combinations)
 {
 
@@ -270,7 +270,7 @@ BOOST_AUTO_TEST_CASE( test_range_combinations)
 
 /// Minimum and maximum value filter.
 ///
-/// @since  x.y.z, 09.10.2019
+/// @since  1.31.0, 09.10.2019
 BOOST_AUTO_TEST_CASE( min_and_max_value)
 {
 

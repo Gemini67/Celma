@@ -37,7 +37,7 @@ using celma::prog_args::Handler;
 
 /// Test error case that can occur with a value filter.
 ///
-/// @since  x.y.z, 18.10.2019
+/// @since  1.31.0, 18.10.2019
 BOOST_AUTO_TEST_CASE( test_value_filter_errors)
 {
 
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE( test_value_filter_errors)
 
 /// For completeness: Set value mode "required" again.
 ///
-/// @since  x.y.z, 18.10.2019
+/// @since  1.31.0, 18.10.2019
 BOOST_AUTO_TEST_CASE( value_mode)
 {
 
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE( value_mode)
 
 /// Test some basic cases.
 ///
-/// @since  x.y.z, 21.10.2019
+/// @since  1.31.0, 21.10.2019
 BOOST_AUTO_TEST_CASE( basics)
 {
 
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE( basics)
 
 /// Test with using "list argument vars".
 ///
-/// @since  x.y.z, 21.10.2019
+/// @since  1.31.0, 21.10.2019
 BOOST_AUTO_TEST_CASE( list_arg_vars)
 {
 

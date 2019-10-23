@@ -2047,7 +2047,7 @@ template< size_t N>
 /// filters to create.
 ///
 /// @tparam  T  The type of the value(s) to create the filter(s) for.
-/// @since  x.y.z, 17.10.2019
+/// @since  1.31.0, 17.10.2019
 template< typename T> class TypedArg< common::ValueFilter< T>>:
    public TypedArgBase
 {
@@ -2061,21 +2061,21 @@ public:
    ///    The destination variable to store the filter(s) in.
    /// @param[in]  vname
    ///    The name of the destination variable to store the filter(s) in.
-   /// @since  x.y.z, 17.10.2019
+   /// @since  1.31.0, 17.10.2019
    TypedArg( valfilter_type& dest, const std::string& vname);
 
    /// Returns the name of the type of the destination variable (ValueFilter of
    /// something).
    ///
    /// @return  The name of the type of the destination variable/vector.
-   /// @since  x.y.z, 17.10.2019
+   /// @since  1.31.0, 17.10.2019
    virtual const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one filter set.
    ///
    /// @return
    ///    \c true if the destination variable contains (at least) one filter.
-   /// @since  x.y.z, 17.10.2019
+   /// @since  1.31.0, 17.10.2019
    virtual bool hasValue() const override;
 
    /// Prints the current value of the destination variable.<br>
@@ -2087,7 +2087,7 @@ public:
    /// @param[in]  print_type
    ///    Specifies if the type of the destination variable should be printed
    ///    too.
-   /// @since  x.y.z, 17.10.2019
+   /// @since  1.31.0, 17.10.2019
    virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Always throws for this class.
@@ -2097,7 +2097,7 @@ public:
    /// @throw
    ///    std::logic_error because checking a value filter string is not
    ///    supported.
-   /// @since  x.y.z, 18.10.2019
+   /// @since  1.31.0, 18.10.2019
    virtual TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
 
    /// Always throws for this class.
@@ -2107,14 +2107,14 @@ public:
    /// @throw
    ///    std::logic_error because formatting a value filter string is not
    ///    supported.
-   /// @since  x.y.z, 18.10.2019
+   /// @since  1.31.0, 18.10.2019
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    ///
    /// @param[out]  os  The stream to print to.
-   /// @since  x.y.z, 17.10.2019
+   /// @since  1.31.0, 17.10.2019
    virtual void dump( std::ostream& os) const override;
 
    /// Parses the given string, creates and stores the filters defined therein
@@ -2124,7 +2124,7 @@ protected:
    ///    The string with the filter definitions.
    /// @param[in]  inverted
    ///    Not supported for this argument.
-   /// @since  x.y.z, 17.10.2019
+   /// @since  1.31.0, 17.10.2019
    virtual void assign( const std::string& value, bool inverted) override;
 
 private:

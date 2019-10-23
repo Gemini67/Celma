@@ -34,13 +34,13 @@ namespace celma { namespace common { namespace detail {
 /// A value must match all these filters, i.e. like an "and" condition.
 ///
 /// @tparam  T  The type of the value to store the filters for.
-/// @since  x.y.z, 31.10.2017
+/// @since  1.31.0, 31.10.2017
 template< typename T> class Filter
 {
 public:
    /// Default constructor is fine.
    ///
-   /// @since  x.y.z, 31.10.2017
+   /// @since  1.31.0, 31.10.2017
    Filter() = default;
 
    /// Copying is not allowed.
@@ -50,7 +50,7 @@ public:
 
    /// Destructor.
    ///
-   /// @since  x.y.z, 31.10.2017
+   /// @since  1.31.0, 31.10.2017
    ~Filter();
 
    /// Adds a single value filter.
@@ -60,7 +60,7 @@ public:
    /// @param[in]  inverted
    ///    Set when the logic should be inverted, i.e. check for values not equal
    ///    to \a value.
-   /// @since  x.y.z, 31.10.2017
+   /// @since  1.31.0, 31.10.2017
    void addSingleValueFilter( const T& value, bool inverted = false);
 
    /// Adds a range filter.
@@ -72,20 +72,20 @@ public:
    /// @param[in]  inverted
    ///    Set when the logic should be inverted, i.e. check for values outside
    ///    of the range.
-   /// @since  x.y.z, 31.10.2017
+   /// @since  1.31.0, 31.10.2017
    void addRangeFilter( const T& min_value, const T& max_value,
       bool inverted = false);
 
    /// Adds a minimum value filter.
    ///
    /// @param[in]  min_val  The minimum value to compare against.
-   /// @since  x.y.z, 02.11.2017
+   /// @since  1.31.0, 02.11.2017
    void addMinimumFilter( const T& min_val);
 
    /// Adds a maximum value filter.
    ///
    /// @param[in]  max_val  The maximum value to compare against.
-   /// @since  x.y.z, 02.11.2017
+   /// @since  1.31.0, 02.11.2017
    void addMaximumFilter( const T& max_val);
 
    /// Checks if the given value matches all filters.
@@ -93,13 +93,13 @@ public:
    /// @param[in]  value  The value to check against all filters.
    /// @return  \c true if the given value matched all filters.
    /// @throw  \c runtime_error if no filter is defined.
-   /// @since  x.y.z, 31.10.2017
+   /// @since  1.31.0, 31.10.2017
    bool matches( const T& value) const noexcept( false);
 
    /// Returns the string representation of the filter.
    /// 
    /// @return  A string with the list of filters.
-   /// @since  x.y.z, 18.10.2019
+   /// @since  1.31.0, 18.10.2019
    std::string str() const;
 
 private:
