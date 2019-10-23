@@ -8,11 +8,15 @@
 **    ####   ######  ######  #    #  #    #
 **
 **
+**  Description:
+**    Test program for the template class celma::common::RelOpsFromCompare<>,
+**    using the Boost.Test framework.
+**
 --*/
 
 
 // module to test header file include
-#include "celma/common/rel_ops_from_compare.hpp"
+#include "celma/common/comparable.hpp"
  
  
 // C++ Standard Library includes

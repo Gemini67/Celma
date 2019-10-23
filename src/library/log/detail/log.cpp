@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,10 @@
 #include "celma/log/detail/log.hpp"
 
 
+// OS/C lib includes
+#include <cassert>
+
+
 // C++ Standard Library includes
 #include <iostream>
 
@@ -29,16 +33,6 @@
 
 
 namespace celma { namespace log { namespace detail {
-
-
-
-/// Constructor.
-/// @since  1.0.0, 19.06.2016
-Log::Log():
-   filter::Filters(),
-   mLoggers()
-{
-} // Log::Log
 
 
 
@@ -60,6 +54,8 @@ Log::~Log()
 /// @since  1.0.0, 19.06.2016
 ILogDest* Log::addDestination( const std::string& name, ILogDest* ldo)
 {
+
+   assert( ldo != nullptr);
 
    mLoggers.push_back( LogDestData( name, ldo));
 
