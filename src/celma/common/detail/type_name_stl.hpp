@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -156,8 +156,10 @@ public:
 
 
 /// Specialisation for type 'std::bitset<>'.
+///
 /// @tparam  N  The number of values stored in the bitset.
-/// @since  1.12.0, 14.09.2018  (now fully constexpr)
+/// @since  1.12.0, 14.09.2018
+///    (now fully constexpr)
 /// @since  0.1, 15.03.2016
 template< std::size_t N> class type< std::bitset< N>>
 {
@@ -168,15 +170,15 @@ public:
    static constexpr const char* name()
    {
       return &mName[ 0];
-   } // type< std::bitset< T>>::name
+   } // type< std::bitset< N>>::name
 
-   /// Used to store the name of the type persistently.<br>
+   /// Used to store the name of the type persistently.
    /// Is public to build nested container names, don't access for printing.
    static constexpr auto const  mName =
       common::string_concat( "std::bitset<",
          common::string_from< std::size_t, N>::value, ">");
 
-}; // type< std::bitset< T>>
+}; // type< std::bitset< N>>
 
 
 /// Specialisation for type 'std::ratio<>'.
