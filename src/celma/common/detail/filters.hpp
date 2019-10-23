@@ -24,7 +24,9 @@
 #define CELMA_COMMON_DETAIL_FILTERS_HPP
 
 
+#include <sstream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 
@@ -59,6 +61,14 @@ public:
    /// @since  x.y.z, 31.10.2017
    virtual bool matches( const T& value) const = 0;
 
+   /// In derived classes, should return a string representation of the filter.
+   ///
+   /// @return
+   ///    String with a representation of the filter that corresponds to the
+   ///    format that the filter string parser supports.
+   /// @since  x.y.z, 18.10.2019
+   virtual std::string str() const = 0;
+
 protected:
    /// Default constructor is fine.
    FilterBase() = default;
@@ -85,7 +95,7 @@ public:
    ///    Set to invert the filter logic (matches if the test value differs from
    ///    this value).
    /// @since  x.y.z, 31.10.2017
-   SingleValue( const T& value, bool inverted = false):
+   explicit SingleValue( const T& value, bool inverted = false):
       mValue( value),
       mInverted( inverted)
    {
@@ -106,6 +116,19 @@ public:
    {
       return mInverted ? (value != mValue) : (value == mValue);
    } // SingleValue< T>::matches
+
+   /// Returns the string representation of the filter.
+   ///
+   /// @return  The string with the single value filter.
+   /// @since  x.y.z, 18.10.2019
+   virtual std::string str() const override
+   {
+      std::ostringstream  oss;
+      if (mInverted)
+         oss << '!';
+      oss << mValue;
+      return oss.str();
+   } // SingleValue< T>::str
 
 private:
    /// The value to compare against.
@@ -164,6 +187,19 @@ public:
       return mInverted ? !result : result;
    } // ValueRange< T>::matches
 
+   /// Returns the string representation of the filter.
+   /// 
+   /// @return  A string with the range filter.
+   /// @since  x.y.z, 18.10.2019
+   virtual std::string str() const override
+   {
+      std::ostringstream  oss;
+      if (mInverted)
+         oss << '!';
+      oss << mMinValue << '-' << mMaxValue;
+      return oss.str();
+   } // ValueRange< T>::str
+
 private:
    /// The lower bound of the range.
    const T     mMinValue;
@@ -190,7 +226,7 @@ public:
    ///
    /// @param[in]  min_val   The minimum value to check against.
    /// @since  x.y.z, 01.11.2017
-   MinimumValue( const T& min_val):
+   explicit MinimumValue( const T& min_val):
       mMinValue( min_val)
    {
    } // MinimumValue< T>::MinimumValue
@@ -211,6 +247,17 @@ public:
    {
       return value >= mMinValue;
    } // MinimumValue< T>::matches
+
+   /// Returns the string representation of the filter.
+   /// 
+   /// @return  A string with the minimum value filter.
+   /// @since  x.y.z, 18.10.2019
+   virtual std::string str() const override
+   {
+      std::ostringstream  oss;
+      oss << '[' << mMinValue;
+      return oss.str();
+   } // MinimumValue< T>::str
 
 private:
    /// The minimum value to compare against.
@@ -234,7 +281,7 @@ public:
    /// 
    /// @param[in]  max_val   The maximum value to check against.
    /// @since  x.y.z, 01.11.2017
-   MaximumValue( const T& max_val):
+   explicit MaximumValue( const T& max_val):
       mMaxValue( max_val)
    {
    } // MaximumValue< T>::MaximumValue
@@ -253,6 +300,17 @@ public:
    {
       return value < mMaxValue;
    } // MaximumValue< T>::matches
+
+   /// Returns the string representation of the filter.
+   /// 
+   /// @return  A string with the maximum value filter.
+   /// @since  x.y.z, 18.10.2019
+   virtual std::string str() const override
+   {
+      std::ostringstream  oss;
+      oss << ']' << mMaxValue;
+      return oss.str();
+   } // MaximumValue< T>::str
 
 private:
    /// The maximum value to compare against.

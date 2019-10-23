@@ -58,6 +58,8 @@ BOOST_AUTO_TEST_CASE( test_single_value)
       BOOST_REQUIRE( !my_filter.matches( 41));
       BOOST_REQUIRE( my_filter.matches( 42));
       BOOST_REQUIRE( !my_filter.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "42");
    } // end scope
 
    {
@@ -68,6 +70,8 @@ BOOST_AUTO_TEST_CASE( test_single_value)
       BOOST_REQUIRE( my_filter.matches( 41));
       BOOST_REQUIRE( !my_filter.matches( 42));
       BOOST_REQUIRE( my_filter.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!42");
    } // end scope
 
 } // test_single_value
@@ -92,6 +96,8 @@ BOOST_AUTO_TEST_CASE( test_value_range)
       BOOST_REQUIRE( my_filter.matches( 199));
       BOOST_REQUIRE( my_filter.matches( 200));
       BOOST_REQUIRE( !my_filter.matches( 201));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "100-200");
    } // end scope
 
    {
@@ -106,6 +112,8 @@ BOOST_AUTO_TEST_CASE( test_value_range)
       BOOST_REQUIRE( !my_filter.matches( 199));
       BOOST_REQUIRE( !my_filter.matches( 200));
       BOOST_REQUIRE( my_filter.matches( 201));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!100-200");
    } // end scope
 
 } // test_value_range
@@ -127,6 +135,8 @@ BOOST_AUTO_TEST_CASE( test_min_max_value)
       BOOST_REQUIRE( !my_filter.matches( 41));
       BOOST_REQUIRE( my_filter.matches( 42));
       BOOST_REQUIRE( my_filter.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "[42");
    } // end scope
 
    {
@@ -138,6 +148,8 @@ BOOST_AUTO_TEST_CASE( test_min_max_value)
       BOOST_REQUIRE( my_filter.matches( 41));
       BOOST_REQUIRE( !my_filter.matches( 42));
       BOOST_REQUIRE( !my_filter.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "]42");
    } // end scope
 
 } // test_min_max_value
@@ -162,6 +174,8 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
       BOOST_REQUIRE( !my_filter.matches( 13));
       BOOST_REQUIRE( !my_filter.matches( 14));
       BOOST_REQUIRE( !my_filter.matches( 15));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "13+42");
    } // end scope
 
    // two inverted single value filters: everything except these two values
@@ -182,6 +196,8 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
       BOOST_REQUIRE( !my_filter.matches( 42));
       BOOST_REQUIRE( my_filter.matches( 43));
       BOOST_REQUIRE( my_filter.matches( 44));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!13+!42");
    } // end scope
 
 } // test_single_values_combined
@@ -220,6 +236,8 @@ BOOST_AUTO_TEST_CASE( test_range_combinations)
       BOOST_REQUIRE( my_filter.matches( 500));
       BOOST_REQUIRE( !my_filter.matches( 501));
       BOOST_REQUIRE( !my_filter.matches( 502));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "100-500+!300-400");
    } // end scope
 
    // a range with a single excluded value within
@@ -242,6 +260,8 @@ BOOST_AUTO_TEST_CASE( test_range_combinations)
       BOOST_REQUIRE( my_filter.matches( 500));
       BOOST_REQUIRE( !my_filter.matches( 501));
       BOOST_REQUIRE( !my_filter.matches( 502));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "100-500+!250");
    } // end scope
 
 } // test_range_combinations
@@ -269,6 +289,8 @@ BOOST_AUTO_TEST_CASE( min_and_max_value)
       BOOST_REQUIRE( my_filter.matches( 83));
       BOOST_REQUIRE( !my_filter.matches( 84));
       BOOST_REQUIRE( !my_filter.matches( 85));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "[42+]84");
    } // end scope
 
 } // test_min_max_value

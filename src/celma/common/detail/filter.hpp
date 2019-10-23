@@ -19,7 +19,9 @@
 #define CELMA_COMMON_DETAIL_FILTER_HPP
 
 
+#include <sstream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "celma/common/clear_container.hpp"
 #include "celma/common/detail/filters.hpp"
@@ -94,6 +96,12 @@ public:
    /// @since  x.y.z, 31.10.2017
    bool matches( const T& value) const noexcept( false);
 
+   /// Returns the string representation of the filter.
+   /// 
+   /// @return  A string with the list of filters.
+   /// @since  x.y.z, 18.10.2019
+   std::string str() const;
+
 private:
    /// The type used to store the filter objects: Base class pointer.
    using filter_base_t = FilterBase< T>;
@@ -155,6 +163,19 @@ template< typename T> bool Filter< T>::matches( const T& value) const
    } // end for
    return true;
 } // Filter< T>::matches
+
+
+template< typename T> std::string Filter< T>::str() const
+{
+   std::ostringstream  oss;
+   for (auto const& filter : mFilters)
+   {
+      if (!oss.str().empty())
+         oss << '+';
+      oss << filter->str();
+   } // end for
+   return oss.str();
+} // Filter< T>::str
 
 
 } // namespace detail

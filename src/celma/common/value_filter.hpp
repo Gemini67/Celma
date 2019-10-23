@@ -19,8 +19,11 @@
 #define CELMA_COMMON_VALUE_FILTER_HPP
 
 
+#include <iostream>
+#include <string>
 #include <vector>
 #include "celma/common/detail/filter.hpp"
+#include "celma/common/type_name.hpp"
 
 
 namespace celma { namespace common {
@@ -72,7 +75,7 @@ public:
    ///    The value to check for.
    /// @param[in]  inverted
    ///    If set, the filter matches all values not equal to \a value.
-   /// @throw  \c runtime_error if no top-level filter was added before.
+   /// @throw  std::runtime_error if no top-level filter was added before.
    /// @since  x.y.z, 07.10.2019
    void appendSingleValueFilter( const T& value, bool inverted = false)
       noexcept( false);
@@ -115,7 +118,7 @@ public:
    /// @param[in]  min_val
    ///    The minimum value to check against, i.e. a value x must be greater
    ///    than or equal to \a min_val.
-   /// @throw  \c runtime_error if no top-level filter was added before.
+   /// @throw  std::runtime_error if no top-level filter was added before.
    /// @since  x.y.z, 07.10.2019
    void appendMinimumFilter( const T& min_val) noexcept( false);
 
@@ -132,7 +135,7 @@ public:
    /// @param[in]  max_val
    ///    The maximum value to check against, i.e. a value x must be less than
    ///    \a max_val.
-   /// @throw  \c runtime_error if no top-level filter was added before.
+   /// @throw  std::runtime_error if no top-level filter was added before.
    /// @since  x.y.z, 07.10.2019
    void appendMaximumFilter( const T& max_val) noexcept( false);
 
@@ -143,7 +146,7 @@ public:
    ///
    /// @param[in]  value  The value to check against the filters.
    /// @return  \c true if the value matched the filters as described above.
-   /// @throw  \c runtime_error if filters are defined.
+   /// @throw  std::runtime_error if filters are defined.
    /// @since  x.y.z, 07.10.2019
    bool matches( const T& value) const noexcept( false);
 
@@ -152,6 +155,29 @@ public:
 
    /// But move-assignment is allowed.
    ValueFilter& operator =( ValueFilter&&) = default;
+
+   /// Clears all internally stored filters.
+   ///
+   /// @since  x.y.z, 17.10.2019
+   void clear();
+
+   /// Returns if the filter container is empty or not.
+   ///
+   /// @return  \c true if the filter container is empty.
+   /// @since  x.y.z, 18.10.2019
+   bool empty() const;
+
+   /// Returns the number of top-level filters stored internally.
+   ///
+   /// @return   Number of top-level filters stored internally.
+   /// @since  x.y.z, 18.10.2019
+   size_t size() const;
+
+   /// Returns a string with the list of filters.
+   ///
+   /// @return  String with the list of filters.
+   /// @since  x.y.z, 18.10.2019
+   std::string str() const;
 
 private:
    /// The type of the top-level filter container.
@@ -257,7 +283,81 @@ template< typename T> bool ValueFilter< T>::matches( const T& value) const
 } // ValueFilter< T>::matches
 
 
+template< typename T> void ValueFilter< T>::clear()
+{
+   mFilters.clear();
+} // ValueFilter< T>::clear
+
+
+template< typename T> bool ValueFilter< T>::empty() const
+{
+   return mFilters.empty();
+} // ValueFilter< T>::empty
+
+
+template< typename T> size_t ValueFilter< T>::size() const
+{
+   return mFilters.size();
+} // ValueFilter< T>::size
+
+
+template< typename T> std::string ValueFilter< T>::str() const
+{
+   std::ostringstream  oss;
+   for (auto const& filter : mFilters)
+   {
+      if (!oss.str().empty())
+         oss << ',';
+      oss << filter.str();
+   } // end for
+   return oss.str();
+} // ValueFilter< T>::str
+
+
+/// Insertion operator for value filter objects.
+///
+/// @tparam  T  The type of the values for which the filters are defined.
+/// @param[in]  os
+///    The stream to write into.
+/// @param[in]  vf
+///    The object to print the value filters of.
+/// @return
+///    The stream as passed in.
+/// @since  x.y.z, 18.10.2019
+template< typename T>
+   std::ostream& operator <<( std::ostream& os, const ValueFilter< T>& vf)
+{
+   return os << vf.str();
+} // operator <<
+
+
 } // namespace common
+
+
+/// Specialisation of type<> for type 'celma::common::ValueFilter<>'.
+///
+/// @tparam  T  The type of the values for which filters may be stored.
+/// @since  x.y.z, 17.10.2019
+template< typename T> class type< common::ValueFilter< T>>
+{
+public:
+   /// Returns the name of the type.
+   ///
+   /// @return  'celma::common::ValueFilter< <type-name> >' (without the spaces).
+   /// @since  x.y.z, 17.10.2019
+   static constexpr const char* name()
+   {
+      return &mName[ 0];
+   } // type< common::ValueFilter< T>>::name
+
+   /// Used to store the name of the type persistently.
+   /// Is public to build nested container names, don't access for printing.
+   static constexpr auto const  mName =
+      common::string_concat( "celma::common::ValueFilter<", type< T>::mName, ">");
+
+}; // type< celma::common::ValueFilter< T>>
+
+
 } // namespace celma
 
 

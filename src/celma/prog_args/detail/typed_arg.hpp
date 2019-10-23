@@ -22,6 +22,7 @@
 /// - TypedArg< std::bitset< T...>>
 /// - TypedArg< std::tuple< T...>>
 /// - TypedArg< std::vector< T>>
+/// - TypedArg< common::ValueFilter< T>>
 
 
 #ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
@@ -39,8 +40,10 @@
 #include <boost/lexical_cast.hpp>
 #include "celma/common/check_assign.hpp"
 #include "celma/common/contains.hpp"
+#include "celma/common/parse_filter_string.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
+#include "celma/common/value_filter.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
@@ -126,7 +129,7 @@ protected:
    ///    The value to store in string format.
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded preceeded by an exclamation mark.
+   ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
@@ -149,7 +152,6 @@ template< typename T>
       TypedArgBase( vname, ValueMode::required, true),
       mDestVar( dest)
 {
-   mpCardinality.reset( new CardinalityMax( 1));
 } // TypedArg< T>::TypedArg
 
 
@@ -252,7 +254,6 @@ public:
       mDestVar( dest),
       mValue2Set( !mDestVar)
    {
-      mpCardinality.reset( new CardinalityMax( 1));
    } // TypedArg< bool>::TypedArg
 
    /// Returns "bool".
@@ -394,7 +395,7 @@ private:
    ///
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded preceeded by an exclamation mark.
+   ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
@@ -874,7 +875,7 @@ protected:
    /// @param[in]  value  The value to store in string format.
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded preceeded by an exclamation mark.
+   ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
@@ -1143,7 +1144,7 @@ protected:
    ///    The value to store in string format.
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded preceeded by an exclamation mark.
+   ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  1.26.0, 29.04.2019
@@ -1387,7 +1388,7 @@ protected:
    ///    The value to store in string format.
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded preceeded by an exclamation mark.
+   ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  1.26.0, 26.04.2019
@@ -1674,7 +1675,7 @@ private:
    ///    The value to store in string format.
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded preceeded by an exclamation mark.
+   ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  0.11, 19.12.2016
@@ -1897,7 +1898,7 @@ protected:
    ///    The value to store in string format.
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded preceeded by an exclamation mark.
+   ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  1.4.3, 29.04.2018
@@ -2036,6 +2037,174 @@ template< size_t N>
       } // end if
    } // end for
 } // TypedArg< std::bitset< N>>::assign
+
+
+// Template TypedArg< ValueFilter< T>>
+// ===================================
+
+
+/// Specialisation of TypedArg<> for an argument string that specifies the
+/// filters to create.
+///
+/// @tparam  T  The type of the value(s) to create the filter(s) for.
+/// @since  x.y.z, 17.10.2019
+template< typename T> class TypedArg< common::ValueFilter< T>>:
+   public TypedArgBase
+{
+public:
+   /// The type of the destination variable.
+   using valfilter_type = typename common::ValueFilter< T>;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the filter(s) in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the filter(s) in.
+   /// @since  x.y.z, 17.10.2019
+   TypedArg( valfilter_type& dest, const std::string& vname);
+
+   /// Returns the name of the type of the destination variable (ValueFilter of
+   /// something).
+   ///
+   /// @return  The name of the type of the destination variable/vector.
+   /// @since  x.y.z, 17.10.2019
+   virtual const std::string varTypeName() const override;
+
+   /// Returns if the destination has (at least) one filter set.
+   ///
+   /// @return
+   ///    \c true if the destination variable contains (at least) one filter.
+   /// @since  x.y.z, 17.10.2019
+   virtual bool hasValue() const override;
+
+   /// Prints the current value of the destination variable.<br>
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  x.y.z, 17.10.2019
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
+   /// Always throws for this class.
+   ///
+   /// @param[in]  c  Check object is deleted.
+   /// @return  Nothing.
+   /// @throw
+   ///    std::logic_error because checking a value filter string is not
+   ///    supported.
+   /// @since  x.y.z, 18.10.2019
+   virtual TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
+
+   /// Always throws for this class.
+   ///
+   /// @param[in]  f  Format object is deleted.
+   /// @return  Nothing.
+   /// @throw
+   ///    std::logic_error because formatting a value filter string is not
+   ///    supported.
+   /// @since  x.y.z, 18.10.2019
+   virtual TypedArgBase* addFormat( IFormat* f) noexcept( false) override;
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   ///
+   /// @param[out]  os  The stream to print to.
+   /// @since  x.y.z, 17.10.2019
+   virtual void dump( std::ostream& os) const override;
+
+   /// Parses the given string, creates and stores the filters defined therein
+   /// in the destination value fiter.
+   ///
+   /// @param[in]  value
+   ///    The string with the filter definitions.
+   /// @param[in]  inverted
+   ///    Not supported for this argument.
+   /// @since  x.y.z, 17.10.2019
+   virtual void assign( const std::string& value, bool inverted) override;
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   valfilter_type&  mDestVar;
+
+}; // TypedArg< common::ValueFilter< T>>
+
+
+// inlined methods
+// ===============
+
+
+template< typename T>
+   TypedArg< common::ValueFilter< T>>::TypedArg( valfilter_type& dest,
+      const std::string& vname):
+         TypedArgBase( vname, ValueMode::required, false),
+         mDestVar( dest)
+{
+} // TypedArg< common::ValueFilter< T>>::TypedArg
+
+
+template< typename T>
+   const std::string TypedArg< common::ValueFilter< T>>::varTypeName() const
+{
+   return type< common::ValueFilter< T>>::name();
+} // TypedArg< common::ValueFilter< T>>::varTypeName
+
+
+template< typename T> bool TypedArg< common::ValueFilter< T>>::hasValue() const
+{
+   return !mDestVar.empty();
+} // TypedArg< common::ValueFilter< T>>::hasValue
+
+
+template< typename T>
+   void TypedArg< common::ValueFilter< T>>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( mDestVar);
+   if (print_type)
+      os << " [" << varTypeName() << "]";
+} // TypedArg< common::ValueFilter< T>>::printValue
+
+
+template< typename T>
+   TypedArgBase* TypedArg< common::ValueFilter< T>>::addCheck( ICheck* c)
+{
+   delete c;
+   throw std::logic_error( "calling addCheck() not allowed for variable '"
+      + mVarName + "'");
+} // TypedArg< common::ValueFilter< T>>::addCheck
+
+
+template< typename T>
+   TypedArgBase* TypedArg< common::ValueFilter< T>>::addFormat( IFormat* f)
+{
+   delete f;
+   throw std::logic_error( "calling addFormat() not allowed for variable '"
+      + mVarName + "'");
+} // TypedArg< common::ValueFilter< T>>::addFormat
+
+
+template< typename T>
+   void TypedArg< common::ValueFilter< T>>::dump( std::ostream& os) const
+{
+   os << "value type '" << varTypeName() << "', destination value filter '"
+      << mVarName << "', currently "
+      << (mDestVar.empty() ? "no" : std::to_string( mDestVar.size()))
+      << " filters." << std::endl
+      << "   " << static_cast< const TypedArgBase&>( *this);
+} // TypedArg< common::ValueFilter< T>>::dump
+
+
+template< typename T>
+   void TypedArg< common::ValueFilter< T>>::assign( const std::string& value,
+      bool)
+{
+   mDestVar = common::parseFilterString< T>( value) ;
+} // TypedArg< common::ValueFilter< T>>::assign
 
 
 } // namespace detail

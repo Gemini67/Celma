@@ -157,6 +157,7 @@ public:
       pair_first_arg(),
       optional_int(),
       optional_bool(),
+      value_filter(),
       tuple_dest()
    {
 
@@ -184,6 +185,7 @@ public:
       ah.addArgument( "opt-bool", DEST_VAR( optional_bool), "an optional boolean");
       ah.addArgument( "c,c-array", DEST_VAR( my_c_array), "C array of ints");
       ah.addArgument( "a,array", DEST_VAR( my_array), "array of ints");
+      ah.addArgument( "value-filter", DEST_VAR( value_filter), "value filters");
 
       tcb.addVoidMember( ah);
       tcb.addValueMember( ah);
@@ -192,7 +194,7 @@ public:
          "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
          "--void-method --value-method another_value -t 28,unbelievable,12.75 "
          "--void-member --value-member=last_value -vv --pair juhu -o 0 "
-         "--opt-bool -c 9,19,29 -a 5,4,3",
+         "--opt-bool -c 9,19,29 -a 5,4,3 --value-filter 42,4711",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // AllTypesFixture::AllTypesFixture
@@ -214,6 +216,7 @@ public:
    celma::common::CheckAssign< bool>  optional_bool;
    int                                my_c_array[ 3] = { 0, 0, 0 };
    std::array< int, 3>                my_array = { 0, 0, 0 };
+   celma::common::ValueFilter< int>   value_filter;
 
    std::tuple< int, std::string, double>  tuple_dest;
 
@@ -320,6 +323,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types, AllTypesFixture)
       "   Value <true> set on variable 'optional_bool'.\n"
       "   Value <9, 19, 29> set on variable 'my_c_array'.\n"
       "   Value <5, 4, 3> set on variable 'my_array'.\n"
+      "   Value <42,4711> set on variable 'value_filter'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -468,6 +472,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_type,
       "   Value <true [bool]> set on variable 'optional_bool'.\n"
       "   Value <9, 19, 29 [int[3]]> set on variable 'my_c_array'.\n"
       "   Value <5, 4, 3 [std::array<int,3>]> set on variable 'my_array'.\n"
+      "   Value <42,4711 [celma::common::ValueFilter<int>]> set on variable 'value_filter'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -617,6 +622,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_key,
       "   Value <true> set on variable 'optional_bool' by argument '--opt-bool'.\n"
       "   Value <9, 19, 29> set on variable 'my_c_array' by argument '-c,--c-array'.\n"
       "   Value <5, 4, 3> set on variable 'my_array' by argument '-a,--array'.\n"
+      "   Value <42,4711> set on variable 'value_filter' by argument '--value-filter'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));
@@ -764,6 +770,7 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_full,
       "   Value <true [bool]> set on variable 'optional_bool' by argument '--opt-bool'.\n"
       "   Value <9, 19, 29 [int[3]]> set on variable 'my_c_array' by argument '-c,--c-array'.\n"
       "   Value <5, 4, 3 [std::array<int,3>]> set on variable 'my_array' by argument '-a,--array'.\n"
+      "   Value <42,4711 [celma::common::ValueFilter<int>]> set on variable 'value_filter' by argument '--value-filter'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));

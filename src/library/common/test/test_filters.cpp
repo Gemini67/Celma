@@ -39,6 +39,8 @@ BOOST_AUTO_TEST_CASE( test_single_value)
       BOOST_REQUIRE( !sv.matches( 41));
       BOOST_REQUIRE( sv.matches( 42));
       BOOST_REQUIRE( !sv.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( sv.str(), "42");
    } // end scope
 
    {
@@ -47,6 +49,8 @@ BOOST_AUTO_TEST_CASE( test_single_value)
       BOOST_REQUIRE( sv.matches( 41));
       BOOST_REQUIRE( !sv.matches( 42));
       BOOST_REQUIRE( sv.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( sv.str(), "!42");
    } // end scope
 
 } // test_single_value
@@ -75,6 +79,8 @@ BOOST_AUTO_TEST_CASE( test_value_range)
       BOOST_REQUIRE( vr.matches( 199));
       BOOST_REQUIRE( vr.matches( 200));
       BOOST_REQUIRE( !vr.matches( 201));
+
+      BOOST_REQUIRE_EQUAL( vr.str(), "100-200");
    } // end scope
 
    {
@@ -87,6 +93,8 @@ BOOST_AUTO_TEST_CASE( test_value_range)
       BOOST_REQUIRE( !vr.matches( 199));
       BOOST_REQUIRE( !vr.matches( 200));
       BOOST_REQUIRE( vr.matches( 201));
+
+      BOOST_REQUIRE_EQUAL( vr.str(), "!100-200");
    } // end scope
 
 } // test_value_range
@@ -108,6 +116,8 @@ BOOST_AUTO_TEST_CASE( test_minimum_value)
       BOOST_REQUIRE( !mv.matches( 99));
       BOOST_REQUIRE( mv.matches( 100));
       BOOST_REQUIRE( mv.matches( 101));
+
+      BOOST_REQUIRE_EQUAL( mv.str(), "[100");
    } // end scope
 
 } // test_minimum_value
@@ -129,9 +139,11 @@ BOOST_AUTO_TEST_CASE( test_maximum_value)
       BOOST_REQUIRE( mv.matches( 99));
       BOOST_REQUIRE( !mv.matches( 100));
       BOOST_REQUIRE( !mv.matches( 101));
+
+      BOOST_REQUIRE_EQUAL( mv.str(), "]100");
    } // end scope
 
-} // test_minimum_value
+} // test_maximum_value
 
 
 

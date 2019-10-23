@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.30.0
+   \mainpage  CELMA v1.31.0
 
    \tableofcontents
 
@@ -47,6 +47,7 @@
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
 
+   |   1.31.0 | 2019-10-23        | Finally finished implementation of filters. |
    |   1.30.0 | 2019-08-19        | Added module "execute statistic". |
    |   1.29.0 | 2019-06-23        | Added module "bounds range". |
    |   1.28.0 | 2019-06-18        | Added module "scope exit execute". |

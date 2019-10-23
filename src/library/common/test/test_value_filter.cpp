@@ -19,6 +19,10 @@
 #include "celma/common/value_filter.hpp"
 
 
+// OS/C lib includes
+#include <cstring>
+
+
 // Boost includes
 #define BOOST_TEST_MODULE ValueFilterTest
 #include <boost/test/unit_test.hpp>
@@ -72,6 +76,25 @@ BOOST_AUTO_TEST_CASE( errors)
 
 
 
+/// Check that getting the type name works.
+///
+/// @since  x.y.z, 17.10.2019
+BOOST_AUTO_TEST_CASE( value_filter_type_name)
+{
+
+   static_assert( celma::type< ValueFilter< int>>::name()[ 0] == 'c');
+   static_assert( celma::type< ValueFilter< int>>::name()[ 7] == 'c');
+   static_assert( celma::type< ValueFilter< int>>::name()[ 15] == 'V');
+   static_assert( celma::type< ValueFilter< int>>::name()[ 20] == 'F');
+   static_assert( celma::type< ValueFilter< int>>::name()[ 27] == 'i');
+
+   BOOST_REQUIRE( ::strcmp( celma::type< ValueFilter< int>>::name(),
+      "celma::common::ValueFilter<int>") == 0);
+
+} // value_filter_type_name
+
+
+
 /// Filter for a single value.
 ///
 /// @since  x.y.z, 07.10.2019
@@ -81,11 +104,18 @@ BOOST_AUTO_TEST_CASE( test_single_value)
    {
       ValueFilter< int>  my_filter;
 
+      BOOST_REQUIRE( my_filter.empty());
+
       my_filter.addSingleValueFilter( 42);
+
+      BOOST_REQUIRE( !my_filter.empty());
+      BOOST_REQUIRE_EQUAL( my_filter.size(), 1);
 
       BOOST_REQUIRE( !my_filter.matches( 41));
       BOOST_REQUIRE( my_filter.matches( 42));
       BOOST_REQUIRE( !my_filter.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "42");
    } // end scope
 
    {
@@ -96,6 +126,8 @@ BOOST_AUTO_TEST_CASE( test_single_value)
       BOOST_REQUIRE( my_filter.matches( 41));
       BOOST_REQUIRE( !my_filter.matches( 42));
       BOOST_REQUIRE( my_filter.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!42");
    } // end scope
 
 } // test_single_value
@@ -120,6 +152,8 @@ BOOST_AUTO_TEST_CASE( test_value_range)
       BOOST_REQUIRE( my_filter.matches( 199));
       BOOST_REQUIRE( my_filter.matches( 200));
       BOOST_REQUIRE( !my_filter.matches( 201));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "100-200");
    } // end scope
 
    {
@@ -134,6 +168,8 @@ BOOST_AUTO_TEST_CASE( test_value_range)
       BOOST_REQUIRE( !my_filter.matches( 199));
       BOOST_REQUIRE( !my_filter.matches( 200));
       BOOST_REQUIRE( my_filter.matches( 201));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!100-200");
    } // end scope
 
 } // test_value_range
@@ -155,6 +191,8 @@ BOOST_AUTO_TEST_CASE( test_min_max_value)
       BOOST_REQUIRE( !my_filter.matches( 41));
       BOOST_REQUIRE( my_filter.matches( 42));
       BOOST_REQUIRE( my_filter.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "[42");
    } // end scope
 
    {
@@ -166,6 +204,8 @@ BOOST_AUTO_TEST_CASE( test_min_max_value)
       BOOST_REQUIRE( my_filter.matches( 41));
       BOOST_REQUIRE( !my_filter.matches( 42));
       BOOST_REQUIRE( !my_filter.matches( 43));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "]42");
    } // end scope
 
 } // test_min_max_value
@@ -181,8 +221,13 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
    {
       ValueFilter< int>  my_filter;
 
+      BOOST_REQUIRE( my_filter.empty());
+
       my_filter.addSingleValueFilter( 13);
       my_filter.addSingleValueFilter( 42);
+
+      BOOST_REQUIRE( !my_filter.empty());
+      BOOST_REQUIRE_EQUAL( my_filter.size(), 2);
 
       BOOST_REQUIRE( !my_filter.matches( 11));
       BOOST_REQUIRE( !my_filter.matches( 12));
@@ -195,6 +240,8 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
       BOOST_REQUIRE( my_filter.matches( 42));
       BOOST_REQUIRE( !my_filter.matches( 43));
       BOOST_REQUIRE( !my_filter.matches( 44));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "13,42");
    } // end scope
 
    // one normal and one inverted single value filter: the first is not really
@@ -216,14 +263,21 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
       BOOST_REQUIRE( !my_filter.matches( 42));
       BOOST_REQUIRE( my_filter.matches( 43));
       BOOST_REQUIRE( my_filter.matches( 44));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "13,!42");
    } // end scope
 
    // two inverted single value filter combined
    {
       ValueFilter< int>  my_filter;
 
+      BOOST_REQUIRE( my_filter.empty());
+
       my_filter.addSingleValueFilter( 13, true);
       my_filter.appendSingleValueFilter( 42, true);
+
+      BOOST_REQUIRE( !my_filter.empty());
+      BOOST_REQUIRE_EQUAL( my_filter.size(), 1);
 
       BOOST_REQUIRE( my_filter.matches( 11));
       BOOST_REQUIRE( my_filter.matches( 12));
@@ -236,6 +290,8 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
       BOOST_REQUIRE( !my_filter.matches( 42));
       BOOST_REQUIRE( my_filter.matches( 43));
       BOOST_REQUIRE( my_filter.matches( 44));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!13+!42");
    } // end scope
 
    // two inverted single value filter: one filter will always match
@@ -256,6 +312,8 @@ BOOST_AUTO_TEST_CASE( test_single_values_combined)
       BOOST_REQUIRE( my_filter.matches( 42));
       BOOST_REQUIRE( my_filter.matches( 43));
       BOOST_REQUIRE( my_filter.matches( 44));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!13,!42");
    } // end scope
 
 } // test_single_values_combined
@@ -288,6 +346,8 @@ BOOST_AUTO_TEST_CASE( test_range_combinations)
       BOOST_REQUIRE( !my_filter.matches( 500));
       BOOST_REQUIRE( my_filter.matches( 501));
       BOOST_REQUIRE( my_filter.matches( 502));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!100-500,250");
    } // end scope
 
 } // test_range_combinations
@@ -321,6 +381,8 @@ BOOST_AUTO_TEST_CASE( multiple_combinations)
       BOOST_REQUIRE( my_filter.matches( 99));
       BOOST_REQUIRE( !my_filter.matches( 100));
       BOOST_REQUIRE( !my_filter.matches( 101));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "[50+!75+]100");
    } // end scope
 
    // range and single excluded
@@ -353,16 +415,23 @@ BOOST_AUTO_TEST_CASE( multiple_combinations)
       BOOST_REQUIRE( !my_filter.matches( 249));
       BOOST_REQUIRE( my_filter.matches( 250));
       BOOST_REQUIRE( !my_filter.matches( 251));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "100-200+!150,50,250");
    } // end scope
 
    // same filters but different order
    {
       ValueFilter< int>  my_filter;
 
+      BOOST_REQUIRE( my_filter.empty());
+
       my_filter.addSingleValueFilter( 50);
       my_filter.addSingleValueFilter( 150, true);
       BOOST_REQUIRE_NO_THROW( my_filter.appendRangeFilter( 100, 200));
       my_filter.addSingleValueFilter( 250);
+
+      BOOST_REQUIRE( !my_filter.empty());
+      BOOST_REQUIRE_EQUAL( my_filter.size(), 3);
 
       BOOST_REQUIRE( !my_filter.matches( 49));
       BOOST_REQUIRE( my_filter.matches( 50));
@@ -385,6 +454,8 @@ BOOST_AUTO_TEST_CASE( multiple_combinations)
       BOOST_REQUIRE( !my_filter.matches( 249));
       BOOST_REQUIRE( my_filter.matches( 250));
       BOOST_REQUIRE( !my_filter.matches( 251));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "50,!150+100-200,250");
    } // end scope
 
    // single value excluded and minimum filter
@@ -402,11 +473,13 @@ BOOST_AUTO_TEST_CASE( multiple_combinations)
       BOOST_REQUIRE( my_filter.matches( 199));
       BOOST_REQUIRE( !my_filter.matches( 200));
       BOOST_REQUIRE( my_filter.matches( 201));
+
+      BOOST_REQUIRE_EQUAL( my_filter.str(), "!200+[100");
    } // end scope
 
 } // multiple_combinations
 
 
 
-// =====  END OF test_filter.cpp  =====
+// =====  END OF test_value_filter.cpp  =====
 
