@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,30 +28,21 @@
 #include "celma/format/to_string.hpp"
 
 
-using std::runtime_error;
-using std::string;
-
-
 namespace celma { namespace prog_args { namespace detail {
 
 
 
 /// Constructor, does a basic validation of the argument list.
-/// @param[in]  reqArgSpec    The list of arguments that must be used.
+///
+/// @param[in]  reqArgSpec  The list of arguments that must be used.
+/// @throws
+///    "invalid argument" if the string is empty or does not contain at least
+///    two arguments.
 /// @since  0.2, 10.04.2016
-ConstraintAllOf::ConstraintAllOf( const string& reqArgSpec):
-   mArgSpecList( reqArgSpec),
+ConstraintAllOf::ConstraintAllOf( const std::string& reqArgSpec):
+   IHandlerConstraint( "all of", reqArgSpec),
    mRemainingArguments()
 {
-
-   if (mArgSpecList.empty())
-      throw runtime_error( "Constraint 'all of' cannot be created with an empty "
-                           "list of arguments");
-
-   if (mArgSpecList.find( ';') == string::npos)
-      throw runtime_error( "List of needed arguments for constraint 'all of' "
-                           "must contain at least two arguments separated by ';'");
-
 } // ConstraintAllOf::ConstraintAllOf
 
 
@@ -70,34 +61,20 @@ void ConstraintAllOf::executeConstraint( const ArgumentKey& key)
    if (!isConstraintArgument( mArgSpecList, key))
       return;
 
-   if (mRemainingArguments.empty())
-      throw runtime_error( "Argument '" + format::toString( key)
-                           + "' was already used");
-
+   // don't have to check for multiple calls:
+   // - normally not allowed anyway
+   // - if allowed and it happens: so what?
    auto  argpos = mRemainingArguments.find( key);
 
-   if (argpos == mRemainingArguments.end())
-      throw runtime_error( "Argument '" + format::toString( key)
-                           + "' was already used");
-
-   mRemainingArguments.erase( argpos);
+   if (argpos != mRemainingArguments.end())
+      mRemainingArguments.erase( argpos);
 
 } // ConstraintAllOf::executeConstraint
 
 
 
-/// Returns the list of arguments that must be used.
-/// @return  The list of arguments as passed to the constructor.
-/// @since  0.2, 10.04.2016
-string& ConstraintAllOf::argumentList()
-{
-
-   return mArgSpecList;
-} // ConstraintAllOf::argumentList
-
-
-
 /// Called after the argument list in a global constraint was validated.
+///
 /// @since  0.2, 10.04.2016
 void ConstraintAllOf::validated()
 {
@@ -113,13 +90,14 @@ void ConstraintAllOf::validated()
 
 /// Checks if all of the specified arguments were used, i.e.: if the string
 /// \a #mRemainingArguments is empty.
+///
 /// @since  0.2, 10.04.2016
 void ConstraintAllOf::checkEndCondition() const
 {
 
    if (!mRemainingArguments.empty())
    {
-      string  remaining;
+      std::string  remaining;
       for (auto const& arg : mRemainingArguments)
       {
          if (!remaining.empty())
@@ -127,7 +105,8 @@ void ConstraintAllOf::checkEndCondition() const
          remaining.append( format::toString( arg.key()));
       } // end for
 
-      throw runtime_error( "Argument(s) '" + remaining + "' required but missing");
+      throw std::runtime_error( "Argument(s) '" + remaining
+         + "' required but missing");
    } // end if
 
 } // ConstraintAllOf::checkEndCondition
@@ -135,9 +114,10 @@ void ConstraintAllOf::checkEndCondition() const
 
 
 /// Returns a text description of the constraint.
+///
 /// @return  A string with the text description of the constraint.
 /// @since  0.16.0, 15.08.2017
-string ConstraintAllOf::toString() const
+std::string ConstraintAllOf::toString() const
 {
 
    std::ostringstream  oss;
@@ -154,5 +134,5 @@ string ConstraintAllOf::toString() const
 } // namespace celma
 
 
-// ======================  END OF constraint_all_of.cpp  ======================
+// =====  END OF constraint_all_of.cpp  =====
 

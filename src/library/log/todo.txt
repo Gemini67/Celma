@@ -1,0 +1,168 @@
+
+1. Locking
+   Ability to set the lock policy at runtime. Policy must be set per log
+   destination type.
+   Example:
+      Logging::instance().setLockingPolicy< LogDestStream>( lpNoLock);
+   Implementation:
+      in class Logging:
+      template< typename LDT> void setLockingPolicy( LogDestLockPolicies ldlp)
+      {
+         LDT::setLockingPolicy( ldlp);
+      }
+      in class e.g. LogDestStream:
+      static void setLockingPolicy( LogDestLockPolicies ldlp)
+      {
+         mpLockingPolicy.reset( LockingPolicyFactory::create( ldlp));
+      }
+      New interface ILockConcept, base class for NoLock, SpinLock, MutexLock,
+      SemLock etc.
+      Then use
+         ScopedLock< ILockConcept>  lock( *mpLockingPolicy.get());
+
+2. Statistic
+   One statistic structure to store
+   - number of messages processed
+   - number of messages per log level, class, ...
+   Then this statistic class may be used by Logging, Log, LogDest, ...
+
+3. Complete and test implementation of << operators to dump log setup.
+
+5. Multi-Threaded?
+   Change to be multi-threaded by default?
+   - LogMessages are written into queue, log thread reads the messages and
+     writes them to log destination(s).
+   - Pool of log message objects.
+   - Lock-free queue.
+     Or NanoMsg-Queue? Advantage then: Log-Collector for multiple processes
+     would be easier to implement.
+   - So: Implemented simply as log destination?
+     And a class 'log collector', that collects log messages and
+     writes them into logfiles. This log collector can then be in the same
+     process (separate thread), or be running in a special process (like
+     rtds_logd).
+
+   -> LogDestQueue( "nanomsg-queue-name");
+   -> Logging::instance().runCollector( ""nanomsg-queue-name", "log-name");
+   -> Multiple ways of logging:
+      - in-process, no multi-threading, no locking (each call directly writes)
+      - in-process, application multi-threaded, locking (each call directly writes)
+      - in-process, (log) multi-threading, decoupled, no locking (using queue)
+      - multi-process, decoupled
+   -> Flag for cmake: include-nanomsg (or so)
+      - Only if this flag is set, the nanomsg-library is located and linked
+      - A define is also set on the compiler options, so that nanomsg-dependent
+        code is only compiled if nanomsg is available
+      Flag is implemented.
+
+7. Specify the output format for streams, textfiles etc. Example:
+   Logging::instance().getLog( log_id|"log_name")->getDest( "dest_name")
+      ->format() << delimiter << '|' << timestamp << "%X %T" << text;
+   This uses a new class that accepts the settings for the output using
+   insertation operators and stores the specified settings in ->
+   Class to store the delimiter and a list of output elements with name and the
+   output format to use (if required).
+   When output should be written iterate over this container and write the data
+   as specified through the elememts and the (optional) formatting.
+   Classes OutputFormatSpecStream and OutputFormat?
+   But the class to format a message like this should not be the standard,
+   but itself be derived from a base class interface, so that the class can be
+   exchanged other implementations/user specific solutions etc.
+   Maybe it makes sense to have a design where the classes are templates, so
+   that 
+   template< typename T> class MyFormat: public IFormatBase
+   {
+   public:
+      MyFormat( T& dest);
+      virtual void format( const LogMsg& in) const;
+   }
+   using
+   class IFormatBase
+   {
+   public:
+      ~IFormatBase() { }
+      virtual void format( const LogMsg& in) const = 0;
+   }
+
+8. Boost-Test getLog():
+   - log does not exist (yet)
+   - log exists, with name
+   - log exists, with id
+   - throws when called with multiple ids
+   - 2 logs
+   - 2 logs, then 1 is deleted again
+
+9. Log top-level include file(s):
+   - log_setup: includes logging, ...
+   - log: includes log_macros, ...
+
+10. Additional log property
+    Feature to specify a (or many) property that will be added to all following
+    log messages. The output generators will have to decide what to do with
+    these properties.
+    Additionally, provide a class to define a property for a specific scope,
+    so that only the log messages created within this scope get this property
+    added.
+    Use case: In a process handling connections, add the name of the remote peer
+    as property.
+    Default log format: <property-name>=<value>[,<property-name>=<value>]
+       Should be written within special marks (e.g. { }) to allow parsing/
+       filtering.
+    See also 12, Attributes
+
+11. Support for something like the 'RT-DS program start log':
+    - open the logfile
+    - write one message using a lock on ... ? File-Lock? Global mutex/semaphore?
+    - log file no longer needed
+
+12. Attributes
+    Idea: Store attributes in a scope, afterwards each log message created
+    within that scope gets this attributes passed.
+    Scopes:
+    - function/method: easy, local variable
+    - module: global variable, but needs to support multi-threading!?!?
+    - thread: thread local storage
+    Problem: How to pass these multiple, optional scoped attributes to the log
+             message?
+    Idea:
+       macro LOG_FUNCTION_ATTR( "<attr-name>", attr-value) \
+          LOG_ADD_SCOPED_ATTR( #__func__, attr-name, attr-value)
+       macro LOG_OBJECT_ATTR( "<attr-name>", attr-value) \
+          LOG_ADD_SCOPED_ATTR( # this, attr-name, attr-value)   // object address as id string
+                           //  ^ ^   does not work
+    All attributes are stored in one 
+
+13. Capture stdout/cout stderr/cerr
+    Added method to let the log framework capture output written to
+    stdout/stderr and/or cout/cerr and redirect it into the log destination.
+    Additional required information like log-level etc. must be specified when
+    the standard channel is captured.
+    Open points:
+    * does capturing stdout also capture cout?
+    * redirect to a) Log, i.e. all destinations, or b) to one log only?
+
+14. Log-Output (additionally) to stdout
+    Function that checks if the output destination is a tty, and if so adds
+    output destinations so that each log message is also written to stdout.
+
+15. Headerfiles
+    All module headerfiles should be in src/foundation/log
+    Create a src/foundation/log.hpp that includes src/foundation/log/log.hpp and
+    maybe other headerfiles that are always needed (boost-like).
+    Apply the same logic on argumenthandler, ...
+
+16. Logged function calls
+    Template that calls a (OS) function and if it fails logs the failure.
+    Parameters: Name of the caller, function (Name and Address), function
+                parameters.
+    May need C++ 11 std::forward to handle an arbitrary number of parameters.
+
+17. Log destination: callable
+    A log destination that calls a function/method when called for a log
+    message.
+    Idea: Add such a log destination with a (reference to the) pointer to current
+    MDF message. If an error message is created during the processing of the
+    message, the message is dumped into the failure-message-logfile.
+
+18. Binary log file support?
+    Advantage: Use features like log generations, rotation etc.

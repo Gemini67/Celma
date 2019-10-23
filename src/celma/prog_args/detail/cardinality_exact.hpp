@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,7 @@
 #define CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
 
 
+#include <string>
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
 
@@ -35,25 +36,37 @@ class CardinalityExact: public ICardinality
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  num_values  The number of calls/values that are expected for
    ///                         the corresponding argument.
    /// @since  0.2, 10.04.2016
-   CardinalityExact( int num_values);
+   explicit CardinalityExact( int num_values);
 
    /// Virtual, empty destructor.
+   ///
    /// @since  0.2, 10.04.2016
-   virtual ~CardinalityExact() { }
+   virtual ~CardinalityExact() = default;
 
    /// Called by the framework when the argument was detected in the command
    /// line (actually may be without a value).
+   ///
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue() override;
+   virtual void gotValue() noexcept( false) override;
 
-   /// Called by the framework at the end of the command line processing.
-   /// @throw  if not all execpted values were passed.
+   /// Called by the framework at the end of the command line processing.<br>
+   /// Here we check that the exact number of values was processed, if any.
+   ///
+   /// @throw  runtime_error
+   ///    if at least one but not all execpted values were passed.
    /// @since  0.2, 10.04.2016
-   virtual void check() override;
+   virtual void check() noexcept( false) override;
+
+   /// Returns the text description of the cardinality "exact".
+   ///
+   /// @return  String with the text description of the cardinality.
+   /// @since  1.14.0, 02.10.2018
+   virtual std::string cardinalityStr() const override;
 
 private:
    /// Number of calls/values expected for the corresponding argument.
@@ -71,6 +84,7 @@ private:
 
 /// Helper method to hide the class name from the library users.<br>
 /// Use this function as parameter to TypedArgBase::setCardinality().
+///
 /// @param[in]  num_values  Number of values expected by the corresponding
 ///                         argument.
 /// @return  The newly created object for checking exact cardinality.
@@ -78,7 +92,7 @@ private:
 inline detail::ICardinality* cardinality_exact( int num_values)
 {
    return new detail::CardinalityExact( num_values);
-} // end cardinality_exact
+} // cardinality_exact
 
 
 } // namespace prog_args
@@ -88,5 +102,5 @@ inline detail::ICardinality* cardinality_exact( int num_values)
 #endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
 
 
-// ======================  END OF cardinality_exact.hpp  ======================
+// =====  END OF cardinality_exact.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,6 +28,7 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Checks a value if it matches a set of specified, allowed values.
+///
 /// @since  0.2, 10.04.2016
 class CheckValues: public ICheck
 {
@@ -35,7 +36,9 @@ public:
    /// Constructor.
    /// @param[in]  valueList  The list of allowed values in string format.
    /// @since  0.2, 10.04.2016
-   CheckValues( const std::string& valueList) noexcept( false);
+   explicit CheckValues( const std::string& valueList) noexcept( false);
+
+   virtual ~CheckValues() = default;
 
    /// Checks if the value in \a val exists in the set of allowed values.
    /// @param[in]  val  The value to check in string format.
@@ -49,7 +52,7 @@ public:
 
 private:
    /// Storage type for the values.
-   typedef  std::set< std::string>  StringSet;
+   using StringSet = std::set< std::string>;
 
    /// The allowed values.
    StringSet  mValues;
@@ -82,5 +85,5 @@ inline detail::ICheck* values( const std::string& valueList)
 #endif   // CELMA_PROG_ARGS_DETAIL_CHECK_VALUES_HPP
 
 
-// =========================  END OF check_values.hpp  =========================
+// =====  END OF check_values.hpp  =====
 

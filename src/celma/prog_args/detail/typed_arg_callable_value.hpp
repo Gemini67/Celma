@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,20 +36,33 @@ class TypedArgCallableValue: public TypedArgBase
 {
 public:
    /// Constructor.
-   /// @param[in]  key    The complete argument specification with short and/or
-   ///                    long argument.
    /// @param[in]  fun    The function to call when the argument is set on the
    ///                    command line.
    /// @param[in]  fname  The name of the function to call.
+   /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArgCallableValue( const ArgumentKey& key,
-                          ArgHandlerCallableValue fun,
+   TypedArgCallableValue( ArgHandlerCallableValue fun,
                           const std::string& fname);
+
+   /// Returns "callable-value".
+   /// @return  The string "callable-value".
+   /// @since  1.14.0, 28.09.2018
+   virtual const std::string varTypeName() const override;
 
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
    virtual bool hasValue() const override;
+
+   /// Prints "callable" since there is no value to print.
+   /// @param[in]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since
+   ///    1.8.0, 05.07.2018
+   virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Allows to set the value mode to 'optional' (or required, but that is
    /// already the default).
@@ -63,6 +76,12 @@ public:
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setTakesMultiValue() override;
 
+   /// Logic inversion may be used on callables.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.27.0, 28.05.2019
+   virtual TypedArgBase* allowsInversion() noexcept( false) override;
+
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
@@ -71,14 +90,21 @@ protected:
 
 private:
    /// Executes the specified function.
-   /// @param[in]  value  The value to pass to the function.
+   ///
+   /// @param[in]  value
+   ///    The value to pass to the function.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    ArgHandlerCallableValue  mFun;
    /// Flag set when the function is called.
-   bool                     mWasCalled;
+   bool                     mWasCalled = false;
 
 }; // TypedArgCallableValue
 
@@ -87,20 +113,30 @@ private:
 // ===============
 
 
-inline TypedArgCallableValue::TypedArgCallableValue( const ArgumentKey& key,
-                                                     ArgHandlerCallableValue fun,
+inline TypedArgCallableValue::TypedArgCallableValue( ArgHandlerCallableValue fun,
                                                      const std::string& fname):
-   TypedArgBase( key, fname, ValueMode::required, false),
-   mFun( fun),
-   mWasCalled( false)
+   TypedArgBase( fname, ValueMode::required, false),
+   mFun( fun)
 {
 } // TypedArgCallableValue::TypedArgCallableValue
+
+
+inline const std::string TypedArgCallableValue::varTypeName() const
+{
+   return "callable-value";
+} // TypedArgCallableValue::varTypeName
 
 
 inline bool TypedArgCallableValue::hasValue() const
 {
    return mWasCalled;
 } // TypedArgCallableValue::hasValue
+
+
+inline void TypedArgCallableValue::printValue( std::ostream& os, bool) const
+{
+   os << "[callable(value)]";
+} // TypedArgCallableValue::printValue
 
 
 inline TypedArgBase* TypedArgCallableValue::setValueMode( ValueMode vm) noexcept( false)
@@ -121,6 +157,13 @@ inline TypedArgBase* TypedArgCallableValue::setTakesMultiValue()
 } // TypedArgCallableValue::setTakesMultiValue
 
 
+inline TypedArgBase* TypedArgCallableValue::allowsInversion()
+{
+   mAllowsInverting = true;
+   return this;
+} // TypedArgCallableValue::allowsInversion
+
+
 inline void TypedArgCallableValue::dump( std::ostream& os) const
 {
    os << "calls function/method '" << mVarName << "'." << std::endl
@@ -128,9 +171,10 @@ inline void TypedArgCallableValue::dump( std::ostream& os) const
 } // TypedArgCallableValue::dump
 
 
-inline void TypedArgCallableValue::assign( const std::string& value)
+inline void TypedArgCallableValue::assign( const std::string& value,
+   bool inverted)
 {
-   mFun( value);
+   mFun( value, inverted);
    mWasCalled = true;
 } // TypedArgCallableValue::assign
 
@@ -143,5 +187,5 @@ inline void TypedArgCallableValue::assign( const std::string& value)
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_CALLABLE_VALUE_HPP
 
 
-// ======================  END OF typed_arg_callable.hpp  ======================
+// =====  END OF typed_arg_callable_value.hpp  =====
 

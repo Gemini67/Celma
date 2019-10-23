@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,7 +28,7 @@
 namespace celma { namespace common {
 
 
-/// Finally, the template to use to get a constrexpr string conversion of the
+/// Finally, the template to use to get a constexpr string conversion of the
 /// specified integer value.
 /// @tparam  Integer  The type of the value to convert.
 /// @tparam  num      The value to convert.
@@ -46,5 +46,5 @@ template< typename Integer, Integer num>
 #endif   // CELMA_COMMON_CONSTEXPR_STRING_FROM_HPP
 
 
-// ====================  END OF constexpr_string_from.hpp  ====================
+// =====  END OF constexpr_string_from.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -358,11 +358,6 @@ template< typename T, typename E>
       mCurrElement.setArgChar( mArgIndex, mArgCharPos,
                                mpArgV[ mArgIndex][ mArgCharPos]);
       ++mArgCharPos;
-      if (mArgCharPos >= mCurrArgStringLen)
-      {
-         ++mArgIndex;
-         mArgCharPos = 0;
-      } // end if
    } // end if
 
 } // ArgListIterator< T, E>::determineNextArg
@@ -379,13 +374,9 @@ template< typename T, typename E>
    bool ArgListIterator< T, E>::isSingleArg() const noexcept( false)
 {
 
-   if (mCurrElement.mElementType == E::ElementType::singleCharArg)
-   {
-      return (mCurrElement.mArgCharPos == 1) &&
-             (mpArgV[ mCurrElement.mArgIndex][ 2] == '\0');
-   } // end if
-
-   return true;
+   return (mCurrElement.mElementType == E::ElementType::singleCharArg)
+      && (mCurrElement.mArgCharPos == 1)
+      && (mpArgV[ mCurrElement.mArgIndex][ 2] == '\0');
 } // ArgListIterator< T, E>::isSingleArg
 
    
@@ -397,5 +388,5 @@ template< typename T, typename E>
 #endif   // CELMA_PROG_ARGS_DETAIL_ARG_LIST_ITERATOR_HPP
 
 
-// ======================  END OF arg_list_iterator.hpp  ======================
+// =====  END OF arg_list_iterator.hpp  =====
 

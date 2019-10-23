@@ -2,19 +2,22 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
 
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.5 )
 
 project( Celma )
 
-set( MAJORVERSION    0 )
-set( MINORVERSION    0 )
-set( RELEASE_VERSION 16 )
+set( MAJORVERSION    1 )
+set( MINORVERSION    30 )
+set( RELEASE_VERSION 1 )
 set( PATCHLEVEL      0 )
+
+set( CMAKE_CXX_STANDARD 17 )
+set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 enable_testing()
 include( CTest)
@@ -24,8 +27,7 @@ set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-macros" )
 include( celma_add_test )
 include( celma_add_test_output_check )
 
-add_definitions( --std=c++1z
-                 -Wall -W -Wshadow -Wunused-variable -Wunused-parameter
+add_definitions( -Wall -W -Wshadow -Wunused-variable -Wunused-parameter
                  -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated
                  -Woverloaded-virtual -Wwrite-strings -Wextra -pedantic
                  -fdiagnostics-show-option )
@@ -41,8 +43,22 @@ if (CMAKE_BUILD_TYPE MATCHES Coverage)
 endif (CMAKE_BUILD_TYPE MATCHES Coverage)
 
 
+# test that filesystem header actually is there and works
+try_compile( HAS_FS "${CMAKE_BINARY_DIR}/temp"
+   "${PROJECT_SOURCE_DIR}/cmake-macros/has_filesystem.cpp"
+   CMAKE_FLAGS -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
+   LINK_LIBRARIES stdc++fs)
+if (HAS_FS)
+   message( STATUS "std::filesystem is available")
+   set( LINK_LIBRARIES stdc++fs)
+else()
+   message( STATUS "std::filesystem is not available (yet)")
+endif()
+
+
 # Boost stuff ------------------------------------------------------------------
 find_package( Boost ${BOOST_VERSION} REQUIRED
+   filesystem
    thread
    system
    unit_test_framework
@@ -51,8 +67,13 @@ find_package( Boost ${BOOST_VERSION} REQUIRED
 message( STATUS "Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIRS}" )
 message( STATUS "Boost_LIBRARY_DIRS ${Boost_LIBRARY_DIRS}" )
 
-set( Boost_Link_Libs       boost_thread boost_system )
+if (HAS_FS)
+   set( Boost_Link_Libs       boost_thread boost_system )
+else()
+   set( Boost_Link_Libs       boost_filesystem boost_thread boost_system )
+endif()
 set( Boost_Test_Link_Libs  boost_unit_test_framework ${Boost_Link_Libs} )
+
 
 # include directories ----------------------------------------------------------
 

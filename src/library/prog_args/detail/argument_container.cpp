@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,6 +25,7 @@
 
 // project includes
 #include "celma/format/to_string.hpp"
+#include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/handler.hpp"
 
 
@@ -38,9 +39,17 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 /// Constructor.
-/// @since  0.2, 10.04.2016
-ArgumentContainer::ArgumentContainer():
-   mArguments()
+///
+/// @param[in]  stores_sub_args
+///    Set if the object is used to store sub-arguments, i.e. arguments that
+///    are related to another (parent) argument.
+/// @since
+///    1.8.0, 12.07.2018  (parameter stores_sub_args added)
+/// @since
+///    0.2, 10.04.2016
+ArgumentContainer::ArgumentContainer( bool stores_sub_args):
+   mArguments(),
+   mStoreSubArgs( stores_sub_args)
 {
 } // ArgumentContainer::ArgumentContainer
 
@@ -174,6 +183,39 @@ void ArgumentContainer::setUsageLineLength( int useLen)
 
 
 
+/// After the arguments from the command line were evaluated, prints the list
+/// of arguments that were used and the values that were aet.
+/// 
+/// @param[in]  contents_set
+///    Set of flags that specify the contents of the summary to print.
+/// @param[out]  os
+///    The stream to write the summary to.
+/// @param[in]   arg_prefix
+///    Specifies the prefix for the arguments of this handler. Used when the
+///    argument handler handles the arguments of a sub-group.
+/// @since  1.8.0, 03.07.2018
+void ArgumentContainer::printSummary( sumoptset_t contents_set,
+   std::ostream& os, const char* arg_prefix) const
+{
+
+   if (mStoreSubArgs)
+   {
+      for (auto const& arg_entry : mArguments)
+      {
+         auto        sub_arg_handler = static_cast< TypedArgSubGroup*>(
+            arg_entry.data().get());
+         auto const  arg_key_str( format::toString( arg_entry.key()));
+         sub_arg_handler->obj()->printSummary( contents_set, os, false, arg_key_str.c_str());
+      } // end for
+   } else
+   {
+      mArguments.printSummary( contents_set, os, arg_prefix);
+   } // end if
+
+} // ArgumentContainer::printSummary
+
+
+
 /// Prints the contents of the container == list of all arguments.
 /// @param[out]  os  The stream to write to.
 /// @param[in]   ac  The object to dump the data of.
@@ -199,5 +241,5 @@ std::ostream& operator <<( std::ostream& os, const ArgumentContainer& ac)
 } // namespace celma
 
 
-// ======================  END OF argument_container.cpp  ======================
+// =====  END OF argument_container.cpp  =====
 

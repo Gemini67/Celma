@@ -51,8 +51,8 @@ analyze:
 	@if [ ! -d build/analyze ]; then \
 	   mkdir -p build/analyze; \
 	   cd build/analyze; \
-	   export CC=/usr/bin/clang; \
-	   export CXX=/usr/bin/clang++; \
+	   export CC=clang-7; \
+	   export CXX=clang++-7; \
 	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
 	         -DBOOST_VERSION=${BOOST_VERSION} \
 	         -DCMAKE_BUILD_TYPE=Debug \
@@ -62,6 +62,9 @@ analyze:
 	fi; \
 	cd build/analyze; \
 	make -j${CPUS};
+
+cppcheck:
+	cppcheck --enable=all --quiet --inline-suppr --force --std=c++11 -I src src
 
 test:	test-release test-debug
 
@@ -98,4 +101,16 @@ coverage:
 	cd build/coverage; \
 	/usr/bin/time --format="-- Build Duration: %E" make -j${CPUS} install; \
 	/usr/bin/time --format="-- Build Duration: %E" make Celma_coverage
+
+sonar:
+	sonar-scanner \
+	   -Dsonar.projectKey=Gemini67_Celma \
+	   -Dsonar.organization=gemini67-github \
+	   -Dsonar.sources=src \
+	   -Dsonar.cfamily.build-wrapper-output=bw-output \
+	   -Dsonar.host.url=https://sonarcloud.io \
+	   -Dsonar.login=$(SONAR_LOGIN)
+
+edit-release:
+	nedit doc/main_page.txt CMakeLists.txt README.md celma.doxy &
 

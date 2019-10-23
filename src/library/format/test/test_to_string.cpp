@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,23 +18,89 @@
 #include "celma/format/to_string.hpp"
 
 
+// OS/C lib includes
+#include <cmath>
+
+
 // C++ Standard Library includes
+#include <bitset>
 #include <list>
 #include <map>
+#include <numeric>
 #include <vector>
 
 
 // Boost includes
 #define BOOST_TEST_MODULE TestToString
 #include <boost/test/unit_test.hpp>
-#include <utility>
+
+
+// project includes
+#include "celma/prog_args/detail/usage_params.hpp"
 
 
 using celma::format::toString;
 
 
 
+/// Conversion of ints, boolean values, doubles etc.
+///
+/// @since  1.8.0, 23.07.2018
+BOOST_AUTO_TEST_CASE( test_basics)
+{
+
+   {
+      bool  flag = false;
+      auto  result = toString( flag);
+
+      BOOST_REQUIRE_EQUAL( result, "false");
+   } // end scope
+
+
+   {
+      bool  flag = true;
+      auto  result = toString( flag);
+
+      BOOST_REQUIRE_EQUAL( result, "true");
+   } // end scope
+
+
+   {
+      int   ival = 42;
+      auto  result = toString( ival);
+
+      BOOST_REQUIRE_EQUAL( result, "42");
+   } // end scope
+
+
+   {
+      double  d = M_PI;
+      auto    result = toString( d);
+
+      BOOST_REQUIRE_EQUAL( result, "3.141593");
+   } // end scope
+
+
+   {
+      std::string  str( "hello world");
+      auto         result = toString( str);
+
+      BOOST_REQUIRE_EQUAL( result, "\"hello world\"");
+   } // end scope
+
+   {
+      const auto  result = toString(
+         celma::prog_args::detail::UsageParams::Contents::shortOnly);
+
+      BOOST_REQUIRE_EQUAL( result, "short only (1)");
+   } // end scope
+
+} // test_basics
+
+
+
 /// Test storing the contents of a vector in a string.
+///
 /// @since  0.14.3, 20.06.2017
 BOOST_AUTO_TEST_CASE( test_vector)
 {
@@ -86,11 +152,12 @@ BOOST_AUTO_TEST_CASE( test_vector)
 
 
 /// Test storing the contents of a list in a string.
+///
 /// @since  0.14.3, 20.06.2017
 BOOST_AUTO_TEST_CASE( test_list)
 {
 
-   typedef std::pair< int, std::string>  data_t;
+   using data_t = std::pair< int, std::string>;
 
 
    {
@@ -141,6 +208,7 @@ BOOST_AUTO_TEST_CASE( test_list)
 
 
 /// Test storing the contents of a map in a string.
+///
 /// @since  0.14.3, 20.06.2017
 BOOST_AUTO_TEST_CASE( test_map)
 {
@@ -192,11 +260,12 @@ BOOST_AUTO_TEST_CASE( test_map)
 
 
 /// Test storing the contents of a multi-map in a string.
+///
 /// @since  1.1, 17.11.2015
 BOOST_AUTO_TEST_CASE( test_multimap)
 {
 
-   typedef  std::multimap< int, std::string>  cont_t;
+   using cont_t = std::multimap< int, std::string>;
 
    {
       cont_t  data;
@@ -244,5 +313,130 @@ BOOST_AUTO_TEST_CASE( test_multimap)
 
 
 
-// ========================  END OF test_to_string.cpp  ========================
+/// Test converting the contents of a bitset.
+///
+/// @since  1.8.0, 05.07.2018
+BOOST_AUTO_TEST_CASE( bitset_to_string)
+{
+
+   // empty bitset
+   {
+      std::bitset< 10>  bs;
+      const auto        str( toString( bs));
+
+      BOOST_REQUIRE_EQUAL( str, "0000000000");
+   } // end scope
+
+   // two bits set
+   {
+      std::bitset< 12>  bs;
+
+      bs[0] = true;
+      bs[11] = true;
+
+      const auto  str( toString( bs));
+
+      BOOST_REQUIRE_EQUAL( str, "100000000001");
+   } // end scope
+
+   // all bits set
+   {
+      std::bitset< 8>  bs;
+
+      bs.flip();
+
+      const auto  str( toString( bs));
+
+      BOOST_REQUIRE_EQUAL( str, "11111111");
+   } // end scope
+
+   // a large bitset
+   {
+      std::bitset< 1024>  bs;
+
+      const auto         str( toString( bs));
+      const std::string  result( 1024, '0');
+
+      BOOST_REQUIRE_EQUAL( str, result);
+   } // end scope
+
+} // bitset_to_string
+
+
+
+/// Test converting the contents of a tuple.
+///
+/// @since  1.8.0, 05.07.2018
+BOOST_AUTO_TEST_CASE( tuple_to_string)
+{
+
+   // tuple with one value
+   {
+      std::tuple< int>  tpl( 10);
+      const auto        str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "10");
+   } // end scope
+
+   // tuple with another single value
+   {
+      std::tuple< int64_t>  tpl( 10'750'382'826);
+      const auto            str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "10750382826");
+   } // end scope
+
+   // tuple with another single value
+   {
+      std::tuple< uint64_t>  tpl( std::numeric_limits< uint64_t>::max());
+      const auto             str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "18446744073709551615");
+   } // end scope
+
+   // tuple with two values
+   {
+      std::tuple< int, std::string>  tpl( 10, "hello world");
+      const auto                     str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "10, \"hello world\"");
+   } // end scope
+
+   // tuple with other two values
+   {
+      std::tuple< int, int>  tpl( 13, 4711);
+      const auto             str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "13, 4711");
+   } // end scope
+
+   // tuple with three values
+   {
+      std::tuple< double, int, std::string>  tpl( M_PI, 10, "hello world");
+      const auto                             str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "3.141593, 10, \"hello world\"");
+   } // end scope
+
+   // tuple with three other values
+   {
+      std::tuple< int, int, int>  tpl( 13, 42, 4711);
+      const auto                  str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "13, 42, 4711");
+   } // end scope
+
+   // tuple with three other values
+   {
+      std::tuple< int, std::string, int>  tpl( 13, "hello world", 42);
+      const auto                          str( toString( tpl));
+
+      BOOST_REQUIRE_EQUAL( str, "13, \"hello world\", 42");
+   } // end scope
+
+} // tuple_to_string
+
+
+
+// =====  END OF test_to_string.cpp  =====
 
