@@ -76,7 +76,7 @@ private:
    ///    Ignored.
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded preceeded by an exclamation mark.
+   ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016

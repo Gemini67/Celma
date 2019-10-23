@@ -31,6 +31,7 @@
 #include <iomanip>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 
 // Boost library includes
@@ -40,12 +41,14 @@
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/clear_container.hpp"
+#include "celma/common/contains.hpp"
 #include "celma/common/reset_at_exit.hpp"
 #include "celma/common/scoped_value.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/format/text_block.hpp"
 #include "celma/prog_args/destination.hpp"
 #include "celma/prog_args/detail/eval_arguments_error_exit.hpp"
+#include "celma/prog_args/detail/i_handler_value_constraint.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
@@ -504,13 +507,16 @@ void Handler::addBracketHandler( HandlerFunc open_bracket,
 
 
 
-/// Adds a constraint to the argument handler itself that affects multiple
-/// arguments.<br>
+/// Adds a (value) constraint to the argument handler itself that affects
+/// multiple arguments.
 /// The arguments specified in the constraint must already be defined.
 ///
 /// @param[in]  ihc
 ///    Pointer to the object that handles the constraint. Is deleted when an
 ///    error occurs.
+/// @throw
+///    std::invalid_argument if a NULL pointer is passed, or the argument
+///    list contains invalid arguments.
 /// @since  0.2, 10.04.2016
 void Handler::addConstraint( detail::IHandlerConstraint* ihc)
 {
@@ -518,7 +524,15 @@ void Handler::addConstraint( detail::IHandlerConstraint* ihc)
    if (ihc == nullptr)
       throw invalid_argument( "invalid NULL pointer passed");
 
-   if (!validArguments( ihc->argumentList()))
+   if (ihc->isValueConstraint())
+   {
+      auto  ihvc = static_cast< detail::IHandlerValueConstraint*>( ihc);
+      if (!validValueArguments( ihvc))
+      {
+         delete ihc;
+         throw invalid_argument( "constraint contains invalid argument(s)");
+      } // end if
+   } else if (!validArguments( ihc->argumentList()))
    {
       delete ihc;
       throw invalid_argument( "constraint contains invalid argument(s)");
@@ -1242,17 +1256,16 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
       args = "help";
 
    if ((txt1 == nullptr) && (txt2 != nullptr))
-      throw std::invalid_argument( "Use first usage text argument to specify a "
+      throw invalid_argument( "Use first usage text argument to specify a "
          "single usage text");
    if ((txt1 != nullptr) && (txt2 != nullptr))
    {
       if (txt1->usagePos() == txt2->usagePos())
-         throw std::invalid_argument( "Cannot have two usage texts with the "
-            "same position");
+         throw invalid_argument( "Cannot have two usage texts with the same "
+            "position");
       if ((txt1->usagePos() == UsagePos::afterArgs)
           && (txt2->usagePos() == UsagePos::beforeArgs))
-         throw std::invalid_argument( "Invalid order of usage texts "
-            "(after/before)");
+         throw invalid_argument( "Invalid order of usage texts (after/before)");
    } // end if
 
    if (!args.empty())
@@ -1353,15 +1366,24 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
 /// If the argument specification in the list does not match the original
 /// specification of the argument (short and/or long), it is replaced in the
 /// \a constraint_arg_list.
+///
 /// @param[in]  constraint_arg_list  The list of arguments to check.
 /// @return  \c true if all arguments in the list are valid.
+/// @throw
+///    std::invalid_argument if the given string is empty, contains an
+///    invalid argument key or invalid combination of short and long keys,
+///    contains less than 2 arguments or the same argument more than once.
 /// @since  0.2, 10.04.2016
 bool Handler::validArguments( string& constraint_arg_list) const
 {
 
-   common::Tokenizer  tok( constraint_arg_list, ';');
-   string             new_constraint_arg_list;
+   if (constraint_arg_list.empty())
+      throw invalid_argument( "constraints cannot be created with an empty list"
+         " of arguments");
 
+   common::Tokenizer     tok( constraint_arg_list, ';');
+   string                new_constraint_arg_list;
+   std::vector< string>  used_argument;
 
    for (auto const& it : tok)
    {
@@ -1369,12 +1391,20 @@ bool Handler::validArguments( string& constraint_arg_list) const
       if (detail::TypedArgBase* arg = mArguments.findArg( key))
       {
          if (invalidCombination( key))
-            throw runtime_error( "Combination '" + it + "' is invalid");
+            throw invalid_argument( "Combination '" + it + "' is invalid");
+
+         const string  key_str( format::toString( arg->key()));
+
+         if (common::contains( used_argument, key_str))
+            throw invalid_argument( "same argument key '" + key_str
+               + "' is used twice in argument list");
 
          // argument from the list is valid
          if (!new_constraint_arg_list.empty())
             new_constraint_arg_list.append( ";");
-         new_constraint_arg_list.append( format::toString( arg->key()));
+         new_constraint_arg_list.append( key_str);
+
+         used_argument.push_back( key_str);
       } else
       {
          return false;
@@ -1387,6 +1417,78 @@ bool Handler::validArguments( string& constraint_arg_list) const
 
    return true;
 } // Handler::validArguments
+
+
+
+/// Checks each argument in the list of the constraint if it is a valid/known
+/// argument.
+/// The (pointer to the) argument handlers are also stored in the constraint
+/// object, they are needed later to check the constraint.<br>
+/// If the argument specification in the list does not match the original
+/// specification of the argument (short and/or long), it is replaced in the
+/// \a constraint_arg_list.
+///
+/// @param[in]  ihc  Pointer to the value constraint constraint object.
+/// @return  \c true if all arguments in the list are valid.
+/// @throw
+///    std::invalid_argument if the given string is empty, contains an
+///    invalid argument key or invalid combination of short and long keys,
+///    contains less than 2 arguments or the same argument more than once.
+/// @since  x.y.z, 22.10.2019
+bool Handler::validValueArguments( detail::IHandlerValueConstraint* ihc) const
+{
+
+   auto &  constraint_arg_list = ihc->argumentList();
+
+   if (constraint_arg_list.empty())
+      throw invalid_argument( "constraints cannot be created with an empty list"
+         " of arguments");
+
+   common::Tokenizer     tok( constraint_arg_list, ';');
+   string                new_constraint_arg_list;
+   std::vector< string>  used_argument;
+
+   for (auto const& it : tok)
+   {
+      const detail::ArgumentKey  key( it);
+      if (detail::TypedArgBase* arg = mArguments.findArg( key))
+      {
+         if (invalidCombination( key))
+            throw invalid_argument( "Combination '" + it + "' is invalid");
+
+         if (ihc->varTypeName() != arg->varTypeName())
+            throw invalid_argument( "constraint and argument have different types");
+
+         // argument from the list is valid
+         const string  key_str( format::toString( arg->key()));
+
+         if (common::contains( used_argument, key_str))
+            throw invalid_argument( "same argument key '" + key_str
+               + "' is used twice in argument list");
+
+         if (!new_constraint_arg_list.empty())
+            new_constraint_arg_list.append( ";");
+         new_constraint_arg_list.append( key_str);
+
+         ihc->storeArgumentHandler( arg);
+
+         used_argument.push_back( key_str);
+      } else
+      {
+         return false;
+      } // end if
+   } // end for
+
+   if (ihc->numArguments() < 2)
+      throw invalid_argument( "need at least 2 arguments for a value "
+         "constraint");
+
+   // when we get here, all the arguments in the constraint string were valid
+   // maybe one or more argument specification was expanded, take the new string
+   constraint_arg_list = new_constraint_arg_list;
+
+   return true;
+} // Handler::validValueArguments
 
 
 
@@ -1426,6 +1528,7 @@ bool Handler::invalidCombination( const detail::ArgumentKey& key) const
 
 /// When an argument was identified, passes the argument specification to all
 /// global constraint objects to check if a constraint is violated.
+///
 /// @param[in]  key  The argument specification.
 /// @since  0.2, 10.04.2016
 void Handler::executeGlobalConstraints( const detail::ArgumentKey& key)
@@ -1442,6 +1545,7 @@ void Handler::executeGlobalConstraints( const detail::ArgumentKey& key)
 
 /// After all arguments were processed, call this method to iterate over all
 /// global constraints to check e.g. if a required argument is missing.
+///
 /// @since  0.2, 10.04.2016
 void Handler::checkGlobalConstraints() const
 {

@@ -654,7 +654,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
 {
 
    Handler             ah( 0);
-   CheckAssign< bool>  flag( true);
+   CheckAssign< bool>  flag;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag")

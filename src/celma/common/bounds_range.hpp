@@ -12,9 +12,9 @@
 
 
 /// @file
-/// See documentation of classes celma::common::BoundsRangeOne and
-/// celma::common::BoundsRangeTwo, as well as function
-// celma::common::bounds_range.
+/// See documentation of template classes celma::common::BoundsRangeOne<> and
+/// celma::common::BoundsRangeTwo<>, as well as template function
+/// celma::common::bounds_range()<>.
 
 
 #ifndef CELMA_COMMON_BOUND_RANGE_HPP
