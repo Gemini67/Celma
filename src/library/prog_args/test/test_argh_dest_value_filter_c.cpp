@@ -268,15 +268,15 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
    BOOST_REQUIRE( celma::test::multilineStringCompare( std_oss,
       "Arguments:\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "'-v' value type 'celma::common::ValueFilter<int>', destination value filter 'my_filter', currently no filters.\n"
-      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "\n"
       "Arguments:\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "'-v' value type 'celma::common::ValueFilter<int>', destination value filter 'my_filter', currently 2 filters.\n"
-      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+      "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "\n"));
 
 } // list_arg_vars

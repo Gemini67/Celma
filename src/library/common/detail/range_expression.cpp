@@ -15,11 +15,11 @@
 /// See documentation of class celma::common::RangeExpression.
 
 
-// module header file include
+// module headerfile include
 #include "celma/common/detail/range_expression.hpp"
 
 
-// C/OS library includes
+// OS/C lib includes
 #include <cctype>
 
 
@@ -38,12 +38,16 @@ using std::string;
 
 
 
-/// Parses the (first) range expression in the string.<br>
+/// Parses the (first) range expression in the string.
 /// The string must begin with a valid range expression. Everything after
 /// the parts that could be identified is ignored.
+///
 /// @param[in]  s  The string to parse.
+/// @throw
+///    celma::common::CelmaRuntimeError if the string contains an invalid
+///    charater.
 /// @since  0.2, 07.04.2016
-void RangeExpression::parseString( const string& s)
+void RangeExpression::parseString( const string& s) noexcept( false)
 {
 
    mRangeString    = s;
@@ -66,6 +70,7 @@ void RangeExpression::parseString( const string& s)
 
 /// Parses the string starting from #mNextPos, checks and evaluates the
 /// single values, ranges, steps etc.
+///
 /// @return  \c true if the contents of the string are syntactically correct.
 /// @since  0.2, 07.04.2016
 bool RangeExpression::parse()
@@ -150,8 +155,7 @@ bool RangeExpression::parse()
          } // end if
       } else if (mRangeString[ mNextPos] != NextRangeSeparator)
       {
-         throw CELMA_RuntimeError( string( "invalid character at position ")
-            .append( boost::lexical_cast< string>( mNextPos)));
+         return false;
       } // end if
    } // end if
 
@@ -161,17 +165,18 @@ bool RangeExpression::parse()
 
 
 /// Helper function to read a number from the range string.
+///
 /// @param[out]  value  Returns the value read from the string.
 /// @since  0.2, 07.04.2016
 void RangeExpression::readNumber( int64_t& value)
 {
 
-   value = mRangeString[ mNextPos] - '0';
+   value = mRangeString[ mNextPos++] - '0';
 
-   while ((++mNextPos < mRangeString.length()) &&
-          ::isdigit( mRangeString[ mNextPos]))
+   while ((mNextPos < mRangeString.length())
+          && (::isdigit( mRangeString[ mNextPos]) != 0))
    {
-      value = (value * 10) + (mRangeString[ mNextPos] - '0');
+      value = (value * 10) + (mRangeString[ mNextPos++] - '0');
    } // end while
 
 } // RangeExpression::readNumber

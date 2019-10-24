@@ -218,7 +218,8 @@ bool ArgumentKey::mismatch( const ArgumentKey& other) const
 /// @since  0.15.0, 12.07.2017
 bool ArgumentKey::startsWith( const ArgumentKey& other) const
 {
-   return common::startsWith( mWord, other.mWord, false);
+   return !mWord.empty() && !other.mWord.empty()
+          && (mWord.compare( 0, other.mWord.length(), other.mWord) == 0);
 } // ArgumentKey::startsWith
 
 

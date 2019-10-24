@@ -397,8 +397,8 @@ BOOST_AUTO_TEST_CASE( methods_test)
       BOOST_REQUIRE_EQUAL( TestClass::mLastFuncName, "TestClass::operator+=");
 
       BOOST_REQUIRE( static_cast< const char*>( tc) == nullptr);
-      BOOST_REQUIRE( (TestClass::mLastFuncName == "TestClass::operator const char *") ||
-                     (TestClass::mLastFuncName == "TestClass::operator const char*"));
+      BOOST_REQUIRE( (TestClass::mLastFuncName == "TestClass::operator const char *")
+                     || (TestClass::mLastFuncName == "TestClass::operator const char*"));
 
       int  my_value;
       tc.templateMethod( my_value);
@@ -447,9 +447,9 @@ BOOST_AUTO_TEST_CASE( methods_namespace_test)
 
       BOOST_REQUIRE( static_cast< const char*>( tc) == nullptr);
       BOOST_REQUIRE( (project::TestClassProject::mLastFuncName ==
-                      string( "project::TestClassProject::operator const char *")) ||
-                     (project::TestClassProject::mLastFuncName ==
-                      string( "project::TestClassProject::operator const char*")));
+                      string( "project::TestClassProject::operator const char *"))
+                      || (project::TestClassProject::mLastFuncName ==
+                          string( "project::TestClassProject::operator const char*")));
 
       int  my_value;
       tc.templateMethod( my_value);
@@ -484,33 +484,33 @@ BOOST_AUTO_TEST_CASE( template_class_test)
    {
       TemplateTestClass< uint32_t>  tplObj( result);
 
-      BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::TemplateTestClass") ||
-                     (result == "TemplateTestClass<T>::TemplateTestClass"));
+      BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::TemplateTestClass")
+                     || (result == "TemplateTestClass<T>::TemplateTestClass"));
 
       tplObj.method1( result);
-      BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::method1") ||
-                     (result == "TemplateTestClass<T>::method1"));
+      BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::method1")
+                     || (result == "TemplateTestClass<T>::method1"));
 
       int  my_value;
       tplObj.templateMethod( my_value, result);
-      BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::templateMethod") ||
-                     (result == "TemplateTestClass<T>::templateMethod"));
+      BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::templateMethod")
+                     || (result == "TemplateTestClass<T>::templateMethod"));
    } // end scope
 
    {
       TemplateTestClass< string>  tplObj( result);
 
-      BOOST_REQUIRE( (result == "TemplateTestClass<std::__cxx11::basic_string<char> >::TemplateTestClass") ||
-                     (result == "TemplateTestClass<T>::TemplateTestClass"));
+      BOOST_REQUIRE( (result == "TemplateTestClass<std::__cxx11::basic_string<char> >::TemplateTestClass")
+                     || (result == "TemplateTestClass<T>::TemplateTestClass"));
 
       tplObj.method1( result);
-      BOOST_REQUIRE( (result == "TemplateTestClass<std::__cxx11::basic_string<char> >::method1") ||
-                     (result == "TemplateTestClass<T>::method1"));
+      BOOST_REQUIRE( (result == "TemplateTestClass<std::__cxx11::basic_string<char> >::method1")
+                     || (result == "TemplateTestClass<T>::method1"));
 
       int  my_value;
       tplObj.templateMethod( my_value, result);
-      BOOST_REQUIRE( (result == "TemplateTestClass<std::__cxx11::basic_string<char> >::templateMethod") ||
-                     (result == "TemplateTestClass<T>::templateMethod"));
+      BOOST_REQUIRE( (result == "TemplateTestClass<std::__cxx11::basic_string<char> >::templateMethod")
+                     || (result == "TemplateTestClass<T>::templateMethod"));
    } // end scope
 
 } // template_class_test

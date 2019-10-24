@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -137,8 +137,8 @@ template< typename T, typename R, typename I>
 
       // if we did not yet reach the end of this input container, add it back
       // to the priority queue
-      while ((++queue_top.first != queue_top.second) &&
-             (*queue_top.first <= next_top_value))
+      while ((++queue_top.first != queue_top.second)
+             && (*queue_top.first <= next_top_value))
       {
          result.push_back( *queue_top.first);
       } // end while

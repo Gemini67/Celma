@@ -122,6 +122,13 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void defaultValue( std::string& dest) const override;
 
+   /// 
+   /// @param[in]  dest
+   ///    .
+   /// @since
+   ///    1.31.0, 23.10.2019
+   void getValue( T& dest) const;
+
 protected:
    /// Used for printing an argument and its destination variable.
    ///
@@ -204,6 +211,13 @@ template< typename T> void TypedArg< T>::defaultValue( std::string& dest) const
 {
    dest.append( format::toString( mDestVar));
 } // TypedArg< T>::defaultValue
+
+
+template< typename T> void TypedArg< T>::getValue( T& dest) const
+{
+   if (mHasValueSet)
+      dest = mDestVar;
+} // TypedArg< T>::getValue
 
 
 template< typename T> void TypedArg< T>::dump( std::ostream& os) const

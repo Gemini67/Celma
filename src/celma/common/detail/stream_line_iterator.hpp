@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -179,8 +179,8 @@ template< typename F, typename H, typename C>
 template< typename F, typename H, typename C>
    bool StreamLineIterator< F, H, C>::operator ==( const StreamLineIterator& other) const
 {
-   return (mSourceFile == other.mSourceFile) && (mAtEnd == other.mAtEnd) &&
-          (mAtEnd || (mLineNbr == other.mLineNbr));
+   return (mSourceFile == other.mSourceFile) && (mAtEnd == other.mAtEnd)
+          && (mAtEnd || (mLineNbr == other.mLineNbr));
 } // StreamLineIterator< F, H, C>::operator !=
 
 

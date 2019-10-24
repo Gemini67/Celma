@@ -81,9 +81,21 @@ public:
    /// @since  0.16.0, 15.08.2017
    virtual std::string toString() const = 0;
 
+   /// Helper function needed to distinguish between a "normal" constraint and a
+   /// value constraint.
+   /// Since the interface for value constraints is derived from this class, it
+   /// is possible to pass a value contraint to the interface that expects
+   /// "normal" constraints. So, instead of traing to force the user to use the
+   /// correct interface, we provide only one method in the handler class and
+   /// check there internally which type of constraint we are dealing with.
+   ///
+   /// @return  Always \c false here.
+   /// @since  1.31.0, 23.10.2019
+   virtual bool isValueConstraint() const;
+
 protected:
    /// Checks if the argument specified in \a arg_spec is one of the argument(s)
-   /// specified in the \a constraint_arg_list.<br>
+   /// specified in the \a constraint_arg_list.
    /// This method is used by global constraints derived from this base class,
    /// because their executeConstraint() method is called for each argument
    /// found on the command line.
@@ -106,11 +118,13 @@ protected:
    /// @param[in]  constraint_name
    ///    The name of the constraint for error messages.
    /// @param[in]  arg_spec
-   ///    The list of arguments affected by the constraint.
+   ///    The list of arguments affected by the constraint.<br>
+   ///    Must already be checked by the calling function (not empty, no invalid
+   ///    arguments).
    /// @since
    ///    1.23.0, 04.04.2019
    IHandlerConstraint( const std::string& constraint_name,
-      const std::string& arg_spec) noexcept( false);
+      const std::string& arg_spec);
 
    /// The name of the constraint for error messages.
    const std::string  mConstraintName;
@@ -133,7 +147,6 @@ inline std::string& IHandlerConstraint::argumentList()
 
 inline std::ostream& operator <<( std::ostream& os, IHandlerConstraint* pc)
 {
-
    return os << pc->toString();
 } // operator <<
 
