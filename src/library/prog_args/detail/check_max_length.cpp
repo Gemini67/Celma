@@ -35,7 +35,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// Constructor, stores the maximum length that will be checked,
 ///
 /// @param[in]  min_length  The minimum length to check against.
-/// @throws  "invalid argument" if the given length is 0.
+/// @throw  std::invalid_argument if the given length is 0.
 /// @since  1.23.0, 12.04.2019
 CheckMaxLength::CheckMaxLength( std::string::size_type max_length):
    ICheck( "maximum length"),
@@ -52,7 +52,7 @@ CheckMaxLength::CheckMaxLength( std::string::size_type max_length):
 /// Checks if the value in \a val meets the "maximum length" requirement.
 ///
 /// @param[in]  val  The value to check.
-/// @throws "overflow error" if the given string is too long.
+/// @throw  std::overflow_error if the given string is too long.
 /// @since  1.23.0, 12.04.2019
 void CheckMaxLength::checkValue( const std::string& val) const
 {

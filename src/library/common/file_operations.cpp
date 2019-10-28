@@ -36,7 +36,7 @@ std::unique_ptr< detail::FileFuncsBase>
 /// @param[in]  obj
 ///    Pointer to the object that implements the file functions. May not be
 ///    NULL.
-/// @throws  runtime error if the given object pointer is NULL.
+/// @throw  std::runtime_error if the given object pointer is NULL.
 /// @since  1.4.0, 20.02.2018
 void FileOperations::setFuncImpl( detail::FileFuncsBase* obj)
 {

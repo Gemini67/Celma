@@ -42,9 +42,9 @@ public:
    ///
    /// @param[in]  reqArgSpec
    ///    The list of arguments of which the values must be different.
-   /// @throws
-   ///    "invalid argument" if the string is empty or does not contain at least
-   ///    two arguments.
+   /// @throw
+   ///    std::invalid_argument if the string is empty or does not contain at
+   ///    least two arguments.
    /// @since  1.31.0, 22.10.2019
    explicit ValueConstraintDiffer( const std::string& reqArgSpec) noexcept( false);
    

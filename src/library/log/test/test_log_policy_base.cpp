@@ -47,7 +47,8 @@ public:
    /// Constructor. Stores the object to use to create the log file names.
    ///
    /// @param[in]  fname_def  Log filename definition.
-   /// @throws  when the filename definition contains no parts.
+   /// @throw
+   ///    std::invalid_argument when the filename definition contains no parts.
    /// @since  1.25.0, 03.05.2019
    explicit TestPolicyBase( const celma::log::filename::Definition& fname_def)
       noexcept( false):

@@ -280,8 +280,9 @@ public:
    /// list a free value, use the argument '--endvalues' after the last value.
    /// @return
    ///    Pointer to this object.
-   /// @throws
-   ///    runtime_error when called on a type that cannot handle multiple values.
+   /// @throw
+   ///    std::runtime_error when called on a type that cannot handle multiple
+   ///    values.
    /// @since
    ///    0.2, 10.04.2016
    virtual TypedArgBase* setTakesMultiValue() noexcept( false);
@@ -295,26 +296,29 @@ public:
    bool takesMultiValue() const;
 
    /// Adds a value formatter: The value from the argument list (command line)
-   /// is formatted before it is checked and/or stored.<br>
-   /// Use this function for destination types that can store only one value.
+   /// is formatted before it is checked and/or stored.
+   /// Use this function for destination types that can store only one value, or
+   /// values of one type.
    ///
    /// @param[in]  f
    ///    Pointer to the formatter to add, is deleted when it could not be
    ///    stored.
    /// @return  Pointer to this object.
-   /// @throws
-   ///    - "logic error" when called for an argument that does not accept
-   ///      values.
-   ///    - "invalid argument" when the given object pointer is NULL.
-   /// @since
-   ///    0.2, 10.04.2016
+   /// @throw
+   ///    std::logic_error when called for an argument that does not accept
+   ///    values.
+   /// @throw
+   ///    std::invalid_argument when the given object pointer is NULL.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false);
 
    /// Adds a value formatter for the value at the given position: The value
    /// from the argument list (command line) is formatted before it is checked
-   /// and/or stored.<br>
+   /// and/or stored.
    /// Use this function for destination types that can store multiple values
-   /// with the same or even with different types.
+   /// with the same or even with different types.<br>
+   /// Here in the base class always throws, must be overloaded for types that
+   /// support multiple values.
    ///
    /// @param[in]  val_idx
    ///    The index of the value to apply the format to.<br>
@@ -324,13 +328,11 @@ public:
    ///    Pointer to the formatter to add, is deleted when it could not be
    ///    stored.
    /// @return  Pointer to this object.
-   /// @throws
-   ///    - "logic error" when called for an argument that does not accept
-   ///      multiple values.
-   ///    - "invalid argument" when the given object pointer is NULL.
-   /// @since
-   ///    x.y.z, 25.04.2019
-   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false);
+   /// @throw
+   ///    std::logic_error when called for an argument that does not accept
+   ///    multiple values.
+   /// @since  x.y.z, 25.04.2019
+   virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false);
 
    /// Calls all formatter methods defined for this argument. The formatter
    /// methods should throw an exception when a formatting failed.
@@ -350,12 +352,11 @@ public:
    ///    Pointer to the object that checks the value, is deleted when it could
    ///    not be stored.
    /// @return  Pointer to this object.
-   /// @throws
-   ///    - "logic error" when called for an argument that does not accept
-   ///      values.
-   ///    - "invalid argument" when the given object pointer is NULL.
-   /// @since
-   ///    0.2, 10.04.2016
+   /// @throw
+   ///    std::logic_error when called for an argument that does not accept
+   ///    values.
+   ///    std::invalid_argument when the given object pointer is NULL.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
 
    /// Special feature for destination variable type level counter:<br>
@@ -633,10 +634,11 @@ protected:
    /// @param[in]  f
    ///    Pointer to the formatter object to store.
    /// @return  This object.
-   /// @throws
-   ///    - "logic error" when called for an argument that does not accept
-   ///      values.
-   ///    - "invalid argument" when the given object pointer is NULL.
+   /// @throw
+   ///    std::logic_error when called for an argument that does not accept
+   ///    values.
+   /// @throw
+   ///    std::invalid_argument when the given object pointer is NULL.
    /// @since  x.y.z, 25.04.2019
    TypedArgBase* internAddFormat( int val_idx, IFormat* f) noexcept( false);
 
@@ -714,11 +716,10 @@ private:
    ///    0.2, 10.04.2016
    virtual void dump( std::ostream& os) const;
 
-   /// 
-   /// @return
-   ///    .
-   /// @since
-   ///    x.y.z, 19.08.2019
+   /// Returns the number of formatters added for this argument.
+   ///
+   /// @return  The number of formatters that have been added.
+   /// @since  x.y.z, 19.08.2019
    size_t numFormats() const;
 
 }; // TypedArgBase

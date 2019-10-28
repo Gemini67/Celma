@@ -386,9 +386,9 @@ BOOST_AUTO_TEST_CASE( different_format_values)
       std::vector< std::string>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
-         ->addFormat( 0, celma::prog_args::lowercase())
-         ->addFormat( 1, celma::prog_args::uppercase())
-         ->addFormat( 2, celma::prog_args::anycase( "Ulllllllllll")));
+         ->addFormatPos( 0, celma::prog_args::lowercase())
+         ->addFormatPos( 1, celma::prog_args::uppercase())
+         ->addFormatPos( 2, celma::prog_args::anycase( "Ulllllllllll")));
 
       auto const  as2a = make_arg_array( "-v MONDAY,tuesday,wEdNeSdAy", nullptr);
 
@@ -405,9 +405,9 @@ BOOST_AUTO_TEST_CASE( different_format_values)
       std::vector< std::string>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
-         ->addFormat( 0, celma::prog_args::lowercase())
-         ->addFormat( 1, celma::prog_args::uppercase())
-         ->addFormat( 3, celma::prog_args::anycase( "Ulllllllllll")));
+         ->addFormatPos( 0, celma::prog_args::lowercase())
+         ->addFormatPos( 1, celma::prog_args::uppercase())
+         ->addFormatPos( 3, celma::prog_args::anycase( "Ulllllllllll")));
 
       auto const  as2a = make_arg_array( "-v MONDAY,tuesday,wEdNeSdAy,thursDAY", nullptr);
 
@@ -426,7 +426,7 @@ BOOST_AUTO_TEST_CASE( different_format_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
          ->addFormat( celma::prog_args::lowercase())
-         ->addFormat( 1, celma::prog_args::uppercase()));
+         ->addFormatPos( 1, celma::prog_args::uppercase()));
 
       auto const  as2a = make_arg_array( "-v MONDAY,tuesday,wEdNeSdAy", nullptr);
 
@@ -444,9 +444,9 @@ BOOST_AUTO_TEST_CASE( different_format_values)
       std::vector< std::string>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
-         ->addFormat( 0, celma::prog_args::lowercase())
-         ->addFormat( 1, celma::prog_args::uppercase())
-         ->addFormat( 3, celma::prog_args::anycase( "Ulllllllllll"))
+         ->addFormatPos( 0, celma::prog_args::lowercase())
+         ->addFormatPos( 1, celma::prog_args::uppercase())
+         ->addFormatPos( 3, celma::prog_args::anycase( "Ulllllllllll"))
          ->setTakesMultiValue());
 
       auto const  as2a = make_arg_array( "-v MONDAY,tuesday wEdNeSdAy,thursDAY", nullptr);
@@ -467,9 +467,9 @@ BOOST_AUTO_TEST_CASE( different_format_values)
       std::vector< std::string>  v = { "some", "default", "values" };
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
-         ->addFormat( 3, celma::prog_args::lowercase())
-         ->addFormat( 4, celma::prog_args::uppercase())
-         ->addFormat( 6, celma::prog_args::anycase( "Ulllllllllll"))
+         ->addFormatPos( 3, celma::prog_args::lowercase())
+         ->addFormatPos( 4, celma::prog_args::uppercase())
+         ->addFormatPos( 6, celma::prog_args::anycase( "Ulllllllllll"))
          ->setTakesMultiValue());
 
       auto const  as2a = make_arg_array( "-v MONDAY,tuesday wEdNeSdAy,thursDAY", nullptr);
@@ -492,7 +492,7 @@ BOOST_AUTO_TEST_CASE( different_format_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
          ->addFormat( celma::prog_args::lowercase())
-         ->addFormat( 1, celma::prog_args::uppercase()));
+         ->addFormatPos( 1, celma::prog_args::uppercase()));
 
       auto const  as2a = make_arg_array( "--list-arg-vars "
          "-v MONDAY,tuesday,wEdNeSdAy --list-arg-vars", nullptr);

@@ -46,7 +46,7 @@ class IHandlerValueConstraint;
 
 
 /// Class to store all command line argument, their descriptions as well as the
-/// destination variables to store the values in.<br>
+/// destination variables to store the values in.
 /// To set up an argument handler, simply follow these steps:
 /// - Create object, specify the HandleFlags to get the desired behaviour.
 /// - For each argument, call addArgument() with the parameters that specify
@@ -400,7 +400,7 @@ public:
             IUsageText* txt2 = nullptr) noexcept( false);
 
    /// Constructor to be used by a sub-group. Copies some settings from the main
-   /// argument handler object.<br>
+   /// argument handler object.
    /// It is possible to create a sub-group argument handler using one of the
    /// other constructors, but then the settings are of course not copied.<br>
    /// The following flags are ignored, the settings are taken from the main
@@ -428,20 +428,22 @@ public:
    Handler& operator =( const Handler&) = delete;
 
    /// Destructor, deletes dynamically allocated objects.
+   ///
    /// @since  0.2, 10.04.2016
    virtual ~Handler();
 
    /// Activates the check for program arguments in an environment variable,
-   /// plus allows to specify the name of the environment variable o use.<br>
+   /// plus allows to specify the name of the environment variable to use.
    /// The default is the name of the program file, all in uppercase letters.
    ///
    /// @param[in]  env_var_name  Optional, the name of the environment variable.
    /// @since  1.22.0, 01.04.2019
    void checkEnvVarArgs( std::string env_var_name = "");
 
-   /// Adds an argument with short and/or long arguments.<br>
+   /// Adds an argument with short and/or long arguments.
    /// For positional arguments, i.e. arguments not preceeded by a an argument
    /// character/name, specify "-" as \a arg_spec.
+   ///
    /// @param[in]  arg_spec  The arguments on the command line for this argument.
    /// @param[in]  dest      The object that handles the type-specific stuff.<br>
    ///                       Use the celma::prog_args::destination() template
@@ -471,7 +473,7 @@ public:
                                       const std::string& desc);
 
    /// Adds an argument that behaves like the -h/--help arguments. Use this if
-   /// the help argument should e.g. be in another language.<br>
+   /// the help argument should e.g. be in another language.
    /// The standard help arguments may still be set in the constructor, then
    /// both arguments can be used to get the usage displayed.
    ///
@@ -495,7 +497,7 @@ public:
                                           IUsageText* txt2 = nullptr);
 
    /// Adds an argument that takes the path/filename of an argument file as
-   /// parameter.<br>
+   /// parameter.
    /// When the flag #hfReadProgArg is passed to the constructor, the program
    /// arguments file with the predefined name is always read if it exists.<br>
    /// With this method it is possible to specify an argument with which the
@@ -513,9 +515,10 @@ public:
    detail::TypedArgBase* addArgumentFile( const std::string& arg_spec);
 
    /// Adds an argument that activates printing of hidden arguments in the
-   /// usage.<br>
+   /// usage.
    /// Same as setting the flag #hfArgHidden, but allows to specify the
    /// argument and its description.
+   ///
    /// @param[in]  arg_spec  The argument(s) on the command line for activating
    ///                       printing the hidden arguments.
    /// @param[in]  desc      Optional text for the description of the argument
@@ -530,6 +533,7 @@ public:
 
    /// Adds an argument that activates printing of usage with arguments with
    /// short argument key only.
+   ///
    /// @param[in]  arg_spec  The argument(s) on the command line for activating
    ///                       printing the usage with short arguments only.
    /// @param[in]  desc      Optional text for the description of the argument
@@ -543,6 +547,7 @@ public:
 
    /// Adds an argument that activates printing of usage with arguments with
    /// long argument key only.
+   ///
    /// @param[in]  arg_spec  The argument(s) on the command line for activating
    ///                       printing the usage with long arguments only.
    /// @param[in]  desc      Optional text for the description of the argument
@@ -555,9 +560,10 @@ public:
       const char* desc = nullptr);
 
    /// Adds an argument that prints the list of arguments, their destination
-   /// variables and their values.<br>
+   /// variables and their values.
    /// Same as setting the flag #hfListArgVar, but allows to specify the
    /// argument.
+   ///
    /// @param[in]  arg_spec  The argument(s) on the command line for printing the
    ///                       arguments and their destination variables.
    /// @return  The object managing this argument, may be used to apply further
@@ -565,9 +571,10 @@ public:
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgumentListArgVars( const std::string& arg_spec);
 
-   /// Adds an argument that prints the list of argument groups.<br>
+   /// Adds an argument that prints the list of argument groups.
    /// Same as setting the flag #hfListArgGroups, but allows to specify the
    /// argument.
+   ///
    /// @param[in]  arg_spec  The argument(s) on the command line for printing the
    ///                       argument groups.
    /// @return  The object managing this argument, may be used to apply further
@@ -577,6 +584,7 @@ public:
 
    /// Adds an argument that can be used to mark the end of multiple, separate
    /// value list.
+   ///
    /// @param[in]  arg_spec  The argument(s) on the command line for marking the
    ///                       end of a separate value list.
    /// @return  The object managing this argument, may be used to apply further
@@ -618,12 +626,14 @@ public:
       HandlerFunc closing_bracket) noexcept( false);
 
    /// Specifies the line length to use when printing the usage.
+   ///
    /// @param[in]  useLen  The new line length to use.<br>
    ///                     The value must be in the range 60 <= useLen < 240.
    /// @since  0.2, 10.04.2016
    void setUsageLineLength( int useLen);
 
    /// Re-sets the usage parameters to use for displaying the usage.
+   ///
    /// @param[in]  usage_params  Shared object to share for the usage parameters.
    /// @since  1.1.0, 04.12.2017
    void setUsageParams( detail::shared_usage_params_t& usage_params);
@@ -642,11 +652,12 @@ public:
    void addConstraint( detail::IHandlerConstraint* ihc) noexcept( false);
 
    /// Iterates over the list of arguments and their values and stores the
-   /// values in the corresponding destination variables.<br>
+   /// values in the corresponding destination variables.
    /// The function also checks for missing, mandatory arguments, arguments
    /// wrongly used without a value etc. If an invalid value is passed for an
    /// argument, or if a mandatory argument is missing etc., an exception is
    /// thrown.
+   ///
    /// @param[in]  argc    Number of arguments passed to the process.
    /// @param[in]  argv[]  List of argument strings.
    /// @throw  Exception as described above.
@@ -654,9 +665,10 @@ public:
    void evalArguments( int argc, char* argv[]) noexcept( false);
 
    /// Same as evalArguments(). Difference is that this method catches
-   /// exceptions, reports them on stderr and then exits the program.<br>
+   /// exceptions, reports them on stderr and then exits the program.
    /// In other words: If the function returns, all argument requirements and
    /// constraints were met.
+   ///
    /// @param[in]  argc    Number of arguments passed to the process.
    /// @param[in]  argv    List of argument strings.
    /// @param[in]  prefix  Prefix text to print before the error message.<br>
@@ -685,11 +697,13 @@ public:
 
    /// Helps to determine if an object is a 'plain' Handler object or a
    /// ValueHandler object.
+   ///
    /// @return  Always \c false for objects of this class.
    /// @since  0.14.0, 21.02.2017
    virtual bool isValueHandler() const;
 
    /// Returns this object if it is a ValueHandler object, otherwise throws.
+   ///
    /// @return  \c this object if it is a ValueHandler object, for objects of
    ///          the base class Handler throws.
    /// @since  0.14.0, 15.03.2017
@@ -697,6 +711,7 @@ public:
 
    /// Returns pointer to the base type of the object that handles the specified
    /// argument.
+   ///
    /// @param[in]  arg_spec  The short and/or long arguments keys.
    /// @return  Pointer to the object handling the specified argument.
    /// @since  0.14.0, 16.03.2017
@@ -733,12 +748,13 @@ protected:
                              const std::string& otherName,
                              const Handler& otherAH) const noexcept( false);
 
-   /// Handles one argument.<br>
+   /// Handles one argument.
    /// Since this function is called from multiple sources, it must not throw an
    /// exception when e.g. an unknown argument is found. Exceptions may only be
    /// thrown if e.g. a known argument misses its value. Otherwise, in most
    /// cases \a ArgResult::unknown should be returned and the error handling
    /// left to the calling function.
+   ///
    /// @param[in]  ai   Iterator that points to the argument to handle.<br>
    ///                  If the argument requires a value, the iterator is
    ///                  incremented, so it will point to the next argument when
@@ -752,10 +768,12 @@ protected:
 
    /// Checks if all mandatory arguments were set, and the cardinality
    /// requirements were met.
+   ///
    /// @since  0.2, 10.04.2016
    void checkMissingMandatoryCardinality() const;
 
    /// Checks if the specified argument is already used.
+   ///
    /// @param[in]  argChar  The argument character to check.
    /// @return  \c true if the argument is already in use.
    /// @since  0.2, 10.04.2016
@@ -785,6 +803,7 @@ protected:
       bool standalone, const char* arg_prefix) const;
 
    /// Prints the usage of this class.
+   ///
    /// @param[out]  os  The stream to print to.
    /// @param[in]   ah  The object to print the data of.
    /// @return  The stream.
@@ -825,10 +844,12 @@ private:
    void usage( IUsageText* txt1, IUsageText* txt2) noexcept( false);
 
    /// Sets the flag that this object is used as sub-group handler.
+   ///
    /// @since  0.2, 10.04.2016
    void setIsSubGroupHandler();
 
    /// Finally: Handle an identified argument from the command line.
+   ///
    /// @param[in]      key  The argument (character/short or long).
    /// @param[in,out]  ai   The iterator pointing to the current argument.<br>
    ///                      May be increased here (for values or argument
@@ -845,6 +866,7 @@ private:
 
    /// Tries to open the file with the program's name and read the arguments
    /// from this file.
+   ///
    /// @param[in]  arg0  The (path and) name of the program file.
    /// @since  0.2, 10.04.2016
    void readEvalFileArguments( const char* arg0);
@@ -858,6 +880,7 @@ private:
    void checkReadEnvVarArgs( const char* arg0);
 
    /// Function to read arguments from a file.
+   ///
    /// @param[in]  pathFilename   The (path and) file name to read from.
    /// @param[in]  reportMissing  If set, the file should exist, an exception is
    ///                            thrown if the file could not be read.
@@ -865,10 +888,12 @@ private:
    void readArgumentFile( const std::string& pathFilename, bool reportMissing);
 
    /// Prints the list of arguments and their destination variables.
+   ///
    /// @since  0.2, 10.04.2016
    void listArgVars();
 
    /// Prints the list of argument groups.
+   ///
    /// @since  0.13.1, 07.02.2017
    void listArgGroups();
 
@@ -878,7 +903,7 @@ private:
    void endValueList();
 
    /// Searches if the given argment key belongs to a known argument, and if so
-   /// prints its usage.<br>
+   /// prints its usage.
    /// If the argument key is unknown, an error message is printed.<br>
    /// At the end, the function calls exit(), unless "usage continues" is set.
    ///
@@ -942,6 +967,7 @@ private:
    /// Checks if the provided argument specification contains an invalid
    /// combination, i.e. a short and a long argument that are already used on
    /// two different, existing arguments.
+   ///
    /// @param[in]  key  The argument specification to test.
    /// @return  \c true if the given combination is invalid.
    /// @since  0.15.0, 06.08.2017

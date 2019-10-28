@@ -38,7 +38,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///    The name of the constraint for error messages.
 /// @param[in]  constraint
 ///    The string with the (list of) constraint(s).
-/// @throws  "invalid argument" when the given constraint string is empty.
+/// @throw  std::invalid_argument when the given constraint string is empty.
 /// @since  1.23.0, 05.04.2019
 IArgConstraint::IArgConstraint( const std::string name,
    const std::string constraint):

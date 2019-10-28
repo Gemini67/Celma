@@ -144,19 +144,20 @@ void TypedArgBase::assignValue( bool ignore_cardinality, const string& value,
 
 
 /// Adds a value formatter: The value from the argument list (command line)
-/// is formatted before it is checked and/or stored.<br>
-/// Use this function for destination types that can store only one value.
+/// is formatted before it is checked and/or stored.
+/// Use this function for destination types that can store only one value, or
+/// values of one type.
 ///
 /// @param[in]  f
 ///    Pointer to the formatter to add, is deleted when it could not be
 ///    stored.
 /// @return  Pointer to this object.
-/// @throws
-///    - "logic error" when called for an argument that does not accept
-///      values.
-///    - "invalid argument" when the given object pointer is NULL.
-/// @since
-///    0.2, 10.04.2016
+/// @throw
+///    std::logic_error when called for an argument that does not accept
+///    values.
+/// @throw
+///    std::invalid_argument when the given object pointer is NULL.
+/// @since  0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 {
 
@@ -167,9 +168,11 @@ TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 
 /// Adds a value formatter for the value at the given position: The value
 /// from the argument list (command line) is formatted before it is checked
-/// and/or stored.<br>
+/// and/or stored.
 /// Use this function for destination types that can store multiple values
-/// with the same or even with different types.
+/// with the same or even with different types.<br>
+/// Here in the base class always throws, must be overloaded for types that
+/// support multiple values.
 ///
 /// @param[in]  val_idx
 ///    The index of the value to apply the format to.<br>
@@ -179,19 +182,17 @@ TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 ///    Pointer to the formatter to add, is deleted when it could not be
 ///    stored.
 /// @return  Pointer to this object.
-/// @throws
-///    - "logic error" when called for an argument that does not accept
-///      multiple values.
-///    - "invalid argument" when the given object pointer is NULL.
-/// @since
-///    x.y.z, 25.04.2019
-TypedArgBase* TypedArgBase::addFormat( int, IFormat*)
+/// @throw
+///    std::logic_error when called for an argument that does not accept
+///    multiple values.
+/// @since  x.y.z, 25.04.2019
+TypedArgBase* TypedArgBase::addFormatPos( int, IFormat*)
 {
 
    throw std::logic_error( "Variable '" + mVarName + "' does not store multiple"
       " values, use addFormat() without index paramater");
 
-} // TypedArgBase::addFormat
+} // TypedArgBase::addFormatPos
 
 
 
@@ -234,10 +235,10 @@ void TypedArgBase::format( string& val, int value_idx) const
 ///    Pointer to the object that checks the value, is deleted when it could
 ///    not be stored.
 /// @return  Pointer to this object.
-/// @throws
-///    - "logic error" when called for an argument that does not accept
-///      values.
-///    - "invalid argument" when the given object pointer is NULL.
+/// @throw
+///    std::logic_error" when called for an argument that does not accept
+///    values.
+///    std::invalid_argument when the given object pointer is NULL.
 /// @since
 ///    0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addCheck( ICheck* c)
@@ -532,10 +533,11 @@ TypedArgBase::TypedArgBase( const std::string& vname, ValueMode vm,
 /// @param[in]  f
 ///    Pointer to the formatter object to store.
 /// @return  This object.
-/// @throws
-///    - "logic error" when called for an argument that does not accept
-///      values.
-///    - "invalid argument" when the given object pointer is NULL.
+/// @throw
+///    std::logic_error when called for an argument that does not accept
+///    values.
+/// @throw
+///    std::invalid_argument when the given object pointer is NULL.
 /// @since  x.y.z, 25.04.2019
 TypedArgBase* TypedArgBase::internAddFormat( int val_idx, IFormat* f)
 {
@@ -561,6 +563,10 @@ TypedArgBase* TypedArgBase::internAddFormat( int val_idx, IFormat* f)
 
 
 
+/// Returns the number of formatters added for this argument.
+///
+/// @return  The number of formatters that have been added.
+/// @since  x.y.z, 19.08.2019
 size_t TypedArgBase::numFormats() const
 {
 

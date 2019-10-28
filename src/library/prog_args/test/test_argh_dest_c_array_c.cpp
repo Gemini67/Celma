@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE( test_array_errors)
       int      arr[ 3];
 
       BOOST_REQUIRE_THROW( ah.addArgument( "a", DEST_VAR( arr), "values")
-         ->addFormat( 3, celma::prog_args::lowercase()), std::range_error);
+         ->addFormatPos( 3, celma::prog_args::lowercase()), std::range_error);
    } // end scope
 
 } // test_array_errors
@@ -287,9 +287,9 @@ BOOST_AUTO_TEST_CASE( format_values)
       std::string  arr[ 3];
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( arr), "values")
-         ->addFormat( 0, celma::prog_args::lowercase())
-         ->addFormat( 1, celma::prog_args::uppercase())
-         ->addFormat( 2, celma::prog_args::anycase( "Ullllllllllll"))
+         ->addFormatPos( 0, celma::prog_args::lowercase())
+         ->addFormatPos( 1, celma::prog_args::uppercase())
+         ->addFormatPos( 2, celma::prog_args::anycase( "Ullllllllllll"))
          ->setListSep( '.')->setTakesMultiValue());
 
       auto const  as2a = make_arg_array( "-a MONDAY tuesday.wEdNeSdAy",

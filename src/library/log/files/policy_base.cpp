@@ -42,7 +42,8 @@ namespace celma { namespace log { namespace files {
 /// Constructor. Stores the object to use to create the log file names.
 ///
 /// @param[in]  fname_def  Log filename definition.
-/// @throws  invalid argument when the filename definition contains no parts.
+/// @throw
+///    std::invalid argument when the filename definition contains no parts.
 /// @since  1.0.0, 13.12.2017
 PolicyBase::PolicyBase( const filename::Definition& fname_def):
    mFilenameDefinition( fname_def),
@@ -68,9 +69,9 @@ PolicyBase::PolicyBase( const filename::Definition& fname_def):
 ///    a (new) log file after a rollover.<br>
 ///    This is needed to prevent an endless loop. If the open check fails on
 ///    the re-opened file, an exception is thrown.
-/// @throws
-///   runtime error if the file could not be created, or if the open check
-///   fails for a re-opened file.
+/// @throw
+///    std::runtime error if the file could not be created, or if the open
+///    check fails for a re-opened file.
 /// @since  1.25.0, 20.05.2019
 ///    (added parameter \a from_reopen)
 /// @since  1.0.0, 13.12.2017

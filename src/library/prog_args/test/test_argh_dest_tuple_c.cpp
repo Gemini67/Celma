@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
 
       BOOST_REQUIRE_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
          "Key and value")
-         ->addFormat( 3, celma::prog_args::lowercase()), std::range_error);
+         ->addFormatPos( 3, celma::prog_args::lowercase()), std::range_error);
    } // end scope
 
    // not enough values for the tuple
@@ -638,7 +638,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_format)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "p,pair", DEST_VAR( my_tuple),
       "Key and value")->setPrintDefault( true)
-      ->addFormat( 1, celma::prog_args::lowercase()));
+      ->addFormatPos( 1, celma::prog_args::lowercase()));
 
    auto const  as2a = make_arg_array( "-p 7,SeVeN", nullptr);
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));

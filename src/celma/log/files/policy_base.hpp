@@ -46,7 +46,8 @@ public:
    /// Constructor. Stores the object to use to create the log file names.
    ///
    /// @param[in]  fname_def  Log filename definition.
-   /// @throws  invalid argument when the filename definition contains no parts.
+   /// @throw
+   ///    std::invalid argument when the filename definition contains no parts.
    /// @since  1.0.0, 13.12.2017
    explicit PolicyBase( const filename::Definition& fname_def) noexcept( false);
 
@@ -71,7 +72,7 @@ public:
 
    /// Opens the current log file, checks if it still is okay to use the file,
    /// if not closes the file again, rolls the log file generations and opens
-   /// a new file.<br>
+   /// a new file.
    /// All that is done calling the virtual function which must be implemented
    /// by the derived classes, the real policies.
    ///
@@ -80,9 +81,9 @@ public:
    ///    a (new) log file after a rollover.<br>
    ///    This is needed to prevent an endless loop. If the open check fails on
    ///    the re-opened file, an exception is thrown.
-   /// @throws
-   ///   runtime error if the file could not be created, or if the open check
-   ///   fails for a re-opened file.
+   /// @throw
+   ///    std::runtime error if the file could not be created, or if the open
+   ///    check fails for a re-opened file.
    /// @since  1.25.0, 20.05.2019
    ///    (added parameter \a from_reopen)
    /// @since  1.0.0, 13.12.2017

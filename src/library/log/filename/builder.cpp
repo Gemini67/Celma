@@ -71,7 +71,8 @@ std::string Builder::filename( const Definition& def, int logfile_nbr,
 /// Constructor.
 ///
 /// @param[in]  def  The object with the format definition.
-/// @throws  when the definition object contains no parts.
+/// @throw
+///    std::invalid_argument when the definition object contains no parts.
 /// @since  1.0.0, 16.10.2017
 Builder::Builder( const Definition& def):
    Definition( def)

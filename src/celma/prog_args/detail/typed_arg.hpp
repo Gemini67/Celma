@@ -107,12 +107,15 @@ public:
    virtual void printValue( std::ostream& os, bool print_type) const override;
 
    /// Checks that the value mode 'command' is only set for destination types
-   /// "std::string".<br>
-   /// For all other value modes and types, the metzhod of the base clase is
+   /// "std::string".
+   /// For all other value modes and types, the method of the base clase is
    /// called.
    ///
    /// @param[in]  vm  The value mode to set.
    /// @return  Pointer to this object.
+   /// @throw
+   ///    std::invalid_argument if the value mode "command" should have been set
+   ///    on another destination than string.
    /// @since  0.14.2, 12.05.2017
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
@@ -122,11 +125,11 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void defaultValue( std::string& dest) const override;
 
-   /// 
-   /// @param[in]  dest
-   ///    .
-   /// @since
-   ///    1.31.0, 23.10.2019
+   /// Used for value checks in value constraints: Returns the current value of
+   /// the destination variable.
+   ///
+   /// @param[out]  dest  Returns the current value of the destination variable.
+   /// @since  1.31.0, 23.10.2019
    void getValue( T& dest) const;
 
 protected:
@@ -319,6 +322,7 @@ public:
    /// make sense for a flag/boolean value: Throw exception.
    ///
    /// @return  Nothing, always throws.
+   /// @throw  std::logic_error whenever called.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setIsMandatory() noexcept( false) override
    {
@@ -571,6 +575,7 @@ public:
    /// make sense for a flag/boolean value: Throw exception.
    ///
    /// @return  Nothing, always throws.
+   /// @throw  std::logic_error whenever called.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setIsMandatory() noexcept( false) override
    {
@@ -623,7 +628,7 @@ private:
 // ================================
 
 
-/// Specialisation of TypedArg<> for a level counter.<br>
+/// Specialisation of TypedArg<> for a level counter.
 /// It is possible/allowed to increment a level counter multiple times, or a
 /// value can be assigned to it.<br>
 /// Those two features are mutually exclusive: Once the level counter was
@@ -671,12 +676,13 @@ public:
    } // TypedArg< LevelCounter>::hasValue
 
    /// Overwrites the 'value mode' which specifies if a value is needed for this
-   /// argument or not.<br>
+   /// argument or not.
    /// Here in the base class, the only value mode that can be set is
    /// 'required'.
    ///
    /// @param[in]  vm  The new value mode.
    /// @return  Pointer to this object.
+   /// @throw  std::invalid_argument if the value mode cannot be set.
    /// @since  1.10.0, 13.08.2018
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override
    {
@@ -833,8 +839,8 @@ public:
    /// @param[in]  vm
    ///    The new value mode, only allowed value is actually "optional".
    /// @return  Pointer to this object.
-   /// @throws
-   ///    "logic error" if the value mode is not "optional", or "clear before
+   /// @throw
+   ///    std::logic_error if the value mode is not "optional", or "clear before
    ///    assign" is not set.
    /// @since  1.24.2, 23.04.2019
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false);
@@ -874,7 +880,7 @@ public:
 
    /// Adds a value formatter for the value at the given position: The value
    /// from the argument list (command line) is formatted before it is checked
-   /// and/or stored.<br>
+   /// and/or stored.
    /// The "value index" refers to the position of the new/additional value in
    /// the destination vector, i.e. if the vector contains some default values
    /// these ust be taken into account.<br>
@@ -890,13 +896,9 @@ public:
    ///    Pointer to the formatter to add, is deleted when it could not be
    ///    stored.
    /// @return  Pointer to this object.
-   /// @throws
-   ///    - "logic error" when called for an argument that does not accept
-   ///      multiple values.
-   ///    - "invalid argument" when the given object pointer is NULL.
-   /// @since
-   ///    x.y.z, 20.08.2019
-   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false)
+   /// @throw  std::invalid_argument when the given object pointer is NULL.
+   /// @since  x.y.z, 20.08.2019
+   virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
    /// Specifies the list separator character to use for splitting lists of
@@ -1031,11 +1033,11 @@ template< typename T>
 
 
 template< typename T>
-   TypedArgBase* TypedArg< std::vector< T>>::addFormat( int val_idx,
+   TypedArgBase* TypedArg< std::vector< T>>::addFormatPos( int val_idx,
       IFormat* f)
 {
    return internAddFormat( val_idx + 1, f);
-} // TypedArg< std::vector< T>>::addFormat
+} // TypedArg< std::vector< T>>::addFormatPos
 
 
 template< typename T>
@@ -1138,7 +1140,7 @@ template< typename T>
 // =========================
 
 
-/// Specialisation of TypedArg<> for values wrapped in an POD array.<br>
+/// Specialisation of TypedArg<> for values wrapped in an POD array.
 /// Arrays are always filled from the first element up to the maximum number of
 /// elements that the array can store.
 ///
@@ -1199,7 +1201,7 @@ public:
 
    /// Adds a value formatter for the value at the given position: The value
    /// from the argument list (command line) is formatted before it is checked
-   /// and/or stored.<br>
+   /// and/or stored.
    /// The "value index" refers to the position of the new/additional value in
    /// the destination array.
    ///
@@ -1211,13 +1213,9 @@ public:
    ///    Pointer to the formatter to add, is deleted when it could not be
    ///    stored.
    /// @return  Pointer to this object.
-   /// @throws
-   ///    - "logic error" when called for an argument that does not accept
-   ///      multiple values.
-   ///    - "invalid argument" when the given object pointer is NULL.
-   /// @since
-   ///    x.y.z, 20.08.2019
-   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false)
+   /// @throw  std::invalid_argument when the given object pointer is NULL.
+   /// @since  x.y.z, 20.08.2019
+   virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
    /// Specifies the list separator character to use for splitting lists of
@@ -1325,12 +1323,12 @@ template< typename T, size_t N>
 
 
 template< typename T, size_t N>
-   TypedArgBase* TypedArg< T[ N]>::addFormat( int val_idx, IFormat* f)
+   TypedArgBase* TypedArg< T[ N]>::addFormatPos( int val_idx, IFormat* f)
 {
    if (val_idx >= static_cast< int>( N))
       throw std::range_error( "formatter value index is out of range");
    return internAddFormat( val_idx + 1, f);
-} // TypedArg< T[ N]>::addFormat
+} // TypedArg< T[ N]>::addFormatPos
 
 
 template< typename T, size_t N>
@@ -1416,7 +1414,7 @@ template< typename T, size_t N>
 // =====================================
 
 
-/// Specialisation of TypedArg<> for values wrapped in an std::array.<br>
+/// Specialisation of TypedArg<> for values wrapped in an std::array.
 /// Arrays are always filled from the first element up to the maximum number of
 /// elements that the array can store.
 ///
@@ -1474,7 +1472,7 @@ public:
 
    /// Adds a value formatter for the value at the given position: The value
    /// from the argument list (command line) is formatted before it is checked
-   /// and/or stored.<br>
+   /// and/or stored.
    /// The "value index" refers to the position of the new/additional value in
    /// the destination array.
    ///
@@ -1486,13 +1484,9 @@ public:
    ///    Pointer to the formatter to add, is deleted when it could not be
    ///    stored.
    /// @return  Pointer to this object.
-   /// @throws
-   ///    - "logic error" when called for an argument that does not accept
-   ///      multiple values.
-   ///    - "invalid argument" when the given object pointer is NULL.
-   /// @since
-   ///    x.y.z, 26.08.2019
-   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false)
+   /// @throw  std::invalid_argument when the given object pointer is NULL.
+   /// @since  x.y.z, 26.08.2019
+   virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().<br>
@@ -1602,13 +1596,13 @@ template< typename T, size_t N>
 
 
 template< typename T, size_t N>
-   TypedArgBase* TypedArg< std::array< T, N>>::addFormat( int val_idx,
+   TypedArgBase* TypedArg< std::array< T, N>>::addFormatPos( int val_idx,
       IFormat* f)
 {
    if (val_idx >= static_cast< int>( N))
       throw std::range_error( "formatter value index is out of range");
    return internAddFormat( val_idx + 1, f);
-} // TypedArg< std::array< T, N>>::addFormat
+} // TypedArg< std::array< T, N>>::addFormatPos
 
 
 template< typename T, size_t N>
@@ -1708,7 +1702,7 @@ namespace {
 
 
 /// Helper class used to assign a value to a tuple element with type
-/// conversion.<br>
+/// conversion.
 /// Can be replaced by a lambda, once the decltype works for boost::lexical_cast.
 class TupleElementValueAssign
 {
@@ -1818,17 +1812,18 @@ public:
    virtual TypedArgBase* setTakesMultiValue() override;
 
    /// Overload for destination tuple: Format not allowed.
+   ///
    /// @param[in]  f  Pointer to the format to add, the object is deleted.
    /// @return  Never returns anything.
-   /// @throws
-   ///    "logic error" when called since setting a format for a tuple is never
-   ///    allowed.
+   /// @throw
+   ///    std::logic_error when called since setting a single formatter for a
+   ///    tuple is  never allowed.
    /// @since  1.23.0, 09.04.2019
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false) override;
 
    /// Adds a value formatter for the value at the given position: The value
    /// from the argument list (command line) is formatted before it is checked
-   /// and/or stored.<br>
+   /// and/or stored.
    /// The "value index" refers to the position of the new/additional value in
    /// the destination tuple.
    ///
@@ -1838,13 +1833,15 @@ public:
    ///    Pointer to the formatter to add, is deleted when it could not be
    ///    stored.
    /// @return  Pointer to this object.
-   /// @throws
-   ///    - "logic error" when called for an argument that does not accept
-   ///      multiple values.
-   ///    - "invalid argument" when the given object pointer is NULL.
-   ///    - "range error" when the given value index is too big for this tuple.
+   /// @throw
+   ///    std::logic_error when the given value index is 0 (would mean:
+   ///    formatter for all values).
+   /// @throw
+   ///    std::invalid_argument when the given object pointer is NULL.
+   /// @throw
+   ///    std::range_error when the given value index is too big for this tuple.
    /// @since  x.y.z, 10.04.2019
-   virtual TypedArgBase* addFormat( int val_idx, IFormat* f) noexcept( false)
+   virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
    /// Specifies the list separator character to use for splitting lists of
@@ -1871,7 +1868,7 @@ private:
    ///    Set when the argument supports inversion and when the argument was 
    ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
-   ///    (added parameter inverted)
+   ///    (added parameter \a inverted)
    /// @since  0.11, 19.12.2016
    virtual void assign( const std::string& value, bool inverted) override;
 
@@ -1944,12 +1941,12 @@ template< typename... T>
    TypedArgBase* TypedArg< std::tuple< T...>>::addFormat( IFormat* f)
 {
    delete f;
-   throw std::logic_error( "not allowed to add a format for a tuple");
+   throw std::logic_error( "not allowed to add a single format for a tuple");
 } // TypedArg< std::tuple< T...>>::addFormat
 
 
 template< typename... T>
-   TypedArgBase* TypedArg< std::tuple< T...>>::addFormat( int val_idx,
+   TypedArgBase* TypedArg< std::tuple< T...>>::addFormatPos( int val_idx,
       IFormat* f)
 {
    if (val_idx == -1)
@@ -1968,7 +1965,7 @@ template< typename... T>
          + format::toString( mTupleLength) + " elements");
 
    return internAddFormat( val_idx + 1, f);
-} // TypedArg< std::tuple< T...>>::addFormat
+} // TypedArg< std::tuple< T...>>::addFormatPos
 
 
 template< typename... T>
@@ -2033,7 +2030,7 @@ template< typename... T>
 // ===================================
 
 
-/// Specialisation of TypedArg<> for destination value type bitset.
+/// Specialisation of TypedArg<> for destination value type std::bitset<>.
 ///
 /// @tparam  N  The size of the bitset.
 /// @since  1.4.3, 29.04.2018

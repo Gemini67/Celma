@@ -82,7 +82,7 @@ public:
    ///
    /// @param[in]  c  Pointer to the check to add, is deleted.
    /// @return  Nothing, always throws.
-   /// @throws  "logic_error" since checks are not allowed for ranges.
+   /// @throw  std::logic_error since checks are not allowed for ranges.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
 
