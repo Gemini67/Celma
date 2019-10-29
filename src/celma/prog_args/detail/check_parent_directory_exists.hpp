@@ -40,7 +40,7 @@ class CheckParentDirectoryExists: public ICheck
 public:
    /// Constructor, sets the symbolic name in the base class.
    ///
-   /// @since  x.y.z, 24.04.2019
+   /// @since  1.32.0, 24.04.2019
    CheckParentDirectoryExists();
 
    /// Default destructor is fine.

@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test, headerfile include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -64,6 +64,26 @@ BOOST_AUTO_TEST_CASE( errors)
       Handler  ah( 0);
 
       BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "any arg")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      int      dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "d", DEST_VAR( dummy), "dummy"));
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "a;b")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      int      dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "d", DEST_VAR( dummy), "dummy"));
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "d")),
          std::invalid_argument);
    } // end scope
 

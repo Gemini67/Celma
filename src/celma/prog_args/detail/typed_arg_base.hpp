@@ -331,7 +331,7 @@ public:
    /// @throw
    ///    std::logic_error when called for an argument that does not accept
    ///    multiple values.
-   /// @since  x.y.z, 25.04.2019
+   /// @since  1.32.0, 25.04.2019
    virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false);
 
    /// Calls all formatter methods defined for this argument. The formatter
@@ -639,7 +639,7 @@ protected:
    ///    values.
    /// @throw
    ///    std::invalid_argument when the given object pointer is NULL.
-   /// @since  x.y.z, 25.04.2019
+   /// @since  1.32.0, 25.04.2019
    TypedArgBase* internAddFormat( int val_idx, IFormat* f) noexcept( false);
 
    /// Storage type for formatters for one value type/position.
@@ -719,7 +719,7 @@ private:
    /// Returns the number of formatters added for this argument.
    ///
    /// @return  The number of formatters that have been added.
-   /// @since  x.y.z, 19.08.2019
+   /// @since  1.32.0, 19.08.2019
    size_t numFormats() const;
 
 }; // TypedArgBase

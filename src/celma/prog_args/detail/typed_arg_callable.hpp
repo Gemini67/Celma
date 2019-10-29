@@ -45,7 +45,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArgCallable() = default;
 
    /// Returns "callable" as type name.

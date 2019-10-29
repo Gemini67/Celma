@@ -142,7 +142,7 @@ inline void remove_to_if_last_excl( std::string& str, char pred)
 ///    \c true if \a str starts with \a starts or when both strings are empty
 ///    and \a allow_empty is set.
 /// @since
-///    x.y.z, 03.09.2019
+///    1.32.0, 03.09.2019
 inline bool startsWith( const std::string& str, const std::string& starts,
    bool allow_empty = true)
 {

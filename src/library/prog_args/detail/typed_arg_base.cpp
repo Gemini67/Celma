@@ -185,7 +185,7 @@ TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 /// @throw
 ///    std::logic_error when called for an argument that does not accept
 ///    multiple values.
-/// @since  x.y.z, 25.04.2019
+/// @since  1.32.0, 25.04.2019
 TypedArgBase* TypedArgBase::addFormatPos( int, IFormat*)
 {
 
@@ -538,7 +538,7 @@ TypedArgBase::TypedArgBase( const std::string& vname, ValueMode vm,
 ///    values.
 /// @throw
 ///    std::invalid_argument when the given object pointer is NULL.
-/// @since  x.y.z, 25.04.2019
+/// @since  1.32.0, 25.04.2019
 TypedArgBase* TypedArgBase::internAddFormat( int val_idx, IFormat* f)
 {
 
@@ -566,7 +566,7 @@ TypedArgBase* TypedArgBase::internAddFormat( int val_idx, IFormat* f)
 /// Returns the number of formatters added for this argument.
 ///
 /// @return  The number of formatters that have been added.
-/// @since  x.y.z, 19.08.2019
+/// @since  1.32.0, 19.08.2019
 size_t TypedArgBase::numFormats() const
 {
 

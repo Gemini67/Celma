@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 

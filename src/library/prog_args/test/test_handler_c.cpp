@@ -15,11 +15,11 @@
 --*/
 
 
-// module to test, header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
-// STL includes
+// C++ Standard Library includes
 #include <string>
 
 
@@ -59,6 +59,7 @@ BOOST_AUTO_TEST_CASE( wrong_usage)
 
 
    BOOST_REQUIRE_THROW( ah.getValueHandlerObj(), runtime_error);
+   BOOST_REQUIRE_THROW( ah.addArgumentListArgGroups( "L"), invalid_argument);
 
 } // wrong_usage
 

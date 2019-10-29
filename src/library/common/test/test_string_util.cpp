@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_CASE( check_remove_to_if_shortcuts)
 
 /// Check the results returned by celma::common::startsWith().
 ///
-/// @since  x.y.z, 03.09.2019
+/// @since  1.32.0, 03.09.2019
 BOOST_AUTO_TEST_CASE( check_starts_with)
 {
 

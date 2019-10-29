@@ -57,14 +57,14 @@ public:
    /// @param[in]  other
    ///    The other check object to verify if combinations with are allowed.
    /// @return  \c false if two checks with the same name would be combined.
-   /// @since  x.y.z, 24.04.2019
+   /// @since  1.32.0, 24.04.2019
    virtual bool combinationAllowed( const ICheck* other) const;
 
 protected:
    /// Constructor, stores the symbolic name of the check.
    ///
    /// @param[in]  check_name  The symbolic name of the check.
-   /// @since  x.y.z, 24.04.2019
+   /// @since  1.32.0, 24.04.2019
    ICheck( const std::string check_name);
 
    /// Symbolic name of the check, used for verifying if combinations of two

@@ -628,7 +628,7 @@ BOOST_AUTO_TEST_CASE( test_tuple_three)
 
 /// Specify a formatter for the string value in the tuple.
 ///
-/// @since  x.y.z, 21.08.2019
+/// @since  1.32.0, 21.08.2019
 BOOST_AUTO_TEST_CASE( test_tuple_format)
 {
 

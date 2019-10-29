@@ -45,24 +45,24 @@ namespace {
 
 /// Helper class: An additional formatter.
 ///
-/// @since  x.y.z, 19.08.2019
+/// @since  1.32.0, 19.08.2019
 class RemoveDigitFormatter: public celma::prog_args::detail::IFormat
 {
 public:
    /// Default constructor.
    ///
-   /// @since  x.y.z, 19.08.2019
+   /// @since  1.32.0, 19.08.2019
    RemoveDigitFormatter() = default;
 
    /// Empty, default destructor.
    ///
-   /// @since  x.y.z, 19.08.2019
+   /// @since  1.32.0, 19.08.2019
    virtual ~RemoveDigitFormatter() = default;
 
    /// The formatting function: Remove all digits from the string.
    ///
    /// @param[in,out]  val  The string to format.
-   /// @since  x.y.z, 19.08.2019
+   /// @since  1.32.0, 19.08.2019
    virtual void formatValue( std::string& val) const override
    {
       auto  i = val.begin();
@@ -84,7 +84,7 @@ public:
 /// Helper function to use the formatting class easily with addFormat().
 ///
 /// @return  A new object of the formatting class RemoveDigitFormatter.
-/// @since  x.y.z, 19.08.2019
+/// @since  1.32.0, 19.08.2019
 celma::prog_args::detail::IFormat* noDigit()
 {
    return new RemoveDigitFormatter();
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE( format_anycase)
 
 /// Add multiple formatters.
 ///
-/// @since  x.y.z, 19.08.2019
+/// @since  1.32.0, 19.08.2019
 BOOST_AUTO_TEST_CASE( multiple_formatters)
 {
 

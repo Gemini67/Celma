@@ -12,8 +12,8 @@ cmake_minimum_required( VERSION 3.5 )
 project( Celma )
 
 set( MAJORVERSION    1 )
-set( MINORVERSION    30 )
-set( RELEASE_VERSION 1 )
+set( MINORVERSION    32 )
+set( RELEASE_VERSION 0 )
 set( PATCHLEVEL      0 )
 
 set( CMAKE_CXX_STANDARD 17 )

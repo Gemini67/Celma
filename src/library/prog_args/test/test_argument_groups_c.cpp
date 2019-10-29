@@ -14,11 +14,11 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args/groups.hpp"
 
 
-// STL includes
+// C++ Standard Library includes
 #include <string>
 
 
@@ -30,6 +30,7 @@
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args/destination.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::make_arg_array;
@@ -51,6 +52,60 @@ BOOST_AUTO_TEST_CASE( no_argument_handlers)
    BOOST_REQUIRE_NO_THROW( Groups::instance().argumentExists( "v,verbose"));
 
 } // no_argument_handlers
+
+
+
+/// Should not cash if the name is empty.
+///
+/// @since  0.2, 10.04.2016
+BOOST_AUTO_TEST_CASE( no_name)
+{
+
+   BOOST_REQUIRE_THROW( Groups::instance().getArgHandler( ""), runtime_error);
+   BOOST_REQUIRE_THROW( Groups::instance().getArgValueHandler( ""), runtime_error);
+
+} // no_name
+
+
+
+/// Add an argument handler, remove it and add it again.
+/// Verify that a new argument handler was created. This cannot be done by
+/// comparing the object handler pointers, because it may happen that the new
+/// object is created at exactly the same address.
+///
+/// @since  1.32.0, 29.10.2019
+BOOST_AUTO_TEST_CASE( remove_arg_handler)
+{
+
+   {
+      Groups::SharedArgHndl  firstAH;
+
+      BOOST_REQUIRE_NO_THROW( firstAH = Groups::instance().getArgHandler( "first"));
+      BOOST_REQUIRE( firstAH.get() != nullptr);
+
+      BOOST_REQUIRE_THROW( Groups::instance().getArgValueHandler( "first"),
+         runtime_error);
+
+      bool  dummy;
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "d", DEST_VAR( dummy), "dummy"));
+   } // end if
+
+   Groups::instance().removeArgHandler( "first");
+
+   Groups::SharedArgHndl  secondAH;
+
+   BOOST_REQUIRE_NO_THROW( secondAH = Groups::instance().getArgHandler( "first"));
+   BOOST_REQUIRE( secondAH.get() != nullptr);
+
+   // try to add the same argument again
+   // would fail if we would have got the same object as first
+   bool  dummy;
+   BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "d", DEST_VAR( dummy), "dummy"));
+
+   // singleton Groups: have to clean up
+   Groups::instance().removeAllArgHandler();
+
+} // remove_arg_handler
 
 
 
@@ -228,6 +283,41 @@ BOOST_AUTO_TEST_CASE( mix_std_appl_args)
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( handle_arguments)
 {
+
+   {
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      bool  secondFlag = false;
+
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
+
+      // first check that it does not crash, then check if the arguments are
+      // really found
+      BOOST_REQUIRE_NO_THROW( Groups::instance().argumentExists( 'f'));
+      BOOST_REQUIRE_NO_THROW( Groups::instance().argumentExists( 's'));
+      BOOST_REQUIRE( Groups::instance().argumentExists( 'f'));
+      BOOST_REQUIRE( Groups::instance().argumentExists( 's'));
+
+      auto const  as2a = make_arg_array( "", nullptr);
+
+      firstFlag  = false;
+      secondFlag = false;
+      BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !firstFlag);
+      BOOST_REQUIRE( !secondFlag);
+
+      std::ostringstream  oss;
+      Groups::instance().printSummary( celma::prog_args::sumoptset_t(), oss);
+
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss.str(),
+         "Argument summary:\n"
+         "   No arguments used/values set.\n"));
+
+      // singleton Groups: have to clean up
+      Groups::instance().removeAllArgHandler();
+   } // end scope
 
    {
       auto  firstAH  = Groups::instance().getArgHandler( "first");
@@ -501,28 +591,74 @@ BOOST_AUTO_TEST_CASE( group_features)
 BOOST_AUTO_TEST_CASE( list_groups)
 {
 
-   Groups::reset();
+   {
+      Groups::reset();
 
-   ostringstream  normal_out;
-   ostringstream  error_out;
+      ostringstream  normal_out;
+      ostringstream  error_out;
 
-   Groups::instance( normal_out, error_out, Handler::hfListArgGroups);
+      Groups::instance( normal_out, error_out, Handler::hfListArgGroups);
 
-   auto  ah1 = Groups::instance().getArgHandler( "Handler 1");
-   auto  ah2 = Groups::instance().getArgHandler( "Handler 2", Handler::AllHelp);
+      auto  ah1 = Groups::instance().getArgHandler( "Handler 1");
+      auto  ah2 = Groups::instance().getArgHandler( "Handler 2", Handler::AllHelp);
 
-   auto const  as2a = make_arg_array( "--list-arg-groups", nullptr);
+      auto const  as2a = make_arg_array( "--list-arg-groups", nullptr);
 
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
 
-   BOOST_REQUIRE_EQUAL( normal_out.str(),
-                        "list of known argument groups:\n"
-                        "- Handler 1\n"
-                        "- Handler 2\n");
-   BOOST_REQUIRE( error_out.str().empty());
+      BOOST_REQUIRE_EQUAL( normal_out.str(),
+                           "list of known argument groups:\n"
+                           "- Handler 1\n"
+                           "- Handler 2\n");
+      BOOST_REQUIRE( error_out.str().empty());
 
-   Groups::instance().removeAllArgHandler();
-   Groups::reset();
+      Groups::instance().removeAllArgHandler();
+      Groups::reset();
+   } // end scope
+
+   {
+      Groups::reset();
+
+      ostringstream  normal_out;
+      ostringstream  error_out;
+
+      Groups::instance( normal_out, error_out);
+
+      auto  ah1 = Groups::instance().getArgHandler( "Handler 1");
+      auto  ah2 = Groups::instance().getArgHandler( "Handler 2", Handler::AllHelp);
+
+      BOOST_REQUIRE_THROW( ah1->addArgumentListArgGroups( ""), invalid_argument);
+
+      Groups::instance().removeAllArgHandler();
+      Groups::reset();
+   } // end scope
+
+   {
+      Groups::reset();
+
+      ostringstream  normal_out;
+      ostringstream  error_out;
+
+      Groups::instance( normal_out, error_out);
+
+      auto  ah1 = Groups::instance().getArgHandler( "Handler 1");
+      auto  ah2 = Groups::instance().getArgHandler( "Handler 2", Handler::AllHelp);
+
+      BOOST_REQUIRE_NO_THROW( ah1->addArgumentListArgGroups( "lag"));
+
+      auto const  as2a = make_arg_array( "--lag", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE_EQUAL( normal_out.str(),
+                           "list of known argument groups:\n"
+                           "- Handler 1\n"
+                           "- Handler 2\n");
+      BOOST_REQUIRE( error_out.str().empty());
+
+      Groups::instance().removeAllArgHandler();
+      Groups::reset();
+   } // end scope
 
 } // list_groups
 

@@ -30,7 +30,7 @@ using celma::common::RangeString;
 
 /// Check that wrongly formatted ranges are recognised.
 ///
-/// @since  x.y.z, 28.08.2019
+/// @since  1.32.0, 28.08.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 

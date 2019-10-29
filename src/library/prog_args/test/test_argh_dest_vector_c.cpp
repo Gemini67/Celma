@@ -377,7 +377,7 @@ BOOST_AUTO_TEST_CASE( format_values)
 /// Test feature to format the values before they are inserted into the vector,
 /// depending on their position in the vector.
 ///
-/// @since  x.y.z, 20.08.2019
+/// @since  1.32.0, 20.08.2019
 BOOST_AUTO_TEST_CASE( different_format_values)
 {
 

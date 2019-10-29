@@ -79,7 +79,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Returns the type of the destination variable as string.
@@ -281,7 +281,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Returns "bool".
@@ -389,7 +389,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Returns the name of the type of the variable handled by the CheckAssign<>
@@ -534,7 +534,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Always returns "bool".
@@ -654,7 +654,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Always returns "LevelCounter".
@@ -822,7 +822,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// By default, the value mode for vectors is set to "required". Here it can
@@ -897,7 +897,7 @@ public:
    ///    stored.
    /// @return  Pointer to this object.
    /// @throw  std::invalid_argument when the given object pointer is NULL.
-   /// @since  x.y.z, 20.08.2019
+   /// @since  1.32.0, 20.08.2019
    virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
@@ -1163,7 +1163,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Returns the name of the type of the destination variable (array of
@@ -1214,7 +1214,7 @@ public:
    ///    stored.
    /// @return  Pointer to this object.
    /// @throw  std::invalid_argument when the given object pointer is NULL.
-   /// @since  x.y.z, 20.08.2019
+   /// @since  1.32.0, 20.08.2019
    virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
@@ -1441,7 +1441,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Returns the name of the type of the destination variable (array of
@@ -1485,7 +1485,7 @@ public:
    ///    stored.
    /// @return  Pointer to this object.
    /// @throw  std::invalid_argument when the given object pointer is NULL.
-   /// @since  x.y.z, 26.08.2019
+   /// @since  1.32.0, 26.08.2019
    virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
@@ -1718,7 +1718,7 @@ public:
 
    /// Empty default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TupleElementValueAssign() = default;
 
    /// Operator called for the tuple element. Converts the value from #mValue to
@@ -1771,7 +1771,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Returns the name of the type of the destination variable, the tuple.
@@ -1840,7 +1840,7 @@ public:
    ///    std::invalid_argument when the given object pointer is NULL.
    /// @throw
    ///    std::range_error when the given value index is too big for this tuple.
-   /// @since  x.y.z, 10.04.2019
+   /// @since  1.32.0, 10.04.2019
    virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
@@ -2051,7 +2051,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArg() = default;
 
    /// Returns the type of the destination variable.
@@ -2290,7 +2290,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 23.10.2019
+   /// @since  1.32.0, 23.10.2019
    virtual ~TypedArg() = default;
 
    /// Returns the name of the type of the destination variable (ValueFilter of

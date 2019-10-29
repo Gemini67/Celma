@@ -65,7 +65,7 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 27.08.2019
+   /// @since  1.32.0, 27.08.2019
    virtual ~TypedArgValue() = default;
 
    /// Returns the name of the type of the destination variable.
