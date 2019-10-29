@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,8 +36,11 @@ template< typename T> class CheckRange : public ICheck
 {
 public:
    /// Constructor.
-   /// @param[in]  lower  The lower limit to check against.
-   /// @param[in]  upper  The upper limit to check against.
+   ///
+   /// @param[in]  lower
+   ///    The lower limit to check against.
+   /// @param[in]  upper
+   ///    The upper limit to check against.
    /// @since  0.2, 10.04.2016
    CheckRange( T lower, T upper);
 
@@ -65,6 +68,7 @@ private:
 
 
 template< typename T> CheckRange< T>::CheckRange( T lower, T upper):
+   ICheck( "range"),
    mLower( lower),
    mUpper( upper)
 {
@@ -124,5 +128,5 @@ template< typename T> detail::ICheck* range( T low, T upp)
 #endif   // CELMA_PROG_ARGS_DETAIL_CHECK_RANGE_HPP
 
 
-// =========================  END OF check_range.hpp  =========================
+// =====  END OF check_range.hpp  =====
 

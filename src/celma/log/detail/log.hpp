@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,7 +40,11 @@ class Log: public filter::Filters
 public:
    /// Constructor.
    /// @since  1.0.0, 19.06.2016
-   Log();
+   Log() = default;
+
+   // copying/moving not allowed nor necessary
+   Log( const Log&) = delete;
+   Log( Log&&) = delete;
 
    /// Destructor.
    /// @since  1.0.0, 19.06.2016
@@ -69,6 +73,10 @@ public:
    /// @param[in]  msg  The message to pass.
    /// @since  1.0.0, 19.06.2016
    void message( const LogMsg& msg) const;
+
+   // assignment not allowed
+   Log& operator =( const Log&) = delete;
+   Log& operator =( Log&&) = delete;
 
    /// Writes information about a log.
    /// @param[in]  os  The stream to write into.

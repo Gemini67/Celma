@@ -117,7 +117,7 @@ inline LogClass text2logClass( const char* lcText)
          return static_cast< LogClass>( i);
    } // end for
 
-   return static_cast< LogClass>( -1);
+   return LogClass::undefined;
 } // text2logClass
 
 
@@ -134,7 +134,7 @@ inline LogLevel text2logLevel( const char* llText)
          return static_cast< LogLevel>( i);
    } // end for
 
-   return static_cast< LogLevel>( -1);
+   return LogLevel::undefined;
 } // text2logLevel
 
 

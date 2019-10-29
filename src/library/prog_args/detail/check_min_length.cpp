@@ -32,12 +32,13 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 
-/// Constructor, stores the minimum length that will be checked,
+/// Constructor, stores the minimum length that will be checked.
 ///
 /// @param[in]  min_length  The minimum length to check against.
-/// @throws  "invalid argument" if the given length is 0.
+/// @throw  std::invalid_argument if the given length is 0.
 /// @since  1.23.0, 11.04.2019
 CheckMinLength::CheckMinLength( std::string::size_type min_length):
+   ICheck( "minimum length"),
    mMinLength( min_length)
 {
 
@@ -51,7 +52,7 @@ CheckMinLength::CheckMinLength( std::string::size_type min_length):
 /// Checks if the value in \a val meets the "minimum length" requirement.
 ///
 /// @param[in]  val  The value to check.
-/// @throws "underflow error" if the given string is too short.
+/// @throw  std::underflow_error if the given string is too short.
 /// @since  1.23.0, 11.04.2019
 void CheckMinLength::checkValue( const std::string& val) const
 {

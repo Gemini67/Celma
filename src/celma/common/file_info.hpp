@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,40 +30,49 @@ namespace celma { namespace common {
 
 /// This class provides easy access to the data of an object in the file system,
 /// a file or a directory. Simply create an object of this class and then call
-/// the desired getter methods.<br>
+/// the desired getter methods.
 /// The file statistics is collected only in the constructors. If update-to-date
 /// infos from a file is needed repeatedly, either create a new object each
 /// time, or use the fileInfo() function.
+///
 /// @since  1.4.0, 27.02.2018
 class FileInfo
 {
 public:
    /// Constructor with the (path and) file name in an std::string.
-   /// @param[in]  filename  The (path and) name of the file or directory to
-   ///                       retrieve the statistics from.
-   /// @throws  if the given object does not exist or if the statistics could
-   ///          not be collected.
+   ///
+   /// @param[in]  filename
+   ///    The (path and) name of the file or directory to retrieve the
+   ///    statistics from.
+   /// @throw
+   ///    std::runtime_error if the given object does not exist or if the
+   ///    statistics could not be collected.
    /// @since  1.4.0, 27.02.2018
    explicit FileInfo( const std::string& filename) noexcept( false);
 
    /// Constructor with the (path and) file name in a C string (character
    /// array).
-   /// @param[in]  filename  The (path and) name of the file or directory to
-   ///                       retrieve the statistics from.
-   /// @throws  if the given object does not exist or if the statistics could
-   ///          not be collected.
+   ///
+   /// @param[in]  filename
+   ///    The (path and) name of the file or directory to retrieve the
+   ///    statistics from.
+   /// @throw
+   ///    std::runtime_error if the given object does not exist or if the
+   ///    statistics could not be collected.
    /// @since  1.4.0, 27.02.2018
    explicit FileInfo( const char* filename) noexcept( false);
 
    /// Constructor with a FILE pointer.
+   ///
    /// @param[in]  fp  The FILE pointer to retrieve the statistics from.
-   /// @throws  if the statistics could not be collected.
+   /// @throw  std::runtime_error if the statistics could not be collected.
    /// @since  1.4.0, 27.02.2018
    explicit FileInfo( FILE* fp) noexcept( false);
 
    /// Constructor with a file descriptor.
+   ///
    /// @param[in]  fp  The file descriptor to retrieve the statistics from.
-   /// @throws  if the statistics could not be collected.
+   /// @throw  std::runtime_error f the statistics could not be collected.
    /// @since  1.4.0, 27.02.2018
    explicit FileInfo( int fd) noexcept( false);
 
@@ -79,7 +88,9 @@ public:
    /// Returns the path and name of the parent directory of the current entry.
    ///
    /// @return  The path and name of the parent directory of the current entry.
-   /// @throws  If the current object was not created with a file path and name.
+   /// @throw
+   ///    std::runtime_error if the current object was not created with a file
+   ///    path and name.
    /// @since  1.9.0, 04.08.2018
    std::string parentDirectory() const noexcept( false);
 

@@ -32,16 +32,16 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  et  The type of the element to return the name of.
 /// @return  The name of the element.
 /// @since  1.23.1, 16.04.2019
-/* static */ const char* ArgListElement::typeName( ElementType et)
+/* static */ const char* ArgListElement::typeName( Type et)
 {
 
    switch (et)
    {
-   case ElementType::singleCharArg:  return "single character argument";
-   case ElementType::stringArg:      return "string/long argument";
-   case ElementType::value:          return "value";
-   case ElementType::control:        return "control character";
-   default:                          break;
+   case Type::singleCharArg:  return "single character argument";
+   case Type::stringArg:      return "string/long argument";
+   case Type::value:          return "value";
+   case Type::control:        return "control character";
+   default:                   break;
    } // end switch
 
    return "invalid";
@@ -60,7 +60,7 @@ void ArgListElement::setArgChar( int argi, int argp, char argChar)
 
    mArgIndex    = argi;
    mArgCharPos  = argp;
-   mElementType = ElementType::singleCharArg;
+   mElementType = Type::singleCharArg;
    mArgChar     = argChar;
 
    mArgString.clear();
@@ -80,7 +80,7 @@ void ArgListElement::setArgString( int argi, const std::string& argName)
 
    mArgIndex    = argi;
    mArgCharPos  = -1;
-   mElementType = ElementType::stringArg;
+   mElementType = Type::stringArg;
    mArgChar     = '-';
    mArgString   = argName;
 
@@ -100,7 +100,7 @@ void ArgListElement::setValue( int argi, const std::string& value)
 
    mArgIndex    = argi;
    mArgCharPos  = -1;
-   mElementType = ElementType::value;
+   mElementType = Type::value;
    mArgChar     = '-';
    mValue       = value;
 
@@ -121,7 +121,7 @@ void ArgListElement::setControl( int argi, int argp, char ctrlChar)
 
    mArgIndex    = argi;
    mArgCharPos  = argp;
-   mElementType = ElementType::control;
+   mElementType = Type::control;
    mArgChar     = ctrlChar;
 
    mArgString.clear();
@@ -141,7 +141,7 @@ void ArgListElement::setControl( int argi, int argp, char ctrlChar)
 ///    The stream as passed in.
 /// @since
 ///    1.23.1, 16.04.2019
-std::ostream& operator <<( std::ostream& os, ArgListElement::ElementType et)
+std::ostream& operator <<( std::ostream& os, ArgListElement::Type et)
 {
 
    return os << ArgListElement::typeName( et) << " (" << static_cast< int>( et)
@@ -161,20 +161,20 @@ std::ostream& operator <<( std::ostream& os, const ArgListElement& ale)
 
    using std::endl;
 
-   if (ale.mElementType == ArgListElement::ElementType::invalid)
+   if (ale.mElementType == ArgListElement::Type::invalid)
       return os << "invalid argument list element";
 
    os << "element type       = " << ale.mElementType << endl
       << "argument index     = " << ale.mArgIndex << endl;
 
-   if (ale.mElementType == ArgListElement::ElementType::value)
+   if (ale.mElementType == ArgListElement::Type::value)
    {
       os << "value              = " << ale.mValue << endl;
-   } else if (ale.mElementType == ArgListElement::ElementType::singleCharArg)
+   } else if (ale.mElementType == ArgListElement::Type::singleCharArg)
    {
       os << "character position = " << ale.mArgCharPos << endl
          << "argument character = " << ale.mArgChar << endl;
-   } else if (ale.mElementType == ArgListElement::ElementType::control)
+   } else if (ale.mElementType == ArgListElement::Type::control)
    {
       os << "ctrl char position = " << ale.mArgCharPos << endl
          << "control character  = " << ale.mArgChar << endl;

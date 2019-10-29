@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -192,12 +192,13 @@ Creator& operator <<( Creator& c, const formatString& fs)
 
 
 /// Operator to change the separator string to use from now on.
+///
 /// @param[in]  c
-///    The object to change the eparator string in.
+///    The object to change the separator string in.
 /// @param[in]  sep
 ///    The separator string to set.
 /// @return  The same object as passed in \a c.
-/// @since  1.0.0, 02.10..2017
+/// @since  1.0.0, 02.10.2017
 Creator& operator <<( Creator& c, const separator& sep)
 {
 

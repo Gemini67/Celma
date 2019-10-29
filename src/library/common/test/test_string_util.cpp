@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -186,6 +186,29 @@ BOOST_AUTO_TEST_CASE( check_remove_to_if_shortcuts)
    } // end scope
 
 } // check_remove_to_if_shortcuts
+
+
+
+/// Check the results returned by celma::common::startsWith().
+///
+/// @since  1.32.0, 03.09.2019
+BOOST_AUTO_TEST_CASE( check_starts_with)
+{
+
+   using celma::common::startsWith;
+
+
+   BOOST_REQUIRE( startsWith( "", ""));
+   BOOST_REQUIRE( !startsWith( "", "", false));
+   BOOST_REQUIRE( !startsWith( "hello", ""));
+   BOOST_REQUIRE( !startsWith( "", "world"));
+   BOOST_REQUIRE( startsWith( "hello world", "hello world"));
+   BOOST_REQUIRE( startsWith( "hello world", "hello worl"));
+   BOOST_REQUIRE( startsWith( "hello world", "hello "));
+   BOOST_REQUIRE( !startsWith( "hello", "hello "));
+   BOOST_REQUIRE( startsWith( "hello world", "h"));
+
+} // check_starts_with
 
 
 

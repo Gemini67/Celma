@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,7 +26,7 @@
 namespace celma { namespace common { namespace detail {
 
 
-/// Helper class to extract the different parts of a range expression.<br>
+/// Helper class to extract the different parts of a range expression.
 /// After parsing an expression with parseString(), check the strings for the
 /// results:
 /// - matchedExpression() returns the full expression that was matched. If this
@@ -41,53 +41,80 @@ namespace celma { namespace common { namespace detail {
 class RangeExpression
 {
 public:
-   /// Constructor, initialises the regular expression.
-   /// @since  0.2, 07.04.2016
-   RangeExpression();
+   /// Delimiter between ranges and single values.
+   static constexpr char  NextRangeSeparator = ',';
+   /// The character that separates the two values of a range: A dash/minus/
+   /// hyphen.
+   static constexpr char  RangeSeparator = '-';
+   /// The start character for an increment expression: Opening square bracket.
+   static constexpr char  IncrementStart = '[';
+   /// The end character for an increment expression: Closing square bracket.
+   static constexpr char  IncrementEnd = ']';
+   /// The start character for an exclude expression: Opening curly brace.
+   static constexpr char  ExcludeStart = '{';
+   /// The end character for an exclude expression: Closing curly brace.
+   static constexpr char  ExcludeEnd = '}';
 
-   /// Parses the (first) range expression in the string.<br>
+   /// Constructor.
+   ///
+   /// @since  0.2, 07.04.2016
+   RangeExpression() = default;
+
+   /// Parses the (first) range expression in the string.
    /// The string must begin with a valid range expression. Everything after
    /// the parts that could be identified is ignored.
+   ///
    /// @param[in]  s  The string to parse.
+   /// @throw
+   ///    celma::common::CelmaRuntimeError if the string contains an invalid
+   ///    charater.
    /// @since  0.2, 07.04.2016
-   void parseString( const std::string& s);
+   void parseString( const std::string& s) noexcept( false);
 
    /// Returns the full string that was matched.
+   ///
    /// @return  The string that was matched.
    /// @since  0.2, 07.04.2016
    const std::string& matchedExpression() const;
 
    /// Returns the single/range start value.
+   ///
    /// @return  The start value.
    /// @since  0.2, 07.04.2016
    int64_t startValue() const;
 
    /// Returns if an end-value was found in the string.
+   ///
    /// @return  \c true if an end-value was found in the string.
    /// @since  0.2, 07.04.2016
    bool hasRangeEnd() const;
 
    /// Returns the range end value, if one was set.
+   ///
    /// @return  The range end value, may be empty.
    /// @since  0.2, 07.04.2016
    int64_t endValue() const;
 
    /// Returns if an increment value was found in the string.
+   ///
    /// @return  \c true if an increment value was found in the string.
    /// @since  0.2, 07.04.2016
    bool hasIncrement() const;
 
    /// Returns the range increment value, if one was set.
+   ///
    /// @return  The range increment value, may be empty.
    /// @since  0.2, 07.04.2016
    int64_t incrementValue() const;
 
    /// Returns if an exclude expression was found in the string.
+   ///
    /// @return  \c true if an exclude expression was found in the string.
    /// @since  0.2, 07.04.2016
    bool hasExcludeExpr() const;
 
-   /// Returns the range exclude expression, if one was set
+   /// Returns the range exclude expression, if one was set.
+   ///
    /// @return  The range exclude expression, may be empty.
    /// @since  0.2, 07.04.2016
    const std::string& excludeExpression() const;
@@ -104,11 +131,13 @@ private:
 
    /// Parses the string starting from #mNextPos, checks and evaluates the
    /// single values, ranges, steps etc.
+   ///
    /// @return  \c true if the contents of the string are syntactically correct.
    /// @since  0.2, 07.04.2016
    bool parse();
 
    /// Helper function to read a number from the range string.
+   ///
    /// @param[out]  value  Returns the value read from the string.
    /// @since  0.2, 07.04.2016
    void readNumber( int64_t& value);

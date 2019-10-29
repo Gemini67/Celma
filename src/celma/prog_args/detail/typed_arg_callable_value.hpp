@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -42,7 +42,12 @@ public:
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArgCallableValue( ArgHandlerCallableValue fun,
-                          const std::string& fname);
+      const std::string& fname);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.32.0, 27.08.2019
+   virtual ~TypedArgCallableValue() = default;
 
    /// Returns "callable-value".
    /// @return  The string "callable-value".
@@ -76,6 +81,12 @@ public:
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setTakesMultiValue() override;
 
+   /// Logic inversion may be used on callables.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.27.0, 28.05.2019
+   virtual TypedArgBase* allowsInversion() noexcept( false) override;
+
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
@@ -84,9 +95,16 @@ protected:
 
 private:
    /// Executes the specified function.
-   /// @param[in]  value  The value to pass to the function.
+   ///
+   /// @param[in]  value
+   ///    The value to pass to the function.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    ArgHandlerCallableValue  mFun;
@@ -144,6 +162,13 @@ inline TypedArgBase* TypedArgCallableValue::setTakesMultiValue()
 } // TypedArgCallableValue::setTakesMultiValue
 
 
+inline TypedArgBase* TypedArgCallableValue::allowsInversion()
+{
+   mAllowsInverting = true;
+   return this;
+} // TypedArgCallableValue::allowsInversion
+
+
 inline void TypedArgCallableValue::dump( std::ostream& os) const
 {
    os << "calls function/method '" << mVarName << "'." << std::endl
@@ -151,9 +176,10 @@ inline void TypedArgCallableValue::dump( std::ostream& os) const
 } // TypedArgCallableValue::dump
 
 
-inline void TypedArgCallableValue::assign( const std::string& value)
+inline void TypedArgCallableValue::assign( const std::string& value,
+   bool inverted)
 {
-   mFun( value);
+   mFun( value, inverted);
    mWasCalled = true;
 } // TypedArgCallableValue::assign
 

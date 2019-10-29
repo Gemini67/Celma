@@ -11,37 +11,22 @@ cmake_minimum_required( VERSION 3.5 )
 
 add_definitions( -DBOOST_TEST_DYN_LINK)
 
-celma_add_celma_boost_testprogram( test_argh_arg_help )
-celma_add_celma_boost_testprogram( test_argh_callables )
-celma_add_celma_boost_testprogram( test_argh_cardinality )
-celma_add_celma_boost_testprogram( test_argh_checks )
-celma_add_celma_boost_testprogram( test_argh_command_arg )
-celma_add_celma_boost_testprogram( test_argh_constraints )
-celma_add_celma_boost_testprogram( test_argh_custom_convert )
-celma_add_celma_boost_testprogram( test_argh_custom_type )
-celma_add_celma_boost_testprogram( test_argh_dest_bitset )
-celma_add_celma_boost_testprogram( test_argh_dest_level_counter )
-celma_add_celma_boost_testprogram( test_argh_dest_pair )
-celma_add_celma_boost_testprogram( test_argh_dest_tuple )
-celma_add_celma_boost_testprogram( test_argh_dest_vector )
-celma_add_celma_boost_testprogram( test_argh_format )
-celma_add_celma_boost_testprogram( test_argh_longarg_abbr )
-celma_add_celma_boost_testprogram( test_argh_migration )
-celma_add_celma_boost_testprogram( test_argh_output_streams)
-celma_add_celma_boost_testprogram( test_argh_range )
-celma_add_celma_boost_testprogram( test_argh_separate_values )
-celma_add_celma_boost_testprogram( test_argh_summary )
-celma_add_celma_boost_testprogram( test_argh_usage_texts )
-celma_add_celma_boost_testprogram( test_argh_value_arg )
-celma_add_celma_boost_testprogram( test_arg_list_element )
-celma_add_celma_boost_testprogram( test_arg_list_parser )
-celma_add_celma_boost_testprogram( test_argument_groups )
-celma_add_celma_boost_testprogram( test_argument_key )
-celma_add_celma_boost_testprogram( test_argument_sub_groups )
-celma_add_celma_boost_testprogram( test_constraint_container )
-celma_add_celma_boost_testprogram( test_handler )
-celma_add_celma_boost_testprogram( test_storage )
-celma_add_celma_boost_testprogram( test_value_handler )
+
+# search for all test programs and build them depending on their names:
+# - test programs ending in _c are using the standard setup and are just against
+#   the Celam and Boost (Test) library
+# - all remainng test programs are set up "manually" due to special requirements
+#   (start arguments)
+
+FILE( GLOB progargs_testprograms *.cpp )
+
+FOREACH( testsource ${progargs_testprograms} )
+   GET_FILENAME_COMPONENT( filename ${testsource} NAME_WE )
+   IF (filename MATCHES ^test_.*_c$)
+      celma_add_celma_boost_testprogram( ${filename} )
+   ENDIF()
+ENDFOREACH()
+
 
 # test-programs for output or start parameters
 add_executable( test_arg_groups_usage           test_arg_groups_usage.cpp )
@@ -57,18 +42,18 @@ add_executable( test_groups_sub_groups_usage    test_groups_sub_groups_usage.cpp
 add_executable( test_long_arg_desc              test_long_arg_desc.cpp )
 add_executable( test_sub_groups_usage           test_sub_groups_usage.cpp )
 
-target_link_libraries( test_arg_groups_usage             celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argg_eval_error_exit         celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_arg_file                celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_env_var                 celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_eval_error_exit         celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_hidden_output           celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_list_arg_vars_output    celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_print_def               celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_argh_verbose_output          celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_groups_sub_groups_usage      celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_long_arg_desc                celma ${Boost_Test_Link_Libs} )
-target_link_libraries( test_sub_groups_usage             celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_arg_groups_usage           celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argg_eval_error_exit       celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_arg_file              celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_env_var               celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_eval_error_exit       celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_hidden_output         celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_list_arg_vars_output  celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_print_def             celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_argh_verbose_output        celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_groups_sub_groups_usage    celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_long_arg_desc              celma ${Boost_Test_Link_Libs} )
+target_link_libraries( test_sub_groups_usage           celma ${Boost_Test_Link_Libs} )
 
 add_test( test_arg_groups_usage                   ${CMAKE_CURRENT_BINARY_DIR}/test_arg_groups_usage -h )
 add_test( test_argg_eval_error_exit_boost_lex     ${CMAKE_CURRENT_BINARY_DIR}/test_argg_eval_error_exit -b )
@@ -493,55 +478,55 @@ celma_add_test_output_check( test_argh_hidden_output  test_argh_hidden_output_re
 set( test_argh_list_arg_vars_output_result
    "^Arguments:\n"
    "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
-   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'-f' boolean flag, destination 'my_flag', not set.\n"
-   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--integer' value type 'int', destination 'my_int', value not set.\n"
-   "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats.\n"
    "'-s,--string' value type 'std::string', destination 'my_string', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
    "\n"
    "--------------------------------------------------------------------------------\n"
    "\n"
    "Arguments:\n"
    "'-V' calls function/method 'Handler::listArgVars'.\n"
-   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'-f' boolean flag, destination 'my_flag', not set.\n"
-   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--integer' value type 'int', destination 'my_int', value not set.\n"
-   "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats.\n"
    "'-s,--string' value type 'std::string', destination 'my_string', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--long' value type 'long', destination 'my_long', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, hidden, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, hidden, no checks, no formats.\n"
    "'--ulong' value type 'unsigned long', destination 'my_ulong', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
    "'--call' calls function/method 'callable_function'.\n"
-   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--cas' value type 'std::string', destination 'CheckAssign< my_ca_string>', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--sl' value type 'std::vector<std::string>', destination vector 'my_string_list', currently no values.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "\n"
    "Arguments:\n"
    "'-V' calls function/method 'Handler::listArgVars'.\n"
-   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'-f' boolean flag, destination 'my_flag', not set.\n"
-   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--integer' value type 'int', destination 'my_int', value = 42.\n"
-   "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), mandatory, does not take multiple&separate values, print dflt, no checks, no formats.\n"
    "'-s,--string' value type 'std::string', destination 'my_string', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--long' value type 'long', destination 'my_long', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, hidden, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, hidden, no checks, no formats.\n"
    "'--ulong' value type 'unsigned long', destination 'my_ulong', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
    "'--call' calls function/method 'callable_function'.\n"
-   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--cas' value type 'std::string', destination 'CheckAssign< my_ca_string>', value not set.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--sl' value type 'std::vector<std::string>', destination vector 'my_string_list', currently 1 values.\n"
-   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats\n"
+   "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "\n$"
 )
 

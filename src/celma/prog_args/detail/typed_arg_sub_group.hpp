@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -47,6 +47,11 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgSubGroup( const ArgumentKey& key, Handler& ah_obj);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.32.0, 27.08.2019
+   virtual ~TypedArgSubGroup() = default;
+
    /// Returns "subgroup".
    ///
    /// @return  Constant string "subgroup".
@@ -55,7 +60,8 @@ public:
 
    /// Required by framework, does nothing except setting the #mWasCalled flag.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */) override;
+   virtual void assign( const std::string& /* value */, bool /* inverted */)
+      override;
 
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.

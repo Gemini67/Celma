@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -43,6 +43,8 @@ namespace celma { namespace common {
 ///   it should be:
 ///      3-20{10,12-15},30
 ///
+/// @tparam  T
+///    The type of the values that will be generated.
 /// @since  0.2, 07.04.2016
 template< typename T = int> class RangeString
 {

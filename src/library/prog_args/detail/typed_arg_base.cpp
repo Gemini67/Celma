@@ -46,7 +46,6 @@ TypedArgBase::~TypedArgBase()
 {
 
    common::Vector::clear( mChecks);
-   common::Vector::clear( mFormats);
    common::Vector::clear( mConstraints);
 
 } // TypedArgBase::~TypedArgBase
@@ -96,36 +95,48 @@ TypedArgBase* TypedArgBase::setValueMode( ValueMode vm)
 
 /// Assigns a value.<br>
 /// Checks if the argument is deprecated, or if a cardinality constraint is
-/// violated. If not, the virtual method assign() is called to actually
-/// assign the value, and finally activateConstraints() is called to activate
-/// the contrainst (sic!) triggered by this argument.
+/// violated.<br>
+/// If not and the flag \a inverted is set, checks if the argument supports
+/// inverted logic.<br>
+/// Finally the virtual method assign() is called to actually assign the
+/// value, and afterwards activateConstraints() is called to activate the
+/// constraints (sic!) triggered by this argument.
 ///
 /// @param[in]  ignore_cardinality
 ///    Specifies if the cardinality of calls/value assignments should be
 ///    ignored.
 /// @param[in]  value
 ///    The value to assign, in string format.
-/// @since
-///    1.6.0, 29.06.2018  (renamed from calledAssign)
-/// @since
-///    0.2, 10.04.2016
-void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
+/// @param[in]  inverted
+///    Is set when the argument was preceeded by an exclamation mark which
+///    means that the logic of the argument should be inverted.
+/// @since  1.27.0, 24.05.2019
+///    (added parameter inverted)
+/// @since  1.6.0, 29.06.2018
+///    (renamed from calledAssign)
+/// @since  0.2, 10.04.2016
+void TypedArgBase::assignValue( bool ignore_cardinality, const string& value,
+   bool inverted)
 {
 
    if (mIsDeprecated)
    {
       if (mReplacedBy.empty())
          throw std::runtime_error( "argument '" + format::toString( mKey)
-            + "' is deprecated!");
+            + "' is deprecated");
       else
          throw std::runtime_error( "argument '" + format::toString( mKey)
-            + "' has been replaced by '" + mReplacedBy + "'!");
+            + "' has been replaced by '" + mReplacedBy + "'");
    } // end if
 
    if (!ignore_cardinality && mpCardinality)
       mpCardinality->gotValue();
 
-   assign( value);
+   if (inverted && !mAllowsInverting)
+      throw std::runtime_error( "argument '" + format::toString( mKey)
+            + "' does not support invertion");
+
+   assign( value, inverted);
    activateConstraints();
 
 } // TypedArgBase::assignValue
@@ -134,50 +145,85 @@ void TypedArgBase::assignValue( bool ignore_cardinality, const string& value)
 
 /// Adds a value formatter: The value from the argument list (command line)
 /// is formatted before it is checked and/or stored.
+/// Use this function for destination types that can store only one value, or
+/// values of one type.
 ///
 /// @param[in]  f
 ///    Pointer to the formatter to add, is deleted when it could not be
 ///    stored.
 /// @return  Pointer to this object.
-///    - "logic error" when called for an argument that does not accept
-///      values.
-///    - "invalid argument" when the given object pointer is NULL.
-/// @since
-///    0.2, 10.04.2016
+/// @throw
+///    std::logic_error when called for an argument that does not accept
+///    values.
+/// @throw
+///    std::invalid_argument when the given object pointer is NULL.
+/// @since  0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 {
 
-   if (mValueMode == ValueMode::none)
-   {
-      delete f;
-      throw std::logic_error( "calling addFormat() not allowed for variable '"
-         + mVarName + "' (because it doesn't accept values)");
-   } // end if
-
-   if (f == nullptr)
-      throw std::invalid_argument( "must provide valid object for formatting on"
-         " variable '" + mVarName + "'");
-
-   mFormats.push_back( f);
-
-   return this;
+   return internAddFormat( 0, f);
 } // TypedArgBase::addFormat
+
+
+
+/// Adds a value formatter for the value at the given position: The value
+/// from the argument list (command line) is formatted before it is checked
+/// and/or stored.
+/// Use this function for destination types that can store multiple values
+/// with the same or even with different types.<br>
+/// Here in the base class always throws, must be overloaded for types that
+/// support multiple values.
+///
+/// @param[in]  val_idx
+///    The index of the value to apply the format to.<br>
+///    A value of -1 means that the format should be applied to all values,
+///    index 0 means the first value etc.
+/// @param[in]  f
+///    Pointer to the formatter to add, is deleted when it could not be
+///    stored.
+/// @return  Pointer to this object.
+/// @throw
+///    std::logic_error when called for an argument that does not accept
+///    multiple values.
+/// @since  1.32.0, 25.04.2019
+TypedArgBase* TypedArgBase::addFormatPos( int, IFormat*)
+{
+
+   throw std::logic_error( "Variable '" + mVarName + "' does not store multiple"
+      " values, use addFormat() without index paramater");
+
+} // TypedArgBase::addFormatPos
 
 
 
 /// Calls all formatter methods defined for this argument. The formatter
 /// methods should throw an exception when a formatting failed.
+///
 /// @param[in,out]  val
-///    The value to format.
+///    The value to format, may be modified by the defined formatters.
+/// @param[in]      value_idx
+///    The index of the value to format, -1 to call the single/general
+///    formatter.
 /// @since
 ///    0.2, 10.04.2016
-void TypedArgBase::format( string& val) const
+void TypedArgBase::format( string& val, int value_idx) const
 {
 
-   for (auto const& stored_format : mFormats)
+   // since the format container is only filled when at least one formatter was
+   // added, a value index greater than the size of the container is not
+   // necessarily an error, it only means that no formatter was defined for the
+   // given value (position)
+   // since we cannot check (easily) if the given index is too high, we also
+   // omit the check if the index is too low
+   // we just check the range to make sure we don't access a non-existing
+   // element
+   if ((-1 <= value_idx) && (value_idx + 1 < static_cast< int>( mFormats.size())))
    {
-      stored_format->formatValue( val);
-   } // end for
+      for (auto const& stored_format : mFormats[ value_idx + 1])
+      {
+         stored_format->formatValue( val);
+      } // end for
+   } // end if
 
 } // TypedArgBase::format
 
@@ -189,10 +235,10 @@ void TypedArgBase::format( string& val) const
 ///    Pointer to the object that checks the value, is deleted when it could
 ///    not be stored.
 /// @return  Pointer to this object.
-/// @throws
-///    - "logic error" when called for an argument that does not accept
-///      values.
-///    - "invalid argument" when the given object pointer is NULL.
+/// @throw
+///    std::logic_error" when called for an argument that does not accept
+///    values.
+///    std::invalid_argument when the given object pointer is NULL.
 /// @since
 ///    0.2, 10.04.2016
 TypedArgBase* TypedArgBase::addCheck( ICheck* c)
@@ -208,6 +254,12 @@ TypedArgBase* TypedArgBase::addCheck( ICheck* c)
    if (c == nullptr)
       throw std::invalid_argument( "must provide valid object for value checks "
          "on variable '" + mVarName + "'");
+
+   for (auto const& check_iter : mChecks)
+   {
+      if (!check_iter->combinationAllowed( c))
+         throw std::logic_error( "two checks of the same kind are not allowed");
+   } // end for
 
    mChecks.push_back( c);
 
@@ -474,6 +526,63 @@ TypedArgBase::TypedArgBase( const std::string& vname, ValueMode vm,
 
 
 
+/// Finally adds the given formatter to the container of formatters.
+///
+/// @param[in]  val_idx
+///    The index of the value to apply the format on, plus 1.
+/// @param[in]  f
+///    Pointer to the formatter object to store.
+/// @return  This object.
+/// @throw
+///    std::logic_error when called for an argument that does not accept
+///    values.
+/// @throw
+///    std::invalid_argument when the given object pointer is NULL.
+/// @since  1.32.0, 25.04.2019
+TypedArgBase* TypedArgBase::internAddFormat( int val_idx, IFormat* f)
+{
+
+   if (mValueMode == ValueMode::none)
+   {
+      delete f;
+      throw std::logic_error( "calling addFormat() not allowed for variable '"
+         + mVarName + "' that doesn't accept values");
+   } // end if
+
+   if (f == nullptr)
+      throw std::invalid_argument( "must provide valid object for formatting on"
+         " variable '" + mVarName + "'");
+
+   if (static_cast< int>( mFormats.size()) <= val_idx)
+      mFormats.resize( val_idx + 10);
+
+   mFormats[ val_idx].emplace_back( f);
+
+   return this;
+} // TypedArgBase::internAddFormat
+
+
+
+/// Returns the number of formatters added for this argument.
+///
+/// @return  The number of formatters that have been added.
+/// @since  1.32.0, 19.08.2019
+size_t TypedArgBase::numFormats() const
+{
+
+   size_t  result = 0;
+
+
+   for (auto const& val_format : mFormats)
+   {
+      result += val_format.size();
+   } // end for
+
+   return result;
+} // TypedArgBase::numFormats
+
+
+
 /// Prints the values of the settings/flags managed by this class (except the
 /// name of the destination variable).
 /// @param[out]  os
@@ -507,8 +616,8 @@ ostream& operator <<( ostream& os, const TypedArgBase& tab)
       << deprecated_str
       << (tab.mChecks.empty() ? "no" : boost::lexical_cast< string>( tab.mChecks.size()))
       << " checks, "
-      << (tab.mFormats.empty() ? "no" : boost::lexical_cast< string>( tab.mFormats.size()))
-      << " formats";
+      << (tab.mFormats.empty() ? "no" : boost::lexical_cast< string>( tab.numFormats()))
+      << " formats.";
 
    return os;
 } // operator <<

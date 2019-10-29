@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,7 +39,7 @@ namespace celma { namespace log { namespace detail {
 namespace {
 
 
-static void log2stdout( const std::string& log_name);
+void log2stdout( const std::string& log_name, bool inverted);
 
 
 } // namespace
@@ -61,7 +61,7 @@ void addLogStandardArgs( const char* std_grp_name)
                                    "log to stdout (too).",
                                    std_grp_name);
 
-} // end addLogStandardArgs
+} // addLogStandardArgs
 
 
 
@@ -72,9 +72,15 @@ namespace {
 /// This function is called when the standard argument to turn on logging to
 /// \c stdout is actually used. Adds the stream log destination with \c cout to
 /// the specified log.
-/// @param[in]  log_name  The name of the log to add the stream destination to.
+///
+/// @param[in]  log_name
+///    The name of the log to add the stream destination to.
+/// @param[in]  inverted
+///    Ignored.
+/// @since  1.27.0, 27.05.2019
+///    (added parameter inverted)
 /// @since  0.3, 19.06.2016
-static void log2stdout( const std::string& log_name)
+void log2stdout( const std::string& log_name, bool)
 {
 
    if (auto log_obj = Logging::instance().getLog( log_name))
@@ -99,5 +105,5 @@ static void log2stdout( const std::string& log_name)
 } // namespace celma
 
 
-// ====================  END OF add_log_standard_args.cpp  ====================
+// =====  END OF add_log_standard_args.cpp  =====
 

@@ -144,12 +144,13 @@ public:
    friend Creator& operator <<( Creator& c, const formatString& fs);
 
    /// Operator to change the separator string to use from now on.
+   ///
    /// @param[in]  c
-   ///    The object to change the eparator string in.
+   ///    The object to change the separator string in.
    /// @param[in]  sep
    ///    The separator string to set.
    /// @return  The same object as passed in \a c.
-   /// @since  1.0.0, 02.10..2017
+   /// @since  1.0.0, 02.10.2017
    friend Creator& operator <<( Creator& c, const separator& sep);
 
 private:
@@ -352,6 +353,28 @@ inline Creator& time( Creator& in)
    in.field( Definition::FieldTypes::time);
    return in;
 } // time
+
+
+/// Adds a 'milliseconds-time' field to the format definition.
+/// @param[in]  in  The object to use to add the field to the definition.
+/// @return  The object as passed in.
+/// @since  1.26.0, 07.03.2018
+inline Creator& time_ms( Creator& in)
+{
+   in.field( Definition::FieldTypes::time_ms);
+   return in;
+} // time_ms
+
+
+/// Adds a 'microseconds-time' field to the format definition.
+/// @param[in]  in  The object to use to add the field to the definition.
+/// @return  The object as passed in.
+/// @since  1.26.0, 07.03.2018
+inline Creator& time_us( Creator& in)
+{
+   in.field( Definition::FieldTypes::time_us);
+   return in;
+} // time_us
 
 
 } // namespace formatting

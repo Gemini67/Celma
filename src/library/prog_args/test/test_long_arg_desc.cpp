@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,7 +29,6 @@
 #include "celma/prog_args.hpp"
 
 
-using celma::appl::ArgString2Array;
 using celma::prog_args::Handler;
 using std::cerr;
 using std::endl;
@@ -39,7 +38,7 @@ using std::endl;
 int main( int argc, char* argv[])
 {
 
-   const ArgString2Array  as2a( "-h", nullptr);
+   auto const  as2a = celma::appl::make_arg_array( "-h", nullptr);
 
 
    if (argc != 2)
