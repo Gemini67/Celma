@@ -36,6 +36,7 @@ using celma::appl::ArgString2Array;
 using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using celma::prog_args::differ;
+using celma::prog_args::disjoint;
 
 
 
@@ -44,7 +45,7 @@ using celma::prog_args::differ;
 /// type.
 ///
 /// @since  1.31.0, 22.10.2019
-BOOST_AUTO_TEST_CASE( errors)
+BOOST_AUTO_TEST_CASE( errors_differ)
 {
 
    {
@@ -155,7 +156,55 @@ BOOST_AUTO_TEST_CASE( errors)
          std::invalid_argument);
    } // end scope
 
-} // errors
+} // errors_differ
+
+
+
+/// Check some error conditions specific to the constraint 'disjoint'.
+///
+/// @since  x.y.z, 31.10.2019
+BOOST_AUTO_TEST_CASE( errors_disjoint)
+{
+
+   using vector_t = std::vector< int>;
+
+   {
+      Handler   ah( 0);
+      vector_t  dummy1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( dummy1), "dummy1"));
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint< vector_t>( "a")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler   ah( 0);
+      vector_t  dummy1;
+      vector_t  dummy2;
+      vector_t  dummy3;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( dummy1), "dummy1"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( dummy2), "dummy2"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c", DEST_VAR( dummy3), "dummy3"));
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint< vector_t>( "a;b;c")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      vector_t     dummy1;
+      std::string  dummy2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( dummy1), "dummy1"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( dummy2), "dummy2"));
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint< vector_t>( "a;b")),
+         std::invalid_argument);
+   } // end scope
+
+} // errors_disjoint
 
 
 
@@ -495,6 +544,149 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
    } // end scope
 
 } // constraint_differ_int3
+
+
+
+/// Verify that a 'disjoint' constraint on two int vectors works correctly.
+///
+/// @since  x.y.z, 31.10.2019
+BOOST_AUTO_TEST_CASE( constraint_disjoint_int)
+{
+
+   using vector_t = std::vector< int>;
+
+   {
+      Handler     ah( 0);
+      vector_t    value1;
+      vector_t    value2;
+      auto const  as2a = make_arg_array( "", nullptr);
+
+      ah.addArgument( "one", DEST_VAR( value1), "Values one");
+      ah.addArgument( "two", DEST_VAR( value2), "Values two");
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
+         disjoint< std::vector< int>>( "one;two")));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler     ah( 0);
+      vector_t    value1;
+      vector_t    value2;
+      auto const  as2a = make_arg_array( "--one 1", nullptr);
+
+      ah.addArgument( "one", DEST_VAR( value1), "Values one");
+      ah.addArgument( "two", DEST_VAR( value2), "Values two");
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
+         disjoint< std::vector< int>>( "one;two")));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler     ah( 0);
+      vector_t    value1;
+      vector_t    value2;
+      auto const  as2a = make_arg_array( "--one 1 --two 2", nullptr);
+
+      ah.addArgument( "one", DEST_VAR( value1), "Values one");
+      ah.addArgument( "two", DEST_VAR( value2), "Values two");
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
+         disjoint< std::vector< int>>( "one;two")));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler     ah( 0);
+      vector_t    value1;
+      vector_t    value2;
+      auto const  as2a = make_arg_array( "--one 1,3 --two 2,3", nullptr);
+
+      ah.addArgument( "one", DEST_VAR( value1), "Values one");
+      ah.addArgument( "two", DEST_VAR( value2), "Values two");
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
+         disjoint< std::vector< int>>( "one;two")));
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+} // constraint_disjoint_int
+
+
+
+/// Verify that a 'disjoint' constraint on two string vectors works correctly.
+///
+/// @since  x.y.z, 01.11.2019
+BOOST_AUTO_TEST_CASE( constraint_disjoint_string)
+{
+
+   using vector_t = std::vector< std::string>;
+
+   {
+      Handler     ah( 0);
+      vector_t    value1;
+      vector_t    value2;
+      auto const  as2a = make_arg_array( "", nullptr);
+
+      ah.addArgument( "one", DEST_VAR( value1), "Values one");
+      ah.addArgument( "two", DEST_VAR( value2), "Values two");
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
+         disjoint< vector_t, vector_t>( "one;two")));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler     ah( 0);
+      vector_t    value1;
+      vector_t    value2;
+      auto const  as2a = make_arg_array( "--one 1", nullptr);
+
+      ah.addArgument( "one", DEST_VAR( value1), "Values one");
+      ah.addArgument( "two", DEST_VAR( value2), "Values two");
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint< vector_t>( "one;two")));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler     ah( 0);
+      vector_t    value1;
+      vector_t    value2;
+      auto const  as2a = make_arg_array( "--one 1 --two 2", nullptr);
+
+      ah.addArgument( "one", DEST_VAR( value1), "Values one");
+      ah.addArgument( "two", DEST_VAR( value2), "Values two");
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint< vector_t>( "one;two")));
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler     ah( 0);
+      vector_t    value1;
+      vector_t    value2;
+      auto const  as2a = make_arg_array( "--one 1,3 --two 2,3", nullptr);
+
+      ah.addArgument( "one", DEST_VAR( value1), "Values one");
+      ah.addArgument( "two", DEST_VAR( value2), "Values two");
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint< vector_t>( "one;two")));
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+} // constraint_disjoint_string
 
 
 

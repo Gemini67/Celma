@@ -426,6 +426,12 @@ public:
    ///    0.16.0, 12.08.2017
    std::string checkStr() const;
 
+   /// Returns a text description of the formats specified for this argument.
+   ///
+   /// @return  A string with the description of the formatters.
+   /// @since  x.y.z, 05.11.2019
+   std::string formatStr() const;
+
    /// Specifies the cardinality check to perform on this type before assignment
    /// of a new value.<br>
    /// For most types, cardinality is set to 'maximum(1)', meaning that at most
@@ -579,6 +585,12 @@ public:
    ///    0.16.0, 15.08.2017
    std::string constraintStr() const;
 
+   /// Prints all properties of a destination variable.
+   ///
+   /// @param[in]  os  The stream to print to.
+   /// @since  x.y.z, 01.11.2019  (moved here from handler class)
+   void printProperties( std::ostream& os) const;
+
    /// Assignment is not allowed.
    TypedArgBase& operator =( const TypedArgBase&) = delete;
 
@@ -690,6 +702,16 @@ protected:
    std::vector< IArgConstraint*>   mConstraints;
 
 private:
+   /// Creates a list of the name of the formatters set for a specific index.
+   ///
+   /// @param[in]  os
+   ///    The stream to write to.
+   /// @param[in]  formatters
+   ///    The container with the formatters for a specific index.
+   /// @since  x.y.z, 05.11.2019
+   static void formatStr( std::ostream& os,
+      const value_format_cont_t& formatters);
+
    /// Should assign a value to the specified destination variable.<br>
    /// Value parameter is obviously always passed, if the destination type
    /// doesn't accept values or supports usage without value(s), the string is/

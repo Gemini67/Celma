@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::detail::FormatLowercase.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/detail/format_lowercase.hpp"
 
 
@@ -24,6 +24,17 @@
 
 
 namespace celma { namespace prog_args { namespace detail {
+
+
+
+/// Default constructor.
+/// Needed to store the name of the formatter in the base class.
+///
+/// @since  x.y.z, 05.11.2019
+FormatLowercase::FormatLowercase():
+   IFormat( "lowercase")
+{
+} // FormatLowercase::FormatLowercase
 
 
 

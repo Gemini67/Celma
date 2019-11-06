@@ -152,15 +152,18 @@ class IHandlerValueConstraint;
 ///     addArgument().
 ///   - setAllowMixIncSet(): For destination type level counter, allows to mix
 ///     arguments that increment the value or assign a new value.
-///   .
 /// - If necessary it is possible to add constraints that are always active, not
 ///   only after a specific argument was set. These constraints are:
-///   - all of: Specifies that either all arguments from the given list msut be
+///   - all of: Specifies that either all arguments from the given list must be
 ///     used , or none.
 ///   - any of: Specifies that either none or at most exactly one of the given
 ///     list of arguments must be used on the command line.
 ///   - one of: Specifies that exactly one of the given list of arguments must
 ///     be used on the command line.
+/// - It is also possible to add value constraints:
+///   - differ: All arguments in the list must have different values.
+///   - disjoint: For types that support multiple values, specifies that no
+///     value may exist in both data sets.
 /// - Finally, when all arguments were specified, call evalArguments() to
 ///   actually evaluate the command line arguments.
 /// - You can use this class to print a list of the arguments and their
@@ -172,6 +175,9 @@ class IHandlerValueConstraint;
 /// - Also you can implement your own formatters. Simply implement a class which
 ///   implements the IFormat interface, and pass an object of this class to
 ///   addFormat().
+/// - Of course you can also implement your own constraints. Depending on the
+///   type of the constraint, chose the corresponding base class and then add
+///   your constraint to the argument or the argument handler.
 /// - In order to support other data types, you just need to implement a
 ///   conversion function which reads the value from a istream and stores it in
 ///   a variable of the corresponding type.<br>
@@ -199,16 +205,6 @@ class IHandlerValueConstraint;
 ///        Handler  ah;<br>
 ///        ah << Argument( ...)->setIsMandatory()-> ...<br>
 ///           << Argument( ...)-> ...
-/// @todo  Argument constraints: Value relations.
-///        Support constraints like 'value of argument x must be less than value
-///        of argument y', e.g. start time < end time.<br>
-///        This constraint must be added to the handler since it needs to access
-///        two arguments, and it can only be checked after both arguments were
-///        used. But there is still the problem of how the values should be
-///        compared, since the values cannot be accessed from the "outside".
-///        Maybe like this: Find the argument with the constraint, search the
-///        second argument, then call checkConstraint() with the pointer to the
-///        other arguments handler. Then ... ?
 /// @todo  Change the logic of addCheck(): If multiple checks are added, a value
 ///        is accepted if it matches at least one of these checks.
 ///        Since lower and upper bound are already combined in the range check,

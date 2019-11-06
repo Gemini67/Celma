@@ -520,6 +520,51 @@ BOOST_AUTO_TEST_CASE( different_format_values)
          "\n"));
    } // end scope
 
+   // test argument help
+   {
+      std::ostringstream         std_out;
+      std::ostringstream         std_err;
+      Handler                    ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::vector< std::string>  v;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->addFormat( celma::prog_args::lowercase())
+         ->addFormatPos( 1, celma::prog_args::uppercase()));
+
+      auto const  as2a = make_arg_array( "-v ONE,two,THREE --help-arg-full v",
+         nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !v.empty());
+      BOOST_REQUIRE_EQUAL( v[ 0], "one");
+      BOOST_REQUIRE_EQUAL( v[ 1], "TWO");
+      BOOST_REQUIRE_EQUAL( v[ 2], "three");
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Argument '-v', usage:\n"
+         "   values\n"
+         "Properties:\n"
+         "   destination variable name:  v\n"
+         "   destination variable type:  std::vector<std::string>\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                none\n"
+         "   checks:                     -\n"
+         "   check original value:       false\n"
+         "   formats:                    all: lowercase; idx 1: uppercase\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   allows inverting:           false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
 } // different_format_values
 
 

@@ -27,6 +27,17 @@ namespace celma { namespace prog_args { namespace detail {
 
 
 
+/// Default constructor.
+/// Needed to store the name of the formatter in the base class.
+///
+/// @since  x.y.z, 05.11.2019
+FormatUppercase::FormatUppercase():
+   IFormat( "uppercase")
+{
+} // FormatUppercase::FormatUppercase
+
+
+
 /// Converts the text in \a val to uppercase.
 ///
 /// @param[in,out]  val  The text to convert to uppercase.

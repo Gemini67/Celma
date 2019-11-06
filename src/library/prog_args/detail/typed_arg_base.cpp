@@ -186,8 +186,10 @@ TypedArgBase* TypedArgBase::addFormat( IFormat* f)
 ///    std::logic_error when called for an argument that does not accept
 ///    multiple values.
 /// @since  1.32.0, 25.04.2019
-TypedArgBase* TypedArgBase::addFormatPos( int, IFormat*)
+TypedArgBase* TypedArgBase::addFormatPos( int, IFormat* f)
 {
+
+   delete f;
 
    throw std::logic_error( "Variable '" + mVarName + "' does not store multiple"
       " values, use addFormat() without index paramater");
@@ -299,6 +301,40 @@ string TypedArgBase::checkStr() const
 
    return format::toString( mChecks.begin(), mChecks.end());
 } // TypedArgBase::checkStr
+
+
+
+/// Returns a text description of the formats specified for this argument.
+///
+/// @return  A string with the description of the formatters.
+/// @since  x.y.z, 05.11.2019
+string TypedArgBase::formatStr() const
+{
+
+   if (mFormats.empty())
+      return "-";
+
+   std::ostringstream  oss;
+
+   if (mFormats[ 0].size() > 0)
+   {
+      oss << "all: ";
+      formatStr( oss, mFormats[ 0]);
+   } // end if
+
+   for (int i = 1; i < static_cast< int>( mFormats.size()); ++i)
+   {
+      if (mFormats[ i].empty())
+         continue; // for
+
+      if (!oss.str().empty())
+         oss << "; ";
+      oss << "idx " << i - 1 << ": ";
+      formatStr( oss, mFormats[ i]);
+   } // end for
+
+   return oss.str();
+} // TypedArgBase::formatStr
 
 
 
@@ -478,6 +514,40 @@ void TypedArgBase::activateConstraints()
 } // TypedArgBase::activateConstraints
 
 
+
+/// Prints all properties of a destination variable.
+///
+/// @param[in]  os  The stream to print to.
+/// @since  x.y.z, 01.11.2019  (moved here from handler class)
+void TypedArgBase::printProperties( std::ostream& os) const
+{
+
+   os << "Properties:\n"
+      << "   destination variable name:  " << mVarName << '\n'
+      << "   destination variable type:  " << varTypeName() << '\n'
+      << "   is mandatory:               " << std::boolalpha << mIsMandatory
+      << '\n'
+      << "   value mode:                 " << mValueMode << '\n'
+      << "   cardinality:                " << cardinalityStr() << '\n'
+      << "   checks:                     " << checkStr() << '\n'
+      << "   check original value:       " << mCheckOrigValue << '\n'
+      << "   formats:                    " << formatStr() << '\n'
+      << "   constraints:                " << constraintStr() << '\n'
+      << "   is hidden:                  " << mIsHidden  << '\n'
+      << "   takes multiple values:      " << mTakeMultipleValues << '\n'
+      << "   allows inverting:           " << mAllowsInverting << '\n'
+      << "   is deprecated:              " << mIsDeprecated << '\n'
+      << "   is replaced:                " << isReplaced() << '\n';
+
+   if (!mReplacedBy.empty())
+      os << "   replaced by:                " << mReplacedBy << '\n';
+
+   os << std::endl;
+
+} // TypedArgBase::printProperties
+
+
+
 /// Called for printing an argument and its destination variable.<br>
 /// Calls dump() which can be overloaded by derived classes.
 /// @param[out]  os
@@ -560,6 +630,31 @@ TypedArgBase* TypedArgBase::internAddFormat( int val_idx, IFormat* f)
 
    return this;
 } // TypedArgBase::internAddFormat
+
+
+
+/// Creates a list of the name of the formatters set for a specific index.
+///
+/// @param[in]  os
+///    The stream to write to.
+/// @param[in]  formatters
+///    The container with the formatters for a specific index.
+/// @since  x.y.z, 05.11.2019
+void TypedArgBase::formatStr( std::ostream& os,
+   const value_format_cont_t& formatters)
+{
+
+   bool  first = true;
+
+   for (auto const& formatter : formatters)
+   {
+      if (!first)
+         os << ", ";
+      os << formatter->desc();
+      first = false;
+   } // end for
+
+} // TypedArgBase::formatStr
 
 
 

@@ -1165,33 +1165,7 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
 
       if (full)
       {
-         mOutput << "Properties:" << std::endl
-                 << "   destination variable name:  "
-                 << p_arg_hdl->varName() << std::endl
-                 << "   destination variable type:  "
-                 << p_arg_hdl->varTypeName() << std::endl
-                 << "   is mandatory:               "
-                 << std::boolalpha << p_arg_hdl->isMandatory() << std::endl
-                 << "   value mode:                 "
-                 << p_arg_hdl->valueMode() << std::endl
-                 << "   cardinality:                "
-                 << p_arg_hdl->cardinalityStr() << std::endl
-                 << "   checks:                     "
-                 << p_arg_hdl->checkStr() << std::endl
-                 << "   constraints:                "
-                 << p_arg_hdl->constraintStr() << std::endl
-                 << "   is hidden:                  "
-                 << std::boolalpha << p_arg_hdl->isHidden() << std::endl
-                 << "   takes multiple values:      "
-                 << std::boolalpha << p_arg_hdl->takesMultiValue() << std::endl
-                 << "   is deprecated:              "
-                 << std::boolalpha << p_arg_hdl->isDeprecated() << std::endl
-                 << "   is replaced:                "
-                 << std::boolalpha << p_arg_hdl->isReplaced() << std::endl;
-         if (!p_arg_hdl->replacedBy().empty())
-            mOutput << "   replaced by:                "
-                    << p_arg_hdl->replacedBy() << std::endl;
-         mOutput << std::endl;
+         p_arg_hdl->printProperties( mOutput);
       } // end if
    } else
    {
@@ -1484,7 +1458,7 @@ bool Handler::validValueArguments( detail::IHandlerValueConstraint* ihc) const
          if (invalidCombination( key))
             throw invalid_argument( "Combination '" + it + "' is invalid");
 
-         if (ihc->varTypeName() != arg->varTypeName())
+         if (!ihc->matchesVarType( arg->varTypeName()))
             throw invalid_argument( "constraint and argument have different types");
 
          // argument from the list is valid

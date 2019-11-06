@@ -52,7 +52,10 @@ public:
    /// Default constructor.
    ///
    /// @since  1.32.0, 19.08.2019
-   RemoveDigitFormatter() = default;
+   RemoveDigitFormatter():
+      IFormat( "remove-digit")
+   {
+   } // RemoveDigitFormatter::RemoveDigitFormatter
 
    /// Empty, default destructor.
    ///
@@ -135,6 +138,15 @@ BOOST_AUTO_TEST_CASE( errors)
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( dummy), "string")
          ->addFormat( celma::prog_args::anycase( "")), std::invalid_argument);
+   } // end scope
+
+   // ensure that calling addFormatPos() on a wrong type throws
+   {
+      Handler      ah( 0);
+      std::string  my_string;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( my_string), "string")
+         ->addFormatPos( 1, celma::prog_args::uppercase()), std::logic_error);
    } // end scope
 
 } // errors
@@ -305,6 +317,48 @@ BOOST_AUTO_TEST_CASE( multiple_formatters)
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'-a' value type 'std::string', destination 'my_string', value = \"helloworld\".\n"
          "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, 2 formats.\n"
+         "\n"));
+   } // end scope
+
+   // test argument help
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         my_string;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( my_string),
+         "another string")->addFormat( celma::prog_args::lowercase())
+         ->addFormat( noDigit()));
+
+      auto const  as2a = make_arg_array( "-a AND4now --help-arg-full a", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !my_string.empty());
+      BOOST_REQUIRE_EQUAL( my_string, "andnow");
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Argument '-a', usage:\n"
+         "   another string\n"
+         "Properties:\n"
+         "   destination variable name:  my_string\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     -\n"
+         "   check original value:       false\n"
+         "   formats:                    all: lowercase, remove-digit\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   allows inverting:           false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
          "\n"));
    } // end scope
 

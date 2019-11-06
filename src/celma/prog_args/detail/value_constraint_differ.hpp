@@ -71,11 +71,16 @@ public:
    /// @since  1.31.0, 22.10.2019
    virtual void checkEndCondition() const noexcept( false) override;
 
-   /// Returns the type set for the constraint as string.
+   /// Checks if the type set for the constraint matches the type of the
+   /// destination variable.
    ///
-   /// @return  String with the type of the destination variable.
-   /// @since  1.31.0, 23.10.2019
-   virtual const std::string varTypeName() const override;
+   /// @param[in]  var_type_name
+   ///    The name of the type of the arguments destination variable.
+   /// @return
+   ///    \c true if the type of the destination variable and the type set for
+   ///    the destination variable match.
+   /// @since  x.y.z, 31.10.2019
+   virtual bool matchesVarType( const std::string& var_type_name) const override;
 
    /// Returns a text description of the constraint.
    ///
@@ -83,7 +88,7 @@ public:
    /// @since  1.31.0, 22.10.2019
    virtual std::string toString() const override;
 
-}; // ValueConstraintDiffer
+}; // ValueConstraintDiffer< T>
 
 
 // inlined methods
@@ -140,10 +145,11 @@ template< typename T> void ValueConstraintDiffer< T>::checkEndCondition() const
 
 
 template< typename T>
-   const std::string ValueConstraintDiffer< T>::varTypeName() const
+   bool ValueConstraintDiffer< T>::matchesVarType(
+      const std::string& var_type_name) const
 {
-   return type< T>::name();
-} // ValueConstraintDiffer< T>::varTypeName
+   return var_type_name == type< T>::name();
+} // ValueConstraintDiffer< T>::matchesVarType
 
 
 template< typename T> std::string ValueConstraintDiffer< T>::toString() const

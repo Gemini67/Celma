@@ -53,6 +53,14 @@ enum class VerboseLevels
 class EnumFormatter: public celma::prog_args::detail::IFormat
 {
 public:
+   /// Constructor, sets the formatters name in the base class.
+   ///
+   /// @since  x.y.z, 05.11.2019
+   EnumFormatter():
+      IFormat( "enum-formatter")
+   {
+   } // EnumFormatter::EnumFormatter
+
    /// Empty, virtual destructor.
    ///
    /// @since  1.23.0, 09.04.2019
