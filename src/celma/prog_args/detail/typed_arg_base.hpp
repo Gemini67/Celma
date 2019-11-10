@@ -100,16 +100,11 @@ public:
       optional,   //!< The value is optional.
       required,   //!< The argument must have a value.<br>
                   //!< This is the default for all other arguments.
-      command,    //!< An argument with this value mode signals that this and
+      command     //!< An argument with this value mode signals that this and
                   //!< all the following arguments and values are not anymore
                   //!< relevant for this object, but should be assigned as
                   //!< complete argument string to the value of the argument and
                   //!< will then be handled by another tool/command.
-      unknown     //!< We don't know if the argument actually needs a value or
-                  //!< not (used for arguments that result in a function call).
-                  //!< But this is only used as an initialisation value, once
-                  //!< the arguments are evaluated each argument must have a
-                  //!< defined value mode.
    }; // ValueMode
 
    /// Returns the text for the enum.

@@ -514,6 +514,11 @@ void Handler::addBracketHandler( HandlerFunc open_bracket,
    mpOpeningBracketHdlr = open_bracket;
    mpClosingBracketHdlr = closing_bracket;
 
+   // these are not really new argument handlers, but the cross-check function
+   // verifies them too
+   if (mUsedByGroup)
+      Groups::instance().crossCheckArguments( this);
+
 } // Handler::addBracketHandler
 
 
@@ -734,12 +739,10 @@ void Handler::crossCheckArguments( const string ownName,
 
    // finally, check that there are no control character handlers set in both
    // argument handlers
+   // since open and close handlers are always set together, we need to check
+   // only one
    if (mpOpeningBracketHdlr && otherAH.mpOpeningBracketHdlr)
-      throw invalid_argument( "Control argument handler for '(' from group '" +
-                              otherName + "' is already used by '" + ownName +
-                              "'");
-   if (mpClosingBracketHdlr && otherAH.mpClosingBracketHdlr)
-      throw invalid_argument( "Control argument handler for ')' from group '" +
+      throw invalid_argument( "Control argument handler for '()' from group '" +
                               otherName + "' is already used by '" + ownName +
                               "'");
 
@@ -791,11 +794,6 @@ Handler::ArgResult
    mpLastArg = p_arg_hdl = mArguments.findArg( key);
    if (p_arg_hdl == nullptr)
       return ArgResult::unknown;
-
-   // an argument that we know
-   if (p_arg_hdl->valueMode() == ValueMode::unknown)
-      throw runtime_error( "Value mode not set for argument '"
-                           + format::toString( key) + "'");
 
    if (p_arg_hdl->valueMode() == ValueMode::none)
    {
@@ -866,6 +864,7 @@ Handler::ArgResult
 
    switch (ai->mElementType)
    {
+   default:
    case detail::ArgListElement::Type::value:
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
@@ -910,10 +909,6 @@ Handler::ArgResult
       } // end if
 
       return ArgResult::consumed;
-
-   default:
-      throw runtime_error( "Got invalid element in argument list");
-
    } // end switch
 
    return ArgResult::unknown;
@@ -1318,7 +1313,11 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 {
 
    if (Groups::instance().evaluatedByArgGroups() && !mIsSubGroupHandler)
-       Groups::instance().displayUsage( txt1, txt2);
+   {
+      Groups::instance().displayUsage( txt1, txt2);
+      mUsagePrinted = true;
+      return;
+   } // end if
 
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;

@@ -217,14 +217,6 @@ BOOST_AUTO_TEST_CASE( errors)
          ->setValueMode( Handler::ValueMode::none), std::invalid_argument);
    } // end scope
 
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_THROW( ah.addArgument( "f,fun",
-         DEST_FUNCTION_VALUE( handlerFunValue), "Function with value")
-         ->setValueMode( Handler::ValueMode::unknown), std::invalid_argument);
-   } // end scope
-
    // pass a value to a method that does not accept values
    {
       Handler      ah( 0);

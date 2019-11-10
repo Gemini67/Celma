@@ -798,6 +798,12 @@ protected:
    void printSummary( sumoptset_t contents_set, std::ostream& os,
       bool standalone, const char* arg_prefix) const;
 
+   /// Returns if this object printed the program usage through evalArguments().
+   ///
+   /// @return  \c true if this object printed the usage.
+   /// @since  x.y.z, 08.11.2019
+   bool usagePrinted() const;
+
    /// Prints the usage of this class.
    ///
    /// @param[out]  os  The stream to print to.
@@ -1102,6 +1108,12 @@ inline void Handler::setUsageParams( detail::shared_usage_params_t& usage_params
 {
    mpUsageParams = usage_params;
 } // Handler::setUsageParams
+
+
+inline bool Handler::usagePrinted() const
+{
+   return mUsagePrinted;
+} // Handler::usagePrinted
 
 
 inline void Handler::setIsSubGroupHandler()

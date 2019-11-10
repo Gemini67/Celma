@@ -687,10 +687,9 @@ public:
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override
    {
 
-      if ((vm == ValueMode::command) || (vm == ValueMode::unknown))
-         throw std::invalid_argument( std::string( "may not set value mode '") +
-                                      valueMode2str( vm) + "' on variable '" +
-                                      mVarName + "'");
+      if (vm == ValueMode::command)
+         throw std::invalid_argument( std::string( "may not set value mode '")
+            + valueMode2str( vm) + "' on variable '" + mVarName + "'");
 
       mValueMode = vm;
       return this;

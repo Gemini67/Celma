@@ -39,6 +39,7 @@ using celma::prog_args::ValueHandler;
 
 
 /// Test value handling with simple types like int's, strings etc.
+///
 /// @since  0.14.0, 09.02.2017
 BOOST_AUTO_TEST_CASE( test_simple_args)
 {
@@ -147,6 +148,7 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
 
 
 /// Test with 'complex' types like vector etc. as destination variables.
+///
 /// @since  0.14.0, 21.02.2017
 BOOST_AUTO_TEST_CASE( test_complex_types)
 {
@@ -204,6 +206,7 @@ BOOST_AUTO_TEST_CASE( test_complex_types)
 
 
 /// Test storing a free value in a destination value.
+///
 /// @since  0.14.0, 09.02.2017
 BOOST_AUTO_TEST_CASE( test_free_value_arg)
 {
@@ -231,6 +234,7 @@ BOOST_AUTO_TEST_CASE( test_free_value_arg)
 
 
 /// Test using handler values objects with groups.
+///
 /// @since  0.14.0, 15.03.2017
 BOOST_AUTO_TEST_CASE( test_values_groups)
 {
@@ -255,6 +259,10 @@ BOOST_AUTO_TEST_CASE( test_values_groups)
       BOOST_REQUIRE_NO_THROW( handler_value->getValueHandlerObj());
       BOOST_REQUIRE_THROW( Groups::instance().getArgHandler( "standard handler"),
                            std::runtime_error);
+
+      // get the stored value handler (again) should of course work
+      BOOST_REQUIRE_NO_THROW( Groups::instance().getArgValueHandler( "standard handler"));
+
       Groups::instance().removeAllArgHandler();
    } // end scope
 
