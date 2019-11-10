@@ -74,19 +74,19 @@ BOOST_AUTO_TEST_CASE( wrong_setup)
 
    BOOST_REQUIRE_THROW(
       Handler  ah( Handler::AllHelp | Handler::hfUsageCont,
-         nullptr, preUsage1), std::invalid_argument);
+         nullptr, preUsage1.get()), std::invalid_argument);
 
    BOOST_REQUIRE_THROW(
       Handler  ah( Handler::AllHelp | Handler::hfUsageCont,
-         preUsage1, preUsage2), std::invalid_argument);
+         preUsage1.get(), preUsage2.get()), std::invalid_argument);
 
    BOOST_REQUIRE_THROW(
       Handler  ah( Handler::AllHelp | Handler::hfUsageCont,
-         postUsage1, postUsage2), std::invalid_argument);
+         postUsage1.get(), postUsage2.get()), std::invalid_argument);
 
    BOOST_REQUIRE_THROW(
       Handler  ah( Handler::AllHelp | Handler::hfUsageCont,
-         postUsage1, preUsage1), std::invalid_argument);
+         postUsage1.get(), preUsage1.get()), std::invalid_argument);
 
 } // wrong_setup
 
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( usage)
       std::ostringstream  oss_out;
       std::ostringstream  oss_err;
       Handler             ah( oss_out, oss_err,
-         Handler::AllHelp | Handler::hfUsageCont, preUsage1);
+         Handler::AllHelp | Handler::hfUsageCont, preUsage1.get());
       auto const          as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE( usage)
       std::ostringstream  oss_out;
       std::ostringstream  oss_err;
       Handler             ah( oss_out, oss_err,
-         Handler::AllHelp | Handler::hfUsageCont, postUsage1);
+         Handler::AllHelp | Handler::hfUsageCont, postUsage1.get());
       auto const          as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -164,7 +164,8 @@ BOOST_AUTO_TEST_CASE( usage)
       std::ostringstream  oss_out;
       std::ostringstream  oss_err;
       Handler             ah( oss_out, oss_err,
-         Handler::AllHelp | Handler::hfUsageCont, preUsage1, postUsage1);
+         Handler::AllHelp | Handler::hfUsageCont, preUsage1.get(),
+         postUsage1.get());
       auto const          as2a = make_arg_array( "-h", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));

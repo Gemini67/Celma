@@ -19,13 +19,14 @@
 #define CELMA_PROG_ARGS_I_USAGE_TEXT_HPP
 
 
+#include <memory>
 #include "celma/prog_args/handler.hpp"
 
 
 namespace celma { namespace prog_args {
 
 
-/// Base class for classes that print additional information for the usage.<br>
+/// Base class for classes that print additional information for the usage.
 /// Together with the following macro UsageText(), the additional usage output
 /// can be created very easily.<br>
 /// Example:<br>
@@ -37,9 +38,9 @@ namespace celma { namespace prog_args {
 ///   </pre>
 /// - Pass the information like this:<br>
 ///   <pre>
-///      ArgumentHandler::evalArguments( argc, argv,
-///                                      ArgumentHandler::upBeforeArgs,
-///                                      PreArgText);
+///      Handler::evalArguments( argc, argv,
+///                              Handler::upBeforeArgs,
+///                              PreArgText);
 ///   </pre>
 ///
 /// @since  0.2, 10.04.2016
@@ -110,14 +111,17 @@ private:
 } // namespace celma
 
 
-/// Macro to easily define the output function.<br>
+/// Macro to easily define the output function.
 /// Actually creates a class called \<c\>_class which contains the required
 /// print() method, as well a static, global variable called c (of type
 /// \<c\>_class) which can then be passed to evalArguments().
-/// @param  c  The name of the class/object to create.
-/// @param  p  The position of the text in the usage (see enum UsagePos in class
-///            ArgumentHandler)
-/// @param  t  The text to print.
+///
+/// @param  c
+///    The name of the class/object to create.
+/// @param  p
+///    The position of the text in the usage (see enum UsagePos in class Handler)
+/// @param  t
+///    The text to print.
 /// @since  0.2, 10.04.2016
 #define UsageText( c, p, t) \
    class c ## _class : public celma::prog_args::IUsageText \
@@ -130,7 +134,7 @@ private:
          os << t; \
       } \
    }; \
-   static c ## _class*  c = new c ## _class ( celma::prog_args::Handler::UsagePos:: p)
+   static std::unique_ptr< c ## _class>  c( new c ## _class ( celma::prog_args::Handler::UsagePos:: p))
 
 
 #endif   // CELMA_PROG_ARGS_I_USAGE_TEXT_HPP

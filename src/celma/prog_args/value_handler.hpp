@@ -31,7 +31,7 @@ namespace celma { namespace prog_args {
 
 
 /// Extension of the Handler class that creates and stores the destination
-/// variables itself.<br>
+/// variables itself.
 /// Use this class e.g. in a library module that wants to support setting values
 /// through command line arguments, but does not have a global object that
 /// persists. Then, create an object of this value handler class in the
@@ -51,130 +51,162 @@ class ValueHandler: public Handler
 {
 public:
    /// Constructor.
-   /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
-   ///                      possible values.
-   /// @param[in]  txt1     Optional pointer to the object to provide additional
-   ///                      text for the usage.
-   /// @param[in]  txt2     Optional pointer to the object to provide additional
-   ///                      text for the usage.
+   ///
+   /// @param[in]  flagSet
+   ///    The set of flags. See enum HandleFlags for a list of possible values.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
    /// @since  0.14.0, 09.02.2017
    explicit ValueHandler( int flagSet = Handler::hfHelpShort | Handler::hfHelpLong,
-                          IUsageText* txt1 = nullptr,
-                          IUsageText* txt2 = nullptr);
+      IUsageText* txt1 = nullptr, IUsageText* txt2 = nullptr);
 
    /// Constructor that allows to specify the output streams to write to.
-   /// @param[in]  os        The stream to write normal output to.
-   /// @param[in]  error_os  The stream to write error output to.
-   /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
-   ///                       of possible values.
-   /// @param[in]  txt1      Optional pointer to the object to provide
-   ///                       additional text for the usage.
-   /// @param[in]  txt2      Optional pointer to the object to provide
-   ///                       additional text for the usage.
+   ///
+   /// @param[in]  os
+   ///    The stream to write normal output to.
+   /// @param[in]  error_os
+   ///    The stream to write error output to.
+   /// @param[in]  flag_set
+   ///    The set of flags. See enum HandleFlags for a list of possible values.
+   /// @param[in]  txt1
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
+   /// @param[in]  txt2
+   ///    Optional pointer to the object to provide additional text for the
+   ///    usage.
    /// @since  0.14.0, 09.02.2017
    ValueHandler( std::ostream& os, std::ostream& error_os,
-                 int flag_set = Handler::hfHelpShort | Handler::hfHelpLong,
-                 IUsageText* txt1 = nullptr,
-                 IUsageText* txt2 = nullptr);
+      int flag_set = Handler::hfHelpShort | Handler::hfHelpLong,
+      IUsageText* txt1 = nullptr,
+      IUsageText* txt2 = nullptr);
 
    // default destructor will do just fine
    virtual ~ValueHandler() = default;
+
    // don't want to allow copying nor assignment
    ValueHandler( const ValueHandler&) = delete;
    ValueHandler& operator =( const ValueHandler&) = delete;
 
    /// Add an argument to the argument handler, where the destination variable
    /// is managed by this class.
+   ///
    /// @tparam  T  The type of the argument value to handle.
-   /// @param[in]  args  The arguments on the command line for this argument.
-   /// @param[in]  desc  The description of this argument for the usage.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// @param[in]  args
+   ///    The arguments on the command line for this argument.
+   /// @param[in]  desc
+   ///    The description of this argument for the usage.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.14.0, 10.02.2017
    template< typename T>
       detail::TypedArgBase* addValueArgument( const std::string& args,
-                                              const std::string desc)
-                                            noexcept( false);
+         const std::string& desc) noexcept( false);
 
    /// Add a free argument to the argument handler, where the destination
    /// variable is managed by this class.
+   ///
    /// @tparam  T  The type of the argument value to handle.
    /// @param[in]  desc  The description of this argument for the usage.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.14.0, 10.02.2017
    template< typename T>
-      detail::TypedArgBase* addValueArgument( const std::string desc)
-                                            noexcept( false);
+      detail::TypedArgBase* addValueArgument( const std::string& desc)
+         noexcept( false);
 
    /// Add an argument that accepts a range string as value.
-   /// @tparam  T  The type of the values to generate from the range string.
-   /// @tparam  C  The type of the container to store the values in.
-   /// @param[in]  args  The arguments on the command line for this argument.
-   /// @param[in]  desc  The description of this argument for the usage.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   ///
+   /// @tparam  T
+   ///    The type of the values to generate from the range string.
+   /// @tparam  C
+   ///    The type of the container to store the values in.
+   /// @param[in]  args
+   ///    The arguments on the command line for this argument.
+   /// @param[in]  desc
+   ///    The description of this argument for the usage.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.14.0, 21.02.2017
    template< typename T, typename C>
       detail::TypedArgBase* addRangeValueArgument( const std::string& args,
-                                                   const std::string desc)
+                                                   const std::string& desc)
                                                  noexcept( false);
 
    /// Add a free argument that accepts a range string as value.
-   /// @tparam  T  The type of the values to generate from the range string.
-   /// @tparam  C  The type of the container to store the values in.
+   ///
+   /// @tparam  T
+   ///    The type of the values to generate from the range string.
+   /// @tparam  C
+   ///    The type of the container to store the values in.
    /// @param[in]  desc  The description of this argument for the usage.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.14.0, 21.02.2017
    template< typename T, typename C>
-      detail::TypedArgBase* addRangeValueArgument( const std::string desc)
+      detail::TypedArgBase* addRangeValueArgument( const std::string& desc)
                                                  noexcept( false);
 
 
-   /// Adds a sub-group.<br>
+   /// Adds a sub-group.
    /// Note: Theoretically we could pass the object by reference, but then the
    /// compiler cannot distinguish anymore between this function and the variant
    /// to add an argument resulting in a function call.
-   /// @param[in]  arg_spec  The arguments on the command line to enter/start
-   ///                       the sub-group.
-   /// @param[in]  subGroup  The object to handle the sub-group arguments.
-   /// @param[in]  desc      The description of this sub-group argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   ///
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line to enter/start the sub-group.
+   /// @param[in]  subGroup
+   ///    The object to handle the sub-group arguments.
+   /// @param[in]  desc
+   ///    The description of this sub-group argument.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
    /// @since  0.14.0, 15.03.2017
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      ValueHandler* subGroup,
-                                      const std::string& desc);
+      ValueHandler* subGroup, const std::string& desc);
 
    /// Use this function to get the value that was set by the argument on the
-   /// command line.<br>
+   /// command line.
    /// To check if a non-mandatory argument was really set, use the
    /// Handler::getArgHandler() method and then check hasValue() from the
    /// (TypedArgBase) pointer returned.
+   ///
    /// @tparam  T  The type of the value.
-   /// @param[out]  dest  Returns the value.
-   /// @param[in]   args  The command line argument(s).
+   /// @param[out]  dest
+   ///    Returns the value.
+   /// @param[in]   args
+   ///    The command line argument(s).
    /// @since  0.14.0, 10.02.2017
    template< typename T>
       void getValue( T& dest, const std::string& args) const noexcept( false);
 
    /// Use this function to get the free value that was set on the command
-   /// line.<br>
+   /// line.
    /// To check if a non-mandatory, free argument was really set, use the
    /// Handler::getArgHandler() method with '-' as the argument key, and then
    /// check hasValue() from the (TypedArgBase) pointer returned.
+   ///
    /// @tparam  T  The type of the value.
    /// @param[out]  dest  Returns the value.
    /// @since  0.14.0, 10.02.2017
    template< typename T> void getValue( T& dest) const noexcept( false);
 
    /// Returns if this object is a value handler.
+   ///
    /// @return  In this class, always \c true.
    /// @since  0.14.0, 21.02.2017
    virtual bool isValueHandler() const override;
 
    /// Returns this object.
+   ///
    /// @return  This object.
    /// @since  0.14.0, 15.03.2017
    virtual ValueHandler* getValueHandlerObj() noexcept( false) override;
@@ -209,8 +241,7 @@ private:
 
 template< typename T>
    detail::TypedArgBase* ValueHandler::addValueArgument( const std::string& args,
-                                                          const std::string desc)
-                                                        noexcept( false)
+      const std::string& desc) noexcept( false)
 {
 
    auto  value = std::make_shared< detail::ArgumentValue< T>>();
@@ -222,8 +253,8 @@ template< typename T>
 
 
 template< typename T>
-   detail::TypedArgBase* ValueHandler::addValueArgument( const std::string desc)
-      noexcept( false)
+   detail::TypedArgBase*
+      ValueHandler::addValueArgument( const std::string& desc) noexcept( false)
 {
    return addValueArgument< T>( "-", desc);
 } // ValueHandler::addValueArgument
@@ -232,7 +263,7 @@ template< typename T>
 template< typename T, typename C>
    detail::TypedArgBase*
       ValueHandler::addRangeValueArgument( const std::string& args,
-         const std::string desc) noexcept( false)
+         const std::string& desc) noexcept( false)
 {
 
    auto  value = std::make_shared< detail::ArgumentValue< C>>();
@@ -247,10 +278,10 @@ template< typename T, typename C>
 
 template< typename T, typename C>
    detail::TypedArgBase*
-      ValueHandler::addRangeValueArgument( const std::string desc)
+      ValueHandler::addRangeValueArgument( const std::string& desc)
          noexcept( false)
 {
-   return addValueArgument< T, C>( "-", desc);
+   return addRangeValueArgument< T, C>( "-", desc);
 } // ValueHandler::addRangeValueArgument
 
 

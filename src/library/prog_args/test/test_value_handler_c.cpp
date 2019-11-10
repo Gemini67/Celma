@@ -12,11 +12,11 @@
 
 
 
-// module to test, header file include
+// module to test headerfile include
 #include "celma/prog_args/value_handler.hpp"
 
 
-// STL includes
+// C++ Standard Library includes
 #include <string>
 
 
@@ -66,6 +66,10 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
       bool  result_value = false;
       BOOST_REQUIRE_NO_THROW( ah.getValue< bool>( result_value, "b"));
       BOOST_REQUIRE_EQUAL( result_value, false);
+
+      // try to get an argument handler that does not exist
+      BOOST_REQUIRE_THROW( ah.getValue< bool>( result_value, "x"),
+         std::invalid_argument);
    } // end scope
 
    // test with a boolean value, used
@@ -227,6 +231,21 @@ BOOST_AUTO_TEST_CASE( test_free_value_arg)
       std::string  wrong_result_value_type;
       BOOST_REQUIRE_THROW( ah.getValue< std::string>( wrong_result_value_type),
                            std::invalid_argument);
+   } // end scope
+
+   // test type RangeDest
+   {
+      ValueHandler  ah( 0);
+
+      ah.addRangeValueArgument< int, std::vector< int>>( "Range.");
+
+      auto const  as2a = make_arg_array( "1-5", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      std::vector< int>  result_value;
+      BOOST_REQUIRE_NO_THROW( ah.getValue< std::vector< int>>( result_value));
+      BOOST_REQUIRE_EQUAL( result_value.size(), 5);
    } // end scope
 
 } // test_free_value_arg

@@ -576,7 +576,8 @@ BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
       std::ostringstream  oss_std;
       std::ostringstream  oss_err;
       auto                firstAH  = Groups::instance( oss_std, oss_err,
-         Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp, preUsage);
+         Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp,
+         preUsage.get());
       auto                secondAH = Groups::instance().getArgHandler( "second");
       bool                firstFlag = false;
       int                 firstValue;
@@ -634,7 +635,8 @@ BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
       std::ostringstream  oss_std;
       std::ostringstream  oss_err;
       auto                firstAH  = Groups::instance( oss_std, oss_err,
-         Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp, postUsage);
+         Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp,
+         postUsage.get());
       auto                secondAH = Groups::instance().getArgHandler( "second");
       bool                firstFlag = false;
       int                 firstValue;
@@ -693,7 +695,7 @@ BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
       std::ostringstream  oss_err;
       auto                firstAH  = Groups::instance( oss_std, oss_err,
          Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp,
-         preUsage, postUsage);
+         preUsage.get(), postUsage.get());
       auto                secondAH = Groups::instance().getArgHandler( "second");
       bool                firstFlag = false;
       int                 firstValue;
