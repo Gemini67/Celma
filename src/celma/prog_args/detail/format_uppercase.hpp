@@ -30,6 +30,12 @@ namespace celma { namespace prog_args { namespace detail {
 class FormatUppercase: public IFormat
 {
 public:
+   /// Default constructor.
+   /// Needed to store the name of the formatter in the base class.
+   ///
+   /// @since  1.33.0, 05.11.2019
+   FormatUppercase();
+
    /// Virtual, empty destructor.
    ///
    /// @since  1.23.0, 11.04.2019

@@ -687,10 +687,9 @@ public:
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override
    {
 
-      if ((vm == ValueMode::command) || (vm == ValueMode::unknown))
-         throw std::invalid_argument( std::string( "may not set value mode '") +
-                                      valueMode2str( vm) + "' on variable '" +
-                                      mVarName + "'");
+      if (vm == ValueMode::command)
+         throw std::invalid_argument( std::string( "may not set value mode '")
+            + valueMode2str( vm) + "' on variable '" + mVarName + "'");
 
       mValueMode = vm;
       return this;
@@ -937,6 +936,13 @@ public:
    virtual TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
       override;
 
+   /// Used for value checks in value constraints: Returns the current value of
+   /// the destination variable.
+   ///
+   /// @param[out]  dest  Returns the current value of the destination variable.
+   /// @since  1.33.0, 31.10.2019
+   void getValue( vector_type& dest) const;
+
 protected:
    /// Used for printing an argument and its destination variable.
    ///
@@ -1072,6 +1078,13 @@ template< typename T>
    mTreatDuplicatesAsErrors = duplicates_are_errors;
    return this;
 } // TypedArg< std::vector< T>>::setUniqueData
+
+
+template< typename T>
+   void TypedArg< std::vector< T>>::getValue( vector_type& dest) const
+{
+   dest = mDestVar;
+} // TypedArg< std::vector< T>>::getValue
 
 
 template< typename T>

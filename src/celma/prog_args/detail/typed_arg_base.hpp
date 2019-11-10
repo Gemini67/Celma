@@ -100,16 +100,11 @@ public:
       optional,   //!< The value is optional.
       required,   //!< The argument must have a value.<br>
                   //!< This is the default for all other arguments.
-      command,    //!< An argument with this value mode signals that this and
+      command     //!< An argument with this value mode signals that this and
                   //!< all the following arguments and values are not anymore
                   //!< relevant for this object, but should be assigned as
                   //!< complete argument string to the value of the argument and
                   //!< will then be handled by another tool/command.
-      unknown     //!< We don't know if the argument actually needs a value or
-                  //!< not (used for arguments that result in a function call).
-                  //!< But this is only used as an initialisation value, once
-                  //!< the arguments are evaluated each argument must have a
-                  //!< defined value mode.
    }; // ValueMode
 
    /// Returns the text for the enum.
@@ -426,6 +421,12 @@ public:
    ///    0.16.0, 12.08.2017
    std::string checkStr() const;
 
+   /// Returns a text description of the formats specified for this argument.
+   ///
+   /// @return  A string with the description of the formatters.
+   /// @since  1.33.0, 05.11.2019
+   std::string formatStr() const;
+
    /// Specifies the cardinality check to perform on this type before assignment
    /// of a new value.<br>
    /// For most types, cardinality is set to 'maximum(1)', meaning that at most
@@ -579,6 +580,12 @@ public:
    ///    0.16.0, 15.08.2017
    std::string constraintStr() const;
 
+   /// Prints all properties of a destination variable.
+   ///
+   /// @param[in]  os  The stream to print to.
+   /// @since  1.33.0, 01.11.2019  (moved here from handler class)
+   void printProperties( std::ostream& os) const;
+
    /// Assignment is not allowed.
    TypedArgBase& operator =( const TypedArgBase&) = delete;
 
@@ -690,6 +697,16 @@ protected:
    std::vector< IArgConstraint*>   mConstraints;
 
 private:
+   /// Creates a list of the name of the formatters set for a specific index.
+   ///
+   /// @param[in]  os
+   ///    The stream to write to.
+   /// @param[in]  formatters
+   ///    The container with the formatters for a specific index.
+   /// @since  1.33.0, 05.11.2019
+   static void formatStr( std::ostream& os,
+      const value_format_cont_t& formatters);
+
    /// Should assign a value to the specified destination variable.<br>
    /// Value parameter is obviously always passed, if the destination type
    /// doesn't accept values or supports usage without value(s), the string is/

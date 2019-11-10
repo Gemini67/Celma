@@ -217,14 +217,6 @@ BOOST_AUTO_TEST_CASE( errors)
          ->setValueMode( Handler::ValueMode::none), std::invalid_argument);
    } // end scope
 
-   {
-      Handler  ah( 0);
-
-      BOOST_REQUIRE_THROW( ah.addArgument( "f,fun",
-         DEST_FUNCTION_VALUE( handlerFunValue), "Function with value")
-         ->setValueMode( Handler::ValueMode::unknown), std::invalid_argument);
-   } // end scope
-
    // pass a value to a method that does not accept values
    {
       Handler      ah( 0);
@@ -813,9 +805,12 @@ BOOST_AUTO_TEST_CASE( multi_values)
          "   value mode:                 'required' (2)\n"
          "   cardinality:                none\n"
          "   checks:                     -\n"
+         "   check original value:       false\n"
+         "   formats:                    -\n"
          "   constraints:                -\n"
          "   is hidden:                  false\n"
          "   takes multiple values:      true\n"
+         "   allows inverting:           false\n"
          "   is deprecated:              false\n"
          "   is replaced:                false\n"
          "\n"));
@@ -869,9 +864,12 @@ BOOST_AUTO_TEST_CASE( no_value_method)
          "   value mode:                 'none' (0)\n"
          "   cardinality:                at most 1\n"
          "   checks:                     -\n"
+         "   check original value:       false\n"
+         "   formats:                    -\n"
          "   constraints:                -\n"
          "   is hidden:                  false\n"
          "   takes multiple values:      false\n"
+         "   allows inverting:           false\n"
          "   is deprecated:              false\n"
          "   is replaced:                false\n"
          "\n"));

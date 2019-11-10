@@ -8,15 +8,19 @@
 **    ####   ######  ######  #    #  #    #
 **
 **
+**  Description:
+**    Test program for the module "bitset iterator", using the Boost.Test
+**    framework.
+**
 --*/
 
 
-// project includes
+// module to test headerfile include
 #include "celma/common/bitset_iterator.hpp"
 
 
 // Boost includes
-#define BOOST_TEST_MODULE AdjustTest
+#define BOOST_TEST_MODULE BitsetIteratorTest
 #include <boost/test/unit_test.hpp>
 
 

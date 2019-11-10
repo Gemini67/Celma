@@ -146,10 +146,9 @@ inline void TypedArgCallableValue::printValue( std::ostream& os, bool) const
 
 inline TypedArgBase* TypedArgCallableValue::setValueMode( ValueMode vm) noexcept( false)
 {
-   if ((vm == ValueMode::none) || (vm == ValueMode::unknown))
-      throw std::invalid_argument( std::string( "may not set value mode '") +
-                                   valueMode2str( vm) + "' on variable '" +
-                                   mVarName + "'");
+   if (vm == ValueMode::none)
+      throw std::invalid_argument( std::string( "may not set value mode '")
+         + valueMode2str( vm) + "' on variable '" + mVarName + "'");
    mValueMode = vm;
    return this;
 } // TypedArgCallableValue::setValueMode

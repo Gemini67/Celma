@@ -264,6 +264,14 @@ namespace {
 class WildcardRangeFormat: public celma::prog_args::detail::IFormat
 {
 public:
+   /// Constructor, sets the formatters name in the base class.
+   ///
+   /// @since  1.33.0, 05.11.2019
+   WildcardRangeFormat():
+      IFormat( "wildcard-range")
+   {
+   } // WildcardRangeFormat::WildcardRangeFormat
+
    /// Changes the string 'all' into '0'.
    /// @param[in,out]  val  The string to check/change.
    /// @since  0.2, 10.04.2016

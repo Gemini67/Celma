@@ -54,11 +54,16 @@ public:
    /// @since  1.31.0, 23.10.2019
    virtual bool isValueConstraint() const override;
 
-   /// Returns the type set for the constraint as string.
+   /// Checks if the type set for the constraint matches the type of the
+   /// destination variable.
    ///
-   /// @return  String with the type of the destination variable.
-   /// @since  1.31.0, 23.10.2019
-   virtual const std::string varTypeName() const = 0;
+   /// @param[in]  var_type_name
+   ///    The name of the type of the arguments destination variable.
+   /// @return
+   ///    \c true if the type of the destination variable and the type set for
+   ///    the destination variable match.
+   /// @since  1.33.0, 31.10.2019
+   virtual bool matchesVarType( const std::string& var_type_name) const = 0;
 
    /// Stores the pointer to the handler object for one of the arguments in the
    /// argument list.
@@ -67,7 +72,7 @@ public:
    ///
    /// @param[in]  handler  Pointer to the argument handler object.
    /// @since  1.31.0, 22.10.2019
-   void storeArgumentHandler( TypedArgBase* handler);
+   virtual void storeArgumentHandler( TypedArgBase* handler);
 
    /// Returns the number of arguments (argument handler objects) stored
    /// internally.

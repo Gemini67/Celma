@@ -30,6 +30,7 @@
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args/destination.hpp"
+#include "celma/prog_args/i_usage_text.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
@@ -39,6 +40,51 @@ using celma::prog_args::Handler;
 using std::invalid_argument;
 using std::ostringstream;
 using std::runtime_error;
+
+
+namespace {
+
+
+UsageText( preUsage, beforeArgs,
+   "Very interesting and meaningful text that will be printed before the list of\n"
+   "arguments."
+);
+
+
+UsageText( postUsage, afterArgs,
+   "And now this even more interesting and meaningful text that will be printed\n"
+   "after the list of arguments."
+);
+
+
+class GroupsCleanupFixture
+{
+public:
+   /// 
+   /// @return
+   ///    .
+   /// @since
+   ///    1.33.0, 08.11.2019
+   GroupsCleanupFixture()
+   {
+      // remove the argument handlers from the group
+      Groups::instance().removeAllArgHandler();
+      // remove the group object so we can set (new) parameters on the group
+      Groups::reset();
+   } // GroupsCleanupFixture::GroupsCleanupFixture
+
+   ~GroupsCleanupFixture()
+   {
+      // remove the argument handlers from the group
+      Groups::instance().removeAllArgHandler();
+      // remove the group object so we can set (new) parameters on the group
+      Groups::reset();
+   } // GroupsCleanupFixture::~GroupsCleanupFixture
+
+}; // GroupsCleanupFixture
+
+
+} // namespace
 
 
 
@@ -55,7 +101,7 @@ BOOST_AUTO_TEST_CASE( no_argument_handlers)
 
 
 
-/// Should not cash if the name is empty.
+/// Should not crash if the name is empty.
 ///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( no_name)
@@ -74,7 +120,7 @@ BOOST_AUTO_TEST_CASE( no_name)
 /// object is created at exactly the same address.
 ///
 /// @since  1.32.0, 29.10.2019
-BOOST_AUTO_TEST_CASE( remove_arg_handler)
+BOOST_FIXTURE_TEST_CASE( remove_arg_handler, GroupsCleanupFixture)
 {
 
    {
@@ -102,16 +148,14 @@ BOOST_AUTO_TEST_CASE( remove_arg_handler)
    bool  dummy;
    BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "d", DEST_VAR( dummy), "dummy"));
 
-   // singleton Groups: have to clean up
-   Groups::instance().removeAllArgHandler();
-
 } // remove_arg_handler
 
 
 
 /// Check that the same symbolic name cannot be used twice.
+///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( duplicate_name)
+BOOST_FIXTURE_TEST_CASE( duplicate_name, GroupsCleanupFixture)
 {
 
    Groups::SharedArgHndl  firstAH;
@@ -126,17 +170,15 @@ BOOST_AUTO_TEST_CASE( duplicate_name)
    BOOST_REQUIRE( secondAH.get() != nullptr);
    BOOST_REQUIRE_EQUAL( firstAH, secondAH);
 
-   // singleton Groups: have to clean up
-   Groups::instance().removeAllArgHandler();
-
 } // duplicate_name
 
 
 
 /// Check that a standard argument used by two Handler objects is
 /// detected.
+///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( duplicate_standard_arg)
+BOOST_FIXTURE_TEST_CASE( duplicate_standard_arg, GroupsCleanupFixture)
 {
 
    {
@@ -177,9 +219,6 @@ BOOST_AUTO_TEST_CASE( duplicate_standard_arg)
       BOOST_REQUIRE_THROW( secondAH->addArgument( "-", DEST_VAR( secondFree),
                                                   "second free argument"),
                                                   invalid_argument);
-
-      // singleton Groups: have to clean up
-      Groups::instance().removeAllArgHandler();
    } // end scope
 
 } // duplicate_standard_arg
@@ -187,8 +226,9 @@ BOOST_AUTO_TEST_CASE( duplicate_standard_arg)
 
 
 /// Check that duplicate application arguments are detected.
+///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( duplicate_application_arg)
+BOOST_FIXTURE_TEST_CASE( duplicate_application_arg, GroupsCleanupFixture)
 {
 
    {
@@ -225,9 +265,6 @@ BOOST_AUTO_TEST_CASE( duplicate_application_arg)
       BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "q,quiet", DEST_VAR( quiet), "be quiet"));
       BOOST_REQUIRE_THROW( secondAH->addArgument( "quiet",   DEST_VAR( quiet), "be quiet"),
                            invalid_argument);
-
-      // singleton Groups: have to clean up
-      Groups::instance().removeAllArgHandler();
    } // end scope
 
 } // duplicate_application_arg
@@ -237,8 +274,9 @@ BOOST_AUTO_TEST_CASE( duplicate_application_arg)
 /// Check that one Handler using the standard argument, and another
 /// using the same argument character/string as application argument, is
 /// detected.
+///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( mix_std_appl_args)
+BOOST_FIXTURE_TEST_CASE( mix_std_appl_args, GroupsCleanupFixture)
 {
 
    // first standard argument, second application argument
@@ -269,9 +307,6 @@ BOOST_AUTO_TEST_CASE( mix_std_appl_args)
       BOOST_REQUIRE_THROW( secondAH = Groups::instance().getArgHandler( "second",
                                                                         Handler::hfHelpShort),
                            invalid_argument);
-
-      // singleton Groups: have to clean up
-      Groups::instance().removeAllArgHandler();
    } // end scope
 
 } // mix_std_appl_args
@@ -280,8 +315,9 @@ BOOST_AUTO_TEST_CASE( mix_std_appl_args)
 
 /// Normal procedure: Two different arguments in two different argument handlers,
 /// check handling.
+///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( handle_arguments)
+BOOST_FIXTURE_TEST_CASE( handle_arguments, GroupsCleanupFixture)
 {
 
    {
@@ -444,22 +480,281 @@ BOOST_AUTO_TEST_CASE( handle_arguments)
       BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
       BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
 
+      auto const  as2a = make_arg_array( "hello", nullptr);
+
+      firstFlag  = false;
+      secondFlag = false;
+      BOOST_REQUIRE_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+
+      // singleton Groups: have to clean up
+      Groups::instance().removeAllArgHandler();
+   } // end scope
+
+   {
+      auto  firstAH  = Groups::instance().getArgHandler( "first");
+      auto  secondAH = Groups::instance().getArgHandler( "second");
+      bool  firstFlag = false;
+      bool  secondFlag = false;
+
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
+
       auto const  as2a = make_arg_array( "--long_argument", nullptr);
 
       BOOST_REQUIRE_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV),
                            runtime_error);
-
-      // singleton Groups: have to clean up
-      Groups::instance().removeAllArgHandler();
    } // end scope
 
 } // handle_arguments
 
 
 
+/// Test printing the usage with pre- and/or post-argument texts.
+///
+/// @since  1.33.0, 07.11.2019
+BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
+{
+
+   // usage without any pre- or post argument list texts
+   {
+      std::ostringstream  oss_std;
+      std::ostringstream  oss_err;
+      auto                firstAH  = Groups::instance( oss_std, oss_err,
+         Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp);
+      auto                secondAH = Groups::instance().getArgHandler( "second");
+      bool                firstFlag = false;
+      int                 firstValue;
+      bool                secondFlag = false;
+      int                 secondValue;
+
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "f", DEST_VAR( firstFlag),
+         "first flag"));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "v", DEST_VAR( firstValue),
+         "first value")->setIsMandatory());
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag),
+         "second flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "w", DEST_VAR( secondValue),
+         "second value")->setIsMandatory());
+
+      auto const  as2a = make_arg_array( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( oss_err.str().empty());
+      BOOST_REQUIRE( !oss_std.str().empty());
+
+      // std::cerr << oss_std.str();
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+         "Usage:\n"
+         "\n"
+         "first\n"
+         "Mandatory:\n"
+         "   -v           first value\n"
+         "\n"
+         "Optional:\n"
+         "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
+         "   -f           first flag\n"
+         "\n"
+         "\n"
+         "second\n"
+         "Mandatory:\n"
+         "   -w   second value\n"
+         "\n"
+         "Optional:\n"
+         "   -s   second flag\n"
+         "\n"
+         "\n"));
+
+      // singleton Groups: have to clean up
+      Groups::instance().removeAllArgHandler();
+   } // end scope
+
+   // usage with a pre-argument list text
+   {
+      std::ostringstream  oss_std;
+      std::ostringstream  oss_err;
+      auto                firstAH  = Groups::instance( oss_std, oss_err,
+         Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp,
+         preUsage.get());
+      auto                secondAH = Groups::instance().getArgHandler( "second");
+      bool                firstFlag = false;
+      int                 firstValue;
+      bool                secondFlag = false;
+      int                 secondValue;
+
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "f", DEST_VAR( firstFlag),
+         "first flag"));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "v", DEST_VAR( firstValue),
+         "first value")->setIsMandatory());
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag),
+         "second flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "w", DEST_VAR( secondValue),
+         "second value")->setIsMandatory());
+
+      auto const  as2a = make_arg_array( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( oss_err.str().empty());
+      BOOST_REQUIRE( !oss_std.str().empty());
+
+      // std::cerr << oss_std.str();
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+         "Very interesting and meaningful text that will be printed before the list of\n"
+         "arguments.\n"
+         "\n"
+         "Usage:\n"
+         "\n"
+         "first\n"
+         "Mandatory:\n"
+         "   -v           first value\n"
+         "\n"
+         "Optional:\n"
+         "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
+         "   -f           first flag\n"
+         "\n"
+         "\n"
+         "second\n"
+         "Mandatory:\n"
+         "   -w   second value\n"
+         "\n"
+         "Optional:\n"
+         "   -s   second flag\n"
+         "\n"
+         "\n"));
+
+      // singleton Groups: have to clean up
+      Groups::instance().removeAllArgHandler();
+   } // end scope
+
+   // usage with a post-argument list text
+   {
+      std::ostringstream  oss_std;
+      std::ostringstream  oss_err;
+      auto                firstAH  = Groups::instance( oss_std, oss_err,
+         Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp,
+         postUsage.get());
+      auto                secondAH = Groups::instance().getArgHandler( "second");
+      bool                firstFlag = false;
+      int                 firstValue;
+      bool                secondFlag = false;
+      int                 secondValue;
+
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "f", DEST_VAR( firstFlag),
+         "first flag"));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "v", DEST_VAR( firstValue),
+         "first value")->setIsMandatory());
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag),
+         "second flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "w", DEST_VAR( secondValue),
+         "second value")->setIsMandatory());
+
+      auto const  as2a = make_arg_array( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( oss_err.str().empty());
+      BOOST_REQUIRE( !oss_std.str().empty());
+
+      // std::cerr << oss_std.str();
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+         "Usage:\n"
+         "\n"
+         "first\n"
+         "Mandatory:\n"
+         "   -v           first value\n"
+         "\n"
+         "Optional:\n"
+         "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
+         "   -f           first flag\n"
+         "\n"
+         "\n"
+         "second\n"
+         "Mandatory:\n"
+         "   -w   second value\n"
+         "\n"
+         "Optional:\n"
+         "   -s   second flag\n"
+         "\n"
+         "\n"
+         "And now this even more interesting and meaningful text that will be printed\n"
+         "after the list of arguments.\n"
+         "\n"));
+
+      // singleton Groups: have to clean up
+      Groups::instance().removeAllArgHandler();
+   } // end scope
+
+   // and finally a usage with a pre- and post-argument list text
+   {
+      std::ostringstream  oss_std;
+      std::ostringstream  oss_err;
+      auto                firstAH  = Groups::instance( oss_std, oss_err,
+         Handler::hfUsageCont).getArgHandler( "first", Handler::AllHelp,
+         preUsage.get(), postUsage.get());
+      auto                secondAH = Groups::instance().getArgHandler( "second");
+      bool                firstFlag = false;
+      int                 firstValue;
+      bool                secondFlag = false;
+      int                 secondValue;
+
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "f", DEST_VAR( firstFlag),
+         "first flag"));
+      BOOST_REQUIRE_NO_THROW( firstAH->addArgument( "v", DEST_VAR( firstValue),
+         "first value")->setIsMandatory());
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag),
+         "second flag"));
+      BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "w", DEST_VAR( secondValue),
+         "second value")->setIsMandatory());
+
+      auto const  as2a = make_arg_array( "-h", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( oss_err.str().empty());
+      BOOST_REQUIRE( !oss_std.str().empty());
+
+      // std::cerr << oss_std.str();
+      BOOST_REQUIRE( celma::test::multilineStringCompare( oss_std.str(),
+         "Very interesting and meaningful text that will be printed before the list of\n"
+         "arguments.\n"
+         "\n"
+         "Usage:\n"
+         "\n"
+         "first\n"
+         "Mandatory:\n"
+         "   -v           first value\n"
+         "\n"
+         "Optional:\n"
+         "   -h,--help    Prints the program usage.\n"
+         "   --help-arg   Prints the usage for the given argument.\n"
+         "   -f           first flag\n"
+         "\n"
+         "\n"
+         "second\n"
+         "Mandatory:\n"
+         "   -w   second value\n"
+         "\n"
+         "Optional:\n"
+         "   -s   second flag\n"
+         "\n"
+         "\n"
+         "And now this even more interesting and meaningful text that will be printed\n"
+         "after the list of arguments.\n"
+         "\n"));
+   } // end scope
+
+} // usage
+
+
 /// Check that missing mandatory arguments are detected.
+///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( missing_mandatory)
+BOOST_FIXTURE_TEST_CASE( missing_mandatory, GroupsCleanupFixture)
 {
 
    {
@@ -540,9 +835,6 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( firstFlag);
       BOOST_REQUIRE_EQUAL( secondArg, 55);
-
-      // singleton Groups: have to clean up
-      Groups::instance().removeAllArgHandler();
    } // end scope
 
 } // missing_mandatory
@@ -551,11 +843,10 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
 
 /// Test the special features of the argument group: Pass parameters on to each
 /// handler object.
+///
 /// @since  0.13.0, 05.02.2017
-BOOST_AUTO_TEST_CASE( group_features)
+BOOST_FIXTURE_TEST_CASE( group_features, GroupsCleanupFixture)
 {
-
-   Groups::reset();
 
    ostringstream  normal_out;
    ostringstream  error_out;
@@ -579,16 +870,14 @@ BOOST_AUTO_TEST_CASE( group_features)
                         "number: value '42' is assigned\n");
    BOOST_REQUIRE( error_out.str().empty());
 
-   Groups::instance().removeAllArgHandler();
-   Groups::reset();
-
 } // group_features
 
 
 
 /// Test listing the argument groups.
+///
 /// @since  0.13.1, 07.02.2017
-BOOST_AUTO_TEST_CASE( list_groups)
+BOOST_FIXTURE_TEST_CASE( list_groups, GroupsCleanupFixture)
 {
 
    {
@@ -655,9 +944,6 @@ BOOST_AUTO_TEST_CASE( list_groups)
                            "- Handler 1\n"
                            "- Handler 2\n");
       BOOST_REQUIRE( error_out.str().empty());
-
-      Groups::instance().removeAllArgHandler();
-      Groups::reset();
    } // end scope
 
 } // list_groups
@@ -712,8 +998,9 @@ private:
 
 
 /// Test that control characters in the second group are handled correctly.
+///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( control_characters)
+BOOST_FIXTURE_TEST_CASE( control_characters, GroupsCleanupFixture)
 {
 
    auto             firstAH  = Groups::instance().getArgHandler( "first");
@@ -738,16 +1025,42 @@ BOOST_AUTO_TEST_CASE( control_characters)
    BOOST_REQUIRE_EQUAL( tca.getOpen(), 1);
    BOOST_REQUIRE_EQUAL( tca.getClose(), 1);
 
-   // singleton Groups: have to clean up
-   Groups::instance().removeAllArgHandler();
-
 } // control_characters
 
 
 
+/// Test that conflicting control characters handlers are detected.
+///
+/// @since  1.33.0, 06.11.2019
+BOOST_FIXTURE_TEST_CASE( control_characters_conflict, GroupsCleanupFixture)
+{
+
+   auto             firstAH  = Groups::instance().getArgHandler( "first");
+   auto             secondAH = Groups::instance().getArgHandler( "second");
+   bool             firstFlag = false;
+   bool             secondFlag = false;
+   TestControlArgs  tca;
+
+
+   BOOST_REQUIRE_NO_THROW( firstAH->addArgument(  "f", DEST_VAR( firstFlag),  "first flag"));
+   BOOST_REQUIRE_NO_THROW( secondAH->addArgument( "s", DEST_VAR( secondFlag), "second flag"));
+
+   BOOST_REQUIRE_NO_THROW( secondAH->addBracketHandler( 
+      std::bind( &TestControlArgs::open, &tca),
+      std::bind( &TestControlArgs::close, &tca)));
+
+   BOOST_REQUIRE_THROW( firstAH->addBracketHandler( 
+      std::bind( &TestControlArgs::open, &tca),
+      std::bind( &TestControlArgs::close, &tca)), std::invalid_argument);
+
+} // control_characters_conflict
+
+
+
 /// Test if an argument exists.
+///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( argument_exists)
+BOOST_FIXTURE_TEST_CASE( argument_exists, GroupsCleanupFixture)
 {
 
    auto  firstAH  = Groups::instance().getArgHandler( "exists_test");
@@ -762,19 +1075,5 @@ BOOST_AUTO_TEST_CASE( argument_exists)
 
 
 
-/// Test if addArgHandler throws exception when an empty name is passed.
-/// @since  0.13.0, 05.02.2017  (changed from nullptr test)
-/// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( add_group_empty_name)
-{
-
-   Groups::SharedArgHndl  argGroup;
-
-
-   BOOST_REQUIRE_THROW( Groups::instance().getArgHandler( ""), std::exception);
-
-} // add_group_empty_name
-
-
-
 // =====  END OF test_argument_groups_c.cpp  =====
+

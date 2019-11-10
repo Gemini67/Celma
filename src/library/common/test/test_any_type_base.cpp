@@ -3,15 +3,19 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
+**  Description:
+**    Test program for the module "any type base", using the Boost.Test
+**    framework.
+**
 --*/
 
 
-// module to test, header file include
+// module to test headerfile include
 #include "celma/common/any_type_base.hpp"
 
 
@@ -26,6 +30,9 @@ using celma::common::TypeName;
 using celma::common::TypeNameBase;
 using celma::common::Value;
 using celma::common::VarName;
+
+
+namespace {
 
 
 /// Helper super class, needed to test those base classes with a protected
@@ -49,6 +56,9 @@ template< typename T> TestTypeName< T> getTestTypeName()
 
    return my_local_var;
 } // getTestTypeName
+
+
+} // namespace
 
 
 

@@ -24,6 +24,7 @@
 #include "celma/prog_args/detail/constraint_one_of.hpp"
 #include "celma/prog_args/detail/constraint_requires.hpp"
 #include "celma/prog_args/detail/value_constraint_differ.hpp"
+#include "celma/prog_args/detail/value_constraint_disjoint.hpp"
 
 
 #endif   // CELMA_PROG_ARGS_HPP

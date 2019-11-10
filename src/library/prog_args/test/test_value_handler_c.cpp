@@ -12,11 +12,11 @@
 
 
 
-// module to test, header file include
+// module to test headerfile include
 #include "celma/prog_args/value_handler.hpp"
 
 
-// STL includes
+// C++ Standard Library includes
 #include <string>
 
 
@@ -39,6 +39,7 @@ using celma::prog_args::ValueHandler;
 
 
 /// Test value handling with simple types like int's, strings etc.
+///
 /// @since  0.14.0, 09.02.2017
 BOOST_AUTO_TEST_CASE( test_simple_args)
 {
@@ -65,6 +66,10 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
       bool  result_value = false;
       BOOST_REQUIRE_NO_THROW( ah.getValue< bool>( result_value, "b"));
       BOOST_REQUIRE_EQUAL( result_value, false);
+
+      // try to get an argument handler that does not exist
+      BOOST_REQUIRE_THROW( ah.getValue< bool>( result_value, "x"),
+         std::invalid_argument);
    } // end scope
 
    // test with a boolean value, used
@@ -147,6 +152,7 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
 
 
 /// Test with 'complex' types like vector etc. as destination variables.
+///
 /// @since  0.14.0, 21.02.2017
 BOOST_AUTO_TEST_CASE( test_complex_types)
 {
@@ -204,6 +210,7 @@ BOOST_AUTO_TEST_CASE( test_complex_types)
 
 
 /// Test storing a free value in a destination value.
+///
 /// @since  0.14.0, 09.02.2017
 BOOST_AUTO_TEST_CASE( test_free_value_arg)
 {
@@ -226,11 +233,27 @@ BOOST_AUTO_TEST_CASE( test_free_value_arg)
                            std::invalid_argument);
    } // end scope
 
+   // test type RangeDest
+   {
+      ValueHandler  ah( 0);
+
+      ah.addRangeValueArgument< int, std::vector< int>>( "Range.");
+
+      auto const  as2a = make_arg_array( "1-5", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      std::vector< int>  result_value;
+      BOOST_REQUIRE_NO_THROW( ah.getValue< std::vector< int>>( result_value));
+      BOOST_REQUIRE_EQUAL( result_value.size(), 5);
+   } // end scope
+
 } // test_free_value_arg
 
 
 
 /// Test using handler values objects with groups.
+///
 /// @since  0.14.0, 15.03.2017
 BOOST_AUTO_TEST_CASE( test_values_groups)
 {
@@ -255,6 +278,10 @@ BOOST_AUTO_TEST_CASE( test_values_groups)
       BOOST_REQUIRE_NO_THROW( handler_value->getValueHandlerObj());
       BOOST_REQUIRE_THROW( Groups::instance().getArgHandler( "standard handler"),
                            std::runtime_error);
+
+      // get the stored value handler (again) should of course work
+      BOOST_REQUIRE_NO_THROW( Groups::instance().getArgValueHandler( "standard handler"));
+
       Groups::instance().removeAllArgHandler();
    } // end scope
 

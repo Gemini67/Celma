@@ -75,6 +75,16 @@ BOOST_AUTO_TEST_CASE( test_tuple_errors)
          std::logic_error);
    } // end scope
 
+   // try to specify a formatter for all values (index == -1).
+   {
+      Handler                             ah( 0);
+      std::tuple< int, std::string, int>  myTuple;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "t,triple", DEST_VAR( myTuple),
+         "Key and value")
+         ->addFormatPos( -1, celma::prog_args::lowercase()), std::logic_error);
+   } // end scope
+
    // try to specify a formatter for a value index that is greater than the size
    // of the tuple
    {
