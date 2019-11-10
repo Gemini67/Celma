@@ -33,7 +33,7 @@ public:
    /// Default constructor.
    /// Needed to store the name of the formatter in the base class.
    ///
-   /// @since  x.y.z, 05.11.2019
+   /// @since  1.33.0, 05.11.2019
    FormatUppercase();
 
    /// Virtual, empty destructor.

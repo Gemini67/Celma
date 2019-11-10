@@ -64,7 +64,7 @@ class EnumFormatter: public celma::prog_args::detail::IFormat
 public:
    /// Constructor, sets the formatters name in the base class.
    ///
-   /// @since  x.y.z, 05.11.2019
+   /// @since  1.33.0, 05.11.2019
    EnumFormatter():
       IFormat( "enum-formatter")
    {

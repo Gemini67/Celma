@@ -26,7 +26,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// Constructor, stores the name of the formatter.
 ///
 /// @param[in]  desc  The description/name of the formatter.
-/// @since  x.y.z, 05.11.2019
+/// @since  1.33.0, 05.11.2019
 IFormat::IFormat( const std::string& desc):
    mDescription( desc)
 {

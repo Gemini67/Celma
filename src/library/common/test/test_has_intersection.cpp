@@ -36,7 +36,7 @@ using celma::common::hasIntersection;
 /// Test that the template function celma::common::hasIntersection<>() returns
 /// the correct result.
 ///
-/// @since  x.y.z, 30.10.2019
+/// @since  1.33.0, 30.10.2019
 BOOST_AUTO_TEST_CASE( verify_has_intersection)
 {
 

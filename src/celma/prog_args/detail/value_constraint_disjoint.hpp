@@ -39,7 +39,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///    The type of the container of the first argument to check.
 /// @tparam  C2
 ///    The type of the container of the second argument to check.
-/// @since  x.y.z, 30.10.2019
+/// @since  1.33.0, 30.10.2019
 template< typename C1, typename C2> class ValueConstraintDisjoint:
    public IHandlerValueConstraint
 {
@@ -51,7 +51,7 @@ public:
    /// @throw
    ///    std::invalid_argument if the string is empty or does not contain
    ///    exactly two arguments.
-   /// @since  x.y.z, 30.10.2019
+   /// @since  1.33.0, 30.10.2019
    explicit ValueConstraintDisjoint( const std::string& reqArgSpec)
       noexcept( false);
    
@@ -62,19 +62,19 @@ public:
    /// then calls the method of the base class to actually store the argument.
    ///
    /// @param[in]  handler  Pointer to the argument handler object.
-   /// @since  x.y.z, 31.10.2019
+   /// @since  1.33.0, 31.10.2019
    virtual void storeArgumentHandler( TypedArgBase* handler) noexcept( false)
       override;
 
    /// Empty here, all the work is done in checkEndCondition().
    ///
    /// @param[in]  key  Ignored.
-   /// @since  x.y.z, 30.10.2019
+   /// @since  1.33.0, 30.10.2019
    virtual void executeConstraint( const ArgumentKey& key) override;
 
    /// Does nothing here.
    ///
-   /// @since  x.y.z, 30.10.2019
+   /// @since  1.33.0, 30.10.2019
    virtual void validated() override;
 
    /// Checks all the values of the two containers, they must not intersect.
@@ -82,7 +82,7 @@ public:
    /// @throw
    ///    std::runtime_error when the same value is found in two different
    ///    arguments.
-   /// @since  x.y.z, 30.10.2019
+   /// @since  1.33.0, 30.10.2019
    virtual void checkEndCondition() const noexcept( false) override;
 
    /// Checks if the type set for the constraint matches one of the types of the
@@ -93,13 +93,13 @@ public:
    /// @return
    ///    \c true if the type of the destination variable and the type set for
    ///    one of the the destination variables match.
-   /// @since  x.y.z, 31.10.2019
+   /// @since  1.33.0, 31.10.2019
    virtual bool matchesVarType( const std::string& var_type_name) const override;
 
    /// Returns a text description of the constraint.
    ///
    /// @return  A string with the text description of the constraint.
-   /// @since  x.y.z, 30.10.2019
+   /// @since  1.33.0, 30.10.2019
    virtual std::string toString() const override;
 
 }; // ValueConstraintDisjoint< C1, C2>
@@ -200,7 +200,7 @@ template< typename C1, typename C2>
 ///    The list of arguments (argument keys) of which the values must be
 ///    different.
 /// @return  The newly created constraint object.
-/// @since  x.y.z, 30.10.2019
+/// @since  1.33.0, 30.10.2019
 template< typename C1>
    detail::IHandlerValueConstraint* disjoint( const std::string& argSpec)
 {
@@ -215,7 +215,7 @@ template< typename C1>
 ///    The list of arguments (argument keys) of which the values must be
 ///    different.
 /// @return  The newly created constraint object.
-/// @since  x.y.z, 30.10.2019
+/// @since  1.33.0, 30.10.2019
 template< typename C1, typename C2>
    detail::IHandlerValueConstraint* disjoint( const std::string& argSpec)
 {

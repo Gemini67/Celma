@@ -44,14 +44,14 @@ public:
    ///
    /// @return
    ///    The description or name of the formatter as given to the constructor.
-   /// @since  x.y.z, 05.11.2019
+   /// @since  1.33.0, 05.11.2019
    const std::string& desc() const;
 
 protected:
    /// Constructor, stores the name of the formatter.
    ///
    /// @param[in]  desc  The description/name of the formatter.
-   /// @since  x.y.z, 05.11.2019
+   /// @since  1.33.0, 05.11.2019
    IFormat( const std::string& desc);
 
 private:

@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE( errors_differ)
 
 /// Check some error conditions specific to the constraint 'disjoint'.
 ///
-/// @since  x.y.z, 31.10.2019
+/// @since  1.33.0, 31.10.2019
 BOOST_AUTO_TEST_CASE( errors_disjoint)
 {
 
@@ -549,7 +549,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
 
 /// Verify that a 'disjoint' constraint on two int vectors works correctly.
 ///
-/// @since  x.y.z, 31.10.2019
+/// @since  1.33.0, 31.10.2019
 BOOST_AUTO_TEST_CASE( constraint_disjoint_int)
 {
 
@@ -622,7 +622,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_int)
 
 /// Verify that a 'disjoint' constraint on two string vectors works correctly.
 ///
-/// @since  x.y.z, 01.11.2019
+/// @since  1.33.0, 01.11.2019
 BOOST_AUTO_TEST_CASE( constraint_disjoint_string)
 {
 

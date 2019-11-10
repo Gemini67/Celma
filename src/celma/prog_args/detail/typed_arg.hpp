@@ -940,7 +940,7 @@ public:
    /// the destination variable.
    ///
    /// @param[out]  dest  Returns the current value of the destination variable.
-   /// @since  x.y.z, 31.10.2019
+   /// @since  1.33.0, 31.10.2019
    void getValue( vector_type& dest) const;
 
 protected:

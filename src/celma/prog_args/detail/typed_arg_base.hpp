@@ -424,7 +424,7 @@ public:
    /// Returns a text description of the formats specified for this argument.
    ///
    /// @return  A string with the description of the formatters.
-   /// @since  x.y.z, 05.11.2019
+   /// @since  1.33.0, 05.11.2019
    std::string formatStr() const;
 
    /// Specifies the cardinality check to perform on this type before assignment
@@ -583,7 +583,7 @@ public:
    /// Prints all properties of a destination variable.
    ///
    /// @param[in]  os  The stream to print to.
-   /// @since  x.y.z, 01.11.2019  (moved here from handler class)
+   /// @since  1.33.0, 01.11.2019  (moved here from handler class)
    void printProperties( std::ostream& os) const;
 
    /// Assignment is not allowed.
@@ -703,7 +703,7 @@ private:
    ///    The stream to write to.
    /// @param[in]  formatters
    ///    The container with the formatters for a specific index.
-   /// @since  x.y.z, 05.11.2019
+   /// @since  1.33.0, 05.11.2019
    static void formatStr( std::ostream& os,
       const value_format_cont_t& formatters);
 

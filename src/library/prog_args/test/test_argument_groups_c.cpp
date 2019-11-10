@@ -64,7 +64,7 @@ public:
    /// @return
    ///    .
    /// @since
-   ///    x.y.z, 08.11.2019
+   ///    1.33.0, 08.11.2019
    GroupsCleanupFixture()
    {
       // remove the argument handlers from the group
@@ -512,7 +512,7 @@ BOOST_FIXTURE_TEST_CASE( handle_arguments, GroupsCleanupFixture)
 
 /// Test printing the usage with pre- and/or post-argument texts.
 ///
-/// @since  x.y.z, 07.11.2019
+/// @since  1.33.0, 07.11.2019
 BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
 {
 
@@ -1031,7 +1031,7 @@ BOOST_FIXTURE_TEST_CASE( control_characters, GroupsCleanupFixture)
 
 /// Test that conflicting control characters handlers are detected.
 ///
-/// @since  x.y.z, 06.11.2019
+/// @since  1.33.0, 06.11.2019
 BOOST_FIXTURE_TEST_CASE( control_characters_conflict, GroupsCleanupFixture)
 {
 

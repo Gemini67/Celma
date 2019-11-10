@@ -307,7 +307,7 @@ string TypedArgBase::checkStr() const
 /// Returns a text description of the formats specified for this argument.
 ///
 /// @return  A string with the description of the formatters.
-/// @since  x.y.z, 05.11.2019
+/// @since  1.33.0, 05.11.2019
 string TypedArgBase::formatStr() const
 {
 
@@ -518,7 +518,7 @@ void TypedArgBase::activateConstraints()
 /// Prints all properties of a destination variable.
 ///
 /// @param[in]  os  The stream to print to.
-/// @since  x.y.z, 01.11.2019  (moved here from handler class)
+/// @since  1.33.0, 01.11.2019  (moved here from handler class)
 void TypedArgBase::printProperties( std::ostream& os) const
 {
 
@@ -639,7 +639,7 @@ TypedArgBase* TypedArgBase::internAddFormat( int val_idx, IFormat* f)
 ///    The stream to write to.
 /// @param[in]  formatters
 ///    The container with the formatters for a specific index.
-/// @since  x.y.z, 05.11.2019
+/// @since  1.33.0, 05.11.2019
 void TypedArgBase::formatStr( std::ostream& os,
    const value_format_cont_t& formatters)
 {

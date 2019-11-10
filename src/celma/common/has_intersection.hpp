@@ -44,7 +44,7 @@ namespace celma { namespace common {
 /// @return
 ///    \c true if the contents of the two sequences are not completely
 ///    disjoint, i.e. at least one (1) value exists in both sequences.
-/// @since  x.y.z, 30.10.2019
+/// @since  1.33.0, 30.10.2019
 template< typename I1, typename I2>
    bool hasIntersection( I1 first1, I1 last1, I2 first2, I2 last2)
 {
@@ -78,7 +78,7 @@ template< typename I1, typename I2>
 /// @return
 ///    \c true if the contents of the two containers are not completely
 ///    disjoint, i.e. at least one (1) value exists in both containers.
-/// @since  x.y.z, 30.10.2019
+/// @since  1.33.0, 30.10.2019
 template< typename C1, typename C2>
    bool hasIntersection( const C1& cont1, const C2& cont2)
 {

@@ -66,7 +66,7 @@ using std::string;
 /// @throw
 ///    std::runtime_error if the handler exists but is not of the requested
 ///    type.
-/// @since  x.y.z, 07.11.2019  (unified from getArgHandler() methods)
+/// @since  1.33.0, 07.11.2019  (unified from getArgHandler() methods)
 template< typename T>
    Groups::SharedArgHndl Groups::internGetArgHandler( const string& grpName,
       int this_handler_flags, IUsageText* txt1, IUsageText* txt2,

@@ -801,7 +801,7 @@ protected:
    /// Returns if this object printed the program usage through evalArguments().
    ///
    /// @return  \c true if this object printed the usage.
-   /// @since  x.y.z, 08.11.2019
+   /// @since  1.33.0, 08.11.2019
    bool usagePrinted() const;
 
    /// Prints the usage of this class.

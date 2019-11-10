@@ -62,7 +62,7 @@ public:
    /// @return
    ///    \c true if the type of the destination variable and the type set for
    ///    the destination variable match.
-   /// @since  x.y.z, 31.10.2019
+   /// @since  1.33.0, 31.10.2019
    virtual bool matchesVarType( const std::string& var_type_name) const = 0;
 
    /// Stores the pointer to the handler object for one of the arguments in the

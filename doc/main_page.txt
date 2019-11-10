@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.32.0
+   \mainpage  CELMA v1.33.0
 
    \tableofcontents
 
@@ -48,7 +48,7 @@
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
 
-   |   1.??.? | 201?-??-??        | Print formatters in argument help. Added constraint "disjoint". |
+   |   1.33.0 | 2019-11-01        | Print formatters in argument help. Added constraint "disjoint". |
    |   1.32.0 | 2019-10-29        | Allow multiple formatters for command line (argument) values.<br>Added function "starts with" for checking strings. |
    |   1.31.0 | 2019-10-23        | Finally finished implementation of filters.<br>Combined rel-ops templates in headerfile "comparable".<br>Split "check assign" in two. |
    |   1.30.0 | 2019-08-19        | Added module "execute statistic". |
