@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,12 @@
 /// See documentation of class celma::log::Logging.
 
 
-// module header file include
+// module headerfile include
 #include "celma/log/logging.hpp"
 
 
 // C++ Standard Library includes
+#include <iomanip>
 #include <iostream>
 
 
@@ -35,8 +36,12 @@ namespace celma { namespace log {
 
 /// Checks if there already exists a log with the specified name. If not, a
 /// new log is created.
+///
 /// @param[in]  name  The name of the log to search for.
 /// @return  The id of the already existing or newly created log.
+/// @throw
+///    celma::common::CelmaRuntimeError if the maximum number of logs is
+///    reached.
 /// @since  0.3, 19.06.2016
 id_t Logging::findCreateLog( const std::string& name)
 {
@@ -62,17 +67,19 @@ id_t Logging::findCreateLog( const std::string& name)
 
 
 /// Returns the log with the specified id.
+///
 /// @param[in]  log_id  The id of the log.
 /// @return  Pointer to the internal log object, NULL if not found.
-/// @throw  CelmaRuntimeError if \a log_id contains more than one log id.
+/// @throw
+///    celma::common::CelmaRuntimeError if \a log_id contains more than one
+///    log id.
 /// @since  0.3, 19.06.2016
 detail::Log* Logging::getLog( id_t log_id)
 {
 
-   /// @todo: find_if
    for (auto & it : mLogs)
    {
-      if (log_id == it.mLogId)
+      if (log_id & it.mLogId)
       {
          if (log_id - it.mLogId != 0)
             throw CELMA_RuntimeError( "only one single log id may be specified");
@@ -86,6 +93,7 @@ detail::Log* Logging::getLog( id_t log_id)
 
 
 /// Returns the log with the specified name.
+///
 /// @param[in]  log_name  The name of the log.
 /// @return  Pointer to the internal log object, NULL if not found.
 /// @since  0.3, 19.06.2016
@@ -105,8 +113,11 @@ detail::Log* Logging::getLog( const std::string& log_name)
 
 
 /// Sends a log message to the specified log(s).
-/// @param[in]  logs  The set of log id(s) to pass the message.
-/// @param[in]  msg   The message to handle.
+///
+/// @param[in]  logs
+///    The set of log id(s) to pass the message.
+/// @param[in]  msg
+///    The message to handle.
 /// @since  0.3, 19.06.2016
 void Logging::log( id_t logs, const detail::LogMsg& msg)
 {
@@ -128,8 +139,11 @@ void Logging::log( id_t logs, const detail::LogMsg& msg)
 
 
 /// Sends a log message to the specified log.
-/// @param[in]  log_name  The name of the log to pass the message.
-/// @param[in]  msg       The message to handle.
+///
+/// @param[in]  log_name
+///    The name of the log to pass the message.
+/// @param[in]  msg
+///    The message to handle.
 /// @since  0.3, 19.06.2016
 void Logging::log( const std::string& log_name, const detail::LogMsg& msg)
 {
@@ -164,7 +178,7 @@ void Logging::addAttribute( const std::string& name, const std::string& value)
 
 
 
-/// Removes an attribute.<br>
+/// Removes an attribute.
 /// If multiple attributes with the same name exist, the attribute that was
 /// added last is removed.
 /// 
@@ -180,14 +194,18 @@ void Logging::removeAttribute( const std::string& attr_name)
 
 
 /// Dumps information about the logging framework.
-/// @param[in]  os  The stream to write into.
-/// @param[in]  lg  The object to dump.
+///
+/// @param[in]  os
+///    The stream to write into.
+/// @param[in]  lg
+///    The object to dump.
 /// @return  The stream as passed in.
 /// @since  0.3, 19.06.2016
 std::ostream& operator <<( std::ostream& os, const Logging& lg)
 {
 
-   os << "next log id: " << std::hex << lg.mNextLogId << std::endl;
+   os << "next log id: 0x" << std::hex << std::setw( 2) << std::setfill( '0')
+      << lg.mNextLogId << std::endl;
 
    for (auto const& it : lg.mLogs)
    {

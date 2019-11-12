@@ -15,7 +15,7 @@
 /// See documentation of class celma::log::detail::Log.
 
 
-// module header file include
+// module headerfile include
 #include "celma/log/detail/log.hpp"
 
 
@@ -37,6 +37,7 @@ namespace celma { namespace log { namespace detail {
 
 
 /// Destructor.
+///
 /// @since  1.0.0, 19.06.2016
 Log::~Log()
 {
@@ -48,9 +49,13 @@ Log::~Log()
 
 
 /// Adds a new destination to this log.
-/// @param[in]  name  The symbolic name of this log destination.
-/// @param[in]  ldo   Pointer to the object that handles this log destination.
-/// @return  Pointer to the log destination object, can be used to set filters.
+///
+/// @param[in]  name
+///    The symbolic name of this log destination.
+/// @param[in]  ldo
+///    Pointer to the object that handles this log destination.
+/// @return
+///    Pointer to the log destination object, can be used to set filters.
 /// @since  1.0.0, 19.06.2016
 ILogDest* Log::addDestination( const std::string& name, ILogDest* ldo)
 {
@@ -65,9 +70,11 @@ ILogDest* Log::addDestination( const std::string& name, ILogDest* ldo)
 
 
 /// Returns a pointer to the log destination with the specified name.
+///
 /// @param[in]  name  The name of the log destination to return.
 /// @return  Pointer to the log destination object.
-/// @throw  Runtime error if a log destination with this name was not found.
+/// @throw
+///    std::runtime_error if a log destination with this name was not found.
 /// @since  1.0.0, 19.06.2016
 ILogDest* Log::getDestination( const std::string& name) noexcept( false)
 {
@@ -89,6 +96,7 @@ ILogDest* Log::getDestination( const std::string& name) noexcept( false)
 
 
 /// Removes a destination.
+///
 /// @param[in]  name  The name of the destination to remove.
 /// @since  1.0.0, 19.06.2016
 void Log::removeDestination( const std::string& name)
@@ -108,6 +116,7 @@ void Log::removeDestination( const std::string& name)
 
 
 /// Passes a log message to all current destinations.
+///
 /// @param[in]  msg  The message to pass.
 /// @since  1.0.0, 19.06.2016
 void Log::message( const LogMsg& msg) const
@@ -126,12 +135,18 @@ void Log::message( const LogMsg& msg) const
 
 
 /// Writes information about a log.
-/// @param[in]  os  The stream to write into.
-/// @param[in]  l   The log to dump the information of.
+///
+/// @param[in]  os
+///    The stream to write into.
+/// @param[in]  l
+///    The log to dump the information of.
 /// @return  The stream as passed in.
 /// @since  1.0.0, 19.06.2016
 std::ostream& operator <<( std::ostream& os, const Log& l)
 {
+
+   if (l.mLoggers.empty())
+      return os << "-\n";
 
    for (auto & it : l.mLoggers)
    {

@@ -38,7 +38,7 @@ class LogMsg;
 } // namespace detail
 
 
-/// Logging framework.<br>
+/// Logging framework.
 /// There is only one Logging object within a process. This singleton object is
 /// the interface to use for logging.<br>
 /// There can be several logs, e.g. one for operational messages, one for
@@ -88,33 +88,47 @@ public:
 
    /// Checks if there already exists a log with the specified name. If not, a
    /// new log is created.
+   ///
    /// @param[in]  name  The name of the log to search for.
    /// @return  The id of the already existing or newly created log.
+   /// @throw
+   ///    celma::common::CelmaRuntimeError if the maximum number of logs is
+   ///    reached.
    /// @since  0.3, 19.06.2016
    id_t findCreateLog( const std::string& name) noexcept( false);
 
    /// Returns the log with the specified id.
+   ///
    /// @param[in]  log_id  The id of the log.
    /// @return  Pointer to the internal log object, NULL if not found.
-   /// @throw  CelmaRuntimeError if \a log_id contains more than one log id.
+   /// @throw
+   ///    celma::common::CelmaRuntimeError if \a log_id contains more than one
+   ///    log id.
    /// @since  0.3, 19.06.2016
    detail::Log* getLog( id_t log_id) noexcept( false);
 
    /// Returns the log with the specified name.
+   ///
    /// @param[in]  log_name  The name of the log.
    /// @return  Pointer to the internal log object, NULL if not found.
    /// @since  0.3, 19.06.2016
    detail::Log* getLog( const std::string& log_name);
 
    /// Sends a log message to the specified log(s).
-   /// @param[in]  logs  The set of log id(s) to pass the message.
-   /// @param[in]  msg   The message to handle.
+   ///
+   /// @param[in]  logs
+   ///    The set of log id(s) to pass the message.
+   /// @param[in]  msg
+   ///    The message to handle.
    /// @since  0.3, 19.06.2016
    void log( id_t logs, const detail::LogMsg& msg);
 
    /// Sends a log message to the specified log.
-   /// @param[in]  log_name  The name of the log to pass the message.
-   /// @param[in]  msg       The message to handle.
+   ///
+   /// @param[in]  log_name
+   ///    The name of the log to pass the message.
+   /// @param[in]  msg
+   ///    The message to handle.
    /// @since  0.3, 19.06.2016
    void log( const std::string& log_name, const detail::LogMsg& msg);
 
@@ -128,7 +142,7 @@ public:
    ///    1.15.0, 10.10.2018
    void addAttribute( const std::string& name, const std::string& value);
 
-   /// Returns the value for an attribute.<br>
+   /// Returns the value for an attribute.
    /// If multiple attributes with the same name exist, the values of the last
    /// attribute is returned (i.e. the one that was added last).
    ///
@@ -139,7 +153,7 @@ public:
    ///    1.15.0, 11.10.2018
    std::string getAttribute( const std::string& attr_name) const;
 
-   /// Removes an attribute.<br>
+   /// Removes an attribute.
    /// If multiple attributes with the same name exist, the attribute that was
    /// added last is removed.
    /// 
@@ -148,14 +162,18 @@ public:
    void removeAttribute( const std::string& attr_name);
 
    /// Dumps information about the logging framework.
-   /// @param[in]  os  The stream to write into.
-   /// @param[in]  lg  The object to dump.
+   ///
+   /// @param[in]  os
+   ///    The stream to write into.
+   /// @param[in]  lg
+   ///    The object to dump.
    /// @return  The stream as passed in.
    /// @since  0.3, 19.06.2016
    friend std::ostream& operator <<( std::ostream& os, const Logging& lg);
 
 protected:
    /// Constructor.
+   ///
    /// @since  0.3, 19.06.2016
    Logging() = default;
 
