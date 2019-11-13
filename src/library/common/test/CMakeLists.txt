@@ -32,3 +32,12 @@ ENDFOREACH()
 
 add_test( test_execute_statistic_erase_path  ${CMAKE_CURRENT_BINARY_DIR}/test_execute_statistic_c -- ${PROJECT_SOURCE_DIR} )
 
+
+# test_print_version_info_c
+# -------------------------
+
+set( test_print_version_info_c_result
+     "^Celma library version: "
+)
+
+celma_add_test_output_check( test_print_version_info_c  test_print_version_info_c_result )

@@ -30,6 +30,7 @@ using celma::common::fileInfo;
 
 
 /// Test creating a FileInfo object with a file that does not exist.
+///
 /// @since  1.4.0, 27.02.2018
 BOOST_AUTO_TEST_CASE( test_errors)
 {
@@ -42,11 +43,16 @@ BOOST_AUTO_TEST_CASE( test_errors)
       BOOST_REQUIRE_THROW( FileInfo( "/tmp/xyz123"), std::runtime_error);
    } // end scope
 
+   {
+      BOOST_REQUIRE_THROW( FileInfo( 42), std::runtime_error);
+   } // end scope
+
 } // test_errors
 
 
 
 /// Test the functions of the class FileInfo with one object.
+///
 /// @since  1.4.0, 27.02.2018
 BOOST_AUTO_TEST_CASE( test_object)
 {
@@ -86,6 +92,7 @@ BOOST_AUTO_TEST_CASE( test_object)
 
 
 /// Test the function fileInfo() with the different initialisation values.
+///
 /// @since  1.4.0, 27.02.2018
 BOOST_AUTO_TEST_CASE( test_one_off)
 {

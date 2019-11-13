@@ -15,6 +15,10 @@
 --*/
 
 
+// module to test headerfile include
+#include "celma/common/print_version_info.hpp"
+
+
 // C++ Standard Library includes
 #include <sstream>
 #include <string>
@@ -27,7 +31,6 @@
 
 // project includes
 #include "celma/celma_version.hpp"
-#include "celma/common/print_version_info.hpp"
 
 
 
@@ -37,11 +40,10 @@
 BOOST_AUTO_TEST_CASE( stream_output)
 {
 
-
    std::ostringstream  oss;
 
 
-   oss << celma::common::version_info;
+   oss << celma::common::versionInfo;
 
    BOOST_REQUIRE_EQUAL( oss.str(), std::string( "Celma library version: ")
       + celma::VersionString);
