@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE( test_one)
 
 /// Single value.
 ///
-/// @since  x.y.z, 12.11.2019
+/// @since  1.33.1, 12.11.2019
 BOOST_AUTO_TEST_CASE( test_one_postfix)
 {
 
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE( test_two_values)
 
 /// Two single values.
 ///
-/// @since  x.y.z, 12.11.2019
+/// @since  1.33.1, 12.11.2019
 BOOST_AUTO_TEST_CASE( test_two_values_postfix)
 {
 
@@ -484,7 +484,7 @@ BOOST_AUTO_TEST_CASE( test_mix_all)
 
 /// Format error after a valid start sequence.
 ///
-/// @since  x.y.z, 12.11.2019
+/// @since  1.33.1, 12.11.2019
 BOOST_AUTO_TEST_CASE( format_error_later)
 {
 

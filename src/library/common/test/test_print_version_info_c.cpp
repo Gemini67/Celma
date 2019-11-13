@@ -27,7 +27,7 @@
 /// No, really.<br>
 /// Prints the version of the library to \c stdout.
 ///
-/// @since  x.y.z, 13.11.2019
+/// @since  1.33.1, 13.11.2019
 int main()
 {
 

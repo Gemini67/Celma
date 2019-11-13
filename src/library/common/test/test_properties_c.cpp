@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE( multiple_links)
 
 /// Check that wrong access is correctly detected.
 ///
-/// @since  x.y.z, 13.11.2019
+/// @since  1.33.1, 13.11.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 

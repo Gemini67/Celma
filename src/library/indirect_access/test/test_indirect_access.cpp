@@ -36,7 +36,7 @@
 
 /// Test that errors are caught correctly.
 ///
-/// @since  x.y.z, 13.11.2019
+/// @since  1.33.1, 13.11.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE( adress_record_test)
 
 /// Test the indirect access functions on an address record using the field ids.
 ///
-/// @since  x.y.z, 13.11.2019
+/// @since  1.33.1, 13.11.2019
 BOOST_AUTO_TEST_CASE( adress_record_id_test)
 {
 

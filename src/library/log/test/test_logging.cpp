@@ -42,7 +42,7 @@ using celma::log::Logging;
 
 /// Test that handling errors are caught correctly.
 ///
-/// @since  x.y.z, 11.11.2019
+/// @since  1.33.1, 11.11.2019
 BOOST_AUTO_TEST_CASE( errors)
 {
 
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
 /// Test printing the settings of the logging framework.
 ///
-/// @since  x.y.z, 11.11.2019
+/// @since  1.33.1, 11.11.2019
 BOOST_AUTO_TEST_CASE( printing)
 {
 

@@ -28,7 +28,7 @@ namespace celma { namespace common {
 
 /// Prints the Celma Library version information to \c stdout.
 ///
-/// @since  x.y.z, 13.11.2019
+/// @since  1.33.1, 13.11.2019
 ///    (renamed from print_version_info)
 /// @since  0.2, 08.04.2016
 extern void printVersionInfo();
@@ -38,7 +38,7 @@ extern void printVersionInfo();
 ///
 /// @param[out]  os  The stream to write into.
 /// @return  The stream as passed in.
-/// @since  x.y.z, 13.11.2019
+/// @since  1.33.1, 13.11.2019
 ///    (renamed from version_info)
 /// @since  0.2, 08.04.2016
 extern std::ostream& versionInfo( std::ostream& os);
