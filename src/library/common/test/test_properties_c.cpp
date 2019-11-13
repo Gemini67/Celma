@@ -15,7 +15,7 @@
 --*/
 
 
-// test module header file included first
+// test module headerfile included first
 #include "celma/common/properties.hpp"
 
 
@@ -295,6 +295,35 @@ BOOST_AUTO_TEST_CASE( multiple_links)
    ));
 
 } // multiple_links
+
+
+
+/// Check that wrong access is correctly detected.
+///
+/// @since  x.y.z, 13.11.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   Properties  myProperties;
+
+
+   BOOST_REQUIRE( myProperties.addProperty( "Name.Family", "Hugentobler"));
+   BOOST_REQUIRE( myProperties.addProperty( "Name.First", "Peter"));
+
+   std::string  name;
+   BOOST_REQUIRE( !myProperties.getProperty( name, "Name"));
+   BOOST_REQUIRE( !myProperties.getProperty( name, "Name.Name"));
+   BOOST_REQUIRE( !myProperties.getProperty( name, "Identity.Name"));
+
+   BOOST_REQUIRE( myProperties.addLink( "Identity", "Name.Family"));
+   BOOST_REQUIRE( !myProperties.getProperty( name, "Identity.Name"));
+
+   BOOST_REQUIRE( !myProperties.addProperty( "Identity.Age", 42));
+
+   BOOST_REQUIRE( myProperties.addLink( "Shortcut", "Name"));
+   BOOST_REQUIRE( !myProperties.getProperty( name, "Shortcut"));
+
+} // errors
 
 
 

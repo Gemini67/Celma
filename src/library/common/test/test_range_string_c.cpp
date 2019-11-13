@@ -15,13 +15,17 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/common/range_string.hpp"
 
 
 // Boost includes
 #define BOOST_TEST_MODULE RangeStringTest
 #include <boost/test/unit_test.hpp>
+
+
+// project includes
+#include "celma/common/celma_exception.hpp"
 
 
 using celma::common::RangeString;
@@ -63,6 +67,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
 
 /// Single value.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_one)
 {
@@ -77,11 +82,38 @@ BOOST_AUTO_TEST_CASE( test_one)
    ++it;
    BOOST_REQUIRE( it == rs.end());
 
+   // incrementing after the end should throw
+   BOOST_REQUIRE_THROW( ++it, std::runtime_error);
+
 } // test_one
 
 
 
+/// Single value.
+///
+/// @since  x.y.z, 12.11.2019
+BOOST_AUTO_TEST_CASE( test_one_postfix)
+{
+
+   RangeString<>  rs( "1");
+   auto           it = rs.begin();
+
+
+   BOOST_REQUIRE( it != rs.end());
+   BOOST_REQUIRE_EQUAL( static_cast< int>( it), 1);
+
+   it++;
+   BOOST_REQUIRE( it == rs.end());
+
+   // incrementing after the end should throw
+   BOOST_REQUIRE_THROW( it++, std::runtime_error);
+
+} // test_one_postfix
+
+
+
 /// Two single values.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_two_values)
 {
@@ -104,7 +136,32 @@ BOOST_AUTO_TEST_CASE( test_two_values)
 
 
 
+/// Two single values.
+///
+/// @since  x.y.z, 12.11.2019
+BOOST_AUTO_TEST_CASE( test_two_values_postfix)
+{
+
+   RangeString<>  rs( "1,2");
+   auto           it = rs.begin();
+
+
+   BOOST_REQUIRE( it != rs.end());
+   BOOST_REQUIRE_EQUAL( static_cast< int>( it), 1);
+
+   it++;
+   BOOST_REQUIRE( it != rs.end());
+   BOOST_REQUIRE_EQUAL( static_cast< int>( it), 2);
+
+   it++;
+   BOOST_REQUIRE( it == rs.end());
+
+} // test_two_values_postfix
+
+
+
 /// Three single values.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_three_values)
 {
@@ -132,6 +189,7 @@ BOOST_AUTO_TEST_CASE( test_three_values)
 
 
 /// A simple, short range.
+//
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_simple_range)
 {
@@ -142,6 +200,8 @@ BOOST_AUTO_TEST_CASE( test_simple_range)
 
    BOOST_REQUIRE( it != rs.end());
    BOOST_REQUIRE_EQUAL( static_cast< int>( it), 3);
+
+   auto  copy( it);
 
    ++it;
    BOOST_REQUIRE( it != rs.end());
@@ -154,11 +214,24 @@ BOOST_AUTO_TEST_CASE( test_simple_range)
    ++it;
    BOOST_REQUIRE( it == rs.end());
 
+   // same again with copied iterator
+   ++copy;
+   BOOST_REQUIRE( copy != rs.end());
+   BOOST_REQUIRE_EQUAL( static_cast< int>( copy), 4);
+
+   ++copy;
+   BOOST_REQUIRE( copy != rs.end());
+   BOOST_REQUIRE_EQUAL( static_cast< int>( copy), 5);
+
+   ++copy;
+   BOOST_REQUIRE( copy == rs.end());
+
 } // test_simple_range
 
 
 
 /// Two simple ranges.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_two_simple_ranges)
 {
@@ -202,6 +275,7 @@ BOOST_AUTO_TEST_CASE( test_two_simple_ranges)
 
 
 /// Single values and ranges mixed.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_simple_mix)
 {
@@ -253,6 +327,7 @@ BOOST_AUTO_TEST_CASE( test_simple_mix)
 
 
 /// A range with a specific increment.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_range_increment)
 {
@@ -288,6 +363,7 @@ BOOST_AUTO_TEST_CASE( test_range_increment)
 
 
 /// Two ranges with different increments.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_two_ranges_increment)
 {
@@ -351,6 +427,7 @@ BOOST_AUTO_TEST_CASE( test_two_ranges_increment)
 
 
 /// Ranges with increments and skipped values.
+///
 /// @since  0.2, 07.04.2016
 BOOST_AUTO_TEST_CASE( test_mix_all)
 {
@@ -402,6 +479,54 @@ BOOST_AUTO_TEST_CASE( test_mix_all)
    BOOST_REQUIRE( it == rs.end());
 
 } // test_mix_all
+
+
+
+/// Format error after a valid start sequence.
+///
+/// @since  x.y.z, 12.11.2019
+BOOST_AUTO_TEST_CASE( format_error_later)
+{
+
+   {
+      RangeString<>  rs( "3-5,");
+      auto           it = rs.begin();
+
+
+      BOOST_REQUIRE( it != rs.end());
+      BOOST_REQUIRE_EQUAL( static_cast< int>( it), 3);
+
+      ++it;
+      BOOST_REQUIRE( it != rs.end());
+      BOOST_REQUIRE_EQUAL( static_cast< int>( it), 4);
+
+      ++it;
+      BOOST_REQUIRE( it != rs.end());
+      BOOST_REQUIRE_EQUAL( static_cast< int>( it), 5);
+
+      BOOST_REQUIRE_THROW( ++it, celma::common::CelmaRuntimeError);
+  } // end scope
+
+   {
+      RangeString<>  rs( "3-5,11hello");
+      auto           it = rs.begin();
+
+
+      BOOST_REQUIRE( it != rs.end());
+      BOOST_REQUIRE_EQUAL( static_cast< int>( it), 3);
+
+      ++it;
+      BOOST_REQUIRE( it != rs.end());
+      BOOST_REQUIRE_EQUAL( static_cast< int>( it), 4);
+
+      ++it;
+      BOOST_REQUIRE( it != rs.end());
+      BOOST_REQUIRE_EQUAL( static_cast< int>( it), 5);
+
+      BOOST_REQUIRE_THROW( ++it, celma::common::CelmaRuntimeError);
+  } // end scope
+
+} // format_error_later
 
 
 
