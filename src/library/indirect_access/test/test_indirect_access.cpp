@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -13,6 +13,10 @@
 **    framework.
 **
 --*/
+
+
+// (indirect) module to test headerfile include
+#include "address_record.hpp"
 
 
 // OS/C lib includes
@@ -29,12 +33,58 @@
 #include <boost/test/unit_test.hpp>
 
 
-// project includes
-#include "address_record.hpp"
+
+/// Test that errors are caught correctly.
+///
+/// @since  x.y.z, 13.11.2019
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   AddressRecord                 addr1;
+   IndirectAccess_AddressRecord  ia_addr1( addr1);
+
+
+   // unknown field name
+   BOOST_REQUIRE_THROW(
+      ia_addr1.set( std::string( "Age"), 42), std::runtime_error);
+
+   // wrong type for this field
+   BOOST_REQUIRE_THROW(
+      ia_addr1.set( std::string( "Name"), 42), std::runtime_error);
+
+   // unknown field name
+   BOOST_REQUIRE_THROW(
+      ia_addr1.get< int>( std::string( "Age")), std::runtime_error);
+
+   // wrong type for this field
+   BOOST_REQUIRE_THROW(
+      ia_addr1.get< int>( std::string( "Name")), std::runtime_error);
+
+   // same with ids
+
+   // unknown id
+   BOOST_REQUIRE_THROW( ia_addr1.set( 14, 42), std::runtime_error);
+
+   // wrong type
+   BOOST_REQUIRE_THROW( ia_addr1.set( 0, 42), std::runtime_error);
+
+   // unknown id
+   BOOST_REQUIRE_THROW( ia_addr1.get< int>( 14), std::runtime_error);
+
+   // wrong type
+   BOOST_REQUIRE_THROW( ia_addr1.get< int>( 0), std::runtime_error);
+
+   // field index too high
+   BOOST_REQUIRE_THROW( ia_addr1.getFieldName( 14), std::runtime_error);
+   BOOST_REQUIRE_THROW( ia_addr1.getFieldValueString( 14), std::runtime_error);
+   BOOST_REQUIRE_THROW( ia_addr1.getFieldTypeString( 14), std::runtime_error);
+
+} // errors
 
 
 
 /// Test the indirect access functions on an address record.
+///
 /// @since  0.4, 13.07.2016
 BOOST_AUTO_TEST_CASE( adress_record_test)
 {
@@ -43,9 +93,11 @@ BOOST_AUTO_TEST_CASE( adress_record_test)
    IndirectAccess_AddressRecord  ia_addr1( addr1);
 
 
-   ia_addr1.set( std::string( "Name"), std::string( "Eng"));
-   ia_addr1.set( std::string( "FirstName"), std::string( "Rene"));
-   ia_addr1.set( std::string( "PostalCode"), 5037);
+   BOOST_REQUIRE_NO_THROW(
+      ia_addr1.set( std::string( "Name"), std::string( "Eng")));
+   BOOST_REQUIRE_NO_THROW(
+      ia_addr1.set( std::string( "FirstName"), std::string( "Rene")));
+   BOOST_REQUIRE_NO_THROW( ia_addr1.set( std::string( "PostalCode"), 5037));
 
    BOOST_REQUIRE_EQUAL( addr1.mName, "Eng");
    BOOST_REQUIRE_EQUAL( addr1.mFirstName, "Rene");
@@ -105,6 +157,34 @@ BOOST_AUTO_TEST_CASE( adress_record_test)
                         );
 
 } // adress_record_test
+
+
+
+/// Test the indirect access functions on an address record using the field ids.
+///
+/// @since  x.y.z, 13.11.2019
+BOOST_AUTO_TEST_CASE( adress_record_id_test)
+{
+
+   AddressRecord                 addr1;
+   IndirectAccess_AddressRecord  ia_addr1( addr1);
+
+
+   BOOST_REQUIRE_NO_THROW( ia_addr1.set( 0, std::string( "Eng")));
+   BOOST_REQUIRE_NO_THROW( ia_addr1.set( 1, std::string( "Rene")));
+   BOOST_REQUIRE_NO_THROW( ia_addr1.set( 2, 5037));
+
+   BOOST_REQUIRE_EQUAL( addr1.mName, "Eng");
+   BOOST_REQUIRE_EQUAL( addr1.mFirstName, "Rene");
+   BOOST_REQUIRE_EQUAL( addr1.mPostalCode, 5037);
+
+   BOOST_REQUIRE_EQUAL( ia_addr1.size(), 3);
+
+   BOOST_REQUIRE_EQUAL( ia_addr1.get< std::string>( 0), "Eng");
+   BOOST_REQUIRE_EQUAL( ia_addr1.get< std::string>( 1), "Rene");
+   BOOST_REQUIRE_EQUAL( ia_addr1.get< int>( 2), 5037);
+
+} // adress_record_id_test
 
 
 
