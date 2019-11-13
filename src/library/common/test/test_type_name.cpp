@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -105,6 +105,9 @@ BOOST_AUTO_TEST_CASE( pod_types)
 
    static_assert( celma::type< wchar_t>::name()[ 0] == 'w');
    BOOST_REQUIRE_EQUAL_STR( celma::type< wchar_t>::name(),  "wchar_t");
+
+   static_assert( celma::type< int[3]>::name()[ 0] == 'i');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< int[ 3]>::name(), "int[3]");
 
 } // pod_types
 

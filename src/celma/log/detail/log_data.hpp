@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -31,14 +31,19 @@ class Log;
 
 
 /// Helper class to store all the data related to a log.
+///
 /// @since  0.3, 19.06.2016
 class LogData
 {
 public:
    /// Constructor.
-   /// @param[in]  log_id   The id of the log.
-   /// @param[in]  name     The name of the log.
-   /// @param[in]  log_obj  The Log object.
+   ///
+   /// @param[in]  log_id
+   ///    The id of the log.
+   /// @param[in]  name
+   ///    The name of the log.
+   /// @param[in]  log_obj
+   ///    The Log object.
    /// @since  0.3, 19.06.2016
    LogData( id_t log_id, const std::string& name, Log* log_obj):
       mLogId( log_id),
@@ -48,8 +53,11 @@ public:
    } // LogData::LogData
 
    /// Writes the information about this log to the stream.
-   /// @param[in]  os  The stream to write into.
-   /// @param[in]  ld  The object to dump the data of.
+   ///
+   /// @param[in]  os
+   ///    The stream to write into.
+   /// @param[in]  ld
+   ///    The object to dump the data of.
    /// @return  The stream as passed in.
    /// @since  0.3, 19.06.2016
    friend std::ostream& operator <<( std::ostream& os, const LogData& ld);
@@ -72,5 +80,5 @@ public:
 #endif   // CELMA_LOG_DETAIL_LOG_DATA_HPP
 
 
-// ===========================  END OF log_data.hpp  ===========================
+// =====  END OF log_data.hpp  =====
 

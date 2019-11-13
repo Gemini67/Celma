@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -49,9 +49,9 @@ string extractFuncname( const string& pretty_funcname)
       first_parenthesis = pretty_funcname.find_first_of( '(', first_parenthesis + 1);
 
    // operator()(....
-   else if ((pretty_funcname[ first_parenthesis + 1] == ')') &&
-            ((first_parenthesis + 2 < pretty_funcname.length()) &&
-             (pretty_funcname[ first_parenthesis + 2] == '(')))
+   else if ((pretty_funcname[ first_parenthesis + 1] == ')')
+            && ((first_parenthesis + 2 < pretty_funcname.length())
+                && (pretty_funcname[ first_parenthesis + 2] == '(')))
       first_parenthesis += 2;
 
    // {anonymous namespace}::<funcname>(
@@ -77,8 +77,8 @@ string extractFuncname( const string& pretty_funcname)
    // seems not to be needed (anymore)
 #if NOT_NEEDED
    // e.g. Class& operator+=
-   if ((pretty_funcname[ first_space] == '&') ||
-       (pretty_funcname[ first_space] == '*'))
+   if ((pretty_funcname[ first_space] == '&')
+       || (pretty_funcname[ first_space] == '*'))
       ++first_space;
 
    // template class

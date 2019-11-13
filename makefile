@@ -111,3 +111,6 @@ sonar:
 	   -Dsonar.host.url=https://sonarcloud.io \
 	   -Dsonar.login=$(SONAR_LOGIN)
 
+edit-release:
+	nedit doc/main_page.txt CMakeLists.txt README.md celma.doxy &
+

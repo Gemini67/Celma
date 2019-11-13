@@ -30,6 +30,12 @@ namespace celma { namespace prog_args { namespace detail {
 class FormatLowercase: public IFormat
 {
 public:
+   /// Default constructor.
+   /// Needed to store the name of the formatter in the base class.
+   ///
+   /// @since  1.33.0, 05.11.2019
+   FormatLowercase();
+
    /// Virtual, empty destructor.
    ///
    /// @since  1.23.0, 11.04.2019

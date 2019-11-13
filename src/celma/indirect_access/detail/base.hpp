@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -56,83 +56,115 @@ public:
    Base& operator =( const Base&) = delete;
 
    /// Assigns a new value.
+   ///
    /// @tparam  T  The type of the value.
-   /// @param[in]  id        The id/number of the field/variable to assign the
-   ///                       value to.
-   /// @param[in]  newValue  The new value to assign.
+   /// @param[in]  id
+   ///    The id/number of the field/variable to assign the value to.
+   /// @param[in]  newValue
+   ///    The new value to assign.
+   /// @throw
+   ///    std::runtime_error when the id is unknown or the type of the value
+   ///    does not match the type of the variable.
    /// @since  0.4, 02.05.2016
    template< typename T>
       void set( uint16_t id, const T& newValue) noexcept( false);
 
    /// Returns the current value of the specified variable/field.
+   ///
    /// @tparam  T  The type of the value.
-   /// @param[in]  id  The id/number of the field/variable to return the value of.
+   /// @param[in]  id
+   ///    The id/number of the field/variable to return the value of.
    /// @return  The current value of the specified variable.
+   /// @throw
+   ///    std::runtime_error when the id is unknown or the type of the value
+   ///    does not match the return type.
    /// @since  0.4, 02.05.2016
    template< typename T> const T& get( uint16_t id) const noexcept( false);
 
    /// Assigns a new value.
+   ///
    /// @tparam  T  The type of the value.
-   /// @param[in]  name       The name of the field/variable to assign the value
-   ///                        to.
-   /// @param[in]  new_value  The new value to assign.
+   /// @param[in]  name
+   ///    The name of the field/variable to assign the value to.
+   /// @param[in]  new_value
+   ///    The new value to assign.
+   /// @throw
+   ///    std::runtime_error when the name is unknown or the type of the value
+   ///    does not match the type of the variable.
    /// @since  0.4, 02.05.2016
    template< typename T>
       void set( const std::string& name, const T& new_value) noexcept( false);
 
    /// Returns the current value of the specified variable/field.
+   ///
    /// @tparam  T  The type of the value.
    /// @param[in]  name  The name of the field/variable to return the value of.
    /// @return  The current value of the specified variable.
+   /// @throw
+   ///    std::runtime_error when the name is unknown or the type of the value
+   ///    does not match the return type.
    /// @since  0.4, 02.05.2016
    template< typename T>
       const T& get( const std::string& name) const noexcept( false);
 
    /// Returns the name of the field/variable with the specified id.
+   ///
    /// @param[in]  id  The id of the field to return the name of.
    /// @return  The name of the field with the given id.
+   /// @throw  std::runtime_error when the id is unknown.
    /// @since  0.4, 02.05.2016
    const std::string& getFieldName( uint16_t id) const noexcept( false);
 
    /// Returns the current value of the specified field/variable as string.
+   ///
    /// @param[in]  id  The id of the field to return the value of.
    /// @return  The current value of the variable as string.
+   /// @throw  std::runtime_error when the id is unknown.
    /// @since  0.4, 02.07.2016
    const std::string getFieldValueString( uint16_t id) const noexcept( false);
 
    /// Returns the type of the field/variable as string.
+   ///
    /// @param[in]  id  The id of the field to return the value of.
    /// @return  The type of the value as string.
+   /// @throw  std::runtime_error when the id is unknown.
    /// @since  0.4, 02.07.2016
    const std::string& getFieldTypeString( uint16_t id) const noexcept( false);
 
    /// Returns the number of fields stored here.
+   ///
    /// @return  The number of fields stored by this indirect access container.
    /// @since  0.4, 02.07.2016
    uint16_t size() const noexcept( true);
 
    /// Insertion operator to print the contents of an object using a base class
    /// object pointer.
-   /// @param[out]  os   The stream to insert into.
-   /// @param[in]   obj  The pointer to the object to print the contents of.
+   ///
+   /// @param[out]  os
+   ///    The stream to insert into.
+   /// @param[in]   obj
+   ///    The pointer to the object to print the contents of.
    /// @return  The stream as passed in.
    /// @since  0.4, 13.07.2016
-   friend std::ostream& operator <<( std::ostream& os,
-      const Base* obj);
+   friend std::ostream& operator <<( std::ostream& os, const Base* obj);
 
 protected:
    /// Protected constructor to make sure that this class is always used as base
    /// class.
+   ///
    /// @since  0.4, 02.05.2016
-   Base();
+   Base() = default;
 
    /// Default destructor.
    virtual ~Base() = default;
 
    /// Adds a new field.
+   ///
    /// @tparam  T  The type of the value/variable.
-   /// @param[in]  name   The name of the field/variable.
-   /// @param[in]  value  The variable itself.
+   /// @param[in]  name
+   ///    The name of the field/variable.
+   /// @param[in]  value
+   ///    The variable itself.
    /// @since  0.4, 02.05.2016
    template< typename T>
       void addField( const std::string& name, T& value) noexcept( false);
@@ -182,8 +214,7 @@ template< typename T>
 
 
 template< typename T>
-   void Base::set( const std::string& name,
-                                 const T& new_value) noexcept( false)
+   void Base::set( const std::string& name, const T& new_value) noexcept( false)
 {
    auto  it = mName2Field.find( name);
    if (it == mName2Field.end())

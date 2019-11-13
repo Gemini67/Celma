@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,7 +16,7 @@
 /// function fileInfo.
 
 
-// module header file include
+// module headerfile include
 #include "celma/common/file_info.hpp"
 
 
@@ -36,10 +36,13 @@ namespace celma { namespace common {
 
 
 /// Constructor with the (path and) file name in an std::string.
-/// @param[in]  filename  The (path and) name of the file or directory to
-///                       retrieve the statistics from.
-/// @throws  if the given object does not exist or if the statistics could
-///          not be collected.
+///
+/// @param[in]  filename
+///    The (path and) name of the file or directory to retrieve the
+///    statistics from.
+/// @throw
+///    std::runtime_error if the given object does not exist or if the
+///    statistics could not be collected.
 /// @since  1.4.0, 27.02.2018
 FileInfo::FileInfo( const std::string& filename):
    FileInfo( filename.c_str())
@@ -50,10 +53,13 @@ FileInfo::FileInfo( const std::string& filename):
 
 /// Constructor with the (path and) file name in a C string (character
 /// array).
-/// @param[in]  filename  The (path and) name of the file or directory to
-///                       retrieve the statistics from.
-/// @throws  if the given object does not exist or if the statistics could
-///          not be collected.
+///
+/// @param[in]  filename
+///    The (path and) name of the file or directory to retrieve the
+///    statistics from.
+/// @throw
+///    std::runtime_error if the given object does not exist or if the
+///    statistics could not be collected.
 /// @since  1.4.0, 27.02.2018
 FileInfo::FileInfo( const char* filename):
    mEntryName( filename)
@@ -69,8 +75,9 @@ FileInfo::FileInfo( const char* filename):
 
 
 /// Constructor with a FILE pointer.
+///
 /// @param[in]  fp  The FILE pointer to retrieve the statistics from.
-/// @throws  if the statistics could not be collected.
+/// @throw  std::runtime_error if the statistics could not be collected.
 /// @since  1.4.0, 27.02.2018
 FileInfo::FileInfo( FILE* fp):
    FileInfo( ::fileno( fp))
@@ -80,8 +87,9 @@ FileInfo::FileInfo( FILE* fp):
 
 
 /// Constructor with a file descriptor.
+///
 /// @param[in]  fp  The file descriptor to retrieve the statistics from.
-/// @throws  if the statistics could not be collected.
+/// @throw  std::runtime_error f the statistics could not be collected.
 /// @since  1.4.0, 27.02.2018
 FileInfo::FileInfo( int fd):
    mEntryName()
@@ -110,6 +118,9 @@ FileInfo::FileInfo( struct stat& stat_data):
 /// Returns the path and name of the parent directory of the current entry.
 ///
 /// @return  The path and name of the parent directory of the current entry.
+/// @throw
+///    std::runtime_error if the current object was not created with a file
+///    path and name.
 /// @since  1.9.0, 04.08.2018
 std::string FileInfo::parentDirectory() const
 {

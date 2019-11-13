@@ -40,11 +40,8 @@ public:
    /// Constructor, does a basic validation of the argument list.
    ///
    /// @param[in]  reqArgSpec  The list of arguments that must be used.
-   /// @throws
-   ///    "invalid argument" if the string is empty or does not contain at least
-   ///    two arguments.
    /// @since  0.2, 10.04.2016
-   explicit ConstraintAllOf( const std::string& reqArgSpec) noexcept( false);
+   explicit ConstraintAllOf( const std::string& reqArgSpec);
 
    // Default destructor is fine.
    virtual ~ConstraintAllOf() = default;

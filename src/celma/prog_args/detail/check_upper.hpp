@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,6 +40,7 @@ public:
    /// @since  0.2, 10.04.2016
    explicit CheckUpper( T value);
 
+   /// Default destructor is fine.
    virtual ~CheckUpper() = default;
 
    /// Checks if the value in \a val is less-than the stored limit.
@@ -64,6 +65,7 @@ private:
 
 
 template< typename T> CheckUpper< T>::CheckUpper( T value):
+   ICheck( "upper"),
    mCheckValue( value)
 {
 } // CheckUpper< T>::CheckUpper

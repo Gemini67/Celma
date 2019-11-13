@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -21,6 +21,7 @@
 
 
 using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 
 
 /// Test argument strings without an argument.
@@ -67,6 +68,14 @@ BOOST_AUTO_TEST_CASE( single_argument)
    } // end scope
 
    {
+      auto const  as2a = make_arg_array( "-v", nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
+   } // end scope
+
+   {
       const ArgString2Array  as2a( "-v", "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
@@ -75,7 +84,23 @@ BOOST_AUTO_TEST_CASE( single_argument)
    } // end scope
 
    {
+      auto const  as2a = make_arg_array( "-v", "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
+   } // end scope
+
+   {
       const ArgString2Array  as2a( "my_own_program_name -v");
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
+   } // end scope
+
+   {
+      auto const  as2a = make_arg_array( "my_own_program_name -v");
       BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
       BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
       BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
@@ -102,7 +127,37 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
+      auto const  as2a = make_arg_array( "-v 'my multi-word value'", nullptr);
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+   {
       const ArgString2Array  as2a( "-v 'my multi-word value'", "my_own_program_name");
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+   {
+      auto const  as2a = make_arg_array( "-v 'my multi-word value'", "my_own_program_name");
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+   {
+      auto const  as2a = make_arg_array( "my_own_program_name -v 'my multi-word value'");
 
       BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
@@ -122,7 +177,27 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
    } // end scope
 
    {
+      auto const  as2a = make_arg_array( "my_own_program_name -v 'my multi-word value'");
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "my_own_program_name");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+   {
       const ArgString2Array  as2a( "-v \"my multi-word value\"", nullptr);
+
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "my multi-word value");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+   {
+      auto const  as2a = make_arg_array( "-v \"my multi-word value\"", nullptr);
 
       BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
       BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");

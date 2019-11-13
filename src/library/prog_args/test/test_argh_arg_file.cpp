@@ -30,7 +30,7 @@
 #include "celma/test/test_prog_arguments.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE( invalid_file)
    ah.addArgument( "i", DEST_VAR( int_val), "An integer");
    ah.addArgumentFile( "arg-file");
 
-   const ArgString2Array  as2a( "--arg-file xyz", "testprogname");
+   auto const  as2a = make_arg_array( "--arg-file xyz", "testprogname");
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
       std::runtime_error);
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE( file_through_flag)
 
    ah.addArgument( "i", DEST_VAR( int_val), "An integer");
 
-   const ArgString2Array  as2a( "", "testprogname");
+   auto const  as2a = make_arg_array( "", "testprogname");
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( int_val, 6);
@@ -136,6 +136,7 @@ BOOST_AUTO_TEST_CASE( file_through_arg)
 
    BOOST_REQUIRE_EQUAL( TestEnvironment::object().argC(), 2);
    BOOST_REQUIRE( TestEnvironment::object().argV() != nullptr);
+   BOOST_REQUIRE( TestEnvironment::object().argV()[ 1] != nullptr);
 
    Handler  ah( 0);
    int      int_val = 6;
@@ -147,13 +148,36 @@ BOOST_AUTO_TEST_CASE( file_through_arg)
 
    file_path.append( "/test_file_args.txt");
 
-   const ArgString2Array  as2a( "--arg-file " + file_path, "testprogname");
+   auto const  as2a = make_arg_array( "--arg-file " + file_path, "testprogname");
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
 
    BOOST_REQUIRE_EQUAL( int_val, 42);
 
 } // file_through_arg
+
+
+
+/// No error when the HOME environment variable is not set.
+///
+/// @since  1.27.0, 28.05.2019
+BOOST_AUTO_TEST_CASE( no_home)
+{
+
+   Handler  ah( Handler::hfReadProgArg);
+   int      int_val = 6;
+
+
+   ah.addArgument( "i", DEST_VAR( int_val), "An integer");
+
+   auto const  as2a = make_arg_array( "", "testprogname");
+
+   ::unsetenv( "HOME");
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_EQUAL( int_val, 6);
+
+} // no_home
 
 
 

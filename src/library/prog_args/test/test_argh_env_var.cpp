@@ -34,7 +34,7 @@
 #include "celma/test/test_prog_arguments.hpp"
 
 
-using celma::appl::ArgString2Array;
+using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE( no_or_empty_env)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "a flag"));
 
-      const ArgString2Array  as2a( "", "testprogname");
+      auto const  as2a = make_arg_array( "", "testprogname");
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE( no_or_empty_env)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "a flag"));
 
-      const ArgString2Array  as2a( "", "testprogname");
+      auto const  as2a = make_arg_array( "", "testprogname");
 
       ::setenv( "TESTPROGNAME", "", 1);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE( set_through_env)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "a flag"));
 
-      const ArgString2Array  as2a( "", "testprogname");
+      auto const  as2a = make_arg_array( "", "testprogname");
 
       ::setenv( "TESTPROGNAME", "-f", 1);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( set_through_env)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "a flag"));
 
-      const ArgString2Array  as2a( "-f", "testprogname");
+      auto const  as2a = make_arg_array( "-f", "testprogname");
 
       ::setenv( "TESTPROGNAME", "-f", 1);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE( set_through_env)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( value), "value"));
 
-      const ArgString2Array  as2a( "-v 4711", "testprogname");
+      auto const  as2a = make_arg_array( "-v 4711", "testprogname");
 
       ::setenv( "TESTPROGNAME", "-v 42", 1);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE( set_through_env)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( value), "value"));
 
       ah.checkEnvVarArgs( "ANOTHERTESTPROGNAME");
-      const ArgString2Array  as2a( "", "testprogname");
+      auto const  as2a = make_arg_array( "", "testprogname");
 
       ::setenv( "ANOTHERTESTPROGNAME", "-v 42", 1);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE( set_through_env)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "3", DEST_VAR( flag3), "flag three"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "4", DEST_VAR( flag4), "flag four"));
 
-      const ArgString2Array  as2a( "-13", "testprogname");
+      auto const  as2a = make_arg_array( "-13", "testprogname");
 
       ::setenv( "TESTPROGNAME", "-2 -4", 1);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE( file_through_env)
    ah.addArgument( "i", DEST_VAR( int_val), "An integer");
    ah.addArgumentFile( "arg-file");
 
-   const ArgString2Array  as2a( "", "testprogname");
+   auto const  as2a = make_arg_array( "", "testprogname");
    std::string            env_value( "--arg-file ");
 
    env_value.append( TestEnvironment::object().argV()[ 1])
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE( file_through_env_overwrite)
    ah.addArgument( "i", DEST_VAR( int_val), "An integer");
    ah.addArgumentFile( "arg-file");
 
-   const ArgString2Array  as2a( "-i 999", "testprogname");
+   auto const  as2a = make_arg_array( "-i 999", "testprogname");
    std::string            env_value( "--arg-file ");
 
    env_value.append( TestEnvironment::object().argV()[ 1])

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of class celma::appla::ProjectRoot.
+/// See documentation of class celma::appl::ProjectRoot.
 
 
 // module header file include
@@ -138,7 +138,7 @@ bool ProjectRoot::isOnProject( const std::string& path_file_name)
 
    // have to specify the sub-string of the longer string (path_file_name) to
    // compare against the shorter (project root) string
-   return path_file_name.compare( 0, mProjectRoot.length(), mProjectRoot) == 0;
+   return common::startsWith( path_file_name, mProjectRoot, false);
 } // ProjectRoot::isOnProject
 
 

@@ -41,6 +41,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @param[in]  pattern  The format pattern to use.
 /// @since  1.23.0, 11.04.2019
 FormatAnycase::FormatAnycase( const std::string& pattern):
+   IFormat( "anycase"),
    mPattern( pattern)
 {
 

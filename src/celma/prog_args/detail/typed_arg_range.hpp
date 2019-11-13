@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -49,6 +49,11 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgRange( const dest_type& dest, const std::string& vname);
 
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.32.0, 27.08.2019
+   virtual ~TypedArgRange() = default;
+
    /// Returns the name of the type of the destination container.
    ///
    /// @return  The destination container's type name.
@@ -77,7 +82,7 @@ public:
    ///
    /// @param[in]  c  Pointer to the check to add, is deleted.
    /// @return  Nothing, always throws.
-   /// @throws  "logic_error" since checks are not allowed for ranges.
+   /// @throw  std::logic_error since checks are not allowed for ranges.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
 
@@ -89,9 +94,15 @@ protected:
 
 private:
    /// Stores the value in the destination variable.
-   /// @param[in]  value  The value to store in string format.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Ignored.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   virtual void assign( const std::string& value, bool inverted) override;
 
    /// Actually evaluates the range string.
    /// @param[in]  value  The value string to evaluate.
@@ -159,7 +170,7 @@ template< typename T, typename C>
 
 
 template< typename T, typename C>
-   void TypedArgRange< T, C>::assign( const std::string& value)
+   void TypedArgRange< T, C>::assign( const std::string& value, bool)
 {
    if (!mFormats.empty())
    {

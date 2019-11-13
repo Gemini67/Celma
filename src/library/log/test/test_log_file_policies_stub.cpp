@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -98,6 +98,20 @@ public:
       // nothing to do here
       return 0;
    } // TestFileFuncs::remove
+
+   /// Gets called when a directory should be created.
+   ///
+   /// @param[in]  dir_name
+   ///    The (path and) name of the directory to create.
+   /// @param[in]  mode
+   ///    The permissions to create the directory with.
+   /// @return  The result code of the %mkdir operation.
+   /// @since  1.26.0, 08.03.2018
+   virtual int mkdir( const std::string&, int) override
+   {
+      // nothing to do here
+      return 0;
+   } // TestFileFuncs::mkdir
 
    /// Stores the expected names of the destination and source file of the next
    /// rename operation.
