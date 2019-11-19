@@ -44,12 +44,12 @@ public:
    /// file.
    /// @param[in]  val  The value to check in string format.
    /// @since  1.4.1, 02.03.2018
-   virtual void checkValue( const std::string& val) const override;
+   void checkValue( const std::string& val) const override;
 
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.
    /// @since  1.4.1, 02.03.2018
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 }; // CheckIsFile
 

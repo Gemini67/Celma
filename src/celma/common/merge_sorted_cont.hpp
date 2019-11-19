@@ -26,7 +26,7 @@
 namespace celma { namespace common {
 
 
-namespace {
+namespace detail {
 
 
 /// Helper class: Comparator for two pairs, where the first value of the pair is
@@ -48,7 +48,7 @@ public:
 }; // GreaterCompareIterators< T>
 
 
-} // namespace
+} // namespace detail
 
 
 /// Merges values from multiple, sorted containers into a single container.
@@ -93,7 +93,7 @@ private:
    /// The priority queue with the iterators to the containers. Sorted by the
    /// first value in each container, in ascending order.
    using queue_t = std::priority_queue< elem_t, std::vector< elem_t>,
-      GreaterCompareIterators< elem_t>>;
+      detail::GreaterCompareIterators< elem_t>>;
 
    /// The list of containers (begin/end iterators, actually) to sort.
    queue_t  mQueue;

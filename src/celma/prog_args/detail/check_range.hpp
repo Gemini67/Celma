@@ -44,15 +44,18 @@ public:
    /// @since  0.2, 10.04.2016
    CheckRange( T lower, T upper);
 
+   // defaut destructor is fine
+   virtual ~CheckRange() = default;
+
    /// Checks if the value in \a val is in the range lower ... upper.
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
-   virtual void checkValue( const std::string& val) const override;
+   void checkValue( const std::string& val) const override;
 
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.
    /// @since  0.16.0, 12.08.2017
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 private:
    /// The lower limit to check against.

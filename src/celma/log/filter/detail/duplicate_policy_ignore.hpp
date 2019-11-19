@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,7 +39,7 @@ public:
    /// Returns the policy type.
    /// @return  Policy \a dpIgnore.
    /// @since  0.3, 19.06.2016
-   virtual DuplicatePolicy policy() const override
+   DuplicatePolicy policy() const override
    {
       return DuplicatePolicy::ignore;
    } // DuplicatePolicyIgnore::policy
@@ -47,7 +47,7 @@ public:
    /// Policy: Always return \c false.
    /// @return  \c false.
    /// @since  0.3, 19.06.2016
-   virtual bool acceptNew() const override
+   bool acceptNew() const override
    {
       return false;
    } // DuplicatePolicyIgnore::acceptNew

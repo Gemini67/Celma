@@ -112,7 +112,7 @@ public:
    ///    \c true if the given value is equal to the filter value, or, when the
    ///    filter logic is inverted, when the value is different.
    /// @since  1.31.0, 31.10.2017
-   virtual bool matches( const T& value) const override
+   bool matches( const T& value) const override
    {
       return mInverted ? (value != mValue) : (value == mValue);
    } // SingleValue< T>::matches
@@ -121,7 +121,7 @@ public:
    ///
    /// @return  The string with the single value filter.
    /// @since  1.31.0, 18.10.2019
-   virtual std::string str() const override
+   std::string str() const override
    {
       std::ostringstream  oss;
       if (mInverted)
@@ -181,7 +181,7 @@ public:
    ///    \c inverted was set in the constructor and the value is outside of the
    ///    range.
    /// @since  1.31.0, 31.10.2017
-   virtual bool matches( const T& value) const override
+   bool matches( const T& value) const override
    {
       const bool  result = (mMinValue <= value) && (value <= mMaxValue);
       return mInverted ? !result : result;
@@ -191,7 +191,7 @@ public:
    /// 
    /// @return  A string with the range filter.
    /// @since  1.31.0, 18.10.2019
-   virtual std::string str() const override
+   std::string str() const override
    {
       std::ostringstream  oss;
       if (mInverted)
@@ -243,7 +243,7 @@ public:
    ///    \c true if the given value is greater than or equal to the defined
    ///    minimum value.
    /// @since  1.31.0, 01.11.2017
-   virtual bool matches( const T& value) const override
+   bool matches( const T& value) const override
    {
       return value >= mMinValue;
    } // MinimumValue< T>::matches
@@ -252,7 +252,7 @@ public:
    /// 
    /// @return  A string with the minimum value filter.
    /// @since  1.31.0, 18.10.2019
-   virtual std::string str() const override
+   std::string str() const override
    {
       std::ostringstream  oss;
       oss << '[' << mMinValue;
@@ -296,7 +296,7 @@ public:
    /// @return
    ///    \c true if the given value is less than the defined maximum value.
    /// @since  1.31.0, 01.11.2017
-   virtual bool matches( const T& value) const override
+   bool matches( const T& value) const override
    {
       return value < mMaxValue;
    } // MaximumValue< T>::matches
@@ -305,7 +305,7 @@ public:
    /// 
    /// @return  A string with the maximum value filter.
    /// @since  1.31.0, 18.10.2019
-   virtual std::string str() const override
+   std::string str() const override
    {
       std::ostringstream  oss;
       oss << ']' << mMaxValue;

@@ -45,7 +45,7 @@ public:
    ///
    /// @param[in,out]  val  The text to convert to uppercase.
    /// @since  0.2, 10.04.2016
-   virtual void formatValue( std::string& val) const override;
+   void formatValue( std::string& val) const override;
 
 }; // FormatUppercase
 

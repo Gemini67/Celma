@@ -52,7 +52,7 @@ public:
    ///
    /// @return  Always \c true.
    /// @since  1.31.0, 23.10.2019
-   virtual bool isValueConstraint() const override;
+   bool isValueConstraint() const override;
 
    /// Checks if the type set for the constraint matches the type of the
    /// destination variable.

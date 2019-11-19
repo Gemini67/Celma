@@ -52,12 +52,12 @@ public:
    /// Returns "callable-value".
    /// @return  The string "callable-value".
    /// @since  1.14.0, 28.09.2018
-   virtual const std::string varTypeName() const override;
+   const std::string varTypeName() const override;
 
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const override;
+   bool hasValue() const override;
 
    /// Prints "callable" since there is no value to print.
    /// @param[in]  os
@@ -67,31 +67,31 @@ public:
    ///    too.
    /// @since
    ///    1.8.0, 05.07.2018
-   virtual void printValue( std::ostream& os, bool print_type) const override;
+   void printValue( std::ostream& os, bool print_type) const override;
 
    /// Allows to set the value mode to 'optional' (or required, but that is
    /// already the default).
    /// @param[in]  vm  The new value mode to set.
    /// @return  Pointer to this object.
    /// @since  0.13.2, 18.02.2017
-   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
+   TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Callables with values may also accept multiple, separate values.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setTakesMultiValue() override;
+   TypedArgBase* setTakesMultiValue() override;
 
    /// Logic inversion may be used on callables.
    ///
    /// @return  Pointer to this object.
    /// @since  1.27.0, 28.05.2019
-   virtual TypedArgBase* allowsInversion() noexcept( false) override;
+   TypedArgBase* allowsInversion() noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const override;
+   void dump( std::ostream& os) const override;
 
 private:
    /// Executes the specified function.
@@ -104,7 +104,7 @@ private:
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value, bool inverted) override;
+   void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    ArgHandlerCallableValue  mFun;

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -56,23 +56,23 @@ private:
    /// Check if the currently opened file is valid for writing into.
    /// @return  Always \c true.
    /// @since  1.0.0, 13.12.2017
-   virtual bool openCheck() override;
+   bool openCheck() override;
 
    /// Checks if the next message can still be written into the current file.
    /// @param[in]  msg       The message object. Ignored.
    /// @param[in]  msg_text  The formatted text of the log message. Ignored.
    /// @return  Always \c true.
    /// @since  1.0.0, 13.12.2017
-   virtual bool writeCheck( const detail::LogMsg& msg,
-      const std::string& msg_text) override;
+   bool writeCheck( const detail::LogMsg& msg, const std::string& msg_text)
+      override;
 
    /// Called after the log message was written into the current log file. Does
    /// nothing in this class.
    /// @param[in]  msg       The message object. Ignored.
    /// @param[in]  msg_text  The formatted text of the log message. Ignored.
    /// @since  1.0.0, 13.12.2017
-   virtual void written( const detail::LogMsg& msg,
-      const std::string& msg_text) override;
+   void written( const detail::LogMsg& msg, const std::string& msg_text)
+      override;
 
 }; // Simple
 

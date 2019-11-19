@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.33.1
+   \mainpage  CELMA v1.33.2
 
    \tableofcontents
 
@@ -47,7 +47,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
-
+   |   1.33.2 | 2019-11-19        | New issues found by SonarCloud resolved. |
    |   1.33.1 | 2019-11-13        | Coverage improved. |
    |   1.33.0 | 2019-11-01        | Print formatters in argument help. Added constraint "disjoint". |
    |   1.32.0 | 2019-10-29        | Allow multiple formatters for command line (argument) values.<br>Added function "starts with" for checking strings. |

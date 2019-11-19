@@ -55,12 +55,12 @@ public:
    ///
    /// @param[in]  key  Ignored.
    /// @since  1.31.0, 22.10.2019
-   virtual void executeConstraint( const ArgumentKey& key) override;
+   void executeConstraint( const ArgumentKey& key) override;
 
    /// Does nothing here.
    ///
    /// @since  1.31.0, 22.10.2019
-   virtual void validated() override;
+   void validated() override;
 
    /// Iterates over all the defined arguments and compares the values set for
    /// these arguments, they must all be different.
@@ -69,7 +69,7 @@ public:
    ///    std::runtime_error when the same value is found in two different
    ///    arguments.
    /// @since  1.31.0, 22.10.2019
-   virtual void checkEndCondition() const noexcept( false) override;
+   void checkEndCondition() const noexcept( false) override;
 
    /// Checks if the type set for the constraint matches the type of the
    /// destination variable.
@@ -80,13 +80,13 @@ public:
    ///    \c true if the type of the destination variable and the type set for
    ///    the destination variable match.
    /// @since  1.33.0, 31.10.2019
-   virtual bool matchesVarType( const std::string& var_type_name) const override;
+   bool matchesVarType( const std::string& var_type_name) const override;
 
    /// Returns a text description of the constraint.
    ///
    /// @return  A string with the text description of the constraint.
    /// @since  1.31.0, 22.10.2019
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 }; // ValueConstraintDiffer< T>
 

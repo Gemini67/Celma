@@ -66,7 +66,7 @@ public:
    ///
    /// @param[in,out]  val  The string to format.
    /// @since  1.32.0, 19.08.2019
-   virtual void formatValue( std::string& val) const override
+   void formatValue( std::string& val) const override
    {
       auto  i = val.begin();
       while (i != val.end())

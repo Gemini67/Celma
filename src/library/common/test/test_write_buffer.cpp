@@ -59,7 +59,7 @@ private:
    /// @param[in]  len
    ///    The length of the data to write.
    /// @since  1.20.0, 01.01.2019
-   virtual void writeData( const unsigned char* const, size_t len) const override
+   void writeData( const unsigned char* const, size_t len) const override
    {
       mDataWritten += len;
       ++mWriteCalled;
@@ -98,7 +98,7 @@ private:
    /// @param[in]  len
    ///    The length of the data to write.
    /// @since  1.20.0, 04.01.2019
-   virtual void writeData( const unsigned char* const, size_t len) const override
+   void writeData( const unsigned char* const, size_t len) const override
    {
       mDataWritten += len;
       ++mWriteCalled;

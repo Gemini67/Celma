@@ -48,14 +48,13 @@ public:
    /// @param[in]  val  The value to check.
    /// @throw  std::underflow_error if the given string is too short.
    /// @since  1.23.0, 11.04.2019
-   virtual void checkValue( const std::string& val) const noexcept( false)
-      override;
+   void checkValue( const std::string& val) const noexcept( false) override;
 
    /// Returns a text description of the check.
    ///
    /// @return  A string with the text description of the check.
    /// @since  1.23.0, 11.04.2019
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 private:
    /// The minimum length to check against.

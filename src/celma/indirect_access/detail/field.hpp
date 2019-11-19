@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -61,7 +61,7 @@ public:
    /// Returns the value of the variable as string.
    /// @return  The current value as string.
    /// @since  0.4, 02.07.2016
-   virtual const std::string str() const noexcept( false) override;
+   const std::string str() const noexcept( false) override;
 
 protected:
    /// The variable.

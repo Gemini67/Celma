@@ -88,7 +88,7 @@ private:
    /// - \c true if it is (still) okay to write into the current log file.
    /// - \c false if a new log file should be opened.
    /// @since  1.25.0, 03.05.2019
-   virtual bool openCheck() override
+   bool openCheck() override
    {
       return mOpenCheckResults[ mOpenCheckCalls++];
    } // TestPolicyBase::openCheck
@@ -104,7 +104,7 @@ private:
    ///   - \c true if the log message can be written into the current log file.
    ///   - \c false if a new file should be opened for this log message.
    /// @since  1.25.0, 03.05.2019
-   virtual bool writeCheck( const celma::log::detail::LogMsg& msg,
+   bool writeCheck( const celma::log::detail::LogMsg& msg,
       const std::string& msg_text) override
    {
       return mWriteCheckResults[ mWriteCheckCalls++];
@@ -119,7 +119,7 @@ private:
    ///    The formatted text of the log message that was written into the log
    ///    file.
    /// @since  1.25.0, 03.05.2019
-   virtual void written( const celma::log::detail::LogMsg& msg,
+   void written( const celma::log::detail::LogMsg& msg,
       const std::string& msg_text) override
    {
    } // TestPolicyBase::written

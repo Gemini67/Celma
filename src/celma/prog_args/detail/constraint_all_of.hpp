@@ -54,24 +54,24 @@ public:
    ///
    /// @param[in]  key  The current argument that was identified.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const ArgumentKey& key) override;
+   void executeConstraint( const ArgumentKey& key) override;
 
    /// Called after the argument list was validated.
    ///
    /// @since  0.2, 10.04.2016
-   virtual void validated() override;
+   void validated() override;
 
    /// Checks if all of the specified arguments were used, i.e.: if the string
    /// \a #mRemainingArguments is empty.
    ///
    /// @since  0.2, 10.04.2016
-   virtual void checkEndCondition() const override;
+   void checkEndCondition() const override;
 
    /// Returns a text description of the constraint.
    ///
    /// @return  A string with the text description of the constraint.
    /// @since  0.16.0, 15.08.2017
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 private:
    /// Container for the keys, only keys needed.

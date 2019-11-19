@@ -68,7 +68,7 @@ public:
    ///
    /// @return  String with the name of the destination type.
    /// @since  1.14.0, 28.09.2018
-   virtual const std::string varTypeName() const override;
+   const std::string varTypeName() const override;
 
    /// Stores the value in the destination variable.
    ///
@@ -77,13 +77,13 @@ public:
    /// @param[in]  inverted
    ///    Ignored.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const string& value, bool inverted) override;
+   void assign( const string& value, bool inverted) override;
 
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
    ///          value, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const override;
+   bool hasValue() const override;
 
    /// Writes the contents of the destination variable into the stream.
    /// @param[in]  os
@@ -93,14 +93,14 @@ public:
    ///    too.
    /// @since
    ///    1.8.0, 05.07.2018
-   virtual void printValue( std::ostream& os, bool print_type) const override;
+   void printValue( std::ostream& os, bool print_type) const override;
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setListSep( char sep) override;
+   TypedArgBase* setListSep( char sep) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.

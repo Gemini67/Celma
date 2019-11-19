@@ -52,7 +52,7 @@ public:
    ///
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue() noexcept( false) override;
+   void gotValue() noexcept( false) override;
 
    /// Called by the framework at the end of the command line processing.<br>
    /// Here we check that the exact number of values was processed, if any.
@@ -60,13 +60,13 @@ public:
    /// @throw  runtime_error
    ///    if at least one but not all execpted values were passed.
    /// @since  0.2, 10.04.2016
-   virtual void check() noexcept( false) override;
+   void check() noexcept( false) override;
 
    /// Returns the text description of the cardinality "exact".
    ///
    /// @return  String with the text description of the cardinality.
    /// @since  1.14.0, 02.10.2018
-   virtual std::string cardinalityStr() const override;
+   std::string cardinalityStr() const override;
 
 private:
    /// Number of calls/values expected for the corresponding argument.
