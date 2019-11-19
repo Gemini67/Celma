@@ -68,7 +68,7 @@ public:
    /// @param[in]  indent
    ///    Indent string.
    /// @since  1.22.0, 20.03.2019
-   virtual void dump( std::ostream& os, std::string indent) const override;
+   void dump( std::ostream& os, std::string indent) const override;
 
 private:
    /// The full path and name of the destination of the link.

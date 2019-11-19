@@ -203,13 +203,13 @@ public:
    ///
    /// @return  In this class, always \c true.
    /// @since  0.14.0, 21.02.2017
-   virtual bool isValueHandler() const override;
+   bool isValueHandler() const override;
 
    /// Returns this object.
    ///
    /// @return  This object.
    /// @since  0.14.0, 15.03.2017
-   virtual ValueHandler* getValueHandlerObj() noexcept( false) override;
+   ValueHandler* getValueHandlerObj() noexcept( false) override;
 
 private:
    /// Type used to store the destination variables.

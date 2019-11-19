@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -93,7 +93,7 @@ private:
    /// Sets the number of tokens found.
    /// @param[in]  theCount  The number of tokens that were found.
    /// @since  0.2, 04.04.2016
-   virtual void setCount( int theCount) override;
+   void setCount( int theCount) override;
 
    /// Copy of the string needed to make sure that the string persists until
    /// the tokenisation process is finished, even when a a char array is

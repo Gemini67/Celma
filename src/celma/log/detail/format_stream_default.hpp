@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,12 +33,16 @@ namespace celma { namespace log { namespace detail {
 /// @since  1.0.0, 19.06.2016
 class FormatStreamDefault: public IFormatStream
 {
+public:
+   // default destructor is fine
+   virtual ~FormatStreamDefault() = default;
+
 private:
    /// Implementation of the interface: Generate the log entry.
    /// @param[out]  out  The stream to write the log entry into.
    /// @param[in]   msg  The log message object with the data to log.
    /// @since  1.0.0, 19.06.2016
-   virtual void format( std::ostream& out, const LogMsg& msg) const override;
+   void format( std::ostream& out, const LogMsg& msg) const override;
 
 }; // FormatStreamDefault
 
@@ -51,5 +55,5 @@ private:
 #endif   // CELMA_LOG_DETAIL_FORMAT_STREAM_DEFAULT_HPP
 
 
-// ====================  END OF format_stream_default.hpp  ====================
+// =====  END OF format_stream_default.hpp  =====
 

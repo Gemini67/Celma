@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,11 +34,11 @@ int main( int argc, char* argv[])
                                                  Handler::AllHelp);
 
 
-   bool  quietFlag;
-   bool  debugMode;
+   bool  quietFlag = false;
+   bool  debugMode = false;
    int   manInt1;
-   bool  printVersion;
-   bool  printModList;
+   bool  printVersion = false;
+   bool  printModList = false;
 
    ah1->addArgument( "q",             DEST_VAR( quietFlag), "be quiet");
    ah1->addArgument( "debug_mode",    DEST_VAR( debugMode),

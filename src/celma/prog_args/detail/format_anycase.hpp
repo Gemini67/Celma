@@ -57,7 +57,7 @@ public:
    ///
    /// @param[in,out]  val  The text to convert, returns the adapted satring.
    /// @since  1.23.0, 11.04.2019
-   virtual void formatValue( std::string& val) const override;
+   void formatValue( std::string& val) const override;
 
 private:
    /// The pattern that specifies how to format the string contents.

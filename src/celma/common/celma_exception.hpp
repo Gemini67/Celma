@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -94,7 +94,11 @@ public:
    /// @return  The error information in the format
    ///          '\<funcname\>\@\<filename<>[\<linenbr<>]: \<text\>'.
    /// @since  0.2, 07.04.2016
-   virtual const char* what() const noexcept override;
+   const char* what() const noexcept override;
+
+   // copy-assignment not allowed, but move-assignment is
+   CelmaException& operator =( const CelmaException&) = delete;
+   CelmaException& operator =( CelmaException&&) = default;
 
 private:
    /// If called with a parent, contains a copy-created object with the data of

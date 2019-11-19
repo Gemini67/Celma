@@ -42,6 +42,10 @@ public:
       mDestVar = value;
    } // ScopedValue< T>::ScopedValue
 
+   // copying is not allowed
+   ScopedValue( const ScopedValue&) = delete;
+   ScopedValue( ScopedValue&&) = delete;
+
    /// Destructor, restores the previous value.
    /// @since  0.2, 10.04.2016
    ~ScopedValue()
@@ -49,11 +53,15 @@ public:
       mDestVar = mOldValue;
    } // ScopedValue< T>::~ScopedValue
 
+   // assignment is not allowed
+   ScopedValue& operator =( const ScopedValue&) = delete;
+   ScopedValue& operator =( ScopedValue&&) = delete;
+
 private:
    /// The variable to handle.
-   T&        mDestVar;
+   T&       mDestVar;
    /// The previous value to restore.
-   const T   mOldValue;
+   const T  mOldValue;
 
 }; // ScopedValue< T>
 
@@ -81,6 +89,10 @@ public:
       mDestVar |= value;
    } // ScopedFlag< S>::ScopedFlag
 
+   // copying is not allowed
+   ScopedFlag( const ScopedFlag&) = delete;
+   ScopedFlag( ScopedFlag&&) = delete;
+
    /// Destructor, restores the previous value of the flag.
    ///
    /// @since  1.22.0, 01.04.2019
@@ -94,6 +106,10 @@ public:
          mDestVar -= mFlagBit;
       } // end if
    } // ScopedFlag< S>::~ScopedFlag
+
+   // assignment is not allowed
+   ScopedFlag& operator =( const ScopedFlag&) = delete;
+   ScopedFlag& operator ==( ScopedFlag&&) = delete;
 
 private:
    /// The variable to handle.

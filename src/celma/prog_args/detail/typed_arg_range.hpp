@@ -58,13 +58,13 @@ public:
    ///
    /// @return  The destination container's type name.
    /// @since  1.14.0, 28.09.2018
-   virtual const std::string varTypeName() const override;
+   const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
    /// @return  \c true if the destination variable contains (at least) one
    ///          value, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const override;
+   bool hasValue() const override;
 
    /// Prints the current value of the destination variable.<br>
    /// Does not check any flags, if a value has been set etc., simply prints the
@@ -76,7 +76,7 @@ public:
    ///    too.
    /// @since
    ///    1.8.0, 05.07.2018
-   virtual void printValue( std::ostream& os, bool print_type) const override;
+   void printValue( std::ostream& os, bool print_type) const override;
 
    /// Adding checks is not allowed for a range.
    ///
@@ -84,13 +84,13 @@ public:
    /// @return  Nothing, always throws.
    /// @throw  std::logic_error since checks are not allowed for ranges.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
+   TypedArgBase* addCheck( ICheck* c) noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const override;
+   void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
@@ -102,7 +102,7 @@ private:
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value, bool inverted) override;
+   void assign( const std::string& value, bool inverted) override;
 
    /// Actually evaluates the range string.
    /// @param[in]  value  The value string to evaluate.

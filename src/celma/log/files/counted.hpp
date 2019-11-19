@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -70,13 +70,13 @@ private:
    ///    \c true if the current log file can still be used, \c false if the log
    ///    file(s) should be rolled.
    /// @since  1.11.0, 05.09.2018
-   virtual bool openCheck() override;
+   bool openCheck() override;
 
    /// Called when openCheck() return \c false. Rolls the existing log file
    /// generations.
    ///
    /// @since  1.11.0, 05.09.2018
-   virtual void rollFiles() override;
+   void rollFiles() override;
 
    /// Called to check if the next log message can still be written into the
    /// current log file.<br>
@@ -90,8 +90,8 @@ private:
    ///    \c true if the log message can still be written into the current log
    ///    file.
    /// @since  1.11.0, 05.09.2018
-   virtual bool writeCheck( const detail::LogMsg& msg,
-      const std::string& msg_text) override;
+   bool writeCheck( const detail::LogMsg& msg, const std::string& msg_text)
+      override;
 
    /// Called after the log message was written into the log file. Here, updates
    /// the #mNumberOfEntries variable.
@@ -101,8 +101,8 @@ private:
    /// @param[in]  msg_text
    ///    Ignored.
    /// @since  1.11.0, 05.09.2018
-   virtual void written( const detail::LogMsg& msg,
-      const std::string& msg_text) override;
+   void written( const detail::LogMsg& msg, const std::string& msg_text)
+      override;
 
    /// Maximum number of entries to write into the log file.
    size_t  mMaxEntries;

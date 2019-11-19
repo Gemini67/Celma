@@ -56,17 +56,16 @@ public:
    ///
    /// @return  Constant string "subgroup".
    /// @since  1.14.0, 28.09.2018
-   virtual const std::string varTypeName() const override;
+   const std::string varTypeName() const override;
 
    /// Required by framework, does nothing except setting the #mWasCalled flag.
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& /* value */, bool /* inverted */)
-      override;
+   void assign( const std::string& /* value */, bool /* inverted */) override;
 
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const override;
+   bool hasValue() const override;
 
    /// Should not be called. Prints the text "subgroup".
    /// @param[in]  os
@@ -76,7 +75,7 @@ public:
    ///    too.
    /// @since
    ///    1.8.0, 05.07.2018
-   virtual void printValue( std::ostream& os, bool print_type) const override;
+   void printValue( std::ostream& os, bool print_type) const override;
 
    /// Returns the argument handler object.
    /// @return  The object stored internally.

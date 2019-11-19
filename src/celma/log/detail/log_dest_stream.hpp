@@ -59,14 +59,14 @@ public:
    ///                        NULL pointer is passed, the previous formatter is
    ///                        replaced by the default stream formatter.
    /// @since  1.0.0, 19.06.2016
-   virtual void setFormatter( IFormatBase* formatter = nullptr) override;
+   void setFormatter( IFormatBase* formatter = nullptr) override;
 
 private:
    /// Called through the base class. Writes a log message to the specified
    /// stream.
    /// @param[in]  msg  The message to write.
    /// @since  1.0.0, 19.06.2016
-   virtual void message( const LogMsg& msg) override;
+   void message( const LogMsg& msg) override;
 
    /// The stream to write into.
    std::ostream&                    mDest;

@@ -80,7 +80,7 @@ public:
    /// @param[in]  dir_name
    ///    The (path and) name of the directory that is created.
    /// @since  1.26.0, 08.03.2018
-   virtual void dirCreated( const std::string& dir_name) override;
+   void dirCreated( const std::string& dir_name) override;
 
 private:
    /// The type of the container used to store the directory names.

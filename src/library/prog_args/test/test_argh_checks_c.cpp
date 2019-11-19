@@ -2151,7 +2151,7 @@ public:
    /// Checks if the value in \a val equals one of the three check values.
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
-   virtual void checkValue( const string& val) const noexcept( false) override
+   void checkValue( const string& val) const noexcept( false) override
    {
       int  checkVal = boost::lexical_cast< int>( val);
       if ((checkVal != m1) && (checkVal != m2) && (checkVal != m3))
@@ -2161,7 +2161,7 @@ public:
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.
    /// @since  0.16.0, 12.08.2017
-   virtual std::string toString() const override
+   std::string toString() const override
    {
       return "";
    }

@@ -72,7 +72,7 @@ public:
    ///
    /// @return  The type name of the destination variable.
    /// @since  1.14.0, 28.09.2018
-   virtual const std::string varTypeName() const override;
+   const std::string varTypeName() const override;
 
    /// Returns if the destination has a value set.<br>
    /// Of course this applies only when the value was set through the current
@@ -80,7 +80,7 @@ public:
    ///
    /// @return  \c true if the destination variable contains a value.
    /// @since  1.1.0, 25.09.2017
-   virtual bool hasValue() const override;
+   bool hasValue() const override;
 
    /// Prints the current value of the destination variable.<br>
    /// Does not check any flags, if a value has been set etc., simply prints the
@@ -93,7 +93,7 @@ public:
    ///    too.
    /// @since
    ///    1.8.0, 05.07.2018
-   virtual void printValue( std::ostream& os, bool print_type) const override;
+   void printValue( std::ostream& os, bool print_type) const override;
 
    /// This type doesn't allow to change the value mode: Throws always.
    ///
@@ -101,28 +101,27 @@ public:
    /// @return  Pointer to this object.
    /// @throw  std::logic_error.
    /// @since  1.1.0, 25.09.2017
-   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
+   TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Adds the value of the destination variable to the string.
    ///
    /// @param[out]  dest  The string to append the default value to.
    /// @since  1.1.0, 25.09.2017
-   virtual void defaultValue( std::string& dest) const override;
+   void defaultValue( std::string& dest) const override;
 
    /// Allows to change the "original value check" mode.
    ///
    /// @param[in]  yesNo  Set to \c false for turning the value check off.
    /// @return  Pointer to this object.
    /// @since  1.1.0, 16.11.2017
-   virtual TypedArgBase* checkOriginalValue( bool yesNo) noexcept( false)
-      override;
+   TypedArgBase* checkOriginalValue( bool yesNo) noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    ///
    /// @param[out]  os  The stream to print to.
    /// @since  1.1.0, 25.09.2017
-   virtual void dump( std::ostream& os) const override;
+   void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
@@ -134,7 +133,7 @@ private:
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  1.1.0, 25.09.2017
-   virtual void assign( const std::string& value, bool inverted) override;
+   void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    T&       mDestVar;

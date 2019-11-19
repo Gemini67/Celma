@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,6 +36,7 @@ public:
    /// @since  0.3, 19.06.2016
    explicit LogFilterMinLevel( LogLevel min_level);
 
+   // default destructor is fine
    virtual ~LogFilterMinLevel() = default;
 
    /// Fast check: Returns if the specified log level may be processed.
@@ -50,7 +51,7 @@ private:
    /// @param[in]  msg  The message to check the log level of.
    /// @return  \c true if the log level of the message is accepted.
    /// @since  0.3, 19.06.2016
-   virtual bool pass( const log::detail::LogMsg& msg) const override;
+   bool pass( const log::detail::LogMsg& msg) const override;
 
    /// The minimum log level.
    const LogLevel  mMinLevel;

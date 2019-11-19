@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -61,7 +61,7 @@ private:
    /// this file.
    /// @return  Always \c true.
    /// @since  1.0.0, 13.12.2017
-   virtual bool openCheck() override;
+   bool openCheck() override;
 
    /// Called to check if the next log message can still be written into the
    /// current log file.<br>
@@ -72,16 +72,16 @@ private:
    /// @return  \c true if the log message text can be written into the current
    ///          log file.
    /// @since  1.0.0, 13.12.2017
-   virtual bool writeCheck( const detail::LogMsg& msg,
-      const std::string& msg_text) override;
+   bool writeCheck( const detail::LogMsg& msg, const std::string& msg_text)
+      override;
 
    /// Called after the log message was written into the log file. Here, does
    /// nothing.
    /// @param[in]  msg       Ignored.
    /// @param[in]  msg_text  
    /// @since  1.0.0, 13.12.2017
-   virtual void written( const detail::LogMsg& msg,
-      const std::string& msg_text) override;
+   void written( const detail::LogMsg& msg,  const std::string& msg_text)
+      override;
 
    /// The maximum timestamp of log messages to write into this file.
    time_t  mTimestampLast;

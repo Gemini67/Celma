@@ -49,25 +49,25 @@ public:
    ///
    /// @param[in]  key  The argument that was used/identified.
    /// @since  0.2, 10.04.2016
-   virtual void executeConstraint( const ArgumentKey& key) override;
+   void executeConstraint( const ArgumentKey& key) override;
 
    /// Called after the argument list was validated.
    ///
    /// @since  0.2, 10.04.2016
-   virtual void validated() override;
+   void validated() override;
 
    /// Called after all arguments were evaluated. Checks that one of the
    /// specified arguments was actually used, i.e. #mUsedArgument may not be
    /// empty.
    ///
    /// @since  0.2, 10.04.2016
-   virtual void checkEndCondition() const override;
+   void checkEndCondition() const override;
 
    /// Returns a text description of the constraint.
    ///
    /// @return  A string with the text description of the constraint.
    /// @since  0.16.0, 15.08.2017
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 private:
    /// Contains the argument that was actually used on the command line.<br>
