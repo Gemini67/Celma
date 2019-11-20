@@ -10,7 +10,7 @@
    collection of modules, classes and functions that are often used in C++
    projects on *UX.<br>
    The most prominent member being the 'argument handler' library, a replacement
-   for getopt()/Boost.Program Options.
+   for ::getopt(), similar to Boost.ProgramOptions.
 
    \subsection  build  Build Information
 

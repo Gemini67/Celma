@@ -18,6 +18,7 @@
 /// - TypedArg< common::CheckAssign< T>>
 /// - TypedArg< common::CheckAssign< bool>>
 /// - TypedArg< LevelCounter>
+/// - TypedArg< std::set< T>>
 /// - TypedArg< std::vector< T>>
 /// - TypedArg< T[ N]>
 /// - TypedArg< std::array< T, N>>
@@ -36,6 +37,7 @@
 #include <bitset>
 #include <iomanip>
 #include <iostream>
+#include <set>
 #include <tuple>
 #include <vector>
 #include <boost/lexical_cast.hpp>
@@ -94,7 +96,7 @@ public:
    /// @since  0.2, 10.04.2016
    bool hasValue() const override;
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -301,7 +303,7 @@ public:
       return mHasValueSet;
    } // TypedArg< bool>::hasValue
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -405,7 +407,7 @@ public:
    /// @since  0.2, 10.04.2016
    bool hasValue() const override;
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -554,7 +556,7 @@ public:
       return mDestVar.hasValue();
    } // TypedArg< common::CheckAssign< bool>>::hasValue
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -694,7 +696,7 @@ public:
       return this;
    } // TypedArg< LevelCounter>::setValueMode
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -711,7 +713,7 @@ public:
          os << " [" << varTypeName() << "]";
    } // TypedArg< LevelCounter>::printValue
 
-   /// Special feature for destination variable type level counter:<br>
+   /// Special feature for destination variable type level counter:
    /// Allow mixing of increment and assignment on the command line.
    ///
    /// @since  1.11.0, 20.08.2018
@@ -789,6 +791,271 @@ private:
 }; // TypedArg< LevelCounter>
 
 
+// Template TypedArg< std::set< T>>
+// ================================
+
+
+/// Specialisation of TypedArg<> for values wrapped in a set.
+///
+/// @tparam  T  The type of the value(s) stored in the set.
+/// @since  x.y.z, 14.11.2019
+template< typename T> class TypedArg< std::set< T>>: public TypedArgBase
+{
+public:
+   /// The type of the destination variable.
+   using set_type = typename std::set< T>;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  x.y.z, 14.11.2019
+   TypedArg( set_type& dest, const std::string& vname);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z, 14.11.2019
+   virtual ~TypedArg() = default;
+
+   /// By default, the value mode for sets is set to "required". Here it can be
+   /// changed to "optional" if "clear before assign" has been set before and
+   /// the destination set contains (default) values.<br>
+   /// This allows the following scenario:
+   /// - Assign default values to the destination set.
+   /// - Define the argument with "clear before assign" and value mode
+   ///   "optional".
+   /// - If the argument is not used: Default values are used.
+   /// - If the argument is used without value(s): The set is cleared.
+   /// - Argument used with values: Only the values are stored in the set.
+   ///
+   /// @param[in]  vm
+   ///    The new value mode, only allowed value is actually "optional".
+   /// @return  Pointer to this object.
+   /// @throw
+   ///    std::logic_error if the value mode is not "optional", or "clear before
+   ///    assign" is not set.
+   /// @since  x.y.z, 14.11.2019
+   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false);
+
+   /// Returns the name of the type of the destination variable (set of
+   /// something).
+   ///
+   /// @return  The name of the type of the destination variable/set.
+   /// @since  x.y.z, 14.11.2019
+   virtual const std::string varTypeName() const override;
+
+   /// Returns if the destination has (at least) one value set.
+   ///
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  x.y.z, 14.11.2019
+   virtual bool hasValue() const override;
+
+   /// Prints the current value of the destination variable.
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  x.y.z, 14.11.2019
+   virtual void printValue( std::ostream& os, bool print_type) const override;
+
+   /// Overloads TypedArgBase::setTakesMultiValue().
+   /// For sets it is possible/allowed to activate this feature.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  x.y.z, 14.11.2019
+   virtual TypedArgBase* setTakesMultiValue() override;
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   ///
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @since  x.y.z, 14.11.2019
+   virtual TypedArgBase* setListSep( char sep) override;
+
+   /// Special feature for destination variable type set:
+   /// Clear the contents of the set before assigning the value(s) from the
+   /// command line. If the feature is off (the default), the value(s from the
+   /// command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination set that should be overwritten by the argument's values.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  x.y.z, 14.11.2019
+   virtual TypedArgBase* setClearBeforeAssign() override;
+
+   /// Used for value checks in value constraints: Returns the current value of
+   /// the destination variable.
+   ///
+   /// @param[out]  dest  Returns the current value of the destination variable.
+   /// @since  x.y.z, 14.11.2019
+   void getValue( set_type& dest) const;
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   ///
+   /// @param[out]  os  The stream to print to.
+   /// @since  x.y.z, 14.11.2019
+   virtual void dump( std::ostream& os) const override;
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  x.y.z, 14.11.2019
+   virtual void assign( const std::string& value, bool inverted) override;
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   set_type&  mDestVar;
+   /// The character to use as a list separator, default: ,
+   char       mListSep = ',';
+   /// If set, the contents of the set are cleared before the first value(s)
+   /// from the command line are assigned.
+   bool       mClearB4Assign = false;
+
+}; // TypedArg< std::set< T>>
+
+
+// inlined methods
+// ===============
+
+
+template< typename T>
+   TypedArg< std::set< T>>::TypedArg( set_type& dest,
+      const std::string& vname):
+         TypedArgBase( vname, ValueMode::required, false),
+         mDestVar( dest)
+{
+   mpCardinality.reset();
+} // TypedArg< std::set< T>>::TypedArg
+
+
+template< typename T>
+   TypedArgBase* TypedArg< std::set< T>>::setValueMode( ValueMode vm)
+{
+   if (vm == mValueMode)
+      return this;
+   if ((vm != ValueMode::optional) || !mClearB4Assign || mDestVar.empty())
+      throw std::logic_error( "can only set value mode 'optional' for set, "
+         "and ony if 'clear before assign' is set and the set is not empty");
+   mValueMode = vm;
+   return this;
+} // TypedArg< std::set< T>>::setValueMode
+
+
+template< typename T>
+   const std::string TypedArg< std::set< T>>::varTypeName() const
+{
+   return type< std::set< T>>::name();
+} // TypedArg< std::set< T>>::varTypeName
+
+
+template< typename T> bool TypedArg< std::set< T>>::hasValue() const
+{
+   return !mDestVar.empty();
+} // TypedArg< std::set< T>>::hasValue
+
+
+template< typename T>
+   void TypedArg< std::set< T>>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << format::toString( mDestVar.begin(), mDestVar.end());
+   if (print_type)
+      os << " [" << varTypeName() << "]";
+} // TypedArg< std::set< T>>::printValue
+
+
+template< typename T>
+   TypedArgBase* TypedArg< std::set< T>>::setTakesMultiValue()
+{
+   mTakeMultipleValues = true;
+   return this;
+} // TypedArg< std::set< T>>::setTakesMultiValue
+
+
+template< typename T>
+   TypedArgBase* TypedArg< std::set< T>>::setListSep( char sep)
+{
+   mListSep = sep;
+   return this;
+} // TypedArg< std::set< T>>::setListSep
+
+
+template< typename T>
+   TypedArgBase* TypedArg< std::set< T>>::setClearBeforeAssign()
+{
+   mClearB4Assign = true;
+   return this;
+} // TypedArg< std::set< T>>::setClearBeforeAssign
+
+
+template< typename T>
+   void TypedArg< std::set< T>>::getValue( set_type& dest) const
+{
+   dest = mDestVar;
+} // TypedArg< std::set< T>>::getValue
+
+
+template< typename T>
+   void TypedArg< std::set< T>>::dump( std::ostream& os) const
+{
+   os << "value type '" << type< set_type>::name()
+      << "', destination set '" << mVarName << "', currently "
+      << (mDestVar.empty() ? "no" : std::to_string( mDestVar.size()))
+      << " values." << std::endl
+      << "   " << static_cast< const TypedArgBase&>( *this);
+} // TypedArg< std::set< T>>::dump
+
+
+template< typename T>
+   void TypedArg< std::set< T>>::assign( const std::string& value, bool)
+{
+   if (mClearB4Assign)
+   {
+      mDestVar.clear();
+      // clear only once
+      mClearB4Assign = false;
+   } // end if
+
+   common::Tokenizer  tok( value, mListSep);
+   for (auto it = tok.begin(); it != tok.end(); ++it)
+   {
+      if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
+         mpCardinality->gotValue();
+
+      auto  listVal( *it);
+
+      check( listVal);
+
+      if (!mFormats.empty())
+      {
+         format( listVal);
+         // we use the position of the new value in the destination set to
+         // determine which formatter should be used
+         // this works with multiple, separate values as well as a set with
+         // default values
+         format( listVal, mDestVar.size());
+      } // end if
+
+      auto const  dest_value = boost::lexical_cast< T>( listVal);
+
+      mDestVar.insert( dest_value);
+   } // end for
+
+} // TypedArg< std::set< T>>::assign
+
+
 // Template TypedArg< std::vector< T>>
 // ===================================
 
@@ -857,7 +1124,7 @@ public:
    /// @since  0.2, 10.04.2016
    bool hasValue() const override;
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -869,7 +1136,7 @@ public:
    /// @since  1.8.0, 04.07.2018
    void printValue( std::ostream& os, bool print_type) const override;
 
-   /// Overloads TypedArgBase::setTakesMultiValue().<br>
+   /// Overloads TypedArgBase::setTakesMultiValue().
    /// For vectors it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
@@ -907,7 +1174,7 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgBase* setListSep( char sep) override;
 
-   /// Special feature for destination variable type vector:<br>
+   /// Special feature for destination variable type vector:
    /// Clear the contents of the vector before assigning the value(s) from the
    /// command line. If the feature is off (the default), the value(s from the
    /// command line are appended.<br>
@@ -918,13 +1185,13 @@ public:
    /// @since  1.2.0, 28.12.2017
    TypedArgBase* setClearBeforeAssign() override;
 
-   /// Special feature for destination variable type vector:<br>
+   /// Special feature for destination variable type vector:
    /// Sort the contents of the vector.
    ///
    /// @since  1.9.0, 04.08.2018
    TypedArgBase* setSortData() override;
 
-   /// Special feature for destination variable type vector:<br>
+   /// Special feature for destination variable type vector:
    /// Make sure only unique values are stored in the vector.
    ///
    /// @param[in]  duplicates_are_errors
@@ -1191,7 +1458,7 @@ public:
    /// @since  1.26.0, 29.04.2019
    bool hasValue() const override;
 
-   /// Prints the current values of the destination variable.<br>
+   /// Prints the current values of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -1203,7 +1470,7 @@ public:
    /// @since  1.26.0, 29.04.2019
    void printValue( std::ostream& os, bool print_type) const override;
 
-   /// Overloads TypedArgBase::setTakesMultiValue().<br>
+   /// Overloads TypedArgBase::setTakesMultiValue().
    /// For arrays it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
@@ -1237,13 +1504,13 @@ public:
    /// @since  1.26.0, 29.04.2019
    TypedArgBase* setListSep( char sep) override;
 
-   /// Special feature for destination variable type array:<br>
+   /// Special feature for destination variable type array:
    /// Sort the contents of the array.
    ///
    /// @since  1.26.0, 29.04.2019
    TypedArgBase* setSortData() override;
 
-   /// Special feature for destination variable type array:<br>
+   /// Special feature for destination variable type array:
    /// Make sure only unique values are stored in the array.
    ///
    /// @param[in]  duplicates_are_errors
@@ -1468,7 +1735,7 @@ public:
    /// @since  1.26.0, 26.04.2019
    bool hasValue() const override;
 
-   /// Prints the current values of the destination variable.<br>
+   /// Prints the current values of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -1499,7 +1766,7 @@ public:
    TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
-   /// Overloads TypedArgBase::setTakesMultiValue().<br>
+   /// Overloads TypedArgBase::setTakesMultiValue().
    /// For arrays it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
@@ -1514,13 +1781,13 @@ public:
    /// @since  1.26.0, 26.04.2019
    TypedArgBase* setListSep( char sep) override;
 
-   /// Special feature for destination variable type array:<br>
+   /// Special feature for destination variable type array:
    /// Sort the contents of the array.
    ///
    /// @since  1.26.0, 26.04.2019
    TypedArgBase* setSortData() override;
 
-   /// Special feature for destination variable type array:<br>
+   /// Special feature for destination variable type array:
    /// Make sure only unique values are stored in the array.
    ///
    /// @param[in]  duplicates_are_errors
@@ -1795,7 +2062,7 @@ public:
    /// @since  0.11, 19.12.2016
    bool hasValue() const override;
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -1813,7 +2080,7 @@ public:
    /// @since  0.11, 19.12.2016
    void defaultValue( std::string& dest) const override;
 
-   /// Overloads TypedArgBase::setTakesMultiValue().<br>
+   /// Overloads TypedArgBase::setTakesMultiValue().
    /// For tuples it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
@@ -2075,7 +2342,7 @@ public:
    /// @since  1.4.3, 29.04.2018
    bool hasValue() const override;
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
@@ -2087,7 +2354,7 @@ public:
    /// @since  1.8.0, 04.07.2018
    void printValue( std::ostream& os, bool print_type) const override;
 
-   /// Overloads TypedArgBase::setTakesMultiValue().<br>
+   /// Overloads TypedArgBase::setTakesMultiValue().
    /// For bitsets it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
@@ -2101,7 +2368,7 @@ public:
    /// @since  1.4.3, 29.04.2018
    TypedArgBase* setListSep( char sep) override;
 
-   /// Special feature for destination variable type bitset:<br>
+   /// Special feature for destination variable type bitset:
    /// Clear the contents of the bitset before assigning the value(s) from the
    /// command line. If the feature is off (the default), the value(s from the
    /// command line are appended.<br>
@@ -2316,7 +2583,7 @@ public:
    /// @since  1.31.0, 17.10.2019
    bool hasValue() const override;
 
-   /// Prints the current value of the destination variable.<br>
+   /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
    /// value.
    ///
