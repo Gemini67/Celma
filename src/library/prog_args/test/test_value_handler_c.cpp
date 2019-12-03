@@ -289,5 +289,5 @@ BOOST_AUTO_TEST_CASE( test_values_groups)
 
 
 
-// =====  END OF test_value_handler_C.cpp  =====
+// =====  END OF test_value_handler_c.cpp  =====
 

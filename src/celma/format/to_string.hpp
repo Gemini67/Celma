@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,6 +23,7 @@
 #include <bitset>
 #include <iomanip>
 #include <sstream>
+#include <stack>
 #include <string>
 #include <utility>
 #include "celma/common/tuple_at_index.hpp"
@@ -208,6 +209,33 @@ template< typename... T> std::string toString( const std::tuple< T...>& tpl)
             oss << format::toString( value);
          });
    } // end for
+   return oss.str();
+} // toString
+
+
+/// Template to handle a std::stack<>.
+/// The speciality here is of course that it is not possible to iterate over the
+/// values in a stack. This means we have to copy the stack and then iterate
+/// over the copy.
+///
+/// @tparam  T  The tye of the values in the stack.
+/// @param[in]  stck
+///    The stack object to print the contents of. Needs to be copied so we can
+///    access the values.
+/// @return  The string with the values from the stack.
+/// @since  x.y.z, 21.11.2019
+template< typename T> std::string toString( std::stack< T> stck)
+{
+   std::ostringstream  oss;
+
+   while (!stck.empty())
+   {
+      if (!oss.str().empty())
+         oss << ", ";
+      oss << toString( stck.top());
+      stck.pop();
+   } // end while
+
    return oss.str();
 } // toString
 

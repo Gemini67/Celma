@@ -13,8 +13,8 @@ add_definitions( -DBOOST_TEST_DYN_LINK)
 
 
 # search for all test programs and build them depending on their names:
-# - test programs ending in _c are using the standard setup and are just against
-#   the Celam and Boost (Test) library
+# - test programs ending in _c are using the standard setup and are just linked
+#   against the Celma and Boost (Test) library
 # - all remainng test programs are set up "manually" due to special requirements
 #   (start arguments)
 
@@ -505,7 +505,7 @@ set( test_argh_list_arg_vars_output_result
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--cas' value type 'std::string', destination 'CheckAssign< my_ca_string>', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-   "'--sl' value type 'std::vector<std::string>', destination vector 'my_string_list', currently no values.\n"
+   "'--sl' value type 'std::vector<std::string>', destination container 'my_string_list', currently no values.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "\n"
    "Arguments:\n"
@@ -525,7 +525,7 @@ set( test_argh_list_arg_vars_output_result
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--cas' value type 'std::string', destination 'CheckAssign< my_ca_string>', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-   "'--sl' value type 'std::vector<std::string>', destination vector 'my_string_list', currently 1 values.\n"
+   "'--sl' value type 'std::vector<std::string>', destination container 'my_string_list', currently 1 values.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "\n$"
 )

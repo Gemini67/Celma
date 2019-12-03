@@ -18,8 +18,8 @@
 /// - TypedArg< common::CheckAssign< T>>
 /// - TypedArg< common::CheckAssign< bool>>
 /// - TypedArg< LevelCounter>
-/// - TypedArg< std::set< T>>
-/// - TypedArg< std::vector< T>>
+/// - TypedArg< ContainerAdapter< T>><br>
+///   This one is used for STL containers like std::set<>, std::vector<> etc.
 /// - TypedArg< T[ N]>
 /// - TypedArg< std::array< T, N>>
 /// - TypedArg< std::tuple< T...>>
@@ -37,9 +37,7 @@
 #include <bitset>
 #include <iomanip>
 #include <iostream>
-#include <set>
 #include <tuple>
-#include <vector>
 #include <boost/lexical_cast.hpp>
 #include "celma/common/check_assign.hpp"
 #include "celma/common/contains.hpp"
@@ -48,6 +46,7 @@
 #include "celma/common/type_name.hpp"
 #include "celma/common/value_filter.hpp"
 #include "celma/format/to_string.hpp"
+#include "celma/prog_args/detail/container_adapter.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 #include "celma/prog_args/level_counter.hpp"
@@ -791,19 +790,20 @@ private:
 }; // TypedArg< LevelCounter>
 
 
-// Template TypedArg< std::set< T>>
-// ================================
+// Template TypedArg< detail::ContainerAdapter< T>>
+// ================================================
 
 
-/// Specialisation of TypedArg<> for values wrapped in a set.
+/// Specialisation of TypedArg<> for destination variables that are of type
+/// container, wrapped in a detail::ContainerAdapter<>.
 ///
-/// @tparam  T  The type of the value(s) stored in the set.
-/// @since  x.y.z, 14.11.2019
-template< typename T> class TypedArg< std::set< T>>: public TypedArgBase
+/// @tparam  T  The type of container.
+/// @since  x.y.z, 22.11.2019  (generalisation for all containers)
+template< typename T> class TypedArg< ContainerAdapter< T>>: public TypedArgBase
 {
 public:
-   /// The type of the destination variable.
-   using set_type = typename std::set< T>;
+   /// The type of the destination variable/container adapter.
+   using dest_type_t = ContainerAdapter< T>;
 
    /// Constructor.
    ///
@@ -811,24 +811,26 @@ public:
    ///    The destination variable to store the values in.
    /// @param[in]  vname
    ///    The name of the destination variable to store the value in.
-   /// @since  x.y.z, 14.11.2019
-   TypedArg( set_type& dest, const std::string& vname);
+   /// @since  x.y.z, 22.11.2019
+   TypedArg( dest_type_t& dest, const std::string& vname);
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 14.11.2019
+   /// @@since  x.y.z, 22.11.2019
    virtual ~TypedArg() = default;
 
-   /// By default, the value mode for sets is set to "required". Here it can be
-   /// changed to "optional" if "clear before assign" has been set before and
-   /// the destination set contains (default) values.<br>
+   /// By default, the value mode for containers is set to "required". Here it
+   /// can be changed to "optional" if "clear before assign" has been set before
+   /// and the destination container contains (default) values.<br>
    /// This allows the following scenario:
-   /// - Assign default values to the destination set.
+   /// - Assign default values to the destination container.
    /// - Define the argument with "clear before assign" and value mode
    ///   "optional".
    /// - If the argument is not used: Default values are used.
-   /// - If the argument is used without value(s): The set is cleared.
-   /// - Argument used with values: Only the values are stored in the set.
+   /// - If the argument is used without value(s): The container is cleared.
+   /// - Argument used with values: Only the values are stored in the container.
+   /// .
+   /// Can only be set on container types that support clearing.
    ///
    /// @param[in]  vm
    ///    The new value mode, only allowed value is actually "optional".
@@ -836,285 +838,14 @@ public:
    /// @throw
    ///    std::logic_error if the value mode is not "optional", or "clear before
    ///    assign" is not set.
-   /// @since  x.y.z, 14.11.2019
-   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false);
-
-   /// Returns the name of the type of the destination variable (set of
-   /// something).
-   ///
-   /// @return  The name of the type of the destination variable/set.
-   /// @since  x.y.z, 14.11.2019
-   virtual const std::string varTypeName() const override;
-
-   /// Returns if the destination has (at least) one value set.
-   ///
-   /// @return
-   ///    \c true if the destination variable contains (at least) one value.
-   /// @since  x.y.z, 14.11.2019
-   virtual bool hasValue() const override;
-
-   /// Prints the current value of the destination variable.
-   /// Does not check any flags, if a value has been set etc., simply prints the
-   /// value.
-   ///
-   /// @param[out]  os
-   ///    The stream to print the value to.
-   /// @param[in]  print_type
-   ///    Specifies if the type of the destination variable should be printed
-   ///    too.
-   /// @since  x.y.z, 14.11.2019
-   virtual void printValue( std::ostream& os, bool print_type) const override;
-
-   /// Overloads TypedArgBase::setTakesMultiValue().
-   /// For sets it is possible/allowed to activate this feature.
-   ///
-   /// @return  Pointer to this object.
-   /// @since  x.y.z, 14.11.2019
-   virtual TypedArgBase* setTakesMultiValue() override;
-
-   /// Specifies the list separator character to use for splitting lists of
-   /// values.
-   ///
-   /// @param[in]  sep  The character to use to split a list.
-   /// @return  Pointer to this object.
-   /// @since  x.y.z, 14.11.2019
-   virtual TypedArgBase* setListSep( char sep) override;
-
-   /// Special feature for destination variable type set:
-   /// Clear the contents of the set before assigning the value(s) from the
-   /// command line. If the feature is off (the default), the value(s from the
-   /// command line are appended.<br>
-   /// Use this feature if some default value(s) have been assigned to the
-   /// destination set that should be overwritten by the argument's values.
-   ///
-   /// @return  Pointer to this object.
-   /// @since  x.y.z, 14.11.2019
-   virtual TypedArgBase* setClearBeforeAssign() override;
-
-   /// Used for value checks in value constraints: Returns the current value of
-   /// the destination variable.
-   ///
-   /// @param[out]  dest  Returns the current value of the destination variable.
-   /// @since  x.y.z, 14.11.2019
-   void getValue( set_type& dest) const;
-
-protected:
-   /// Used for printing an argument and its destination variable.
-   ///
-   /// @param[out]  os  The stream to print to.
-   /// @since  x.y.z, 14.11.2019
-   virtual void dump( std::ostream& os) const override;
-
-   /// Stores the value in the destination variable.
-   ///
-   /// @param[in]  value  The value to store in string format.
-   /// @param[in]  inverted
-   ///    Set when the argument supports inversion and when the argument was 
-   ///    preceeded by an exclamation mark.
-   /// @since  x.y.z, 14.11.2019
-   virtual void assign( const std::string& value, bool inverted) override;
-
-private:
-   /// Reference of the destination variable to store the value(s) in.
-   set_type&  mDestVar;
-   /// The character to use as a list separator, default: ,
-   char       mListSep = ',';
-   /// If set, the contents of the set are cleared before the first value(s)
-   /// from the command line are assigned.
-   bool       mClearB4Assign = false;
-
-}; // TypedArg< std::set< T>>
-
-
-// inlined methods
-// ===============
-
-
-template< typename T>
-   TypedArg< std::set< T>>::TypedArg( set_type& dest,
-      const std::string& vname):
-         TypedArgBase( vname, ValueMode::required, false),
-         mDestVar( dest)
-{
-   mpCardinality.reset();
-} // TypedArg< std::set< T>>::TypedArg
-
-
-template< typename T>
-   TypedArgBase* TypedArg< std::set< T>>::setValueMode( ValueMode vm)
-{
-   if (vm == mValueMode)
-      return this;
-   if ((vm != ValueMode::optional) || !mClearB4Assign || mDestVar.empty())
-      throw std::logic_error( "can only set value mode 'optional' for set, "
-         "and ony if 'clear before assign' is set and the set is not empty");
-   mValueMode = vm;
-   return this;
-} // TypedArg< std::set< T>>::setValueMode
-
-
-template< typename T>
-   const std::string TypedArg< std::set< T>>::varTypeName() const
-{
-   return type< std::set< T>>::name();
-} // TypedArg< std::set< T>>::varTypeName
-
-
-template< typename T> bool TypedArg< std::set< T>>::hasValue() const
-{
-   return !mDestVar.empty();
-} // TypedArg< std::set< T>>::hasValue
-
-
-template< typename T>
-   void TypedArg< std::set< T>>::printValue( std::ostream& os,
-      bool print_type) const
-{
-   os << format::toString( mDestVar.begin(), mDestVar.end());
-   if (print_type)
-      os << " [" << varTypeName() << "]";
-} // TypedArg< std::set< T>>::printValue
-
-
-template< typename T>
-   TypedArgBase* TypedArg< std::set< T>>::setTakesMultiValue()
-{
-   mTakeMultipleValues = true;
-   return this;
-} // TypedArg< std::set< T>>::setTakesMultiValue
-
-
-template< typename T>
-   TypedArgBase* TypedArg< std::set< T>>::setListSep( char sep)
-{
-   mListSep = sep;
-   return this;
-} // TypedArg< std::set< T>>::setListSep
-
-
-template< typename T>
-   TypedArgBase* TypedArg< std::set< T>>::setClearBeforeAssign()
-{
-   mClearB4Assign = true;
-   return this;
-} // TypedArg< std::set< T>>::setClearBeforeAssign
-
-
-template< typename T>
-   void TypedArg< std::set< T>>::getValue( set_type& dest) const
-{
-   dest = mDestVar;
-} // TypedArg< std::set< T>>::getValue
-
-
-template< typename T>
-   void TypedArg< std::set< T>>::dump( std::ostream& os) const
-{
-   os << "value type '" << type< set_type>::name()
-      << "', destination set '" << mVarName << "', currently "
-      << (mDestVar.empty() ? "no" : std::to_string( mDestVar.size()))
-      << " values." << std::endl
-      << "   " << static_cast< const TypedArgBase&>( *this);
-} // TypedArg< std::set< T>>::dump
-
-
-template< typename T>
-   void TypedArg< std::set< T>>::assign( const std::string& value, bool)
-{
-   if (mClearB4Assign)
-   {
-      mDestVar.clear();
-      // clear only once
-      mClearB4Assign = false;
-   } // end if
-
-   common::Tokenizer  tok( value, mListSep);
-   for (auto it = tok.begin(); it != tok.end(); ++it)
-   {
-      if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
-         mpCardinality->gotValue();
-
-      auto  listVal( *it);
-
-      check( listVal);
-
-      if (!mFormats.empty())
-      {
-         format( listVal);
-         // we use the position of the new value in the destination set to
-         // determine which formatter should be used
-         // this works with multiple, separate values as well as a set with
-         // default values
-         format( listVal, mDestVar.size());
-      } // end if
-
-      auto const  dest_value = boost::lexical_cast< T>( listVal);
-
-      mDestVar.insert( dest_value);
-   } // end for
-
-} // TypedArg< std::set< T>>::assign
-
-
-// Template TypedArg< std::vector< T>>
-// ===================================
-
-
-/// Specialisation of TypedArg<> for values wrapped in a vector.
-///
-/// @tparam  T  The type of the value(s) stored in the vector.
-/// @since  1.24.2, 23.04.2019
-///    (allow to change value mode to optional when "clear before assign" is
-///     already set)
-/// @since  0.15.0, 17.07.2017
-///    (use type ArgumentKey instead of string for arguments)
-/// @since  0.2, 10.04.2016
-template< typename T> class TypedArg< std::vector< T>>: public TypedArgBase
-{
-public:
-   /// The type of the destination variable.
-   using vector_type = typename std::vector< T>;
-
-   /// Constructor.
-   ///
-   /// @param[in]  dest
-   ///    The destination variable to store the values in.
-   /// @param[in]  vname
-   ///    The name of the destination variable to store the value in.
-   /// @since  0.16.0, 10.11.2017  (removed key parameter)
-   /// @since  0.2, 10.04.2016
-   TypedArg( vector_type& dest, const std::string& vname);
-
-   /// Empty, virtual default destructor.
-   ///
-   /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
-
-   /// By default, the value mode for vectors is set to "required". Here it can
-   /// be changed to "optional" if "clear before assign" has been set before and
-   /// the destination vector contains (default) values.<br>
-   /// This allows the following scenario:
-   /// - Assign default values to the destination vector.
-   /// - Define the argument with "clear before assign" and value mode
-   ///   "optional".
-   /// - If the argument is not used: Default values are used.
-   /// - If the argument is used without value(s): The vector is cleared.
-   /// - Argument used with values: Only the values are stored in the vector.
-   ///
-   /// @param[in]  vm
-   ///    The new value mode, only allowed value is actually "optional".
-   /// @return  Pointer to this object.
-   /// @throw
-   ///    std::logic_error if the value mode is not "optional", or "clear before
-   ///    assign" is not set.
-   /// @since  1.24.2, 23.04.2019
+   /// @since  x.y.z, 22.11.2019
    TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
-   /// Returns the name of the type of the destination variable (vector of
+   /// Returns the name of the type of the destination variable (container of
    /// something).
    ///
-   /// @return  The name of the type of the destination variable/vector.
-   /// @since  1.14.0, 28.09.2018
+   /// @return  The name of the type of the destination variable/container.
+   /// @since  x.y.z, 22.11.2019
    const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
@@ -1133,22 +864,21 @@ public:
    /// @param[in]  print_type
    ///    Specifies if the type of the destination variable should be printed
    ///    too.
-   /// @since  1.8.0, 04.07.2018
+   /// @since  x.y.z, 22.11.2019
    void printValue( std::ostream& os, bool print_type) const override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().
-   /// For vectors it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
-   /// @since  0.2, 10.04.2016
+   /// @since  x.y.z, 22.11.2019
    TypedArgBase* setTakesMultiValue() override;
 
    /// Adds a value formatter for the value at the given position: The value
    /// from the argument list (command line) is formatted before it is checked
    /// and/or stored.
    /// The "value index" refers to the position of the new/additional value in
-   /// the destination vector, i.e. if the vector contains some default values
-   /// these ust be taken into account.<br>
+   /// the destination container, i.e. if the container contains some default
+   /// values these ust be taken into account.<br>
    /// Since the numbers of values that will be passed on the command line is
    /// not necessarily known, the range of the value index is not checked
    /// against any upper bound.
@@ -1162,7 +892,7 @@ public:
    ///    stored.
    /// @return  Pointer to this object.
    /// @throw  std::invalid_argument when the given object pointer is NULL.
-   /// @since  1.32.0, 20.08.2019
+   /// @since  x.y.z, 22.11.2019
    TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
@@ -1171,48 +901,61 @@ public:
    ///
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
-   /// @since  0.2, 10.04.2016
+   /// @since  x.y.z, 22.11.2019
    TypedArgBase* setListSep( char sep) override;
 
-   /// Special feature for destination variable type vector:
-   /// Clear the contents of the vector before assigning the value(s) from the
-   /// command line. If the feature is off (the default), the value(s from the
-   /// command line are appended.<br>
+   /// Special feature for destination variable type container:
+   /// Clear the contents of the container before assigning the value(s) from
+   /// the command line. If the feature is off (the default), the value(s) from
+   /// the command line are appended.<br>
    /// Use this feature if some default value(s) have been assigned to the
-   /// destination vector that should be overwritten by the argument's values.
+   /// destination variable that should be overwritten by the argument's
+   /// values.<br>
+   /// Can only be set on containers that support clearing.
    ///
    /// @return  Pointer to this object.
-   /// @since  1.2.0, 28.12.2017
-   TypedArgBase* setClearBeforeAssign() override;
+   /// @throw
+   ///    std::logic_error if the destination container type does not support
+   ///    clearing.
+   /// @since  x.y.z, 22.11.2019
+   TypedArgBase* setClearBeforeAssign() noexcept( false) override;
 
-   /// Special feature for destination variable type vector:
-   /// Sort the contents of the vector.
+   /// Special feature for destination variable type container:
+   /// Sort the contents of the container.<br>
+   /// Can only be set on containers that can be sorted, i.e. support iterators.
    ///
-   /// @since  1.9.0, 04.08.2018
-   TypedArgBase* setSortData() override;
+   /// @throw
+   ///    std::logic_error if the destination container type does not support
+   ///    sorting.
+   /// @since  x.y.z, 22.11.2019
+   TypedArgBase* setSortData() noexcept( false) override;
 
-   /// Special feature for destination variable type vector:
-   /// Make sure only unique values are stored in the vector.
+   /// Special feature for destination variable type container:
+   /// Make sure only unique values are stored in the container.<br>
+   /// Can only be set on containers that allow multiple, equal values, and
+   /// support iterators.
    ///
    /// @param[in]  duplicates_are_errors
    ///    Set this flag if duplicate values should be treated as errors,
    ///    otherwise they will be silently discarded.
-   /// @since
-   ///    1.9.0, 04.08.2018
+   /// @throw
+   ///    std::logic_error if the destination container type already prevents
+   ///    multiple values, or if the container does not support iterators.
+   /// @since  x.y.z, 22.11.2019
    TypedArgBase* setUniqueData( bool duplicates_are_errors = false) override;
 
    /// Used for value checks in value constraints: Returns the current value of
    /// the destination variable.
    ///
    /// @param[out]  dest  Returns the current value of the destination variable.
-   /// @since  1.33.0, 31.10.2019
-   void getValue( vector_type& dest) const;
+   /// @since  x.y.z, 22.11.2019
+   void getValue( dest_type_t& dest) const;
 
 protected:
    /// Used for printing an argument and its destination variable.
    ///
    /// @param[out]  os  The stream to print to.
-   /// @since  0.2, 10.04.2016
+   /// @since  x.y.z, 22.11.2019
    void dump( std::ostream& os) const override;
 
    /// Stores the value in the destination variable.
@@ -1223,26 +966,26 @@ protected:
    ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
-   /// @since  0.2, 10.04.2016
+   /// @since  x.y.z, 22.11.2019
    void assign( const std::string& value, bool inverted) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
-   vector_type&  mDestVar;
+   dest_type_t  mDestVar;
    /// The character to use as a list separator, default: ,
-   char          mListSep = ',';
-   /// If set, the contents of the vector are cleared before the first value(s)
-   /// from the command line are assigned.
-   bool          mClearB4Assign = false;
-   /// If set, the contents of the vector are sorted.
-   bool          mSortData = false;
-   /// If set, makes sure that the data in the vector contains no duplicates.
-   bool          mUniqueData = false;
-   /// If set, trying to add a duplicate value to the vector is treated as an
+   char         mListSep = ',';
+   /// If set, the contents of the container are cleared before the first
+   /// value(s) from the command line are assigned.
+   bool         mClearB4Assign = false;
+   /// If set, the contents of the container are sorted.
+   bool         mSortData = false;
+   /// If set, makes sure that the data in the container contains no duplicates.
+   bool         mUniqueData = false;
+   /// If set, trying to add a duplicate value to the container is treated as an
    /// error, otherwise (the default) it is silently discarded.
-   bool          mTreatDuplicatesAsErrors = false;
+   bool         mTreatDuplicatesAsErrors = false;
 
-}; // TypedArg< std::vector< T>>
+}; // TypedArg< ContainerAdapter< T>>
 
 
 // inlined methods
@@ -1250,121 +993,140 @@ private:
 
 
 template< typename T>
-   TypedArg< std::vector< T>>::TypedArg( vector_type& dest,
-                                         const std::string& vname):
-      TypedArgBase( vname, ValueMode::required, false),
-      mDestVar( dest)
+   TypedArg< ContainerAdapter< T>>::TypedArg( dest_type_t& dest,
+      const std::string& vname):
+         TypedArgBase( vname, ValueMode::required, false),
+         mDestVar( dest)
 {
    mpCardinality.reset();
-} // TypedArg< std::vector< T>>::TypedArg
+} // TypedArg< ContainerAdapter< T>>::TypedArg
 
 
 template< typename T>
-   TypedArgBase* TypedArg< std::vector< T>>::setValueMode( ValueMode vm)
+   TypedArgBase* TypedArg< ContainerAdapter< T>>::setValueMode( ValueMode vm)
 {
    if (vm == mValueMode)
       return this;
+   if (!dest_type_t::IsClearable)
+      throw std::logic_error( "can only change the value mode when the "
+         "container supports clearing");
    if ((vm != ValueMode::optional) || !mClearB4Assign || mDestVar.empty())
-      throw std::logic_error( "can only set value mode 'optional' for vector, "
-         "and ony if 'clear before assign' is set and the vector is not empty");
+      throw std::logic_error( "can only set value mode 'optional' for "
+         "container, and ony if 'clear before assign' is set and the container "
+         "is not empty");
    mValueMode = vm;
    return this;
-} // TypedArg< std::vector< T>>::setValueMode
+} // TypedArg< ContainerAdapter< T>>::setValueMode
 
 
 template< typename T>
-   const std::string TypedArg< std::vector< T>>::varTypeName() const
+   const std::string TypedArg< ContainerAdapter< T>>::varTypeName() const
 {
-   return type< std::vector< T>>::name();
-} // TypedArg< std::vector< T>>::varTypeName
+   // application should not need or want to know that we are using an adapter
+   return type< T>::name();
+} // TypedArg< ContainerAdapter< T>>::varTypeName
 
 
-template< typename T> bool TypedArg< std::vector< T>>::hasValue() const
+template< typename T> bool TypedArg< ContainerAdapter< T>>::hasValue() const
 {
    return !mDestVar.empty();
-} // TypedArg< std::vector< T>>::hasValue
+} // TypedArg< ContainerAdapter< T>>::hasValue
 
 
 template< typename T>
-   void TypedArg< std::vector< T>>::printValue( std::ostream& os,
+   void TypedArg< ContainerAdapter< T>>::printValue( std::ostream& os,
       bool print_type) const
 {
-   os << format::toString( mDestVar.begin(), mDestVar.end());
+   os << mDestVar.toString();
    if (print_type)
       os << " [" << varTypeName() << "]";
-} // TypedArg< std::vector< T>>::printValue
+} // TypedArg< ContainerAdapter< T>>::printValue
 
 
 template< typename T>
-   TypedArgBase* TypedArg< std::vector< T>>::setTakesMultiValue()
+   TypedArgBase* TypedArg< ContainerAdapter< T>>::setTakesMultiValue()
 {
    mTakeMultipleValues = true;
    return this;
-} // TypedArg< std::vector< T>>::setTakesMultiValue
+} // TypedArg< ContainerAdapter< T>>::setTakesMultiValue
 
 
 template< typename T>
-   TypedArgBase* TypedArg< std::vector< T>>::addFormatPos( int val_idx,
+   TypedArgBase* TypedArg< ContainerAdapter< T>>::addFormatPos( int val_idx,
       IFormat* f)
 {
-   return internAddFormat( val_idx + 1, f);
-} // TypedArg< std::vector< T>>::addFormatPos
+   if (dest_type_t::AllowsPositionFormat)
+      return internAddFormat( val_idx + 1, f);
+   return TypedArgBase::addFormatPos( val_idx, f);
+} // TypedArg< ContainerAdapter< T>>::addFormatPos
 
 
 template< typename T>
-   TypedArgBase* TypedArg< std::vector< T>>::setListSep( char sep)
+   TypedArgBase* TypedArg< ContainerAdapter< T>>::setListSep( char sep)
 {
    mListSep = sep;
    return this;
-} // TypedArg< std::vector< T>>::setListSep
+} // TypedArg< ContainerAdapter< T>>::setListSep
 
 
 template< typename T>
-   TypedArgBase* TypedArg< std::vector< T>>::setClearBeforeAssign()
+   TypedArgBase* TypedArg< ContainerAdapter< T>>::setClearBeforeAssign()
 {
-   mClearB4Assign = true;
-   return this;
-} // TypedArg< std::vector< T>>::setClearBeforeAssign
+   if (dest_type_t::IsClearable)
+   {
+      mClearB4Assign = true;
+      return this;
+   } // end if
+   return TypedArgBase::setClearBeforeAssign();
+} // TypedArg< ContainerAdapter< T>>::setClearBeforeAssign
 
 
 template< typename T>
-   TypedArgBase* TypedArg< std::vector< T>>::setSortData()
+   TypedArgBase* TypedArg< ContainerAdapter< T>>::setSortData()
 {
-   mSortData = true;
-   return this;
-} // TypedArg< std::vector< T>>::setSortData
+   if (!dest_type_t::IsSorted && dest_type_t::IsSortable)
+   {
+      mSortData = true;
+      return this;
+   } // end if
+   return TypedArgBase::setSortData();
+} // TypedArg< ContainerAdapter< T>>::setSortData
 
 
 template< typename T>
    TypedArgBase*
-      TypedArg< std::vector< T>>::setUniqueData( bool duplicates_are_errors)
+      TypedArg< ContainerAdapter< T>>::setUniqueData( bool duplicates_are_errors)
 {
-   mUniqueData = true;
-   mTreatDuplicatesAsErrors = duplicates_are_errors;
-   return this;
-} // TypedArg< std::vector< T>>::setUniqueData
+   if (dest_type_t::AllowsDuplicates && dest_type_t::HasIterators)
+   {
+     mUniqueData = true;
+     mTreatDuplicatesAsErrors = duplicates_are_errors;
+     return this;
+   } // end if
+   return TypedArgBase::setUniqueData( duplicates_are_errors);
+} // TypedArg< ContainerAdapter< T>>::setUniqueData
 
 
 template< typename T>
-   void TypedArg< std::vector< T>>::getValue( vector_type& dest) const
+   void TypedArg< ContainerAdapter< T>>::getValue( dest_type_t& dest) const
 {
    dest = mDestVar;
-} // TypedArg< std::vector< T>>::getValue
+} // TypedArg< ContainerAdapter< T>>::getValue
 
 
 template< typename T>
-   void TypedArg< std::vector< T>>::dump( std::ostream& os) const
+   void TypedArg< ContainerAdapter< T>>::dump( std::ostream& os) const
 {
-   os << "value type '" << type< vector_type>::name()
-      << "', destination vector '" << mVarName << "', currently "
+   os << "value type '" << varTypeName() << "', destination container '"
+      << mVarName << "', currently "
       << (mDestVar.empty() ? "no" : std::to_string( mDestVar.size()))
       << " values." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
-} // TypedArg< std::vector< T>>::dump
+} // TypedArg< ContainerAdapter< T>>::dump
 
 
 template< typename T>
-   void TypedArg< std::vector< T>>::assign( const std::string& value, bool)
+   void TypedArg< ContainerAdapter< T>>::assign( const std::string& value, bool)
 {
    if (mClearB4Assign)
    {
@@ -1386,32 +1148,29 @@ template< typename T>
       if (!mFormats.empty())
       {
          format( listVal);
-         // we use the position of the new value in the destination vector to
+         // we use the position of the new value in the destination container to
          // determine which formatter should be used
-         // this works with multiple, separate values as well as a vector with
-         // default values
+         // this works with multiple, separate values as well as a container
+         /// with default values
          format( listVal, mDestVar.size());
       } // end if
 
-      auto const  dest_value = boost::lexical_cast< T>( listVal);
-      if (mUniqueData)
+      auto const  dest_value = boost::lexical_cast< typename dest_type_t::value_type_t>( listVal);
+      if (mUniqueData && mDestVar.contains( dest_value))
       {
-         if (common::contains( mDestVar, dest_value))
-         {
-            if (mTreatDuplicatesAsErrors)
-               throw std::runtime_error( "refuse to store duplicate values in"
-                  " variable '" + mVarName + "'");
-            continue; // for
-         } // end if
+         if (mTreatDuplicatesAsErrors)
+            throw std::runtime_error( "refuse to store duplicate values in"
+               " variable '" + mVarName + "'");
+         continue; // for
       } // end if
 
-      mDestVar.push_back( dest_value);
+      mDestVar.addValue( dest_value);
    } // end for
 
    if (mSortData)
-      std::sort( mDestVar.begin(), mDestVar.end());
+      mDestVar.sort();
 
-} // TypedArg< std::vector< T>>::assign
+} // TypedArg< ContainerAdapter< T>>::assign
 
 
 // Template TypedArg< T[ N]>
@@ -2572,7 +2331,7 @@ public:
    /// Returns the name of the type of the destination variable (ValueFilter of
    /// something).
    ///
-   /// @return  The name of the type of the destination variable/vector.
+   /// @return  The name of the type of the destination variable/value filter.
    /// @since  1.31.0, 17.10.2019
    const std::string varTypeName() const override;
 

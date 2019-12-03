@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE( vector_usage)
          "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-         "'-e,--enum' value type 'std::vector<unknown>', destination vector 'enumedValue', currently 2 values.\n"
+         "'-e,--enum' value type 'std::vector<unknown>', destination container 'enumedValue', currently 2 values.\n"
          "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
    } // end scope

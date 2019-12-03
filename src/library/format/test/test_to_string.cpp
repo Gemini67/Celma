@@ -14,7 +14,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/format/to_string.hpp"
 
 
@@ -27,6 +27,7 @@
 #include <list>
 #include <map>
 #include <numeric>
+#include <stack>
 #include <vector>
 
 
@@ -435,6 +436,72 @@ BOOST_AUTO_TEST_CASE( tuple_to_string)
    } // end scope
 
 } // tuple_to_string
+
+
+
+/// Test converting the contents of a stack.
+///
+/// @since  x.y.z, 20.11.2019
+BOOST_AUTO_TEST_CASE( stack_to_string)
+{
+
+   // stack with one value
+   {
+      std::stack< int>  stck;
+
+      stck.push( 13);
+
+      const auto  str( toString( stck));
+
+      BOOST_REQUIRE_EQUAL( str, "13");
+   } // end scope
+
+   // stack with two values
+   {
+      std::stack< int>  stck;
+
+      stck.push( 42);
+      stck.push( 13);
+
+      const auto  str( toString( stck));
+
+      BOOST_REQUIRE_EQUAL( str, "13, 42");
+   } // end scope
+
+   // hold on: stack with four values
+   {
+      std::stack< int>  stck;
+
+      stck.push( 4711);
+      stck.push( 42);
+      stck.push( 28);
+      stck.push( 13);
+
+      const auto  str( toString( stck));
+
+      BOOST_REQUIRE_EQUAL( str, "13, 28, 42, 4711");
+   } // end scope
+
+   // stack of strings
+   {
+      std::stack< std::string>  stck;
+
+      stck.push( "show");
+      stck.push( "the");
+      stck.push( "for");
+      stck.push( "two");
+      stck.push( "money");
+      stck.push( "the");
+      stck.push( "for");
+      stck.push( "one");
+
+      const auto  str( toString( stck));
+
+      BOOST_REQUIRE_EQUAL( str,
+         R"raw("one", "for", "the", "money", "two", "for", "the", "show")raw");
+   } // end scope
+
+} // stack_to_string
 
 
 

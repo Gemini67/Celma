@@ -93,6 +93,7 @@ public:
 
    /// Add an argument to the argument handler, where the destination variable
    /// is managed by this class.
+   /// This method is used for single-value-types like PODs, std::string etc.
    ///
    /// @tparam  T  The type of the argument value to handle.
    /// @param[in]  args
@@ -104,8 +105,47 @@ public:
    ///    settings.
    /// @since  0.14.0, 10.02.2017
    template< typename T>
-      detail::TypedArgBase* addValueArgument( const std::string& args,
-         const std::string& desc) noexcept( false);
+      typename std::enable_if< !detail::ContainerAdapter< T>::HasAdapter,
+         detail::TypedArgBase*>::type
+      addValueArgument( const std::string& args, const std::string& desc)
+         noexcept( false)
+   {
+
+      auto  value = std::make_shared< detail::ArgumentValue< T>>();
+
+      mValues.insert( container_t::value_type( detail::ArgumentKey( args), value));
+      return Handler::addArgument(
+         args, new detail::TypedArg< T>( (*value)(), "unnamed"), desc);
+   } // ValueHandler::addValueArgument
+
+   /// Add an argument to the argument handler, where the destination variable
+   /// is managed by this class.
+   /// This method is used for types that can store multiple values.
+   ///
+   /// @tparam  T  The type of the argument value to handle.
+   /// @param[in]  args
+   ///    The arguments on the command line for this argument.
+   /// @param[in]  desc
+   ///    The description of this argument for the usage.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
+   /// @since  x.y., 29.11.2019
+   template< typename T>
+      typename std::enable_if< detail::ContainerAdapter< T>::HasAdapter,
+         detail::TypedArgBase*>::type
+      addValueArgument( const std::string& args, const std::string& desc)
+         noexcept( false)
+   {
+
+      auto  value = std::make_shared< detail::ArgumentValue< T>>();
+
+      mValues.insert( container_t::value_type( detail::ArgumentKey( args), value));
+      detail::ContainerAdapter< T>  wrapper( (*value)());
+      return Handler::addArgument(
+         args, new detail::TypedArg< detail::ContainerAdapter< T>>( wrapper,
+         "unnamed"), desc);
+   } // ValueHandler::addValueArgument
 
    /// Add a free argument to the argument handler, where the destination
    /// variable is managed by this class.
@@ -237,19 +277,6 @@ private:
 
 // inlined methods
 // ===============
-
-
-template< typename T>
-   detail::TypedArgBase* ValueHandler::addValueArgument( const std::string& args,
-      const std::string& desc) noexcept( false)
-{
-
-   auto  value = std::make_shared< detail::ArgumentValue< T>>();
-
-   mValues.insert( container_t::value_type( detail::ArgumentKey( args), value));
-   return Handler::addArgument(
-      args, new detail::TypedArg< T>( (*value)(), "unnamed"), desc);
-} // ValueHandler::addValueArgument
 
 
 template< typename T>

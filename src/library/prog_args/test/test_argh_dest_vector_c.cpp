@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       BOOST_REQUIRE_EQUAL( v[ 5], 6);
    } // end scope
 
-   // first check with the default list separator
+   // now check with a custom list separator
    {
       Handler  ah( 0);
       std::vector< int>  v = { 1, 2, 3};
@@ -461,7 +461,6 @@ BOOST_AUTO_TEST_CASE( different_format_values)
 
    // multiple formattings should also work correctly when the vector contains
    // default values
-   // values
    {
       Handler                    ah( 0);
       std::vector< std::string>  v = { "some", "default", "values" };
@@ -509,13 +508,13 @@ BOOST_AUTO_TEST_CASE( different_format_values)
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-         "'-v' value type 'std::vector<std::string>', destination vector 'v', currently no values.\n"
+         "'-v' value type 'std::vector<std::string>', destination container 'v', currently no values.\n"
          "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, 2 formats.\n"
          "\n"
          "Arguments:\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-         "'-v' value type 'std::vector<std::string>', destination vector 'v', currently 3 values.\n"
+         "'-v' value type 'std::vector<std::string>', destination container 'v', currently 3 values.\n"
          "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, 2 formats.\n"
          "\n"));
    } // end scope

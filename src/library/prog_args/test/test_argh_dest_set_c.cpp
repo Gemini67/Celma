@@ -96,6 +96,24 @@ BOOST_AUTO_TEST_CASE( test_set_errors)
          std::bad_cast);
    } // end scope
 
+   // a set cannot be sorted
+   {
+      Handler         ah( 0);
+      std::set< int>  s;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( s), "values")
+         ->setSortData(), std::logic_error);
+   } // end scope
+
+   // a set can only store unique values
+   {
+      Handler         ah( 0);
+      std::set< int>  s;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( s), "values")
+         ->setUniqueData( false), std::logic_error);
+   } // end scope
+
 } // test_set_errors
 
 
@@ -466,13 +484,13 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
       "Arguments:\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-      "'-s' value type 'std::set<std::string>', destination set 's', currently no values.\n"
+      "'-s' value type 'std::set<std::string>', destination container 's', currently no values.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, 1 formats.\n"
       "\n"
       "Arguments:\n"
       "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-      "'-s' value type 'std::set<std::string>', destination set 's', currently 3 values.\n"
+      "'-s' value type 'std::set<std::string>', destination container 's', currently 3 values.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, 1 formats.\n"
       "\n"));
 
