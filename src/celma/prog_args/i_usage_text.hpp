@@ -52,7 +52,7 @@ public:
    /// @param[in]  up
    ///    The position of the text, provided by this object, in the usage.
    /// @since  0.2, 10.04.2016
-   IUsageText( Handler::UsagePos up):
+   explicit IUsageText( Handler::UsagePos up):
       mUsagePos( up)
    {
    } // IUsageText::IUsageText
@@ -129,7 +129,7 @@ private:
    public: \
       c ## _class( celma::prog_args::Handler::UsagePos up): \
          celma::prog_args::IUsageText( up) { } \
-      virtual void print( std::ostream& os) const \
+      void print( std::ostream& os) const override \
       { \
          os << t; \
       } \
