@@ -310,7 +310,7 @@ BOOST_AUTO_TEST_CASE( test_multimap)
       BOOST_REQUIRE_EQUAL( result, "{ 1, \"two\"}, { 2, \"three\"}, { 3, \"five\"}, { 4, \"seven\"}, { 5, \"eleven\"}");
    } // end scope
 
-} // test_map
+} // test_multimap
 
 
 
@@ -502,6 +502,126 @@ BOOST_AUTO_TEST_CASE( stack_to_string)
    } // end scope
 
 } // stack_to_string
+
+
+
+/// Test converting the contents of a priority_queue.
+///
+/// @since  x.y.z, 29.12.2019
+BOOST_AUTO_TEST_CASE( priority_queue_to_string)
+{
+
+   // priority queue with one value
+   {
+      std::priority_queue< int>  pq;
+
+      pq.push( 13);
+
+      const auto  str( toString( pq));
+
+      BOOST_REQUIRE_EQUAL( str, "13");
+   } // end scope
+
+   // priority queue with two values
+   {
+      std::priority_queue< int>  pq;
+
+      pq.push( 42);
+      pq.push( 13);
+
+      const auto  str( toString( pq));
+
+      BOOST_REQUIRE_EQUAL( str, "42, 13");
+   } // end scope
+
+   // hold on: priority queue with four values
+   {
+      std::priority_queue< int>  pq;
+
+      pq.push( 28);
+      pq.push( 4711);
+      pq.push( 13);
+      pq.push( 42);
+
+      const auto  str( toString( pq));
+
+      BOOST_REQUIRE_EQUAL( str, "4711, 42, 28, 13");
+   } // end scope
+
+   // priority queue of strings
+   {
+      std::priority_queue< std::string>  pq;
+
+      pq.push( "I");
+      pq.push( "Will");
+      pq.push( "Win");
+
+      const auto  str( toString( pq));
+
+      BOOST_REQUIRE_EQUAL( str, R"raw("Win", "Will", "I")raw");
+   } // end scope
+
+} // priority_queue_to_string
+
+
+
+/// Test converting the contents of a queue.
+///
+/// @since  x.y.z, 29.12.2019
+BOOST_AUTO_TEST_CASE( queue_to_string)
+{
+
+   // queue with one value
+   {
+      std::queue< int>  q;
+
+      q.push( 13);
+
+      const auto  str( toString( q));
+
+      BOOST_REQUIRE_EQUAL( str, "13");
+   } // end scope
+
+   // queue with two values
+   {
+      std::queue< int>  q;
+
+      q.push( 42);
+      q.push( 13);
+
+      const auto  str( toString( q));
+
+      BOOST_REQUIRE_EQUAL( str, "42, 13");
+   } // end scope
+
+   // hold on: queue with four values
+   {
+      std::queue< int>  q;
+
+      q.push( 28);
+      q.push( 4711);
+      q.push( 13);
+      q.push( 42);
+
+      const auto  str( toString( q));
+
+      BOOST_REQUIRE_EQUAL( str, "28, 4711, 13, 42");
+   } // end scope
+
+   // queue of strings
+   {
+      std::queue< std::string>  q;
+
+      q.push( "I");
+      q.push( "Will");
+      q.push( "Win");
+
+      const auto  str( toString( q));
+
+      BOOST_REQUIRE_EQUAL( str, R"raw("I", "Will", "Win")raw");
+   } // end scope
+
+} // queue_to_string
 
 
 

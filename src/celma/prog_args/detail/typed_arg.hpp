@@ -812,7 +812,7 @@ public:
    /// @param[in]  vname
    ///    The name of the destination variable to store the value in.
    /// @since  x.y.z, 22.11.2019
-   TypedArg( dest_type_t& dest, const std::string& vname);
+   TypedArg( dest_type_t dest, const std::string& vname);
 
    /// Empty, virtual default destructor.
    ///
@@ -932,17 +932,20 @@ public:
 
    /// Special feature for destination variable type container:
    /// Make sure only unique values are stored in the container.<br>
-   /// Can only be set on containers that allow multiple, equal values, and
-   /// support iterators.
+   /// Can only be set on containers that support iterators. When not set, the
+   /// resulting behaviour depends on the type of the container that is used:
+   /// Either multiple, equal values are simply added (e.g. vector, multiset),
+   /// or multiple values are silently discarded (e.g. set).
    ///
    /// @param[in]  duplicates_are_errors
    ///    Set this flag if duplicate values should be treated as errors,
    ///    otherwise they will be silently discarded.
    /// @throw
-   ///    std::logic_error if the destination container type already prevents
-   ///    multiple values, or if the container does not support iterators.
+   ///    std::logic_error if the destination container type does not support
+   ///    iterators.
    /// @since  x.y.z, 22.11.2019
-   TypedArgBase* setUniqueData( bool duplicates_are_errors = false) override;
+   TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
+      noexcept( false) override;
 
    /// Used for value checks in value constraints: Returns the current value of
    /// the destination variable.
@@ -993,7 +996,7 @@ private:
 
 
 template< typename T>
-   TypedArg< ContainerAdapter< T>>::TypedArg( dest_type_t& dest,
+   TypedArg< ContainerAdapter< T>>::TypedArg( dest_type_t dest,
       const std::string& vname):
          TypedArgBase( vname, ValueMode::required, false),
          mDestVar( dest)
@@ -1096,8 +1099,9 @@ template< typename T>
 template< typename T>
    TypedArgBase*
       TypedArg< ContainerAdapter< T>>::setUniqueData( bool duplicates_are_errors)
+         noexcept( false)
 {
-   if (dest_type_t::AllowsDuplicates && dest_type_t::HasIterators)
+   if (dest_type_t::HasIterators)
    {
      mUniqueData = true;
      mTreatDuplicatesAsErrors = duplicates_are_errors;

@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE( test_vector_errors)
 
    // assign wrong value types
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values"));
@@ -134,13 +134,14 @@ BOOST_AUTO_TEST_CASE( value_mode)
 
 
 /// Test feature to set another character as list separator.
+///
 /// @since  1.2.0, 28.12.2017
 BOOST_AUTO_TEST_CASE( test_list_sep)
 {
 
    // first check with the default list separator
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values"));
@@ -156,11 +157,11 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
    // now check with a custom list separator
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")->
-         setListSep( '.'));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
+         ->setListSep( '.'));
 
       auto const  as2a = make_arg_array( "-v 4.5.6", nullptr);
 
@@ -175,14 +176,15 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
 
 
-/// Test feature to handle multiple values.
+/// Test feature to handle multiple, separate values.
+///
 /// @since  1.2.0, 28.12.2017
 BOOST_AUTO_TEST_CASE( test_multi_values)
 {
 
    // first check with the default behaviour: no multi-values
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values"));
@@ -196,9 +198,9 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
    // first check with the default behaviour: no multi-values, additional value
    // is interpreted as a free value
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
-      int  free = -1;
+      int                free = -1;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
@@ -215,7 +217,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
    // now accept multi-values
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -234,9 +236,9 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
    // accept multi-values, would want to add a free value, but flag is not set
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
-      int  free = -1;
+      int                free = -1;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
          ->setTakesMultiValue());
@@ -250,9 +252,9 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
    // accept multi-values, but still add a free value
    {
-      Handler  ah( Handler::hfEndValues);
+      Handler            ah( Handler::hfEndValues);
       std::vector< int>  v = { 1, 2, 3};
-      int  free = -1;
+      int                free = -1;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
          ->setTakesMultiValue());
@@ -274,13 +276,14 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
 
 /// Test feature to clear the destination before assigning the values.
+///
 /// @since  1.2.0, 28.12.2017
 BOOST_AUTO_TEST_CASE( test_clear_dest)
 {
 
    // first check the default: values are appended
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values"));
@@ -296,7 +299,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
    // now the default values should be cleared
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -313,7 +316,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
    // make sure that the previously added values are not deleted when the
    // feature "multi-value" is used
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -331,7 +334,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
    } // end scope
 
    // set default values, make argument optional, vector should be empty when
-   // argument is used with value(s)
+   // argument is used without value(s)
    {
       Handler            ah( 0);
       std::vector< int>  v = { 1, 2, 3};
@@ -576,7 +579,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
    // first check the default: values are stored as given
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values"));
@@ -593,7 +596,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
    // now the values should be sorted
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -611,7 +614,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
    // should still be sorted when added as multiple values
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -632,7 +635,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
    // of course sorting should include pre-set values
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 11, 255, 17 };
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -666,7 +669,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
    // first check the default: duplicate values are stored as given
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values"));
@@ -685,7 +688,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
    // now the duplicate values should be ignored
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -704,7 +707,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
    // duplicates should still be ignored when added as multiple values
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -723,7 +726,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
    // duplicates should still be ignored when conflicting with pre-set values
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 3, 5, 6 };
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")
@@ -742,7 +745,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
    // duplicates should still be ignored when conflicting with pre-set values
    {
-      Handler  ah( 0);
+      Handler            ah( 0);
       std::vector< int>  v = { 3, 5, 6 };
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "values")

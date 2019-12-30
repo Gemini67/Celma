@@ -105,15 +105,6 @@ BOOST_AUTO_TEST_CASE( test_set_errors)
          ->setSortData(), std::logic_error);
    } // end scope
 
-   // a set can only store unique values
-   {
-      Handler         ah( 0);
-      std::set< int>  s;
-
-      BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( s), "values")
-         ->setUniqueData( false), std::logic_error);
-   } // end scope
-
 } // test_set_errors
 
 
@@ -157,7 +148,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       for (auto set_iter : s)
       {
          BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-         exp_val++;
+         ++exp_val;
       } // end for
    } // end scope
 
@@ -178,7 +169,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       for (auto set_iter : s)
       {
          BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-         exp_val++;
+         ++exp_val;
       } // end for
    } // end scope
 
@@ -209,7 +200,7 @@ BOOST_AUTO_TEST_CASE( test_cardinality)
    for (auto set_iter : s)
    {
       BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-      exp_val++;
+      ++exp_val;
    } // end for
 
 } // test_cardinality
@@ -254,7 +245,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       for (auto set_iter : s)
       {
          BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-         exp_val++;
+         ++exp_val;
       } // end for
 
       BOOST_REQUIRE_EQUAL( free, 7);
@@ -278,7 +269,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       for (auto set_iter : s)
       {
          BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-         exp_val++;
+         ++exp_val;
       } // end for
 
       BOOST_REQUIRE_EQUAL( free, -1);
@@ -319,7 +310,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       for (auto set_iter : s)
       {
          BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-         exp_val++;
+         ++exp_val;
       } // end for
 
       BOOST_REQUIRE_EQUAL( free, 8);
@@ -351,7 +342,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       for (auto set_iter : s)
       {
          BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-         exp_val++;
+         ++exp_val;
       } // end for
    } // end scope
 
@@ -372,7 +363,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       for (auto set_iter : s)
       {
          BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-         exp_val++;
+         ++exp_val;
       } // end for
    } // end scope
 
@@ -394,7 +385,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       for (auto set_iter : s)
       {
          BOOST_REQUIRE_EQUAL( set_iter, exp_val);
-         exp_val++;
+         ++exp_val;
       } // end for
    } // end scope
 
@@ -455,6 +446,84 @@ BOOST_AUTO_TEST_CASE( format_values)
    } // end for
 
 } // format_values
+
+
+
+/// Test feature that only unique values should be stored in the set.
+/// Setting the same value multiple times would simply override in the set.
+///
+/// @since  x.y.z, 17.12.2019
+BOOST_AUTO_TEST_CASE( test_unique_values)
+{
+
+   // first check the default: duplicate values overwrite silently
+   {
+      Handler         ah( 0);
+      std::set< int>  s;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( s), "values"));
+
+      auto const  as2a = make_arg_array( "-v 2,3,4,4,6,7", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( s.size(), 5);
+
+      int  exp_val = 2;
+      for (auto set_iter : s)
+      {
+         if (exp_val == 5)
+            ++exp_val;
+
+         BOOST_REQUIRE_EQUAL( set_iter, exp_val);
+         ++exp_val;
+      } // end for
+
+      BOOST_REQUIRE_EQUAL( exp_val, 8);
+   } // end scope
+
+   // mode "ignore unique data without errors" can be set, even when it does not
+   // make much sense
+   {
+      Handler         ah( 0);
+      std::set< int>  s;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( s), "values")
+         ->setUniqueData());
+
+      auto const  as2a = make_arg_array( "-v 2,3,4,4,6,7", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( s.size(), 5);
+
+      int  exp_val = 2;
+      for (auto set_iter : s)
+      {
+         if (exp_val == 5)
+            ++exp_val;
+
+         BOOST_REQUIRE_EQUAL( set_iter, exp_val);
+         ++exp_val;
+      } // end for
+
+      BOOST_REQUIRE_EQUAL( exp_val, 8);
+   } // end scope
+
+   // duplicates should lead to an error, also when conflicting with pre-set
+   // values
+   {
+      Handler         ah( 0);
+      std::set< int>  s = { 3, 5, 6 };
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( s), "values")
+         ->setUniqueData( true)->setTakesMultiValue());
+
+      auto const  as2a = make_arg_array( "-v 2,4 6,7", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+} // test_unique_values
 
 
 

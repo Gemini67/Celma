@@ -46,6 +46,7 @@
 #include <type_traits>
 #include "celma/common/range_dest.hpp"
 #include "celma/prog_args/detail/arg_handler_callable.hpp"
+#include "celma/prog_args/detail/container_adapter.hpp"
 #include "celma/prog_args/detail/typed_arg_callable.hpp"
 #include "celma/prog_args/detail/typed_arg_callable_value.hpp"
 #include "celma/prog_args/detail/typed_arg.hpp"
@@ -121,8 +122,8 @@ template< typename T>
       detail::TypedArgBase*>::type
    destination( T& dest_cont, const std::string cname)
 {
-   detail::ContainerAdapter< T>  wrapper( dest_cont);
-   return new detail::TypedArg< detail::ContainerAdapter< T>>( wrapper, cname);
+   return new detail::TypedArg< detail::ContainerAdapter< T>>(
+     detail::ContainerAdapter< T>( dest_cont), cname);
 } // destination
 
 

@@ -22,6 +22,7 @@
 
 #include <bitset>
 #include <iomanip>
+#include <queue>
 #include <sstream>
 #include <stack>
 #include <string>
@@ -213,10 +214,64 @@ template< typename... T> std::string toString( const std::tuple< T...>& tpl)
 } // toString
 
 
+/// Template to handle a std::priority_queue<>.
+/// The speciality here is of course that it is not possible to iterate over the
+/// values in a priority queue. This means we have to copy the priority queue
+/// and then get the values from the copy.
+///
+/// @tparam  T  The tye of the values in the priority queue.
+/// @param[in]  pq
+///    The priority queue object to print the contents of. Needs to be copied so
+///    we can access the values.
+/// @return  The string with the values from the priority queue.
+/// @since  x.y.z, 25.12.2019
+template< typename T> std::string toString( std::priority_queue< T> pq)
+{
+   std::ostringstream  oss;
+
+   while (!pq.empty())
+   {
+      if (!oss.str().empty())
+         oss << ", ";
+      oss << toString( pq.top());
+      pq.pop();
+   } // end while
+
+   return oss.str();
+} // toString
+
+
+/// Template to handle a std::queue<>.
+/// The speciality here is of course that it is not possible to iterate over the
+/// values in a queue. This means we have to copy the queue and then get the
+/// values from the copy.
+///
+/// @tparam  T  The tye of the values in the queue.
+/// @param[in]  q
+///    The queue object to print the contents of. Needs to be copied so we can
+///    access the values.
+/// @return  The string with the values from the queue.
+/// @since  x.y.z, 29.12.2019
+template< typename T> std::string toString( std::queue< T> q)
+{
+   std::ostringstream  oss;
+
+   while (!q.empty())
+   {
+      if (!oss.str().empty())
+         oss << ", ";
+      oss << toString( q.front());
+      q.pop();
+   } // end while
+
+   return oss.str();
+} // toString
+
+
 /// Template to handle a std::stack<>.
 /// The speciality here is of course that it is not possible to iterate over the
-/// values in a stack. This means we have to copy the stack and then iterate
-/// over the copy.
+/// values in a stack. This means we have to copy the stack and then get the
+/// values from the copy.
 ///
 /// @tparam  T  The tye of the values in the stack.
 /// @param[in]  stck
