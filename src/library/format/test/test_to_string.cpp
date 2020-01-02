@@ -441,7 +441,7 @@ BOOST_AUTO_TEST_CASE( tuple_to_string)
 
 /// Test converting the contents of a stack.
 ///
-/// @since  x.y.z, 20.11.2019
+/// @since  1.34.0, 20.11.2019
 BOOST_AUTO_TEST_CASE( stack_to_string)
 {
 
@@ -507,7 +507,7 @@ BOOST_AUTO_TEST_CASE( stack_to_string)
 
 /// Test converting the contents of a priority_queue.
 ///
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 BOOST_AUTO_TEST_CASE( priority_queue_to_string)
 {
 
@@ -567,7 +567,7 @@ BOOST_AUTO_TEST_CASE( priority_queue_to_string)
 
 /// Test converting the contents of a queue.
 ///
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 BOOST_AUTO_TEST_CASE( queue_to_string)
 {
 

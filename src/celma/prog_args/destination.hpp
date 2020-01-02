@@ -116,7 +116,7 @@ template< typename T>
 /// @param[in]  cname
 ///    The name of the variable/container.
 /// @return  The typed arg object for the type of the \a dest_cont.
-/// @since  x.y.z, 22.11.2019
+/// @since  1.34.0, 22.11.2019
 template< typename T>
    typename std::enable_if< detail::ContainerAdapter< T>::HasAdapter,
       detail::TypedArgBase*>::type
@@ -176,7 +176,7 @@ template< typename T1, typename T2>
 /// @param[in]  value2
 ///    The value to assign to the second variable.
 /// @return  The typed argument object for the pair of variables.
-/// @since  x.y.z, 28.11.2019
+/// @since  1.34.0, 28.11.2019
 template< typename T1, typename T2>
    typename std::enable_if< detail::ContainerAdapter< T1>::HasAdapter,
       detail::TypedArgBase*>::type

@@ -798,7 +798,7 @@ private:
 /// container, wrapped in a detail::ContainerAdapter<>.
 ///
 /// @tparam  T  The type of container.
-/// @since  x.y.z, 22.11.2019  (generalisation for all containers)
+/// @since  1.34.0, 22.11.2019  (generalisation for all containers)
 template< typename T> class TypedArg< ContainerAdapter< T>>: public TypedArgBase
 {
 public:
@@ -811,12 +811,12 @@ public:
    ///    The destination variable to store the values in.
    /// @param[in]  vname
    ///    The name of the destination variable to store the value in.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    TypedArg( dest_type_t dest, const std::string& vname);
 
    /// Empty, virtual default destructor.
    ///
-   /// @@since  x.y.z, 22.11.2019
+   /// @@since  1.34.0, 22.11.2019
    virtual ~TypedArg() = default;
 
    /// By default, the value mode for containers is set to "required". Here it
@@ -838,14 +838,14 @@ public:
    /// @throw
    ///    std::logic_error if the value mode is not "optional", or "clear before
    ///    assign" is not set.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Returns the name of the type of the destination variable (container of
    /// something).
    ///
    /// @return  The name of the type of the destination variable/container.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
@@ -864,13 +864,13 @@ public:
    /// @param[in]  print_type
    ///    Specifies if the type of the destination variable should be printed
    ///    too.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    void printValue( std::ostream& os, bool print_type) const override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().
    ///
    /// @return  Pointer to this object.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    TypedArgBase* setTakesMultiValue() override;
 
    /// Adds a value formatter for the value at the given position: The value
@@ -892,7 +892,7 @@ public:
    ///    stored.
    /// @return  Pointer to this object.
    /// @throw  std::invalid_argument when the given object pointer is NULL.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false)
       override;
 
@@ -901,7 +901,7 @@ public:
    ///
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    TypedArgBase* setListSep( char sep) override;
 
    /// Special feature for destination variable type container:
@@ -917,7 +917,7 @@ public:
    /// @throw
    ///    std::logic_error if the destination container type does not support
    ///    clearing.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    TypedArgBase* setClearBeforeAssign() noexcept( false) override;
 
    /// Special feature for destination variable type container:
@@ -927,7 +927,7 @@ public:
    /// @throw
    ///    std::logic_error if the destination container type does not support
    ///    sorting.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    TypedArgBase* setSortData() noexcept( false) override;
 
    /// Special feature for destination variable type container:
@@ -943,7 +943,7 @@ public:
    /// @throw
    ///    std::logic_error if the destination container type does not support
    ///    iterators.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
       noexcept( false) override;
 
@@ -951,14 +951,14 @@ public:
    /// the destination variable.
    ///
    /// @param[out]  dest  Returns the current value of the destination variable.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    void getValue( dest_type_t& dest) const;
 
 protected:
    /// Used for printing an argument and its destination variable.
    ///
    /// @param[out]  os  The stream to print to.
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    void dump( std::ostream& os) const override;
 
    /// Stores the value in the destination variable.
@@ -969,7 +969,7 @@ protected:
    ///    preceeded by an exclamation mark.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
-   /// @since  x.y.z, 22.11.2019
+   /// @since  1.34.0, 22.11.2019
    void assign( const std::string& value, bool inverted) override;
 
 private:
@@ -1010,9 +1010,6 @@ template< typename T>
 {
    if (vm == mValueMode)
       return this;
-   if (!dest_type_t::IsClearable)
-      throw std::logic_error( "can only change the value mode when the "
-         "container supports clearing");
    if ((vm != ValueMode::optional) || !mClearB4Assign || mDestVar.empty())
       throw std::logic_error( "can only set value mode 'optional' for "
          "container, and ony if 'clear before assign' is set and the container "
@@ -1075,12 +1072,8 @@ template< typename T>
 template< typename T>
    TypedArgBase* TypedArg< ContainerAdapter< T>>::setClearBeforeAssign()
 {
-   if (dest_type_t::IsClearable)
-   {
-      mClearB4Assign = true;
-      return this;
-   } // end if
-   return TypedArgBase::setClearBeforeAssign();
+   mClearB4Assign = true;
+   return this;
 } // TypedArg< ContainerAdapter< T>>::setClearBeforeAssign
 
 

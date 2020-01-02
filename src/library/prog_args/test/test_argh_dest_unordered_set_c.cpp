@@ -40,7 +40,7 @@ using celma::prog_args::Handler;
 
 /// Test error case that can occur with an unordered set.
 ///
-/// @since  x.y.z, 06.12.2019
+/// @since  1.34.0, 06.12.2019
 BOOST_AUTO_TEST_CASE( test_unordered_set_errors)
 {
 
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE( test_unordered_set_errors)
 
 /// For completeness: Set value mode "required" again.
 ///
-/// @since  x.y.z, 06.12.2019
+/// @since  1.34.0, 06.12.2019
 BOOST_AUTO_TEST_CASE( value_mode)
 {
 
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE( value_mode)
 
 /// Test feature to set another character as list separator.
 ///
-/// @since  x.y.z, 06.12.2019
+/// @since  1.34.0, 06.12.2019
 BOOST_AUTO_TEST_CASE( test_list_sep)
 {
 
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
 /// Test feature to handle multiple values.
 ///
-/// @since  x.y.z, 06.12.2019
+/// @since  1.34.0, 06.12.2019
 BOOST_AUTO_TEST_CASE( test_multi_values)
 {
 
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
 /// Test feature to clear the destination before assigning the values.
 ///
-/// @since  x.y.z, 06.12.2019
+/// @since  1.34.0, 06.12.2019
 BOOST_AUTO_TEST_CASE( test_clear_dest)
 {
 
@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 /// Test feature to format the values before they are inserted into the
 /// unordered set.
 ///
-/// @since  x.y.z, 06.12.2019
+/// @since  1.34.0, 06.12.2019
 BOOST_AUTO_TEST_CASE( format_values)
 {
 
@@ -354,7 +354,7 @@ BOOST_AUTO_TEST_CASE( format_values)
 
 /// Test "list argument values" with an unordered set.
 ///
-/// @since  x.y.z, 06.12.2019
+/// @since  1.34.0, 06.12.2019
 BOOST_AUTO_TEST_CASE( list_arg_vars)
 {
 

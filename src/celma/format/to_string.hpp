@@ -224,7 +224,7 @@ template< typename... T> std::string toString( const std::tuple< T...>& tpl)
 ///    The priority queue object to print the contents of. Needs to be copied so
 ///    we can access the values.
 /// @return  The string with the values from the priority queue.
-/// @since  x.y.z, 25.12.2019
+/// @since  1.34.0, 25.12.2019
 template< typename T> std::string toString( std::priority_queue< T> pq)
 {
    std::ostringstream  oss;
@@ -251,7 +251,7 @@ template< typename T> std::string toString( std::priority_queue< T> pq)
 ///    The queue object to print the contents of. Needs to be copied so we can
 ///    access the values.
 /// @return  The string with the values from the queue.
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 template< typename T> std::string toString( std::queue< T> q)
 {
    std::ostringstream  oss;
@@ -278,7 +278,7 @@ template< typename T> std::string toString( std::queue< T> q)
 ///    The stack object to print the contents of. Needs to be copied so we can
 ///    access the values.
 /// @return  The string with the values from the stack.
-/// @since  x.y.z, 21.11.2019
+/// @since  1.34.0, 21.11.2019
 template< typename T> std::string toString( std::stack< T> stck)
 {
    std::ostringstream  oss;

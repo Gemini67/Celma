@@ -41,7 +41,7 @@ using celma::prog_args::Handler;
 
 /// Test error case that can occur with a set.
 ///
-/// @since  x.y.z, 14.11.2019
+/// @since  1.34.0, 14.11.2019
 BOOST_AUTO_TEST_CASE( test_set_errors)
 {
 
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE( test_set_errors)
 
 /// For completeness: Set value mode "required" again.
 ///
-/// @since  x.y.z, 14.11.2019
+/// @since  1.34.0, 14.11.2019
 BOOST_AUTO_TEST_CASE( value_mode)
 {
 
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE( value_mode)
 
 /// Test feature to set another character as list separator.
 ///
-/// @since  x.y.z, 14.11.2019
+/// @since  1.34.0, 14.11.2019
 BOOST_AUTO_TEST_CASE( test_list_sep)
 {
 
@@ -179,7 +179,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
 /// Test that the cardinality is checked correctly.
 ///
-/// @since  x.y.z, 15.11.2019
+/// @since  1.34.0, 15.11.2019
 BOOST_AUTO_TEST_CASE( test_cardinality)
 {
 
@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE( test_cardinality)
 
 /// Test feature to handle multiple, separate values.
 ///
-/// @since  x.y.z, 15.11.2019
+/// @since  1.34.0, 15.11.2019
 BOOST_AUTO_TEST_CASE( test_multi_values)
 {
 
@@ -322,7 +322,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
 /// Test feature to clear the destination before assigning the values.
 ///
-/// @since  x.y.z, 15.11.2019
+/// @since  1.34.0, 15.11.2019
 BOOST_AUTO_TEST_CASE( test_clear_dest)
 {
 
@@ -410,7 +410,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
 /// Test feature to format the values before they are inserted into the set.
 ///
-/// @since  x.y.z, 15.11.2019
+/// @since  1.34.0, 15.11.2019
 BOOST_AUTO_TEST_CASE( format_values)
 {
 
@@ -452,7 +452,7 @@ BOOST_AUTO_TEST_CASE( format_values)
 /// Test feature that only unique values should be stored in the set.
 /// Setting the same value multiple times would simply override in the set.
 ///
-/// @since  x.y.z, 17.12.2019
+/// @since  1.34.0, 17.12.2019
 BOOST_AUTO_TEST_CASE( test_unique_values)
 {
 
@@ -529,7 +529,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
 /// Test "list argument values" with a set.
 ///
-/// @since  x.y.z, 15.11.2019
+/// @since  1.34.0, 15.11.2019
 BOOST_AUTO_TEST_CASE( list_arg_vars)
 {
 
@@ -569,7 +569,7 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
 
 /// Test constraint "disjoint" with two sets.
 ///
-/// @since  x.y.z, 15.11.2019
+/// @since  1.34.0, 15.11.2019
 BOOST_AUTO_TEST_CASE( disjoint_sets)
 {
 

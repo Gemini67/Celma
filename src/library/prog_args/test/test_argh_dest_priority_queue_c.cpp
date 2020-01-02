@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,7 +40,7 @@ using celma::prog_args::Handler;
 
 /// Test error case that can occur with a priority queue.
 ///
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 BOOST_AUTO_TEST_CASE( test_priority_queue_errors)
 {
 
@@ -85,13 +85,31 @@ BOOST_AUTO_TEST_CASE( test_priority_queue_errors)
          std::bad_cast);
    } // end scope
 
+   // constraint "unique data" cannot be set for priority queues
+   {
+      Handler                    ah( 0);
+      std::priority_queue< int>  pq;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_VAR( pq), "values")
+         ->setUniqueData(), std::logic_error);
+   } // end scope
+
+   // sorting data in a priority queue is not possible
+   {
+      Handler                    ah( 0);
+      std::priority_queue< int>  pq;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_VAR( pq), "values")
+         ->setSortData(), std::logic_error);
+   } // end scope
+
 } // test_priority_queue_errors
 
 
 
 /// For completeness: Set value mode "required" again.
 ///
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 BOOST_AUTO_TEST_CASE( value_mode)
 {
 
@@ -108,7 +126,7 @@ BOOST_AUTO_TEST_CASE( value_mode)
 
 /// Test feature to set another character as list separator.
 ///
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 BOOST_AUTO_TEST_CASE( test_list_sep)
 {
 
@@ -165,7 +183,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
 /// Test feature to handle multiple, separate values.
 ///
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 BOOST_AUTO_TEST_CASE( test_multi_values)
 {
 
@@ -270,7 +288,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 /// Test feature to format the values before they are inserted into the priority
 /// queue.
 ///
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 BOOST_AUTO_TEST_CASE( format_values)
 {
 
@@ -310,7 +328,7 @@ BOOST_AUTO_TEST_CASE( format_values)
 
 /// Test output in usage etc. for a priority queue.
 ///
-/// @since  x.y.z, 29.12.2019
+/// @since  1.34.0, 29.12.2019
 BOOST_AUTO_TEST_CASE( usage_help)
 {
 

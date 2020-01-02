@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,15 +23,10 @@
 // C++ Standard Library includes
 #include <array>
 #include <bitset>
-#include <deque>
 #include <optional>
-#include <set>
-#include <stack>
 #include <stdexcept>
 #include <string>
 #include <tuple>
-#include <unordered_set>
-#include <vector>
 
 
 // Boost includes
@@ -50,9 +45,10 @@ using celma::prog_args::detail::ContainerAdapter;
 namespace {
 
 
-/// 
+/// Do some checks with the container adapter used with a template type.
 ///
-/// @since  x.y.z, 13.12.2019
+/// @return  \c true if all tests passed successfully.
+/// @since  1.34.0, 13.12.2019
 template< template< typename> class C> bool checkContAdapt()
 {
 
@@ -67,21 +63,15 @@ template< template< typename> class C> bool checkContAdapt()
    my_cont_adapter.addValue( 13);
 
    CHECK_EQUAL_RETURN( my_cont_adapter.size(), 2);
-   CHECK_EQUAL_RETURN( my_container.size(), 2);
 
-   if (container_adapter_t::IsClearable)
-   {
-      my_cont_adapter.clear();
+   my_cont_adapter.clear();
 
-      CHECK_EQUAL_RETURN( my_cont_adapter.size(), 0);
-      CHECK_EQUAL_RETURN( my_container.size(), 0);
+   CHECK_EQUAL_RETURN( my_cont_adapter.size(), 0);
 
-      my_cont_adapter.addValue( 42);
-      my_cont_adapter.addValue( 13);
+   my_cont_adapter.addValue( 42);
+   my_cont_adapter.addValue( 13);
 
-      CHECK_EQUAL_RETURN( my_cont_adapter.size(), 2);
-      CHECK_EQUAL_RETURN( my_container.size(), 2);
-   } // end if
+   CHECK_EQUAL_RETURN( my_cont_adapter.size(), 2);
 
    return true;
 } // checkContAdapt
@@ -94,7 +84,7 @@ template< template< typename> class C> bool checkContAdapt()
 /// Verify that container adapter exist only for those types that should be
 /// supported.
 ///
-/// @since  x.y.z, 29.11.2019
+/// @since  1.34.0, 29.11.2019
 BOOST_AUTO_TEST_CASE( no_adapter)
 {
 
@@ -133,7 +123,7 @@ BOOST_AUTO_TEST_CASE( no_adapter)
 /// Check the features of the container adapter for queues.
 /// Also test that the values are stored in the destination queue.
 ///
-/// @since  x.y.z, 04.12.2019
+/// @since  1.34.0, 04.12.2019
 BOOST_AUTO_TEST_CASE( deque_adapter)
 {
 
@@ -144,7 +134,6 @@ BOOST_AUTO_TEST_CASE( deque_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, false);
 
@@ -192,10 +181,67 @@ BOOST_AUTO_TEST_CASE( deque_adapter)
 
 
 
+/// Check the features of the container adapter for forward-lists.
+/// Also test that the values are stored in the destination list.
+///
+/// @since  1.34.0, 30.12.2019
+BOOST_AUTO_TEST_CASE( forward_list_adapter)
+{
+
+   using my_list = std::forward_list< int>;
+   using my_adapter = ContainerAdapter< my_list>;
+
+   static_assert( my_adapter::HasAdapter);
+   BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
+   BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
+   BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
+   BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, true);
+   BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, false);
+
+   my_list     l;
+   my_adapter  cal( l);
+
+   BOOST_REQUIRE( cal.empty());
+   BOOST_REQUIRE_EQUAL( cal.size(), 0);
+   BOOST_REQUIRE( !cal.contains( 42));
+
+   cal.addValue( 42);
+
+   BOOST_REQUIRE( !cal.empty());
+   BOOST_REQUIRE_EQUAL( cal.size(), 1);
+   BOOST_REQUIRE( cal.contains( 42));
+
+   BOOST_REQUIRE( !l.empty());
+
+   BOOST_REQUIRE_NO_THROW( cal.clear());
+
+   BOOST_REQUIRE( cal.empty());
+   BOOST_REQUIRE_EQUAL( cal.size(), 0);
+   BOOST_REQUIRE( !cal.contains( 42));
+
+   BOOST_REQUIRE( l.empty());
+
+   cal.addValue( 42);
+   cal.addValue( 13);
+
+   BOOST_REQUIRE_EQUAL( cal.toString(), "13, 42");
+
+   BOOST_REQUIRE_NO_THROW( cal.sort());
+
+   BOOST_REQUIRE_EQUAL( cal.toString(), "13, 42");
+
+   // check with duplicate value
+   BOOST_REQUIRE_NO_THROW( cal.addValue( 13));
+   BOOST_REQUIRE_EQUAL( cal.toString(), "13, 13, 42");
+
+} // forward_list_adapter
+
+
+
 /// Check the features of the container adapter for lists.
 /// Also test that the values are stored in the destination list.
 ///
-/// @since  x.y.z, 11.12.2019
+/// @since  1.34.0, 11.12.2019
 BOOST_AUTO_TEST_CASE( list_adapter)
 {
 
@@ -206,7 +252,6 @@ BOOST_AUTO_TEST_CASE( list_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, false);
 
@@ -255,7 +300,7 @@ BOOST_AUTO_TEST_CASE( list_adapter)
 /// Check the features of the container adapter for multisets.
 /// Also test that the values are stored in the destination set.
 ///
-/// @since  x.y.z, 13.12.2019
+/// @since  1.34.0, 13.12.2019
 BOOST_AUTO_TEST_CASE( multiset_adapter)
 {
 
@@ -266,7 +311,6 @@ BOOST_AUTO_TEST_CASE( multiset_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, false);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, true);
 
@@ -313,7 +357,7 @@ BOOST_AUTO_TEST_CASE( multiset_adapter)
 /// Check the features of the container adapter for priority queues.
 /// Also test that the values are stored in the destination queue.
 ///
-/// @since  x.y.z, 20.12.2019
+/// @since  1.34.0, 20.12.2019
 BOOST_AUTO_TEST_CASE( priority_queue_adapter)
 {
 
@@ -324,7 +368,6 @@ BOOST_AUTO_TEST_CASE( priority_queue_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, false);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, false);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, false);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, true);
 
@@ -349,14 +392,74 @@ BOOST_AUTO_TEST_CASE( priority_queue_adapter)
 
    BOOST_REQUIRE_EQUAL( capq.toString(), "42, 42, 17, 13, 9");
 
+   BOOST_REQUIRE_THROW( capq.contains( 42), std::logic_error);
+   BOOST_REQUIRE_THROW( capq.sort(), std::logic_error);
+
 } // priority_queue_adapter
+
+
+
+/// Check the features of the container adapter for queues.
+/// Also test that the values are stored in the destination queue.
+///
+/// @since  1.34.0, 02.01.2020
+BOOST_AUTO_TEST_CASE( queue_adapter)
+{
+
+   using my_queue = std::queue< int>;
+   using my_adapter = ContainerAdapter< my_queue>;
+
+   static_assert( my_adapter::HasAdapter);
+   BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
+   BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, false);
+   BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
+   BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, false);
+   BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, false);
+
+   my_queue    q;
+   my_adapter  caq( q);
+
+   BOOST_REQUIRE( caq.empty());
+   BOOST_REQUIRE_EQUAL( caq.size(), 0);
+
+   caq.addValue( 42);
+
+   BOOST_REQUIRE( !caq.empty());
+   BOOST_REQUIRE_EQUAL( caq.size(), 1);
+
+   BOOST_REQUIRE( !q.empty());
+   BOOST_REQUIRE_EQUAL( q.size(), 1);
+
+   BOOST_REQUIRE_NO_THROW( caq.clear());
+
+   BOOST_REQUIRE( caq.empty());
+   BOOST_REQUIRE_EQUAL( caq.size(), 0);
+
+   BOOST_REQUIRE( q.empty());
+   BOOST_REQUIRE_EQUAL( q.size(), 0);
+
+   caq.addValue( 42);
+   caq.addValue( 13);
+   caq.addValue( 17);
+   caq.addValue( 9);
+
+   BOOST_REQUIRE_EQUAL( caq.toString(), "42, 13, 17, 9");
+
+   // check with duplicate value
+   BOOST_REQUIRE_NO_THROW( caq.addValue( 13));
+   BOOST_REQUIRE_EQUAL( caq.toString(), "42, 13, 17, 9, 13");
+
+   BOOST_REQUIRE_THROW( caq.sort(), std::logic_error);
+   BOOST_REQUIRE_THROW( caq.contains( 13), std::logic_error);
+
+} // queue_adapter
 
 
 
 /// Check the features of the container adapter for sets.
 /// Also test that the values are stored in the destination set.
 ///
-/// @since  x.y.z, 02.12.2019
+/// @since  1.34.0, 02.12.2019
 BOOST_AUTO_TEST_CASE( set_adapter)
 {
 
@@ -367,7 +470,6 @@ BOOST_AUTO_TEST_CASE( set_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, false);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, true);
 
@@ -414,7 +516,7 @@ BOOST_AUTO_TEST_CASE( set_adapter)
 /// Check the features of the container adapter for stacks.
 /// Also test that the values are stored in the destination stack.
 ///
-/// @since  x.y.z, 02.12.2019
+/// @since  1.34.0, 02.12.2019
 BOOST_AUTO_TEST_CASE( stack_adapter)
 {
 
@@ -425,7 +527,6 @@ BOOST_AUTO_TEST_CASE( stack_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, false);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, false);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, false);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, false);
 
@@ -451,7 +552,12 @@ BOOST_AUTO_TEST_CASE( stack_adapter)
    cas.addValue( 42);
    BOOST_REQUIRE_EQUAL( cas.toString(), "42, 13, 42");
 
-   BOOST_REQUIRE_THROW( cas.clear(), std::logic_error);
+   BOOST_REQUIRE_NO_THROW( cas.clear());
+   BOOST_REQUIRE( cas.empty());
+   BOOST_REQUIRE_EQUAL( cas.size(), 0);
+   BOOST_REQUIRE( s.empty());
+   BOOST_REQUIRE_EQUAL( s.size(), 0);
+
    BOOST_REQUIRE_THROW( cas.contains( 42), std::logic_error);
    BOOST_REQUIRE_THROW( cas.sort(), std::logic_error);
 
@@ -462,7 +568,7 @@ BOOST_AUTO_TEST_CASE( stack_adapter)
 /// Check the features of the container adapter for unordered multi-sets.
 /// Also test that the values are stored in the destination unordered set.
 ///
-/// @since  x.y.z, 17.12.2019
+/// @since  1.34.0, 17.12.2019
 BOOST_AUTO_TEST_CASE( unordered_multiset_adapter)
 {
 
@@ -473,7 +579,6 @@ BOOST_AUTO_TEST_CASE( unordered_multiset_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, false);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, false);
 
@@ -522,7 +627,7 @@ BOOST_AUTO_TEST_CASE( unordered_multiset_adapter)
 /// Check the features of the container adapter for unordered sets.
 /// Also test that the values are stored in the destination unordered set.
 ///
-/// @since  x.y.z, 04.12.2019
+/// @since  1.34.0, 04.12.2019
 BOOST_AUTO_TEST_CASE( unordered_set_adapter)
 {
 
@@ -533,7 +638,6 @@ BOOST_AUTO_TEST_CASE( unordered_set_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, false);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, false);
 
@@ -582,7 +686,7 @@ BOOST_AUTO_TEST_CASE( unordered_set_adapter)
 /// Check the features of the container adapter for vectors.
 /// Also test that the values are stored in the destination vector.
 ///
-/// @since  x.y.z, 29.11.2019
+/// @since  1.34.0, 29.11.2019
 BOOST_AUTO_TEST_CASE( vector_adapter)
 {
 
@@ -593,7 +697,6 @@ BOOST_AUTO_TEST_CASE( vector_adapter)
    BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
    BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
    BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, true);
-   BOOST_REQUIRE_EQUAL( my_adapter::IsClearable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, true);
    BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, false);
 
@@ -639,23 +742,25 @@ BOOST_AUTO_TEST_CASE( vector_adapter)
 
 
 
-/// 
+/// Test the container adapter with a template.
 ///
-/// @since  x.y.z, 13.12.2019
+/// @since  1.34.0, 13.12.2019
 BOOST_AUTO_TEST_CASE( template_test)
 {
 
    BOOST_REQUIRE( checkContAdapt< std::deque>());
+   BOOST_REQUIRE( checkContAdapt< std::forward_list>());
    BOOST_REQUIRE( checkContAdapt< std::list>());
    BOOST_REQUIRE( checkContAdapt< std::multiset>());
    BOOST_REQUIRE( checkContAdapt< std::priority_queue>());
+   BOOST_REQUIRE( checkContAdapt< std::queue>());
    BOOST_REQUIRE( checkContAdapt< std::set>());
    BOOST_REQUIRE( checkContAdapt< std::stack>());
    BOOST_REQUIRE( checkContAdapt< std::unordered_multiset>());
    BOOST_REQUIRE( checkContAdapt< std::unordered_set>());
    BOOST_REQUIRE( checkContAdapt< std::vector>());
 
-} // 
+} // template_test
 
 
 
