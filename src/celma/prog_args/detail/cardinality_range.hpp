@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -53,19 +53,19 @@ public:
    ///
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue() noexcept( false) override;
+   void gotValue() noexcept( false) override;
 
    /// Called by the framework at the end of the command line processing.
    ///
    /// @throw  if the minimum of calls/values was not reached.
    /// @since  0.2, 10.04.2016
-   virtual void check() noexcept( false) override;
+   void check() noexcept( false) override;
 
    /// Returns the text description of the cardinality "range".
    ///
    /// @return  String with the text description of the cardinality.
    /// @since  1.14.0, 02.10.2018
-   virtual std::string cardinalityStr() const override;
+   std::string cardinalityStr() const override;
 
 private:
    /// Minimum number of calls/values for the corresponding argument.

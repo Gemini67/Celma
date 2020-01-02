@@ -97,7 +97,7 @@ public:
    /// @param[in]  indent
    ///    Indent string.
    /// @since  1.22.0, 19.10.2016
-   virtual void dump( std::ostream& os, std::string indent = "") const override;
+   void dump( std::ostream& os, std::string indent = "") const override;
 
    /// Returns the internal container in which the properties are stored.
    ///

@@ -47,14 +47,14 @@ public:
    ///    The (path and) name of the existing file that should be renamed.
    /// @return  The return code from ::rename().
    /// @since  1.4.0, 20.02.2018
-   virtual int rename( const std::string& dest, const std::string& src) override;
+   int rename( const std::string& dest, const std::string& src) override;
 
    /// Removes (deletes) a file.
    ///
    /// @param[in]  file  The (path and) name of the %file to delete.
    /// @return  The result code from ::remove().
    /// @since  1.4.0, 28.02.2018
-   virtual int remove( const std::string& file) override;
+   int remove( const std::string& file) override;
 
    /// Creates a directory.
    ///
@@ -64,7 +64,7 @@ public:
    ///    The permissions to create the directory with.
    /// @return  The result code of the %mkdir operation.
    /// @since  1.26.0, 21.05.2019
-   virtual int mkdir( const std::string& dir_name, int mode) override;
+   int mkdir( const std::string& dir_name, int mode) override;
 
 }; // FileFuncsOs
 

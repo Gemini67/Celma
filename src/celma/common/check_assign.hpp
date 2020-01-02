@@ -57,6 +57,9 @@ public:
    /// Moving is allowed.
    CheckAssignRef( CheckAssignRef&&) = default;
 
+   // default destructor is fine
+   ~CheckAssignRef() = default;
+
    /// Assigns a value.
    ///
    /// @param[in]  newValue
@@ -186,6 +189,9 @@ public:
          mValue = other.mValue;
       } // end if
    } // CheckAssign< T>:: CheckAssign
+
+   // default destructor is fine
+   ~CheckAssign() = default;
 
    /// Assignment operator.
    ///

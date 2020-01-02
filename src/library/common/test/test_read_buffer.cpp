@@ -47,7 +47,7 @@ public:
 private:
    using ReadBuffer< 100UL>::readData;
 
-   virtual size_t readData( unsigned char* dest, size_t) override
+   size_t readData( unsigned char* dest, size_t) override
    {
       const int  len = mNextReadLen[ 0];
 
@@ -80,7 +80,7 @@ public:
 private:
    using ReadBuffer< 100UL, celma::common::ReadCountPolicy>::readData;
 
-   virtual size_t readData( unsigned char* dest, size_t) override
+   size_t readData( unsigned char* dest, size_t) override
    {
       const int  len = mNextReadLen[ 0];
 

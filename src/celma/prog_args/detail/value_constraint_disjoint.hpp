@@ -63,19 +63,18 @@ public:
    ///
    /// @param[in]  handler  Pointer to the argument handler object.
    /// @since  1.33.0, 31.10.2019
-   virtual void storeArgumentHandler( TypedArgBase* handler) noexcept( false)
-      override;
+   void storeArgumentHandler( TypedArgBase* handler) noexcept( false) override;
 
    /// Empty here, all the work is done in checkEndCondition().
    ///
    /// @param[in]  key  Ignored.
    /// @since  1.33.0, 30.10.2019
-   virtual void executeConstraint( const ArgumentKey& key) override;
+   void executeConstraint( const ArgumentKey& key) override;
 
    /// Does nothing here.
    ///
    /// @since  1.33.0, 30.10.2019
-   virtual void validated() override;
+   void validated() override;
 
    /// Checks all the values of the two containers, they must not intersect.
    ///
@@ -83,7 +82,7 @@ public:
    ///    std::runtime_error when the same value is found in two different
    ///    arguments.
    /// @since  1.33.0, 30.10.2019
-   virtual void checkEndCondition() const noexcept( false) override;
+   void checkEndCondition() const noexcept( false) override;
 
    /// Checks if the type set for the constraint matches one of the types of the
    /// destination variables.
@@ -94,13 +93,13 @@ public:
    ///    \c true if the type of the destination variable and the type set for
    ///    one of the the destination variables match.
    /// @since  1.33.0, 31.10.2019
-   virtual bool matchesVarType( const std::string& var_type_name) const override;
+   bool matchesVarType( const std::string& var_type_name) const override;
 
    /// Returns a text description of the constraint.
    ///
    /// @return  A string with the text description of the constraint.
    /// @since  1.33.0, 30.10.2019
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 }; // ValueConstraintDisjoint< C1, C2>
 

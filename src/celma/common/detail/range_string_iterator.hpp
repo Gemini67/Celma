@@ -51,6 +51,9 @@ public:
    /// @since  0.2, 07.04.2016
    explicit RangeStringIterator( const T& src);
 
+   // default destructor is fine
+   ~RangeStringIterator() = default;
+
    /// Copy constructor. Needed because of internal \c unique_ptr.
    /// @param[in]  other  The other object to copy the data from.
    /// @since  0.2, 07.04.2016

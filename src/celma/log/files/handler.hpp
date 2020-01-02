@@ -78,7 +78,7 @@ public:
    ///    passed, the previous formatter is replaced by the default stream
    ///    formatter.
    /// @since  1.0.0, 14.12.2017
-   virtual void setFormatter( detail::IFormatBase* formatter = nullptr) override;
+   void setFormatter( detail::IFormatBase* formatter = nullptr) override;
 
 private:
    /// Implementation of the ILogDest interface: Formats the given log message
@@ -86,7 +86,7 @@ private:
    ///
    /// @param[in]  msg  The object with the data of the log message to write.
    /// @since  1.0.0, 13.12.2017
-   virtual void message( const detail::LogMsg& msg) override;
+   void message( const detail::LogMsg& msg) override;
 
    /// The policy object to handle the log file(s).
    std::unique_ptr< P>  mpFilePolicy;

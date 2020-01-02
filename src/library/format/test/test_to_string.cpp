@@ -14,7 +14,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/format/to_string.hpp"
 
 
@@ -27,6 +27,7 @@
 #include <list>
 #include <map>
 #include <numeric>
+#include <stack>
 #include <vector>
 
 
@@ -309,7 +310,7 @@ BOOST_AUTO_TEST_CASE( test_multimap)
       BOOST_REQUIRE_EQUAL( result, "{ 1, \"two\"}, { 2, \"three\"}, { 3, \"five\"}, { 4, \"seven\"}, { 5, \"eleven\"}");
    } // end scope
 
-} // test_map
+} // test_multimap
 
 
 
@@ -435,6 +436,192 @@ BOOST_AUTO_TEST_CASE( tuple_to_string)
    } // end scope
 
 } // tuple_to_string
+
+
+
+/// Test converting the contents of a stack.
+///
+/// @since  1.34.0, 20.11.2019
+BOOST_AUTO_TEST_CASE( stack_to_string)
+{
+
+   // stack with one value
+   {
+      std::stack< int>  stck;
+
+      stck.push( 13);
+
+      const auto  str( toString( stck));
+
+      BOOST_REQUIRE_EQUAL( str, "13");
+   } // end scope
+
+   // stack with two values
+   {
+      std::stack< int>  stck;
+
+      stck.push( 42);
+      stck.push( 13);
+
+      const auto  str( toString( stck));
+
+      BOOST_REQUIRE_EQUAL( str, "13, 42");
+   } // end scope
+
+   // hold on: stack with four values
+   {
+      std::stack< int>  stck;
+
+      stck.push( 4711);
+      stck.push( 42);
+      stck.push( 28);
+      stck.push( 13);
+
+      const auto  str( toString( stck));
+
+      BOOST_REQUIRE_EQUAL( str, "13, 28, 42, 4711");
+   } // end scope
+
+   // stack of strings
+   {
+      std::stack< std::string>  stck;
+
+      stck.push( "show");
+      stck.push( "the");
+      stck.push( "for");
+      stck.push( "two");
+      stck.push( "money");
+      stck.push( "the");
+      stck.push( "for");
+      stck.push( "one");
+
+      const auto  str( toString( stck));
+
+      BOOST_REQUIRE_EQUAL( str,
+         R"raw("one", "for", "the", "money", "two", "for", "the", "show")raw");
+   } // end scope
+
+} // stack_to_string
+
+
+
+/// Test converting the contents of a priority_queue.
+///
+/// @since  1.34.0, 29.12.2019
+BOOST_AUTO_TEST_CASE( priority_queue_to_string)
+{
+
+   // priority queue with one value
+   {
+      std::priority_queue< int>  pq;
+
+      pq.push( 13);
+
+      const auto  str( toString( pq));
+
+      BOOST_REQUIRE_EQUAL( str, "13");
+   } // end scope
+
+   // priority queue with two values
+   {
+      std::priority_queue< int>  pq;
+
+      pq.push( 42);
+      pq.push( 13);
+
+      const auto  str( toString( pq));
+
+      BOOST_REQUIRE_EQUAL( str, "42, 13");
+   } // end scope
+
+   // hold on: priority queue with four values
+   {
+      std::priority_queue< int>  pq;
+
+      pq.push( 28);
+      pq.push( 4711);
+      pq.push( 13);
+      pq.push( 42);
+
+      const auto  str( toString( pq));
+
+      BOOST_REQUIRE_EQUAL( str, "4711, 42, 28, 13");
+   } // end scope
+
+   // priority queue of strings
+   {
+      std::priority_queue< std::string>  pq;
+
+      pq.push( "I");
+      pq.push( "Will");
+      pq.push( "Win");
+
+      const auto  str( toString( pq));
+
+      BOOST_REQUIRE_EQUAL( str, R"raw("Win", "Will", "I")raw");
+   } // end scope
+
+} // priority_queue_to_string
+
+
+
+/// Test converting the contents of a queue.
+///
+/// @since  1.34.0, 29.12.2019
+BOOST_AUTO_TEST_CASE( queue_to_string)
+{
+
+   // queue with one value
+   {
+      std::queue< int>  q;
+
+      q.push( 13);
+
+      const auto  str( toString( q));
+
+      BOOST_REQUIRE_EQUAL( str, "13");
+   } // end scope
+
+   // queue with two values
+   {
+      std::queue< int>  q;
+
+      q.push( 42);
+      q.push( 13);
+
+      const auto  str( toString( q));
+
+      BOOST_REQUIRE_EQUAL( str, "42, 13");
+   } // end scope
+
+   // hold on: queue with four values
+   {
+      std::queue< int>  q;
+
+      q.push( 28);
+      q.push( 4711);
+      q.push( 13);
+      q.push( 42);
+
+      const auto  str( toString( q));
+
+      BOOST_REQUIRE_EQUAL( str, "28, 4711, 13, 42");
+   } // end scope
+
+   // queue of strings
+   {
+      std::queue< std::string>  q;
+
+      q.push( "I");
+      q.push( "Will");
+      q.push( "Win");
+
+      const auto  str( toString( q));
+
+      BOOST_REQUIRE_EQUAL( str, R"raw("I", "Will", "Win")raw");
+   } // end scope
+
+} // queue_to_string
 
 
 

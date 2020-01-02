@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -112,11 +112,11 @@ class IHandlerValueConstraint;
 ///     variable) should be printed in the usage.
 ///   - setIsHidden(): Can be used to make an argument a hidden argument, i.e.
 ///     it will not be listed in the usage.
-///   - setTakesMultiValue(): For destination types vector and callables: The
-///     destination type is able to process multiple, separate values.
+///   - setTakesMultiValue(): For destination types containers and callables:
+///     The destination type is able to process multiple, separate values.
 ///   - addFormat(): Adds a format converter, can be used e.g. to convert
 ///     symbolic names into integer values.
-///   - setListSep(): For destination type vector, allows to specify the list
+///   - setListSep(): For destination type container, allows to specify the list
 ///     separator character by which a list of values is split.
 ///   - setCardinality(): Allows to change or delete the cardinality check that
 ///     is applied to this argument.
@@ -239,10 +239,8 @@ class IHandlerValueConstraint;
 ///        different destinations, one for - and one for +?<b>
 ///        If +/- is distinguished on short arguments, what about long
 ///        arguments?
-/// @todo  Refactor typed arg for std::vector so that any std container can be
-///        used.
-/// @todo  Similar solution that allows to use an std container with key/value
-///        pairs.
+/// @todo  Similar solution like the container adapter that allows to use any
+///        std container with key/value  pairs.
 /// @todo  Check comments of constraints classes (all_of).
 ///        All of: Use as dynamic constraint? Otherwise, all the arguments could
 ///        simply be mandatory.

@@ -54,7 +54,7 @@ public:
    ///                   renamed.
    /// @return  The result of the %rename operation.
    /// @since  1.26.0, 08.03.2018
-   virtual int rename( const std::string& dest, const std::string& src) override
+   int rename( const std::string& dest, const std::string& src) override
    {
       return mOsFuncs.rename( dest, src);
    } // TestFileFuncsImpl::rename
@@ -63,7 +63,7 @@ public:
    /// @param[in]  file  The (path and) name of the %file to delete.
    /// @return  The result code of the %remove operation.
    /// @since  1.26.0, 08.03.2018
-   virtual int remove( const std::string& file) override
+   int remove( const std::string& file) override
    {
       return mOsFuncs.remove( file);
    } // TestFileFuncsImpl::remove
@@ -73,7 +73,7 @@ public:
    /// @param[in]  mode      The permissions to create the directory with.
    /// @return  The result code of the %mkdir operation.
    /// @since  1.26.0, 08.03.2018
-   virtual int mkdir( const std::string& dir_name, int mode) override
+   int mkdir( const std::string& dir_name, int mode) override
    {
       // insert the name of the directory into the directory list
       mpDirHandler->dirCreated( dir_name);

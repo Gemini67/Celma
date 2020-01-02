@@ -64,7 +64,7 @@ public:
    /// @param[in]  indent
    ///    Required by base class, ignored here.
    /// @since  1.22.0, 19.10.2016
-   virtual void dump( std::ostream& os, std::string indent) const override;
+   void dump( std::ostream& os, std::string indent) const override;
 
 private:
    /// The value of the property.

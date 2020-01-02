@@ -79,7 +79,7 @@ public:
    ///
    /// @param[in,out]  val  The value to change the formatting of.
    /// @since  1.23.0, 05.04.2019
-   virtual void formatValue( std::string& val) const override
+   void formatValue( std::string& val) const override
    {
       if (val == "zero")
          val = "0";

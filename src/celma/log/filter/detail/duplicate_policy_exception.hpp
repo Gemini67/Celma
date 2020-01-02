@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -42,7 +42,7 @@ public:
    /// Returns the policy type.
    /// @return  Policy \a dpThrow.
    /// @since  0.3, 19.06.2016
-   virtual DuplicatePolicy policy() const override
+   DuplicatePolicy policy() const override
    {
       return DuplicatePolicy::exception;
    } // DuplicatePolicyException::policy
@@ -51,7 +51,7 @@ public:
    /// @return  Nothing, actually.
    /// @throw  Always CELMA_RuntimeError.
    /// @since  0.3, 19.06.2016
-   virtual bool acceptNew() const noexcept( false) override
+   bool acceptNew() const noexcept( false) override
    {
       throw CELMA_RuntimeError( "filter already defined");
    } // DuplicatePolicyException::acceptNew

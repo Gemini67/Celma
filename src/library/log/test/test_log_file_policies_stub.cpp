@@ -70,7 +70,7 @@ public:
    ///    The (path and) name of the existing file that should be renamed.
    /// @return  The result of the %rename operation.
    /// @since  1.11.0, 30.08.2018
-   virtual int rename( const std::string& dest, const std::string& src) override
+   int rename( const std::string& dest, const std::string& src) override
    {
       if (mNextRenameParamsIdx >= mRenameParam.size())
          throw std::invalid_argument( "more rename calls than expected");
@@ -93,7 +93,7 @@ public:
    /// @param[in]  file  The (path and) name of the file to delete.
    /// @return  The result code of the %remove operation.
    /// @since  1.11.0, 30.08.2018
-   virtual int remove( const std::string&) override
+   int remove( const std::string&) override
    {
       // nothing to do here
       return 0;
@@ -107,7 +107,7 @@ public:
    ///    The permissions to create the directory with.
    /// @return  The result code of the %mkdir operation.
    /// @since  1.26.0, 08.03.2018
-   virtual int mkdir( const std::string&, int) override
+   int mkdir( const std::string&, int) override
    {
       // nothing to do here
       return 0;
