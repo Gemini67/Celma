@@ -43,9 +43,10 @@
 #define CELMA_PROG_ARGS_DESTINATION_HPP
 
 
-#include "celma/common/check_assign.hpp"
+#include <type_traits>
 #include "celma/common/range_dest.hpp"
 #include "celma/prog_args/detail/arg_handler_callable.hpp"
+#include "celma/prog_args/detail/container_adapter.hpp"
 #include "celma/prog_args/detail/typed_arg_callable.hpp"
 #include "celma/prog_args/detail/typed_arg_callable_value.hpp"
 #include "celma/prog_args/detail/typed_arg.hpp"
@@ -60,6 +61,8 @@ namespace celma { namespace prog_args {
 /// Returns the typed argument object corresponding to the type of the
 /// destination variable, which may be a simple POD, a std::string, but also a
 /// std::vector or a std::bitset.
+/// Additional precaution was taken to make sure that destinations of type
+/// container are not handled here.
 ///
 /// @tparam  T  The type of the destination variable.
 /// @param[in]  dest_var
@@ -69,7 +72,9 @@ namespace celma { namespace prog_args {
 /// @return  The typed arg object for the type of the \a dest_var.
 /// @since  0.16.0, 09.11.2017
 template< typename T>
-   detail::TypedArgBase* destination( T& dest_var, const std::string vname)
+   typename std::enable_if< !detail::ContainerAdapter< T>::HasAdapter,
+      detail::TypedArgBase*>::type
+   destination( T& dest_var, const std::string vname)
 {
    return new detail::TypedArg< T>( dest_var, vname);
 } // destination
@@ -77,6 +82,8 @@ template< typename T>
 
 /// Returns the typed argument object corresponding to the type of the
 /// destination variable.
+/// This overload handles the case when the value to set is given when the
+/// argument is defined.
 ///
 /// @tparam  T  The type of the destination variable.
 /// @param[in]  dest_var
@@ -95,7 +102,34 @@ template< typename T>
 } // destination
 
 
+/// Returns the typed argument object corresponding to the type of the
+/// destination variable.
+/// This overload handles the case when the destination variable is a
+/// container.<br>
+/// Additional precaution was taken to make sure that this overload is only
+/// chosen for supported container types.
+/// 
+/// @tparam  T  The type of the destination variable, container of something.
+/// @param[in]  dest_cont
+///    The destination variable/container, in which the values from the command
+///    line should be stored.
+/// @param[in]  cname
+///    The name of the variable/container.
+/// @return  The typed arg object for the type of the \a dest_cont.
+/// @since  1.34.0, 22.11.2019
+template< typename T>
+   typename std::enable_if< detail::ContainerAdapter< T>::HasAdapter,
+      detail::TypedArgBase*>::type
+   destination( T& dest_cont, const std::string cname)
+{
+   return new detail::TypedArg< detail::ContainerAdapter< T>>(
+     detail::ContainerAdapter< T>( dest_cont), cname);
+} // destination
+
+
 /// Overload for creating the typed argument object for a pair of variables.
+/// This ovrload is used when the first destination variable is a single-value
+/// type like int, std::string etc.
 ///
 /// @tparam  T1
 ///    The type of the first destination variable.
@@ -114,12 +148,44 @@ template< typename T>
 /// @return  The typed argument object for the pair of variables.
 /// @since  0.16.0, 10.11.2017
 template< typename T1, typename T2>
-   detail::TypedArgBase*
-      destination( T1& dest_var1, const std::string vname1,
-         T2& dest_var2, const std::string vname2, const T2& value2)
+   typename std::enable_if< !detail::ContainerAdapter< T1>::HasAdapter,
+      detail::TypedArgBase*>::type
+   destination( T1& dest_var1, const std::string vname1,
+      T2& dest_var2, const std::string vname2, const T2& value2)
 {
    return new detail::TypedArgPair< T1, T2>( dest_var1, vname1,
       dest_var2, vname2, value2);
+} // destination
+
+
+/// Overload for creating the typed argument object for a pair of variables.
+/// This ovrload is used when the first destination variable is a container.
+///
+/// @tparam  T1
+///    The type of the first destination variable.
+/// @tparam  T2
+///    The type of the second destination variable.
+/// @param[in]  dest_var1
+///    The first destination variable for the value of the argument.
+/// @param[in]  vname1
+///    The name of the first destination variable.
+/// @param[in]  dest_var2
+///    The second variable for the argument.
+/// @param[in]  vname2
+///    The name of the second variable.
+/// @param[in]  value2
+///    The value to assign to the second variable.
+/// @return  The typed argument object for the pair of variables.
+/// @since  1.34.0, 28.11.2019
+template< typename T1, typename T2>
+   typename std::enable_if< detail::ContainerAdapter< T1>::HasAdapter,
+      detail::TypedArgBase*>::type
+   destination( T1& dest_var1, const std::string vname1,
+      T2& dest_var2, const std::string vname2, const T2& value2)
+{
+   detail::ContainerAdapter< T1>  wrapper( dest_var1);
+   return new detail::TypedArgPair< detail::ContainerAdapter< T1>, T2>(
+      wrapper, vname1, dest_var2, vname2, value2);
 } // destination
 
 

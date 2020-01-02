@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.33.2
+   \mainpage  CELMA v1.34.0
 
    \tableofcontents
 
@@ -10,7 +10,7 @@
    collection of modules, classes and functions that are often used in C++
    projects on *UX.<br>
    The most prominent member being the 'argument handler' library, a replacement
-   for getopt()/Boost.Program Options.
+   for ::getopt(), similar to Boost.ProgramOptions.
 
    \subsection  build  Build Information
 
@@ -47,6 +47,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
+   |   1.34.0 | 2020-01-02        | Support all non-key std containers as destination type for argument handler variables. |
    |   1.33.2 | 2019-11-19        | New issues found by SonarCloud resolved. |
    |   1.33.1 | 2019-11-13        | Coverage improved. |
    |   1.33.0 | 2019-11-01        | Print formatters in argument help. Added constraint "disjoint". |

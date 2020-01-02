@@ -149,6 +149,8 @@ public:
       ah( 0),
       oss(),
       bit_set(),
+      my_set(),
+      my_stack(),
       names(),
       range_dest(),
       range_bit_set(),
@@ -165,6 +167,10 @@ public:
       ah.addArgument( "f,flag", DEST_VAR( flag1), "boolean flag");
       ah.addArgument( "b,bitset", DEST_VAR( bit_set), "bitset");
       ah.addArgument( "n,names", DEST_VAR( names), "list of names");
+      ah.addArgument( "s,set", DEST_VAR( my_set), "set of values")
+         ->setListSep( '.')->setTakesMultiValue();
+      ah.addArgument( "stack", DEST_VAR( my_stack), "stack of values")
+         ->setListSep( '+');
       ah.addArgument( "r,range", DEST_RANGE( range_dest, int, std::vector),
          "range");
       ah.addArgument( "d,double", DEST_VAR_VALUE( dbl_value, 3.1415), "double");
@@ -194,7 +200,8 @@ public:
          "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
          "--void-method --value-method another_value -t 28,unbelievable,12.75 "
          "--void-member --value-member=last_value -vv --pair juhu -o 0 "
-         "--opt-bool -c 9,19,29 -a 5,4,3 --value-filter 42,4711",
+         "--opt-bool -c 9,19,29 -a 5,4,3 --value-filter 42,4711 -s 13.24.4711 2 "
+         "--stack goodbye+and+hello",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // AllTypesFixture::AllTypesFixture
@@ -204,6 +211,8 @@ public:
    int                                int1 = 0;
    bool                               flag1 = false;
    std::bitset< 10>                   bit_set;
+   std::set< int>                     my_set;
+   std::stack< std::string>           my_stack;
    std::vector< std::string>          names;
    std::vector< int>                  range_dest;
    double                             dbl_value = 0.0;
@@ -309,6 +318,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types, AllTypesFixture)
       "   Value <true> set on variable 'flag1'.\n"
       "   Value <0000011100> set on variable 'bit_set'.\n"
       "   Value <\"peter\", \"paul\", \"mary\"> set on variable 'names'.\n"
+      "   Value <2, 13, 24, 4711> set on variable 'my_set'.\n"
+      "   Value <\"hello\", \"and\", \"goodbye\"> set on variable 'my_stack'.\n"
       "   Value <2, 5, 6, 7> set on variable 'range_dest'.\n"
       "   Value <3.141500> set on variable 'dbl_value'.\n"
       "   Value <0010101000> set on variable 'range_bit_set'.\n"
@@ -458,6 +469,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_type,
       "   Value <true [bool]> set on variable 'flag1'.\n"
       "   Value <0000011100 [std::bitset<10>]> set on variable 'bit_set'.\n"
       "   Value <\"peter\", \"paul\", \"mary\" [std::vector<std::string>]> set on variable 'names'.\n"
+      "   Value <2, 13, 24, 4711 [std::set<int>]> set on variable 'my_set'.\n"
+      "   Value <\"hello\", \"and\", \"goodbye\" [std::stack<std::string>]> set on variable 'my_stack'.\n"
       "   Value <2, 5, 6, 7 [std::vector<int>]> set on variable 'range_dest'.\n"
       "   Value <3.141500 [double]> set on variable 'dbl_value'.\n"
       "   Value <0010101000 [std::bitset<10>]> set on variable 'range_bit_set'.\n"
@@ -608,6 +621,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_key,
       "   Value <true> set on variable 'flag1' by argument '-f,--flag'.\n"
       "   Value <0000011100> set on variable 'bit_set' by argument '-b,--bitset'.\n"
       "   Value <\"peter\", \"paul\", \"mary\"> set on variable 'names' by argument '-n,--names'.\n"
+      "   Value <2, 13, 24, 4711> set on variable 'my_set' by argument '-s,--set'.\n"
+      "   Value <\"hello\", \"and\", \"goodbye\"> set on variable 'my_stack' by argument '--stack'.\n"
       "   Value <2, 5, 6, 7> set on variable 'range_dest' by argument '-r,--range'.\n"
       "   Value <3.141500> set on variable 'dbl_value' by argument '-d,--double'.\n"
       "   Value <0010101000> set on variable 'range_bit_set' by argument '--range-bitset'.\n"
@@ -756,6 +771,8 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_full,
       "   Value <true [bool]> set on variable 'flag1' by argument '-f,--flag'.\n"
       "   Value <0000011100 [std::bitset<10>]> set on variable 'bit_set' by argument '-b,--bitset'.\n"
       "   Value <\"peter\", \"paul\", \"mary\" [std::vector<std::string>]> set on variable 'names' by argument '-n,--names'.\n"
+      "   Value <2, 13, 24, 4711 [std::set<int>]> set on variable 'my_set' by argument '-s,--set'.\n"
+      "   Value <\"hello\", \"and\", \"goodbye\" [std::stack<std::string>]> set on variable 'my_stack' by argument '--stack'.\n"
       "   Value <2, 5, 6, 7 [std::vector<int>]> set on variable 'range_dest' by argument '-r,--range'.\n"
       "   Value <3.141500 [double]> set on variable 'dbl_value' by argument '-d,--double'.\n"
       "   Value <0010101000 [std::bitset<10>]> set on variable 'range_bit_set' by argument '--range-bitset'.\n"

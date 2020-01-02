@@ -142,8 +142,8 @@ template< typename T1, typename T2>
 template< typename T1, typename T2>
    void TypedArgPair< T1, T2>::dump( std::ostream& os) const
 {
-   os << "store first value with type '" << type< T1>::name() << "' in '"
-      << TypedArg< T1>::mVarName << "', second value with type '"
+   os << "store first value with type '" << TypedArg< T1>::varTypeName()
+      << "' in '" << TypedArg< T1>::mVarName << "', second value with type '"
       << type< T2>::name() << "' in '" << mVarName2  << "'." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
 } // TypedArgPair< T1, T2>::dump
