@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -59,6 +59,12 @@ public:
    /// @since  0.3, 19.06.2016
    Filters();
 
+   // copy-construction is not allowed
+   Filters( const Filters&) = delete;
+
+   // default move-constructor is fine
+   Filters( Filters&) = default;
+
    /// Destructor.
    ///
    /// @since  0.3, 19.06.2016
@@ -103,6 +109,12 @@ public:
    /// @return  \c true if messages with this log level are processed.
    /// @since  0.3, 19.06.2016
    bool processLevel( LogLevel l) const;
+
+   // copy-assignment is not allowed
+   Filters& operator =( const Filters&) = delete;
+
+   // default move-assignment is fine
+   Filters& operator =( Filters&&) = default;
 
 private:
    /// Container type to store the filters.
