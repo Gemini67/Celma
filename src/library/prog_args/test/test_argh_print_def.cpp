@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,7 +27,7 @@ int main( int argc, char* argv[])
    try
    {
       celma::prog_args::Handler         ah( celma::prog_args::Handler::AllHelp);
-      bool                              flagArg;
+      bool                              flagArg = false;
       int                               intArgMandatory;
       int                               intArgOptDef = 4711;
       std::string                       stringArgOptDef( "hello world");

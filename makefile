@@ -113,7 +113,7 @@ sonar:
 	   cd -; \
 	fi; \
 	cd build/sonar; \
-	build-wrapper-linux-x86-64 --out-dir bw-output make; \
+	build-wrapper-linux-x86-64 --out-dir bw-output make -j4; \
 	cd -; \
 	sonar-scanner -Dsonar.login=$(SONAR_LOGIN)
 

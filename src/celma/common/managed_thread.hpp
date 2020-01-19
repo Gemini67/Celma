@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -45,15 +45,27 @@ public:
    template< class Function, class... Args>
       explicit ManagedThread( Function&& f, Args&&... args);
 
+   // copy-construction is not allowed
+   ManagedThread( const ManagedThread&) = delete;
+
+   // default move-constructor is fine
+   ManagedThread( ManagedThread&&) = default;
+
    /// Destructor, calls std::thread::join(), i.e. would block if the thread is
    /// still running.
    /// @since  012, 19.01.2017
-   ~ManagedThread();
+   virtual ~ManagedThread();
 
    /// Returns if the thread function is still active.
    /// @return  \c true if the thread function is still active.
    /// @since  012, 19.01.2017
    bool isActive() const noexcept;
+
+   // copy-assignment is not allowed
+   ManagedThread& operator =( const ManagedThread&) = delete;
+
+   // default move-assignment is fine
+   ManagedThread& operator =( ManagedThread&&) = default;
 
 private:
    /// Flag, set by the thread before the thread function is executed, cleared
