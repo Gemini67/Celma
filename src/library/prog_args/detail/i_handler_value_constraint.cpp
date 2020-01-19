@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,6 +38,23 @@ bool IHandlerValueConstraint::isValueConstraint() const
    return true;
 } // IHandlerValueConstraint::isValueConstraint
 
+
+
+/// Checks if the type set for the constraint matches the type of the
+/// destination variable.
+///
+/// @param[in]  var_type_name
+///    The name of the type of the arguments destination variable.
+/// @return
+///    \c true if the type of the destination variable and the type set for
+///    the destination variable match.
+/// @since  1.33.0, 31.10.2019
+bool IHandlerValueConstraint::matchesVarType( const std::string& var_type_name) const
+{
+   if (mArgHandlers.empty())
+      return true;
+   return mArgHandlers[ 0]->varTypeName() == var_type_name;
+} // IHandlerValueConstraint::matchesVarType
 
 
 /// Stores the pointer to the handler object for one of the arguments in the

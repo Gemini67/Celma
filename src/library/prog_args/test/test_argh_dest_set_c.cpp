@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -573,6 +573,8 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
 BOOST_AUTO_TEST_CASE( disjoint_sets)
 {
 
+   using celma::prog_args::disjoint;
+
    {
       Handler         ah( 0);
       std::set< int>  set1;
@@ -581,8 +583,7 @@ BOOST_AUTO_TEST_CASE( disjoint_sets)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( set1), "left"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( set2), "right"));
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         celma::prog_args::disjoint< std::set< int>>( "l;r")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "l;r")));
 
       auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6", nullptr);
 
@@ -598,66 +599,12 @@ BOOST_AUTO_TEST_CASE( disjoint_sets)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( set1), "left"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( set2), "right"));
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         celma::prog_args::disjoint< std::set< int>>( "l;r")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "l;r")));
 
       auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6,1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
-   } // end scope
-
-   {
-      Handler            ah( 0);
-      std::set< int>     set1;
-      std::vector< int>  vector1;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( set1), "left"));
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( vector1), "right"));
-
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         celma::prog_args::disjoint< std::set< int>, std::vector< int>>( "l;r")));
-
-      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   } // end scope
-
-   // throw if the data in the set and the vector is not disjoint
-   {
-      Handler            ah( 0);
-      std::set< int>     set1;
-      std::vector< int>  vector1;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( set1), "left"));
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( vector1), "right")
-         ->setSortData());
-
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         celma::prog_args::disjoint< std::set< int>, std::vector< int>>( "l;r")));
-
-      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6,1", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
-   } // end scope
-
-   // shoud throw if the data in the set and the vector is not disjoint,
-   // but since we don't sort the data the problem is not detected
-   {
-      Handler            ah( 0);
-      std::set< int>     set1;
-      std::vector< int>  vector1;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( set1), "left"));
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( vector1), "right"));
-
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         celma::prog_args::disjoint< std::set< int>, std::vector< int>>( "l;r")));
-
-      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6,1", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
 } // disjoint_sets

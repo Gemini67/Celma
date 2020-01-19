@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -57,24 +57,14 @@ BOOST_AUTO_TEST_CASE( errors_differ)
    {
       Handler  ah( 0);
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "")),
          std::invalid_argument);
    } // end scope
 
    {
       Handler  ah( 0);
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "any arg")),
-         std::invalid_argument);
-   } // end scope
-
-   {
-      Handler  ah( 0);
-      int      dummy;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "d", DEST_VAR( dummy), "dummy"));
-
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "a;b")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "any arg")),
          std::invalid_argument);
    } // end scope
 
@@ -84,7 +74,7 @@ BOOST_AUTO_TEST_CASE( errors_differ)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "d", DEST_VAR( dummy), "dummy"));
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "d")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "a;b")),
          std::invalid_argument);
    } // end scope
 
@@ -94,7 +84,17 @@ BOOST_AUTO_TEST_CASE( errors_differ)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "d", DEST_VAR( dummy), "dummy"));
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "d;d")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "d")),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      int      dummy;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "d", DEST_VAR( dummy), "dummy"));
+
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "d;d")),
          std::invalid_argument);
    } // end scope
 
@@ -108,23 +108,9 @@ BOOST_AUTO_TEST_CASE( errors_differ)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "y,dummy2", DEST_VAR( dummy2),
          "no name"));
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "d,dummy2;y")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "d,dummy2;y")),
          std::invalid_argument);
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "y,dummy1;d")),
-         std::invalid_argument);
-   } // end scope
-
-   {
-      Handler  ah( 0);
-      int      dummy1;
-      int      dummy2;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "d,dummy1", DEST_VAR( dummy1),
-         "no name"));
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "y,dummy2", DEST_VAR( dummy2),
-         "no name"));
-
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< std::string>( "d;y")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "y,dummy1;d")),
          std::invalid_argument);
    } // end scope
 
@@ -138,7 +124,7 @@ BOOST_AUTO_TEST_CASE( errors_differ)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "y,dummy2", DEST_VAR( dummy2),
          "no name"));
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< std::string>( "d;y")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "d;y")),
          std::invalid_argument);
    } // end scope
 
@@ -152,7 +138,7 @@ BOOST_AUTO_TEST_CASE( errors_differ)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "y,dummy2", DEST_VAR( dummy2),
          "no name"));
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( differ< int>( "d;y")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( differ( "d;y")),
          std::invalid_argument);
    } // end scope
 
@@ -174,7 +160,7 @@ BOOST_AUTO_TEST_CASE( errors_disjoint)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( dummy1), "dummy1"));
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint< vector_t>( "a")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint( "a")),
          std::invalid_argument);
    } // end scope
 
@@ -188,7 +174,7 @@ BOOST_AUTO_TEST_CASE( errors_disjoint)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( dummy2), "dummy2"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c", DEST_VAR( dummy3), "dummy3"));
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint< vector_t>( "a;b;c")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint( "a;b;c")),
          std::invalid_argument);
    } // end scope
 
@@ -200,7 +186,7 @@ BOOST_AUTO_TEST_CASE( errors_disjoint)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( dummy1), "dummy1"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( dummy2), "dummy2"));
 
-      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint< vector_t>( "a;b")),
+      BOOST_REQUIRE_THROW( ah.addConstraint( disjoint( "a;b")),
          std::invalid_argument);
    } // end scope
 
@@ -224,7 +210,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_string)
       ah.addArgument( "p", DEST_VAR( primary), "Primary");
       ah.addArgument( "b", DEST_VAR( backup),  "Backup");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< std::string>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -239,7 +225,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_string)
       ah.addArgument( "p", DEST_VAR( primary), "Primary");
       ah.addArgument( "b", DEST_VAR( backup),  "Backup");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< std::string>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -254,7 +240,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_string)
       ah.addArgument( "p", DEST_VAR( primary), "Primary");
       ah.addArgument( "b", DEST_VAR( backup),  "Backup");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< std::string>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -269,7 +255,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_string)
       ah.addArgument( "p", DEST_VAR( primary), "Primary");
       ah.addArgument( "b", DEST_VAR( backup),  "Backup");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< std::string>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -295,7 +281,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int)
       ah.addArgument( "p", DEST_VAR( primary_id), "Primary id");
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -310,7 +296,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int)
       ah.addArgument( "p", DEST_VAR( primary_id), "Primary id");
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -325,7 +311,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int)
       ah.addArgument( "p", DEST_VAR( primary_id), "Primary id");
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -340,7 +326,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int)
       ah.addArgument( "p", DEST_VAR( primary_id), "Primary id");
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -355,7 +341,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int)
       ah.addArgument( "p", DEST_VAR( primary_id), "Primary id");
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b")));
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -383,7 +369,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -400,7 +386,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -417,7 +403,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -434,7 +420,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -451,7 +437,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -468,7 +454,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -485,7 +471,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -502,7 +488,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -519,7 +505,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -537,7 +523,7 @@ BOOST_AUTO_TEST_CASE( constraint_differ_int3)
       ah.addArgument( "b", DEST_VAR( backup_id),  "Backup id");
       ah.addArgument( "q", DEST_VAR( quorum_id),  "Quorum id");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ< int>( "p;b;q")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( differ( "p;b;q")));
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -564,8 +550,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_int)
       ah.addArgument( "one", DEST_VAR( value1), "Values one");
       ah.addArgument( "two", DEST_VAR( value2), "Values two");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         disjoint< std::vector< int>>( "one;two")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "one;two")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -579,8 +564,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_int)
       ah.addArgument( "one", DEST_VAR( value1), "Values one");
       ah.addArgument( "two", DEST_VAR( value2), "Values two");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         disjoint< std::vector< int>>( "one;two")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "one;two")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -594,8 +578,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_int)
       ah.addArgument( "one", DEST_VAR( value1), "Values one");
       ah.addArgument( "two", DEST_VAR( value2), "Values two");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         disjoint< std::vector< int>>( "one;two")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "one;two")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -609,8 +592,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_int)
       ah.addArgument( "one", DEST_VAR( value1), "Values one");
       ah.addArgument( "two", DEST_VAR( value2), "Values two");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         disjoint< std::vector< int>>( "one;two")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "one;two")));
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);
@@ -637,8 +619,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_string)
       ah.addArgument( "one", DEST_VAR( value1), "Values one");
       ah.addArgument( "two", DEST_VAR( value2), "Values two");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
-         disjoint< vector_t, vector_t>( "one;two")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "one;two")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -652,7 +633,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_string)
       ah.addArgument( "one", DEST_VAR( value1), "Values one");
       ah.addArgument( "two", DEST_VAR( value2), "Values two");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint< vector_t>( "one;two")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "one;two")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -666,7 +647,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_string)
       ah.addArgument( "one", DEST_VAR( value1), "Values one");
       ah.addArgument( "two", DEST_VAR( value2), "Values two");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint< vector_t>( "one;two")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "one;two")));
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
@@ -680,7 +661,7 @@ BOOST_AUTO_TEST_CASE( constraint_disjoint_string)
       ah.addArgument( "one", DEST_VAR( value1), "Values one");
       ah.addArgument( "two", DEST_VAR( value2), "Values two");
 
-      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint< vector_t>( "one;two")));
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "one;two")));
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::runtime_error);

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,8 +34,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///
 /// @tparam  T  The type of the values of the arguments to check.
 /// @since  1.31.0, 22.10.2019
-template< typename T> class ValueConstraintDiffer:
-   public IHandlerValueConstraint
+class ValueConstraintDiffer: public IHandlerValueConstraint
 {
 public:
    /// Constructor.
@@ -71,49 +70,36 @@ public:
    /// @since  1.31.0, 22.10.2019
    void checkEndCondition() const noexcept( false) override;
 
-   /// Checks if the type set for the constraint matches the type of the
-   /// destination variable.
-   ///
-   /// @param[in]  var_type_name
-   ///    The name of the type of the arguments destination variable.
-   /// @return
-   ///    \c true if the type of the destination variable and the type set for
-   ///    the destination variable match.
-   /// @since  1.33.0, 31.10.2019
-   bool matchesVarType( const std::string& var_type_name) const override;
-
    /// Returns a text description of the constraint.
    ///
    /// @return  A string with the text description of the constraint.
    /// @since  1.31.0, 22.10.2019
    std::string toString() const override;
 
-}; // ValueConstraintDiffer< T>
+}; // ValueConstraintDiffer
 
 
 // inlined methods
 // ===============
 
 
-template< typename T>
-   ValueConstraintDiffer< T>::ValueConstraintDiffer( const std::string& reqArgSpec):
-      IHandlerValueConstraint( "differ", reqArgSpec)
+inline ValueConstraintDiffer::ValueConstraintDiffer( const std::string& reqArgSpec):
+   IHandlerValueConstraint( "differ", reqArgSpec)
 {
-} // ValueConstraintDiffer< T>::ValueConstraintDiffer
+} // ValueConstraintDiffer::ValueConstraintDiffer
 
 
-template< typename T>
-   void ValueConstraintDiffer< T>::executeConstraint( const ArgumentKey&)
+inline void ValueConstraintDiffer::executeConstraint( const ArgumentKey&)
 {
-} // ValueConstraintDiffer< T>::executeConstraint
+} // ValueConstraintDiffer::executeConstraint
 
 
-template< typename T> void ValueConstraintDiffer< T>::validated()
+inline void ValueConstraintDiffer::validated()
 {
-} // ValueConstraintDiffer< T>::validated
+} // ValueConstraintDiffer::validated
 
 
-template< typename T> void ValueConstraintDiffer< T>::checkEndCondition() const
+inline void ValueConstraintDiffer::checkEndCondition() const
 {
 
    for (auto const& arg1 : mArgHandlers)
@@ -121,38 +107,24 @@ template< typename T> void ValueConstraintDiffer< T>::checkEndCondition() const
       if (!arg1->hasValue())
          continue;
 
-      T  value1;
-      static_cast< TypedArg< T>*>( arg1)->getValue( value1);
-
       for (auto const& arg2 : mArgHandlers)
       {
-         if (arg2->hasValue() && (arg1 != arg2))
+         if ((arg1 != arg2) && arg2->hasValue()
+             && (arg1->compareValue( arg2) == 0))
          {
-            T  value2;
-            static_cast< TypedArg< T>*>( arg2)->getValue( value2);
-
-            if (value1 == value2)
-               throw std::runtime_error( "variable '" + arg1->varName()
-                  + "' from argument '" + format::toString( arg1->key())
-                  + "' and variable '" + arg2->varName() +"' from argument '"
-                  + format::toString( arg2->key()) + "' contain the same "
-                  "value, must be different");
+            throw std::runtime_error( "variable '" + arg1->varName()
+               + "' from argument '" + format::toString( arg1->key())
+               + "' and variable '" + arg2->varName() +"' from argument '"
+               + format::toString( arg2->key()) + "' contain the same "
+               "value, must be different");
          } // end if
       } // end for
    } // end for
 
-} // ValueConstraintDiffer< T>::checkEndCondition
+} // ValueConstraintDiffer::checkEndCondition
 
 
-template< typename T>
-   bool ValueConstraintDiffer< T>::matchesVarType(
-      const std::string& var_type_name) const
-{
-   return var_type_name == type< T>::name();
-} // ValueConstraintDiffer< T>::matchesVarType
-
-
-template< typename T> std::string ValueConstraintDiffer< T>::toString() const
+inline std::string ValueConstraintDiffer::toString() const
 {
 
    std::ostringstream  oss;
@@ -160,7 +132,7 @@ template< typename T> std::string ValueConstraintDiffer< T>::toString() const
    oss << "different_values( " << mArgSpecList << ")";
 
    return oss.str();
-} // ValueConstraintDiffer< T>::toString
+} // ValueConstraintDiffer::toString
 
 
 } // namespace detail
@@ -178,10 +150,9 @@ template< typename T> std::string ValueConstraintDiffer< T>::toString() const
 ///    different.
 /// @return  The newly created constraint object.
 /// @since  1.31.0, 22.10.2019
-template< typename T>
-   detail::IHandlerValueConstraint* differ( const std::string& argSpec)
+inline detail::IHandlerValueConstraint* differ( const std::string& argSpec)
 {
-   return new detail::ValueConstraintDiffer< T>( argSpec);
+   return new detail::ValueConstraintDiffer( argSpec);
 } // differ
 
 

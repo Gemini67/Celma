@@ -126,12 +126,16 @@ public:
    /// @since  0.2, 10.04.2016
    void defaultValue( std::string& dest) const override;
 
-   /// Used for value checks in value constraints: Returns the current value of
-   /// the destination variable.
+   /// Needed to evaulate constraints.
    ///
-   /// @param[out]  dest  Returns the current value of the destination variable.
-   /// @since  1.31.0, 23.10.2019
-   void getValue( T& dest) const;
+   /// @param[in]  arg
+   ///    Pointer to the other argument with the value to compare against.
+   /// @return
+   ///    - Value less than zero if this value is less than the other value.
+   ///    - 0 if the values are equal.
+   ///    - Value greater than zero if the other value is greater.
+   /// @since  1.34.1, 14.01.2020
+   int compareValue( const TypedArgBase* arg) const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -217,11 +221,13 @@ template< typename T> void TypedArg< T>::defaultValue( std::string& dest) const
 } // TypedArg< T>::defaultValue
 
 
-template< typename T> void TypedArg< T>::getValue( T& dest) const
+template< typename T> int TypedArg< T>::compareValue( const TypedArgBase* arg) const
 {
-   if (mHasValueSet)
-      dest = mDestVar;
-} // TypedArg< T>::getValue
+  auto  other = static_cast< const TypedArg< T>*>( arg);
+  if (mDestVar < other->mDestVar)
+     return -1;
+  return (other->mDestVar < mDestVar) ? 1 : 0;
+} // TypedArg< T>::compareValue
 
 
 template< typename T> void TypedArg< T>::dump( std::ostream& os) const
@@ -947,13 +953,6 @@ public:
    TypedArgBase* setUniqueData( bool duplicates_are_errors = false)
       noexcept( false) override;
 
-   /// Used for value checks in value constraints: Returns the current value of
-   /// the destination variable.
-   ///
-   /// @param[out]  dest  Returns the current value of the destination variable.
-   /// @since  1.34.0, 22.11.2019
-   void getValue( dest_type_t& dest) const;
-
 protected:
    /// Used for printing an argument and its destination variable.
    ///
@@ -971,6 +970,13 @@ protected:
    ///    (added parameter inverted)
    /// @since  1.34.0, 22.11.2019
    void assign( const std::string& value, bool inverted) override;
+
+   /// Returns if this object/container and the other container intersect, i.e.
+   /// have at least one element in common.
+   ///
+   /// @return  \c true if the values in the two containers intersect.
+   /// @since  1.34.1, 12.01.2020
+   bool hasIntersection( TypedArgBase* arg) const noexcept( false) override;
 
 private:
    /// Reference of the destination variable to store the value(s) in.
@@ -1105,13 +1111,6 @@ template< typename T>
 
 
 template< typename T>
-   void TypedArg< ContainerAdapter< T>>::getValue( dest_type_t& dest) const
-{
-   dest = mDestVar;
-} // TypedArg< ContainerAdapter< T>>::getValue
-
-
-template< typename T>
    void TypedArg< ContainerAdapter< T>>::dump( std::ostream& os) const
 {
    os << "value type '" << varTypeName() << "', destination container '"
@@ -1168,6 +1167,14 @@ template< typename T>
       mDestVar.sort();
 
 } // TypedArg< ContainerAdapter< T>>::assign
+
+
+template< typename T>
+   bool TypedArg< ContainerAdapter< T>>::hasIntersection( TypedArgBase* arg)
+      const noexcept( false)
+{
+   return mDestVar.hasIntersection( static_cast< const TypedArg< dest_type_t>*>( arg)->mDestVar);
+} // TypedArg< ContainerAdapter< T>>::hasIntersection
 
 
 // Template TypedArg< T[ N]>
