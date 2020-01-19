@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -42,6 +42,10 @@ public:
    /// @param[in]  name  The name of the subtree entry.
    /// @since  1.22.0, 19.10.2016
    explicit PropertyCont( const std::string& name);
+
+   // copying is not allowed, moving would be
+   PropertyCont( const PropertyCont&) = delete;
+   PropertyCont( PropertyCont&&) = default;
 
    /// Destructor, clears the entries in the map.
    ///

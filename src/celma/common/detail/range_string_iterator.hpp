@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -51,13 +51,16 @@ public:
    /// @since  0.2, 07.04.2016
    explicit RangeStringIterator( const T& src);
 
-   // default destructor is fine
-   ~RangeStringIterator() = default;
+   // moving is allowed
+   RangeStringIterator( RangeStringIterator&&) = default;
 
    /// Copy constructor. Needed because of internal \c unique_ptr.
    /// @param[in]  other  The other object to copy the data from.
    /// @since  0.2, 07.04.2016
    RangeStringIterator( const RangeStringIterator& other);
+
+   // default destructor is fine
+   ~RangeStringIterator() = default;
 
    /// Prefix increment operator.
    /// @return  The incremented iterator.
@@ -68,6 +71,16 @@ public:
    /// @return  An iterator object with the previous value.
    /// @since  0.2, 07.04.2016
    RangeStringIterator operator ++( std::postfix);
+
+   /// Assignment operator.
+   ///
+   /// @param[in]  other  The other object to copy the data from.
+   /// @return  This object.
+   /// @since  1.34.1, 02.01.2020
+   RangeStringIterator& operator =( const RangeStringIterator& other);
+
+   // move-assignment by default is fine
+   RangeStringIterator& operator =( RangeStringIterator&& other) = default;
 
    /// Returns if the two iterators point to the same position.<br>
    /// Not a really foolproof check for equality, since the position is
@@ -193,6 +206,26 @@ template< typename T, typename TF>
 
    return *this;
 } // RangeStringIterator< T, TF>::operator ++
+
+
+template< typename T, typename TF>
+   RangeStringIterator< T, TF>&
+      RangeStringIterator< T, TF>::operator =( const RangeStringIterator& other)
+{
+   if (this != &other)
+   {
+      mSource = other.mSource;
+      mPos = other.mPos;
+      mMainExpression = other.mMainExpression;
+      mCurrentValue = other.mCurrentValue;
+
+      if (other.mpRanger)
+         mpRanger.reset( new Ranger( *other.mpRanger.get()));
+      else
+         mpRanger.reset();
+   } // end if
+   return *this;
+} // RangeStringIterator< T, TF>::operator =
 
 
 template< typename T, typename TF>
