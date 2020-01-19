@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -148,6 +148,9 @@ public:
    /// @param[in]  inverted
    ///    Is set when the argument was preceeded by an exclamation mark which
    ///    means that the logic of the argument should be inverted.
+   /// @throw  std::runtime_error
+   ///    if the function is deprecated, or when the flag \a inverted is set and
+   ///    the value type dopes not support inversion.
    /// @since  1.27.0, 24.05.2019
    ///    (added parameter inverted)
    /// @since  1.6.0, 29.06.2018
@@ -247,12 +250,11 @@ public:
    /// argument or not.<br>
    /// Here in the base class, the only value mode that can be set is
    /// 'required'.
-   /// @param[in]  vm
-   ///    The new value mode.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @param[in]  vm  The new value mode.
+   /// @return  Pointer to this object.
+   /// @throw  std::invalid_argument If the given value mode is not 'required'.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false);
 
    /// Returns the value mode of this argument.
@@ -572,6 +574,26 @@ public:
    /// @since
    ///    0.16.0, 15.08.2017
    bool hasConstraint() const;
+
+   /// Returns if the values in the objects intersect.
+   /// In the base class: Throws always.
+   ///
+   /// @return  Here: Nothing, always throws.
+   /// @throw  std::invalid_argument in the base class.
+   /// @since   1.34.1, 12.01.2020
+   virtual bool hasIntersection( TypedArgBase* arg) const noexcept( false);
+
+   /// Returns the result of the comparison of the values in this and the other
+   /// object.
+   /// Here in the base class: ALways throws.
+   ///
+   /// @param[in]  arg
+   ///    Pointer to the other object with the value to compare against.<br>
+   ///    Here: Ignored.
+   /// @return  Nothing, always throws.
+   /// @throw  std::invalid_argument in the base class.
+   /// @since  1.34.1, 14.01.2020
+   virtual int compareValue( const TypedArgBase* arg) const noexcept( false);
 
    /// Returns a text description of the constraint specified for this argument.
    /// @return

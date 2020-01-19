@@ -1458,7 +1458,8 @@ bool Handler::validValueArguments( detail::IHandlerValueConstraint* ihc) const
             throw invalid_argument( "Combination '" + it + "' is invalid");
 
          if (!ihc->matchesVarType( arg->varTypeName()))
-            throw invalid_argument( "constraint and argument have different types");
+            throw invalid_argument( "arguments listed for constraint have "
+               "different types");
 
          // argument from the list is valid
          const string  key_str( format::toString( arg->key()));
