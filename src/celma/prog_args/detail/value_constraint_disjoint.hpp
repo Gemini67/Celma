@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,7 +23,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include "celma/common/has_intersection.hpp"
 #include "celma/common/type_name.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/i_handler_value_constraint.hpp"
@@ -35,13 +34,8 @@ namespace celma { namespace prog_args { namespace detail {
 /// Constraint: The values of the given argument destinations, of type
 /// container,  must be different.
 ///
-/// @tparam  C1
-///    The type of the container of the first argument to check.
-/// @tparam  C2
-///    The type of the container of the second argument to check.
 /// @since  1.33.0, 30.10.2019
-template< typename C1, typename C2> class ValueConstraintDisjoint:
-   public IHandlerValueConstraint
+class ValueConstraintDisjoint: public IHandlerValueConstraint
 {
 public:
    /// Constructor.
@@ -84,62 +78,47 @@ public:
    /// @since  1.33.0, 30.10.2019
    void checkEndCondition() const noexcept( false) override;
 
-   /// Checks if the type set for the constraint matches one of the types of the
-   /// destination variables.
-   ///
-   /// @param[in]  var_type_name
-   ///    The name of the type of the arguments destination variable.
-   /// @return
-   ///    \c true if the type of the destination variable and the type set for
-   ///    one of the the destination variables match.
-   /// @since  1.33.0, 31.10.2019
-   bool matchesVarType( const std::string& var_type_name) const override;
-
    /// Returns a text description of the constraint.
    ///
    /// @return  A string with the text description of the constraint.
    /// @since  1.33.0, 30.10.2019
    std::string toString() const override;
 
-}; // ValueConstraintDisjoint< C1, C2>
+}; // ValueConstraintDisjoint
 
 
 // inlined methods
 // ===============
 
 
-template< typename C1, typename C2>
-   ValueConstraintDisjoint< C1, C2>::ValueConstraintDisjoint(
-      const std::string& reqArgSpec):
-         IHandlerValueConstraint( "disjoint", reqArgSpec)
+inline ValueConstraintDisjoint::ValueConstraintDisjoint(
+   const std::string& reqArgSpec):
+      IHandlerValueConstraint( "disjoint", reqArgSpec)
 {
-} // ValueConstraintDisjoint< C1, C2>::ValueConstraintDisjoint
+} // ValueConstraintDisjoint::ValueConstraintDisjoint
 
 
-template< typename C1, typename C2>
-   void ValueConstraintDisjoint< C1, C2>::storeArgumentHandler(
-      TypedArgBase* handler)
+inline
+   void ValueConstraintDisjoint::storeArgumentHandler( TypedArgBase* handler)
 {
    if (mArgHandlers.size() == 2)
       throw std::invalid_argument( "constraint 'disjoint' can handle only two "
          "arguments");
    IHandlerValueConstraint::storeArgumentHandler( handler);
-} // ValueConstraintDisjoint< C1, C2>::storeArgumentHandler
+} // ValueConstraintDisjoint::storeArgumentHandler
 
-template< typename C1, typename C2>
-   void ValueConstraintDisjoint< C1, C2>::executeConstraint( const ArgumentKey&)
+inline
+   void ValueConstraintDisjoint::executeConstraint( const ArgumentKey&)
 {
-} // ValueConstraintDisjoint< C1, C2>::executeConstraint
+} // ValueConstraintDisjoint::executeConstraint
 
 
-template< typename C1, typename C2>
-   void ValueConstraintDisjoint< C1, C2>::validated()
+inline void ValueConstraintDisjoint::validated()
 {
-} // ValueConstraintDisjoint< C1, C2>::validated
+} // ValueConstraintDisjoint::validated
 
 
-template< typename C1, typename C2>
-   void ValueConstraintDisjoint< C1, C2>::checkEndCondition() const
+inline void ValueConstraintDisjoint::checkEndCondition() const
 {
 
    TypedArgBase*  arg1 = mArgHandlers[ 0];
@@ -148,33 +127,17 @@ template< typename C1, typename C2>
    if (!arg1->hasValue() || !arg2->hasValue())
       return;
 
-   C1  cont1;
-   C2  cont2;
-
-   static_cast< TypedArg< C1>*>( arg1)->getValue( cont1);
-   static_cast< TypedArg< C2>*>( arg2)->getValue( cont2);
-
-   if (common::hasIntersection( cont1, cont2))
+   if (arg1->hasIntersection( arg2))
       throw std::runtime_error( "containers of variable '" + arg1->varName()
          + "' from argument '" + format::toString( arg1->key())
          + "' and variable '" + arg2->varName() +"' from argument '"
          + format::toString( arg2->key()) + "' intersect in at least one value,"
               " must be disjoint");
 
-} // ValueConstraintDisjoint< C1, C2>::checkEndCondition
+} // ValueConstraintDisjoint::checkEndCondition
 
 
-template< typename C1, typename C2>
-   bool ValueConstraintDisjoint< C1, C2>::matchesVarType(
-      const std::string& var_type_name) const
-{
-   return (var_type_name == type< C1>::name())
-      || (var_type_name == type< C2>::name());
-} // ValueConstraintDisjoint< C1, C2>::matchesVarType
-
-
-template< typename C1, typename C2>
-   std::string ValueConstraintDisjoint< C1, C2>::toString() const
+inline std::string ValueConstraintDisjoint::toString() const
 {
 
    std::ostringstream  oss;
@@ -182,7 +145,7 @@ template< typename C1, typename C2>
    oss << "disjoint_containers( " << mArgSpecList << ")";
 
    return oss.str();
-} // ValueConstraintDisjoint< C1, C2>::toString
+} // ValueConstraintDisjoint::toString
 
 
 } // namespace detail
@@ -200,25 +163,9 @@ template< typename C1, typename C2>
 ///    different.
 /// @return  The newly created constraint object.
 /// @since  1.33.0, 30.10.2019
-template< typename C1>
-   detail::IHandlerValueConstraint* disjoint( const std::string& argSpec)
+inline detail::IHandlerValueConstraint* disjoint( const std::string& argSpec)
 {
-   return new detail::ValueConstraintDisjoint< C1, C1>( argSpec);
-} // disjoint
-
-
-/// Helper function to easily add a 'disjoint' value constraint.
-/// Usage:  argument_handler_object.addValueConstraint( disjoint< std::vector< int>, std::set< int>( "..."));
-///
-/// @param[in]  argSpec
-///    The list of arguments (argument keys) of which the values must be
-///    different.
-/// @return  The newly created constraint object.
-/// @since  1.33.0, 30.10.2019
-template< typename C1, typename C2>
-   detail::IHandlerValueConstraint* disjoint( const std::string& argSpec)
-{
-   return new detail::ValueConstraintDisjoint< C1, C2>( argSpec);
+   return new detail::ValueConstraintDisjoint( argSpec);
 } // disjoint
 
 

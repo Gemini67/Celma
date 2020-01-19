@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,6 +33,7 @@
 #include <unordered_set>
 #include <vector>
 #include "celma/common/contains.hpp"
+#include "celma/common/has_intersection.hpp"
 #include "celma/format/to_string.hpp"
 
 
@@ -56,6 +57,13 @@ public:
    {
    } // AdapterBase< T>::AdapterBase
 
+   // default copy-/move-construction is fine
+   AdapterBase( const AdapterBase&) = default;
+   AdapterBase( AdapterBase&&) = default;
+
+   // empty, virtual default destructor
+   virtual ~AdapterBase() = default;
+
    /// Returns if the container is empty.
    ///
    /// @return  \c true if the container is empty.
@@ -75,6 +83,10 @@ public:
       return mDestCont.size();
    } // AdapterBase< T>::size
 
+   // assignment is not allowed
+   AdapterBase& operator =( const AdapterBase&) = delete;
+   AdapterBase& operator =( AdapterBase&&) = delete;
+
 protected:
    /// The reference of the destination.
    T&  mDestCont;
@@ -93,6 +105,13 @@ public:
    /// Flag that can be checked if a container adapter is available, set to
    /// \c false here for all non-supported (container) types.
    static constexpr bool  HasAdapter = false;
+
+   // should never have to create an object of this type
+   ContainerAdapter() = delete;
+   ContainerAdapter( const ContainerAdapter&) = delete;
+   ContainerAdapter( ContainerAdapter&&) = delete;
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< T>
 
@@ -137,8 +156,12 @@ public:
    {
    } // ContainerAdapter< std::deque< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -175,6 +198,19 @@ public:
       std::sort( mDestCont.begin(), mDestCont.end());
    } // ContainerAdapter< std::deque< T>>::sort
 
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare. against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont);
+   } // ContainerAdapter< std::deque< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the (unsorted) values from the container.
@@ -188,6 +224,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::deque< T>>
 
@@ -232,8 +272,12 @@ public:
    {
    } // ContainerAdapter< std::forward_list< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -270,6 +314,19 @@ public:
       mDestCont.sort();
    } // ContainerAdapter< std::forward_list< T>>::sort
 
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare. against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont);
+   } // ContainerAdapter< std::forward_list< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the (unsorted) values from the container.
@@ -291,6 +348,10 @@ public:
 
    /// Method empty() is used from te base class.
    using AdapterBase< container_type_t>::empty;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::forward_list< T>>
 
@@ -335,8 +396,12 @@ public:
    {
    } // ContainerAdapter< std::list< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -373,6 +438,19 @@ public:
       mDestCont.sort();
    } // ContainerAdapter< std::list< T>>::sort
 
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare. against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont);
+   } // ContainerAdapter< std::list< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the values from the container.
@@ -386,6 +464,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::list< T>>
 
@@ -430,8 +512,12 @@ public:
    {
    } // ContainerAdapter< std::multiset< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -472,6 +558,19 @@ public:
       throw std::logic_error( "sort() is not necessary for multi-sets");
    } // ContainerAdapter< std::multiset< T>>::sort
 
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare. against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont);
+   } // ContainerAdapter< std::multiset< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the values from the container.
@@ -485,6 +584,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::multiset< T>>
 
@@ -529,8 +632,12 @@ public:
    {
    } // ContainerAdapter< std::priority_queue< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -576,6 +683,19 @@ public:
       throw std::logic_error( "sort() is not supported for priority-queues");
    } // ContainerAdapter< std::priority_queue< T>>::sort
 
+   /// Always throws.
+   ///
+   /// @param[in]  Ignored.
+   /// @return  Never, always throws.
+   /// @throw  std::logic_error since this container does not support iterators.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& /* other */) const
+      noexcept( false)
+   {
+      throw std::logic_error( "hasIntersection() is not supported for priority "
+         "queues");
+   } // ContainerAdapter< std::priority_queue< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the values from the container.
@@ -589,6 +709,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::priority_queue< T>>
 
@@ -633,8 +757,12 @@ public:
    {
    } // ContainerAdapter< std::queue< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -676,6 +804,18 @@ public:
       throw std::logic_error( "sort() is not supported for queues");
    } // ContainerAdapter< std::queue< T>>::sort
 
+   /// Always throws.
+   ///
+   /// @param[in]  Ignored.
+   /// @return  Never, always throws.
+   /// @throw  std::logic_error since this container does not support iterators.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& /* other */) const
+      noexcept( false)
+   {
+      throw std::logic_error( "hasIntersection() is not supported for queues");
+   } // ContainerAdapter< std::queue< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the (unsorted) values from the container.
@@ -689,6 +829,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::queue< T>>
 
@@ -733,8 +877,12 @@ public:
    {
    } // ContainerAdapter< std::set< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -763,6 +911,19 @@ public:
       return mDestCont.find( value) != mDestCont.end();
    } // ContainerAdapter< std::set< T>>::contains
 
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare. against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont);
+   } // ContainerAdapter< std::set< T>>::hasIntersection
+
    /// Here: Throws, since the values in the container are already sorted.
    /// Check #IsSorted and/or #IsSortable before calling this function.
    ///
@@ -788,6 +949,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::set< T>>
 
@@ -831,6 +996,10 @@ public:
       AdapterBase< std::stack< T>>( dest)
    {
    } // ContainerAdapter< std::stack< T>>::ContainerAdapter
+
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
    ~ContainerAdapter() = default;
@@ -878,6 +1047,18 @@ public:
       throw std::logic_error( "sort() is not supported for stacks");
    } // ContainerAdapter< std::stack< T>>::sort
 
+   /// Always throws.
+   ///
+   /// @param[in]  Ignored.
+   /// @return  Never, always throws.
+   /// @throw  std::logic_error since this container does not support iterators.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& /* other */) const
+      noexcept( false)
+   {
+      throw std::logic_error( "hasIntersection() is not supported for stacks");
+   } // ContainerAdapter< std::stack< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    /// This is possible for stacks only because the values from the container
    /// are copied into a new stack for printing.
@@ -893,6 +1074,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::stack< T>>
 
@@ -937,8 +1122,12 @@ public:
    {
    } // ContainerAdapter< std::unordered_multiset< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -978,6 +1167,19 @@ public:
       throw std::logic_error( "sort() is not supported for unordered multi-sets");
    } // ContainerAdapter< std::unordered_multiset< T>>::sort
 
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare. against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont);
+   } // ContainerAdapter< std::unordered_multiset< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the (unsorted) values from the container.
@@ -991,6 +1193,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::unordered_multiset< T>>
 
@@ -1035,8 +1241,12 @@ public:
    {
    } // ContainerAdapter< std::unordered_set< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
    // default destructor is fine
-   ~ContainerAdapter() = default;
+   virtual ~ContainerAdapter() = default;
 
    /// Stores a value in the destination container.
    ///
@@ -1076,6 +1286,19 @@ public:
       throw std::logic_error( "sort() is not supported for unordered sets");
    } // ContainerAdapter< std::unordered_set< T>>::sort
 
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare. against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont);
+   } // ContainerAdapter< std::unordered_set< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the (unsorted) values from the container.
@@ -1089,6 +1312,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::unordered_set< T>>
 
@@ -1133,6 +1360,13 @@ public:
    {
    } // ContainerAdapter< std::vector< T>>::ContainerAdapter
 
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
+   // default destructor is fine
+   virtual ~ContainerAdapter() = default;
+
    /// Stores a value in the destination container.
    ///
    /// @param[in]  value  The value to store.
@@ -1168,6 +1402,19 @@ public:
       std::sort( mDestCont.begin(), mDestCont.end());
    } // ContainerAdapter< std::vector< T>>::sort
 
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare. against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  1.34.1, 14.01.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont);
+   } // ContainerAdapter< std::vector< T>>::hasIntersection
+
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the values from the container.
@@ -1181,6 +1428,10 @@ public:
    using AdapterBase< container_type_t>::empty;
    /// Method size() is used from the base class.
    using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< std::vector< T>>
 
