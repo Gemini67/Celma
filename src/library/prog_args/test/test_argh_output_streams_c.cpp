@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -108,7 +108,8 @@ BOOST_AUTO_TEST_CASE( argument_output)
    int             opt_int_arg = 42;
 
 
-   ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")->setIsMandatory();
+   ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")
+      ->setIsMandatory();
    ah.addArgument( "i,index", DEST_VAR( opt_int_arg), "Integer argument");
 
    auto const  as2a = make_arg_array( "-h", nullptr);
@@ -127,6 +128,43 @@ BOOST_AUTO_TEST_CASE( argument_output)
    BOOST_REQUIRE( err_out.str().empty());
 
 } // argument_output
+
+
+
+/// An argument with a value unit.
+///
+/// @since  1.35.0, 09.02.2020
+BOOST_AUTO_TEST_CASE( value_unit)
+{
+
+   ostringstream   std_out;
+   ostringstream   err_out;
+   Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
+   string          string_arg;
+   int             throughput = 100;
+
+
+   ah.addArgument( "s", DEST_VAR( string_arg),  "String argument")
+      ->setIsMandatory();
+   ah.addArgument( "t,throughput", DEST_VAR( throughput), "Throughput rate")
+      ->setValueUnit( "msgs/s");
+
+   auto const  as2a = make_arg_array( "-h", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE( multilineStringCompare( std_out,
+                        "Usage:\nMandatory arguments:\n"
+                        "   -s                String argument\n"
+                        "\n"
+                        "Optional arguments:\n"
+                        "   -h,--help         Prints the program usage.\n"
+                        "   --help-arg        Prints the usage for the given argument.\n"
+                        "   -t,--throughput   Throughput rate\n"
+                        "                     Default value: 100 [msgs/s]\n"
+                        "\n"));
+   BOOST_REQUIRE( err_out.str().empty());
+
+} // value_unit
 
 
 
@@ -1024,3 +1062,4 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
 
 
 // =====  END OF test_argh_output_streams_c.cpp  =====
+

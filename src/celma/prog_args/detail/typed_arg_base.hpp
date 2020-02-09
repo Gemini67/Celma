@@ -216,21 +216,34 @@ public:
 
    /// Sets the flag if the default value of the destination variable should be
    /// printed in the usage or not.
-   /// @param[in]  doPrint
-   ///    \c true = do print the default value.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @param[in]  doPrint  \c true = do print the default value.
+   /// @return  Pointer to this object.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setPrintDefault( bool doPrint);
 
    /// Returns if the default value of the destination variable should be
    /// printed in the usage.
-   /// @return
-   ///    \c true if the default value should be printed.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @return  \c true if the default value should be printed.
+   /// @since  0.2, 10.04.2016
    bool printDefault() const;
+
+   /// If printing the default value in the usage is enabled, this function can
+   /// be used to specify the unit of the value. This will be displayed behind
+   /// the value in the usage.
+   ///
+   /// @param[in]  unit  The unit of the value to display in the usage.
+   /// @throw  std::logic_error if printing the default value is disabled.
+   /// @since  1.35.0, 09.02.2020
+   void setValueUnit( const std::string& unit) noexcept( false);
+
+   /// 
+   /// @return
+   ///    .
+   /// @since
+   ///    1.35.0, 09.02.2020
+   const std::string& valueUnit() const;
 
    /// Specifies that this argument is hidden.
    /// @return
@@ -706,6 +719,8 @@ protected:
    bool                            mAllowsInverting = false;
    /// The key of the argument that replaced this argument.
    std::string                     mReplacedBy;
+   /// When set: the unit string to display in the usage.
+   std::string                     mUnitString;
    /// Stores all the checks (objects) defined for this argument.
    std::vector< ICheck*>           mChecks;
    /// Stores all the formatters (objects) defined for this argument.<br>
@@ -833,6 +848,22 @@ inline bool TypedArgBase::printDefault() const
 {
    return mPrintDefault;
 } // TypedArgBase::printDefault
+
+
+inline void TypedArgBase::setValueUnit( const std::string& unit)
+   noexcept( false)
+{
+   if (!mPrintDefault)
+      throw std::logic_error( "unit string can only be set when printing the "
+         "default value is enabled");
+   mUnitString = unit;
+} // TypedArgBase::setValueUnit
+
+
+inline const std::string& TypedArgBase::valueUnit() const
+{
+   return mUnitString;
+} // TypedArgBase::valueUnit
 
 
 inline TypedArgBase* TypedArgBase::setIsHidden()
