@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -862,6 +862,14 @@ Handler::ArgResult
                                 const detail::ArgListParser::const_iterator& end)
 {
 
+   // make me the current argument handler
+   // do it here so it works for single argument handlers as well as argument
+   // groups
+   const common::ScopedValue< detail::ConstraintContainer*>
+      makeMeCurrent( detail::ConstraintContainer::mpCurrentConstraints,
+                     &mConstraints);
+
+
    switch (ai->mElementType)
    {
    default:
@@ -1183,12 +1191,6 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
 /// @since  0.2, 10.04.2016
 void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 {
-
-   /// make me the current argument handler
-   const common::ScopedValue< detail::ConstraintContainer*>
-      makeMeCurrent( detail::ConstraintContainer::mpCurrentConstraints,
-                     &mConstraints);
-
 
    for (auto ai = alp.begin(); ai != alp.end(); ++ai)
    {
