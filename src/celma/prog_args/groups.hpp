@@ -80,6 +80,10 @@ public:
       | Handler::hfEndValues
       | Handler::hfListArgGroups;
 
+   /// Empty, virtual default destructor.
+   /// @since  x.y.z, 10.03.2020
+   virtual ~Groups() = default;
+
    /// Returns the argument handler for the specified group name.
    /// If the argument handler does not exist yet, a new handler object will be
    /// created. If the handler object exists already, it must be a 'plain'

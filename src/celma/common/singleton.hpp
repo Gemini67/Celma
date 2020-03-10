@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -59,19 +59,31 @@ public:
    /// @since  0.12.2, 05.02.2017
    static void reset();
 
+   /// Empty, virtual default destructor.
+   /// @since  x.yz, 10.03.2020
+   virtual ~Singleton() = default;
+
 protected:
    /// Empty constructor.
    /// @since  0.2, 10.04.2016
-   Singleton() { }
+   Singleton() = default;
 
 private:
    /// Don't copy.
    /// @since  0.2, 10.04.2016
    Singleton( const Singleton&) = delete;
 
-   /// Don't assign.
+   /// Don't move.
+   /// @since  x.y.z, 10.03.2020
+   Singleton( Singleton&&) = delete;
+
+   /// Don't copy-assign.
    /// @since  0.2, 10.04.2016
    Singleton& operator =( const Singleton&) = delete;
+
+   /// Don't move-assign.
+   /// @since  x.y.z, 10.03.2020
+   Singleton& operator =( Singleton&&) = delete;
 
    /// Mutex object used to make the creation/resetting of the singleton object
    /// thread-safe.
@@ -124,5 +136,5 @@ template< class T> void Singleton< T>::reset()
 #endif   // CELMA_COMMON_SINGLETON_HPP
 
 
-// ==========================  END OF singleton.hpp  ==========================
+// =====  END OF singleton.hpp  =====
 
