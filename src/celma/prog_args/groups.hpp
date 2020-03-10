@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -81,7 +81,7 @@ public:
       | Handler::hfListArgGroups;
 
    /// Empty, virtual default destructor.
-   /// @since  x.y.z, 10.03.2020
+   /// @since  1.35.0, 10.03.2020
    virtual ~Groups() = default;
 
    /// Returns the argument handler for the specified group name.

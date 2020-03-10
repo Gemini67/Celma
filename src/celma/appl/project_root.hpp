@@ -45,7 +45,7 @@ public:
    };
 
    /// Empty, virtual default destructor.
-   /// @since  x.y.z, 10.03.2020
+   /// @since  1.35.0, 10.03.2020
    virtual ~ProjectRoot() = default;
 
    /// Initialise the 'project root' directory.<br>

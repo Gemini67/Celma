@@ -74,7 +74,7 @@ private:
    Singleton( const Singleton&) = delete;
 
    /// Don't move.
-   /// @since  x.y.z, 10.03.2020
+   /// @since  1.35.0, 10.03.2020
    Singleton( Singleton&&) = delete;
 
    /// Don't copy-assign.
@@ -82,7 +82,7 @@ private:
    Singleton& operator =( const Singleton&) = delete;
 
    /// Don't move-assign.
-   /// @since  x.y.z, 10.03.2020
+   /// @since  1.35.0, 10.03.2020
    Singleton& operator =( Singleton&&) = delete;
 
    /// Mutex object used to make the creation/resetting of the singleton object
