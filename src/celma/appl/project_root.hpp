@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -43,6 +43,10 @@ public:
                //!< '<proj-root-dir>/bin/prog'.
       cwd      //!< Use 'current working directory'.
    };
+
+   /// Empty, virtual default destructor.
+   /// @since  x.y.z, 10.03.2020
+   virtual ~ProjectRoot() = default;
 
    /// Initialise the 'project root' directory.<br>
    /// If this method is not called explicitly, it is called when the singleton
