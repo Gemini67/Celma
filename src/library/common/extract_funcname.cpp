@@ -35,7 +35,7 @@ namespace celma { namespace common {
 ///
 /// @param[in]  pretty_funcname
 ///    Function prototype as in the macro \c __PRETTY_FUNCTION__.
-/// @since  x.y.z, 12.04.2020
+/// @since  1.36.0, 12.04.2020
 ///    (adapted to work with clang++ too)
 /// @since  0.6, 04.11.2016
 ///    (interface changed, simplified algorithm)

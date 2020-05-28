@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE( test_constexpr_concat)
 
 /// Test converting a string created by the preprocessor.
 ///
-/// @since  x.y.z, 21.04.2020
+/// @since  1.36.0, 21.04.2020
 BOOST_AUTO_TEST_CASE( concat_pp_string)
 {
 
@@ -114,7 +114,7 @@ TYPE_NAME( std::string)
 
 /// Test converting a type name.
 ///
-/// @since  x.y.z, 21.04.2020
+/// @since  1.36.0, 21.04.2020
 BOOST_AUTO_TEST_CASE( concat_typename)
 {
 

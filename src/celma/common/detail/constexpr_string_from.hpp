@@ -33,7 +33,7 @@ namespace celma { namespace common { namespace detail {
 /// Specialisation for a positive value.
 ///
 /// @tparam  digits  The single digits of the original number.
-/// @since  x.y.z, 12.04.2020
+/// @since  1.36.0, 12.04.2020
 ///    (set the size explicitly to avoid warnings when accessing the value)
 /// @since  0.10, 31.12.2016
 template< uint8_t... digits> struct positive_to_chars
@@ -52,7 +52,7 @@ template< uint8_t... digits>
 /// Specialisation for a negative value.
 ///
 /// @tparam  digits  The single digits of the original number.
-/// @since  x.y.z, 12.04.2020
+/// @since  1.36.0, 12.04.2020
 ///    (set the size explicitly to avoid warnings when accessing the value)
 /// @since  0.10, 31.12.2016
 template< uint8_t... digits> struct negative_to_chars

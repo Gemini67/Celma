@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.35.0
+   \mainpage  CELMA v1.36.0
 
    \tableofcontents
 
@@ -47,6 +47,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
+   |   1.36.0 | 2020-05-28        | Adapted to new compiler version. Due to a compiler bug currently only works correctly in debug mode. |
    |   1.35.0 | 2020-03-10        | Patch: Fixed some minor bugs. |
    |   1.35.0 | 2020-02-09        | Added feature "value unit" in argument handler. |
    |   1.34.2 | 2020-01-19        | Fixed some issues found by SonarCloud. |
