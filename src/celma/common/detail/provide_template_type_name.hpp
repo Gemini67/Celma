@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,7 +29,7 @@
    public: \
       static constexpr const char* name() \
       { \
-         return &mName[ 0]; \
+         return mName.data(); \
       } \
       static constexpr auto const  mName = \
          common::string_concat( # c, "<", type< T>::mName, ">"); \

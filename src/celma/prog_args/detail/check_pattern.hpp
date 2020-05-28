@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -47,7 +47,7 @@ public:
    explicit CheckPattern( const std::regex& reg_ex);
 
    /// Default destructor is fine.
-   virtual ~CheckPattern() = default;
+   ~CheckPattern() override = default;
 
    /// Checks if the value in \a val matches the pattern given in the
    /// constructor.

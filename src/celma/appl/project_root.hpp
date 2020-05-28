@@ -46,7 +46,7 @@ public:
 
    /// Empty, virtual default destructor.
    /// @since  1.35.0, 10.03.2020
-   virtual ~ProjectRoot() = default;
+   ~ProjectRoot() override = default;
 
    /// Initialise the 'project root' directory.<br>
    /// If this method is not called explicitly, it is called when the singleton

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -73,7 +73,7 @@ public:
    /// Empty, virtual destructor.
    ///
    /// @since  1.23.0, 05.04.2019
-   virtual ~EnumFormatter() = default;
+   ~EnumFormatter() override = default;
 
    /// Returns the value of the enum as string in \a val.
    ///
@@ -510,3 +510,4 @@ BOOST_AUTO_TEST_CASE( list_var)
 
 
 // =====  END OF test_argh_dest_bitset_c.cpp  =====
+

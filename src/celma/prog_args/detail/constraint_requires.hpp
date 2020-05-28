@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -45,7 +45,7 @@ public:
    /// Empty, virtual destructor.
    ///
    /// @since  1.23.0, 05.04.2019
-   virtual ~ConstraintRequires() = default;
+   ~ConstraintRequires() override = default;
 
    /// Adds the 'required' constraint to the current argument handler.
    ///

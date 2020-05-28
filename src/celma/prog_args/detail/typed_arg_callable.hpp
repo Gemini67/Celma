@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,7 +46,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArgCallable() = default;
+   ~TypedArgCallable() override = default;
 
    /// Returns "callable" as type name.
    /// @return  The string "callable".

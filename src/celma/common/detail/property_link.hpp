@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -52,7 +52,7 @@ public:
    /// Empty, virtual destructor.
    ///
    /// @since  1.22.0, 20.03.2019
-   virtual ~PropertyLink() = default;
+   ~PropertyLink() override = default;
 
    /// Return s the internally stored iterator that points to the destination
    /// property.

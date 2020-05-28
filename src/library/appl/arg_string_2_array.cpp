@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -151,7 +151,7 @@ ArgString2Array::ArgString2Array( ArgString2Array&& other):
 ArgString2Array make_arg_array( const std::string& cmd_line)
 {
 
-   return std::move( ArgString2Array( cmd_line));
+   return ArgString2Array( cmd_line);
 } // make_arg_array
 
 
@@ -168,7 +168,7 @@ ArgString2Array make_arg_array( const std::string& cmd_line,
    const char* prog_name)
 {
 
-   return std::move( ArgString2Array( cmd_line, prog_name));
+   return ArgString2Array( cmd_line, prog_name);
 } // make_arg_array
 
 

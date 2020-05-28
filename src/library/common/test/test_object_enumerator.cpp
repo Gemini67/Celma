@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -53,7 +53,7 @@ class CountedTwo: public ObjectEnumerator< CountedTwo>
 /// @since  1.11.0, 22.08.2018
 CountedOne creator()
 {
-   return std::move( CountedOne());
+   return CountedOne();
 } // creator
 
 
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( one_class)
 
 
 
-/// Check that the move constructor is called: Only two new objects are created.
+/// Check that the move constructor is called: Only one new object is created.
 ///
 /// @since  1.11.0, 22.08.2018
 BOOST_AUTO_TEST_CASE( move_ctor)
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE( move_ctor)
    {
       CountedOne  c1 = creator();
 
-      BOOST_REQUIRE_EQUAL( c1.objectNbr(), 5);
+      BOOST_REQUIRE_EQUAL( c1.objectNbr(), 4);
    } // end scope
 
 } // move_ctor
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( classes_independent)
    {
       CountedOne  c1;
 
-      BOOST_REQUIRE_EQUAL( c1.objectNbr(), 6);
+      BOOST_REQUIRE_EQUAL( c1.objectNbr(), 5);
    } // end scope
 
    {
@@ -134,18 +134,18 @@ BOOST_AUTO_TEST_CASE( classes_independent)
    {
       CountedOne  c1;
 
-      BOOST_REQUIRE_EQUAL( c1.objectNbr(), 7);
+      BOOST_REQUIRE_EQUAL( c1.objectNbr(), 6);
 
       {
          CountedTwo  c2;
 
-         BOOST_REQUIRE_EQUAL( c1.objectNbr(), 7);
+         BOOST_REQUIRE_EQUAL( c1.objectNbr(), 6);
          BOOST_REQUIRE_EQUAL( c2.objectNbr(), 1);
 
          {
             CountedTwo  c3;
 
-            BOOST_REQUIRE_EQUAL( c1.objectNbr(), 7);
+            BOOST_REQUIRE_EQUAL( c1.objectNbr(), 6);
             BOOST_REQUIRE_EQUAL( c3.objectNbr(), 2);
          } // end scope
       } // end scope
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE( classes_independent)
    {
       CountedOne  c1;
 
-      BOOST_REQUIRE_EQUAL( c1.objectNbr(), 8);
+      BOOST_REQUIRE_EQUAL( c1.objectNbr(), 7);
    } // end scope
 
    {

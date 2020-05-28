@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,16 +46,16 @@ public:
 
    // copying is fine
    ScopedAttribute( const ScopedAttribute&) = default;
-   ScopedAttribute( ScopedAttribute&&) = default;
+   ScopedAttribute( ScopedAttribute&&) = delete;
 
    /// Destructor, removes the attribute again.
    ///
    /// @since  1.15.0, 11.10.2018
    ~ScopedAttribute();
 
-   // only move-assignment is allowed
+   // no assignment allowed
    ScopedAttribute& operator =( const ScopedAttribute&) = delete;
-   ScopedAttribute& operator =( ScopedAttribute&&) = default;
+   ScopedAttribute& operator =( ScopedAttribute&&) = delete;
 
 private:
    /// The name of the attribute. Used to remove the attribute again.

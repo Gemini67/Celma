@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -82,7 +82,7 @@ private:
 template< typename B> class TypeNameBase: public B
 {
 public:
-   virtual ~TypeNameBase() = default;
+   ~TypeNameBase() override = default;
 
    /// Returns the stored type name.
    /// @return  The type name stored internally.
@@ -120,7 +120,7 @@ private:
 template< typename T, typename B> class TypeName: public TypeNameBase< B>
 {
 public:
-   virtual ~TypeName() = default;
+   ~TypeName() override = default;
 
 protected:
    /// Constructor.
@@ -155,7 +155,7 @@ public:
    {
    } // Reference< T, B>::Reference
 
-   virtual ~Reference() = default;
+   ~Reference() override = default;
 
 protected:
    /// Reference of the specified variable.
@@ -185,7 +185,7 @@ public:
    {
    } // Value< T, B>::Value
 
-   virtual ~Value() = default;
+   ~Value() override = default;
 
 protected:
    /// Internal variable of the specified type.
@@ -216,7 +216,7 @@ public:
    {
    } // VarName< T, B>::VarName
 
-   virtual ~VarName() = default;
+   ~VarName() override = default;
 
    /// Returns the name of the original variable.
    /// @return  The name of the original variable as specified in the

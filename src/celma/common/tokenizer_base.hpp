@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -50,7 +50,7 @@ public:
 
    /// Default destructor is just fine.
    /// @since  0.2, 05.04.2016
-   virtual ~TokenizerBase() = default;
+   ~TokenizerBase() override = default;
 
    /// Returns an iterator that points to the first token.
    /// @return  Iterator that points to the first token.

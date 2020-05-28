@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -66,7 +66,7 @@ public:
    explicit Handler( P* file_policy);
 
    Handler( const Handler&) = delete;
-   virtual ~Handler() = default;
+   ~Handler() override = default;
    Handler& operator =( const Handler&) = delete;
 
    /// Sets the new formatter to use.<br>

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,7 +40,7 @@ public:
    explicit CheckLower( T value);
 
    /// Default destructor is fine.
-   virtual ~CheckLower() = default;
+   ~CheckLower() override = default;
 
    /// Checks if the value in \a val is greater-than or equal to the stored
    /// limit.

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -44,7 +44,7 @@ public:
    /// Destructor, has to call flush() to wrie remaining bytes from the buffer.
    ///
    /// @since  1.20.0, 01.01.2019
-   virtual ~TestWriteBuffer()
+   ~TestWriteBuffer() override
    {
       flush();
    } /// ~TestWriteBuffer::TestWriteBuffer
@@ -83,7 +83,7 @@ public:
    /// Destructor, has to call flush() to wrie remaining bytes from the buffer.
    ///
    /// @since  1.20.0, 04.01.2019
-   virtual ~TestWriteBufferCount()
+   ~TestWriteBufferCount() override
    {
       flush();
    } // TestWriteBufferCount::~TestWriteBufferCount

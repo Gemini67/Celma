@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -49,7 +49,7 @@ public:
    /// Empty, virtual destructor.
    ///
    /// @since  1.22.0, 19.10.2016
-   virtual ~PropertyValue() = default;
+   ~PropertyValue() override = default;
 
    /// Returns the value.
    ///

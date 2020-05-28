@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,7 +46,7 @@ public:
    /// Virtual, empty destructor.
    ///
    /// @since  1.23.0, 11.04.2019
-   virtual ~FormatAnycase() = default;
+   ~FormatAnycase() override = default;
 
    /// Converts the text in \a val according to the pattern given in the 
    /// constructor.<br>
