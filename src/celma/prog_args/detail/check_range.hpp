@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -45,7 +45,7 @@ public:
    CheckRange( T lower, T upper);
 
    // defaut destructor is fine
-   virtual ~CheckRange() = default;
+   ~CheckRange() override = default;
 
    /// Checks if the value in \a val is in the range lower ... upper.
    /// @param[in]  val  The value to check in string format.

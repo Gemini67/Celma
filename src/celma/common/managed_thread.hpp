@@ -32,7 +32,7 @@ namespace celma { namespace common {
 /// When this object is destroyed, it calls \c join(), so the calling
 /// application does not need to do that.
 /// @since  012, 19.01.2017
-class ManagedThread: public std::thread
+class ManagedThread final: public std::thread
 {
 public:
    /// Constructor, creates the thread which immediately starts its work.
@@ -54,7 +54,7 @@ public:
    /// Destructor, calls std::thread::join(), i.e. would block if the thread is
    /// still running.
    /// @since  012, 19.01.2017
-   ~ManagedThread() override;
+   ~ManagedThread();
 
    /// Returns if the thread function is still active.
    /// @return  \c true if the thread function is still active.

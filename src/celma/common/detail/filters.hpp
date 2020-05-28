@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -103,7 +103,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  1.31.0, 31.10.2017
-   virtual ~SingleValue() = default;
+   ~SingleValue() override = default;
 
    /// Returns if the given value matches the filter value.
    ///
@@ -171,7 +171,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  1.31.0, 31.10.2017
-   virtual ~ValueRange() = default;
+   ~ValueRange() override = default;
 
    /// Checks if the given value is inside or outside of the range.
    ///
@@ -233,7 +233,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  1.31.0, 01.11.2017
-   virtual ~MinimumValue() = default;
+   ~MinimumValue() override = default;
 
    /// Checks if the given \a value is greater than or equal to the minimum
    /// value.
@@ -288,7 +288,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  1.31.0, 01.11.2017
-   virtual ~MaximumValue() = default;
+   ~MaximumValue() override = default;
 
    /// Checks if the given \a value is less than the maximum value.
    ///

@@ -48,7 +48,7 @@ public:
    explicit ValueConstraintDiffer( const std::string& reqArgSpec) noexcept( false);
    
    // Default destructor is fine.
-   virtual ~ValueConstraintDiffer() = default;
+   ~ValueConstraintDiffer() override = default;
 
    /// Empty here, all the work is done in checkEndCondition().
    ///

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -66,7 +66,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArgValue() = default;
+   ~TypedArgValue() override = default;
 
    /// Returns the name of the type of the destination variable.
    ///

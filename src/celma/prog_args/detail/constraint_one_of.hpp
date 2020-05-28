@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,7 +41,7 @@ public:
    explicit ConstraintOneOf( const std::string& reqArgSpec);
    
    // Default destructor is fine.
-   virtual ~ConstraintOneOf() = default;
+   ~ConstraintOneOf() override = default;
 
    /// Called when an argument was identified. If the argument is one of those
    /// in the specified list, check if it is the first of these arguments that

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -57,7 +57,7 @@ public:
    /// Default destructor.
    ///
    /// @since  1.11.0, 05.09.2018
-   virtual ~Counted() = default;
+   ~Counted() override = default;
 
    /// Copying and moving not needed.
    Counted& operator =( const Counted&) = delete;

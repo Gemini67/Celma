@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -45,7 +45,7 @@ public:
    /// Virtual, empty destructor.
    ///
    /// @since  0.2, 10.04.2016
-   virtual ~CardinalityExact() = default;
+   ~CardinalityExact() override = default;
 
    /// Called by the framework when the argument was detected in the command
    /// line (actually may be without a value).

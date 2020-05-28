@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,7 +34,7 @@ class DuplicatePolicyIgnore: public IDuplicatePolicy
 public:
    /// Virtual, empty destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~DuplicatePolicyIgnore() = default;
+   ~DuplicatePolicyIgnore() override = default;
 
    /// Returns the policy type.
    /// @return  Policy \a dpIgnore.

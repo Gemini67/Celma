@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,7 +39,7 @@ public:
    /// Virtual, empty destructor.
    ///
    /// @since  1.23.0, 11.04.2019
-   virtual ~FormatUppercase() = default;
+   ~FormatUppercase() override = default;
 
    /// Converts the text in \a val to uppercase.
    ///

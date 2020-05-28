@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,7 +34,7 @@ class IFormatStream: public IFormatBase
 public:
    /// Empty, virtual destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~IFormatStream() = default;
+   ~IFormatStream() override = default;
 
    /// Visible interface. Calls format() (from the derived classes).
    /// @param[out]  out  The stream to write into.

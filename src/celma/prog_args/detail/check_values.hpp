@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,7 +39,7 @@ public:
    explicit CheckValues( const std::string& valueList) noexcept( false);
 
    /// Default destructor is fine.
-   virtual ~CheckValues() = default;
+   ~CheckValues() override = default;
 
    /// Checks if the value in \a val exists in the set of allowed values.
    /// @param[in]  val  The value to check in string format.

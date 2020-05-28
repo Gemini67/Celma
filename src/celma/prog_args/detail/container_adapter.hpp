@@ -161,7 +161,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -277,7 +277,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -401,7 +401,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -517,7 +517,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -637,7 +637,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -762,7 +762,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -882,7 +882,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -1127,7 +1127,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -1246,7 +1246,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///
@@ -1365,7 +1365,7 @@ public:
    ContainerAdapter( ContainerAdapter&&) = default;
 
    // default destructor is fine
-   virtual ~ContainerAdapter() = default;
+   ~ContainerAdapter() override = default;
 
    /// Stores a value in the destination container.
    ///

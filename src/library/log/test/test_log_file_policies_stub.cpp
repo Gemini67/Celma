@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -60,7 +60,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  1.11.0, 30.08.2018
-   virtual ~TestFileFuncs() = default;
+   ~TestFileFuncs() override = default;
 
    /// Gets called when a file should be renamed.
    ///
@@ -513,3 +513,4 @@ BOOST_AUTO_TEST_CASE( counted_rolled)
 
 
 // =====  END OF test_log_file_policies_stub.cpp  =====
+

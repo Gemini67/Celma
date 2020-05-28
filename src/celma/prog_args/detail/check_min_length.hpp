@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,7 +41,7 @@ public:
 
    /// Default destructor is fine.
    /// @since  1.23.0, 11.04.2019
-   virtual ~CheckMinLength() = default;
+   ~CheckMinLength() override = default;
 
    /// Checks if the value in \a val meets the "minimum length" requirement.
    ///

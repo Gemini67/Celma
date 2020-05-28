@@ -50,7 +50,7 @@ public:
    /// Destructor, clears the entries in the map.
    ///
    /// @since  1.22.0, 19.10.2016
-   virtual ~PropertyCont();
+   ~PropertyCont() override;
 
    /// Adds a property, i.e. a named value.<br>
    /// If the property already exists, the value is overwritten.

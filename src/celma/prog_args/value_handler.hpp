@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -85,7 +85,7 @@ public:
       IUsageText* txt2 = nullptr);
 
    // default destructor will do just fine
-   virtual ~ValueHandler() = default;
+   ~ValueHandler() override = default;
 
    // don't want to allow copying nor assignment
    ValueHandler( const ValueHandler&) = delete;

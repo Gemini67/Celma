@@ -50,7 +50,7 @@ public:
       noexcept( false);
    
    // Default destructor is fine.
-   virtual ~ValueConstraintDisjoint() = default;
+   ~ValueConstraintDisjoint() override = default;
 
    /// Checks that not more than two arguments are added for this constraint,
    /// then calls the method of the base class to actually store the argument.

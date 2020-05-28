@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -44,7 +44,7 @@ public:
    CheckParentDirectoryExists();
 
    /// Default destructor is fine.
-   virtual ~CheckParentDirectoryExists() = default;
+   ~CheckParentDirectoryExists() override = default;
 
    /// Checks if parent directory of the path in the value \a val exists.
    ///

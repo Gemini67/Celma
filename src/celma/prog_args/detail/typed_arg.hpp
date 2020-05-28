@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -81,7 +81,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the type of the destination variable as string.
    ///
@@ -289,7 +289,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns "bool".
    /// @return  The string "bool".
@@ -397,7 +397,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the variable handled by the CheckAssign<>
    /// object.
@@ -542,7 +542,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Always returns "bool".
    /// @return  The string "bool".
@@ -661,7 +661,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Always returns "LevelCounter".
    /// @return  The string "LevelCounter".
@@ -823,7 +823,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @@since  1.34.0, 22.11.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// By default, the value mode for containers is set to "required". Here it
    /// can be changed to "optional" if "clear before assign" has been set before
@@ -1205,7 +1205,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the destination variable (array of
    /// something).
@@ -1482,7 +1482,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the destination variable (array of
    /// something).
@@ -1811,7 +1811,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the destination variable, the tuple.
    ///
@@ -2091,7 +2091,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the type of the destination variable.
    ///
@@ -2330,7 +2330,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 23.10.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the destination variable (ValueFilter of
    /// something).
