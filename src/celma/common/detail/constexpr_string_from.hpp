@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,11 +33,15 @@ namespace celma { namespace common { namespace detail {
 /// Specialisation for a positive value.
 ///
 /// @tparam  digits  The single digits of the original number.
+/// @since  x.y.z, 12.04.2020
+///    (set the size explicitly to avoid warnings when accessing the value)
 /// @since  0.10, 31.12.2016
 template< uint8_t... digits> struct positive_to_chars
 {
-   static constexpr const char value[] = { ('0' + digits)..., 0};
+   static constexpr const char value[ sizeof...( digits) + 1]
+      = { ('0' + digits)..., 0};
 }; // positive_to_chars< digits...>
+
 
 template< uint8_t... digits>
    constexpr const char positive_to_chars< digits...>::value[];
@@ -48,10 +52,13 @@ template< uint8_t... digits>
 /// Specialisation for a negative value.
 ///
 /// @tparam  digits  The single digits of the original number.
+/// @since  x.y.z, 12.04.2020
+///    (set the size explicitly to avoid warnings when accessing the value)
 /// @since  0.10, 31.12.2016
 template< uint8_t... digits> struct negative_to_chars
 {
-   static constexpr const char value[] = { '-', ('0' + digits)..., 0};
+   static constexpr const char value[ sizeof...( digits) + 2]
+      = { '-', ('0' + digits)..., 0};
 }; // negative_to_chars< digits...>
 
 

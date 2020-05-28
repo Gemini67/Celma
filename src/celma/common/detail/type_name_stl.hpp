@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -143,7 +143,7 @@ public:
    /// @since  0.10, 25.12.2016
    static constexpr const char* name()
    {
-      return &mName[ 0];
+      return mName.data();
    } // type< std::array< T>>::name
 
    /// Used to store the name of the type persistently.
@@ -169,7 +169,7 @@ public:
    /// @since  0.1, 15.03.2016
    static constexpr const char* name()
    {
-      return &mName[ 0];
+      return mName.data();
    } // type< std::bitset< N>>::name
 
    /// Used to store the name of the type persistently.
@@ -194,7 +194,7 @@ public:
    /// @since  1.16.0, 03.10.2018
    static constexpr const char* name()
    {
-      return &mName[ 0];
+      return mName.data();
    } // type< std::ratio< N, D>>::name
 
    /// Used to store the name of the type persistently.<br>
@@ -242,7 +242,7 @@ PROVIDE_TEMPLATE_TYPE_NAME( std::optional);
    public: \
       static constexpr const char* name() \
       { \
-         return &mName[ 0]; \
+         return mName.data(); \
       } \
       static constexpr auto const  mName = \
          common::string_concat( # c, "<", type< K>::mName, ",", \

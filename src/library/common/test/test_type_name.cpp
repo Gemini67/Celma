@@ -28,6 +28,8 @@
 #include <boost/test/unit_test.hpp>
 
 
+#include <iostream>
+
 #define  BOOST_REQUIRE_EQUAL_STR( a, b) \
    BOOST_REQUIRE( ::strcmp( a, b) == 0)
 
@@ -39,15 +41,24 @@
 
 
 /// Test for POD data types.
+///
 /// @since  0.1, 15.03.2016
 BOOST_AUTO_TEST_CASE( pod_types)
 {
 
    static_assert( celma::type< bool>::name()[ 0] == 'b');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< bool>::name(),   "bool");
+   static_assert( celma::type< bool>::name()[ 1] == 'o');
+   static_assert( celma::type< bool>::name()[ 2] == 'o');
+   static_assert( celma::type< bool>::name()[ 3] == 'l');
+   static_assert( celma::type< bool>::name()[ 4] == '\0');
+
+std::cout << "celma::type< bool>::name() = " << celma::type< bool>::name() << std::endl;
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< bool>::name(), "bool");
 
    static_assert( celma::type< char>::name()[ 0] == 'c');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< char>::name(),   "char");
+   static_assert( celma::type< char>::name()[ 4] == '\0');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< char>::name(), "char");
 
    static_assert( celma::type< double>::name()[ 0] == 'd');
    BOOST_REQUIRE_EQUAL_STR( celma::type< double>::name(), "double");
@@ -56,7 +67,7 @@ BOOST_AUTO_TEST_CASE( pod_types)
    BOOST_REQUIRE_EQUAL_STR( celma::type< long double>::name(), "long double");
 
    static_assert( celma::type< float>::name()[ 0] == 'f');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< float>::name(),  "float");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< float>::name(), "float");
 
    static_assert( celma::type< int>::name()[ 0] == 'i');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int>::name(),    "int");

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -64,7 +64,12 @@ BOOST_AUTO_TEST_CASE( log_printf_id)
    LOG_PRINTF( my_log, info, communication,
                "log message create %s-like function call with %d parameters",
                "printf()", 2);
-   const int  log_message_line = __LINE__ - 1 ;
+   const int  log_message_line = __LINE__
+#ifndef __clang__
+     - 3;
+#else
+     - 1;
+#endif
 
    BOOST_REQUIRE_EQUAL( msg.getLevel(), LogLevel::info);
    BOOST_REQUIRE_EQUAL( msg.getClass(), celma::log::LogClass::communication);
@@ -97,7 +102,12 @@ BOOST_AUTO_TEST_CASE( log_printf_name)
    LOG_PRINTF( std::string( "mine"), info, communication,
                "log message create %s-like function call with %d parameters",
                "printf()", 2);
-   const int  log_message_line = __LINE__ - 1 ;
+   const int  log_message_line = __LINE__
+#ifndef __clang__
+     - 3;
+#else
+     - 1;
+#endif
 
    BOOST_REQUIRE_EQUAL( msg.getLevel(), LogLevel::info);
    BOOST_REQUIRE_EQUAL( msg.getClass(), celma::log::LogClass::communication);
@@ -115,4 +125,5 @@ BOOST_AUTO_TEST_CASE( log_printf_name)
 
 
 
-// =======================  END OF test_log_printf.cpp  =======================
+// =====  END OF test_log_printf.cpp  =====
+

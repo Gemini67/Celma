@@ -82,7 +82,7 @@ public:
 
    /// Empty, virtual default destructor.
    /// @since  1.35.0, 10.03.2020
-   virtual ~Groups() = default;
+   ~Groups() override = default;
 
    /// Returns the argument handler for the specified group name.
    /// If the argument handler does not exist yet, a new handler object will be
