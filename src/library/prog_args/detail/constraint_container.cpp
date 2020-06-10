@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -69,8 +69,8 @@ void ConstraintContainer::addConstraint( Constraint constraint_type,
       const ArgumentKey  search( token);
       auto               dataIt = mConstraints.find( search);
 
-      if ((dataIt == mConstraints.end()) ||
-          (dataIt->data().mConstraint != constraint_type))
+      if ((dataIt == mConstraints.end())
+          || (dataIt->data().mConstraint != constraint_type))
       {
          mConstraints.addArgument( Data( constraint_type, created_by), search);
       } // end if
@@ -153,5 +153,5 @@ ConstraintContainer::Data::Data( Constraint c, const string& origin):
 } // namespace celma
 
 
-// =====================  END OF constraint_container.cpp  =====================
+// =====  END OF constraint_container.cpp  =====
 

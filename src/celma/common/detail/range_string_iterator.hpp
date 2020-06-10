@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,27 +32,35 @@ namespace celma { namespace common { namespace detail {
 
 /// Range string iterator, returning the next value computed from the specified
 /// range.
-/// @tparam  T   The object with the range expression: An std::string.
-/// @tparam  TF  The type of the values to generate.
+///
+/// @tparam  T
+///    The object with the range expression: An std::string.
+/// @tparam  TF
+///    The type of the values to generate.
 /// @since  0.2, 07.04.2016
-template< typename T, typename TF>
-   class RangeStringIterator: public std::iterator< std::forward_iterator_tag,
-                                                    void*>
+template< typename T, typename TF> class RangeStringIterator:
+   public std::iterator< std::forward_iterator_tag, void*>
 {
 public:
    /// End-of-range constructor.
    /// @since  0.2, 07.04.2016
-   RangeStringIterator();
+   RangeStringIterator() = default;
 
    /// Constructor.
    /// @param[in]  src  The object with the range expression to handle.
    /// @since  0.2, 07.04.2016
    explicit RangeStringIterator( const T& src);
 
+   // moving is allowed
+   RangeStringIterator( RangeStringIterator&&) = default;
+
    /// Copy constructor. Needed because of internal \c unique_ptr.
    /// @param[in]  other  The other object to copy the data from.
    /// @since  0.2, 07.04.2016
    RangeStringIterator( const RangeStringIterator& other);
+
+   // default destructor is fine
+   ~RangeStringIterator() = default;
 
    /// Prefix increment operator.
    /// @return  The incremented iterator.
@@ -63,6 +71,16 @@ public:
    /// @return  An iterator object with the previous value.
    /// @since  0.2, 07.04.2016
    RangeStringIterator operator ++( std::postfix);
+
+   /// Assignment operator.
+   ///
+   /// @param[in]  other  The other object to copy the data from.
+   /// @return  This object.
+   /// @since  1.34.1, 02.01.2020
+   RangeStringIterator& operator =( const RangeStringIterator& other);
+
+   // move-assignment by default is fine
+   RangeStringIterator& operator =( RangeStringIterator&& other) = default;
 
    /// Returns if the two iterators point to the same position.<br>
    /// Not a really foolproof check for equality, since the position is
@@ -79,13 +97,6 @@ public:
    /// @return  \c true if the two iterators point to different positions.
    /// @since  0.2, 07.04.2016
    bool operator !=( const RangeStringIterator& other) const;
-
-   /// Assignment operator.
-   ///
-   /// @param[in]  other  The other object to copy the data from.
-   /// @return  This object.
-   /// @since  1.19.0, 29.11.2018
-   RangeStringIterator& operator =( const RangeStringIterator& other);
 
    /// Instead of de-referencing the iterator: Use a typecast to the field/
    /// value type to get the current value.
@@ -105,10 +116,10 @@ private:
    Ranger* createRanger( const RangeExpression& re);
 
    /// The string to parse.
-   const T                   mSource;
+   T                         mSource;
    /// Start position of the current expression in the string, set to
    /// \c std::string::npos when the complete expression was handled.
-   std::string::size_type    mPos;
+   std::string::size_type    mPos = std::string::npos;
    /// The current expression.
    RangeExpression           mMainExpression;
    /// Value generator for the current range.
@@ -124,17 +135,6 @@ private:
 
 
 template< typename T, typename TF>
-   RangeStringIterator< T, TF>::RangeStringIterator():
-      mSource(),
-      mPos( std::string::npos),
-      mMainExpression(),
-      mpRanger(),
-      mCurrentValue()
-{
-} // RangeStringIterator< T, TF>::RangeStringIterator
-
-
-template< typename T, typename TF>
    RangeStringIterator< T, TF>::RangeStringIterator( const T& src):
       mSource( src),
       mPos( 0),
@@ -143,8 +143,6 @@ template< typename T, typename TF>
       mCurrentValue()
 {
    mMainExpression.parseString( mSource);
-   if (mMainExpression.matchedExpression().length() == 0)
-      throw std::runtime_error( "no valid expression found in string");
    mpRanger.reset( createRanger( mMainExpression));
    mCurrentValue = static_cast< TF>( *mpRanger);
 } // RangeStringIterator< T, TF>::RangeStringIterator
@@ -154,7 +152,7 @@ template< typename T, typename TF>
    RangeStringIterator< T, TF>::RangeStringIterator( const RangeStringIterator& other):
       mSource( other.mSource),
       mPos( other.mPos),
-      mMainExpression(),
+      mMainExpression( other.mMainExpression),
       mpRanger(),
       mCurrentValue( other.mCurrentValue)
 {
@@ -182,7 +180,7 @@ template< typename T, typename TF>
          return *this;
       } // end if
 
-      if (mSource[ mPos] != ',')
+      if (mSource[ mPos] != RangeExpression::NextRangeSeparator)
          throw std::runtime_error( "invalid character in range string");
 
       mPos++;
@@ -211,6 +209,26 @@ template< typename T, typename TF>
 
 
 template< typename T, typename TF>
+   RangeStringIterator< T, TF>&
+      RangeStringIterator< T, TF>::operator =( const RangeStringIterator& other)
+{
+   if (this != &other)
+   {
+      mSource = other.mSource;
+      mPos = other.mPos;
+      mMainExpression = other.mMainExpression;
+      mCurrentValue = other.mCurrentValue;
+
+      if (other.mpRanger)
+         mpRanger.reset( new Ranger( *other.mpRanger.get()));
+      else
+         mpRanger.reset();
+   } // end if
+   return *this;
+} // RangeStringIterator< T, TF>::operator =
+
+
+template< typename T, typename TF>
    bool RangeStringIterator< T, TF>::operator ==( const RangeStringIterator& other) const
 {
    return mPos == other.mPos;
@@ -222,25 +240,6 @@ template< typename T, typename TF>
 {
    return mPos != other.mPos;
 } // RangeStringIterator< T, TF>::operator !=
-
-
-template< typename T, typename TF>
-   RangeStringIterator< T, TF>&
-      RangeStringIterator< T, TF>::operator =( const RangeStringIterator& other)
-{
-   if (this != &other)
-   {
-      mSource = other.mSource;
-      mPos = other.mPos;
-      mMainExpression = RangeExpression();
-      if (other.mpRanger.get() != nullptr)
-         mpRanger.reset( new Ranger( *other.mpRanger.get()));
-      else
-         mpRanger.reset();
-      mCurrentValue = other.mCurrentValue;
-   } // end if
-   return *this;
-} // RangeStringIterator< T, TF>::operator =
 
 
 template< typename T, typename TF>
@@ -263,12 +262,12 @@ template< typename T, typename TF>
    if (re.hasIncrement())
       // range with increment
       newRanger = new Ranger( static_cast< TF>( re.startValue()),
-                              static_cast< TF>( re.endValue()),
-                              static_cast< TF>( re.incrementValue()));
+         static_cast< TF>( re.endValue()),
+         static_cast< TF>( re.incrementValue()));
    else
       // range without increment
       newRanger = new Ranger( static_cast< TF>( re.startValue()),
-                              static_cast< TF>( re.endValue()));
+         static_cast< TF>( re.endValue()));
 
    if (re.hasExcludeExpr())
    {

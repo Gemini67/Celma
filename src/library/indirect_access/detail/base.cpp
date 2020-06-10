@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,7 +14,7 @@
 /// See documentation of class celma::indirect_access::detail::Base.
 
 
-// module header file include
+// module headerfile include
 #include "celma/indirect_access/detail/base.hpp"
 
 
@@ -23,8 +23,10 @@ namespace celma { namespace indirect_access { namespace detail {
 
 
 /// Returns the name of the field/variable with the specified id.
+///
 /// @param[in]  id  The id of the field to return the name of.
 /// @return  The name of the field with the given id.
+/// @throw  std::runtime_error when the id is unknown.
 /// @since  0.4, 02.05.2016
 const std::string& Base::getFieldName( uint16_t id) const noexcept( false)
 {
@@ -38,8 +40,10 @@ const std::string& Base::getFieldName( uint16_t id) const noexcept( false)
 
 
 /// Returns the current value of the specified field/variable as string.
+///
 /// @param[in]  id  The id of the field to return the value of.
 /// @return  The current value of the variable as string.
+/// @throw  std::runtime_error when the id is unknown.
 /// @since  0.4, 02.07.2016
 const std::string Base::getFieldValueString( uint16_t id) const noexcept( false)
 {
@@ -53,8 +57,10 @@ const std::string Base::getFieldValueString( uint16_t id) const noexcept( false)
 
 
 /// Returns the type of the field/variable as string.
+///
 /// @param[in]  id  The id of the field to return the value of.
 /// @return  The type of the value as string.
+/// @throw  std::runtime_error when the id is unknown.
 /// @since  0.4, 02.07.2016
 const std::string& Base::getFieldTypeString( uint16_t id) const noexcept( false)
 {
@@ -69,8 +75,11 @@ const std::string& Base::getFieldTypeString( uint16_t id) const noexcept( false)
 
 /// Insertion operator to print the contents of an object using a base class
 /// object pointer.
-/// @param[out]  os   The stream to insert into.
-/// @param[in]   obj  The pointer to the object to print the contents of.
+///
+/// @param[out]  os
+///    The stream to insert into.
+/// @param[in]   obj
+///    The pointer to the object to print the contents of.
 /// @return  The stream as passed in.
 /// @since  0.4, 13.07.2016
 std::ostream& operator <<( std::ostream& os, const Base* obj)
@@ -88,17 +97,6 @@ std::ostream& operator <<( std::ostream& os, const Base* obj)
    
    return os;
 } // operator <<
-
-
-
-/// Protected constructor to make sure that this class is always used as base
-/// class.
-/// @since  0.4, 02.05.2016
-Base::Base():
-   mId2Field(),
-   mName2Field()
-{
-} // Base::Base
 
 
 

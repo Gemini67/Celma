@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,7 +25,7 @@
 namespace celma { namespace common {
 
 
-/// Helper class to enumerate all objects of a class.<br>
+/// Helper class to enumerate all objects of a class.
 /// Use this template with the CRTP:
 ///   class Counter: public ObjectEnumerator< Counter>
 /// This (the CRTP) is necessary to make sure that multiple enumerated classes
@@ -37,6 +37,9 @@ namespace celma { namespace common {
 template< typename T, typename C = uint64_t> class ObjectEnumerator
 {
 public:
+   /// Default destructor is fine.
+   ~ObjectEnumerator() = default;
+
    /// Returns the number of this object.
    ///
    /// @return  The number of this (super) object.

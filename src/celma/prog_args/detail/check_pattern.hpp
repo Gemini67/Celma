@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,20 +46,21 @@ public:
    /// @since  1.19.0, 27.11.2018
    explicit CheckPattern( const std::regex& reg_ex);
 
-   virtual ~CheckPattern() = default;
+   /// Default destructor is fine.
+   ~CheckPattern() override = default;
 
    /// Checks if the value in \a val matches the pattern given in the
    /// constructor.
    ///
    /// @param[in]  val  The value to check in string format.
    /// @since  1.19.0, 27.11.2018
-   virtual void checkValue( const std::string& val) const noexcept( false) override;
+   void checkValue( const std::string& val) const noexcept( false) override;
 
    /// Returns a text description of the check.
    ///
    /// @return  A string with the text description of the check.
    /// @since  1.19.0, 27.11.2018
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 private:
    /// The string with the regular expression, if known.

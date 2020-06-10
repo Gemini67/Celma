@@ -3,15 +3,18 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
+**  Description:
+**    Test program for the module "adjust", using the Boost.Test framework.
+**
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/common/adjust.hpp"
 
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -45,14 +45,14 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~LogDestMsg() = default;
+   ~LogDestMsg() override = default;
 
 private:
    /// Called through the base class. Stores the data of a log message in the
    /// specified object.
    /// @param[in]  msg  The message to store.
    /// @since  0.3, 19.06.2016
-   virtual void message( const detail::LogMsg& msg)
+   void message( const detail::LogMsg& msg) override
    {
       mDest = msg;
    } // end LogDestMsg::message

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,6 +17,10 @@
 
 // module to test header file include
 #include "celma/log/files/handler.hpp"
+
+
+// C++ Standard Library includes
+#include <sstream>
 
 
 // Boost includes
@@ -69,6 +73,28 @@ BOOST_AUTO_TEST_CASE( test_errors)
    {
       BOOST_REQUIRE_THROW(
          clf::Handler< clf::Counted>  hct( new clf::Counted( my_def, 1'000, 10)),
+         std::runtime_error);
+   } // end scope
+
+   // no filename defined
+   {
+      clfn::Definition  ldef;
+      clfn::Creator     lfc( ldef);
+
+      BOOST_REQUIRE_THROW(
+         clf::Handler< clf::Simple>  hct( new clf::Simple( ldef)),
+         std::invalid_argument);
+   } // end scope
+
+   // simple log file handling, but invalid path
+   {
+      clfn::Definition  ldef;
+      clfn::Creator     lfc( ldef);
+
+      lfc << "/x/y/z/logfile.txt";
+
+      BOOST_REQUIRE_THROW(
+         clf::Handler< clf::Simple>  hct( new clf::Simple( ldef)),
          std::runtime_error);
    } // end scope
 

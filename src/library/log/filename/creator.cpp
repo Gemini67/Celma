@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,15 +23,14 @@ namespace celma { namespace log { namespace filename {
 
 
 /// Constructor.
-/// @param[in]  dest_def  The filename definition object to store the log
-///                       filename format definition in.
+///
+/// @param[in]  dest_def
+///    The filename definition object to store the log filename format
+///    definition in.
 /// @since  1.0.0, 11.10.2017
 Creator::Creator( Definition& dest_def):
    mDefs( dest_def),
-   mString(),
-   mFixedWidth( 0),
-   mFillChar( '0'),
-   mCheckPathSep( false)
+   mString()
 {
 } // Creator::Creator
 
@@ -39,6 +38,7 @@ Creator::Creator( Definition& dest_def):
 
 /// Adds a path/filename part with the given type. Remaining parameters must
 /// be set before and are stored in the member variables.
+///
 /// @param[in]  part_type  The type of the part to add.
 /// @since  1.0.0, 11.10.2017
 void Creator::part( Definition::PartTypes part_type)
@@ -59,6 +59,7 @@ void Creator::part( Definition::PartTypes part_type)
 
 
 /// Sets a fixed width for the next part, the log file number.
+///
 /// @param[in]  fixed_width  The fixed width to use for log file number.
 /// @since  1.0.0, 11.10.2017
 void Creator::setFixedWidth( int fixed_width)
@@ -82,7 +83,11 @@ void Creator::setFillChar( char fill_char)
 
 
 
-/// 
+/// When adding two parts of constant text (which will internally be
+/// concatenated), call this function in between if the two parts come from
+/// parameters/environment variables etc., and you need to make sure that a
+/// path separator (a slash) is in between.
+///
 /// @since  1.0.0, 16.10.2017
 void Creator::setCheckPathSeparator()
 {
@@ -94,6 +99,7 @@ void Creator::setCheckPathSeparator()
 
 
 /// Operator to handle manipulators.
+///
 /// @param[in]  m  The manipulator to call.
 /// @return  This object.
 /// @since  1.0.0, 11.10.2017
@@ -108,10 +114,13 @@ Creator& Creator::operator <<( Creator&( *m)( Creator&))
 
 
 /// Operator to pass a constant string to a creator object.
-/// @param[in]  c           The object to pass the constant string to.
-/// @param[in]  const_text  The text part to add.<br>
-///                         If the previous part was a constant text too,
-///                         this text will be appended to it.
+///
+/// @param[in]  c
+///    The object to pass the constant string to.
+/// @param[in]  const_text
+///    The text part to add.<br>
+///    If the previous part was a constant text too, this text will be
+///    appended to it.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 11.10.2017
 Creator& operator <<( Creator& c, const std::string& const_text)
@@ -124,10 +133,13 @@ Creator& operator <<( Creator& c, const std::string& const_text)
 
 
 
-/// Operator to pass a fixed width setting for the log file number to a
-/// creator object.
-/// @param[in]  c            The object to pass the fixed width to.
-/// @param[in]  fixed_width  The fixed width to store.
+/// Operator to pass a fixed width setting for the log file number or the pid
+/// to a creator object.
+///
+/// @param[in]  c
+///    The object to pass the fixed width to.
+/// @param[in]  fixed_width
+///    The fixed width to store.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 11.10.2017
 Creator& operator <<( Creator& c, int fixed_width)
@@ -141,8 +153,11 @@ Creator& operator <<( Creator& c, int fixed_width)
 
 
 /// Operator to pass the data of a 'format string' to a creator object.
-/// @param[in]  c   The object to pass the format string to.
-/// @param[in]  fs  The format string to store.
+///
+/// @param[in]  c
+///    The object to pass the format string to.
+/// @param[in]  fs
+///    The format string to store.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 11.10.2017
 Creator& operator <<( Creator& c, const formatString& fs)
@@ -157,8 +172,11 @@ Creator& operator <<( Creator& c, const formatString& fs)
 
 /// Operator to change the fill character to use for a fixed width log file
 /// number.
-/// @param[in]  c    The object to change the eparator string in.
-/// @param[in]  sep  The separator string to set.
+///
+/// @param[in]  c
+///    The object to change the eparator string in.
+/// @param[in]  sep
+///    The separator string to set.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 11.10.2017
 Creator& operator <<( Creator& c, char fill_char)
@@ -173,10 +191,11 @@ Creator& operator <<( Creator& c, char fill_char)
 
 /// Operator to store a path part that adds the value of the given
 /// environment variable.
-/// @param[in]  c   The object to pass the name of the environment variable
-///                 to.
-/// @param[in]  ev  The objct with the name of the environment variable to
-///                 store.
+///
+/// @param[in]  c
+///    The object to pass the name of the environment variable to.
+/// @param[in]  ev
+///    The objct with the name of the environment variable to store.
 /// @return  The same object as passed in \a c.
 /// @since  1.0.0, 19.10.2017
 Creator& operator <<( Creator& c, const env_var& ev)
@@ -191,6 +210,7 @@ Creator& operator <<( Creator& c, const env_var& ev)
 
 /// Called by the operator to actually store the constant text.<br>
 /// Also adds the part to the log file format definition.
+///
 /// @param[in]  const_text  The constant text to store.
 /// @since  1.0.0, 11.10.2017
 void Creator::addConstantText( const std::string& const_text)
@@ -211,6 +231,7 @@ void Creator::addConstantText( const std::string& const_text)
 
 
 /// Stores a format string that should be used by the next date part.
+///
 /// @param[in]  fmt  The format string to store.
 /// @since  1.0.0, 11.10.2017
 void Creator::formatString( const std::string& fmt)
@@ -225,6 +246,7 @@ void Creator::formatString( const std::string& fmt)
 /// Called by the operator to actually store the name of an environment
 /// variable.<br>
 /// Also adds the part to the log file format definition.
+///
 /// @param[in]  env_var_name  The name of the environment variable.
 /// @since  1.0.0, 19.10.2017
 void Creator::addEnvVar( const std::string& env_var_name)
@@ -249,6 +271,7 @@ void Creator::addEnvVar( const std::string& env_var_name)
 /// between. Otherwise the part is added as-is to the log filename
 /// definition.<br>
 /// And while we're at it, prepare for the next part.
+///
 /// @param[in]  part  The part to add.
 /// @since  1.0.0, 11.10.2017
 void Creator::addPart( const Definition::Part& part)
@@ -296,5 +319,5 @@ void Creator::addPart( const Definition::Part& part)
 } // namespace celma
 
 
-// ===========================  END OF creator.cpp  ===========================
+// =====  END OF creator.cpp  =====
 

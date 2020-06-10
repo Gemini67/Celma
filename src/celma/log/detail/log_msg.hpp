@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,7 +20,7 @@
 
 
 #include <pthread.h>
-#include <ctime>
+#include <chrono>
 #include <string>
 #include "celma/common/exception_base.hpp"
 #include "celma/log/detail/log_defs.hpp"
@@ -31,6 +31,9 @@ namespace celma { namespace log { namespace detail {
 
 
 /// Class to store all the data of a log message.
+///
+/// @since  1.26.0, 21.05.2019
+///    (use std::chrono::system_clock for timestamp)
 /// @since  1.15.0, 17.10.2018
 ///    (removed properties, added support for attributes)
 /// @since  1.0.0, 19.06.2016
@@ -39,91 +42,135 @@ class LogMsg
 public:
    /// Constructor, sets the properties where this log message was created.<br>
    /// Internally, also the process id is set.
-   /// @param[in]  file_name             The name of the source file.
-   /// @param[in]  pretty_function_name  The name of the function.
-   /// @param[in]  line_nbr              The line number.
+   ///
+   /// @param[in]  file_name
+   ///    The name of the source file.
+   /// @param[in]  pretty_function_name
+   ///    The name of the function.
+   /// @param[in]  line_nbr
+   ///    The line number.
    /// @since  1.0.0, 19.06.2016
    LogMsg( const std::string& file_name, const char* const pretty_function_name,
            int line_nbr);
 
+   LogMsg( const LogMsg&) = default;
+   LogMsg( LogMsg&&) = default;
+   ~LogMsg() = default;
+
+   LogMsg& operator =( const LogMsg&) = default;
+   LogMsg& operator =( LogMsg&&) = default;
+
    /// Stores the data of an exception.<br>
    /// Note that also the line number, function name etc. are copied.
+   ///
    /// @param[in]  eb  The exception to copy the data from.
    /// @since  1.0.0, 19.06.2016
    void assign( const common::ExceptionBase& eb);
 
    /// Sets the log class.
+   ///
    /// @param[in]  lc  The log class of this message.
    /// @since  1.0.0, 19.06.2016
    void setClass( LogClass lc);
 
    /// Sets the log level.
+   ///
    /// @param[in]  ll  The log level.
    /// @since  1.0.0, 19.06.2016
    void setLevel( LogLevel ll);
 
    /// Sets the error number, if there is any.
+   ///
    /// @param[in]  error_nbr  The error number.
    /// @since  1.0.0, 19.06.2016
    void setErrorNumber( int error_nbr);
 
    /// Sets the log message text.
+   ///
    /// @param[in]  text  The text to log.
    /// @since  1.0.0, 19.06.2016
    void setText( const std::string& text);
 
    /// Sets the timestamp for the log message.
+   ///
    /// @param[in]  ts  The timestamp to store.
    /// @since  1.0.0, 27.09.2017
    void setTimestamp( time_t ts);
 
+   /// Updates the timestamp for the log message with the current date/time.
+   ///
+   /// @since  1.26.0, 06.03.2018
+   void setTimestamp();
+
    /// Returns the timestamp when the log message was created.
+   ///
    /// @return  The timestamp for the log message.
    /// @since  1.0.0, 11.12.2016
    time_t getTimestamp() const;
 
+   /// Returns the microseconds part of the timestamp.
+   ///
+   /// @return  Number of microseconds in the timestamp.
+   /// @since  1.26.0, 07.03.2018
+   uint32_t getTimeMicroSecs() const;
+
+   /// Returns the milliseconds part of the timestamp.
+   ///
+   /// @return  Number of milliseconds in the timestamp.
+   /// @since  1.26.0, 07.03.2018
+   uint32_t getTimeMilliSecs() const;
+
    /// Returns the process id.
+   ///
    /// @return  The id of the process by which the log message was created.
    /// @since  1.0.0, 19.06.2016
    pid_t getProcessId() const;
 
    /// Returns the thread id.
+   ///
    /// @return  The id of the thread by which the log message was created.
    /// @since  1.0.0, 04.10.2017
    pthread_t getThreadId() const;
 
    /// Returns the source file name.
+   ///
    /// @return  The name of the source file where the log message was created.
    /// @since  1.0.0, 19.06.2016
    const std::string& getFileName() const;
 
    /// The name of the function.
+   ///
    /// @return  The name of the function where the log message was created.
    /// @since  1.0.0, 19.06.2016
    const std::string& getFunctionName() const;
 
    /// The line number.
+   ///
    /// @return  Returns the number of the line in the source file where the log
    /// message was created.
    /// @since  1.0.0, 19.06.2016
    int getLineNbr() const;
 
    /// The log class.
+   ///
    /// @return  The log class of the message.
    /// @since  1.0.0, 19.06.2016
    LogClass getClass() const;
 
    /// The log level.
+   ///
    /// @return  The log level.
    /// @since  1.0.0, 19.06.2016
    LogLevel getLevel() const;
 
    /// Returns the error number.
+   ///
    /// @return  The error number set for the log message.
    /// @since  1.0.0, 19.06.2016
    int getErrorNbr() const;
 
    /// Returns the log message text.
+   ///
    /// @return  The text of the log message.
    /// @since  1.0.0, 19.06.2016
    const std::string& getText() const;
@@ -145,27 +192,27 @@ public:
 
 private:
    /// Time stamp when the log message (i.e., this object) was created.
-   time_t                mTimestamp;
+   std::chrono::system_clock::time_point  mTimestamp;
    /// The id of the process that created the log message.
-   pid_t                 mProcessId;
+   pid_t                                  mProcessId;
    /// The id the thread that created the message.
-   pthread_t             mThreadId;
+   pthread_t                              mThreadId;
    /// The name of the source file.
-   std::string           mFileName;
+   std::string                            mFileName;
    /// The name of the function.
-   std::string           mFunctionName;
+   std::string                            mFunctionName;
    /// The line number in the source file.
-   int                   mLineNbr;
+   int                                    mLineNbr;
    /// The classification of the log message.
-   LogClass              mClass = LogClass::undefined;
+   LogClass                               mClass = LogClass::undefined;
    /// The severity level of the log message.
-   LogLevel              mLevel = LogLevel::undefined;
+   LogLevel                               mLevel = LogLevel::undefined;
    /// The error number for this log message.
-   int                   mErrNbr = 0;
+   int                                    mErrNbr = 0;
    /// The text of the log message.
-   std::string           mText;
+   std::string                            mText;
    /// Pointer to the optional object to get the log attributes from.
-   const LogAttributes*  mpAttributes = nullptr;
+   const LogAttributes*                   mpAttributes = nullptr;
 
 }; // LogMsg
 
@@ -176,8 +223,24 @@ private:
 
 inline time_t LogMsg::getTimestamp() const
 {
-   return mTimestamp;
+   return std::chrono::system_clock::to_time_t( mTimestamp);
 } // LogMsg::getTimestamp
+
+
+inline uint32_t LogMsg::getTimeMilliSecs() const
+{
+   auto  duration = mTimestamp.time_since_epoch();
+   return std::chrono::duration_cast< std::chrono::milliseconds>( duration).
+      count() % 1000;
+} // LogMsg::getTimeMilliSecs
+
+
+inline uint32_t LogMsg::getTimeMicroSecs() const
+{
+   auto  duration = mTimestamp.time_since_epoch();
+   return std::chrono::duration_cast< std::chrono::microseconds>( duration).
+      count() % 1000000;
+} // LogMsg::getTimeMicroSecs
 
 
 inline pid_t LogMsg::getProcessId() const
@@ -254,7 +317,13 @@ inline void LogMsg::setText( const std::string& text)
 
 inline void LogMsg::setTimestamp( time_t ts)
 {
-   mTimestamp = ts;
+   mTimestamp = std::chrono::system_clock::from_time_t( ts);
+} // LogMsg::setTimestamp
+
+
+inline void LogMsg::setTimestamp()
+{
+   mTimestamp = std::chrono::system_clock::now();
 } // LogMsg::setTimestamp
 
 

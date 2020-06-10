@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -65,7 +65,7 @@ void CardinalityRange::gotValue()
 void CardinalityRange::check()
 {
 
-   if (mNumValues < mMinNumValues)
+   if ((mNumValues != 0) && (mNumValues < mMinNumValues))
       throw std::runtime_error( "not all expected values");
 
 } // CardinalityRange::check

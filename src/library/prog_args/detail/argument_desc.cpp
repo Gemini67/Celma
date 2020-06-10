@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ArgumentDesc.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/detail/argument_desc.hpp"
 
 
@@ -213,6 +213,9 @@ void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
       {
          descCopy.append( "\nDefault value: ");
          mArguments[ i].mpArgObj->defaultValue(descCopy);
+         if (!mArguments[ i].mpArgObj->valueUnit().empty())
+            descCopy.append( " [").append( mArguments[ i].mpArgObj->valueUnit())
+               .append( "]");
       } // end if
       if (mArguments[ i].mpArgObj->hasCheck())
       {

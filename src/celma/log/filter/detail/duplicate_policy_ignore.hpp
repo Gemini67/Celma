@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,12 +34,12 @@ class DuplicatePolicyIgnore: public IDuplicatePolicy
 public:
    /// Virtual, empty destructor.
    /// @since  0.3, 19.06.2016
-   virtual ~DuplicatePolicyIgnore() = default;
+   ~DuplicatePolicyIgnore() override = default;
 
    /// Returns the policy type.
    /// @return  Policy \a dpIgnore.
    /// @since  0.3, 19.06.2016
-   virtual DuplicatePolicy policy() const override
+   DuplicatePolicy policy() const override
    {
       return DuplicatePolicy::ignore;
    } // DuplicatePolicyIgnore::policy
@@ -47,7 +47,7 @@ public:
    /// Policy: Always return \c false.
    /// @return  \c false.
    /// @since  0.3, 19.06.2016
-   virtual bool acceptNew() const override
+   bool acceptNew() const override
    {
       return false;
    } // DuplicatePolicyIgnore::acceptNew

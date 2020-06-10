@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,16 +30,25 @@
 #include <iostream>
 #include <iomanip>
 #include <memory>
+#include <stdexcept>
+#include <vector>
+
+
+// Boost library includes
+#include <boost/algorithm/string.hpp>
 
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/clear_container.hpp"
+#include "celma/common/contains.hpp"
 #include "celma/common/reset_at_exit.hpp"
 #include "celma/common/scoped_value.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/format/text_block.hpp"
 #include "celma/prog_args/destination.hpp"
+#include "celma/prog_args/detail/eval_arguments_error_exit.hpp"
+#include "celma/prog_args/detail/i_handler_value_constraint.hpp"
 #include "celma/prog_args/detail/typed_arg_sub_group.hpp"
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/i_usage_text.hpp"
@@ -64,6 +73,7 @@ const detail::ArgumentKey  Handler::mPosKey( "-");
 
 
 /// Constructor.
+///
 /// @param[in]  flagSet  The set of flags. See enum HandleFlags for a list of
 ///                      possible values.
 /// @param[in]  txt1     Optional pointer to the object to provide additional
@@ -81,6 +91,7 @@ Handler::Handler( int flagSet, IUsageText* txt1, IUsageText* txt2):
 
 
 /// Constructor that allows to specify the output streams to write to.
+///
 /// @param[in]  os        The stream to write normal out to.
 /// @param[in]  error_os  The stream to write error output to.
 /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
@@ -104,9 +115,10 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
-   mpExclamationMarkHdlr(),
    mConstraints(),
    mGlobalConstraints(),
+   mCheckEnvVar( (flag_set & hfEnvVarArgs) != 0),
+   mEnvVarName(),
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
@@ -123,13 +135,14 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
 
 
 /// Constructor to be used by a sub-group. Copies some settings from the main
-/// argument handler object.<br>
+/// argument handler object.
 /// It is possible to create a sub-group argument handler using one of the
 /// other constructors, but then the settings are of course not copied.<br>
 /// The following flags are ignored, the settings are taken from the main
 /// argument handler:<br>
 /// #hfReadProgArg, #hfVerboseArgs, #hfUsageHidden, #hfUsageShort,
 /// #hfUsageLong and #hfUsageCont.
+///
 /// @param[in]  main_ah   The main argument handler to copy the settings
 ///                       from.
 /// @param[in]  flag_set  The set of flags. See enum HandleFlags for a list
@@ -152,9 +165,10 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
    mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
-   mpExclamationMarkHdlr(),
    mConstraints(),
    mGlobalConstraints(),
+   mCheckEnvVar(),
+   mEnvVarName(),
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
@@ -165,6 +179,7 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
 
 
 /// Destructor, deletes dynamically allocated objects.
+///
 /// @since  0.2, 10.04.2016
 Handler::~Handler()
 {
@@ -172,6 +187,22 @@ Handler::~Handler()
    common::Vector::clear( mGlobalConstraints);
 
 } // Handler::~Handler
+
+
+
+/// Activates the check for program arguments in an environment variable,
+/// plus allows to specify the name of the environment variable to use.
+/// The default is the name of the program file, all in uppercase letters.
+///
+/// @param[in]  env_var_name  Optional, the name of the environment variable.
+/// @since  1.22.0, 01.04.2019
+void Handler::checkEnvVarArgs( std::string env_var_name)
+{
+
+   mCheckEnvVar = true;
+   mEnvVarName  = env_var_name;
+
+} // Handler::checkEnvVarArgs
 
 
 
@@ -208,9 +239,10 @@ detail::TypedArgBase*
 
 
 /// Adds an argument that behaves like the -h/--help arguments. Use this if
-/// the help argument should e.g. be in another language.<br>
+/// the help argument should e.g. be in another language.
 /// The standard help arguments may still be set in the constructor, then
 /// both arguments can be used to get the usage displayed.
+///
 /// @param[in]  arg_spec  The arguments on the command line for the help
 ///                       feature.
 /// @param[in]  desc      The description of this argument.
@@ -228,7 +260,7 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 {
 
    return addArgument( arg_spec,
-      new detail::TypedArgCallable( [=]() { usage( txt1, txt2); },
+      new detail::TypedArgCallable( [=]( bool) { usage( txt1, txt2); },
          "Handler::usage"),
       desc);
 } // Handler::addHelpArgument
@@ -236,17 +268,20 @@ detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
 
 
 /// Adds an argument that takes the path/filename of an argument file as
-/// parameter.<br>
+/// parameter.
 /// When the flag #hfReadProgArg is passed to the constructor, the program
 /// arguments file with the predefined name is always read if it exists.<br>
-/// With the method it is possible to specify an argument with which the
+/// With this method it is possible to specify an argument with which the
 /// (path and) name of the arguments file can be specified. Only if this
 /// given argument is then used on the command line, the argument file is
 /// read.
-/// @param[in]  arg_spec  The arguments on the command line for specifying
-///                       the file with the arguments.
-/// @return  The object managing this argument, may be used to apply further
-///          settings.
+///
+/// @param[in]  arg_spec
+///    The arguments on the command line for specifying the file with the
+///    arguments.
+/// @return
+///    The object managing this argument, may be used to apply further
+///    settings.
 /// @since  0.2, 10.04.2016
 detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 {
@@ -256,7 +291,10 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallableValue(
-      [&](auto const& filename) { this->readArgumentFile( filename, true); },
+      [&](auto const& filename, bool)
+      {
+         this->readArgumentFile( filename, true);
+      },
       "Handler::readArgumentFile");
 
 
@@ -268,9 +306,10 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
 
 
 /// Adds an argument that activates printing of hidden arguments in the
-/// usage.<br>
+/// usage.
 /// Same as setting the flag #hfArgHidden, but allows to specify the
 /// argument and its description.
+///
 /// @param[in]  arg_spec  The argument(s) on the command line for activating
 ///                       printing the hidden arguments.
 /// @param[in]  desc      Optional text for the description of the argument
@@ -291,6 +330,7 @@ detail::TypedArgBase* Handler::addArgumentPrintHidden( const string& arg_spec,
 
 /// Adds an argument that activates printing of usage with arguments with
 /// short argument key only.
+///
 /// @param[in]  arg_spec  The argument(s) on the command line for activating
 ///                       printing the usage with short arguments only.
 /// @param[in]  desc      Optional text for the description of the argument
@@ -311,6 +351,7 @@ detail::TypedArgBase*
 
 /// Adds an argument that activates printing of usage with arguments with
 /// long argument key only.
+///
 /// @param[in]  arg_spec  The argument(s) on the command line for activating
 ///                       printing the usage with long arguments only.
 /// @param[in]  desc      Optional text for the description of the argument
@@ -330,9 +371,10 @@ detail::TypedArgBase*
 
 
 /// Adds an argument that prints the list of arguments, their destination
-/// variables and their values.<br>
+/// variables and their values.
 /// Same as setting the flag #hfListArgVar, but allows to specify the
 /// argument.
+///
 /// @param[in]  arg_spec  The argument(s) on the command line for printing the
 ///                       arguments and their destination variables.
 /// @return  The object managing this argument, may be used to apply further
@@ -346,7 +388,7 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallable(
-      [&]() { this->listArgVars(); }, "Handler::listArgVars");
+      [&]( bool) { this->listArgVars(); }, "Handler::listArgVars");
 
 
    arg_hdl->setKey( key);
@@ -357,9 +399,10 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
 
 
 
-/// Adds an argument that prints the list of argument groups.<br>
+/// Adds an argument that prints the list of argument groups.
 /// Same as setting the flag #hfListArgGroups, but allows to specify the
 /// argument.
+///
 /// @param[in]  arg_spec  The argument(s) on the command line for printing the
 ///                       argument groups.
 /// @return  The object managing this argument, may be used to apply further
@@ -377,7 +420,7 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
    const detail::ArgumentKey  key( arg_spec);
 
    auto  arg_hdl = new detail::TypedArgCallable(
-      [&]() { this->listArgGroups(); }, desc);
+      [&]( bool) { this->listArgGroups(); }, desc);
 
    arg_hdl->setKey( key);
    arg_hdl->setCardinality();
@@ -389,6 +432,7 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
 
 /// Adds an argument that can be used to mark the end of multiple, separate
 /// value list.
+///
 /// @param[in]  arg_spec  The argument(s) on the command line for marking the
 ///                       end of a separate value list.
 /// @return  The object managing this argument, may be used to apply further
@@ -401,7 +445,10 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
 
    const detail::ArgumentKey  key( arg_spec);
    detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallable( [&]() { this->endValueList(); }, desc);
+      = new detail::TypedArgCallable( [&]( bool)
+      {
+         this->endValueList();
+      }, desc);
 
 
    arg_hdl->setKey( key);
@@ -435,8 +482,11 @@ detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
 
    const detail::ArgumentKey  key( arg_spec);
    detail::TypedArgBase*      arg_hdl
-      = new detail::TypedArgCallableValue( [&,full=full]( auto const& help_arg_key)
-        { this->helpArgument( help_arg_key, full); }, desc);
+      = new detail::TypedArgCallableValue(
+         [&, full=full]( auto const& help_arg_key, bool)
+         {
+            this->helpArgument( help_arg_key, full);
+         }, desc);
 
    arg_hdl->setKey( key);
 
@@ -445,60 +495,82 @@ detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
 
 
 
-/// Specifies the callback function for a control argument.<br>
-/// If no handler is defined for a control character, it is treated as error
-/// when found in an argument list.
-/// @param[in]  ctrlChar  The control character to specify the handler for.
-/// @param[in]  hf        The handler to call when the control character is
-///                       detected on the argument list.
+/// Specifies the callback functions for handling brackets on the command
+/// line.
+///
+/// @param[in]  open_bracket
+///    The handler to call when an opening round bracket is detected on the
+///    command line.
+/// @param[in]  closing_bracket
+///    The handler to call when a closing round bracket is detected in the
+///    argument list.
+/// @since  1.27.0, 28.05.2019
+///    (renamed from addControlHandler)
 /// @since  0.2, 10.04.2016
-void Handler::addControlHandler( char ctrlChar, HandlerFunc hf) noexcept( false)
+void Handler::addBracketHandler( HandlerFunc open_bracket,
+      HandlerFunc closing_bracket)
 {
 
-   switch (ctrlChar)
-   {
-   case '(':  mpOpeningBracketHdlr  = hf;  break;
-   case ')':  mpClosingBracketHdlr  = hf;  break;
-   case '!':  mpExclamationMarkHdlr = hf;  break;
-   default:
-      throw invalid_argument( "Invalid control character '" + string( 1, ctrlChar)
-                              + "' specified!");
-   } // end switch
+   mpOpeningBracketHdlr = open_bracket;
+   mpClosingBracketHdlr = closing_bracket;
 
-} // Handler::addControlHandler
+   // these are not really new argument handlers, but the cross-check function
+   // verifies them too
+   if (mUsedByGroup)
+      Groups::instance().crossCheckArguments( this);
+
+} // Handler::addBracketHandler
 
 
 
-/// Adds a constraint to the argument handler itself that affects multiple
-/// arguments.<br>
+/// Adds a (value) constraint to the argument handler itself that affects
+/// multiple arguments.
 /// The arguments specified in the constraint must already be defined.
-/// @param[in]  ic  Pointer to the object that handles the constraint.
+///
+/// @param[in]  ihc
+///    Pointer to the object that handles the constraint. Is deleted when an
+///    error occurs.
+/// @throw
+///    std::invalid_argument if a NULL pointer is passed, or the argument
+///    list contains invalid arguments.
 /// @since  0.2, 10.04.2016
-void Handler::addConstraint( detail::IConstraint* ic) noexcept( false)
+void Handler::addConstraint( detail::IHandlerConstraint* ihc)
 {
 
-   if (ic->argumentList().empty())
-      throw runtime_error( "may not specify constraint with empty argument list");
+   if (ihc == nullptr)
+      throw invalid_argument( "invalid NULL pointer passed");
 
-   if (!validArguments( ic->argumentList()))
-      throw runtime_error( "constraint contains invalid argument(s)");
+   if (ihc->isValueConstraint())
+   {
+      auto  ihvc = static_cast< detail::IHandlerValueConstraint*>( ihc);
+      if (!validValueArguments( ihvc))
+      {
+         delete ihc;
+         throw invalid_argument( "constraint contains invalid argument(s)");
+      } // end if
+   } else if (!validArguments( ihc->argumentList()))
+   {
+      delete ihc;
+      throw invalid_argument( "constraint contains invalid argument(s)");
+   } // end if
 
    // in case the argument list was updated through validArguments(), the
    // constraints may need to be notified about the new content
-   ic->validated();
+   ihc->validated();
 
-   mGlobalConstraints.push_back( ic);
+   mGlobalConstraints.push_back( ihc);
 
 } // Handler::addConstraint
 
 
 
 /// Iterates over the list of arguments and their values and stores the
-/// values in the corresponding destination variables.<br>
+/// values in the corresponding destination variables.
 /// The function also checks for missing, mandatory arguments, arguments
 /// wrongly used without a value etc. If an invalid value is passed for an
 /// argument, or if a mandatory argument is missing etc., an exception is
 /// thrown.
+///
 /// @param[in]  argc    Number of arguments passed to the process.
 /// @param[in]  argv[]  List of argument strings.
 /// @since  0.2, 10.04.2016
@@ -509,6 +581,11 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
    if (mReadProgramArguments)
    {
       readEvalFileArguments( argv[ 0]);
+   } // end if
+
+   if (mCheckEnvVar)
+   {
+      checkReadEnvVarArgs( argv[ 0]);
    } // end if
 
    // make sure that mpLastArg is reset at the end, in case the same object is
@@ -540,9 +617,10 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
 
 
 /// Same as evalArguments(). Difference is that this method catches
-/// exceptions, reports them on \c stderr and then exits the program.<br>
+/// exceptions, reports them on \c stderr and then exits the program.
 /// In other words: If the function returns, all argument requirements and
 /// constraints were met.
+///
 /// @param[in]  argc    Number of arguments passed to the process.
 /// @param[in]  argv    List of argument strings.
 /// @param[in]  prefix  Prefix text to print before the error message.<br>
@@ -550,42 +628,11 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
 ///                     space at the end as separator to the following text.
 /// @since  0.2, 10.04.2016
 void Handler::evalArgumentsErrorExit( int argc, char* argv[],
-                                      const string& prefix)
+   const string& prefix)
 {
 
-   try
-   {
+   detail::evalArgumentsErrorExit( *this, mErrorOutput, argc, argv, prefix);
 
-      evalArguments( argc, argv);
-      return;   // return here, easier error exit below
-
-   } catch (const invalid_argument& ia)
-   {
-      mErrorOutput << prefix << "Caught 'invalid argument' exception: " << ia.what() << "!" << endl;
-   } catch (const out_of_range& re)
-   {
-      mErrorOutput << prefix << "Caught 'range error' exception: " << re.what() << "!" << endl;
-   } catch (const logic_error& le)
-   {
-      mErrorOutput << prefix << "Caught 'logic error' exception: " << le.what() << "!" << endl;
-   } catch (const overflow_error& oe)
-   {
-      mErrorOutput << prefix << "Caught 'overflow' exception: " << oe.what() << "!" << endl;
-   } catch (const underflow_error& ue)
-   {
-      mErrorOutput << prefix << "Caught 'underflow' exception: " << ue.what() << "!" << endl;
-   } catch (const runtime_error& rte)
-   {
-      mErrorOutput << prefix << "Caught 'runtime error' exception: " << rte.what() << "!" << endl;
-   } catch (const exception& e)
-   {
-      mErrorOutput << prefix << "Caught unspecific std::exception: " << e.what() << "!" << endl;
-   } catch (...)
-   {
-      mErrorOutput << prefix << "Caught unknown exception!" << endl;
-   } // end try
-
-   exit( EXIT_FAILURE);
 } // Handler::evalArgumentsErrorExit
 
 
@@ -632,6 +679,7 @@ void Handler::printSummary( sumoptset_t contents_set, std::ostream& os,
 
 /// Helps to determine if an object is a 'plain' Handler object or a
 /// ValueHandler object.
+///
 /// @return  Always \c false for objects of this class.
 /// @since  0.14.0, 21.02.2017
 bool Handler::isValueHandler() const
@@ -642,6 +690,7 @@ bool Handler::isValueHandler() const
 
 
 /// Returns this object if it is a ValueHandler object, otherwise throws.
+///
 /// @return  \c this object if it is a ValueHandler object, for objects of
 ///          the base class Handler throws.
 /// @since  0.14.0, 15.03.2017
@@ -654,6 +703,7 @@ ValueHandler* Handler::getValueHandlerObj()
 
 /// Returns pointer to the base type of the object that handles the specified
 /// argument.
+///
 /// @param[in]  arg_spec  The short and/or long arguments keys.
 /// @return  Pointer to the object handling the specified argument.
 /// @since  0.14.0, 16.03.2017
@@ -668,11 +718,13 @@ detail::TypedArgBase* Handler::getArgHandler( const string& arg_spec)
 
 /// Compares the arguments defined in this object with those in \a otherAH
 /// and throws an exception if duplicates are detected.
-/// @param[in]  ownName    The symbolic name of this objects arguments.
-/// @param[in]  otherName  The symbolic name of the the other objects
-///                        arguments.
-/// @param[in]  otherAH    The other object to check the argument list
-///                        against.
+///
+/// @param[in]  ownName
+///    The symbolic name of this objects arguments.
+/// @param[in]  otherName
+///    The symbolic name of the the other objects arguments.
+/// @param[in]  otherAH
+///    The other object to check the argument list against.
 /// @since  0.2, 10.04.2016
 void Handler::crossCheckArguments( const string ownName,
                                    const string& otherName,
@@ -687,16 +739,10 @@ void Handler::crossCheckArguments( const string ownName,
 
    // finally, check that there are no control character handlers set in both
    // argument handlers
+   // since open and close handlers are always set together, we need to check
+   // only one
    if (mpOpeningBracketHdlr && otherAH.mpOpeningBracketHdlr)
-      throw invalid_argument( "Control argument handler for '(' from group '" +
-                              otherName + "' is already used by '" + ownName +
-                              "'");
-   if (mpClosingBracketHdlr && otherAH.mpClosingBracketHdlr)
-      throw invalid_argument( "Control argument handler for ')' from group '" +
-                              otherName + "' is already used by '" + ownName +
-                              "'");
-   if (mpExclamationMarkHdlr && otherAH.mpExclamationMarkHdlr)
-      throw invalid_argument( "Control argument handler for '!' from group '" +
+      throw invalid_argument( "Control argument handler for '()' from group '" +
                               otherName + "' is already used by '" + ownName +
                               "'");
 
@@ -705,6 +751,7 @@ void Handler::crossCheckArguments( const string ownName,
 
 
 /// Finally: Handle an identified argument from the command line.
+///
 /// @param[in]      key  The argument (character/short or long).
 /// @param[in,out]  ai   The iterator pointing to the current argument.<br>
 ///                      May be increased here (for values or argument
@@ -734,8 +781,8 @@ Handler::ArgResult
       // we may only advance the main iterator if the argument is (still)
       // handled by the sub-argument
       auto  subAI( ai);
-      while ((subAI != end) &&
-             (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
+      while ((subAI != end)
+             && (subArgHandler->evalSingleArgument( subAI, end) == ArgResult::consumed))
       {
          ai = subAI++;
       } // end while
@@ -747,11 +794,6 @@ Handler::ArgResult
    mpLastArg = p_arg_hdl = mArguments.findArg( key);
    if (p_arg_hdl == nullptr)
       return ArgResult::unknown;
-
-   // an argument that we know
-   if (p_arg_hdl->valueMode() == ValueMode::unknown)
-      throw runtime_error( "Value mode not set for argument '"
-                           + format::toString( key) + "'");
 
    if (p_arg_hdl->valueMode() == ValueMode::none)
    {
@@ -776,8 +818,8 @@ Handler::ArgResult
       ait2.remArgStrAsVal();
    ++ait2;
 
-   if ((ait2 == end) ||
-       (ait2->mElementType != detail::ArgListElement::ElementType::value))
+   if ((ait2 == end)
+       || (ait2->mElementType != detail::ArgListElement::Type::value))
    {
       // no next value
       if (p_arg_hdl->valueMode() == ValueMode::optional)
@@ -800,12 +842,13 @@ Handler::ArgResult
 
 
 
-/// Handles one argument.<br>
+/// Handles one argument.
 /// Since this function is called from multiple sources, it must not throw an
 /// exception when e.g. an unknown argument is found. Exceptions may only be
 /// thrown if e.g. a known argument misses its value. Otherwise, in most
 /// cases \a ArgResult::unknown should be returned and the error handling
 /// left to the calling function.
+///
 /// @param[in]  ai   Iterator that points to the argument to handle.<br>
 ///                  If the argument requires a value, the iterator is
 ///                  incremented, so it will point to the next argument when
@@ -819,12 +862,22 @@ Handler::ArgResult
                                 const detail::ArgListParser::const_iterator& end)
 {
 
+   // make me the current argument handler
+   // do it here so it works for single argument handlers as well as argument
+   // groups
+   const common::ScopedValue< detail::ConstraintContainer*>
+      makeMeCurrent( detail::ConstraintContainer::mpCurrentConstraints,
+                     &mConstraints);
+
+
    switch (ai->mElementType)
    {
-   case detail::ArgListElement::ElementType::value:
+   default:
+   case detail::ArgListElement::Type::value:
       if ((mpLastArg != nullptr) && mpLastArg->takesMultiValue())
       {
-         mpLastArg->assignValue( mReadingArgumentFile, ai->mValue);
+         mpLastArg->assignValue( mReadMode != ReadMode::commandLine, ai->mValue,
+            mInverted);
          return ArgResult::consumed;
       } // end if
       if (detail::TypedArgBase* hdl = mArguments.findArg( mPosKey))
@@ -841,13 +894,13 @@ Handler::ArgResult
       } // end if
       break;
 
-   case detail::ArgListElement::ElementType::singleCharArg:
+   case detail::ArgListElement::Type::singleCharArg:
       return processArg( detail::ArgumentKey( ai->mArgChar), ai, end);
 
-   case detail::ArgListElement::ElementType::stringArg:
+   case detail::ArgListElement::Type::stringArg:
       return processArg( detail::ArgumentKey( ai->mArgString), ai, end);
 
-   case detail::ArgListElement::ElementType::control:
+   case detail::ArgListElement::Type::control:
       if (ai->mArgChar == '(')
       {
          if (!mpOpeningBracketHdlr)
@@ -860,16 +913,10 @@ Handler::ArgResult
          mpClosingBracketHdlr();
       } else
       {
-         if (!mpExclamationMarkHdlr)
-            return ArgResult::unknown;
-         mpExclamationMarkHdlr();
+         mInverted = true;
       } // end if
 
       return ArgResult::consumed;
-
-   default:
-      throw runtime_error( "Got invalid element in argument list");
-
    } // end switch
 
    return ArgResult::unknown;
@@ -879,6 +926,7 @@ Handler::ArgResult
 
 /// Checks if all mandatory arguments were set, and the cardinality
 /// requirements were met.
+///
 /// @since  0.2, 10.04.2016
 void Handler::checkMissingMandatoryCardinality() const
 {
@@ -891,6 +939,7 @@ void Handler::checkMissingMandatoryCardinality() const
 
 
 /// Checks if the specified argument is already used.
+///
 /// @param[in]  argChar  The argument character to check.
 /// @return  \c true if the argument is already in use.
 /// @since  0.2, 10.04.2016
@@ -903,6 +952,7 @@ bool Handler::argumentExists( char argChar) const
 
 
 /// Checks if the specified argument is already used.
+///
 /// @param[in]  argString  The argument string to check.
 /// @return  \c true if the argument is already in use.
 /// @since  0.2, 10.04.2016
@@ -916,13 +966,18 @@ bool Handler::argumentExists( const string& argString) const
 
 /// Tries to open the file with the program's name and read the arguments
 /// from this file.
+///
 /// @param[in]  arg0  The (path and) name of the program file.
 /// @since  0.2, 10.04.2016
 void Handler::readEvalFileArguments( const char* arg0)
 {
 
+   assert( (mReadMode & ReadMode::file) == 0);
+
    // have to copy the path since basename() may want to modify it
    std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
+
+   ::strcpy( copy.get(), arg0);
 
    const char*  progNameOnly = ::basename( copy.get());
    const char*  homeDir = ::getenv( "HOME");
@@ -940,7 +995,44 @@ void Handler::readEvalFileArguments( const char* arg0)
 
 
 
+/// If no environment variable name is given, the name of the program file is
+/// used. Then check if an environment variable with this name exists and is
+/// not empty. If so the evaluate the program arguments from the variable.
+///
+/// @param[in]  arg0  The (path and) name of the program file.
+/// @since  1.22.0, 01.04.2019
+void Handler::checkReadEnvVarArgs( const char* arg0)
+{
+
+   assert( (mReadMode & ReadMode::envVar) == 0);
+
+   if (mEnvVarName.empty())
+   {
+      std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
+
+      ::strcpy( copy.get(), arg0);
+      mEnvVarName = ::basename( copy.get());
+      boost::to_upper( mEnvVarName);
+   } // end if
+
+   const char*  arg_env = ::getenv( mEnvVarName.c_str());
+
+   if ((arg_env == nullptr) || (arg_env[ 0] == '\0'))
+      return;
+
+   const common::ScopedFlag< uint8_t>  sf( mReadMode, ReadMode::envVar);
+   auto const                          as2a = appl::make_arg_array( arg_env,
+      nullptr);
+   detail::ArgListParser               alp( as2a.mArgC, as2a.mpArgV);
+
+   iterateArguments( alp);
+
+} // Handler::checkReadEnvVarArgs
+
+
+
 /// Function to read arguments from a file.
+///
 /// @param[in]  pathFilename   The (path and) file name to read from.
 /// @param[in]  reportMissing  If set, the file should exist, an exception is
 ///                            thrown if the file could not be read.
@@ -958,8 +1050,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       return;
    } // end if
 
-   const common::ResetAtExit< bool>  rae( mReadingArgumentFile, false);
-   mReadingArgumentFile = true;
+   const common::ScopedFlag< uint8_t>  sf( mReadMode, ReadMode::file);
 
    // now read the lines with arguments and process them
    string  line;
@@ -968,7 +1059,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       if (line.empty() || (line[ 0] == '#'))
          continue;   // while
 
-      appl::ArgString2Array  as2a( line, nullptr);
+      auto const             as2a = appl::make_arg_array( line, nullptr);
       detail::ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
 
       iterateArguments( alp);
@@ -981,6 +1072,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
 
 
 /// Prints the list of arguments and their destination variables.
+///
 /// @since  0.2, 10.04.2016
 void Handler::listArgVars()
 {
@@ -995,6 +1087,7 @@ void Handler::listArgVars()
 
 
 /// Prints the list of argument groups.
+///
 /// @since  0.13.1, 07.02.2017
 void Handler::listArgGroups()
 {
@@ -1018,7 +1111,7 @@ void Handler::endValueList()
 
 
 /// Searches if the given argment key belongs to a known argument, and if so
-/// prints its usage.<br>
+/// prints its usage.
 /// If the argument key is unknown, an error message is printed.<br>
 /// At the end, the function calls exit(), unless "usage continues" is set.
 ///
@@ -1075,32 +1168,7 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
 
       if (full)
       {
-         mOutput << "Properties:" << std::endl
-                 << "   destination variable name:  "
-                 << p_arg_hdl->varName() << std::endl
-                 << "   destination variable type:  "
-                 << p_arg_hdl->varTypeName() << std::endl
-                 << "   is mandatory:               "
-                 << std::boolalpha << p_arg_hdl->isMandatory() << std::endl
-                 << "   value mode:                 "
-                 << p_arg_hdl->valueMode() << std::endl
-                 << "   cardinality:                "
-                 << p_arg_hdl->cardinalityStr() << std::endl
-                 << "   checks:                     "
-                 << p_arg_hdl->checkStr() << std::endl
-                 << "   constraints:                "
-                 << p_arg_hdl->constraintStr() << std::endl
-                 << "   is hidden:                  "
-                 << std::boolalpha << p_arg_hdl->isHidden() << std::endl
-                 << "   takes multiple values:      "
-                 << std::boolalpha << p_arg_hdl->takesMultiValue() << std::endl
-                 << "   is deprecated:              "
-                 << std::boolalpha << p_arg_hdl->isDeprecated() << std::endl
-                 << "   is replaced:                "
-                 << std::boolalpha << p_arg_hdl->isReplaced() << std::endl;
-         if (!p_arg_hdl->replacedBy().empty())
-            mOutput << "   replaced by:                "
-                    << p_arg_hdl->replacedBy() << std::endl;
+         p_arg_hdl->printProperties( mOutput);
       } // end if
    } else
    {
@@ -1118,26 +1186,21 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
 
 
 /// Iterates over the arguments and evaluates them.
+///
 /// @param[in]  alp  The parser object used to access the arguments.
 /// @since  0.2, 10.04.2016
 void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 {
-
-   /// make me the current argument handler
-   const common::ScopedValue< detail::ConstraintContainer*>
-      makeMeCurrent( detail::ConstraintContainer::mpCurrentConstraints,
-                     &mConstraints);
-
 
    for (auto ai = alp.begin(); ai != alp.end(); ++ai)
    {
       auto const  result = evalSingleArgument( ai, alp.end());
       if (result == ArgResult::unknown)
       {
-         if (ai->mElementType == detail::ArgListElement::ElementType::value)
+         if (ai->mElementType == detail::ArgListElement::Type::value)
             throw runtime_error( "Unknown argument '" + ai->mValue + "'");
-         if ((ai->mElementType == detail::ArgListElement::ElementType::singleCharArg) ||
-             (ai->mElementType == detail::ArgListElement::ElementType::control))
+         if ((ai->mElementType == detail::ArgListElement::Type::singleCharArg)
+             || (ai->mElementType == detail::ArgListElement::Type::control))
             throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
          throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
@@ -1152,6 +1215,7 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 
 
 /// Prints the usage of this class.
+///
 /// @param[out]  os  The stream to print to.
 /// @param[in]   ah  The object to print the data of.
 /// @return  The stream.
@@ -1168,10 +1232,10 @@ std::ostream& operator <<( std::ostream& os, const Handler& ah)
 /// @param[in]  flag_set
 ///    The set of flags to set.
 /// @param[in]  txt1
-///    Optional pointer to the object to provide additional text for the
+///    Optional pointer to the object that provides additional text for the
 ///    usage.
 /// @param[in]  txt2
-///    Optional pointer to the object to provide additional text for the
+///    Optional pointer to the object that provides additional text for the
 ///    usage.
 /// @since
 ///    1.11.0, 16.02.2018
@@ -1189,9 +1253,22 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
    else if (flag_set & hfHelpLong)
       args = "help";
 
+   if ((txt1 == nullptr) && (txt2 != nullptr))
+      throw invalid_argument( "Use first usage text argument to specify a "
+         "single usage text");
+   if ((txt1 != nullptr) && (txt2 != nullptr))
+   {
+      if (txt1->usagePos() == txt2->usagePos())
+         throw invalid_argument( "Cannot have two usage texts with the same "
+            "position");
+      if ((txt1->usagePos() == UsagePos::afterArgs)
+          && (txt2->usagePos() == UsagePos::beforeArgs))
+         throw invalid_argument( "Invalid order of usage texts (after/before)");
+   } // end if
+
    if (!args.empty())
       addArgument( args, new detail::TypedArgCallable(
-         [=]() { usage( txt1, txt2); }, "Handler::usage"),
+         [=]( bool) { usage( txt1, txt2); }, "Handler::usage"),
          "Prints the program usage.");
 
    if (flag_set & hfHelpArg)
@@ -1237,12 +1314,12 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
 void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 {
 
-   if ((txt2 != nullptr) && (txt1 == nullptr))
-      throw std::invalid_argument( "second usage text can only be used if first"
-         " usage text is used too");
-
    if (Groups::instance().evaluatedByArgGroups() && !mIsSubGroupHandler)
-       Groups::instance().displayUsage( txt1, txt2);
+   {
+      Groups::instance().displayUsage( txt1, txt2);
+      mUsagePrinted = true;
+      return;
+   } // end if
 
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::beforeArgs))
       mOutput << txt1 << endl << endl;
@@ -1265,6 +1342,7 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 
 
 /// Standard procedure for adding an argument handling object.
+///
 /// @param[in]  ah_obj  Pointer to the object that handles the argument.
 /// @param[in]  key     The argument key: short and/or long argument.
 /// @param[in]  desc    The description of the argument.
@@ -1287,19 +1365,28 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
 
 
 
-/// Checks each argument in the list if it is a valid/known argument.<br>
+/// Checks each argument in the list if it is a valid/known argument.
 /// If the argument specification in the list does not match the original
 /// specification of the argument (short and/or long), it is replaced in the
 /// \a constraint_arg_list.
+///
 /// @param[in]  constraint_arg_list  The list of arguments to check.
 /// @return  \c true if all arguments in the list are valid.
+/// @throw
+///    std::invalid_argument if the given string is empty, contains an
+///    invalid argument key or invalid combination of short and long keys,
+///    contains less than 2 arguments or the same argument more than once.
 /// @since  0.2, 10.04.2016
 bool Handler::validArguments( string& constraint_arg_list) const
 {
 
-   common::Tokenizer  tok( constraint_arg_list, ';');
-   string             new_constraint_arg_list;
+   if (constraint_arg_list.empty())
+      throw invalid_argument( "constraints cannot be created with an empty list"
+         " of arguments");
 
+   common::Tokenizer     tok( constraint_arg_list, ';');
+   string                new_constraint_arg_list;
+   std::vector< string>  used_argument;
 
    for (auto const& it : tok)
    {
@@ -1307,12 +1394,20 @@ bool Handler::validArguments( string& constraint_arg_list) const
       if (detail::TypedArgBase* arg = mArguments.findArg( key))
       {
          if (invalidCombination( key))
-            throw runtime_error( "Combination '" + it + "' is invalid");
+            throw invalid_argument( "Combination '" + it + "' is invalid");
+
+         const string  key_str( format::toString( arg->key()));
+
+         if (common::contains( used_argument, key_str))
+            throw invalid_argument( "same argument key '" + key_str
+               + "' is used twice in argument list");
 
          // argument from the list is valid
          if (!new_constraint_arg_list.empty())
             new_constraint_arg_list.append( ";");
-         new_constraint_arg_list.append( format::toString( arg->key()));
+         new_constraint_arg_list.append( key_str);
+
+         used_argument.push_back( key_str);
       } else
       {
          return false;
@@ -1328,9 +1423,83 @@ bool Handler::validArguments( string& constraint_arg_list) const
 
 
 
+/// Checks each argument in the list of the constraint if it is a valid/known
+/// argument.
+/// The (pointer to the) argument handlers are also stored in the constraint
+/// object, they are needed later to check the constraint.<br>
+/// If the argument specification in the list does not match the original
+/// specification of the argument (short and/or long), it is replaced in the
+/// \a constraint_arg_list.
+///
+/// @param[in]  ihc  Pointer to the value constraint constraint object.
+/// @return  \c true if all arguments in the list are valid.
+/// @throw
+///    std::invalid_argument if the given string is empty, contains an
+///    invalid argument key or invalid combination of short and long keys,
+///    contains less than 2 arguments or the same argument more than once.
+/// @since  1.31.0, 22.10.2019
+bool Handler::validValueArguments( detail::IHandlerValueConstraint* ihc) const
+{
+
+   auto &  constraint_arg_list = ihc->argumentList();
+
+   if (constraint_arg_list.empty())
+      throw invalid_argument( "constraints cannot be created with an empty list"
+         " of arguments");
+
+   common::Tokenizer     tok( constraint_arg_list, ';');
+   string                new_constraint_arg_list;
+   std::vector< string>  used_argument;
+
+   for (auto const& it : tok)
+   {
+      const detail::ArgumentKey  key( it);
+      if (detail::TypedArgBase* arg = mArguments.findArg( key))
+      {
+         if (invalidCombination( key))
+            throw invalid_argument( "Combination '" + it + "' is invalid");
+
+         if (!ihc->matchesVarType( arg->varTypeName()))
+            throw invalid_argument( "arguments listed for constraint have "
+               "different types");
+
+         // argument from the list is valid
+         const string  key_str( format::toString( arg->key()));
+
+         if (common::contains( used_argument, key_str))
+            throw invalid_argument( "same argument key '" + key_str
+               + "' is used twice in argument list");
+
+         if (!new_constraint_arg_list.empty())
+            new_constraint_arg_list.append( ";");
+         new_constraint_arg_list.append( key_str);
+
+         ihc->storeArgumentHandler( arg);
+
+         used_argument.push_back( key_str);
+      } else
+      {
+         return false;
+      } // end if
+   } // end for
+
+   if (ihc->numArguments() < 2)
+      throw invalid_argument( "need at least 2 arguments for a value "
+         "constraint");
+
+   // when we get here, all the arguments in the constraint string were valid
+   // maybe one or more argument specification was expanded, take the new string
+   constraint_arg_list = new_constraint_arg_list;
+
+   return true;
+} // Handler::validValueArguments
+
+
+
 /// Checks if the provided argument specification contains an invalid
 /// combination, i.e. a short and a long argument that are already used on
 /// two different, existing arguments.
+///
 /// @param[in]  key  The argument specification to test.
 /// @return  \c true if the given combination is invalid.
 /// @since  0.15.0, 06.08.2017
@@ -1356,14 +1525,15 @@ bool Handler::invalidCombination( const detail::ArgumentKey& key) const
          throw runtime_error( "unknown argument '" + key.argString() + "'");
    } // end if
 
-   return (short_arg != nullptr) && (long_arg != nullptr) &&
-          (short_arg != long_arg);
+   return (short_arg != nullptr) && (long_arg != nullptr)
+          && (short_arg != long_arg);
 } // Handler::invalidCombination
 
 
 
 /// When an argument was identified, passes the argument specification to all
 /// global constraint objects to check if a constraint is violated.
+///
 /// @param[in]  key  The argument specification.
 /// @since  0.2, 10.04.2016
 void Handler::executeGlobalConstraints( const detail::ArgumentKey& key)
@@ -1380,6 +1550,7 @@ void Handler::executeGlobalConstraints( const detail::ArgumentKey& key)
 
 /// After all arguments were processed, call this method to iterate over all
 /// global constraints to check e.g. if a required argument is missing.
+///
 /// @since  0.2, 10.04.2016
 void Handler::checkGlobalConstraints() const
 {
@@ -1421,7 +1592,9 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
                  << endl;
    } // end if
 
-   hdl->assignValue( mReadingArgumentFile, value);
+   hdl->assignValue( mReadMode != 0, value, mInverted);
+
+   mInverted = false;
 
 } // Handler::handleIdentifiedArg
 

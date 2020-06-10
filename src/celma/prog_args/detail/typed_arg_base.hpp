@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -24,7 +24,7 @@
 #include <vector>
 #include "celma/prog_args/detail/argument_key.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
-#include "celma/prog_args/detail/i_constraint.hpp"
+#include "celma/prog_args/detail/i_arg_constraint.hpp"
 #include "celma/prog_args/detail/i_format.hpp"
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
@@ -34,6 +34,8 @@
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
 #include "celma/prog_args/detail/check_lower.hpp"
+#include "celma/prog_args/detail/check_max_length.hpp"
+#include "celma/prog_args/detail/check_min_length.hpp"
 #include "celma/prog_args/detail/check_parent_directory_exists.hpp"
 #include "celma/prog_args/detail/check_pattern.hpp"
 #include "celma/prog_args/detail/check_range.hpp"
@@ -42,6 +44,7 @@
 
 // also the specific formatters are not actually needed here, but they are also
 // included anyway for convenience of the user
+#include "celma/prog_args/detail/format_anycase.hpp"
 #include "celma/prog_args/detail/format_lowercase.hpp"
 #include "celma/prog_args/detail/format_uppercase.hpp"
 
@@ -97,16 +100,11 @@ public:
       optional,   //!< The value is optional.
       required,   //!< The argument must have a value.<br>
                   //!< This is the default for all other arguments.
-      command,    //!< An argument with this value mode signals that this and
+      command     //!< An argument with this value mode signals that this and
                   //!< all the following arguments and values are not anymore
                   //!< relevant for this object, but should be assigned as
                   //!< complete argument string to the value of the argument and
                   //!< will then be handled by another tool/command.
-      unknown     //!< We don't know if the argument actually needs a value or
-                  //!< not (used for arguments that result in a function call).
-                  //!< But this is only used as an initialisation value, once
-                  //!< the arguments are evaluated each argument must have a
-                  //!< defined value mode.
    }; // ValueMode
 
    /// Returns the text for the enum.
@@ -135,21 +133,31 @@ public:
 
    /// Assigns a value.<br>
    /// Checks if the argument is deprecated, or if a cardinality constraint is
-   /// violated. If not, the virtual method assign() is called to actually
-   /// assign the value, and finally activateConstraints() is called to activate
-   /// the contrainst (sic!) triggered by this argument.
+   /// violated.<br>
+   /// If not and the flag \a inverted is set, checks if the argument supports
+   /// inverted logic.<br>
+   /// Finally the virtual method assign() is called to actually assign the
+   /// value, and afterwards activateConstraints() is called to activate the
+   /// constraints (sic!) triggered by this argument.
    ///
    /// @param[in]  ignore_cardinality
    ///    Specifies if the cardinality of calls/value assignments should be
    ///    ignored.
    /// @param[in]  value
    ///    The value to assign, in string format.
-   /// @since
-   ///    1.6.0, 29.06.2018  (renamed from calledAssign)
-   /// @since
-   ///    0.2, 10.04.2016
-   void assignValue( bool ignore_cardinality, const std::string& value)
-      noexcept( false);
+   /// @param[in]  inverted
+   ///    Is set when the argument was preceeded by an exclamation mark which
+   ///    means that the logic of the argument should be inverted.
+   /// @throw  std::runtime_error
+   ///    if the function is deprecated, or when the flag \a inverted is set and
+   ///    the value type dopes not support inversion.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
+   /// @since  1.6.0, 29.06.2018
+   ///    (renamed from calledAssign)
+   /// @since  0.2, 10.04.2016
+   void assignValue( bool ignore_cardinality, const std::string& value,
+      bool inverted) noexcept( false);
 
    /// Should return if the argument was used/parameter was set.
    /// @return
@@ -208,21 +216,34 @@ public:
 
    /// Sets the flag if the default value of the destination variable should be
    /// printed in the usage or not.
-   /// @param[in]  doPrint
-   ///    \c true = do print the default value.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @param[in]  doPrint  \c true = do print the default value.
+   /// @return  Pointer to this object.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setPrintDefault( bool doPrint);
 
    /// Returns if the default value of the destination variable should be
    /// printed in the usage.
-   /// @return
-   ///    \c true if the default value should be printed.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @return  \c true if the default value should be printed.
+   /// @since  0.2, 10.04.2016
    bool printDefault() const;
+
+   /// If printing the default value in the usage is enabled, this function can
+   /// be used to specify the unit of the value. This will be displayed behind
+   /// the value in the usage.
+   ///
+   /// @param[in]  unit  The unit of the value to display in the usage.
+   /// @throw  std::logic_error if printing the default value is disabled.
+   /// @since  1.35.0, 09.02.2020
+   void setValueUnit( const std::string& unit) noexcept( false);
+
+   /// 
+   /// @return
+   ///    .
+   /// @since
+   ///    1.35.0, 09.02.2020
+   const std::string& valueUnit() const;
 
    /// Specifies that this argument is hidden.
    /// @return
@@ -242,12 +263,11 @@ public:
    /// argument or not.<br>
    /// Here in the base class, the only value mode that can be set is
    /// 'required'.
-   /// @param[in]  vm
-   ///    The new value mode.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @param[in]  vm  The new value mode.
+   /// @return  Pointer to this object.
+   /// @throw  std::invalid_argument If the given value mode is not 'required'.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false);
 
    /// Returns the value mode of this argument.
@@ -270,8 +290,9 @@ public:
    /// list a free value, use the argument '--endvalues' after the last value.
    /// @return
    ///    Pointer to this object.
-   /// @throws
-   ///    runtime_error when called on a type that cannot handle multiple values.
+   /// @throw
+   ///    std::runtime_error when called on a type that cannot handle multiple
+   ///    values.
    /// @since
    ///    0.2, 10.04.2016
    virtual TypedArgBase* setTakesMultiValue() noexcept( false);
@@ -285,32 +306,67 @@ public:
    bool takesMultiValue() const;
 
    /// Adds a value formatter: The value from the argument list (command line)
-   /// is formatted before it is checked and/or stored.<br>
-   /// Throws when called for an argument that does not accept values.
+   /// is formatted before it is checked and/or stored.
+   /// Use this function for destination types that can store only one value, or
+   /// values of one type.
+   ///
    /// @param[in]  f
-   ///    Pointer to the formatter to add.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throw
+   ///    std::logic_error when called for an argument that does not accept
+   ///    values.
+   /// @throw
+   ///    std::invalid_argument when the given object pointer is NULL.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addFormat( IFormat* f) noexcept( false);
+
+   /// Adds a value formatter for the value at the given position: The value
+   /// from the argument list (command line) is formatted before it is checked
+   /// and/or stored.
+   /// Use this function for destination types that can store multiple values
+   /// with the same or even with different types.<br>
+   /// Here in the base class always throws, must be overloaded for types that
+   /// support multiple values.
+   ///
+   /// @param[in]  val_idx
+   ///    The index of the value to apply the format to.<br>
+   ///    A value of -1 means that the format should be applied to all values,
+   ///    index 0 means the first value etc.
+   /// @param[in]  f
+   ///    Pointer to the formatter to add, is deleted when it could not be
+   ///    stored.
+   /// @return  Pointer to this object.
+   /// @throw
+   ///    std::logic_error when called for an argument that does not accept
+   ///    multiple values.
+   /// @since  1.32.0, 25.04.2019
+   virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false);
 
    /// Calls all formatter methods defined for this argument. The formatter
    /// methods should throw an exception when a formatting failed.
+   ///
    /// @param[in,out]  val
-   ///    The value to format.
+   ///    The value to format, may be modified by the defined formatters.
+   /// @param[in]      value_idx
+   ///    The index of the value to format, -1 to call the single/general
+   ///    formatter.
    /// @since
    ///    0.2, 10.04.2016
-   void format( std::string& val) const;
+   void format( std::string& val, int value_idx = -1) const;
 
-   /// Adds a value check.<br>
-   /// Throws when called for an argument that does not accept values.
+   /// Adds a value check.
+   ///
    /// @param[in]  c
-   ///    Pointer to the object that checks the value.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///    Pointer to the object that checks the value, is deleted when it could
+   ///    not be stored.
+   /// @return  Pointer to this object.
+   /// @throw
+   ///    std::logic_error when called for an argument that does not accept
+   ///    values.
+   ///    std::invalid_argument when the given object pointer is NULL.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
 
    /// Special feature for destination variable type level counter:<br>
@@ -379,6 +435,12 @@ public:
    /// @since
    ///    0.16.0, 12.08.2017
    std::string checkStr() const;
+
+   /// Returns a text description of the formats specified for this argument.
+   ///
+   /// @return  A string with the description of the formatters.
+   /// @since  1.33.0, 05.11.2019
+   std::string formatStr() const;
 
    /// Specifies the cardinality check to perform on this type before assignment
    /// of a new value.<br>
@@ -456,6 +518,15 @@ public:
    ///    1.6.0, 03.07.2018
    const std::string& replacedBy() const;
 
+   /// Marks an argument that inverted logic is supported, i.e. the argument may
+   /// be proceeded by an exclamation mark.<br>
+   /// By default this is not allowed/supported.
+   ///
+   /// @return  Pointer to this object.
+   /// @throw  invalid argument.
+   /// @since  1.27.0, 28.05.2019
+   virtual TypedArgBase* allowsInversion() noexcept( false);
+
 /*
    /// Adds a value conversion: The value from the argument list (command line)
    /// is converted before it is checked and/or stored.
@@ -501,13 +572,14 @@ public:
 
    /// Adds a constraint to this argument. The constraint is only evaluated when
    /// the argument is actually used.
-   /// @param[in]  ic
+   ///
+   /// @param[in]  iac
    ///    Pointer to the contraint object to add to this argument.
    /// @return
    ///    Pointer to this object.
    /// @since
    ///    0.2, 10.04.2016
-   virtual TypedArgBase* addConstraint( IConstraint* ic);
+   virtual TypedArgBase* addConstraint( IArgConstraint* iac) noexcept( false);
 
    /// Returns if the argument has a constraint specified.
    /// @return
@@ -516,12 +588,38 @@ public:
    ///    0.16.0, 15.08.2017
    bool hasConstraint() const;
 
+   /// Returns if the values in the objects intersect.
+   /// In the base class: Throws always.
+   ///
+   /// @return  Here: Nothing, always throws.
+   /// @throw  std::invalid_argument in the base class.
+   /// @since   1.34.1, 12.01.2020
+   virtual bool hasIntersection( TypedArgBase* arg) const noexcept( false);
+
+   /// Returns the result of the comparison of the values in this and the other
+   /// object.
+   /// Here in the base class: ALways throws.
+   ///
+   /// @param[in]  arg
+   ///    Pointer to the other object with the value to compare against.<br>
+   ///    Here: Ignored.
+   /// @return  Nothing, always throws.
+   /// @throw  std::invalid_argument in the base class.
+   /// @since  1.34.1, 14.01.2020
+   virtual int compareValue( const TypedArgBase* arg) const noexcept( false);
+
    /// Returns a text description of the constraint specified for this argument.
    /// @return
    ///    A string with the description of the constraint.
    /// @since
    ///    0.16.0, 15.08.2017
    std::string constraintStr() const;
+
+   /// Prints all properties of a destination variable.
+   ///
+   /// @param[in]  os  The stream to print to.
+   /// @since  1.33.0, 01.11.2019  (moved here from handler class)
+   void printProperties( std::ostream& os) const;
 
    /// Assignment is not allowed.
    TypedArgBase& operator =( const TypedArgBase&) = delete;
@@ -571,6 +669,26 @@ protected:
    ///    0.2, 10.04.2016
    void activateConstraints();
 
+   /// Finally adds the given formatter to the container of formatters.
+   ///
+   /// @param[in]  val_idx
+   ///    The index of the value to apply the format on, plus 1.
+   /// @param[in]  f
+   ///    Pointer to the formatter object to store.
+   /// @return  This object.
+   /// @throw
+   ///    std::logic_error when called for an argument that does not accept
+   ///    values.
+   /// @throw
+   ///    std::invalid_argument when the given object pointer is NULL.
+   /// @since  1.32.0, 25.04.2019
+   TypedArgBase* internAddFormat( int val_idx, IFormat* f) noexcept( false);
+
+   /// Storage type for formatters for one value type/position.
+   using value_format_cont_t = std::vector< std::unique_ptr< IFormat>>;
+   /// Storage type for all formatters for multiple value types/positions.
+   using format_cont_t = std::vector< value_format_cont_t>;
+
    /// The complete argument specification: short and/or long argument.
    ArgumentKey                     mKey;
    /// Contains the name of the variable in which the value(s) are stored.
@@ -596,24 +714,53 @@ protected:
    /// Set if an argument is deprecated. Issues an error message
    /// "argument is deprecated" instead of "unknown argument".
    bool                            mIsDeprecated = false;
+   /// Set when the argument supports logic inversion by a preceeding
+   /// exclamation makr.
+   bool                            mAllowsInverting = false;
    /// The key of the argument that replaced this argument.
    std::string                     mReplacedBy;
+   /// When set: the unit string to display in the usage.
+   std::string                     mUnitString;
    /// Stores all the checks (objects) defined for this argument.
    std::vector< ICheck*>           mChecks;
-   /// Stores all the formatters (objects) defined for this argument.
-   std::vector< IFormat*>          mFormats;
+   /// Stores all the formatters (objects) defined for this argument.<br>
+   /// Index 0 is used for formatters for single-value destinations and for
+   /// formatters that apply to all positions of a multi-value destination.<br>
+   /// Index 1 is then used for values at position 0 of the destination etc.
+   format_cont_t                   mFormats;
    /// Pointer to the object that manages the cardinality check.
    std::unique_ptr< ICardinality>  mpCardinality;
    /// Stores the constraints defined for this argument.
-   std::vector< IConstraint*>      mConstraints;
+   std::vector< IArgConstraint*>   mConstraints;
 
 private:
-   /// Should assign a value to the specified destination variable.
+   /// Creates a list of the name of the formatters set for a specific index.
+   ///
+   /// @param[in]  os
+   ///    The stream to write to.
+   /// @param[in]  formatters
+   ///    The container with the formatters for a specific index.
+   /// @since  1.33.0, 05.11.2019
+   static void formatStr( std::ostream& os,
+      const value_format_cont_t& formatters);
+
+   /// Should assign a value to the specified destination variable.<br>
+   /// Value parameter is obviously always passed, if the destination type
+   /// doesn't accept values or supports usage without value(s), the string is/
+   /// may be empty.<br>
+   /// Also the inverted parameter is always present, but it may only be set
+   /// when the argument does support logic inversion. In all other cases the
+   /// value need not be checked.
+   ///
    /// @param[in]  value
    ///    The value to assign in string format.
-   /// @since
-   ///    0.2, 10.04.2016
-   virtual void assign( const std::string& value = "") = 0;
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
+   /// @since  0.2, 10.04.2016
+   virtual void assign( const std::string& value, bool inverted) = 0;
 
    /// Used for printing an argument and its destination variable.<br>
    /// This function should be overloaded by derived classes.
@@ -622,6 +769,12 @@ private:
    /// @since
    ///    0.2, 10.04.2016
    virtual void dump( std::ostream& os) const;
+
+   /// Returns the number of formatters added for this argument.
+   ///
+   /// @return  The number of formatters that have been added.
+   /// @since  1.32.0, 19.08.2019
+   size_t numFormats() const;
 
 }; // TypedArgBase
 
@@ -646,11 +799,11 @@ constexpr const char* TypedArgBase::valueMode2str( ValueMode vm)
 {
    switch (vm)
    {
+   default:
    case ValueMode::none:      return "none";
    case ValueMode::optional:  return "optional";
    case ValueMode::required:  return "required";
    case ValueMode::command:   return "command";
-   default:                   return "unknown";
    } // end switch
 } // TypedArgBase::valueMode2str
 
@@ -695,6 +848,22 @@ inline bool TypedArgBase::printDefault() const
 {
    return mPrintDefault;
 } // TypedArgBase::printDefault
+
+
+inline void TypedArgBase::setValueUnit( const std::string& unit)
+   noexcept( false)
+{
+   if (!mPrintDefault)
+      throw std::logic_error( "unit string can only be set when printing the "
+         "default value is enabled");
+   mUnitString = unit;
+} // TypedArgBase::setValueUnit
+
+
+inline const std::string& TypedArgBase::valueUnit() const
+{
+   return mUnitString;
+} // TypedArgBase::valueUnit
 
 
 inline TypedArgBase* TypedArgBase::setIsHidden()
@@ -786,6 +955,13 @@ inline const std::string& TypedArgBase::replacedBy() const
 {
    return mReplacedBy;
 } // TypedArgBase::replacedBy
+
+
+inline TypedArgBase* TypedArgBase::allowsInversion()
+{
+   throw std::invalid_argument( "setting 'allows inversion' not allowed for "
+                                "variable '" + mVarName + "'");
+} // TypedArgBase::allowsInversion
 
 
 inline bool TypedArgBase::hasConstraint() const

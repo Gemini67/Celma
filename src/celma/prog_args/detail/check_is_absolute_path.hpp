@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,24 +32,35 @@ namespace celma { namespace prog_args { namespace detail {
 class CheckIsAbsolutePath: public ICheck
 {
 public:
-   CheckIsAbsolutePath() = default;
-   virtual ~CheckIsAbsolutePath() = default;
+   /// Constructor, sets the symbolic name in the base class.
+   ///
+   /// @since  1.32.0, 24.04.2019
+   CheckIsAbsolutePath();
+
+   /// Default destructor is fine.
+   ~CheckIsAbsolutePath() override = default;
 
    /// Checks if the value in \a val contains an absolute path.
    /// @param[in]  val  The value to check in string format.
    /// @since  1.4.2, 12.04.2018
-   virtual void checkValue( const std::string& val) const override;
+   void checkValue( const std::string& val) const override;
 
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.
    /// @since  1.4.2, 12.04.2018
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 }; // CheckIsAbsolutePath
 
 
 // inlined methods
 // ===============
+
+
+inline CheckIsAbsolutePath::CheckIsAbsolutePath():
+   ICheck( "is absolute path")
+{
+} // CheckIsAbsolutePath::CheckIsAbsolutePath
 
 
 inline void CheckIsAbsolutePath::checkValue( const std::string& val) const

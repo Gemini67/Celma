@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,7 +40,34 @@ public:
    /// @since  0.2, 10.04.2016
    virtual void formatValue( std::string& val) const = 0;
 
+   /// Returns the description/name of the formatter.
+   ///
+   /// @return
+   ///    The description or name of the formatter as given to the constructor.
+   /// @since  1.33.0, 05.11.2019
+   const std::string& desc() const;
+
+protected:
+   /// Constructor, stores the name of the formatter.
+   ///
+   /// @param[in]  desc  The description/name of the formatter.
+   /// @since  1.33.0, 05.11.2019
+   IFormat( const std::string& desc);
+
+private:
+   /// The name or description of the formatter.
+   const std::string  mDescription;
+
 }; // IFormat
+
+
+// inlined methods
+// ===============
+
+inline const std::string& IFormat::desc() const
+{
+   return mDescription;
+} // IFormat::desc
 
 
 } // namespace detail

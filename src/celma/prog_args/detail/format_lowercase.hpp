@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,10 +30,22 @@ namespace celma { namespace prog_args { namespace detail {
 class FormatLowercase: public IFormat
 {
 public:
+   /// Default constructor.
+   /// Needed to store the name of the formatter in the base class.
+   ///
+   /// @since  1.33.0, 05.11.2019
+   FormatLowercase();
+
+   /// Virtual, empty destructor.
+   ///
+   /// @since  1.23.0, 11.04.2019
+   ~FormatLowercase() override = default;
+
    /// Converts the text in \a val to lowercase.
+   ///
    /// @param[in,out]  val  The text to convert to lowercase.
    /// @since  0.2, 10.04.2016
-   virtual void formatValue( std::string& val) const override;
+   void formatValue( std::string& val) const override;
 
 }; // FormatLowercase
 
@@ -47,6 +59,7 @@ public:
 
 /// Helper function to create a lowercase formatter more easily.<br>
 /// Usage:  addArgument()->addFormat( lowercase());
+///
 /// @return  The newly created FormatLowercase object.
 /// @since  0.2, 10.04.2016
 inline detail::IFormat* lowercase()
@@ -62,5 +75,5 @@ inline detail::IFormat* lowercase()
 #endif   // CELMA_PROG_ARGS_DETAIL_FORMAT_LOWERCASE_HPP
 
 
-// =======================  END OF format_lowercase.hpp  =======================
+// =====  END OF format_lowercase.hpp  =====
 

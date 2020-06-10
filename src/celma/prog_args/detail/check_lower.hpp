@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,18 +39,19 @@ public:
    /// @since  0.2, 10.04.2016
    explicit CheckLower( T value);
 
-   virtual ~CheckLower() = default;
+   /// Default destructor is fine.
+   ~CheckLower() override = default;
 
    /// Checks if the value in \a val is greater-than or equal to the stored
    /// limit.
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
-   virtual void checkValue( const std::string& val) const override;
+   void checkValue( const std::string& val) const override;
 
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.
    /// @since  0.16.0, 12.08.2017
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 private:
    /// The lower limit to check against.
@@ -64,6 +65,7 @@ private:
 
 
 template< typename T> CheckLower< T>::CheckLower( T value):
+   ICheck( "lower"),
    mCheckValue( value)
 {
 } // CheckLower< T>::CheckLower
@@ -73,18 +75,15 @@ template< typename T> void CheckLower< T>::checkValue( const std::string& val) c
 {
    T  native = boost::lexical_cast< T>( val);
    if (native < mCheckValue)
-      throw std::underflow_error( "Value " + val + " is below limit " +
-                                  boost::lexical_cast< std::string>( mCheckValue));
+      throw std::underflow_error( "Value " + val + " is below limit "
+         + boost::lexical_cast< std::string>( mCheckValue));
 } // CheckLower< T>::checkValue
 
 
 template< typename T> std::string CheckLower< T>::toString() const
 {
-
    std::ostringstream  oss;
-
    oss << "Value >= " << mCheckValue;
-
    return oss.str();
 } // CheckLower< T>::toString
 

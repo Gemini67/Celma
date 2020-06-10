@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -44,26 +44,26 @@ public:
    /// Empty, virtual destructor.
    ///
    /// @since  0.2, 10.04.2016
-   virtual ~CardinalityMax() = default;
+   ~CardinalityMax() override = default;
 
    /// Called by the framework when the argument was detected in the command
    /// line (actually may be without a value).
    ///
    /// @throw  when attempting to add too many values.
    /// @since  0.2, 10.04.2016
-   virtual void gotValue() noexcept( false) override;
+   void gotValue() noexcept( false) override;
 
    /// Called by the framework at the end of the command line processing.
    ///
    /// @throw  never.
    /// @since  0.2, 10.04.2016
-   virtual void check() override;
+   void check() override;
 
    /// Returns the text description of the cardinality "maximum".
    ///
    /// @return  String with the text description of the cardinality.
    /// @since  1.14.0, 02.10.2018
-   virtual std::string cardinalityStr() const override;
+   std::string cardinalityStr() const override;
 
 private:
    /// Maximum number of calls/values accepted for the corresponding argument.

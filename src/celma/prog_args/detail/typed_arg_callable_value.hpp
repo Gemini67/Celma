@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -42,17 +42,22 @@ public:
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
    TypedArgCallableValue( ArgHandlerCallableValue fun,
-                          const std::string& fname);
+      const std::string& fname);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.32.0, 27.08.2019
+   ~TypedArgCallableValue() override = default;
 
    /// Returns "callable-value".
    /// @return  The string "callable-value".
    /// @since  1.14.0, 28.09.2018
-   virtual const std::string varTypeName() const override;
+   const std::string varTypeName() const override;
 
    /// Returns if the function was called or not.
    /// @return  \c true if function was called, \c false otherwise.
    /// @since  0.2, 10.04.2016
-   virtual bool hasValue() const override;
+   bool hasValue() const override;
 
    /// Prints "callable" since there is no value to print.
    /// @param[in]  os
@@ -62,31 +67,44 @@ public:
    ///    too.
    /// @since
    ///    1.8.0, 05.07.2018
-   virtual void printValue( std::ostream& os, bool print_type) const override;
+   void printValue( std::ostream& os, bool print_type) const override;
 
    /// Allows to set the value mode to 'optional' (or required, but that is
    /// already the default).
    /// @param[in]  vm  The new value mode to set.
    /// @return  Pointer to this object.
    /// @since  0.13.2, 18.02.2017
-   virtual TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
+   TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Callables with values may also accept multiple, separate values.
    /// @return  Pointer to this object.
    /// @since  0.2, 10.04.2016
-   virtual TypedArgBase* setTakesMultiValue() override;
+   TypedArgBase* setTakesMultiValue() override;
+
+   /// Logic inversion may be used on callables.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.27.0, 28.05.2019
+   TypedArgBase* allowsInversion() noexcept( false) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
    /// @since  0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const override;
+   void dump( std::ostream& os) const override;
 
 private:
    /// Executes the specified function.
-   /// @param[in]  value  The value to pass to the function.
+   ///
+   /// @param[in]  value
+   ///    The value to pass to the function.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since  0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    ArgHandlerCallableValue  mFun;
@@ -128,10 +146,9 @@ inline void TypedArgCallableValue::printValue( std::ostream& os, bool) const
 
 inline TypedArgBase* TypedArgCallableValue::setValueMode( ValueMode vm) noexcept( false)
 {
-   if ((vm == ValueMode::none) || (vm == ValueMode::unknown))
-      throw std::invalid_argument( std::string( "may not set value mode '") +
-                                   valueMode2str( vm) + "' on variable '" +
-                                   mVarName + "'");
+   if (vm == ValueMode::none)
+      throw std::invalid_argument( std::string( "may not set value mode '")
+         + valueMode2str( vm) + "' on variable '" + mVarName + "'");
    mValueMode = vm;
    return this;
 } // TypedArgCallableValue::setValueMode
@@ -144,6 +161,13 @@ inline TypedArgBase* TypedArgCallableValue::setTakesMultiValue()
 } // TypedArgCallableValue::setTakesMultiValue
 
 
+inline TypedArgBase* TypedArgCallableValue::allowsInversion()
+{
+   mAllowsInverting = true;
+   return this;
+} // TypedArgCallableValue::allowsInversion
+
+
 inline void TypedArgCallableValue::dump( std::ostream& os) const
 {
    os << "calls function/method '" << mVarName << "'." << std::endl
@@ -151,9 +175,10 @@ inline void TypedArgCallableValue::dump( std::ostream& os) const
 } // TypedArgCallableValue::dump
 
 
-inline void TypedArgCallableValue::assign( const std::string& value)
+inline void TypedArgCallableValue::assign( const std::string& value,
+   bool inverted)
 {
-   mFun( value);
+   mFun( value, inverted);
    mWasCalled = true;
 } // TypedArgCallableValue::assign
 

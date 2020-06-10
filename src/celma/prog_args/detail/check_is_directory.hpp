@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -33,26 +33,36 @@ namespace celma { namespace prog_args { namespace detail {
 class CheckIsDirectory: public ICheck
 {
 public:
-   CheckIsDirectory() = default;
-   virtual ~CheckIsDirectory() = default;
+   /// Constructor, sets the symbolic name in the base class.
+   ///
+   /// @since  1.32.0, 24.04.2019
+   CheckIsDirectory();
+
+   /// Default destructor is fine.
+   ~CheckIsDirectory() override = default;
 
    /// Checks if the value in \a val contains the (path and) name of an existing
    /// directory.
    /// @param[in]  val  The value to check in string format.
    /// @since  1.4.1, 02.03.2018
-   virtual void checkValue( const std::string& val) const noexcept( false)
-      override;
+   void checkValue( const std::string& val) const noexcept( false) override;
 
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.
    /// @since  1.4.1, 02.03.2018
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 }; // CheckIsDirectory
 
 
 // inlined methods
 // ===============
+
+
+inline CheckIsDirectory::CheckIsDirectory():
+   ICheck( "is directory")
+{
+} // CheckIsDirectory::CheckIsDirectory
 
 
 inline void CheckIsDirectory::checkValue( const std::string& val) const

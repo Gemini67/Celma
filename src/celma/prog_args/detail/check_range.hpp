@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,20 +36,26 @@ template< typename T> class CheckRange : public ICheck
 {
 public:
    /// Constructor.
-   /// @param[in]  lower  The lower limit to check against.
-   /// @param[in]  upper  The upper limit to check against.
+   ///
+   /// @param[in]  lower
+   ///    The lower limit to check against.
+   /// @param[in]  upper
+   ///    The upper limit to check against.
    /// @since  0.2, 10.04.2016
    CheckRange( T lower, T upper);
+
+   // defaut destructor is fine
+   ~CheckRange() override = default;
 
    /// Checks if the value in \a val is in the range lower ... upper.
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
-   virtual void checkValue( const std::string& val) const override;
+   void checkValue( const std::string& val) const override;
 
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.
    /// @since  0.16.0, 12.08.2017
-   virtual std::string toString() const override;
+   std::string toString() const override;
 
 private:
    /// The lower limit to check against.
@@ -65,6 +71,7 @@ private:
 
 
 template< typename T> CheckRange< T>::CheckRange( T lower, T upper):
+   ICheck( "range"),
    mLower( lower),
    mUpper( upper)
 {
@@ -124,5 +131,5 @@ template< typename T> detail::ICheck* range( T low, T upp)
 #endif   // CELMA_PROG_ARGS_DETAIL_CHECK_RANGE_HPP
 
 
-// =========================  END OF check_range.hpp  =========================
+// =====  END OF check_range.hpp  =====
 

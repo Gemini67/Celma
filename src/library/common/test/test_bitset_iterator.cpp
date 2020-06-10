@@ -3,25 +3,30 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
+**  Description:
+**    Test program for the module "bitset iterator", using the Boost.Test
+**    framework.
+**
 --*/
 
 
-// project includes
+// module to test headerfile include
 #include "celma/common/bitset_iterator.hpp"
 
 
 // Boost includes
-#define BOOST_TEST_MODULE AdjustTest
+#define BOOST_TEST_MODULE BitsetIteratorTest
 #include <boost/test/unit_test.hpp>
 
 
 
 /// Test that the iterator works correctly on an empty bitset.
+///
 /// @since  1.7.0, 17.07.2018
 BOOST_AUTO_TEST_CASE( empty_bitset)
 {
@@ -37,6 +42,7 @@ BOOST_AUTO_TEST_CASE( empty_bitset)
 
 
 /// Test that the iterator works correctly on a full bitset.
+///
 /// @since  1.7.0, 17.07.2018
 BOOST_AUTO_TEST_CASE( full_bitset)
 {
@@ -78,11 +84,16 @@ BOOST_AUTO_TEST_CASE( full_bitset)
    ++iter;
    BOOST_REQUIRE( iter == std::end( bs));
 
+   // incrmenting at end should not change anything
+   ++iter;
+   BOOST_REQUIRE( iter == std::end( bs));
+
 } // full_bitset
 
 
 
 /// Tests the bitset iterator with a range based for.
+///
 /// @since  1.7.0, 17.07.2018
 BOOST_AUTO_TEST_CASE( range_based_for)
 {
@@ -109,6 +120,7 @@ BOOST_AUTO_TEST_CASE( range_based_for)
 
 
 /// Test that the reverse iterator works correctly on an empty bitset.
+///
 /// @since  1.7.0, 17.07.2018
 BOOST_AUTO_TEST_CASE( empty_bitset_reverse)
 {
@@ -124,6 +136,7 @@ BOOST_AUTO_TEST_CASE( empty_bitset_reverse)
 
 
 /// Test that the reverse iterator works correctly on a full bitset.
+///
 /// @since  1.7.0, 17.07.2018
 BOOST_AUTO_TEST_CASE( full_bitset_reverse)
 {
@@ -162,6 +175,10 @@ BOOST_AUTO_TEST_CASE( full_bitset_reverse)
    BOOST_REQUIRE( iter != std::rend( bs));
    BOOST_REQUIRE_EQUAL( *iter, 0);
 
+   ++iter;
+   BOOST_REQUIRE( iter == std::rend( bs));
+
+   // incrementing at end should not change anything
    ++iter;
    BOOST_REQUIRE( iter == std::rend( bs));
 

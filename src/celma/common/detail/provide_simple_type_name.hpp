@@ -30,7 +30,7 @@
    public: \
       static constexpr const char* name() \
       { \
-         return &mName[ 0]; \
+         return mName.data(); \
       } \
       static constexpr auto const  mName = common::string_concat( # t); \
    }

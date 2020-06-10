@@ -36,7 +36,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///   - When argument 'a' is used, add constraint to the list.
 ///   - When argument 'b' is used, remove it from the list.
 ///   - After evaluation arguments, check that the list is empty.
-/// .
+///
 /// @todo  Using a global variable to provide access to the current object of
 ///        this class is of course not thread-safe. Need to find a better
 ///        solution.

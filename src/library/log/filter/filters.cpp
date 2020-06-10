@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,6 +25,7 @@
 
 // // project includes
 #include "celma/common/clear_container.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/log/detail/log_msg.hpp"
 #include "celma/log/filter/detail/duplicate_policy_factory.hpp"
 #include "celma/log/filter/detail/log_filter_classes.hpp"
@@ -99,8 +100,8 @@ boost::scoped_ptr< detail::IDuplicatePolicy>  Filters::mpDuplicatePolicy;
 void Filters::setDuplicatePolicy( detail::DuplicatePolicy policy)
 {
 
-   if ((mpDuplicatePolicy.get() == nullptr) ||
-       (mpDuplicatePolicy->policy() != policy))
+   if ((mpDuplicatePolicy.get() == nullptr)
+       || (mpDuplicatePolicy->policy() != policy))
       mpDuplicatePolicy.reset( detail::DuplicatePolicyFactory::createPolicy( policy));
 
 } // Filters::setDuplicatePolicy
@@ -223,11 +224,23 @@ bool Filters::processLevel( LogLevel l) const
    if (mpLevelFilter == nullptr)
       return true;
 
-   if (mpLevelFilter->filterType() == detail::IFilter::FilterTypes::maxLevel)
-      return static_cast< detail::LogFilterMaxLevel*>( mpLevelFilter)->processLevel( l);
+   switch (mpLevelFilter->filterType())
+   {
+   case detail::IFilter::FilterTypes::maxLevel:
+      return static_cast< detail::LogFilterMaxLevel*>( mpLevelFilter)
+         ->processLevel( l);
+   case detail::IFilter::FilterTypes::minLevel:
+      return static_cast< detail::LogFilterMinLevel*>( mpLevelFilter)
+         ->processLevel( l);
+   case detail::IFilter::FilterTypes::level:
+      return static_cast< detail::LogFilterLevel*>( mpLevelFilter)
+         ->processLevel( l);
+   default:
+      throw std::invalid_argument( "wrong level filter type "
+         + format::toString( static_cast< int>( mpLevelFilter->filterType())));
+   } // end switch
 
-   // only two types of level filter exist, so ...
-   return static_cast< detail::LogFilterLevel*>( mpLevelFilter)->processLevel( l);
+   return true;
 } // Filters::processLevel
 
 

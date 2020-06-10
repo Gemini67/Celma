@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -61,7 +61,12 @@ public:
    /// @since
    ///    0.2, 10.04.2016
    TypedArgPair( T1& dest1, const std::string& vname1, T2& dest2,
-                 const std::string& vname2, const T2& value2);
+      const std::string& vname2, const T2& value2);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.32.0, 27.08.2019
+   ~TypedArgPair() override = default;
 
    /// Prints the two current values of the destination variables.<br>
    /// Does not check any flags, if a value has been set etc., simply prints the
@@ -73,7 +78,7 @@ public:
    ///    too.
    /// @since
    ///    1.8.0, 05.07.2018
-   virtual void printValue( std::ostream& os, bool print_type) const override;
+   void printValue( std::ostream& os, bool print_type) const override;
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -81,15 +86,20 @@ protected:
    ///    The stream to print to.
    /// @since
    ///    0.2, 10.04.2016
-   virtual void dump( std::ostream& os) const override;
+   void dump( std::ostream& os) const override;
 
 private:
    /// Stores the value in the destination variable.
    /// @param[in]  value
    ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.27.0, 24.05.2019
+   ///    (added parameter inverted)
    /// @since
    ///    0.2, 10.04.2016
-   virtual void assign( const std::string& value) override;
+   void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
    T2&                mDestVar2;
@@ -109,12 +119,11 @@ private:
 
 template< typename T1, typename T2>
    TypedArgPair< T1, T2>::TypedArgPair( T1& dest1, const std::string& vname1,
-                                        T2& dest2, const std::string& vname2,
-                                        const T2& value2):
-      TypedArg< T1>( dest1, vname1),
-      mDestVar2( dest2),
-      mVarName2( vname2),
-      mValue2( value2)
+      T2& dest2, const std::string& vname2, const T2& value2):
+         TypedArg< T1>( dest1, vname1),
+         mDestVar2( dest2),
+         mVarName2( vname2),
+         mValue2( value2)
 {
 } // TypedArgPair< T1, T2>::TypedArgPair
 
@@ -133,17 +142,17 @@ template< typename T1, typename T2>
 template< typename T1, typename T2>
    void TypedArgPair< T1, T2>::dump( std::ostream& os) const
 {
-   os << "store first value with type '" << type< T1>::name() << "' in '"
-      << TypedArg< T1>::mVarName << "', second value with type '"
+   os << "store first value with type '" << TypedArg< T1>::varTypeName()
+      << "' in '" << TypedArg< T1>::mVarName << "', second value with type '"
       << type< T2>::name() << "' in '" << mVarName2  << "'." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
 } // TypedArgPair< T1, T2>::dump
 
 
 template< typename T1, typename T2>
-   void TypedArgPair< T1, T2>::assign( const std::string& value)
+   void TypedArgPair< T1, T2>::assign( const std::string& value, bool inverted)
 {
-   TypedArg< T1>::assign( value);
+   TypedArg< T1>::assign( value, inverted);
    mDestVar2 = mValue2;
 } // TypedArgPair< T1, T2>::assign
 

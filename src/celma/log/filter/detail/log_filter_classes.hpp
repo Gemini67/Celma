@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,7 +39,7 @@ public:
    /// @since  0.3, 19.06.2016
    explicit LogFilterClasses( const std::string& class_list) noexcept( false);
 
-   virtual ~LogFilterClasses() = default;
+   ~LogFilterClasses() override = default;
 
 private:
    /// Called to check if a message matches the filter criteria, i.e. if the
@@ -47,7 +47,7 @@ private:
    /// @param[in]  msg  The message to check.
    /// @return  \c true if the log class of the message is selected.
    /// @since  0.3, 19.06.2016
-   virtual bool pass( const log::detail::LogMsg& msg) const override;
+   bool pass( const log::detail::LogMsg& msg) const override;
 
    /// Set of log classes to accept.
    std::bitset< static_cast< size_t>( LogClass::operatorAction)>  mClassSelection;

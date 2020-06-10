@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -69,12 +69,6 @@ public:
    size_t operator *() const;
 
 protected:
-   /// Default constructor, object must afterwards be initialised using the
-   /// assignment operator, for example.
-   ///
-   /// @since  1.7.0, 18.07.2018
-   BitsetIteratorBase();
-
    /// Constructor with meaningful data.
    ///
    /// @param[in]  bs
@@ -86,7 +80,7 @@ protected:
    explicit BitsetIteratorBase( const std::bitset< N>& bs, bool at_end);
 
    /// Tries to find the next bit that is set in the bitset, starting after the
-   /// current position #mIndex.<br>
+   /// current position #mIndex.
    /// If no bit is set anymore, #mAtEnd is set.<br>
    /// Does nothing if #mAtEnd is already set when the function is entered.
    ///
@@ -94,7 +88,7 @@ protected:
    void findNext();
 
    /// Tries to find the previous bit that is set in the bitset, starting before
-   /// the current position #mIndex.<br>
+   /// the current position #mIndex.
    /// If no bit is set anymore, #mAtEnd is set.<br>
    /// Does nothing if #mAtEnd is already set when the function is entered.
    ///
@@ -135,15 +129,6 @@ template< size_t N>
 {
    return mIndex;
 } // BitsetIteratorBase< N>::operator *
-
-
-template< size_t N>
-   BitsetIteratorBase< N>::BitsetIteratorBase():
-      mpBitset( nullptr),
-      mIndex( 0),
-      mAtEnd( true)
-{
-} // BitsetIteratorBase< N>::BitsetIteratorBase
 
 
 template< size_t N>

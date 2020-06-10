@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -134,8 +134,8 @@ public:
 
             mStartValue += mIncrement;
 
-            if (mExludeValues.empty() ||
-                (mExludeValues.find( mStartValue) == mExludeValues.end()))
+            if (mExludeValues.empty()
+                || (mExludeValues.find( mStartValue) == mExludeValues.end()))
                break;   // for
          } // end for
       } // end if

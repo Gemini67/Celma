@@ -51,8 +51,8 @@ analyze:
 	@if [ ! -d build/analyze ]; then \
 	   mkdir -p build/analyze; \
 	   cd build/analyze; \
-	   export CC=/usr/bin/clang; \
-	   export CXX=/usr/bin/clang++; \
+	   export CC=clang; \
+	   export CXX=clang++; \
 	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
 	         -DBOOST_VERSION=${BOOST_VERSION} \
 	         -DCMAKE_BUILD_TYPE=Debug \
@@ -103,11 +103,20 @@ coverage:
 	/usr/bin/time --format="-- Build Duration: %E" make Celma_coverage
 
 sonar:
-	sonar-scanner \
-	   -Dsonar.projectKey=Gemini67_Celma \
-	   -Dsonar.organization=gemini67-github \
-	   -Dsonar.sources=src \
-	   -Dsonar.cfamily.build-wrapper-output=bw-output \
-	   -Dsonar.host.url=https://sonarcloud.io \
-	   -Dsonar.login=$(SONAR_LOGIN)
+	@if [ ! -d build/sonar ]; then \
+	   mkdir -p build/sonar; \
+	   cd build/sonar; \
+	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
+	         -DBOOST_VERSION=${BOOST_VERSION} \
+                 -DCMAKE_BUILD_TYPE=Debug \
+	         ../..; \
+	   cd -; \
+	fi; \
+	cd build/sonar; \
+	build-wrapper-linux-x86-64 --out-dir bw-output make -j4; \
+	cd -; \
+	sonar-scanner -Dsonar.login=$(SONAR_LOGIN)
+
+edit-release:
+	nedit doc/main_page.txt CMakeLists.txt README.md celma.doxy sonar-project.properties &
 

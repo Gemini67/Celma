@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -60,7 +60,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  1.11.0, 30.08.2018
-   virtual ~TestFileFuncs() = default;
+   ~TestFileFuncs() override = default;
 
    /// Gets called when a file should be renamed.
    ///
@@ -70,7 +70,7 @@ public:
    ///    The (path and) name of the existing file that should be renamed.
    /// @return  The result of the %rename operation.
    /// @since  1.11.0, 30.08.2018
-   virtual int rename( const std::string& dest, const std::string& src) override
+   int rename( const std::string& dest, const std::string& src) override
    {
       if (mNextRenameParamsIdx >= mRenameParam.size())
          throw std::invalid_argument( "more rename calls than expected");
@@ -93,11 +93,25 @@ public:
    /// @param[in]  file  The (path and) name of the file to delete.
    /// @return  The result code of the %remove operation.
    /// @since  1.11.0, 30.08.2018
-   virtual int remove( const std::string&) override
+   int remove( const std::string&) override
    {
       // nothing to do here
       return 0;
    } // TestFileFuncs::remove
+
+   /// Gets called when a directory should be created.
+   ///
+   /// @param[in]  dir_name
+   ///    The (path and) name of the directory to create.
+   /// @param[in]  mode
+   ///    The permissions to create the directory with.
+   /// @return  The result code of the %mkdir operation.
+   /// @since  1.26.0, 08.03.2018
+   int mkdir( const std::string&, int) override
+   {
+      // nothing to do here
+      return 0;
+   } // TestFileFuncs::mkdir
 
    /// Stores the expected names of the destination and source file of the next
    /// rename operation.
@@ -499,3 +513,4 @@ BOOST_AUTO_TEST_CASE( counted_rolled)
 
 
 // =====  END OF test_log_file_policies_stub.cpp  =====
+
