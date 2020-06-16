@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,6 +27,7 @@
 #include <stack>
 #include <string>
 #include <utility>
+#include "celma/common/dynamic_bitset.hpp"
 #include "celma/common/tuple_at_index.hpp"
 #include "celma/common/tuple_length.hpp"
 
@@ -109,6 +110,19 @@ inline std::string toString( const std::string& data)
    oss << '"' << data << '"';
 
    return oss.str();
+} // toString
+
+
+/// 
+/// @param[in]  dbs
+///    .
+/// @return
+///    .
+/// @since
+///    x.y.z, 10.06.2020
+inline std::string toString( const common::DynamicBitset& dbs)
+{
+   return dbs.to_string();
 } // toString
 
 
