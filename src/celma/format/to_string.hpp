@@ -27,6 +27,7 @@
 #include <stack>
 #include <string>
 #include <utility>
+#include <vector>
 #include "celma/common/dynamic_bitset.hpp"
 #include "celma/common/tuple_at_index.hpp"
 #include "celma/common/tuple_length.hpp"
@@ -92,7 +93,7 @@ inline std::string toString( const double val)
 } // toString
 
 
-/// Function to write a string into the string ;-)<br>
+/// Function to write a string into the string ;-)
 /// Add double quotation marks to the string, to make sure multiple-words
 /// strings are interpreted correctly afterwards.
 /// @param[in]  data
@@ -113,13 +114,29 @@ inline std::string toString( const std::string& data)
 } // toString
 
 
-/// 
-/// @param[in]  dbs
-///    .
-/// @return
-///    .
-/// @since
-///    x.y.z, 10.06.2020
+/// Format the contents of a vector of bool into a binary string.
+///
+/// @param[in]  vb  The vector of boolean values to convert the contents of.
+/// @return  String with the contents of the vector as binary number.
+/// @since  x.y.z, 17.06.2020
+inline std::string toString( const std::vector< bool>& vb)
+{
+   std::string  result( vb.size(), '0');
+
+   for (size_t idx = 0; idx < vb.size(); ++idx)
+   {
+      if (vb[ idx])
+         result[ idx] = '1';
+   } // end for
+   return result;
+} // toString
+
+
+/// Format the contents of a dynamic bitset into a binary string.
+///
+/// @param[in]  dbs  The dynamic bitset to convert the contents of.
+/// @return  String with the contents of the dynamic bitset as binary number.
+/// @since  x.y.z, 10.06.2020
 inline std::string toString( const common::DynamicBitset& dbs)
 {
    return dbs.to_string();
