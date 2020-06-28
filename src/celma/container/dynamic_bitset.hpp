@@ -22,10 +22,11 @@
 #include <bitset>
 #include <string>
 #include <vector>
+#include "celma/common/type_name.hpp"
 #include "celma/container/detail/dynamic_bitset_iterator.hpp"
 
 
-namespace celma::container {
+namespace celma { namespace container {
 
 
 /// Dynamic bitset, a std::vector<bool> with the interface of a std::bitset<>.
@@ -509,7 +510,32 @@ DynamicBitset operator |( const DynamicBitset& lhs, const DynamicBitset& rhs) no
 DynamicBitset operator ^( const DynamicBitset& lhs, const DynamicBitset& rhs) noexcept( true);
 
 
-} // namespace celma::container
+} // namespace container
+
+
+/// Specialisation of type<> for type 'celma::container::DynamicBitset'.
+///
+/// @since  x.y.z, 28.06.2020
+template<> class type< container::DynamicBitset>
+{
+public:
+   /// Returns the name of the type.
+   ///
+   /// @return  'celma::common::ValueFilter< <type-name> >' (without the spaces).
+   /// @since  x.y.z, 28.06.2020
+   static constexpr const char* name()
+   {
+      return &mName[ 0];
+   } // type< container::DynamicBitset>::name
+
+   /// Used to store the name of the type persistently.
+   /// Is public to build nested container names, don't access for printing.
+   static constexpr auto const  mName = "celma::container::DynamicBitset";
+
+}; // type< celma::container::DynamicBitset>
+
+
+} // namespace celma
 
 
 #endif   // CELMA_CONTAINER_DYNAMIC_BITSET_HPP
