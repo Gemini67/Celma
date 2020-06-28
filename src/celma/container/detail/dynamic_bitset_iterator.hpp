@@ -39,7 +39,7 @@ namespace celma::container::detail {
 ///    The type of the class for which this iterator may be used.<br>
 ///    Here: Always celma::container::DynamicBitset. Set as template parameter to
 ///    break dependency cycle.
-/// @since  x.y.z, 18.06.2020
+/// @since  1.37.0, 18.06.2020
 template< typename T> class DynamicBitsetIteratorBase
 {
 public:
@@ -49,7 +49,7 @@ public:
    /// @return
    ///    \c true if both iterators point to end(), or both iterators point to
    ///    the same position in the same dynamic bitset.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    bool operator ==( const DynamicBitsetIteratorBase& other) const
    {
       return (mpDynBitset == other.mpDynBitset) && (mCurrPos == other.mCurrPos);
@@ -61,7 +61,7 @@ public:
    /// @return
    ///    \c true if the iterators point to different bitsets or different
    ///    positions.
-   /// @since  x.y.z, 20.06.2020
+   /// @since  1.37.0, 20.06.2020
    bool operator !=( const DynamicBitsetIteratorBase& other) const
    {
       return (mpDynBitset != other.mpDynBitset) || (mCurrPos != other.mCurrPos);
@@ -71,7 +71,7 @@ public:
    ///
    /// @return
    ///    The position in the bitset that the iterator currently points to.
-   /// @since  x.y.z, 20.06.2020
+   /// @since  1.37.0, 20.06.2020
    size_t operator *() const
    {
       return static_cast< size_t>( mCurrPos);
@@ -84,7 +84,7 @@ protected:
    ///    Pointer to the dynamic bitset to iterate over.
    /// @param[in]  startpos
    ///    The start position for the iteration.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetIteratorBase( T* dbs, ssize_t startpos):
       mpDynBitset( dbs),
       mCurrPos( startpos)
@@ -97,7 +97,7 @@ protected:
 
    /// Searches for the next bit in the dynamic bitset that is set.
    ///
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    void forward()
    {
       if (static_cast< size_t>( mCurrPos) >= mpDynBitset->size())
@@ -111,7 +111,7 @@ protected:
    /// Searches backward for the next (i.e. previous) bit that is set in the
    /// dynamic bitset.
    ///
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    void reverse()
    {
       if (mCurrPos < 0)
@@ -139,7 +139,7 @@ protected:
 ///    The type of the class for which this iterator may be used.<br>
 ///    Here: Always celma::container::DynamicBitset. Set as template parameter to
 ///    break dependency cycle.
-/// @since  x.y.z, 18.06.2020
+/// @since  1.37.0, 18.06.2020
 template< typename T> class DynamicBitsetIterator:
    public DynamicBitsetIteratorBase< T>
 {
@@ -147,7 +147,7 @@ public:
    /// Constructor for an iterator object that points to the end of the vector.
    ///
    /// @param[in]  dbs  Pointer to the dynamic bitset to iterate over.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    explicit DynamicBitsetIterator( T* dbs):
       DynamicBitsetIteratorBase< T>( dbs, dbs->size())
    {
@@ -160,7 +160,7 @@ public:
    ///    Pointer to the dynamic bitset to iterate over.
    /// @param[in]  startpos
    ///    The position to start iterating from.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetIterator( T* dbs, ssize_t startpos):
       DynamicBitsetIteratorBase< T>( dbs, startpos)
    {
@@ -183,7 +183,7 @@ public:
    /// Pre-increment operator.
    ///
    /// @return  This object, pointing to the next bit that is set.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetIterator& operator ++( std::prefix)
    {
       forward();
@@ -193,7 +193,7 @@ public:
    /// Post-increment operator.
    ///
    /// @return  A new object pointing to the previous position of this object.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetIterator operator ++( std::postfix)
    {
       auto  copy( *this);
@@ -204,7 +204,7 @@ public:
    /// Pre-decrement operator.
    ///
    /// @return  This object, pointing to the previous bit that is set.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetIterator& operator --( std::prefix)
    {
       reverse();
@@ -217,7 +217,7 @@ public:
    /// Post-decrement operator.
    ///
    /// @return  A new object pointing to the previous position of this object.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetIterator operator --( std::postfix)
    {
       auto  copy( *this);
@@ -250,7 +250,7 @@ private:
 ///    The type of the class for which this iterator may be used.<br>
 ///    Here: Always celma::container::DynamicBitset. Set as template parameter to
 ///    break dependency cycle.
-/// @since  x.y.z, 18.06.2020
+/// @since  1.37.0, 18.06.2020
 template< typename T> class DynamicBitsetReverseIterator:
    public DynamicBitsetIteratorBase< T>
 {
@@ -259,7 +259,7 @@ public:
    /// vector.
    ///
    /// @param[in]  dbs  Pointer to the dynamic bitset to iterate over.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    explicit DynamicBitsetReverseIterator( T* dbs):
       DynamicBitsetIteratorBase< T>( dbs, -1)
    {
@@ -272,7 +272,7 @@ public:
    ///    Pointer to the dynamic bitset to iterate over.
    /// @param[in]  startpos
    ///    The position to start iterating from.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetReverseIterator( T* dbs, ssize_t startpos):
       DynamicBitsetIteratorBase< T>( dbs, startpos)
    {
@@ -295,7 +295,7 @@ public:
    /// Pre-increment operator.
    ///
    /// @return  This object, pointing to the previous bit that is set.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetReverseIterator& operator ++( std::prefix)
    {
       reverse();
@@ -305,7 +305,7 @@ public:
    /// Post-increment operator.
    ///
    /// @return  A new object pointing to the previous position of this object.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetReverseIterator operator ++( std::postfix)
    {
       auto  copy( *this);
@@ -316,7 +316,7 @@ public:
    /// Pre-decrement operator.
    ///
    /// @return  This object, pointing to the next bit that is set.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetReverseIterator& operator --( std::prefix)
    {
       forward();
@@ -328,7 +328,7 @@ public:
    /// Post-decrement operator.
    ///
    /// @return  A new object pointing to the previous position of this object.
-   /// @since  x.y.z, 18.06.2020
+   /// @since  1.37.0, 18.06.2020
    DynamicBitsetReverseIterator operator --( std::postfix)
    {
       auto  copy( *this);

@@ -118,7 +118,7 @@ inline std::string toString( const std::string& data)
 ///
 /// @param[in]  vb  The vector of boolean values to convert the contents of.
 /// @return  String with the contents of the vector as binary number.
-/// @since  x.y.z, 17.06.2020
+/// @since  1.37.0, 17.06.2020
 inline std::string toString( const std::vector< bool>& vb)
 {
    std::string  result( vb.size(), '0');
@@ -136,7 +136,7 @@ inline std::string toString( const std::vector< bool>& vb)
 ///
 /// @param[in]  dbs  The dynamic bitset to convert the contents of.
 /// @return  String with the contents of the dynamic bitset as binary number.
-/// @since  x.y.z, 10.06.2020
+/// @since  1.37.0, 10.06.2020
 inline std::string toString( const container::DynamicBitset& dbs)
 {
    return dbs.to_string();

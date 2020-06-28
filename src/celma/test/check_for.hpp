@@ -34,7 +34,7 @@
 /// of times that the loop block was entered matches the expected value.
 ///
 /// @param  c  The clause for the for loop.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 #define CHECK_FOR( c) \
    { \
       size_t  counter = 0; \
@@ -46,7 +46,7 @@
 /// Checks that the loop block was executed exactly the given number of times.
 ///
 /// @param  n  The expected number of times that the loop block was executed.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 #define  CHECK_FOR_COUNT( n) \
       } \
       BOOST_REQUIRE_EQUAL( counter, n); \
@@ -55,12 +55,12 @@
 
 /// Special case: Checks that the loop block was never executed.
 ///
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 #define  CHECK_FOR_NEVER  CHECK_FOR_COUNT( 0)
 
 /// Special case: Checks that the loop block was executed exactly once.
 ///
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 #define  CHECK_FOR_ONCE   CHECK_FOR_COUNT( 1)
 
 

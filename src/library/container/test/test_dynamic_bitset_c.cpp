@@ -42,7 +42,7 @@ using celma::container::DynamicBitset;
 
 /// Verify some error cases with a dynamic bitset.
 ///
-/// @since  x.y.z, 10.06.2020
+/// @since  1.37.0, 10.06.2020
 BOOST_AUTO_TEST_CASE( errors)
 {
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
 /// Test some operations with a dynamic bitset where 0 or none bit is set.
 ///
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 BOOST_AUTO_TEST_CASE( test_one)
 {
 
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE( test_one)
 
 /// Set and flips some bits in the dynamic bitset.
 ///
-/// @since  x.y.z, 10.06.2020
+/// @since  1.37.0, 10.06.2020
 BOOST_AUTO_TEST_CASE( set_flip)
 {
 
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE( set_flip)
 
 /// Test the logic operations with two dynamic bitsets with the same size.
 ///
-/// @since  x.y.z, 10.06.2020
+/// @since  1.37.0, 10.06.2020
 BOOST_AUTO_TEST_CASE( logic_same_size)
 {
 
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE( logic_same_size)
 
 /// Test the logic operations with two dynamic bitsets with different sizes.
 ///
-/// @since  x.y.z, 10.06.2020
+/// @since  1.37.0, 10.06.2020
 BOOST_AUTO_TEST_CASE( logic_different_size)
 {
 
@@ -295,7 +295,7 @@ BOOST_AUTO_TEST_CASE( logic_different_size)
 
 /// Test the shift operations of the dynamic bitset.
 ///
-/// @since  x.y.z, 10.06.2020
+/// @since  1.37.0, 10.06.2020
 BOOST_AUTO_TEST_CASE( shift)
 {
 
@@ -410,7 +410,7 @@ BOOST_AUTO_TEST_CASE( shift)
 
 /// Test the resize operation.
 ///
-/// @since  x.y.z, 16.06.2020
+/// @since  1.37.0, 16.06.2020
 BOOST_AUTO_TEST_CASE( resize)
 {
 
@@ -433,7 +433,7 @@ BOOST_AUTO_TEST_CASE( resize)
 
 /// Test constructors that allow different data types.
 ///
-/// @since  x.y.z, 16.06.2020
+/// @since  1.37.0, 16.06.2020
 BOOST_AUTO_TEST_CASE( conversion_constructor)
 {
 
@@ -486,7 +486,7 @@ BOOST_AUTO_TEST_CASE( conversion_constructor)
 
 /// Test assignments.
 ///
-/// @since  x.y.z, 16.06.2020
+/// @since  1.37.0, 16.06.2020
 BOOST_AUTO_TEST_CASE( assignment)
 {
 
@@ -578,7 +578,7 @@ BOOST_AUTO_TEST_CASE( assignment)
 
 /// Test the iterators.
 ///
-/// @since  x.y.z, 20.06.2020
+/// @since  1.37.0, 20.06.2020
 BOOST_AUTO_TEST_CASE( iterate_empty)
 {
 
@@ -617,7 +617,7 @@ BOOST_AUTO_TEST_CASE( iterate_empty)
 
 /// Test that iterating past the end does not crash.
 ///
-/// @since  x.y.z, 20.06.2020
+/// @since  1.37.0, 20.06.2020
 BOOST_AUTO_TEST_CASE( exceed_end)
 {
 
@@ -717,7 +717,7 @@ BOOST_AUTO_TEST_CASE( exceed_end)
 
 /// Test iterating over a dynamic bitset where one flag in the middle is set.
 ///
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 BOOST_AUTO_TEST_CASE( iterate_one)
 {
 
@@ -758,7 +758,7 @@ BOOST_AUTO_TEST_CASE( iterate_one)
 
 /// Test iterating over a dynamic bitset where the first flag is set.
 ///
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 BOOST_AUTO_TEST_CASE( iterate_first)
 {
 
@@ -799,7 +799,7 @@ BOOST_AUTO_TEST_CASE( iterate_first)
 
 /// Test iterating over a dynamic bitset where the first flag is set.
 ///
-/// @since  x.y.z, 28.06.2020
+/// @since  1.37.0, 28.06.2020
 BOOST_AUTO_TEST_CASE( const_iterate_first)
 {
 
@@ -842,7 +842,7 @@ BOOST_AUTO_TEST_CASE( const_iterate_first)
 
 /// Test iterating over a dynamic bitset where the last flag is set.
 ///
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 BOOST_AUTO_TEST_CASE( iterate_last)
 {
 
@@ -883,7 +883,7 @@ BOOST_AUTO_TEST_CASE( iterate_last)
 
 /// Test iterating over a dynamic bitset where the last flag is set.
 ///
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 BOOST_AUTO_TEST_CASE( iterate_first_middle_last)
 {
 
@@ -926,7 +926,7 @@ BOOST_AUTO_TEST_CASE( iterate_first_middle_last)
 
 /// Test iterating in both ways.
 ///
-/// @since  x.y.z, 25.06.2020
+/// @since  1.37.0, 25.06.2020
 BOOST_AUTO_TEST_CASE( iterate_back_and_forth)
 {
 

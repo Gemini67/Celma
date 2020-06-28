@@ -33,7 +33,7 @@ namespace celma::container {
 /// @param[in]  num_bits
 ///    Number of bits that the internal vector should initially be able to
 ///    store.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 DynamicBitset::DynamicBitset( size_t num_bits)
 {
 
@@ -47,7 +47,7 @@ DynamicBitset::DynamicBitset( size_t num_bits)
 /// Constructor that copies the values from a vector of bool.
 ///
 /// @param[in]  other  The vector to copy the data from.
-/// @since  x.y.z, 16.06.2020
+/// @since  1.37.0, 16.06.2020
 DynamicBitset::DynamicBitset( const std::vector< bool>& other):
    mData( other)
 {
@@ -58,7 +58,7 @@ DynamicBitset::DynamicBitset( const std::vector< bool>& other):
 /// Constructor that takes the values from a vector of bool.
 ///
 /// @param[in]  other  The vector to move the data from.
-/// @since  x.y.z, 16.06.2020
+/// @since  1.37.0, 16.06.2020
 DynamicBitset::DynamicBitset( std::vector< bool>&& other):
    mData( std::move( other))
 {
@@ -73,7 +73,7 @@ DynamicBitset::DynamicBitset( std::vector< bool>&& other):
 /// @throw
 ///    std::out_of_range if then given position is greater than the size of
 ///    the internal vector.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 bool DynamicBitset::test( size_t pos) const noexcept( false)
 {
 
@@ -88,7 +88,7 @@ bool DynamicBitset::test( size_t pos) const noexcept( false)
 /// Returns if all bits are set.
 ///
 /// @return  \c true if all bits are set.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 bool DynamicBitset::all() const noexcept( true)
 {
 
@@ -100,7 +100,7 @@ bool DynamicBitset::all() const noexcept( true)
 /// Returns if at least one bit is set.
 ///
 /// @return  \c true if at least one bit is set.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 bool DynamicBitset::any() const noexcept( true)
 {
 
@@ -112,7 +112,7 @@ bool DynamicBitset::any() const noexcept( true)
 /// Returns if no bit is set.
 ///
 /// @return  \c true if no bit is set.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 bool DynamicBitset::none() const noexcept( true)
 {
 
@@ -124,7 +124,7 @@ bool DynamicBitset::none() const noexcept( true)
 /// Returns the number of bits that are currently set.
 ///
 /// @return  The number of bits that are currently set.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 size_t DynamicBitset::count() const noexcept( true)
 {
 
@@ -137,7 +137,7 @@ size_t DynamicBitset::count() const noexcept( true)
 /// stored.
 ///
 /// @return  The number of bits that are currently set.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 size_t DynamicBitset::size() const noexcept( true)
 {
 
@@ -153,7 +153,7 @@ size_t DynamicBitset::size() const noexcept( true)
 /// @param[in]  init_value
 ///    The value to initialise the new elements with if the size of the
 ///    vector is increased.
-/// @since  x.y.z, 16.06.2020
+/// @since  1.37.0, 16.06.2020
 void DynamicBitset::resize( size_t count, bool init_value)
 {
 
@@ -166,7 +166,7 @@ void DynamicBitset::resize( size_t count, bool init_value)
 /// Sets all bits.
 ///
 /// @return  This object.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 DynamicBitset& DynamicBitset::set() noexcept( true)
 {
 
@@ -187,7 +187,7 @@ DynamicBitset& DynamicBitset::set() noexcept( true)
 /// @param[in]  value
 ///    The value to set for the bit.
 /// @return  This object.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 DynamicBitset& DynamicBitset::set( size_t pos, bool value)
 {
 
@@ -204,7 +204,7 @@ DynamicBitset& DynamicBitset::set( size_t pos, bool value)
 /// Resets/Clears all bits.
 ///
 /// @return  This object.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 DynamicBitset& DynamicBitset::reset() noexcept( true)
 {
 
@@ -219,7 +219,7 @@ DynamicBitset& DynamicBitset::reset() noexcept( true)
 ///
 /// @param[in]  pos  The position of the bit to clear.
 /// @return  This object.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 DynamicBitset& DynamicBitset::reset( size_t pos)
 {
 
@@ -236,7 +236,7 @@ DynamicBitset& DynamicBitset::reset( size_t pos)
 /// Flips/Inverts all bits.
 ///
 /// @return  This object.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 DynamicBitset& DynamicBitset::flip() noexcept( true)
 {
 
@@ -251,7 +251,7 @@ DynamicBitset& DynamicBitset::flip() noexcept( true)
 ///
 /// @param[in]  pos  The position of the bit to flip.
 /// @return  This object.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 DynamicBitset& DynamicBitset::flip( size_t pos)
 {
 
@@ -271,7 +271,7 @@ DynamicBitset& DynamicBitset::flip( size_t pos)
 /// @throw 
 ///    std::overflow_error if the contents of the vector cannot be converted
 ///    into an unsigned long integer.
-/// @since  x.y.z, 10.06.2020
+/// @since  1.37.0, 10.06.2020
 unsigned long DynamicBitset::to_ulong() const noexcept( false)
 {
 
@@ -298,7 +298,7 @@ unsigned long DynamicBitset::to_ulong() const noexcept( false)
 ///
 /// @param[in]  other  The vector to copy the data from.
 /// @return  This object.
-/// @since  x.y.z, 16.06.2020
+/// @since  1.37.0, 16.06.2020
 DynamicBitset& DynamicBitset::operator =( const std::vector< bool>& other)
 {
 
@@ -313,7 +313,7 @@ DynamicBitset& DynamicBitset::operator =( const std::vector< bool>& other)
 ///
 /// @param[in]  other  The vector to take the data from.
 /// @return  This object.
-/// @since  x.y.z, 16.06.2020
+/// @since  1.37.0, 16.06.2020
 DynamicBitset& DynamicBitset::operator =( std::vector< bool>&& other)
 {
 
@@ -330,7 +330,7 @@ DynamicBitset& DynamicBitset::operator =( std::vector< bool>&& other)
 ///
 /// @param[in]  other  The other dynamic bitset to compare against.
 /// @return  \c true if the contents of the two vectors are identical.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 bool DynamicBitset::operator ==( const DynamicBitset& other) const noexcept( true)
 {
 
@@ -346,7 +346,7 @@ bool DynamicBitset::operator ==( const DynamicBitset& other) const noexcept( tru
 /// @throw
 ///    std::out_of_range if the given position is greater than the size of
 ///    the internal vector.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 bool DynamicBitset::operator []( size_t pos) const noexcept( false)
 {
 
@@ -364,7 +364,7 @@ bool DynamicBitset::operator []( size_t pos) const noexcept( false)
 ///
 /// @param[in]  pos  The position of the flag to return the value of.
 /// @return  The value of the flag at the given position.
-/// @since  x.y.z, 08.06.2020
+/// @since  1.37.0, 08.06.2020
 DynamicBitset::reference DynamicBitset::operator []( size_t pos) noexcept( true)
 {
 
@@ -381,7 +381,7 @@ DynamicBitset::reference DynamicBitset::operator []( size_t pos) noexcept( true)
 ///
 /// @param[in]  other  The other dynamic bitset to "and" the flags with.
 /// @return  This object.
-/// @since  x.y.z, 09.06.2020
+/// @since  1.37.0, 09.06.2020
 DynamicBitset& DynamicBitset::operator &=( const DynamicBitset& other) noexcept( true)
 {
 
@@ -413,7 +413,7 @@ DynamicBitset& DynamicBitset::operator &=( const DynamicBitset& other) noexcept(
 ///
 /// @param[in]  other  The other dynamic bitset to "or" the flags with.
 /// @return  This object.
-/// @since  x.y.z, 09.06.2020
+/// @since  1.37.0, 09.06.2020
 DynamicBitset& DynamicBitset::operator |=( const DynamicBitset& other) noexcept( true)
 {
 
@@ -438,7 +438,7 @@ DynamicBitset& DynamicBitset::operator |=( const DynamicBitset& other) noexcept(
 /// @param[in]  other
 ///    The other dynamic bitset to "exclusive or" the flags with.
 /// @return  This object.
-/// @since  x.y.z, 09.06.2020
+/// @since  1.37.0, 09.06.2020
 DynamicBitset& DynamicBitset::operator ^=( const DynamicBitset& other) noexcept( true)
 {
 
@@ -460,7 +460,7 @@ DynamicBitset& DynamicBitset::operator ^=( const DynamicBitset& other) noexcept(
 /// Invertas/Flips each flag of the internal vector.
 ///
 /// @return  This object.
-/// @since  x.y.z, 09.06.2020
+/// @since  1.37.0, 09.06.2020
 DynamicBitset DynamicBitset::operator ~() const noexcept( true)
 {
 
@@ -478,7 +478,7 @@ DynamicBitset DynamicBitset::operator ~() const noexcept( true)
 ///
 /// @param[in]  pos  The number of positions to left-shift.
 /// @return  A new dynamic bitset with the shifted flags.
-/// @since  x.y.z, 09.06.2020
+/// @since  1.37.0, 09.06.2020
 DynamicBitset DynamicBitset::operator <<( size_t pos) const noexcept( true)
 {
 
@@ -502,7 +502,7 @@ DynamicBitset DynamicBitset::operator <<( size_t pos) const noexcept( true)
 ///
 /// @param[in]  pos  The number of positions to left-shift.
 /// @return  This object.
-/// @since  x.y.z, 09.06.2020
+/// @since  1.37.0, 09.06.2020
 DynamicBitset& DynamicBitset::operator <<=( size_t pos) noexcept( true)
 {
 
@@ -529,7 +529,7 @@ DynamicBitset& DynamicBitset::operator <<=( size_t pos) noexcept( true)
 ///
 /// @param[in]  pos  The number of positions to right-shift.
 /// @return  A new dynamic bitset with the shifted flags.
-/// @since  x.y.z, 09.06.2020
+/// @since  1.37.0, 09.06.2020
 DynamicBitset DynamicBitset::operator >>( size_t pos) const noexcept( true)
 {
 
@@ -553,7 +553,7 @@ DynamicBitset DynamicBitset::operator >>( size_t pos) const noexcept( true)
 ///
 /// @param[in]  pos  The number of positions to right-shift.
 /// @return  This object.
-/// @since  x.y.z, 09.06.2020
+/// @since  1.37.0, 09.06.2020
 DynamicBitset& DynamicBitset::operator >>=( size_t pos) noexcept( true)
 {
 
@@ -579,7 +579,7 @@ DynamicBitset& DynamicBitset::operator >>=( size_t pos) noexcept( true)
 /// If not bit is set at all, begin() yields end().
 ///
 /// @return  Iterator that gives the position of the first bit that is set.
-/// @since  x.y.z, 18.06.2020
+/// @since  1.37.0, 18.06.2020
 DynamicBitset::iterator DynamicBitset::begin()
 {
    return iterator( this, 0);
@@ -591,7 +591,7 @@ DynamicBitset::iterator DynamicBitset::begin()
 /// vector.
 ///
 /// @return  Iterator pointing to the end of the vector.
-/// @since  x.y.z, 18.06.2020
+/// @since  1.37.0, 18.06.2020
 DynamicBitset::iterator DynamicBitset::end()
 {
    return iterator( this);
@@ -605,7 +605,7 @@ DynamicBitset::iterator DynamicBitset::end()
 ///
 /// @return
 ///    Const iterator that gives the position of the first bit that is set.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::const_iterator DynamicBitset::begin() const
 {
    return const_iterator( this, 0);
@@ -617,7 +617,7 @@ DynamicBitset::const_iterator DynamicBitset::begin() const
 /// dynamic vector.
 ///
 /// @return  Const iterator pointing to the end of the vector.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::const_iterator DynamicBitset::end() const
 {
    return const_iterator( this);
@@ -631,7 +631,7 @@ DynamicBitset::const_iterator DynamicBitset::end() const
 ///
 /// @return
 ///    Const iterator that gives the position of the first bit that is set.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::const_iterator DynamicBitset::cbegin() const
 {
    return const_iterator( this, 0);
@@ -643,7 +643,7 @@ DynamicBitset::const_iterator DynamicBitset::cbegin() const
 /// dynamic vector.
 ///
 /// @return  Const iterator pointing to the end of the vector.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::const_iterator DynamicBitset::cend() const
 {
    return const_iterator( this);
@@ -657,7 +657,7 @@ DynamicBitset::const_iterator DynamicBitset::cend() const
 ///
 /// @return
 ///    Iterator with the position of the last bit in the vector that is set.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::reverse_iterator DynamicBitset::rbegin()
 {
    return reverse_iterator( this, mData.size() - 1);
@@ -670,7 +670,7 @@ DynamicBitset::reverse_iterator DynamicBitset::rbegin()
 ///
 /// @return
 ///    Iterator pointing before the start of the vector.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::reverse_iterator DynamicBitset::rend()
 {
    return reverse_iterator( this);
@@ -685,7 +685,7 @@ DynamicBitset::reverse_iterator DynamicBitset::rend()
 /// @return
 ///    Const iterator with the position of the last bit in the vector that is
 ///    set.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::const_reverse_iterator DynamicBitset::rbegin() const
 {
    return const_reverse_iterator( this, mData.size() - 1);
@@ -698,7 +698,7 @@ DynamicBitset::const_reverse_iterator DynamicBitset::rbegin() const
 ///
 /// @return
 ///    Const iterator pointing before the start of the vector.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::const_reverse_iterator DynamicBitset::rend() const
 {
    return const_reverse_iterator( this);
@@ -713,7 +713,7 @@ DynamicBitset::const_reverse_iterator DynamicBitset::rend() const
 /// @return
 ///    Const iterator with the position of the last bit in the vector that is
 ///    set.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::const_reverse_iterator DynamicBitset::crbegin() const
 {
    return const_reverse_iterator( this, mData.size() - 1);
@@ -726,7 +726,7 @@ DynamicBitset::const_reverse_iterator DynamicBitset::crbegin() const
 ///
 /// @return
 ///    Const iterator pointing before the start of the vector.
-/// @since  x.y.z, 21.06.2020
+/// @since  1.37.0, 21.06.2020
 DynamicBitset::const_reverse_iterator DynamicBitset::crend() const
 {
    return const_reverse_iterator( this);
@@ -744,7 +744,7 @@ DynamicBitset::const_reverse_iterator DynamicBitset::crend() const
 /// @return
 ///    A new dynamic bitset with the result of the logical "and" of the flags.
 /// @since
-///    x.y.z, 11.06.2020
+///    1.37.0, 11.06.2020
 DynamicBitset operator &( const DynamicBitset& lhs, const DynamicBitset& rhs) noexcept( true)
 {
 
@@ -767,7 +767,7 @@ DynamicBitset operator &( const DynamicBitset& lhs, const DynamicBitset& rhs) no
 /// @return
 ///    A new dynamic bitset with the result of the logical "or" of the flags.
 /// @since
-///    x.y.z, 11.06.2020
+///    1.37.0, 11.06.2020
 DynamicBitset operator |( const DynamicBitset& lhs, const DynamicBitset& rhs) noexcept( true)
 {
 
@@ -791,7 +791,7 @@ DynamicBitset operator |( const DynamicBitset& lhs, const DynamicBitset& rhs) no
 ///    A new dynamic bitset with the result of the logical "exclusive-or" of the
 ///    flags.
 /// @since
-///    x.y.z, 11.06.2020
+///    1.37.0, 11.06.2020
 DynamicBitset operator ^( const DynamicBitset& lhs, const DynamicBitset& rhs) noexcept( true)
 {
 

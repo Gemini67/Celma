@@ -60,13 +60,13 @@ enum bit_names
 
 /// Helper class to convert an enum name into its value.
 ///
-/// @since  x.y.z, 28.06.2020
+/// @since  1.37.0, 28.06.2020
 class EnumFormatter: public celma::prog_args::detail::IFormat
 {
 public:
    /// Constructor, sets the formatters name in the base class.
    ///
-   /// @since  x.y.z, 28.06.2020
+   /// @since  1.37.0, 28.06.2020
    EnumFormatter():
       IFormat( "enum-formatter")
    {
@@ -74,13 +74,13 @@ public:
 
    /// Empty, virtual destructor.
    ///
-   /// @since  x.y.z, 28.06.2020
+   /// @since  1.37.0, 28.06.2020
    ~EnumFormatter() override = default;
 
    /// Returns the value of the enum as string in \a val.
    ///
    /// @param[in,out]  val  The value to change the formatting of.
-   /// @since  x.y.z, 28.06.2020
+   /// @since  1.37.0, 28.06.2020
    void formatValue( std::string& val) const override
    {
       if (val == "zero")
@@ -118,7 +118,7 @@ public:
 
 /// Test error case that can occur with a bitset.
 ///
-/// @since  x.y.z, 28.06.2020
+/// @since  1.37.0, 28.06.2020
 BOOST_AUTO_TEST_CASE( test_bitset_errors)
 {
 
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
 
 /// Test feature to set another character as list separator.
 ///
-/// @since  x.y.z, 28.06.2020
+/// @since  1.37.0, 28.06.2020
 BOOST_AUTO_TEST_CASE( test_list_sep)
 {
 
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
 /// Test feature to handle multiple values.
 ///
-/// @since  x.y.z, 28.06.2020
+/// @since  1.37.0, 28.06.2020
 BOOST_AUTO_TEST_CASE( test_multi_values)
 {
 
@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
 /// Test feature to clear the destination before assigning the values.
 ///
-/// @since  x.y.z, 28.06.2020
+/// @since  1.37.0, 28.06.2020
 BOOST_AUTO_TEST_CASE( test_clear_dest)
 {
 
@@ -376,7 +376,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
 /// Test feature to reset the flags instead of setting them.
 ///
-/// @since  x.y.z, 28.06.2020
+/// @since  1.37.0, 28.06.2020
 BOOST_AUTO_TEST_CASE( test_resetting_flags)
 {
 
@@ -429,7 +429,7 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
 
 /// Print information about the argument.
 ///
-/// @since  x.y.z, 28.06.2020
+/// @since  1.37.0, 28.06.2020
 BOOST_AUTO_TEST_CASE( list_var)
 {
 

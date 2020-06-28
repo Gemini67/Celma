@@ -368,7 +368,7 @@ BOOST_AUTO_TEST_CASE( bitset_to_string)
 
 /// Test converting the contents of a vector of bool.
 ///
-/// @since  x.y.z, 17.06.2020
+/// @since  1.37.0, 17.06.2020
 BOOST_AUTO_TEST_CASE( vector_bool_to_string)
 {
 
@@ -419,7 +419,7 @@ BOOST_AUTO_TEST_CASE( vector_bool_to_string)
 
 /// Test converting the contents of a dynamic bitset.
 ///
-/// @since  x.y.z, 17.06.2020
+/// @since  1.37.0, 17.06.2020
 BOOST_AUTO_TEST_CASE( dynamic_bitset_to_string)
 {
 
