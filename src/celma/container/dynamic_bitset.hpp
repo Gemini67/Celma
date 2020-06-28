@@ -521,7 +521,7 @@ template<> class type< container::DynamicBitset>
 public:
    /// Returns the name of the type.
    ///
-   /// @return  'celma::common::ValueFilter< <type-name> >' (without the spaces).
+   /// @return  'celma::container::DynamicBitset>'.
    /// @since  x.y.z, 28.06.2020
    static constexpr const char* name()
    {
