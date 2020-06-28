@@ -12,20 +12,20 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::PropertyLink.
+/// See documentation of class celma::container::detail::PropertyLink.
 
 
-#ifndef CELMA_COMMON_DETAIL_PROPERTY_LINK_HPP
-#define CELMA_COMMON_DETAIL_PROPERTY_LINK_HPP
+#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_LINK_HPP
+#define CELMA_CONTAINER_DETAIL_PROPERTY_LINK_HPP
 
 
 #include <iostream>
 #include <string>
-#include "celma/common/detail/property_entry.hpp"
-#include "celma/common/detail/property_map_t.hpp"
+#include "celma/container/detail/property_entry.hpp"
+#include "celma/container/detail/property_map_t.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 /// Stores a link to another property.<br>
@@ -104,12 +104,10 @@ inline void PropertyLink::dump( std::ostream& os, std::string indent) const
 } // PropertyLink::dump
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_DETAIL_PROPERTY_LINK_HPP
+#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_LINK_HPP
 
 
 // =====  END OF property_link.hpp  =====

@@ -12,11 +12,11 @@
 
 
 /// @file
-/// See documentation of class celma::common::DynamicBitset.
+/// See documentation of class celma::container::DynamicBitset.
 
 
 // module headerfile include
-#include "celma/common/dynamic_bitset.hpp"
+#include "celma/container/dynamic_bitset.hpp"
 
 
 // C++ Standard Library includes
@@ -24,7 +24,7 @@
 #include <stdexcept>
 
 
-namespace celma::common {
+namespace celma::container {
 
 
 
@@ -804,7 +804,7 @@ DynamicBitset operator ^( const DynamicBitset& lhs, const DynamicBitset& rhs) no
 
 
 
-} // namespace celma::common
+} // namespace celma::container
 
 
 // =====  END OF dynamic_bitset.cpp  =====

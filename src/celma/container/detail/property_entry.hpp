@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,18 +12,18 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::PropertyEntry.
+/// See documentation of class celma::container::detail::PropertyEntry.
 
 
-#ifndef CELMA_COMMON_DETAIL_PROPERTY_ENTRY_HPP
-#define CELMA_COMMON_DETAIL_PROPERTY_ENTRY_HPP
+#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_ENTRY_HPP
+#define CELMA_CONTAINER_DETAIL_PROPERTY_ENTRY_HPP
 
 
 #include <iosfwd>
 #include <string>
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 /// Base class for entries in the property map: Either a (property) map itself,
@@ -104,12 +104,10 @@ inline PropertyEntry::Types PropertyEntry::entryType() const
 } // PropertyEntry::entryType
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_DETAIL_PROPERTY_ENTRY_HPP
+#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_ENTRY_HPP
 
 
 // =====  END OF property_entry.hpp  =====

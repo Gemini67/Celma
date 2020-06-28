@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 
 
 // module to test header file include
-#include "celma/common/clear_container.hpp"
+#include "celma/container/clear_container.hpp"
 
 
 // C++ Standard Library includes
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE( test_clear_vector)
       myVec.push_back( new int(   42));
       myVec.push_back( new int( 4711));
 
-      celma::common::Vector::clear( myVec);
+      celma::container::Vector::clear( myVec);
 
       BOOST_REQUIRE( myVec.empty());
    } // end scope
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( test_clear_vector)
       myVec.push_back( new TestCountInstances);
       myVec.push_back( new TestCountInstances);
 
-      celma::common::Vector::clear( myVec);
+      celma::container::Vector::clear( myVec);
 
       BOOST_REQUIRE( myVec.empty());
       BOOST_REQUIRE_EQUAL( TestCountInstances::mInstances, 0);
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE( test_clear_list)
       myList.push_back( new int(   42));
       myList.push_back( new int( 4711));
 
-      celma::common::Container::clear( myList);
+      celma::container::Container::clear( myList);
 
       BOOST_REQUIRE( myList.empty());
    } // end scope
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE( test_clear_list)
       myList.push_back( new TestCountInstances);
       myList.push_back( new TestCountInstances);
 
-      celma::common::Container::clear( myList);
+      celma::container::Container::clear( myList);
 
       BOOST_REQUIRE( myList.empty());
       BOOST_REQUIRE_EQUAL( TestCountInstances::mInstances, 0);
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE( test_clear_map)
       myMap[   42] = new int(   42);
       myMap[ 4711] = new int( 4711);
 
-      celma::common::Map::clear( myMap);
+      celma::container::Map::clear( myMap);
 
       BOOST_REQUIRE( myMap.empty());
    } // end scope
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE( test_clear_map)
       myMap[ 3] = new TestCountInstances;
       myMap[ 5] = new TestCountInstances;
 
-      celma::common::Map::clear( myMap);
+      celma::container::Map::clear( myMap);
 
       BOOST_REQUIRE( myMap.empty());
       BOOST_REQUIRE_EQUAL( TestCountInstances::mInstances, 0);

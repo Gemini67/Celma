@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -24,7 +24,7 @@
 
 
 // // project includes
-#include "celma/common/clear_container.hpp"
+#include "celma/container/clear_container.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/log/detail/log_msg.hpp"
 #include "celma/log/filter/detail/duplicate_policy_factory.hpp"
@@ -34,7 +34,7 @@
 #include "celma/log/filter/detail/log_filter_min_level.hpp"
 
 
-namespace celma { namespace log { namespace filter {
+namespace celma::log::filter {
 
 
 
@@ -128,7 +128,7 @@ Filters::Filters():
 Filters::~Filters()
 {
 
-   common::Vector::clear( mFilters);
+   container::Vector::clear( mFilters);
    mpLevelFilter = nullptr;
 
 } // Filters::~Filters
@@ -245,9 +245,7 @@ bool Filters::processLevel( LogLevel l) const
 
 
 
-} // namespace filter
-} // namespace log
-} // namespace celma
+} // namespace celma::log::filter
 
 
 // =====  END OF filters.cpp  =====

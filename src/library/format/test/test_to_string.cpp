@@ -37,7 +37,7 @@
 
 
 // project includes
-#include "celma/common/dynamic_bitset.hpp"
+#include "celma/container/dynamic_bitset.hpp"
 #include "celma/prog_args/detail/usage_params.hpp"
 
 
@@ -423,7 +423,7 @@ BOOST_AUTO_TEST_CASE( vector_bool_to_string)
 BOOST_AUTO_TEST_CASE( dynamic_bitset_to_string)
 {
 
-   using celma::common::DynamicBitset;
+   using celma::container::DynamicBitset;
 
    // empty bitset
    {

@@ -28,12 +28,12 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "celma/common/dynamic_bitset.hpp"
 #include "celma/common/tuple_at_index.hpp"
 #include "celma/common/tuple_length.hpp"
+#include "celma/container/dynamic_bitset.hpp"
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// Template to convert any value type into string format. Requires the
@@ -137,7 +137,7 @@ inline std::string toString( const std::vector< bool>& vb)
 /// @param[in]  dbs  The dynamic bitset to convert the contents of.
 /// @return  String with the contents of the dynamic bitset as binary number.
 /// @since  x.y.z, 10.06.2020
-inline std::string toString( const common::DynamicBitset& dbs)
+inline std::string toString( const container::DynamicBitset& dbs)
 {
    return dbs.to_string();
 } // toString
@@ -326,8 +326,7 @@ template< typename T> std::string toString( std::stack< T> stck)
 } // toString
 
 
-} // namespace format
-} // namespace celma
+} // namespace celma::format
 
 
 #endif   // CELMA_FORMAT_TO_STRING_HPP

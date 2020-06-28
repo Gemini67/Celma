@@ -13,20 +13,20 @@
 
 /// @file
 /// See documentation of template classes
-/// celma::common::detail::DynamicBitsetIteratorBase<>,
-/// celma::common::detail::DynamicBitsetIterator<> and
-/// celma::common::detail::DynamicBitsetReverseIterator<>.
+/// celma::container::detail::DynamicBitsetIteratorBase<>,
+/// celma::container::detail::DynamicBitsetIterator<> and
+/// celma::container::detail::DynamicBitsetReverseIterator<>.
 
 
-#ifndef CELMA_COMMON_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
-#define CELMA_COMMON_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
+#ifndef CELMA_CONTAINER_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
+#define CELMA_CONTAINER_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
 
 
 #include <cassert>
 #include "celma/common/pre_postfix.hpp"
 
 
-namespace celma::common::detail {
+namespace celma::container::detail {
 
 
 // Template Class DynamicBitsetIteratorBase
@@ -37,7 +37,7 @@ namespace celma::common::detail {
 ///
 /// @tparam  T
 ///    The type of the class for which this iterator may be used.<br>
-///    Here: Always celma::common::DynamicBitset. Set as template parameter to
+///    Here: Always celma::container::DynamicBitset. Set as template parameter to
 ///    break dependency cycle.
 /// @since  x.y.z, 18.06.2020
 template< typename T> class DynamicBitsetIteratorBase
@@ -137,7 +137,7 @@ protected:
 ///
 /// @tparam  T
 ///    The type of the class for which this iterator may be used.<br>
-///    Here: Always celma::common::DynamicBitset. Set as template parameter to
+///    Here: Always celma::container::DynamicBitset. Set as template parameter to
 ///    break dependency cycle.
 /// @since  x.y.z, 18.06.2020
 template< typename T> class DynamicBitsetIterator:
@@ -248,7 +248,7 @@ private:
 ///
 /// @tparam  T
 ///    The type of the class for which this iterator may be used.<br>
-///    Here: Always celma::common::DynamicBitset. Set as template parameter to
+///    Here: Always celma::container::DynamicBitset. Set as template parameter to
 ///    break dependency cycle.
 /// @since  x.y.z, 18.06.2020
 template< typename T> class DynamicBitsetReverseIterator:
@@ -351,10 +351,10 @@ private:
 }; // DynamicBitsetReverseIterator< T>
 
 
-} // namespace celma::common::detail
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
+#endif   // CELMA_CONTAINER_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
 
 
 // =====  END OF dynamic_bitset_iterator.hpp  =====

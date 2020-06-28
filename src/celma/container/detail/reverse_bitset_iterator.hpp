@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,17 +12,17 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::ReverseBitsetIterator.
+/// See documentation of class celma::container::detail::ReverseBitsetIterator.
 
 
-#ifndef CELMA_COMMON_DETAIL_REVERSE_BITSET_ITERATOR_HPP
-#define CELMA_COMMON_DETAIL_REVERSE_BITSET_ITERATOR_HPP
+#ifndef CELMA_CONTAINER_DETAIL_REVERSE_BITSET_ITERATOR_HPP
+#define CELMA_CONTAINER_DETAIL_REVERSE_BITSET_ITERATOR_HPP
 
 
-#include "celma/common/detail/bitset_iterator_base.hpp"
+#include "celma/container/detail/bitset_iterator_base.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 /// Forward iterator for std::bitset's.
@@ -164,12 +164,10 @@ template< size_t N>
 } // ReverseBitsetIterator< N>::operator --
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_DETAIL_REVERSE_BITSET_ITERATOR_HPP
+#endif   // CELMA_CONTAINER_DETAIL_REVERSE_BITSET_ITERATOR_HPP
 
 
 // =====  END OF reverse_bitset_iterator.hpp  =====

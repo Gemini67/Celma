@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,12 +29,12 @@
 /// - std::crend()
 
 
-#ifndef CELMA_COMMON_BITSET_ITERATOR_HPP
-#define CELMA_COMMON_BITSET_ITERATOR_HPP
+#ifndef CELMA_CONTAINER_BITSET_ITERATOR_HPP
+#define CELMA_CONTAINER_BITSET_ITERATOR_HPP
 
 
-#include "celma/common/detail/forward_bitset_iterator.hpp"
-#include "celma/common/detail/reverse_bitset_iterator.hpp"
+#include "celma/container/detail/forward_bitset_iterator.hpp"
+#include "celma/container/detail/reverse_bitset_iterator.hpp"
 
 
 namespace std {
@@ -46,10 +46,10 @@ namespace std {
 /// @param[in]  bs  The bitset to iterate over.
 /// @return  Forward bitset iterator.
 /// @since  1.7.0, 18.07.2018
-template< size_t N> celma::common::detail::ForwardBitsetIterator< N>
+template< size_t N> celma::container::detail::ForwardBitsetIterator< N>
    begin( bitset< N>& bs)
 {
-   return celma::common::detail::ForwardBitsetIterator< N>( bs);
+   return celma::container::detail::ForwardBitsetIterator< N>( bs);
 } // begin
 
 
@@ -59,10 +59,10 @@ template< size_t N> celma::common::detail::ForwardBitsetIterator< N>
 /// @param[in]  bs  The bitset to iterate over.
 /// @return  Const forward bitset iterator.
 /// @since  1.7.0, 18.07.2018
-template< size_t N> celma::common::detail::ForwardBitsetIterator< N>
+template< size_t N> celma::container::detail::ForwardBitsetIterator< N>
    cbegin( const bitset< N>& bs)
 {
-   return celma::common::detail::ForwardBitsetIterator< N>( bs);
+   return celma::container::detail::ForwardBitsetIterator< N>( bs);
 } // cbegin
 
 
@@ -71,10 +71,10 @@ template< size_t N> celma::common::detail::ForwardBitsetIterator< N>
 /// @param[in]  bs  The bitset to iterate over.
 /// @return  Forward bitset iterator.
 /// @since  1.7.0, 18.07.2018
-template< size_t N> celma::common::detail::ForwardBitsetIterator< N>
+template< size_t N> celma::container::detail::ForwardBitsetIterator< N>
    end( bitset< N>& bs)
 {
-   return celma::common::detail::ForwardBitsetIterator< N>( bs, true);
+   return celma::container::detail::ForwardBitsetIterator< N>( bs, true);
 } // end
 
 
@@ -83,10 +83,10 @@ template< size_t N> celma::common::detail::ForwardBitsetIterator< N>
 /// @param[in]  bs  The bitset to iterate over.
 /// @return  Const forward bitset iterator.
 /// @since  1.7.0, 18.07.2018
-template< size_t N> celma::common::detail::ForwardBitsetIterator< N>
+template< size_t N> celma::container::detail::ForwardBitsetIterator< N>
    cend( const bitset< N>& bs)
 {
-   return celma::common::detail::ForwardBitsetIterator< N>( bs, true);
+   return celma::container::detail::ForwardBitsetIterator< N>( bs, true);
 } // cend
 
 
@@ -96,10 +96,10 @@ template< size_t N> celma::common::detail::ForwardBitsetIterator< N>
 /// @param[in]  bs  The bitset to iterate over.
 /// @return  Reverse bitset iterator.
 /// @since  1.7.0, 18.07.2018
-template< size_t N> celma::common::detail::ReverseBitsetIterator< N>
+template< size_t N> celma::container::detail::ReverseBitsetIterator< N>
    rbegin( bitset< N>& bs)
 {
-   return celma::common::detail::ReverseBitsetIterator< N>( bs);
+   return celma::container::detail::ReverseBitsetIterator< N>( bs);
 } // rbegin
 
 
@@ -109,10 +109,10 @@ template< size_t N> celma::common::detail::ReverseBitsetIterator< N>
 /// @param[in]  bs  The bitset to iterate over.
 /// @return  Const reverse bitset iterator.
 /// @since  1.7.0, 18.07.2018
-template< size_t N> celma::common::detail::ReverseBitsetIterator< N>
+template< size_t N> celma::container::detail::ReverseBitsetIterator< N>
    crbegin( const bitset< N>& bs)
 {
-   return celma::common::detail::ReverseBitsetIterator< N>( bs);
+   return celma::container::detail::ReverseBitsetIterator< N>( bs);
 } // crbegin
 
 
@@ -121,10 +121,10 @@ template< size_t N> celma::common::detail::ReverseBitsetIterator< N>
 /// @param[in]  bs  The bitset to iterate over.
 /// @return  Reverse bitset iterator.
 /// @since  1.7.0, 18.07.2018
-template< size_t N> celma::common::detail::ReverseBitsetIterator< N>
+template< size_t N> celma::container::detail::ReverseBitsetIterator< N>
    rend( bitset< N>& bs)
 {
-   return celma::common::detail::ReverseBitsetIterator< N>( bs, true);
+   return celma::container::detail::ReverseBitsetIterator< N>( bs, true);
 } // rend
 
 
@@ -134,17 +134,17 @@ template< size_t N> celma::common::detail::ReverseBitsetIterator< N>
 /// @param[in]  bs  The bitset to iterate over.
 /// @return  Const reverse bitset iterator.
 /// @since  1.7.0, 18.07.2018
-template< size_t N> celma::common::detail::ReverseBitsetIterator< N>
+template< size_t N> celma::container::detail::ReverseBitsetIterator< N>
    crend( const bitset< N>& bs)
 {
-   return celma::common::detail::ReverseBitsetIterator< N>( bs, true);
+   return celma::container::detail::ReverseBitsetIterator< N>( bs, true);
 } // crend
 
 
 } // namespace std
 
 
-#endif   // CELMA_COMMON_BITSET_ITERATOR_HPP
+#endif   // CELMA_CONTAINER_BITSET_ITERATOR_HPP
 
 
 // =====  END OF bitset_iterator.hpp  =====

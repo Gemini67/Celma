@@ -9,14 +9,14 @@
 **
 **
 **  Description:
-**    Test program for the class celma::common::DynamicBitset, using the
+**    Test program for the class celma::container::DynamicBitset, using the
 **    Boost.Test framework.
 **
 --*/
 
 
 // module to test headerfile include
-#include "celma/common/dynamic_bitset.hpp"
+#include "celma/container/dynamic_bitset.hpp"
 
 
 // C++ Standard Library includes
@@ -31,12 +31,12 @@
 #include "celma/test/check_for.hpp"
 
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::common::DynamicBitset)
-BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::common::DynamicBitset::iterator)
-BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::common::DynamicBitset::reverse_iterator)
+BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::container::DynamicBitset)
+BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::container::DynamicBitset::iterator)
+BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::container::DynamicBitset::reverse_iterator)
 
 
-using celma::common::DynamicBitset;
+using celma::container::DynamicBitset;
 
 
 

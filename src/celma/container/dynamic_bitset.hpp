@@ -12,20 +12,20 @@
 
 
 /// @file
-/// See documentation of class celma::common::DynamicBitset.
+/// See documentation of class celma::container::DynamicBitset.
 
 
-#ifndef CELMA_COMMON_DYNAMIC_BITSET_HPP
-#define CELMA_COMMON_DYNAMIC_BITSET_HPP
+#ifndef CELMA_CONTAINER_DYNAMIC_BITSET_HPP
+#define CELMA_CONTAINER_DYNAMIC_BITSET_HPP
 
 
 #include <bitset>
 #include <string>
 #include <vector>
-#include "celma/common/detail/dynamic_bitset_iterator.hpp"
+#include "celma/container/detail/dynamic_bitset_iterator.hpp"
 
 
-namespace celma::common {
+namespace celma::container {
 
 
 /// Dynamic bitset, a std::vector<bool> with the interface of a std::bitset<>.
@@ -509,10 +509,10 @@ DynamicBitset operator |( const DynamicBitset& lhs, const DynamicBitset& rhs) no
 DynamicBitset operator ^( const DynamicBitset& lhs, const DynamicBitset& rhs) noexcept( true);
 
 
-} // namespace celma::common
+} // namespace celma::container
 
 
-#endif   // CELMA_COMMON_DYNAMIC_BITSET_HPP
+#endif   // CELMA_CONTAINER_DYNAMIC_BITSET_HPP
 
 
 // =====  END OF dynamic_bitset.hpp  =====
