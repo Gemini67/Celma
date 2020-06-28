@@ -28,15 +28,16 @@
 
 
 // project includes
-#include "celma/common/clear_container.hpp"
+#include "celma/container/clear_container.hpp"
 #include "celma/format/to_string.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 using std::ostream;
 using std::string;
+
 
 
 /// Destructor, frees dynamically allocated memory.
@@ -45,8 +46,8 @@ using std::string;
 TypedArgBase::~TypedArgBase()
 {
 
-   common::Vector::clear( mChecks);
-   common::Vector::clear( mConstraints);
+   container::Vector::clear( mChecks);
+   container::Vector::clear( mConstraints);
 
 } // TypedArgBase::~TypedArgBase
 
@@ -780,9 +781,7 @@ ostream& operator <<( ostream& os, TypedArgBase::ValueMode vm)
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF typed_arg_base.cpp  =====

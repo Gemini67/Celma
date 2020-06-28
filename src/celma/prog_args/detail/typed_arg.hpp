@@ -15,8 +15,8 @@
 /// See documentation of template celma::prog_args::detail::TypedArg<>.<br>
 /// This file contains the base template plus all specialisations:
 /// - TypedArg< bool>
-/// - TypedArg< common::CheckAssign< T>>
-/// - TypedArg< common::CheckAssign< bool>>
+/// - TypedArg< celma::common::CheckAssign< T>>
+/// - TypedArg< celma::common::CheckAssign< bool>>
 /// - TypedArg< LevelCounter>
 /// - TypedArg< ContainerAdapter< T>><br>
 ///   This one is used for STL containers like std::set<>, std::vector<> etc.
@@ -24,7 +24,8 @@
 /// - TypedArg< std::array< T, N>>
 /// - TypedArg< std::tuple< T...>>
 /// - TypedArg< std::bitset< T...>>
-/// - TypedArg< common::ValueFilter< T>>
+/// - TypedArg< celma::container::DynamicBitset>
+/// - TypedArg< celma::common::ValueFilter< T>>
 
 
 #ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
@@ -45,6 +46,7 @@
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
 #include "celma/common/value_filter.hpp"
+#include "celma/container/dynamic_bitset.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/container_adapter.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
@@ -52,7 +54,7 @@
 #include "celma/prog_args/level_counter.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 // Template TypedArg
@@ -2302,6 +2304,191 @@ template< size_t N>
 } // TypedArg< std::bitset< N>>::assign
 
 
+// Template TypedArg< container::DynamicBitset>
+// ============================================
+
+
+/// Specialisation of TypedArg<> for destination value type
+/// container::DynamicBitset.
+///
+/// @since  1.37.0, 28.06.2020
+template<> class TypedArg< container::DynamicBitset>: public TypedArgBase
+{
+public:
+   /// The type of the destination variable.
+   using bitset_type = container::DynamicBitset;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  1.37.0, 28.06.2020
+   TypedArg( bitset_type& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::required, false),
+      mDestVar( dest)
+   {
+      mpCardinality.reset();
+   } // TypedArg< container::DynamicBitset>::TypedArg
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.37.0, 28.06.2020
+   ~TypedArg() override = default;
+
+   /// Returns the type of the destination variable.
+   ///
+   /// @return  The name of the destination variable's type.
+   /// @since  1.37.0, 28.06.2020
+   const std::string varTypeName() const override
+   {
+      return type< bitset_type>::name();
+   } // TypedArg< container::DynamicBitset>::varTypeName
+
+   /// Returns if the destination has (at least) one value set.
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  1.37.0, 28.06.2020
+   bool hasValue() const override
+   {
+      return mDestVar.any();
+   } // TypedArg< container::DynamicBitset>::hasValue
+
+   /// Prints the current value of the destination variable.
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.37.0, 28.06.2020
+   void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << format::toString( mDestVar);
+      if (print_type)
+         os << " [" << varTypeName() << "]";
+   } // TypedArg< container::DynamicBitset>::printValue
+
+   /// Overloads TypedArgBase::setTakesMultiValue().
+   /// For dynamic bitsets it is possible/allowed to activate this feature.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.37.0, 28.06.2020
+   TypedArgBase* setTakesMultiValue() override
+   {
+      mTakeMultipleValues = true;
+      return this;
+   } // TypedArg< container::DynamicBitset>::setTakesMultiValue
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @since  1.37.0, 28.06.2020
+   TypedArgBase* setListSep( char sep) override
+   {
+      mListSep = sep;
+      return this;
+   } // TypedArg< container::DynamicBitset>::setListSep
+
+   /// Special feature for destination variable type bitset:
+   /// Clear the contents of the bitset before assigning the value(s) from the
+   /// command line. If the feature is off (the default), the value(s from the
+   /// command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination bitset that should be overwritten by the argument's values.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.37.0, 28.06.2020
+   TypedArgBase* setClearBeforeAssign() override
+   {
+      mClearB4Assign = true;
+      return this;
+   } // TypedArg< container::DynamicBitset>::setClearBeforeAssign
+
+   /// Unset the flags (reset in the bitset) when the argument is detected,
+   /// instead of setting it (the default).
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.37.0, 28.06.2020
+   TypedArgBase* unsetFlag() override
+   {
+      mResetFlags = true;
+      return this;
+   } // TypedArg< container::DynamicBitset>::unsetFlag
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.37.0, 28.06.2020
+   void dump( std::ostream& os) const override
+   {
+      os << "value type '" << varTypeName()
+         << "', destination bitset '" << mVarName << "', currently "
+         << (mDestVar.none() ? "no" : boost::lexical_cast< std::string>( mDestVar.count()))
+         << " values." << std::endl
+         << "   " << static_cast< const TypedArgBase&>( *this);
+   } // TypedArg< container::DynamicBitset>::dump
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.37.0, 28.06.2020
+   void assign( const std::string& value, bool) override
+   {
+      if (mClearB4Assign)
+      {
+         mDestVar.reset();
+         // clear only once
+         mClearB4Assign = false;
+      } // end if
+
+      common::Tokenizer  tok( value, mListSep);
+      for (auto it = tok.begin(); it != tok.end(); ++it)
+      {
+         if (mpCardinality && (it != tok.begin()))
+            mpCardinality->gotValue();
+
+         auto const&  listVal( *it);
+
+         check( listVal);
+
+         if (!mFormats.empty())
+         {
+            auto  valCopy( listVal);
+            format( valCopy);
+            auto const  pos = boost::lexical_cast< size_t>( valCopy);
+            mDestVar.set(  pos, !mResetFlags);
+         } else
+         {
+            auto const  pos = boost::lexical_cast< size_t>( listVal);
+            mDestVar.set( pos, !mResetFlags);
+         } // end if
+      } // end for
+   } // TypedArg< container::DynamicBitset>::assign
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   bitset_type&  mDestVar;
+   /// The character to use as a list separator, default: ,
+   char          mListSep = ',';
+   /// If set, the contents of the bitset are cleared before the first value(s)
+   /// from the command line are assigned.
+   bool          mClearB4Assign = false;
+   /// Specifies if the flags in the bitset should set (the default) or reset.
+   bool          mResetFlags = false;
+
+
+}; // TypedArg< container::DynamicBitset>
+
+
 // Template TypedArg< ValueFilter< T>>
 // ===================================
 
@@ -2475,9 +2662,7 @@ template< typename T>
 } // TypedArg< common::ValueFilter< T>>::assign
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP

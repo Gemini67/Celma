@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,18 +12,18 @@
 
 
 /// @file
-/// See documentation of classes celma::common::ClearVector,
-/// celma::common::ClearContainer and celma::common::ClearMap.
+/// See documentation of classes celma::container::ClearVector,
+/// celma::container::ClearContainer and celma::container::ClearMap.
 
 
-#ifndef CELMA_COMMON_CLEAR_CONTAINER_HPP
-#define CELMA_COMMON_CLEAR_CONTAINER_HPP
+#ifndef CELMA_CONTAINER_CLEAR_CONTAINER_HPP
+#define CELMA_CONTAINER_CLEAR_CONTAINER_HPP
 
 
 #include <cstddef>
 
 
-namespace celma { namespace common {
+namespace celma::container {
 
 
 /// Clear a vector which contains pointers: Delete all objects and the clear the
@@ -99,11 +99,10 @@ public:
 }; // Map
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::container
 
 
-#endif   // CELMA_COMMON_CLEAR_CONTAINER_HPP
+#endif   // CELMA_CONTAINER_CLEAR_CONTAINER_HPP
 
 
 // =====  END OF clear_container.hpp  =====

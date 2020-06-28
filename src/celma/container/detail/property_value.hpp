@@ -12,19 +12,19 @@
 
 
 /// @file
-/// See documentation of template class celma::common::detail::PropertyValue<>.
+/// See documentation of template class celma::container::detail::PropertyValue<>.
 
 
-#ifndef CELMA_COMMON_DETAIL_PROPERTY_VALUE_HPP
-#define CELMA_COMMON_DETAIL_PROPERTY_VALUE_HPP
+#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_VALUE_HPP
+#define CELMA_CONTAINER_DETAIL_PROPERTY_VALUE_HPP
 
 
 #include <iostream>
 #include <string>
-#include "celma/common/detail/property_entry.hpp"
+#include "celma/container/detail/property_entry.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 /// Stores a property, i.e. a named value.
@@ -99,12 +99,10 @@ template< typename T>
 } // PropertyValue< T>::dump
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_DETAIL_PROPERTY_VALUE_HPP
+#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_VALUE_HPP
 
 
 // =====  END OF property_value.hpp  =====

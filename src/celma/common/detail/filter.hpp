@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,11 +23,11 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "celma/common/clear_container.hpp"
 #include "celma/common/detail/filters.hpp"
+#include "celma/container/clear_container.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Handles multiple filters on the same level.
@@ -120,7 +120,7 @@ private:
 
 template< typename T> Filter< T>::~Filter()
 {
-   Vector::clear( mFilters);
+   container::Vector::clear( mFilters);
 } // Filter< T>::~Filter
 
 
@@ -178,9 +178,7 @@ template< typename T> std::string Filter< T>::str() const
 } // Filter< T>::str
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::common::detail
 
 
 #endif   // CELMA_COMMON_DETAIL_FILTER_HPP

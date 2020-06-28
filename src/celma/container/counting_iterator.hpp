@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,17 +12,17 @@
 
 
 /// @file
-/// See documentation of template celma::common::CountingIterator.
+/// See documentation of template celma::container::CountingIterator.
 
 
-#ifndef CELMA_COMMON_COUNTING_ITERATOR_HPP
-#define CELMA_COMMON_COUNTING_ITERATOR_HPP
+#ifndef CELMA_CONTAINER_COUNTING_ITERATOR_HPP
+#define CELMA_CONTAINER_COUNTING_ITERATOR_HPP
 
 
 #include "celma/common/pre_postfix.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::container {
 
 
 // Class ICountResult
@@ -180,11 +180,10 @@ template< class BaseType> int CountingIterator< BaseType>::currentNum() const
 } // CountingIterator< BaseType>::currentNum
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::container
 
 
-#endif   // CELMA_COMMON_COUNTING_ITERATOR_HPP
+#endif   // CELMA_CONTAINER_COUNTING_ITERATOR_HPP
 
 
 // =====  END OF counting_iterator.hpp  =====

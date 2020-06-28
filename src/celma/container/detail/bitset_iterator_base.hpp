@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,18 +12,19 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::BitsetIteratorBase.
+/// See documentation of class celma::container::detail::BitsetIteratorBase.
 
 
-#ifndef CELMA_COMMON_BITSET_DETAIL_ITERATOR_BASE_HPP
-#define CELMA_COMMON_BITSET_DETAIL_ITERATOR_BASE_HPP
+#ifndef CELMA_CONTAINER_BITSET_DETAIL_ITERATOR_BASE_HPP
+#define CELMA_CONTAINER_BITSET_DETAIL_ITERATOR_BASE_HPP
 
 
 #include <bitset>
+#include <iterator>
 #include "celma/common/pre_postfix.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 /// Base class for bitset iterator classes.
@@ -33,6 +34,8 @@ namespace celma { namespace common { namespace detail {
 template< size_t N> class BitsetIteratorBase
 {
 public:
+   typedef std::random_access_iterator_tag iterator_category;
+
    /// Allow default copy construction.
    BitsetIteratorBase( const BitsetIteratorBase&) = default;
 
@@ -169,12 +172,10 @@ template< size_t N> void BitsetIteratorBase< N>::findPrev()
 } // BitsetIteratorBase< N>::findPrev
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_BITSET_DETAIL_ITERATOR_BASE_HPP
+#endif   // CELMA_CONTAINER_BITSET_DETAIL_ITERATOR_BASE_HPP
 
 
 // =====  END OF bitset_iterator_base.hpp  =====

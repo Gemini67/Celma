@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,11 +12,11 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::PropertyCont.
+/// See documentation of class celma::container::detail::PropertyCont.
 
 
 // module header file include
-#include "celma/common/detail/property_cont.hpp"
+#include "celma/container/detail/property_cont.hpp"
 
 
 // C++ Standard Library includes
@@ -24,10 +24,13 @@
 
 
 // project includes
-#include "celma/common/clear_container.hpp"
+#include "celma/container/clear_container.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
+
+
+using common::detail::NamePathRemain;
 
 
 
@@ -66,10 +69,10 @@ PropertyCont::~PropertyCont()
 bool PropertyCont::hasProperty( const std::string& name, char separator) const
 {
 
-   if (detail::NamePathRemain::nameHasSeparator( name, separator))
+   if (NamePathRemain::nameHasSeparator( name, separator))
    {
-      detail::NamePathRemain  npr( name, separator);
-      auto const              subtree_iter = mProperties.find( npr.firstName());
+      NamePathRemain  npr( name, separator);
+      auto const      subtree_iter = mProperties.find( npr.firstName());
       if (subtree_iter == mProperties.end())
          return false;
       auto  subtree = static_cast< PropertyCont*>( subtree_iter->second);
@@ -122,10 +125,10 @@ typename PropertyCont::result_t
    PropertyCont::findEntry( const std::string& name, char separator) const
 {
 
-   if (detail::NamePathRemain::nameHasSeparator( name, separator))
+   if (NamePathRemain::nameHasSeparator( name, separator))
    {
-      const detail::NamePathRemain  npr( name, separator);
-      auto                          subtree_iter = mProperties.find( npr.firstName());
+      const NamePathRemain  npr( name, separator);
+      auto                  subtree_iter = mProperties.find( npr.firstName());
 
       if ((subtree_iter == mProperties.end())
           || (subtree_iter->second->entryType() != PropertyEntry::Types::map))
@@ -141,9 +144,7 @@ typename PropertyCont::result_t
 
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
 // =====  END OF property_cont.cpp  =====

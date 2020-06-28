@@ -169,4 +169,5 @@ BOOST_AUTO_TEST_CASE( test_all)
 
 
 
-// =================  END OF test_generation_file_creator.cpp  =================
+// =====  END OF test_generation_file_creator.cpp  =====
+

@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -17,6 +17,11 @@ get_directory_property( appl_sources DIRECTORY ./appl
 add_subdirectory( common )
 get_directory_property( common_sources DIRECTORY ./common
    DEFINITION common_sources
+)
+
+add_subdirectory( container )
+get_directory_property( container_sources DIRECTORY ./container
+   DEFINITION container_sources
 )
 
 add_subdirectory( format )
@@ -42,6 +47,7 @@ get_directory_property( indirect_access_sources DIRECTORY ./indirect_access
 set( celma_lib_sources
    ${appl_sources}
    ${common_sources}
+   ${container_sources}
    ${format_sources}
    ${log_sources}
    ${prog_args_sources}

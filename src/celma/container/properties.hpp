@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,20 +12,20 @@
 
 
 /// @file
-/// See documentation of class celma::common::Properties.
+/// See documentation of class celma::container::Properties.
 
 
-#ifndef CELMA_COMMON_PROPERTIES_HPP
-#define CELMA_COMMON_PROPERTIES_HPP
+#ifndef CELMA_CONTAINER_PROPERTIES_HPP
+#define CELMA_CONTAINER_PROPERTIES_HPP
 
 
 #include <iosfwd>
 #include <string>
-#include "celma/common/detail/property_iterator.hpp"
-#include "celma/common/detail/property_cont.hpp"
+#include "celma/container/detail/property_iterator.hpp"
+#include "celma/container/detail/property_cont.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::container {
 
 
 /// Stores properties, configuration parameters etc.<br>
@@ -204,11 +204,10 @@ inline typename Properties::iterator Properties::end()
 } // Properties::end
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::container
 
 
-#endif   // CELMA_COMMON_PROPERTIES_HPP
+#endif   // CELMA_CONTAINER_PROPERTIES_HPP
 
 
 // =====  END OF properties.hpp  =====

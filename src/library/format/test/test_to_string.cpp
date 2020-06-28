@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,6 +37,7 @@
 
 
 // project includes
+#include "celma/container/dynamic_bitset.hpp"
 #include "celma/prog_args/detail/usage_params.hpp"
 
 
@@ -332,8 +333,8 @@ BOOST_AUTO_TEST_CASE( bitset_to_string)
    {
       std::bitset< 12>  bs;
 
-      bs[0] = true;
-      bs[11] = true;
+      bs[ 0] = true;
+      bs[ 11] = true;
 
       const auto  str( toString( bs));
 
@@ -362,6 +363,110 @@ BOOST_AUTO_TEST_CASE( bitset_to_string)
    } // end scope
 
 } // bitset_to_string
+
+
+
+/// Test converting the contents of a vector of bool.
+///
+/// @since  1.37.0, 17.06.2020
+BOOST_AUTO_TEST_CASE( vector_bool_to_string)
+{
+
+   // empty bitset
+   {
+      std::vector< bool>  vb( 10);
+      const auto          str( toString( vb));
+
+      BOOST_REQUIRE_EQUAL( str, "0000000000");
+   } // end scope
+
+   // two bits set
+   {
+      std::vector< bool>  vb( 12);
+
+      vb[ 0] = true;
+      vb[ 11] = true;
+
+      const auto  str( toString( vb));
+
+      BOOST_REQUIRE_EQUAL( str, "100000000001");
+   } // end scope
+
+   // all bits set
+   {
+      std::vector< bool>  vb( 8);
+
+      vb.flip();
+
+      const auto  str( toString( vb));
+
+      BOOST_REQUIRE_EQUAL( str, "11111111");
+   } // end scope
+
+   // a large bitset
+   {
+      std::vector< bool>  vb( 1024);
+
+      const auto         str( toString( vb));
+      const std::string  result( 1024, '0');
+
+      BOOST_REQUIRE_EQUAL( str, result);
+   } // end scope
+
+} // vector_bool_to_string
+
+
+
+/// Test converting the contents of a dynamic bitset.
+///
+/// @since  1.37.0, 17.06.2020
+BOOST_AUTO_TEST_CASE( dynamic_bitset_to_string)
+{
+
+   using celma::container::DynamicBitset;
+
+   // empty bitset
+   {
+      DynamicBitset  dbs( 10);
+      const auto     str( toString( dbs));
+
+      BOOST_REQUIRE_EQUAL( str, "0000000000");
+   } // end scope
+
+   // two bits set
+   {
+      DynamicBitset  dbs( 12);
+
+      dbs[ 0] = true;
+      dbs[ 11] = true;
+
+      const auto  str( toString( dbs));
+
+      BOOST_REQUIRE_EQUAL( str, "100000000001");
+   } // end scope
+
+   // all bits set
+   {
+      DynamicBitset  dbs( 8);
+
+      dbs.flip();
+
+      const auto  str( toString( dbs));
+
+      BOOST_REQUIRE_EQUAL( str, "11111111");
+   } // end scope
+
+   // a large bitset
+   {
+      DynamicBitset  dbs( 1024);
+
+      const auto         str( toString( dbs));
+      const std::string  result( 1024, '0');
+
+      BOOST_REQUIRE_EQUAL( str, result);
+   } // end scope
+
+} // dynamic_bitset_to_string
 
 
 
