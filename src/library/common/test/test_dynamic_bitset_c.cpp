@@ -28,7 +28,12 @@
 #include <boost/test/unit_test.hpp>
 
 
+#include "celma/test/check_for.hpp"
+
+
 BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::common::DynamicBitset)
+BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::common::DynamicBitset::iterator)
+BOOST_TEST_DONT_PRINT_LOG_VALUE( celma::common::DynamicBitset::reverse_iterator)
 
 
 using celma::common::DynamicBitset;
@@ -568,6 +573,403 @@ BOOST_AUTO_TEST_CASE( assignment)
    } // end scope
 
 } // conversion_constructor
+
+
+
+/// Test the iterators.
+///
+/// @since  x.y.z, 20.06.2020
+BOOST_AUTO_TEST_CASE( iterate_empty)
+{
+
+   DynamicBitset  dbs( 8);
+
+
+   CHECK_FOR (auto dbi : dbs)
+   {
+      BOOST_REQUIRE( dbi == 0);
+   } // end for
+   CHECK_FOR_NEVER;
+
+   auto const& dbs_r = dbs;
+
+   CHECK_FOR (auto dbi : dbs_r)
+   {
+      BOOST_REQUIRE( dbi == 0);
+   } // end for
+   CHECK_FOR_NEVER;
+
+   CHECK_FOR (auto riter = dbs.rbegin(); riter != dbs.rend(); ++riter)
+   {
+      BOOST_REQUIRE( riter == dbs.rend());
+   } // end for
+   CHECK_FOR_NEVER;
+
+   CHECK_FOR (auto riter = dbs_r.rbegin(); riter != dbs_r.rend(); ++riter)
+   {
+      BOOST_REQUIRE( riter == dbs_r.end());
+   } // end for
+   CHECK_FOR_NEVER;
+
+} // iterate_empty
+
+
+
+/// Test that iterating past the end does not crash.
+///
+/// @since  x.y.z, 20.06.2020
+BOOST_AUTO_TEST_CASE( exceed_end)
+{
+
+   {
+      DynamicBitset  dbs( 8);
+      auto           iter = dbs.begin();
+
+
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+      ++iter;
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+      iter++;
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+
+      --iter;
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+      iter--;
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+
+      auto  riter = dbs.rbegin();
+
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+      ++riter;
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+      riter++;
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+
+      --riter;
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+      riter--;
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+   } // end scope
+
+   {
+      DynamicBitset  dbs( 8);
+
+      dbs[ 0] = true;
+
+      auto  iter = dbs.begin();
+
+      --iter;
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+
+      iter = dbs.begin();
+      ++iter;
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+   } // end scope
+
+   {
+      DynamicBitset  dbs( 8);
+
+      dbs[ 7] = true;
+
+      auto  iter = dbs.begin();
+
+      iter--;
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+
+      iter = dbs.begin();
+      iter++;
+      BOOST_REQUIRE_EQUAL( iter, dbs.end());
+   } // end scope
+
+   {
+      DynamicBitset  dbs( 8);
+
+      dbs[ 0] = true;
+
+      auto  riter = dbs.rbegin();
+
+      --riter;
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+
+      riter = dbs.rbegin();
+      ++riter;
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+   } // end scope
+
+   {
+      DynamicBitset  dbs( 8);
+
+      dbs[ 7] = true;
+
+      auto  riter = dbs.rbegin();
+
+      riter--;
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+
+      riter = dbs.rbegin();
+      riter++;
+      BOOST_REQUIRE_EQUAL( riter, dbs.rend());
+   } // end scope
+
+} // exceed_end
+
+
+
+/// Test iterating over a dynamic bitset where one flag in the middle is set.
+///
+/// @since  x.y.z, 21.06.2020
+BOOST_AUTO_TEST_CASE( iterate_one)
+{
+
+   DynamicBitset  dbs( 20);
+
+
+   dbs[ 10] = true;
+
+   CHECK_FOR (auto dbi : dbs)
+   {
+      BOOST_REQUIRE( dbi == 10);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   auto const& dbs_r = dbs;
+
+   CHECK_FOR (auto dbi : dbs_r)
+   {
+      BOOST_REQUIRE( dbi == 10);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   CHECK_FOR (auto riter = dbs.rbegin(); riter != dbs.rend(); ++riter)
+   {
+      BOOST_REQUIRE( *riter == 10);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   CHECK_FOR (auto riter = dbs_r.rbegin(); riter != dbs_r.rend(); ++riter)
+   {
+      BOOST_REQUIRE( *riter == 10);
+   } // end for
+   CHECK_FOR_ONCE;
+
+} // iterate_one
+
+
+
+/// Test iterating over a dynamic bitset where the first flag is set.
+///
+/// @since  x.y.z, 21.06.2020
+BOOST_AUTO_TEST_CASE( iterate_first)
+{
+
+   DynamicBitset  dbs( 20);
+
+
+   dbs[ 0] = true;
+
+   CHECK_FOR (auto dbi : dbs)
+   {
+      BOOST_REQUIRE( dbi == 0);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   auto const& dbs_r = dbs;
+
+   CHECK_FOR (auto dbi : dbs_r)
+   {
+      BOOST_REQUIRE( dbi == 0);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   CHECK_FOR (auto riter = dbs.rbegin(); riter != dbs.rend(); ++riter)
+   {
+      BOOST_REQUIRE( *riter == 0);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   CHECK_FOR (auto riter = dbs_r.rbegin(); riter != dbs_r.rend(); ++riter)
+   {
+      BOOST_REQUIRE( *riter == 0);
+   } // end for
+   CHECK_FOR_ONCE;
+
+} // iterate_first
+
+
+
+/// Test iterating over a dynamic bitset where the first flag is set.
+///
+/// @since  x.y.z, 28.06.2020
+BOOST_AUTO_TEST_CASE( const_iterate_first)
+{
+
+   DynamicBitset  dbs( 20);
+
+
+   dbs[ 0] = true;
+
+   auto const  cdbs( dbs);
+
+   CHECK_FOR (auto dbi = cdbs.cbegin(); dbi != cdbs.cend(); ++dbi)
+   {
+      BOOST_REQUIRE( *dbi == 0);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   auto const& cdbs_r = cdbs;
+
+   CHECK_FOR (auto dbi : cdbs_r)
+   {
+      BOOST_REQUIRE( dbi == 0);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   CHECK_FOR (auto riter = dbs.crbegin(); riter != dbs.crend(); ++riter)
+   {
+      BOOST_REQUIRE( *riter == 0);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   CHECK_FOR (auto riter = cdbs_r.crbegin(); riter != cdbs_r.crend(); ++riter)
+   {
+      BOOST_REQUIRE( *riter == 0);
+   } // end for
+   CHECK_FOR_ONCE;
+
+} // const_iterate_first
+
+
+
+/// Test iterating over a dynamic bitset where the last flag is set.
+///
+/// @since  x.y.z, 21.06.2020
+BOOST_AUTO_TEST_CASE( iterate_last)
+{
+
+   DynamicBitset  dbs( 20);
+
+
+   dbs[ 19] = true;
+
+   CHECK_FOR (auto dbi : dbs)
+   {
+      BOOST_REQUIRE( dbi == 19);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   auto const& dbs_r = dbs;
+
+   CHECK_FOR (auto dbi : dbs_r)
+   {
+      BOOST_REQUIRE( dbi == 19);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   CHECK_FOR (auto riter = dbs.rbegin(); riter != dbs.rend(); ++riter)
+   {
+      BOOST_REQUIRE( *riter == 19);
+   } // end for
+   CHECK_FOR_ONCE;
+
+   CHECK_FOR (auto riter = dbs_r.rbegin(); riter != dbs_r.rend(); ++riter)
+   {
+      BOOST_REQUIRE( *riter == 19);
+   } // end for
+   CHECK_FOR_ONCE;
+
+} // iterate_last
+
+
+
+/// Test iterating over a dynamic bitset where the last flag is set.
+///
+/// @since  x.y.z, 21.06.2020
+BOOST_AUTO_TEST_CASE( iterate_first_middle_last)
+{
+
+   DynamicBitset  dbs( 20);
+
+
+   dbs[  0] = true;
+   dbs[ 10] = true;
+   dbs[ 19] = true;
+
+   CHECK_FOR (auto dbi : dbs)
+   {
+      BOOST_REQUIRE( (dbi == 0) || (dbi == 10) || (dbi == 19));
+   } // end for
+   CHECK_FOR_COUNT( 3);
+
+   auto const& dbs_r = dbs;
+
+   CHECK_FOR (auto dbi : dbs_r)
+   {
+      BOOST_REQUIRE( (dbi == 0) || (dbi == 10) || (dbi == 19));
+   } // end for
+   CHECK_FOR_COUNT( 3);
+
+   CHECK_FOR (auto riter = dbs.rbegin(); riter != dbs.rend(); ++riter)
+   {
+      BOOST_REQUIRE( (*riter == 0) || (*riter == 10) || (*riter == 19));
+   } // end for
+   CHECK_FOR_COUNT( 3);
+
+   CHECK_FOR (auto riter = dbs_r.rbegin(); riter != dbs_r.rend(); ++riter)
+   {
+      BOOST_REQUIRE( (*riter == 0) || (*riter == 10) || (*riter == 19));
+   } // end for
+   CHECK_FOR_COUNT( 3);
+
+} // iterate_first_middle_last
+
+
+
+/// Test iterating in both ways.
+///
+/// @since  x.y.z, 25.06.2020
+BOOST_AUTO_TEST_CASE( iterate_back_and_forth)
+{
+
+   DynamicBitset  dbs( 20);
+
+
+   dbs[  0] = true;
+   dbs[ 10] = true;
+   dbs[ 19] = true;
+
+   auto  iter = dbs.begin();
+   ++iter;
+
+   BOOST_REQUIRE_EQUAL( *iter, 10);
+
+   --iter;
+   ++iter;
+   BOOST_REQUIRE_EQUAL( *iter, 10);
+
+   iter++;
+   iter--;
+   BOOST_REQUIRE_EQUAL( *iter, 10);
+
+   iter--;
+   BOOST_REQUIRE_EQUAL( iter, dbs.begin());
+
+   auto  riter = dbs.rbegin();
+   ++riter;
+
+   BOOST_REQUIRE_EQUAL( *riter, 10);
+
+   --riter;
+   ++riter;
+   BOOST_REQUIRE_EQUAL( *riter, 10);
+
+   riter++;
+   riter--;
+   BOOST_REQUIRE_EQUAL( *riter, 10);
+
+   riter--;
+   BOOST_REQUIRE_EQUAL( riter, dbs.rbegin());
+
+} // iterate_back_and_forth
 
 
 

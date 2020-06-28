@@ -22,21 +22,33 @@
 #include <bitset>
 #include <string>
 #include <vector>
+#include "celma/common/detail/dynamic_bitset_iterator.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Dynamic bitset, a std::vector<bool> with the interface of a std::bitset<>.
 /// If not noted otherwise, the internal vector is dynamically resized if a
-/// given position is greater than the current size of the vector.
+/// given position is greater than the current size of the vector.<br>
+/// The iterators return only the positions of the bits that are set. To check
+/// each bit of the dynamic bitset, use a for loop with an index variable.
 ///
 /// @since  x.y.z, 08.06.2020
 class DynamicBitset
 {
 public:
-   /// The type of the internally used data container: A vector of booleans.
+   /// The type returned by the non-const index access operator.
    using reference = std::vector< bool>::reference;
+
+   /// Iterator type.
+   using iterator = detail::DynamicBitsetIterator< DynamicBitset>;
+   /// Reverse iterator type.
+   using reverse_iterator = detail::DynamicBitsetReverseIterator< DynamicBitset>;
+   /// Const iterator type.
+   using const_iterator = detail::DynamicBitsetIterator< const DynamicBitset>;
+   /// Const reverse iterator type.
+   using const_reverse_iterator = detail::DynamicBitsetReverseIterator< const DynamicBitset>;
 
    /// Constructor.
    ///
@@ -305,6 +317,106 @@ public:
    /// @since  x.y.z, 09.06.2020
    DynamicBitset& operator >>=( size_t pos) noexcept( true);
 
+   /// Returns an iterator that provides the position of the first bit that is
+   /// set in the dynamic bitset.
+   /// If not bit is set at all, begin() yields end().
+   ///
+   /// @return  Iterator that gives the position of the first bit that is set.
+   /// @since  x.y.z, 18.06.2020
+   iterator begin();
+
+   /// Returns an iterator that points behind the end of the internal dynamic
+   /// vector.
+   ///
+   /// @return  Iterator pointing to the end of the vector.
+   /// @since  x.y.z, 18.06.2020
+   iterator end();
+
+   /// Returns a const iterator that provides the position of the first bit that
+   /// is set in the dynamic bitset.
+   /// If not bit is set at all, begin() yields end().
+   ///
+   /// @return
+   ///    Const iterator that gives the position of the first bit that is set.
+   /// @since  x.y.z, 21.06.2020
+   const_iterator begin() const;
+
+   /// Returns a const iterator that points behind the end of the internal
+   /// dynamic vector.
+   ///
+   /// @return  Const iterator pointing to the end of the vector.
+   /// @since  x.y.z, 21.06.2020
+   const_iterator end() const;
+
+   /// Returns a const iterator that provides the position of the first bit that
+   /// is set in the dynamic bitset.
+   /// If not bit is set at all, begin() yields end().
+   ///
+   /// @return
+   ///    Const iterator that gives the position of the first bit that is set.
+   /// @since  x.y.z, 21.06.2020
+   const_iterator cbegin() const;
+
+   /// Returns a const iterator that points behind the end of the internal
+   /// dynamic vector.
+   ///
+   /// @return  Const iterator pointing to the end of the vector.
+   /// @since  x.y.z, 21.06.2020
+   const_iterator cend() const;
+
+   /// Returns a reverse iterator pointing the last bit in the internal vector
+   /// that is set.
+   /// If no bit is set, rbegin() yields rend().
+   ///
+   /// @return
+   ///    Iterator with the position of the last bit in the vector that is set.
+   /// @since  x.y.z, 21.06.2020
+   reverse_iterator rbegin();
+
+   /// Returns a reverse iterator pointing before the start of the internal
+   /// vector.
+   ///
+   /// @return
+   ///    Iterator pointing before the start of the vector.
+   /// @since  x.y.z, 21.06.2020
+   reverse_iterator rend();
+
+   /// Returns a const reverse iterator pointing the last bit in the internal
+   /// vector that is set.
+   /// If no bit is set, rbegin() yields rend().
+   ///
+   /// @return
+   ///    Const iterator with the position of the last bit in the vector that is
+   ///    set.
+   /// @since  x.y.z, 21.06.2020
+   const_reverse_iterator rbegin() const;
+
+   /// Returns a const reverse iterator pointing before the start of the
+   /// internal vector.
+   ///
+   /// @return
+   ///    Const iterator pointing before the start of the vector.
+   /// @since  x.y.z, 21.06.2020
+   const_reverse_iterator rend() const;
+
+   /// Returns a const reverse iterator pointing the last bit in the internal
+   /// vector that is set.
+   /// If no bit is set, rbegin() yields rend().
+   ///
+   /// @return
+   ///    Const iterator with the position of the last bit in the vector that is
+   ///    set.
+   /// @since  x.y.z, 21.06.2020
+   const_reverse_iterator crbegin() const;
+
+   /// Returns a const reverse iterator pointing before the start of the
+   /// internal vector.
+   ///
+   /// @return
+   ///    Const iterator pointing before the start of the vector.
+   /// @since  x.y.z, 21.06.2020
+   const_reverse_iterator crend() const;
+
 private:
    /// The vector with the flags.
    std::vector< bool>  mData;
@@ -397,8 +509,7 @@ DynamicBitset operator |( const DynamicBitset& lhs, const DynamicBitset& rhs) no
 DynamicBitset operator ^( const DynamicBitset& lhs, const DynamicBitset& rhs) noexcept( true);
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
 #endif   // CELMA_COMMON_DYNAMIC_BITSET_HPP

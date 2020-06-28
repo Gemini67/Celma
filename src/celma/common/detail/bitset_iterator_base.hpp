@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,6 +20,7 @@
 
 
 #include <bitset>
+#include <iterator>
 #include "celma/common/pre_postfix.hpp"
 
 
@@ -33,6 +34,8 @@ namespace celma { namespace common { namespace detail {
 template< size_t N> class BitsetIteratorBase
 {
 public:
+   typedef std::random_access_iterator_tag iterator_category;
+
    /// Allow default copy construction.
    BitsetIteratorBase( const BitsetIteratorBase&) = default;
 
