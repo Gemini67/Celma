@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,8 @@
 
 
 /// @file
-/// See documentation of the macros CHECK_RETURN and CHECK_EQUAL_RETURN.<br>
+/// See documentation of the CHECK_RETURN_MSG, macros CHECK_RETURN and
+/// CHECK_EQUAL_RETURN.<br>
 /// This file does not include the necessary Boost.Test include files, since
 /// the "test module" must be defined first.<br>
 /// So, define the test module, include the Boost.Test include file(s), and then
@@ -26,18 +27,43 @@
 #define CELMA_TEST_CHECK_RETURN_HPP
 
 
-// use this define for tests in non-BOOST function:
-// - test the condition, print error message if condition fails
-// - test the condition again, return false if it fails
-// Usage:
-// - in BOOST_AUTO_TEST_CASE function:
-//      BOOST_REQUIRE( testfuncname( ...));
-// - in function 'testfuncname':
-//      CHECK_RETURN( x == y, "x and y should be equal, but are different");
-#define  CHECK_RETURN( a, b) \
+/// use this define for tests in non-BOOST function:
+/// - test the condition, print error message if condition fails
+/// - test the condition again, return false if it fails
+/// Usage:
+/// - in BOOST_AUTO_TEST_CASE function:
+///      BOOST_REQUIRE( testfuncname( ...));
+/// - in function 'testfuncname':
+///      CHECK_RETURN_MSG( x == y, "x and y should be equal, but are different");
+/// @param  a  The test to execute.
+/// @param  b  The error message to print if the test fails.
+/// @since  x.y.z, 28.03.2018  (renamed from CHECK_RETURN)
+#define  CHECK_RETURN_MSG( a, b) \
    { \
       const bool  checkResult = (a); \
       BOOST_CHECK_MESSAGE( checkResult, b); \
+      if (!checkResult) \
+      { \
+         return false; \
+      } \
+   }
+
+
+/// use this define for tests in non-BOOST function:
+/// - test the condition, print error message if condition fails
+/// - test the condition again, return false if it fails
+/// the condition that was tested is printed as error message
+/// Usage:
+/// - in BOOST_AUTO_TEST_CASE function:
+///      BOOST_REQUIRE( testfuncname( ...));
+/// - in function 'testfuncname':
+///      CHECK_RETURN( x == y);
+/// @param  a  The test to execute.
+/// @since  x.y.z, 28.03.2018  (new version with one parameter)
+#define  CHECK_RETURN( a) \
+   { \
+      const bool  checkResult = (a); \
+      BOOST_CHECK_MESSAGE( checkResult, #a); \
       if (!checkResult) \
       { \
          return false; \
