@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -565,6 +565,50 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
       "\n"));
 
 } // list_arg_vars
+
+
+
+/// Test constraint "disjoint" with two multi-sets.
+///
+/// @since  x.y.z, 05.07.2020
+BOOST_AUTO_TEST_CASE( disjoint_multisets)
+{
+
+   using celma::prog_args::disjoint;
+
+   {
+      Handler              ah( 0);
+      std::multiset< int>  ms1;
+      std::multiset< int>  ms2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( ms1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( ms2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // throw if the data in the forward lists is not disjoint
+   {
+      Handler              ah( 0);
+      std::multiset< int>  ms1;
+      std::multiset< int>  ms2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( ms1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( ms2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6,1", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+} // disjoint_multisets
 
 
 

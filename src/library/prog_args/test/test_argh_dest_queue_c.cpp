@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -101,6 +101,24 @@ BOOST_AUTO_TEST_CASE( test_queue_errors)
 
       BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_VAR( q), "values")
          ->setSortData(), std::logic_error);
+   } // end scope
+
+   // checking for disjoint data is not possible with queues
+   {
+      Handler           ah( 0);
+      std::queue< int>  q1;
+      std::queue< int>  q2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( q1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( q2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
+         celma::prog_args::disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::logic_error);
    } // end scope
 
 } // test_queue_errors

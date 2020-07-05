@@ -389,7 +389,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       } // end for
    } // end scope
 
-   // set default values, make argument optional, vector should be empty when
+   // set default values, make argument optional, set should be empty when
    // argument is used with value(s)
    {
       Handler         ah( 0);

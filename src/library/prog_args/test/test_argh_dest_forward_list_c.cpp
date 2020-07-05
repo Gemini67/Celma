@@ -607,5 +607,49 @@ BOOST_AUTO_TEST_CASE( usage_help)
 
 
 
+/// Test constraint "disjoint" with two forward lists.
+///
+/// @since  x.y.z, 05.07.2020
+BOOST_AUTO_TEST_CASE( disjoint_forward_lists)
+{
+
+   using celma::prog_args::disjoint;
+
+   {
+      Handler                  ah( 0);
+      std::forward_list< int>  fl1;
+      std::forward_list< int>  fl2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( fl1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( fl2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   // throw if the data in the forward lists is not disjoint
+   {
+      Handler                  ah( 0);
+      std::forward_list< int>  fl1;
+      std::forward_list< int>  fl2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( fl1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( fl2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6,1", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+} // disjoint_forward_lists
+
+
+
 // =====  END OF test_argh_dest_forward_list_c.cpp  =====
 

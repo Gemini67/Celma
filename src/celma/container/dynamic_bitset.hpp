@@ -532,7 +532,7 @@ public:
    /// Is public to build nested container names, don't access for printing.
    static constexpr auto const  mName = "celma::container::DynamicBitset";
 
-}; // type< celma::container::DynamicBitset>
+}; // type< container::DynamicBitset>
 
 
 } // namespace celma

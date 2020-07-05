@@ -34,6 +34,7 @@
 #include <vector>
 #include "celma/common/contains.hpp"
 #include "celma/common/has_intersection.hpp"
+#include "celma/container/binary_tree.hpp"
 #include "celma/format/to_string.hpp"
 
 
@@ -114,6 +115,126 @@ public:
    ContainerAdapter& operator =( ContainerAdapter&&) = delete;
 
 }; // ContainerAdapter< T>
+
+
+/// Container adapter for celma::container::BinaryTree.
+///
+/// @tparam  T  The type of the values stored in the binary tree.
+/// @since  x.y.z, 29.06.2020
+template< typename T> class ContainerAdapter< container::BinaryTree< T>> final:
+   AdapterBase< container::BinaryTree< T>>
+{
+public:
+   /// Flag for compile-time check if a container adapter exists for this type
+   /// (obviously).
+   static constexpr bool  HasAdapter = true;
+   /// Flag for (compile-time) check if the container type, wrapped in this
+   /// adapter, supports iterators.
+   static constexpr bool  HasIterators = true;
+   /// Flag for (compile-time) check if positional formatters should be allowed,
+   /// i.e. the values stored in the container keep their order.
+   static constexpr bool  AllowsPositionFormat = false;
+   /// Flag for (compile-time) check if the container type, wrapped in this
+   /// adapter, is sortable.
+   static constexpr bool  IsSortable = false;
+   /// Flag for (compile-time) check if the container type, wrapped in this
+   /// adapter, sorts the values automatically.
+   static constexpr bool  IsSorted = true;
+
+   /// The type of the container handled by this adapter.
+   using container_type_t = container::BinaryTree< T>;
+   /// The type of the values stored in the container.
+   using value_type_t = T;
+   /// Of course we use the variable from the base class.
+   using AdapterBase< container_type_t>::mDestCont;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest  The destination container.
+   /// @since  x.y.z, 29.06.2020
+   explicit ContainerAdapter( container_type_t& dest):
+      AdapterBase< container_type_t>( dest)
+   {
+   } // ContainerAdapter< container::BinaryTree< T>>::ContainerAdapter
+
+   // default copy-/move-construction is fine
+   ContainerAdapter( const ContainerAdapter&) = default;
+   ContainerAdapter( ContainerAdapter&&) = default;
+
+   // default destructor is fine
+   ~ContainerAdapter() override = default;
+
+   /// Stores a value in the destination container.
+   ///
+   /// @param[in]  value  The value to store.
+   /// @since  x.y.z, 29.06.2020
+   void addValue( const T& value)
+   {
+      mDestCont.insert( value);
+   } // ContainerAdapter< container::BinaryTree< T>>::addValue
+
+   /// Clears the destination container.
+   ///
+   /// @since  x.y.z, 29.06.2020
+   void clear()
+   {
+      mDestCont.clear();
+   } // ContainerAdapter< container::BinaryTree< T>>::clear
+
+   /// Returns if the container contains the given value.
+   ///
+   /// @param[in]  value  The value to search in the container.
+   /// @return  \c true if the value was found.
+   /// @since  x.y.z, 29.06.2020
+   bool contains( const T& value) const
+   {
+      return mDestCont.find( value) != mDestCont.end();
+   } // ContainerAdapter< container::BinaryTree< T>>::contains
+
+   /// Returns if the data in this and the other container intersect.
+   ///
+   /// @param[in]  other
+   ///    The other object with the container/data to compare against.
+   /// @return
+   ///    \c true if the data in this and the other object/containers intersect,
+   ///    i.e. at least one value exists in both.
+   /// @since  x.y.z, 29.06.2020
+   bool hasIntersection( const ContainerAdapter& other) const
+   {
+      return common::hasIntersection( mDestCont, other.mDestCont, IsSorted);
+   } // ContainerAdapter< container::BinaryTree< T>>::hasIntersection
+
+   /// Here: Throws, since the values in the container are already sorted.
+   /// Check #IsSorted and/or #IsSortable before calling this function.
+   ///
+   /// @throw
+   ///    std::logic_error since the values in this container are already
+   ///    sorted.
+   /// @since  x.y.z, 29.06.2020
+   void sort() const noexcept( false)
+   {
+      throw std::logic_error( "sort() is not necessary for sets");
+   } // ContainerAdapter< container::BinaryTree< T>>::sort
+
+   /// Returns a string with the values from the container.
+   ///
+   /// @return  String with the values from the container.
+   /// @since  x.y.z, 29.06.2020
+   std::string toString() const
+   {
+      return format::toString( mDestCont.begin(), mDestCont.end());
+   } // ContainerAdapter< container::BinaryTree< T>>::toString
+
+   /// Method empty() is used from te base class.
+   using AdapterBase< container_type_t>::empty;
+   /// Method size() is used from the base class.
+   using AdapterBase< container_type_t>::size;
+
+   // assignment is not allowed
+   ContainerAdapter& operator =( const ContainerAdapter&) = delete;
+   ContainerAdapter& operator =( ContainerAdapter&&) = delete;
+
+}; // ContainerAdapter< container::BinaryTree< T>>
 
 
 /// Container adapter for std::deque.
@@ -198,17 +319,17 @@ public:
       std::sort( mDestCont.begin(), mDestCont.end());
    } // ContainerAdapter< std::deque< T>>::sort
 
-   /// Returns if the data in this and the other container intersect.
+   /// Always throws.
    ///
-   /// @param[in]  other
-   ///    The other object with the container/data to compare. against.
-   /// @return
-   ///    \c true if the data in this and the other object/containers intersect,
-   ///    i.e. at least one value exists in both.
+   /// @param[in]  other  Ignored.
+   /// @return  Nothing.
+   /// @throw  std::logic_error since deques cannot be checked for intersection.
    /// @since  1.34.1, 14.01.2020
-   bool hasIntersection( const ContainerAdapter& other) const
+   bool hasIntersection( const ContainerAdapter& /* other */) const
+      noexcept( false)
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      throw std::logic_error( "hasIntersection() is not supported for priority "
+         "queues");
    } // ContainerAdapter< std::deque< T>>::hasIntersection
 
    /// Returns a string with the values from the container.
@@ -317,14 +438,14 @@ public:
    /// Returns if the data in this and the other container intersect.
    ///
    /// @param[in]  other
-   ///    The other object with the container/data to compare. against.
+   ///    The other object with the container/data to compare against.
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
    /// @since  1.34.1, 14.01.2020
    bool hasIntersection( const ContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, IsSorted);
    } // ContainerAdapter< std::forward_list< T>>::hasIntersection
 
    /// Returns a string with the values from the container.
@@ -441,14 +562,14 @@ public:
    /// Returns if the data in this and the other container intersect.
    ///
    /// @param[in]  other
-   ///    The other object with the container/data to compare. against.
+   ///    The other object with the container/data to compare against.
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
    /// @since  1.34.1, 14.01.2020
    bool hasIntersection( const ContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, IsSorted);
    } // ContainerAdapter< std::list< T>>::hasIntersection
 
    /// Returns a string with the values from the container.
@@ -553,7 +674,7 @@ public:
    ///    std::logic_error since the values in this container are already
    ///    sorted.
    /// @since  1.34.0, 13.12.2019
-   void sort() noexcept( false)
+   void sort() const noexcept( false)
    {
       throw std::logic_error( "sort() is not necessary for multi-sets");
    } // ContainerAdapter< std::multiset< T>>::sort
@@ -561,14 +682,14 @@ public:
    /// Returns if the data in this and the other container intersect.
    ///
    /// @param[in]  other
-   ///    The other object with the container/data to compare. against.
+   ///    The other object with the container/data to compare against.
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
    /// @since  1.34.1, 14.01.2020
    bool hasIntersection( const ContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, IsSorted);
    } // ContainerAdapter< std::multiset< T>>::hasIntersection
 
    /// Returns a string with the values from the container.
@@ -675,10 +796,9 @@ public:
    /// Always throws because sorting the values in a priority queue is not
    /// supported.
    ///
-   /// @throw
-   ///    std::logic_error since sorting a priority queue is not supported.
+   /// @throw  std::logic_error since sorting a priority queue is not supported.
    /// @since  1.34.0, 20.12.2019
-   void sort() noexcept( false)
+   void sort() const noexcept( false)
    {
       throw std::logic_error( "sort() is not supported for priority-queues");
    } // ContainerAdapter< std::priority_queue< T>>::sort
@@ -799,7 +919,7 @@ public:
    ///
    /// @throw  std::logic_error since sorting a queue is not possible.
    /// @since  1.34.0, 29.12.2019
-   void sort() noexcept( false)
+   void sort() const noexcept( false)
    {
       throw std::logic_error( "sort() is not supported for queues");
    } // ContainerAdapter< std::queue< T>>::sort
@@ -914,14 +1034,14 @@ public:
    /// Returns if the data in this and the other container intersect.
    ///
    /// @param[in]  other
-   ///    The other object with the container/data to compare. against.
+   ///    The other object with the container/data to compare against.
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
    /// @since  1.34.1, 14.01.2020
    bool hasIntersection( const ContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, IsSorted);
    } // ContainerAdapter< std::set< T>>::hasIntersection
 
    /// Here: Throws, since the values in the container are already sorted.
@@ -1170,14 +1290,14 @@ public:
    /// Returns if the data in this and the other container intersect.
    ///
    /// @param[in]  other
-   ///    The other object with the container/data to compare. against.
+   ///    The other object with the container/data to compare against.
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
    /// @since  1.34.1, 14.01.2020
    bool hasIntersection( const ContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, IsSorted);
    } // ContainerAdapter< std::unordered_multiset< T>>::hasIntersection
 
    /// Returns a string with the values from the container.
@@ -1289,14 +1409,14 @@ public:
    /// Returns if the data in this and the other container intersect.
    ///
    /// @param[in]  other
-   ///    The other object with the container/data to compare. against.
+   ///    The other object with the container/data to compare against.
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
    /// @since  1.34.1, 14.01.2020
    bool hasIntersection( const ContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, IsSorted);
    } // ContainerAdapter< std::unordered_set< T>>::hasIntersection
 
    /// Returns a string with the values from the container.
@@ -1405,14 +1525,14 @@ public:
    /// Returns if the data in this and the other container intersect.
    ///
    /// @param[in]  other
-   ///    The other object with the container/data to compare. against.
+   ///    The other object with the container/data to compare against.
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
    /// @since  1.34.1, 14.01.2020
    bool hasIntersection( const ContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, IsSorted);
    } // ContainerAdapter< std::vector< T>>::hasIntersection
 
    /// Returns a string with the values from the container.

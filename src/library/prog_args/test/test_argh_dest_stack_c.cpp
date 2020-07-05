@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -91,6 +91,24 @@ BOOST_AUTO_TEST_CASE( test_stack_errors)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::bad_cast);
+   } // end scope
+
+   // checking for disjoint data is not possible with stacks
+   {
+      Handler           ah( 0);
+      std::stack< int>  s1;
+      std::stack< int>  s2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( s1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( s2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
+         celma::prog_args::disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::logic_error);
    } // end scope
 
 } // test_stack_errors

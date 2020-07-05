@@ -20,14 +20,17 @@
 
 
 #include <cassert>
+#include <initializer_list>
 #include <iterator>
 #include <memory>
 #include <utility>
+#include "celma/common/constexpr_string_concat.hpp"
+#include "celma/common/type_name.hpp"
 #include "celma/container/detail/binary_tree_node.hpp"
 #include "celma/container/detail/tree_iterator.hpp"
 
 
-namespace celma::container {
+namespace celma { namespace container {
 
 
 /// A simple, non-balancing binary tree.
@@ -44,6 +47,8 @@ namespace celma::container {
 template< typename T, typename C = std::less< T>> class BinaryTree
 {
 public:
+   using const_reference = const T&;
+
    /// Type of the nodes with which the binary tree is built.
    using node_t = detail::BinaryTreeNode< T>;
    /// Type of the iterator.
@@ -59,6 +64,15 @@ public:
    ///
    /// @since  x.y.z, 24.03.2017
    BinaryTree() = default;
+
+   /// Constructor with list of values to insert.
+   /// The values are inserted into the binary tree as they are stored in the
+   /// initializer list. If the values are sorted, the resulting binary tree
+   /// will actually be a list.
+   ///
+   /// @param[in]  init  Initializer list of values to insert.
+   /// @since  x.y.z, 30.06.2020
+   BinaryTree( std::initializer_list< T> init);
 
    /// Copy constructor.
    /// Does not create an identical copy of the source tree, but an optimised
@@ -277,6 +291,17 @@ public:
    /// @since  x.y.z, 31.03.2017
    BinaryTree& operator =( const BinaryTree& other);
 
+   /// Assignment operator, replaces the current values with the values from the
+   /// initializer list.
+   /// The values are inserted into the binary tree as they are stored in the
+   /// initializer list. If the values are sorted, the resulting binary tree
+   /// will actually be a list.
+   ///
+   /// @param[in]  ilist  The list of values to insert into the binary tree.
+   /// @return  This object.
+   /// @since  x.y.z, 30.06.2020
+   BinaryTree& operator =( std::initializer_list< T> ilist);
+   
    /// Move-assignment operator, takes the elements from the other binary tree.
    ///
    /// @param[in]  other  The other binary tree to take the data from.
@@ -365,6 +390,17 @@ private:
 
 // inlined methods
 // ===============
+
+
+template< typename T, typename C>
+   BinaryTree< T, C>::BinaryTree( std::initializer_list< T> init):
+      mpRoot()
+{
+   for (auto const& v : init)
+   {
+      insert( v);
+   } // end for
+} // BinaryTree< T, C>::BinaryTree
 
 
 template< typename T, typename C> BinaryTree< T, C>::BinaryTree( const BinaryTree& other):
@@ -604,6 +640,18 @@ template< typename T, typename C>
 
 
 template< typename T, typename C>
+   BinaryTree< T, C>& BinaryTree< T, C>::operator =( std::initializer_list< T> ilist)
+{
+   clear();
+   for (auto const& v : ilist)
+   {
+      insert( v);
+   } // end for
+   return *this;
+} // BinaryTree< T, C>::operator =
+
+
+template< typename T, typename C>
    BinaryTree< T, C>& BinaryTree< T, C>::operator =( const BinaryTree& other)
 {
    assign( other);
@@ -756,7 +804,33 @@ template< typename T, typename C> template< typename F>
 } // BinaryTree< T, C>::recursiveVisit
 
 
-} // namespace celma::container
+} // namespace container
+
+
+/// Specialisation of type<> for type 'celma::container::DynamicBitset'.
+///
+/// @since  x.y.z, 05.07.2020
+template< typename T> class type< container::BinaryTree< T>>
+{
+public:
+   /// Returns the name of the type.
+   ///
+   /// @return  'celma::container::BinaryTree<T>'.
+   /// @since  x.y.z, 05.07.2020
+   static constexpr const char* name()
+   {
+      return &mName[ 0];
+   } // type< container::BinaryTree>::name
+
+   /// Used to store the name of the type persistently.
+   /// Is public to build nested container names, don't access for printing.
+   static constexpr auto const  mName = common::string_concat(
+     "celma::container::BinaryTree<", type< T>::mName, ">");
+
+}; // type< container::BinaryTree>
+
+
+} // namespace celma
 
 
 #endif   // CELMA_CONTAINER_BINARY_TREE_HPP

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,7 +23,7 @@
 #include <string>
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Base class for value checks.
@@ -65,7 +65,7 @@ protected:
    ///
    /// @param[in]  check_name  The symbolic name of the check.
    /// @since  1.32.0, 24.04.2019
-   ICheck( const std::string check_name);
+   explicit ICheck( const std::string check_name);
 
    /// Symbolic name of the check, used for verifying if combinations of two
    /// checks are allowed.<br>
@@ -108,9 +108,7 @@ inline std::ostream& operator <<( std::ostream& os, ICheck* pc)
 } // operator <<
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 #endif   // CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP

@@ -1069,5 +1069,36 @@ BOOST_AUTO_TEST_CASE( move_ctor)
 
 
 
+/// Check setting values using an initializer list.
+///
+/// @since  x.y.z, 30.06.2020
+BOOST_AUTO_TEST_CASE( init_list)
+{
+
+   BinaryTree< int>  bti = { 4, 2, 1, 3 , 6, 5, 7};
+
+
+   BOOST_REQUIRE( bti.check());
+   BOOST_REQUIRE_EQUAL( bti.size(), 7);
+
+   for (int i = 1; i < 8; ++i)
+   {
+      BOOST_REQUIRE( bti.find( i) != bti.end());
+   } // end for
+
+   bti = { 5, 3, 7 };
+
+   BOOST_REQUIRE( bti.check());
+   BOOST_REQUIRE_EQUAL( bti.size(), 3);
+
+   for (auto i : { 3, 5, 7})
+   {
+      BOOST_REQUIRE( bti.find( i) != bti.end());
+   } // end for
+
+} // init_list
+
+
+
 // =====  END OF test_binary_tree.cpp  =====
 

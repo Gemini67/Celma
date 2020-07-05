@@ -16,7 +16,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args/detail/container_adapter.hpp"
 
 
@@ -30,12 +30,13 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE ValueHandlerTest
+#define BOOST_TEST_MODULE ContainerAdapterTest
 #include <boost/test/unit_test.hpp>
 
 
 // project includes
 #include "celma/common/check_assign.hpp"
+#include "celma/container/binary_tree.hpp"
 #include "celma/test/check_return.hpp"
 
 
@@ -742,6 +743,63 @@ BOOST_AUTO_TEST_CASE( vector_adapter)
 
 
 
+/// Check the features of the container adapter for binary trees.
+/// Also test that the values are stored in the destination binary tree.
+///
+/// @since  x.y.z, 29.06.2020
+BOOST_AUTO_TEST_CASE( binary_tree_adapter)
+{
+
+   using my_binary_tree = celma::container::BinaryTree< int>;
+   using my_adapter = ContainerAdapter< my_binary_tree>;
+
+   static_assert( my_adapter::HasAdapter);
+   BOOST_REQUIRE_EQUAL( my_adapter::HasAdapter, true);
+   BOOST_REQUIRE_EQUAL( my_adapter::HasIterators, true);
+   BOOST_REQUIRE_EQUAL( my_adapter::AllowsPositionFormat, false);
+   BOOST_REQUIRE_EQUAL( my_adapter::IsSortable, false);
+   BOOST_REQUIRE_EQUAL( my_adapter::IsSorted, true);
+
+   my_binary_tree  bt;
+   my_adapter      cabt( bt);
+
+   BOOST_REQUIRE( cabt.empty());
+   BOOST_REQUIRE_EQUAL( cabt.size(), 0);
+   BOOST_REQUIRE( !cabt.contains( 42));
+
+   cabt.addValue( 42);
+
+   BOOST_REQUIRE( !cabt.empty());
+   BOOST_REQUIRE_EQUAL( cabt.size(), 1);
+   BOOST_REQUIRE( cabt.contains( 42));
+
+   BOOST_REQUIRE( !bt.empty());
+   BOOST_REQUIRE_EQUAL( bt.size(), 1);
+
+   BOOST_REQUIRE_NO_THROW( cabt.clear());
+
+   BOOST_REQUIRE( cabt.empty());
+   BOOST_REQUIRE_EQUAL( cabt.size(), 0);
+   BOOST_REQUIRE( !cabt.contains( 42));
+
+   BOOST_REQUIRE( bt.empty());
+   BOOST_REQUIRE_EQUAL( bt.size(), 0);
+
+   cabt.addValue( 42);
+   cabt.addValue( 13);
+
+   BOOST_REQUIRE_EQUAL( cabt.toString(), "13, 42");
+
+   BOOST_REQUIRE_THROW( cabt.sort(), std::logic_error);
+
+   // check with duplicate value
+   BOOST_REQUIRE_NO_THROW( cabt.addValue( 42));
+   BOOST_REQUIRE_EQUAL( cabt.toString(), "13, 42");
+
+} // binary_tree_adapter
+
+
+
 /// Test the container adapter with a template.
 ///
 /// @since  1.34.0, 13.12.2019
@@ -759,6 +817,8 @@ BOOST_AUTO_TEST_CASE( template_test)
    BOOST_REQUIRE( checkContAdapt< std::unordered_multiset>());
    BOOST_REQUIRE( checkContAdapt< std::unordered_set>());
    BOOST_REQUIRE( checkContAdapt< std::vector>());
+
+   BOOST_REQUIRE( checkContAdapt< celma::container::BinaryTree>());
 
 } // template_test
 

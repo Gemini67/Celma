@@ -729,5 +729,50 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
 
 
 
+/// Test constraint "disjoint" with two binary trees.
+///
+/// @since  x.y.z, 05.07.2020
+BOOST_AUTO_TEST_CASE( disjoint_sets)
+{
+
+   using celma::prog_args::disjoint;
+
+   {
+      Handler           ah( 0);
+      std::deque< int>  dq1;
+      std::deque< int>  dq2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( dq1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( dq2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::logic_error);
+   } // end scope
+
+   // throw if the data in the sets is not disjoint
+   {
+      Handler           ah( 0);
+      std::deque< int>  dq1;
+      std::deque< int>  dq2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( dq1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( dq2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint( disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6,1", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::logic_error);
+   } // end scope
+
+} // disjoint_sets
+
+
+
 // =====  END OF test_argh_dest_deque_c.cpp  =====
 

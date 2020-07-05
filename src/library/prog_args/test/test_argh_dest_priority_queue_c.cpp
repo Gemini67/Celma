@@ -103,6 +103,24 @@ BOOST_AUTO_TEST_CASE( test_priority_queue_errors)
          ->setSortData(), std::logic_error);
    } // end scope
 
+   // checking for disjoint data is not possible with priority queues
+   {
+      Handler                    ah( 0);
+      std::priority_queue< int>  pq1;
+      std::priority_queue< int>  pq2;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "l", DEST_VAR( pq1), "left"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "r", DEST_VAR( pq2), "right"));
+
+      BOOST_REQUIRE_NO_THROW( ah.addConstraint(
+         celma::prog_args::disjoint( "l;r")));
+
+      auto const  as2a = make_arg_array( "-l 1,2,3 -r 4,5,6", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::logic_error);
+   } // end scope
+
 } // test_priority_queue_errors
 
 
