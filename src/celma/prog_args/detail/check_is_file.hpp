@@ -20,14 +20,16 @@
 
 
 #include <stdexcept>
+#include <string>
 #include "celma/common/file_info.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks if a value contains the (path and) name of file.
+///
 /// @since  1.4.1, 02.03.2018
 class CheckIsFile: public ICheck
 {
@@ -37,16 +39,19 @@ public:
    /// @since  1.32.0, 24.04.2019
    CheckIsFile();
 
-   /// Default destructor isa fine.
+   /// Default destructor is fine.
    ~CheckIsFile() override = default;
 
    /// Checks if the value in \a val contains the (path and) name of an existing
    /// file.
+   ///
    /// @param[in]  val  The value to check in string format.
+   /// @throw  std::invalid_argument if the specified file does not exist.
    /// @since  1.4.1, 02.03.2018
-   void checkValue( const std::string& val) const override;
+   void checkValue( const std::string& val) const noexcept( false) override;
 
    /// Returns a text description of the check.
+   ///
    /// @return  A string with the text description of the check.
    /// @since  1.4.1, 02.03.2018
    std::string toString() const override;
@@ -67,7 +72,7 @@ inline CheckIsFile::CheckIsFile():
 inline void CheckIsFile::checkValue( const std::string& val) const
 {
    if (!common::fileInfo( val).isFile())
-      throw std::runtime_error( std::string( "'") + val
+      throw std::invalid_argument( std::string( "'") + val
          + "' is not an existing file");
 } // CheckIsFile::checkValue
 
@@ -85,8 +90,9 @@ inline std::string CheckIsFile::toString() const
 // ===============
 
 
-/// Helper function to create a is-file check more easily.<br>
+/// Helper function to create a is-file check more easily.
 /// Usage:  addArgument( ...)->addCheck( isFile());
+///
 /// @return  The newly created CheckIsFile object.
 /// @since  1.4.1, 02.03.2018
 inline detail::ICheck* isFile()
@@ -95,8 +101,7 @@ inline detail::ICheck* isFile()
 } // isFile
 
 
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args
 
 
 #endif   // CELMA_PROG_ARGS_DETAIL_CHECK_IS_FILE_HPP
