@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,7 +11,7 @@
 --*/
 
 
-// module to test, header file include
+// module to test headerfile include
 #include "celma/common/string_util.hpp"
 
 
@@ -209,6 +209,29 @@ BOOST_AUTO_TEST_CASE( check_starts_with)
    BOOST_REQUIRE( startsWith( "hello world", "h"));
 
 } // check_starts_with
+
+
+
+/// Check the results returned by celma::common::endsWith().
+///
+/// @since  1.38.0, 06.07.2020
+BOOST_AUTO_TEST_CASE( check_ends_with)
+{
+
+   using celma::common::endsWith;
+
+
+   BOOST_REQUIRE( endsWith( "haus", "haus"));
+   BOOST_REQUIRE( endsWith( "haus", "aus"));
+   BOOST_REQUIRE( endsWith( "haus", "us"));
+   BOOST_REQUIRE( endsWith( "haus", "s"));
+
+   BOOST_REQUIRE( endsWith( "hausdach", "dach"));
+
+   BOOST_REQUIRE( !endsWith( "haus", "klaus"));
+   BOOST_REQUIRE( !endsWith( "haus", "auf"));
+
+} // check_ends_with
 
 
 

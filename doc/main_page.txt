@@ -47,6 +47,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
+   |   1.38.0 | 2020-07-07        | Added function "string ends with" and check "file suffix" in program arguments handler. |
    |   1.37.0 | 2020-06-28        | Added class dynamic bitset, created new sub-library container. |
    |   1.36.0 | 2020-05-28        | Adapted to new compiler version. Due to a compiler bug currently only works correctly in debug mode. |
    |   1.35.0 | 2020-03-10        | Patch: Fixed some minor bugs. |
