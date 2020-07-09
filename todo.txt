@@ -136,3 +136,10 @@ Namen?
 - IArgConstraint
 - IHandlerConstraint
 
+
+File checks:
+- File darf es nicht geben
+- File Groesse: kleiner als, groesser als
+- File Aenderungs-Zeitstempel
+- ... ?
+

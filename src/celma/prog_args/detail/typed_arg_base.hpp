@@ -30,6 +30,7 @@
 
 // the specific checks are not actually needed here, but they are included
 // anyway for convenience of the user
+#include "celma/prog_args/detail/check_file_size.hpp"
 #include "celma/prog_args/detail/check_file_suffix.hpp"
 #include "celma/prog_args/detail/check_is_absolute_path.hpp"
 #include "celma/prog_args/detail/check_is_directory.hpp"
