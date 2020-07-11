@@ -48,11 +48,15 @@ public:
    /// Default destructor is fine.
    ~CheckFileSize() override = default;
 
-   /// Checks if the value in \a val contains the (path and) name of an existing
-   /// file.
+   /// Checks if the size of the file given by \a val fulfills the comparison
+   /// with the defined size.
    ///
-   /// @param[in]  val  The value to check in string format.
-   /// @throw  std::invalid_argument if the specified file does not exist.
+   /// @param[in]  val  The (path and) filename to check.
+   /// @throw
+   ///    std::runtime_error if the specified file does not exist.
+   /// @throw
+   ///    std::invalid_argument if the size of the file does not pass the
+   ///    comparison with the defined size.
    /// @since  x.y.z, 08.07.2020
    void checkValue( const std::string& val) const noexcept( false) override;
 

@@ -1964,6 +1964,83 @@ BOOST_AUTO_TEST_CASE( file_size)
 
 
 
+/// Some tests for a file modification time.
+///
+/// @since  x.y.z, 11.07.2020
+BOOST_AUTO_TEST_CASE( file_modification_time)
+{
+
+   using namespace std::literals;
+   using celma::prog_args::fileMod;
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileMod< std::greater>( 24h)));
+
+      auto const  as2a = make_arg_array( "-f /etc/protocols", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileMod< std::greater_equal>( 100 * 365 * 24h)));
+
+      auto const  as2a = make_arg_array( "-f /etc/protocols", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         dest;
+
+      ah.addArgument( "f", DEST_VAR( dest), "filename")
+         ->addCheck( fileMod< std::greater_equal>( 365 * 24h));
+
+      auto const  as2a = make_arg_array( "-f /etc/protocols --help-arg-full f",
+         nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Argument '-f', usage:\n"
+         "   filename\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     file modification time check std::greater_equal 31536000\n"
+         "   check original value:       false\n"
+         "   formats:                    -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   allows inverting:           false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // file_modification_time
+
+
+
 /// Verify the "pattern" check.
 ///
 /// @since  1.19.0, 25.12.2018
