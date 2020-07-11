@@ -24,6 +24,7 @@
 #include <complex>
 #include <deque>
 #include <forward_list>
+#include <functional>
 #include <limits>
 #include <list>
 #include <map>
@@ -255,6 +256,36 @@ PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::multimap);
 PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::pair);
 PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::unordered_map);
 PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::unordered_multimap);
+
+
+PROVIDE_TEMPLATE_TYPE_NAME( std::less);
+PROVIDE_TEMPLATE_TYPE_NAME( std::less_equal);
+PROVIDE_TEMPLATE_TYPE_NAME( std::equal_to);
+PROVIDE_TEMPLATE_TYPE_NAME( std::not_equal_to);
+PROVIDE_TEMPLATE_TYPE_NAME( std::greater_equal);
+PROVIDE_TEMPLATE_TYPE_NAME( std::greater);
+
+
+/// Macro to create the specialisation of comparison classes for type <void>.
+/// @param  c  The type of the comparison class.
+/// @since  x.y.z, 09.07.2020
+#define  PROVIDE_NAME_ONLY( c) \
+   template<> class type< c< void>> \
+   { \
+   public: \
+      static constexpr const char* name() \
+      { \
+         return # c; \
+      } \
+   }
+
+
+PROVIDE_NAME_ONLY( std::less);
+PROVIDE_NAME_ONLY( std::less_equal);
+PROVIDE_NAME_ONLY( std::equal_to);
+PROVIDE_NAME_ONLY( std::not_equal_to);
+PROVIDE_NAME_ONLY( std::greater_equal);
+PROVIDE_NAME_ONLY( std::greater);
 
 
 } // namespace celma

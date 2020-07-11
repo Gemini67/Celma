@@ -1909,6 +1909,19 @@ BOOST_AUTO_TEST_CASE( file_size)
    } // end scope
 
    {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileSize< std::greater_equal>( 1_TiB)));
+
+      auto const  as2a = make_arg_array( "-f /etc/passwd", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::invalid_argument);
+   } // end scope
+
+   {
       std::ostringstream  std_out;
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::hfUsageCont
@@ -1935,7 +1948,7 @@ BOOST_AUTO_TEST_CASE( file_size)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                at most 1\n"
-         "   checks:                     check file suffix '.tgz'\n"
+         "   checks:                     file size check std::less 1048576\n"
          "   check original value:       false\n"
          "   formats:                    -\n"
          "   constraints:                -\n"

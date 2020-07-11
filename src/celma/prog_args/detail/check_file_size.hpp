@@ -24,6 +24,8 @@
 #include <stdexcept>
 #include <string>
 #include "celma/common/file_info.hpp"
+#include "celma/common/type_name.hpp"
+#include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 
 
@@ -89,7 +91,8 @@ template< template< typename> class C>
 
 template< template< typename> class C> std::string CheckFileSize< C>::toString() const
 {
-   return std::string( "file size check");
+   return std::string( "file size check ") + type< C< void>>::name() + " "
+      + format::toString( mFileSize);
 } // CheckFileSize< C>::toString
 
 
