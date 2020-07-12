@@ -127,12 +127,3 @@ Fragen:
 - Oder reicht einer, und es wird eine andere Moeglichkeit geboten, mehrere
   Format-Handler zu kombinieren?
 
-
-Handler, Constraints:
-Basisklasse IConstraint aufteilen in 2 Klassen, 1 fuer Constraints die durch die
-Verwendung eines Arguments gesetzt werden, und 1 fuer Constraints die im Handler
-gesetzt werden.
-Namen?
-- IArgConstraint
-- IHandlerConstraint
-
