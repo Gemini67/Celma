@@ -2311,7 +2311,7 @@ template< size_t N>
 
 /// Specialisation of TypedArg<> for destination value type std::vector< bool>.
 ///
-/// @since  x.y.z. 28.05.2020
+/// @since  1.40.0. 28.05.2020
 template<> class TypedArg< std::vector< bool>>: public TypedArgBase
 {
 public:
@@ -2324,7 +2324,7 @@ public:
    ///    The destination variable to store the values in.
    /// @param[in]  vname
    ///    The name of the destination variable to store the value in.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    TypedArg( vector_type& dest, const std::string& vname):
       TypedArgBase( vname, ValueMode::required, false),
       mDestVar( dest)
@@ -2334,13 +2334,13 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    ~TypedArg() override = default;
 
    /// Returns the type of the destination variable.
    ///
    /// @return  The name of the destination variable's type.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    const std::string varTypeName() const override
    {
       return type< vector_type>::name();
@@ -2349,7 +2349,7 @@ public:
    /// Returns if the destination has (at least) one value set.
    /// @return
    ///    \c true if the destination variable contains (at least) one value.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    bool hasValue() const override
    {
       return common::contains( mDestVar, true);
@@ -2364,7 +2364,7 @@ public:
    /// @param[in]  print_type
    ///    Specifies if the type of the destination variable should be printed
    ///    too.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    void printValue( std::ostream& os, bool print_type) const override
    {
       os << format::toString( mDestVar);
@@ -2376,7 +2376,7 @@ public:
    /// For vector< bool> it is possible/allowed to activate this feature.
    ///
    /// @return  Pointer to this object.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    TypedArgBase* setTakesMultiValue() override
    {
       mTakeMultipleValues = true;
@@ -2387,7 +2387,7 @@ public:
    /// values.
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    TypedArgBase* setListSep( char sep) override
    {
       mListSep = sep;
@@ -2402,7 +2402,7 @@ public:
    /// destination vector that should be overwritten by the argument's values.
    ///
    /// @return  Pointer to this object.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    TypedArgBase* setClearBeforeAssign() override
    {
       mClearB4Assign = true;
@@ -2413,7 +2413,7 @@ public:
    /// instead of setting it (the default).
    ///
    /// @return  Pointer to this object.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    TypedArgBase* unsetFlag() override
    {
       mResetFlags = true;
@@ -2423,7 +2423,7 @@ public:
 protected:
    /// Used for printing an argument and its destination variable.
    /// @param[out]  os  The stream to print to.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    void dump( std::ostream& os) const override
    {
       os << "value type '" << varTypeName()
@@ -2440,7 +2440,7 @@ protected:
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
    ///    preceeded by an exclamation mark.
-   /// @since  x.y.z. 28.05.2020
+   /// @since  1.40.0. 28.05.2020
    void assign( const std::string& value, bool) override
    {
       if (mClearB4Assign)
@@ -2482,7 +2482,7 @@ private:
    /// Returns if no bit is set.
    ///
    /// @return  \c true if no bit is set.
-   /// @since  x.y.z, 02.06.2020
+   /// @since  1.40.0, 02.06.2020
    bool none() const
    {
       return !common::contains( mDestVar, true);
@@ -2491,7 +2491,7 @@ private:
    /// Returns the number of bits that are set.
    ///
    /// @return  Number of bits set.
-   /// @since  x.y.z, 02.06.2020
+   /// @since  1.40.0, 02.06.2020
    size_t count() const
    {
       return std::count( mDestVar.begin(), mDestVar.end(), true);

@@ -116,7 +116,7 @@ public:
 
 /// Test error case that can occur with a vector of booleans.
 ///
-/// @since  x.y.z, 04.06.2020
+/// @since  1.40.0, 04.06.2020
 BOOST_AUTO_TEST_CASE( test_vector_bool_errors)
 {
 
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE( test_vector_bool_errors)
 
 /// Test feature to set another character as list separator.
 ///
-/// @since  x.y.z, 04.06.2020
+/// @since  1.40.0, 04.06.2020
 BOOST_AUTO_TEST_CASE( test_list_sep)
 {
 
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
 /// Test feature to handle multiple values.
 ///
-/// @since  x.y.z, 12.07.2020
+/// @since  1.40.0, 12.07.2020
 BOOST_AUTO_TEST_CASE( test_multi_values)
 {
 
@@ -318,7 +318,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
 /// Test feature to clear the destination before assigning the values.
 ///
-/// @since  x.y.z, 12.07.2020
+/// @since  1.40.0, 12.07.2020
 BOOST_AUTO_TEST_CASE( test_clear_dest)
 {
 
@@ -368,7 +368,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
 /// Test feature to reset the flags instead of setting them.
 ///
-/// @since  x.y.z, 12.07.2020
+/// @since  1.40.0, 12.07.2020
 BOOST_AUTO_TEST_CASE( test_resetting_flags)
 {
 
@@ -426,7 +426,7 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
 
 /// Print information about the argument.
 ///
-/// @since  x.y.z, 12.07.2020
+/// @since  1.40.0, 12.07.2020
 BOOST_AUTO_TEST_CASE( list_var)
 {
 

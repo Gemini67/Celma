@@ -1322,7 +1322,7 @@ public:
 
 /// Container adapter for std::vector< bool>.
 ///
-/// @since  x.y.z, 04.06.2020
+/// @since  1.40.0, 04.06.2020
 template<> class ContainerAdapter< std::vector< bool>> final:
    AdapterBase< std::vector< bool>>
 {

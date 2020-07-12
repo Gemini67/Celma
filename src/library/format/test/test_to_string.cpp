@@ -368,7 +368,7 @@ BOOST_AUTO_TEST_CASE( bitset_to_string)
 
 /// Test converting the contents of a vector of booleans.
 ///
-/// @since  x.y.z, 04.06.2020
+/// @since  1.40.0, 04.06.2020
 BOOST_AUTO_TEST_CASE( vector_bool_to_string)
 {
 
