@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -32,18 +32,13 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/format/unit_prefixes.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::make_arg_array;
 using celma::common::CheckAssign;
 using celma::prog_args::Handler;
-using std::overflow_error;
-using std::out_of_range;
-using std::runtime_error;
-using std::string;
-using std::underflow_error;
-using std::vector;
 
 
 
@@ -143,11 +138,32 @@ BOOST_AUTO_TEST_CASE( errors)
          std::logic_error);
    } // end scope
 
+   // specify an empty file suffix
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( file), "file")
+         ->addCheck( celma::prog_args::fileSuffix( "")),
+         std::invalid_argument);
+   } // end scope
+
+   // specify a file suffix that is only a dot/point
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( file), "file")
+         ->addCheck( celma::prog_args::fileSuffix( ".")),
+         std::invalid_argument);
+   } // end scope
+
 } // errors
 
 
 
 /// Check that the 'lower' limit works correctly.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( lower_limit)
 {
@@ -175,7 +191,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
       auto const  as2a = make_arg_array( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         underflow_error);
+         std::underflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -236,6 +252,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
 
 /// Check that the 'lower' limit works correctly on a vector.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( lower_limit_vector)
 {
@@ -243,8 +260,8 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
    using celma::prog_args::lower;
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
@@ -255,21 +272,21 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
       auto const  as2a = make_arg_array( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         underflow_error);
+         std::underflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
@@ -282,8 +299,8 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
@@ -296,15 +313,15 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
       auto const  as2a = make_arg_array( "-i 10,5,10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         underflow_error);
+         std::underflow_error);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 10);
@@ -315,6 +332,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
 
 /// Check that the 'upper' limit works correctly.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( upper_limit)
 {
@@ -342,7 +360,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
       auto const  as2a = make_arg_array( "-i 500", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -355,7 +373,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
       auto const  as2a = make_arg_array( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -416,6 +434,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
 
 /// Check that the 'upper' limit works correctly on a vector.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( upper_limit_vector)
 {
@@ -423,8 +442,8 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
    using celma::prog_args::upper;
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
@@ -435,34 +454,34 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
       auto const  as2a = make_arg_array( "-i 500", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
       auto const  as2a = make_arg_array( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
@@ -475,8 +494,8 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
@@ -489,15 +508,15 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
       auto const  as2a = make_arg_array( "-i 50,100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 50);
@@ -508,6 +527,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
 
 /// Check that a combination of 'lower' and 'uppper' limit works correctly.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( lower_upper_limit)
 {
@@ -538,7 +558,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       auto const  as2a = make_arg_array( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         underflow_error);
+         std::underflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -606,7 +626,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       auto const  as2a = make_arg_array( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -620,7 +640,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       auto const  as2a = make_arg_array( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -630,6 +650,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
 
 /// Check that a combination of 'lower' and 'uppper' limit works correctly on a
 /// vector.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
 {
@@ -638,8 +659,8 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
    using celma::prog_args::upper;
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -651,8 +672,8 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -660,13 +681,13 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       auto const  as2a = make_arg_array( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         underflow_error);
+         std::underflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -680,8 +701,8 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -695,8 +716,8 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -704,13 +725,13 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       auto const  as2a = make_arg_array( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -718,13 +739,13 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       auto const  as2a = make_arg_array( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -732,15 +753,15 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       auto const  as2a = make_arg_array( "-i 10,200", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         overflow_error);
+         std::overflow_error);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 10);
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -748,7 +769,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       auto const  as2a = make_arg_array( "-i 20,5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         underflow_error);
+         std::underflow_error);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 20);
@@ -759,6 +780,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
 
 
 /// Check that the 'range' limit works correctly.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( check_range)
 {
@@ -788,7 +810,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       auto const  as2a = make_arg_array( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -830,7 +852,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       auto const  as2a = make_arg_array( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -844,7 +866,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       auto const  as2a = make_arg_array( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -853,6 +875,7 @@ BOOST_AUTO_TEST_CASE( check_range)
 
 
 /// Check that the 'range' limit works correctly on a vector.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( check_range_vector)
 {
@@ -860,8 +883,8 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
    using celma::prog_args::range;
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -873,8 +896,8 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -882,13 +905,13 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       auto const  as2a = make_arg_array( "-i 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -906,7 +929,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      vector< int>        iVal;
+      std::vector< int>   iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -943,8 +966,8 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -952,13 +975,13 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       auto const  as2a = make_arg_array( "-i 100", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -966,13 +989,13 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       auto const  as2a = make_arg_array( "-i 10000", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -980,15 +1003,15 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       auto const  as2a = make_arg_array( "-i 10,200", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 10);
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -996,7 +1019,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       auto const  as2a = make_arg_array( "-i 20,5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 20);
@@ -1007,6 +1030,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
 
 
 /// Check that the 'list of values' limit works correctly.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( check_values_string)
 {
@@ -1014,8 +1038,8 @@ BOOST_AUTO_TEST_CASE( check_values_string)
    using celma::prog_args::values;
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                    ah( 0);
+      CheckAssign< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1027,8 +1051,8 @@ BOOST_AUTO_TEST_CASE( check_values_string)
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                    ah( 0);
+      CheckAssign< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1036,13 +1060,13 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       auto const  as2a = make_arg_array( "-n peter", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !name.hasValue());
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                    ah( 0);
+      CheckAssign< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1050,13 +1074,13 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       auto const  as2a = make_arg_array( "-n Paule", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !name.hasValue());
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                    ah( 0);
+      CheckAssign< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1064,13 +1088,13 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       auto const  as2a = make_arg_array( "-n Pete", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !name.hasValue());
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                    ah( 0);
+      CheckAssign< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1083,8 +1107,8 @@ BOOST_AUTO_TEST_CASE( check_values_string)
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                    ah( 0);
+      CheckAssign< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1097,11 +1121,11 @@ BOOST_AUTO_TEST_CASE( check_values_string)
    } // end scope
 
    {
-      std::ostringstream    std_out;
-      std::ostringstream    std_err;
-      Handler               ah( std_out, std_err, Handler::hfUsageCont
+      std::ostringstream        std_out;
+      std::ostringstream        std_err;
+      Handler                   ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      CheckAssign< string>  name;
+      CheckAssign< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1120,7 +1144,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
          "   Name\n"
          "Properties:\n"
          "   destination variable name:  name\n"
-         "   destination variable type:  std::string\n"
+        "   destination variable type:  std::string\n"
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                at most 1\n"
@@ -1141,6 +1165,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
 
 
 /// Check that the 'list of values' limit works correctly.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( check_values_int)
 {
@@ -1172,7 +1197,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       auto const  as2a = make_arg_array( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -1187,7 +1212,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       auto const  as2a = make_arg_array( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -1241,6 +1266,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
 
 
 /// Check that the 'list of values' limit works correctly.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( check_values_int_vector)
 {
@@ -1248,8 +1274,8 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
    using celma::prog_args::values;
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
@@ -1262,8 +1288,8 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
@@ -1272,13 +1298,13 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       auto const  as2a = make_arg_array( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
@@ -1287,13 +1313,13 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       auto const  as2a = make_arg_array( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
@@ -1308,8 +1334,8 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
@@ -1324,8 +1350,8 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
@@ -1340,8 +1366,8 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  iVal;
+      Handler            ah( 0);
+      std::vector< int>  iVal;
 
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
@@ -1350,7 +1376,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       auto const  as2a = make_arg_array( "-i 11,1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         out_of_range);
+         std::out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 11);
@@ -1361,6 +1387,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
 
 
 /// Verify that the "is a file" and "is a directory" checks work correctly.
+///
 /// @since  1.4.1, 02.03.2018
 BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
 {
@@ -1369,20 +1396,20 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
    using celma::prog_args::isFile;
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "f", DEST_VAR( dest), "File")->addCheck( isFile());
 
       auto const  as2a = make_arg_array( "-f /tmp", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         runtime_error);
+         std::invalid_argument);
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "f", DEST_VAR( dest), "File")->addCheck( isFile());
 
@@ -1391,10 +1418,9 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "d", DEST_VAR( dest), "Directory")
          ->addCheck( isDirectory());
@@ -1402,7 +1428,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
       auto const  as2a = make_arg_array( "-d /etc/passwd", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         runtime_error);
+         std::runtime_error);
    } // end scope
 
    {
@@ -1410,7 +1436,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      string              dest;
+      std::string         dest;
 
       ah.addArgument( "d", DEST_VAR( dest), "Directory")
          ->addCheck( isDirectory());
@@ -1444,8 +1470,8 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "d", DEST_VAR( dest), "Directory")
          ->addCheck( isDirectory());
@@ -1460,6 +1486,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
 
 
 /// Verify that the "is an absolute path" check work correctly.
+///
 /// @since  1.4.2, 12.04.2018
 BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
 {
@@ -1467,44 +1494,44 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
    using celma::prog_args::isAbsolutePath;
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
       auto const  as2a = make_arg_array( "-p ./data/file.dat", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         runtime_error);
+         std::runtime_error);
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
       auto const  as2a = make_arg_array( "-p data/file.dat", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         runtime_error);
+         std::runtime_error);
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
       auto const  as2a = make_arg_array( "-p ~/data/file.dat", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         runtime_error);
+         std::runtime_error);
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
@@ -1516,9 +1543,9 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
    {
       std::ostringstream  std_out;
       std::ostringstream  std_err;
-      Handler              ah( std_out, std_err, Handler::hfUsageCont
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      string              dest;
+      std::string         dest;
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
@@ -1556,6 +1583,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
 
 /// Verify that a combined check for "is a directory" and "is an absolute path"
 /// work correctly.
+///
 /// @since  1.4.2, 12.04.2018
 BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
 {
@@ -1564,8 +1592,8 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
    using celma::prog_args::isDirectory;
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
@@ -1573,12 +1601,12 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       auto const  as2a = make_arg_array( "-d /etc/passwd", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         runtime_error);
+         std::runtime_error);
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
@@ -1586,12 +1614,12 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       auto const  as2a = make_arg_array( "-d etc", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         runtime_error);
+         std::runtime_error);
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
@@ -1599,12 +1627,12 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       auto const  as2a = make_arg_array( "-d ./etc", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         runtime_error);
+         std::runtime_error);
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
@@ -1619,7 +1647,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      string              dest;
+      std::string         dest;
 
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
@@ -1659,15 +1687,15 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
 /// Verify that the "parent directory exists" check work correctly.
 ///
 /// @since  1.9.0, 04.08.2018
-BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
+BOOST_AUTO_TEST_CASE( correctly_check_parent_directory_exists)
 {
 
    using celma::prog_args::parentDirectoryExists;
 
    // should throw when the path does not exist
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "f", DEST_VAR( dest), "path and filename")
          ->addCheck( parentDirectoryExists());
@@ -1680,8 +1708,8 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
 
    // should throw when the path does exist but is not a directory
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "f", DEST_VAR( dest), "path and filename")
          ->addCheck( parentDirectoryExists());
@@ -1693,8 +1721,8 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
    } // end scope
 
    {
-      Handler  ah( 0);
-      string   dest;
+      Handler      ah( 0);
+      std::string  dest;
 
       ah.addArgument( "f", DEST_VAR( dest), "path and filename")
          ->addCheck( parentDirectoryExists());
@@ -1709,7 +1737,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      string              dest;
+      std::string         dest;
 
       ah.addArgument( "f", DEST_VAR( dest), "path and filename")
          ->addCheck( parentDirectoryExists());
@@ -1743,7 +1771,273 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_diretory_exists)
          "\n"));
    } // end scope
 
-} // correctly_check_parent_diretory_exists
+} // correctly_check_parent_directory_exists
+
+
+
+/// Test specifying a file suffix.
+///
+/// @since  1.38.0, 07.07.2020
+BOOST_AUTO_TEST_CASE( file_suffix)
+{
+
+   using celma::prog_args::fileSuffix;
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileSuffix( "txt")));
+
+      auto const  as2a = make_arg_array( "-f myfile", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileSuffix( "txt")));
+
+      auto const  as2a = make_arg_array( "-f myfile.bin", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileSuffix( "txt")));
+
+      auto const  as2a = make_arg_array( "-f myfile.txt", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileSuffix( ".txt")));
+
+      auto const  as2a = make_arg_array( "-f myfile.txt", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileSuffix( ".txt")));
+
+      auto const  as2a = make_arg_array( "-f myfile.today.txt", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         dest;
+
+      ah.addArgument( "f", DEST_VAR( dest), "filename")
+         ->addCheck( fileSuffix( "tgz"));
+
+      auto const  as2a = make_arg_array( "-f transfer.tgz --help-arg-full f",
+         nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Argument '-f', usage:\n"
+         "   filename\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     check file suffix '.tgz'\n"
+         "   check original value:       false\n"
+         "   formats:                    -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   allows inverting:           false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // file_suffix
+
+
+
+/// Some tests for a file size.
+///
+/// @since  1.39.0, 08.07.2020
+BOOST_AUTO_TEST_CASE( file_size)
+{
+
+   using celma::prog_args::fileSize;
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileSize< std::greater>( 1)));
+
+      auto const  as2a = make_arg_array( "-f /etc/passwd", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileSize< std::greater_equal>( 1_TiB)));
+
+      auto const  as2a = make_arg_array( "-f /etc/passwd", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         dest;
+
+      ah.addArgument( "f", DEST_VAR( dest), "filename")
+         ->addCheck( fileSize< std::less>( 1_MiB));
+
+      auto const  as2a = make_arg_array( "-f /etc/passwd --help-arg-full f",
+         nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Argument '-f', usage:\n"
+         "   filename\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     file size check std::less 1048576\n"
+         "   check original value:       false\n"
+         "   formats:                    -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   allows inverting:           false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // file_size
+
+
+
+/// Some tests for a file modification time.
+///
+/// @since  1.39.0, 11.07.2020
+BOOST_AUTO_TEST_CASE( file_modification_time)
+{
+
+   using namespace std::literals;
+   using celma::prog_args::fileMod;
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileMod< std::greater>( 24h)));
+
+      auto const  as2a = make_arg_array( "-f /etc/protocols", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   } // end scope
+
+   {
+      Handler      ah( 0);
+      std::string  file;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
+         ->addCheck( fileMod< std::greater_equal>( 100 * 365 * 24h)));
+
+      auto const  as2a = make_arg_array( "-f /etc/protocols", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::invalid_argument);
+   } // end scope
+
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         dest;
+
+      ah.addArgument( "f", DEST_VAR( dest), "filename")
+         ->addCheck( fileMod< std::greater_equal>( 365 * 24h));
+
+      auto const  as2a = make_arg_array( "-f /etc/protocols --help-arg-full f",
+         nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Argument '-f', usage:\n"
+         "   filename\n"
+         "Properties:\n"
+         "   destination variable name:  dest\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   checks:                     file modification time check std::greater_equal 31536000\n"
+         "   check original value:       false\n"
+         "   formats:                    -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   allows inverting:           false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+} // file_modification_time
 
 
 
@@ -1757,8 +2051,8 @@ BOOST_AUTO_TEST_CASE( pattern_check)
 
    // check against a pattern for a name: one word starting with an uppercase
    {
-      Handler  ah( 0);
-      string   name;
+      Handler      ah( 0);
+      std::string  name;
 
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
@@ -1770,8 +2064,8 @@ BOOST_AUTO_TEST_CASE( pattern_check)
 
    // check against a pattern for a name: one word starting with an uppercase
    {
-      Handler  ah( 0);
-      string   name;
+      Handler      ah( 0);
+      std::string  name;
 
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
@@ -1784,8 +2078,8 @@ BOOST_AUTO_TEST_CASE( pattern_check)
 
    // check against a pattern for a name: one word starting with an uppercase
    {
-      Handler  ah( 0);
-      string   name;
+      Handler      ah( 0);
+      std::string  name;
 
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
@@ -1798,8 +2092,8 @@ BOOST_AUTO_TEST_CASE( pattern_check)
 
    // check against a pattern for a name: one word starting with an uppercase
    {
-      Handler  ah( 0);
-      string   name;
+      Handler      ah( 0);
+      std::string  name;
 
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
@@ -1815,7 +2109,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      string              name;
+      std::string         name;
 
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
@@ -1850,9 +2144,9 @@ BOOST_AUTO_TEST_CASE( pattern_check)
 
    // pass the pattern directly
    {
-      Handler     ah( 0);
-      string      name;
-      std::regex  reg_ex( "^[A-Z][a-z]+");
+      Handler      ah( 0);
+      std::string  name;
+      std::regex   reg_ex( "^[A-Z][a-z]+");
 
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( reg_ex));
@@ -2131,11 +2425,13 @@ BOOST_AUTO_TEST_CASE( min_max_length)
 
 /// Helper class to check the implementation and usage of application specific
 /// check classes.
+///
 /// @since  0.2, 10.04.2016
 class ApplCheckTriple: public celma::prog_args::detail::ICheck
 {
 public:
    /// Constructor.
+   ///
    /// @param[in]  first   The first value to accept.
    /// @param[in]  second  The second value to accept.
    /// @param[in]  third   The third value to accept.
@@ -2149,16 +2445,18 @@ public:
    }
 
    /// Checks if the value in \a val equals one of the three check values.
+   ///
    /// @param[in]  val  The value to check in string format.
    /// @since  0.2, 10.04.2016
-   void checkValue( const string& val) const noexcept( false) override
+   void checkValue( const std::string& val) const noexcept( false) override
    {
       int  checkVal = boost::lexical_cast< int>( val);
       if ((checkVal != m1) && (checkVal != m2) && (checkVal != m3))
-         throw runtime_error( "not in tripple");
+         throw std::runtime_error( "not in tripple");
    }
 
    /// Returns a text description of the check.
+   ///
    /// @return  A string with the text description of the check.
    /// @since  0.16.0, 12.08.2017
    std::string toString() const override
@@ -2176,6 +2474,7 @@ private:
 
 /// Helper function to use the application specific check function just like
 /// the standard check functions from the library.
+///
 /// @param[in]  first   The first allowed value.
 /// @param[in]  second  The second allowed value.
 /// @param[in]  third   The third allowed value.
@@ -2189,6 +2488,7 @@ static celma::prog_args::detail::ICheck* tripple( int first, int second, int thi
 
 
 /// Application specific limit check.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( application_check)
 {
@@ -2217,7 +2517,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       auto const  as2a = make_arg_array( "-i 1", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -2231,7 +2531,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       auto const  as2a = make_arg_array( "-i 110", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
       BOOST_REQUIRE( !iVal.hasValue());
    } // end scope
 
@@ -2285,6 +2585,7 @@ BOOST_AUTO_TEST_CASE( application_check)
 
 
 /// Test handling of control characters.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( control_check)
 {
@@ -2299,7 +2600,7 @@ BOOST_AUTO_TEST_CASE( control_check)
    {
       auto const  as2a = make_arg_array( "-v 45 ! -v 47", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           runtime_error);
+                           std::runtime_error);
       BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
    } // end scope
 
@@ -2308,3 +2609,4 @@ BOOST_AUTO_TEST_CASE( control_check)
 
 
 // =====  END OF test_argh_checks_c.cpp  =====
+

@@ -30,6 +30,9 @@
 
 // the specific checks are not actually needed here, but they are included
 // anyway for convenience of the user
+#include "celma/prog_args/detail/check_file_modification.hpp"
+#include "celma/prog_args/detail/check_file_size.hpp"
+#include "celma/prog_args/detail/check_file_suffix.hpp"
 #include "celma/prog_args/detail/check_is_absolute_path.hpp"
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
@@ -59,7 +62,7 @@
 #include "celma/prog_args/detail/constraint_requires.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Base class for storing type-specific handlers type-neutrally.<br>
@@ -984,9 +987,7 @@ inline void TypedArgBase::defaultValue( std::string& /* dest */) const
 } // TypedArgBase::defaultValue
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_BASE_HPP

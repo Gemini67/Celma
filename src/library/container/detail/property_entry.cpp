@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,14 +12,14 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::PropertyEntry.
+/// See documentation of class celma::container::detail::PropertyEntry.
 
 
 // module header file include
-#include "celma/common/detail/property_entry.hpp"
+#include "celma/container/detail/property_entry.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 
@@ -38,9 +38,7 @@ PropertyEntry::PropertyEntry( const std::string& name, Types my_type):
 
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
 // =====  END OF property_entry.cpp  =====

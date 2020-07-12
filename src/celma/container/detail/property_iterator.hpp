@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,11 +12,11 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::PropertyIterator.
+/// See documentation of class celma::container::detail::PropertyIterator.
 
 
-#ifndef CELMA_COMMON_DETAIL_PROPERTY_ITERATOR_HPP
-#define CELMA_COMMON_DETAIL_PROPERTY_ITERATOR_HPP
+#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_ITERATOR_HPP
+#define CELMA_CONTAINER_DETAIL_PROPERTY_ITERATOR_HPP
 
 
 #include <cassert>
@@ -24,12 +24,12 @@
 #include <stack>
 #include <stdexcept>
 #include <string>
-#include "celma/common/detail/property_entry.hpp"
-#include "celma/common/detail/property_cont.hpp"
 #include "celma/common/pre_postfix.hpp"
+#include "celma/container/detail/property_entry.hpp"
+#include "celma/container/detail/property_cont.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 /// Iterator for properties.<br>
@@ -348,12 +348,10 @@ template< typename T> inline const T& PropertyIterator::value() const
 } // PropertyIterator::value
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_DETAIL_PROPERTY_ITERATOR_HPP
+#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_ITERATOR_HPP
 
 
 // =====  END OF property_iterator.hpp  =====

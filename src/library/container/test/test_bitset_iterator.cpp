@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,7 +16,7 @@
 
 
 // module to test headerfile include
-#include "celma/common/bitset_iterator.hpp"
+#include "celma/container/bitset_iterator.hpp"
 
 
 // Boost includes

@@ -12,23 +12,23 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::PropertyCont.
+/// See documentation of class celma::container::detail::PropertyCont.
 
 
-#ifndef CELMA_COMMON_DETAIL_PROPERTY_CONT_HPP
-#define CELMA_COMMON_DETAIL_PROPERTY_CONT_HPP
+#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_CONT_HPP
+#define CELMA_CONTAINER_DETAIL_PROPERTY_CONT_HPP
 
 
 #include <iosfwd>
 #include <string>
 #include "celma/common/detail/name_path_remain.hpp"
-#include "celma/common/detail/property_entry.hpp"
-#include "celma/common/detail/property_factory.hpp"
-#include "celma/common/detail/property_map_t.hpp"
-#include "celma/common/detail/property_value.hpp"
+#include "celma/container/detail/property_entry.hpp"
+#include "celma/container/detail/property_factory.hpp"
+#include "celma/container/detail/property_map_t.hpp"
+#include "celma/container/detail/property_value.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 /// Handles a property map which can contain values and property maps.
@@ -145,10 +145,10 @@ template< typename T>
       const std::string& full_path_name, const T& value,
       char separator)
 {
-   if (detail::NamePathRemain::nameHasSeparator( name, separator))
+   if (common::detail::NamePathRemain::nameHasSeparator( name, separator))
    {
-      const detail::NamePathRemain  npr( name, separator);
-      auto                          subtree_iter = mProperties.find( npr.firstName());
+      const common::detail::NamePathRemain  npr( name, separator);
+      auto                                  subtree_iter = mProperties.find( npr.firstName());
       if (subtree_iter == mProperties.end())
          subtree_iter = mProperties.emplace(
             npr.firstName(), new PropertyCont( npr.firstName())).first;
@@ -196,10 +196,10 @@ template< typename T>
    bool PropertyCont::getProperty( T& value, const std::string& name,
       char separator) const
 {
-   if (detail::NamePathRemain::nameHasSeparator( name, separator))
+   if (common::detail::NamePathRemain::nameHasSeparator( name, separator))
    {
-      const detail::NamePathRemain  npr( name, separator);
-      auto const                    subtree_iter = mProperties.find( npr.firstName());
+      const common::detail::NamePathRemain  npr( name, separator);
+      auto const                            subtree_iter = mProperties.find( npr.firstName());
       if ((subtree_iter == mProperties.end())
           || (subtree_iter->second->entryType() == PropertyEntry::Types::value))
          return false;
@@ -256,12 +256,10 @@ inline const property_map_t& PropertyCont::map() const
 } // PropertyCont::map
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_DETAIL_PROPERTY_CONT_HPP
+#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_CONT_HPP
 
 
 // =====  END OF property_cont.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,11 +27,13 @@
 #include <stack>
 #include <string>
 #include <utility>
+#include <vector>
 #include "celma/common/tuple_at_index.hpp"
 #include "celma/common/tuple_length.hpp"
+#include "celma/container/dynamic_bitset.hpp"
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// Template to convert any value type into string format. Requires the
@@ -91,7 +93,7 @@ inline std::string toString( const double val)
 } // toString
 
 
-/// Function to write a string into the string ;-)<br>
+/// Function to write a string into the string ;-)
 /// Add double quotation marks to the string, to make sure multiple-words
 /// strings are interpreted correctly afterwards.
 /// @param[in]  data
@@ -112,7 +114,39 @@ inline std::string toString( const std::string& data)
 } // toString
 
 
-/// Template to handle a data pair.<br>
+/// Format the contents of a vector of bool into a binary string.
+///
+/// @param[in]  vb  The vector of boolean values to convert the contents of.
+/// @return  String with the contents of the vector as binary number.
+/// @since  1.37.0, 17.06.2020
+inline std::string toString( const std::vector< bool>& vb)
+{
+   if (vb.size() == 0)
+      return "0";
+
+   std::string  result( vb.size(), '0');
+
+   for (size_t idx = 0; idx < vb.size(); ++idx)
+   {
+      if (vb[ idx])
+         result[ vb.size() - idx - 1] = '1';
+   } // end for
+   return result;
+} // toString
+
+
+/// Format the contents of a dynamic bitset into a binary string.
+///
+/// @param[in]  dbs  The dynamic bitset to convert the contents of.
+/// @return  String with the contents of the dynamic bitset as binary number.
+/// @since  1.37.0, 10.06.2020
+inline std::string toString( const container::DynamicBitset& dbs)
+{
+   return dbs.to_string();
+} // toString
+
+
+/// Template to handle a data pair.
 /// By providing this implementation, it is possible to treat containers like
 /// lists, vectors and maps/multi-maps the same: Call toString() for the value
 /// type of the iterator, for maps this leads to a call of toString< pair>().
@@ -295,8 +329,7 @@ template< typename T> std::string toString( std::stack< T> stck)
 } // toString
 
 
-} // namespace format
-} // namespace celma
+} // namespace celma::format
 
 
 #endif   // CELMA_FORMAT_TO_STRING_HPP

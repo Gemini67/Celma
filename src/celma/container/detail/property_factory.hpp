@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,21 +12,21 @@
 
 
 /// @file
-/// See documentation of functions celma::common::detail::propetyFactory().
+/// See documentation of functions celma::container::detail::propetyFactory().
 
 
-#ifndef CELMA_COMMON_DETAIL_PROPERTY_FACTORY_HPP
-#define CELMA_COMMON_DETAIL_PROPERTY_FACTORY_HPP
+#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_FACTORY_HPP
+#define CELMA_CONTAINER_DETAIL_PROPERTY_FACTORY_HPP
 
 
 #include <string>
-#include "celma/common/detail/property_entry.hpp"
-#include "celma/common/detail/property_link.hpp"
-#include "celma/common/detail/property_map_t.hpp"
-#include "celma/common/detail/property_value.hpp"
+#include "celma/container/detail/property_entry.hpp"
+#include "celma/container/detail/property_link.hpp"
+#include "celma/container/detail/property_map_t.hpp"
+#include "celma/container/detail/property_value.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 /// Creates a property entry that contains a value.
@@ -65,12 +65,10 @@ inline PropertyEntry* propertyFactory( const std::string& name,
 } // propertyFactory
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
-#endif   // CELMA_COMMON_DETAIL_PROPERTY_FACTORY_HPP
+#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_FACTORY_HPP
 
 
 // =====  END OF property_factory.hpp  =====

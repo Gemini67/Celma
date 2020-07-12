@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/log/files/handler.hpp"
 
 
@@ -40,6 +40,7 @@
 
 
 /// Test some error conditions.
+///
 /// @since  1.0.0, 21.12.2017
 BOOST_AUTO_TEST_CASE( test_errors)
 {
@@ -103,6 +104,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
 
 /// Try to create log file handlers with the different log file policies.
+///
 /// @since  1.0.0, 14.12.2017
 BOOST_AUTO_TEST_CASE( test_one)
 {

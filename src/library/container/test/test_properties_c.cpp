@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,7 +16,7 @@
 
 
 // test module headerfile included first
-#include "celma/common/properties.hpp"
+#include "celma/container/properties.hpp"
 
 
 // C++ Standard Library includes
@@ -32,7 +32,7 @@
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::common::Properties;
+using celma::container::Properties;
 
 
 

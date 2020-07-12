@@ -1320,6 +1320,20 @@ public:
 }; // ContainerAdapter< std::unordered_set< T>>
 
 
+/// Container adapter for std::vector< bool>.
+///
+/// @since  1.40.0, 04.06.2020
+template<> class ContainerAdapter< std::vector< bool>> final:
+   AdapterBase< std::vector< bool>>
+{
+public:
+   /// Flag for compile-time check if a container adapter exists for this type
+   /// (obviously).
+   static constexpr bool  HasAdapter = false;
+
+}; // ContainerAdapter< std::vector< bool>>
+
+
 /// Container adapter for std::vector.
 ///
 /// @tparam  T  The type of the values stored in the vector.

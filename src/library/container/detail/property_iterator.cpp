@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,14 +12,14 @@
 
 
 /// @file
-/// See documentation of class celma::common::detail::PropertyIterator.
+/// See documentation of class celma::container::detail::PropertyIterator.
 
 
 // module header file include
-#include "celma/common/detail/property_iterator.hpp"
+#include "celma/container/detail/property_iterator.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::container::detail {
 
 
 
@@ -131,9 +131,7 @@ void PropertyIterator::findNextValue()
 
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
+} // namespace celma::container::detail
 
 
 // =====  END OF property_iterator.cpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,18 +12,18 @@
 
 
 /// @file
-/// See documentation of class celma::common::Properties.
+/// See documentation of class celma::container::Properties.
 
 
 // module header file include
-#include "celma/common/properties.hpp"
+#include "celma/container/properties.hpp"
 
 
 // C++ Standard Library includes
 #include <iostream>
 
 
-namespace celma { namespace common {
+namespace celma::container {
 
 
 
@@ -82,8 +82,7 @@ std::ostream& operator <<( std::ostream& os, const Properties& props)
 
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::container
 
 
 // =====  END OF properties.cpp  =====

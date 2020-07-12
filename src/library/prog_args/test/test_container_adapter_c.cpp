@@ -110,6 +110,10 @@ BOOST_AUTO_TEST_CASE( no_adapter)
    static_assert( !ContainerAdapter< std::tuple< int>>::HasAdapter);
    BOOST_REQUIRE_EQUAL( ContainerAdapter< std::tuple< int>>::HasAdapter, false);
 
+   // std::vector< bool>
+   static_assert( !ContainerAdapter< std::vector< bool>>::HasAdapter);
+   BOOST_REQUIRE_EQUAL( ContainerAdapter< std::vector< bool>>::HasAdapter, false);
+
    // celma::common::CheckAssign
    static_assert( !ContainerAdapter<
       celma::common::CheckAssign< int>>::HasAdapter);
