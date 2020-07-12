@@ -121,12 +121,15 @@ inline std::string toString( const std::string& data)
 /// @since  1.37.0, 17.06.2020
 inline std::string toString( const std::vector< bool>& vb)
 {
+   if (vb.size() == 0)
+      return "0";
+
    std::string  result( vb.size(), '0');
 
    for (size_t idx = 0; idx < vb.size(); ++idx)
    {
       if (vb[ idx])
-         result[ idx] = '1';
+         result[ vb.size() - idx - 1] = '1';
    } // end for
    return result;
 } // toString
@@ -143,7 +146,7 @@ inline std::string toString( const container::DynamicBitset& dbs)
 } // toString
 
 
-/// Template to handle a data pair.<br>
+/// Template to handle a data pair.
 /// By providing this implementation, it is possible to treat containers like
 /// lists, vectors and maps/multi-maps the same: Call toString() for the value
 /// type of the iterator, for maps this leads to a call of toString< pair>().

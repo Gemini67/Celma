@@ -24,6 +24,7 @@
 /// - TypedArg< std::array< T, N>>
 /// - TypedArg< std::tuple< T...>>
 /// - TypedArg< std::bitset< T...>>
+/// - TypedArg< std::vector< bool>>
 /// - TypedArg< celma::container::DynamicBitset>
 /// - TypedArg< celma::common::ValueFilter< T>>
 
@@ -758,7 +759,7 @@ protected:
                "variable '" + mVarName + "'");
 
          const int          new_level = mDestVar.value() + 1;
-         const std::string  testval( boost::lexical_cast< std::string>( new_level));
+         const std::string  testval( std::to_string( new_level));
          check( testval);
 
          // when we get here, the new value is within the limits
@@ -2257,7 +2258,7 @@ template< size_t N>
 {
    os << "value type '" << varTypeName()
       << "', destination bitset '" << mVarName << "', currently "
-      << (mDestVar.none() ? "no" : boost::lexical_cast< std::string>( mDestVar.count()))
+      << (mDestVar.none() ? "no" : std::to_string( mDestVar.count()))
       << " values." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
 } // TypedArg< std::bitset< N>>::dump
@@ -2302,6 +2303,212 @@ template< size_t N>
       } // end if
    } // end for
 } // TypedArg< std::bitset< N>>::assign
+
+
+// Template TypedArg< std::vector< bool>>
+// ======================================
+
+
+/// Specialisation of TypedArg<> for destination value type std::vector< bool>.
+///
+/// @since  x.y.z. 28.05.2020
+template<> class TypedArg< std::vector< bool>>: public TypedArgBase
+{
+public:
+   /// The type of the destination variable.
+   using vector_type = typename std::vector< bool>;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  x.y.z. 28.05.2020
+   TypedArg( vector_type& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::required, false),
+      mDestVar( dest)
+   {
+      mpCardinality.reset();
+   } // TypedArg< std::vector< bool>>::TypedArg
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  x.y.z. 28.05.2020
+   ~TypedArg() override = default;
+
+   /// Returns the type of the destination variable.
+   ///
+   /// @return  The name of the destination variable's type.
+   /// @since  x.y.z. 28.05.2020
+   const std::string varTypeName() const override
+   {
+      return type< vector_type>::name();
+   } // TypedArg< std::vector< bool>>::varTypeName
+
+   /// Returns if the destination has (at least) one value set.
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  x.y.z. 28.05.2020
+   bool hasValue() const override
+   {
+      return common::contains( mDestVar, true);
+   } // TypedArg< std::vector< bool>>::hasValue
+
+   /// Prints the current value of the destination variable.
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  x.y.z. 28.05.2020
+   void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << format::toString( mDestVar);
+      if (print_type)
+         os << " [" << varTypeName() << "]";
+   } // TypedArg< std::vector< bool>>::printValue
+
+   /// Overloads TypedArgBase::setTakesMultiValue().
+   /// For vector< bool> it is possible/allowed to activate this feature.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  x.y.z. 28.05.2020
+   TypedArgBase* setTakesMultiValue() override
+   {
+      mTakeMultipleValues = true;
+      return this;
+   } // TypedArg< std::vector< bool>>::setTakesMultiValue
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @since  x.y.z. 28.05.2020
+   TypedArgBase* setListSep( char sep) override
+   {
+      mListSep = sep;
+      return this;
+   } // TypedArg< std::vector< bool>>::setListSep
+
+   /// Special feature for destination variable type vector< bool>:
+   /// Clear the contents of the vector before assigning the value(s) from the
+   /// command line. If the feature is off (the default), the value(s from the
+   /// command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination vector that should be overwritten by the argument's values.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  x.y.z. 28.05.2020
+   TypedArgBase* setClearBeforeAssign() override
+   {
+      mClearB4Assign = true;
+      return this;
+   } // TypedArg< std::vector< bool>>::setClearBeforeAssign
+
+   /// Unset the flags (set to \c false the vector) when the argument is detected,
+   /// instead of setting it (the default).
+   ///
+   /// @return  Pointer to this object.
+   /// @since  x.y.z. 28.05.2020
+   TypedArgBase* unsetFlag() override
+   {
+      mResetFlags = true;
+      return this;
+   } // TypedArg< std::vector< bool>>::unsetFlag
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   /// @param[out]  os  The stream to print to.
+   /// @since  x.y.z. 28.05.2020
+   void dump( std::ostream& os) const override
+   {
+      os << "value type '" << varTypeName()
+         << "', destination vector '" << mVarName << "', currently "
+         << (none() ? "no" : std::to_string( count()))
+         << " values." << std::endl
+         << "   " << static_cast< const TypedArgBase&>( *this);
+   } // TypedArg< std::vector< bool>>::dump
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  x.y.z. 28.05.2020
+   void assign( const std::string& value, bool) override
+   {
+      if (mClearB4Assign)
+      {
+         mDestVar.clear();
+         // clear only once
+         mClearB4Assign = false;
+      } // end if
+
+      common::Tokenizer  tok( value, mListSep);
+      for (auto it = tok.begin(); it != tok.end(); ++it)
+      {
+         if (mpCardinality && (it != tok.begin()))
+            mpCardinality->gotValue();
+
+         auto const&  listVal( *it);
+
+         check( listVal);
+
+         if (!mFormats.empty())
+         {
+            auto  valCopy( listVal);
+            format( valCopy);
+            auto const  pos = boost::lexical_cast< size_t>( valCopy);
+            if (pos >= mDestVar.size())
+               mDestVar.resize( pos * 1.5);
+            mDestVar[ pos] = !mResetFlags;
+         } else
+         {
+            auto const  pos = boost::lexical_cast< size_t>( listVal);
+            if (pos >= mDestVar.size())
+               mDestVar.resize( pos * 1.5);
+            mDestVar[ pos] = !mResetFlags;
+         } // end if
+      } // end for
+   } // TypedArg< std::vector< bool>>::assign
+
+private:
+   /// Returns if no bit is set.
+   ///
+   /// @return  \c true if no bit is set.
+   /// @since  x.y.z, 02.06.2020
+   bool none() const
+   {
+      return !common::contains( mDestVar, true);
+   } // TypedArg< std::vector< bool>>::none
+
+   /// Returns the number of bits that are set.
+   ///
+   /// @return  Number of bits set.
+   /// @since  x.y.z, 02.06.2020
+   size_t count() const
+   {
+      return std::count( mDestVar.begin(), mDestVar.end(), true);
+   } // TypedArg< std::vector< bool>>::count
+
+   /// Reference of the destination variable to store the value(s) in.
+   vector_type&  mDestVar;
+   /// The character to use as a list separator, default: ,
+   char          mListSep = ',';
+   /// If set, the contents of the vector are cleared before the first value(s)
+   /// from the command line are assigned.
+   bool          mClearB4Assign = false;
+   /// Specifies if the flags in the vector should set (the default) or reset.
+   bool          mResetFlags = false;
+
+
+}; // TypedArg< std::vector< bool>>
 
 
 // Template TypedArg< container::DynamicBitset>
@@ -2465,7 +2672,7 @@ protected:
             auto  valCopy( listVal);
             format( valCopy);
             auto const  pos = boost::lexical_cast< size_t>( valCopy);
-            mDestVar.set(  pos, !mResetFlags);
+            mDestVar.set( pos, !mResetFlags);
          } else
          {
             auto const  pos = boost::lexical_cast< size_t>( listVal);

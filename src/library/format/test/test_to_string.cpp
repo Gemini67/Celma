@@ -366,46 +366,52 @@ BOOST_AUTO_TEST_CASE( bitset_to_string)
 
 
 
-/// Test converting the contents of a vector of bool.
+/// Test converting the contents of a vector of booleans.
 ///
-/// @since  1.37.0, 17.06.2020
+/// @since  x.y.z, 04.06.2020
 BOOST_AUTO_TEST_CASE( vector_bool_to_string)
 {
 
-   // empty bitset
+   // empty vector
    {
-      std::vector< bool>  vb( 10);
+      std::vector< bool>  vb;
       const auto          str( toString( vb));
 
-      BOOST_REQUIRE_EQUAL( str, "0000000000");
+      BOOST_REQUIRE_EQUAL( str, "0");
    } // end scope
 
    // two bits set
    {
-      std::vector< bool>  vb( 12);
+      std::vector< bool>  vb;
+
+      vb.resize( 20);
 
       vb[ 0] = true;
       vb[ 11] = true;
 
       const auto  str( toString( vb));
 
-      BOOST_REQUIRE_EQUAL( str, "100000000001");
+      BOOST_REQUIRE_EQUAL( str, "00000000100000000001");
    } // end scope
 
    // all bits set
    {
-      std::vector< bool>  vb( 8);
+      std::vector< bool>  vb;
+
+      vb.resize( 10);
 
       vb.flip();
 
       const auto  str( toString( vb));
 
-      BOOST_REQUIRE_EQUAL( str, "11111111");
+      BOOST_REQUIRE_EQUAL( str, "1111111111");
    } // end scope
 
-   // a large bitset
+   // a large vector
    {
-      std::vector< bool>  vb( 1024);
+      std::vector< bool>  vb;
+
+      vb.resize( 1024);
 
       const auto         str( toString( vb));
       const std::string  result( 1024, '0');
