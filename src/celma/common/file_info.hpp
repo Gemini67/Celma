@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -13,19 +13,19 @@
 
 /// @file
 /// See documentation of class celma::common::FileInfo and the
-/// function fileInfo.
+/// function celma::common::fileInfo().
 
 
-#ifndef CELMA_COMMON_FILE_INFO_HPP
-#define CELMA_COMMON_FILE_INFO_HPP
+#pragma once
 
 
 #include <sys/stat.h>
 #include <cstdio>
+#include <chrono>
 #include <string>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// This class provides easy access to the data of an object in the file system,
@@ -109,6 +109,12 @@ public:
    /// @since  1.4.0, 27.02.2018
    bool isDirectory() const;
 
+   /// Returns the file modification timestamp.
+   ///
+   /// @return  The file modification timestamp.
+   /// @since  1.39.0, 11.07.2020
+   std::chrono::system_clock::time_point modTime() const;
+
 private:
    /// The path and name of the file, as given to the constructor.<br>
    /// Needed for the function parentDirectory(), not const to allow copying.
@@ -141,6 +147,15 @@ inline bool FileInfo::isDirectory() const
 } // FileInfo::isDirectory
 
 
+inline std::chrono::system_clock::time_point FileInfo::modTime() const
+{
+   auto  dur = std::chrono::seconds( mFileStat.st_mtim.tv_sec)
+      + std::chrono::nanoseconds( mFileStat.st_mtim.tv_nsec);
+      
+   return std::chrono::system_clock::time_point( dur);
+} // FileInfo::modTime
+
+
 /// If just one info is needed from a file, e.g. the size, use this function to
 /// get a (temporary) FileInfo object.<br>
 /// The funcion is implemented as a template in order to support all the
@@ -155,11 +170,7 @@ template< typename T> FileInfo fileInfo( T init_value)
 } // fileInfo
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_FILE_INFO_HPP
+} // namespace celma::common
 
 
 // =====  END OF file_info.hpp  =====
