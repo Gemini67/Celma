@@ -112,7 +112,7 @@ public:
    /// Returns the file modification timestamp.
    ///
    /// @return  The file modification timestamp.
-   /// @since  x.y.z, 11.07.2020
+   /// @since  1.39.0, 11.07.2020
    std::chrono::system_clock::time_point modTime() const;
 
 private:

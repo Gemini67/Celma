@@ -98,6 +98,11 @@ class IHandlerValueConstraint;
 ///       file.
 ///     - is directory: Value must be the path and name of an existing
 ///       directory.
+///     - file size: The size of the file must fulfill the comparison against
+///       the given size.
+///     - file modification time: The difference between the current time and
+///       file modification time must fulfill the comparison against the given
+///       time.
 ///     - is absolute path: The value must be an absolute path.
 ///     - parent directory exists: The parent directory of the given path/file
 ///       name must exist (the file itself not).

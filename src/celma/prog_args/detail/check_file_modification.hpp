@@ -37,7 +37,7 @@ namespace celma::prog_args { namespace detail {
 /// of the file is compared against the given time difference in seconds.
 ///
 /// @tparam  C  The type of the size comparison class.
-/// @since  x.y.z, 11.07.2020
+/// @since  1.39.0, 11.07.2020
 template< template< typename> class C> class CheckFileModification:
    public ICheck
 {
@@ -46,7 +46,7 @@ public:
    ///
    /// @param[in]  mod_time_diff
    ///    The time difference for the modification time to compare against.
-   /// @since  x.y.z, 11.07.2020
+   /// @since  1.39.0, 11.07.2020
    CheckFileModification( std::chrono::seconds mod_time_diff);
 
    /// Default destructor is fine.
@@ -62,13 +62,13 @@ public:
    /// @throw
    ///    std::invalid_argument if the time-since-last-modification does not
    ///    fulfill the comparison with the defined time.
-   /// @since  x.y.z, 11.07.2020
+   /// @since  1.39.0, 11.07.2020
    void checkValue( const std::string& val) const noexcept( false) override;
 
    /// Returns a text description of the check.
    ///
    /// @return  A string with the text description of the check.
-   /// @since  x.y.z, 11.07.2020
+   /// @since  1.39.0, 11.07.2020
    std::string toString() const override;
 
 private:
@@ -121,7 +121,7 @@ template< template< typename> class C>
 /// @tparam  C  The type of the size comparison class.
 /// @param[in]  mod_time_diff  The file size to compare against.
 /// @return  The newly created CheckFileSize object.
-/// @since  x.y.z, 08.07.2020
+/// @since  1.39.0, 08.07.2020
 template< template< typename> class C>
    detail::ICheck* fileMod( std::chrono::seconds mod_time_diff)
 {

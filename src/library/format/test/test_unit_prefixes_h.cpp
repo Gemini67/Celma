@@ -32,7 +32,7 @@
 
 /// Verify that the format prefixes are correctly applied.
 ///
-/// @since  x.y.z, 09.07.2020
+/// @since  1.39.0, 09.07.2020
 BOOST_AUTO_TEST_CASE( apply_prefixes)
 {
 

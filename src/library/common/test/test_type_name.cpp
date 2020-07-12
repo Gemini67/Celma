@@ -901,7 +901,7 @@ BOOST_AUTO_TEST_CASE( nested_containers)
 
 /// Check the names of comparison classes.
 ///
-/// @since  x.y.z, 09.07.2020
+/// @since  1.39.0, 09.07.2020
 BOOST_AUTO_TEST_CASE( comparison_classes)
 {
 

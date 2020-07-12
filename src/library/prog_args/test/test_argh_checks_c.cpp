@@ -1890,7 +1890,7 @@ BOOST_AUTO_TEST_CASE( file_suffix)
 
 /// Some tests for a file size.
 ///
-/// @since  x.y.z, 08.07.2020
+/// @since  1.39.0, 08.07.2020
 BOOST_AUTO_TEST_CASE( file_size)
 {
 
@@ -1966,7 +1966,7 @@ BOOST_AUTO_TEST_CASE( file_size)
 
 /// Some tests for a file modification time.
 ///
-/// @since  x.y.z, 11.07.2020
+/// @since  1.39.0, 11.07.2020
 BOOST_AUTO_TEST_CASE( file_modification_time)
 {
 

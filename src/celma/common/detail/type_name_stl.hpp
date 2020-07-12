@@ -268,7 +268,7 @@ PROVIDE_TEMPLATE_TYPE_NAME( std::greater);
 
 /// Macro to create the specialisation of comparison classes for type <void>.
 /// @param  c  The type of the comparison class.
-/// @since  x.y.z, 09.07.2020
+/// @since  1.39.0, 09.07.2020
 #define  PROVIDE_NAME_ONLY( c) \
    template<> class type< c< void>> \
    { \

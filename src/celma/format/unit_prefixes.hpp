@@ -28,7 +28,7 @@
 ///
 /// @param[in]  v  The kibibyte value to return as bytes.
 /// @return  \c v kibibytes in bytes (multiplied by 1024).
-/// @since  x.y.z, 07.07.2020
+/// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_KiB( unsigned long long v)
 {
   return 1024ul * v;
@@ -39,7 +39,7 @@ constexpr std::size_t operator ""_KiB( unsigned long long v)
 ///
 /// @param[in]  v  The mebibyte value to return as bytes.
 /// @return  \c v mebibytes in bytes (multiplied by 1024^2).
-/// @since  x.y.z, 07.07.2020
+/// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_MiB( unsigned long long v)
 {
   return v * 1024_KiB;
@@ -50,7 +50,7 @@ constexpr std::size_t operator ""_MiB( unsigned long long v)
 ///
 /// @param[in]  v  The gibibyte value to return as bytes.
 /// @return  \c v gibibytes in bytes (multiplied by 1024^3).
-/// @since  x.y.z, 07.07.2020
+/// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_GiB( unsigned long long v)
 {
   return v * 1024_MiB;
@@ -61,7 +61,7 @@ constexpr std::size_t operator ""_GiB( unsigned long long v)
 ///
 /// @param[in]  v  The tebibyte value to return as bytes.
 /// @return  \c v tebibytes in bytes (multiplied by 1024^4).
-/// @since  x.y.z, 07.07.2020
+/// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_TiB( unsigned long long v)
 {
   return v * 1024_GiB;
@@ -72,7 +72,7 @@ constexpr std::size_t operator ""_TiB( unsigned long long v)
 ///
 /// @param[in]  v  The pebibyte value to return as bytes.
 /// @return  \c v pebibytes in bytes (multiplied by 1024^5).
-/// @since  x.y.z, 07.07.2020
+/// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_PiB( unsigned long long v)
 {
   return v * 1024_TiB;
@@ -83,7 +83,7 @@ constexpr std::size_t operator ""_PiB( unsigned long long v)
 ///
 /// @param[in]  v  The exbibyte value to return as bytes.
 /// @return  \c v exbibytes in bytes (multiplied by 1024^6).
-/// @since  x.y.z, 07.07.2020
+/// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_EiB( unsigned long long v)
 {
   return v * 1024_PiB;
