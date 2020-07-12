@@ -197,7 +197,48 @@ TypedArgBase* TypedArgBase::addFormatPos( int, IFormat* f)
    throw std::logic_error( "Variable '" + mVarName + "' does not store multiple"
       " values, use addFormat() without index paramater");
 
+   return nullptr;
 } // TypedArgBase::addFormatPos
+
+
+
+/// 
+/// @param[in]  f
+///    .
+/// @return
+///    .
+/// @since
+///    x.y.z, 18.02.2020
+TypedArgBase* TypedArgBase::addFormatKey( IFormat* f)
+{
+
+   delete f;
+
+   throw std::logic_error( "Variable '" + mVarName + "' does not support "
+      "different key/value formatters");
+
+   return nullptr;
+}
+
+
+
+/// 
+/// @param[in]  f
+///    .
+/// @return
+///    .
+/// @since
+///    x.y.z, 18.02.2020
+TypedArgBase* TypedArgBase::addFormatValue( IFormat* f)
+{
+
+   delete f;
+
+   throw std::logic_error( "Variable '" + mVarName + "' does not support "
+      "different key/value formatters");
+
+   return nullptr;
+}
 
 
 

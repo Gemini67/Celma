@@ -23,8 +23,7 @@
 /// - celma::common::endsWith()
 
 
-#ifndef CELMA_COMMON_STRING_UTIL_HPP
-#define CELMA_COMMON_STRING_UTIL_HPP
+#pragma once
 
 
 #include <string>
@@ -159,7 +158,7 @@ inline bool startsWith( const std::string& str, const std::string& starts,
 } // startsWith
 
 
-/// Returns if thje given string ends with the specified text.
+/// Returns if the given string ends with the specified text.
 ///
 /// @param[in]  str
 ///    The string to check the end of.
@@ -176,10 +175,25 @@ inline bool endsWith( const std::string& str, const std::string& end)
 } // endsWith
 
 
+/// Splits a string in two parts.
+///
+/// @param[in]  src
+///    The string to split.
+/// @param[in]  separator
+///    The character to use as separator to split the string.
+/// @return  A pair with the two substrings.
+/// @since  x.y.z, 13.02.2020
+inline auto split2( const std::string& src, char separator) -> decltype( auto)
+{
+   auto const  pos = src.find_first_of( separator);
+   if (pos == std::string::npos)
+      return std::pair< std::string, std::string>( "", "");
+   return std::pair< std::string, std::string>( src.substr( 0, pos),
+      src.substr( pos + 1));
+} // split2
+
+
 } // namespace celma::common
-
-
-#endif   // CELMA_COMMON_STRING_UTIL_HPP
 
 
 // =====  END OF string_util.hpp  =====

@@ -16,7 +16,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args/detail/container_adapter.hpp"
 
 
@@ -30,7 +30,7 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE ValueHandlerTest
+#define BOOST_TEST_MODULE ContainerAdapterTest
 #include <boost/test/unit_test.hpp>
 
 

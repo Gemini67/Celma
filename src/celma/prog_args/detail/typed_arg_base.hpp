@@ -241,11 +241,10 @@ public:
    /// @since  1.35.0, 09.02.2020
    void setValueUnit( const std::string& unit) noexcept( false);
 
-   /// 
-   /// @return
-   ///    .
-   /// @since
-   ///    1.35.0, 09.02.2020
+   /// Returns the specified value unit string.
+   ///
+   /// @return  The value unit string if specified, an empty string otherwise.
+   /// @since  1.35.0, 09.02.2020
    const std::string& valueUnit() const;
 
    /// Specifies that this argument is hidden.
@@ -347,6 +346,24 @@ public:
    /// @since  1.32.0, 25.04.2019
    virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false);
 
+   /// 
+   /// @param[in]  f
+   ///    .
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 18.02.2020
+   virtual TypedArgBase* addFormatKey( IFormat* f) noexcept( false);
+
+   /// 
+   /// @param[in]  f
+   ///    .
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 18.02.2020
+   virtual TypedArgBase* addFormatValue( IFormat* f) noexcept( false);
+
    /// Calls all formatter methods defined for this argument. The formatter
    /// methods should throw an exception when a formatting failed.
    ///
@@ -368,7 +385,7 @@ public:
    /// @throw
    ///    std::logic_error when called for an argument that does not accept
    ///    values.
-   ///    std::invalid_argument when the given object pointer is NULL.
+   /// @throw  std::invalid_argument when the given object pointer is NULL.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
 
@@ -380,13 +397,23 @@ public:
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
-   /// @param[in]  sep
-   ///    The character to use to split a list.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @param[in]  sep  The character to use to split a list. Ignored here.
+   /// @return  Never returns.
+   /// @throw  std::invalid_argument when called in this base class.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setListSep( char sep) noexcept( false);
+
+   /// Is overwritten by types that support key-value pairs.
+   /// Here: Throws.
+   ///
+   /// @param[in]  separators
+   ///    Specifies the separator(s) for pairs. Ignored here
+   /// @return  Never returns here.
+   /// @throw  std::invalid_argument when called in this base class.
+   /// @since   x.y.z, 13.02.2020
+   virtual TypedArgBase* setPairFormat( const std::string& separators)
+      noexcept( false);
 
    /// Special feature for destination variable type vector:<br>
    /// Clear the contents of the vector before assigning the value(s) from the
@@ -913,6 +940,14 @@ inline TypedArgBase* TypedArgBase::setListSep( char /* sep */)
    throw std::invalid_argument( "setting list separator not allowed for "
                                 "variable '" + mVarName + "'");
 } // TypedArgBase::setListSep
+
+
+inline TypedArgBase* TypedArgBase::setPairFormat( const std::string&)
+   noexcept( false)
+{
+   throw std::invalid_argument( "setting pair separator not allowed for "
+                                "variable '" + mVarName + "'");
+} // TypedArgBase::setPairFormat
 
 
 inline TypedArgBase* TypedArgBase::setClearBeforeAssign()

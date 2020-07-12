@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,6 +30,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/test/check_for.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
@@ -133,13 +134,11 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ms.size(), 6);
 
-      int  idx = 1;
-      for (auto const& value : ms)
+      CHECK_FOR (auto const& value : ms)
       {
-         BOOST_REQUIRE_EQUAL( value, idx);
-         ++idx;
+         BOOST_REQUIRE_EQUAL( value, counter);
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 7);
+      CHECK_FOR_COUNT( 6);
    } // end scope
 
    // now check with a custom list separator
@@ -155,13 +154,11 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ms.size(), 6);
 
-      int  idx = 1;
-      for (auto const& value : ms)
+      CHECK_FOR (auto const& value : ms)
       {
-         BOOST_REQUIRE_EQUAL( value, idx);
-         ++idx;
+         BOOST_REQUIRE_EQUAL( value, counter);
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 7);
+      CHECK_FOR_COUNT( 6);
    } // end scope
 
 } // test_list_sep
@@ -202,13 +199,11 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ms.size(), 6);
 
-      int  idx = 1;
-      for (auto const& value : ms)
+      CHECK_FOR (auto const& value : ms)
       {
-         BOOST_REQUIRE_EQUAL( value, idx);
-         ++idx;
+         BOOST_REQUIRE_EQUAL( value, counter);
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 7);
+      CHECK_FOR_COUNT( 6);
 
       BOOST_REQUIRE_EQUAL( free, 7);
    } // end scope
@@ -226,14 +221,11 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ms.size(), 8);
 
-
-      int  idx = 1;
-      for (auto const& value : ms)
+      CHECK_FOR (auto const& value : ms)
       {
-         BOOST_REQUIRE_EQUAL( value, idx);
-         ++idx;
+         BOOST_REQUIRE_EQUAL( value, counter);
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 9);
+      CHECK_FOR_COUNT( 8);
    } // end scope
 
    // accept multi-values, would want to add a free value, but flag is not set
@@ -267,13 +259,11 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ms.size(), 7);
 
-      int  idx = 1;
-      for (auto const& value : ms)
+      CHECK_FOR (auto const& value : ms)
       {
-         BOOST_REQUIRE_EQUAL( value, idx);
-         ++idx;
+         BOOST_REQUIRE_EQUAL( value, counter);
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 8);
+      CHECK_FOR_COUNT( 7);
 
       BOOST_REQUIRE_EQUAL( free, 8);
    } // end scope
@@ -300,13 +290,11 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ms.size(), 6);
 
-      int  idx = 1;
-      for (auto const& value : ms)
+      CHECK_FOR (auto const& value : ms)
       {
-         BOOST_REQUIRE_EQUAL( value, idx);
-         ++idx;
+         BOOST_REQUIRE_EQUAL( value, counter);
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 7);
+      CHECK_FOR_COUNT( 6);
    } // end scope
 
    // now the default values should be cleared
@@ -322,13 +310,11 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ms.size(), 2);
 
-      int  idx = 4;
-      for (auto const& value : ms)
+      CHECK_FOR (auto const& value : ms)
       {
-         BOOST_REQUIRE_EQUAL( value, idx);
-         ++idx;
+         BOOST_REQUIRE_EQUAL( value, counter + 3);
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 6);
+      CHECK_FOR_COUNT( 2);
    } // end scope
 
    // make sure that the previously added values are not deleted when the
@@ -345,13 +331,11 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ms.size(), 5);
 
-      int  idx = 4;
-      for (auto const& value : ms)
+      CHECK_FOR (auto const& value : ms)
       {
-         BOOST_REQUIRE_EQUAL( value, idx);
-         ++idx;
+         BOOST_REQUIRE_EQUAL( value, counter + 3);
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 9);
+      CHECK_FOR_COUNT( 5);
    } // end scope
 
    // set default values, make argument optional, vector should be empty when
@@ -392,19 +376,17 @@ BOOST_AUTO_TEST_CASE( format_values)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( ms.size(), 3);
 
-   int  idx = 0;
-   for (auto const& value : ms)
+   CHECK_FOR (auto const& value : ms)
    {
-      switch (idx)
+      switch (counter)
       {
-      case 0:   BOOST_REQUIRE_EQUAL( value, "monday");     break;
-      case 1:   BOOST_REQUIRE_EQUAL( value, "tuesday");    break;
-      case 2:   BOOST_REQUIRE_EQUAL( value, "wednesday");  break;
-      default:  BOOST_REQUIRE( idx < 3);                   break;
+      case 1:   BOOST_REQUIRE_EQUAL( value, "monday");     break;
+      case 2:   BOOST_REQUIRE_EQUAL( value, "tuesday");    break;
+      case 3:   BOOST_REQUIRE_EQUAL( value, "wednesday");  break;
+      default:  BOOST_REQUIRE( counter < 4);               break;
       } // end switch
-      ++idx;
    } // end for
-   BOOST_REQUIRE_EQUAL( idx, 3);
+   CHECK_FOR_COUNT( 3);
 
 } // format_values
 
@@ -568,5 +550,5 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
 
 
 
-// =====  END OF test_argh_dest_multiset_c.cpp  =====
+// =====  END OF test_argh_dest_multi_set_c.cpp  =====
 

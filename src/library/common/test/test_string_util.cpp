@@ -235,5 +235,48 @@ BOOST_AUTO_TEST_CASE( check_ends_with)
 
 
 
+/// Check the string split function.
+///
+/// @since  x.y.z, 13.02.2020
+BOOST_AUTO_TEST_CASE( split_string)
+{
+
+   using celma::common::split2;
+
+
+   // missing separator
+   {
+      auto  result = split2( "hello world", ':');
+
+      BOOST_REQUIRE( result.first.empty());
+      BOOST_REQUIRE( result.second.empty());
+   } // end scope
+
+   // separate
+   {
+      auto  result = split2( "hello world", ' ');
+
+      BOOST_REQUIRE( !result.first.empty());
+      BOOST_REQUIRE( !result.second.empty());
+
+      BOOST_REQUIRE_EQUAL( result.first, "hello");
+      BOOST_REQUIRE_EQUAL( result.second, "world");
+   } // end scope
+
+   // two consecutive separators, split at the first
+   {
+      auto  result = split2( "hello,,world", ',');
+
+      BOOST_REQUIRE( !result.first.empty());
+      BOOST_REQUIRE( !result.second.empty());
+
+      BOOST_REQUIRE_EQUAL( result.first, "hello");
+      BOOST_REQUIRE_EQUAL( result.second, ",world");
+   } // end scope
+
+} // split_string
+
+
+
 // =====  END OF test_string_util.cpp  =====
 

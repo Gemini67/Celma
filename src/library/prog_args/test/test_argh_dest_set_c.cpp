@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       } // end for
    } // end scope
 
-   // first check with the default list separator
+   // now check with a custom list separator
    {
       Handler         ah( 0);
       std::set< int>  s = { 1, 2, 3};
@@ -389,8 +389,8 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       } // end for
    } // end scope
 
-   // set default values, make argument optional, vector should be empty when
-   // argument is used with value(s)
+   // set default values, make argument optional, set should be empty when
+   // argument is used without value(s)
    {
       Handler         ah( 0);
       std::set< int>  s = { 1, 2, 3};

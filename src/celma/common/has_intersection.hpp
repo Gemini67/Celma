@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,13 @@
 /// See documentation of template functions celma::common::hasIntersection<>().
 
 
-#ifndef CELMA_COMMON_HAS_INTERSECTION_HPP
-#define CELMA_COMMON_HAS_INTERSECTION_HPP
+#pragma once
 
 
-namespace celma { namespace common {
+#include <unordered_map>
+
+
+namespace celma::common {
 
 
 /// Checks if two sequences intersect, i.e. if they both contain at least one
@@ -87,11 +89,79 @@ template< typename C1, typename C2>
 } // hasIntersection
 
 
-} // namespace common
-} // namespace celma
+/// Checks 2 unordered maps for intersection.
+///
+/// @tparam  K
+///    The key type of the unordered maps.
+/// @tparam  V
+///    The value type of the unordered maps.
+/// @param[in]  cont1
+///    The first container to check.
+/// @param[in]  cont2
+///    The second container to check.
+/// @return  \c true if the values in the two containers intersect.
+/// @since  x.y.z, 18.03.2020
+template< typename K, typename V>
+   bool hasIntersection( const std::unordered_map< K, V>& cont1,
+      const std::unordered_map< K, V>& cont2)
+{
+
+   using  ct = std::unordered_map< K, V>;
+
+   auto  check = []( const ct& c1, const ct& c2)
+      {
+         for (auto const& i1 : c1)
+         {
+            if (c2.find( i1.first) != c2.end())
+               return true;
+         } // end for
+         return false;
+      };
+
+   if (cont1.size() < cont2.size())
+      return check( cont1, cont2);
+
+   return check( cont2, cont1);
+} // hasIntersection
 
 
-#endif   // CELMA_COMMON_HAS_INTERSECTION_HPP
+/// Checks 2 unordered multi-maps for intersection.
+///
+/// @tparam  K
+///    The key type of the unordered multi-maps.
+/// @tparam  V
+///    The value type of the unordered multi-maps.
+/// @param[in]  cont1
+///    The first container to check.
+/// @param[in]  cont2
+///    The second container to check.
+/// @return  \c true if the values in the two containers intersect.
+/// @since  x.y.z, 12.07.2020
+template< typename K, typename V>
+   bool hasIntersection( const std::unordered_multimap< K, V>& cont1,
+      const std::unordered_multimap< K, V>& cont2)
+{
+
+   using  ct = std::unordered_multimap< K, V>;
+
+   auto  check = []( const ct& c1, const ct& c2)
+      {
+         for (auto const& i1 : c1)
+         {
+            if (c2.find( i1.first) != c2.end())
+               return true;
+         } // end for
+         return false;
+      };
+
+   if (cont1.size() < cont2.size())
+      return check( cont1, cont2);
+
+   return check( cont2, cont1);
+} // hasIntersection
+
+
+} // namespace celma::common
 
 
 // =====  END OF has_intersection.hpp  =====

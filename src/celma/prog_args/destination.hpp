@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -47,6 +47,7 @@
 #include "celma/common/range_dest.hpp"
 #include "celma/prog_args/detail/arg_handler_callable.hpp"
 #include "celma/prog_args/detail/container_adapter.hpp"
+#include "celma/prog_args/detail/key_value_container_adapter.hpp"
 #include "celma/prog_args/detail/typed_arg_callable.hpp"
 #include "celma/prog_args/detail/typed_arg_callable_value.hpp"
 #include "celma/prog_args/detail/typed_arg.hpp"
@@ -72,7 +73,8 @@ namespace celma { namespace prog_args {
 /// @return  The typed arg object for the type of the \a dest_var.
 /// @since  0.16.0, 09.11.2017
 template< typename T>
-   typename std::enable_if< !detail::ContainerAdapter< T>::HasAdapter,
+   typename std::enable_if< !detail::ContainerAdapter< T>::HasAdapter
+      && !detail::KeyValueContainerAdapter< T>::HasAdapter,
       detail::TypedArgBase*>::type
    destination( T& dest_var, const std::string vname)
 {
@@ -124,6 +126,31 @@ template< typename T>
 {
    return new detail::TypedArg< detail::ContainerAdapter< T>>(
      detail::ContainerAdapter< T>( dest_cont), cname);
+} // destination
+
+
+/// Returns the typed argument object corresponding to the type of the
+/// destination variable.
+/// This overload handles the case when the destination variable is a
+/// key-value pair container.<br>
+/// Additional precaution was taken to make sure that this overload is only
+/// chosen for supported container types.
+/// 
+/// @tparam  T  The type of the destination variable, container of something.
+/// @param[in]  dest_cont
+///    The destination variable/container, in which the values from the command
+///    line should be stored.
+/// @param[in]  cname
+///    The name of the variable/container.
+/// @return  The typed arg object for the type of the \a dest_cont.
+/// @since  x.y.z, 16.02.2020
+template< typename T>
+   typename std::enable_if< detail::KeyValueContainerAdapter< T>::HasAdapter,
+      detail::TypedArgBase*>::type
+   destination( T& dest_cont, const std::string cname)
+{
+   return new detail::TypedArg< detail::KeyValueContainerAdapter< T>>(
+     detail::KeyValueContainerAdapter< T>( dest_cont), cname);
 } // destination
 
 
