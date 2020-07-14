@@ -92,6 +92,7 @@ BOOST_AUTO_TEST_CASE( test_one)
    BOOST_REQUIRE( dbs.test( 2));
    BOOST_REQUIRE( dbs[ 2]);
    BOOST_REQUIRE_THROW( dbs.test( 6), std::out_of_range);
+   BOOST_REQUIRE_EQUAL( dbs.to_string(), "00100");
 
    auto const copy = dbs;
    BOOST_REQUIRE( copy == dbs);
@@ -131,6 +132,7 @@ BOOST_AUTO_TEST_CASE( set_flip)
    BOOST_REQUIRE( dbs[ 3]);
    BOOST_REQUIRE( dbs[ 7]);
    BOOST_REQUIRE( dbs[ 9]);
+   BOOST_REQUIRE_EQUAL( dbs.to_string(), "001010101010");
 
    auto const copy( ~dbs);
    dbs.flip();

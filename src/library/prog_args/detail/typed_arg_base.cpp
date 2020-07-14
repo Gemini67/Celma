@@ -197,7 +197,46 @@ TypedArgBase* TypedArgBase::addFormatPos( int, IFormat* f)
    throw std::logic_error( "Variable '" + mVarName + "' does not store multiple"
       " values, use addFormat() without index paramater");
 
+   return nullptr;
 } // TypedArgBase::addFormatPos
+
+
+
+/// Defines a formatter for the key of containers with key-value pairs.
+///
+/// @param[in]  f  Ignored here.
+/// @return  Never in this base class.
+/// @throw  std::logic_error when executed in the base class.
+/// @since  1.41.0, 18.02.2020
+TypedArgBase* TypedArgBase::addFormatKey( IFormat* f)
+{
+
+   delete f;
+
+   throw std::logic_error( "Variable '" + mVarName + "' does not support "
+      "different key/value formatters");
+
+   return nullptr;
+} // TypedArgBase::addFormatKey
+
+
+
+/// Defines a formatter for the values of containers with key-value pairs.
+/// 
+/// @param[in]  f  Ignored here.
+/// @return  Never in this base class.
+/// @throw  std::logic_error when executed in the base class.
+/// @since  1.41.0, 18.02.2020
+TypedArgBase* TypedArgBase::addFormatValue( IFormat* f)
+{
+
+   delete f;
+
+   throw std::logic_error( "Variable '" + mVarName + "' does not support "
+      "different key/value formatters");
+
+   return nullptr;
+}
 
 
 

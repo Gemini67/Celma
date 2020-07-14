@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -160,7 +160,10 @@ public:
       optional_int(),
       optional_bool(),
       value_filter(),
-      tuple_dest()
+      tuple_dest(),
+      map(),
+      db( 10),
+      vb()
    {
 
       ah.addArgument( "i,integer", DEST_VAR( int1), "numerical");
@@ -192,6 +195,9 @@ public:
       ah.addArgument( "c,c-array", DEST_VAR( my_c_array), "C array of ints");
       ah.addArgument( "a,array", DEST_VAR( my_array), "array of ints");
       ah.addArgument( "value-filter", DEST_VAR( value_filter), "value filters");
+      ah.addArgument( "m,map", DEST_VAR( map), "map");
+      ah.addArgument( "y,dynamic-bitset", DEST_VAR( db), "dynamic bitset");
+      ah.addArgument( "x,vector-bool", DEST_VAR( vb), "boolean vector");
 
       tcb.addVoidMember( ah);
       tcb.addValueMember( ah);
@@ -201,7 +207,7 @@ public:
          "--void-method --value-method another_value -t 28,unbelievable,12.75 "
          "--void-member --value-member=last_value -vv --pair juhu -o 0 "
          "--opt-bool -c 9,19,29 -a 5,4,3 --value-filter 42,4711 -s 13.24.4711 2 "
-         "--stack goodbye+and+hello",
+         "--stack goodbye+and+hello --map 1,one;2,two -y 2,4,6,8 -x 1,3,5",
          nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // AllTypesFixture::AllTypesFixture
@@ -228,6 +234,10 @@ public:
    celma::common::ValueFilter< int>   value_filter;
 
    std::tuple< int, std::string, double>  tuple_dest;
+
+   std::map< int, std::string>        map;
+   celma::container::DynamicBitset    db;
+   std::vector< bool>                 vb;
 
 }; // AllTypesFixture
 
@@ -335,6 +345,9 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types, AllTypesFixture)
       "   Value <9, 19, 29> set on variable 'my_c_array'.\n"
       "   Value <5, 4, 3> set on variable 'my_array'.\n"
       "   Value <42,4711> set on variable 'value_filter'.\n"
+      "   Value <{ 1, \"one\"}, { 2, \"two\"}> set on variable 'map'.\n"
+      "   Value <0101010100> set on variable 'db'.\n"
+      "   Value <0000101010> set on variable 'vb'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -486,6 +499,9 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_type,
       "   Value <9, 19, 29 [int[3]]> set on variable 'my_c_array'.\n"
       "   Value <5, 4, 3 [std::array<int,3>]> set on variable 'my_array'.\n"
       "   Value <42,4711 [celma::common::ValueFilter<int>]> set on variable 'value_filter'.\n"
+      "   Value <{ 1, \"one\"}, { 2, \"two\"} [std::map<int,std::string>]> set on variable 'map'.\n"
+      "   Value <0101010100 [celma::container::DynamicBitset]> set on variable 'db'.\n"
+      "   Value <0000101010 [std::vector<bool>]> set on variable 'vb'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member'.\n"
    ));
@@ -638,6 +654,9 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_with_key,
       "   Value <9, 19, 29> set on variable 'my_c_array' by argument '-c,--c-array'.\n"
       "   Value <5, 4, 3> set on variable 'my_array' by argument '-a,--array'.\n"
       "   Value <42,4711> set on variable 'value_filter' by argument '--value-filter'.\n"
+      "   Value <{ 1, \"one\"}, { 2, \"two\"}> set on variable 'map' by argument '-m,--map'.\n"
+      "   Value <0101010100> set on variable 'db' by argument '-y,--dynamic-bitset'.\n"
+      "   Value <0000101010> set on variable 'vb' by argument '-x,--vector-bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));
@@ -788,6 +807,9 @@ BOOST_FIXTURE_TEST_CASE( summary_with_all_destination_types_full,
       "   Value <9, 19, 29 [int[3]]> set on variable 'my_c_array' by argument '-c,--c-array'.\n"
       "   Value <5, 4, 3 [std::array<int,3>]> set on variable 'my_array' by argument '-a,--array'.\n"
       "   Value <42,4711 [celma::common::ValueFilter<int>]> set on variable 'value_filter' by argument '--value-filter'.\n"
+      "   Value <{ 1, \"one\"}, { 2, \"two\"} [std::map<int,std::string>]> set on variable 'map' by argument '-m,--map'.\n"
+      "   Value <0101010100 [celma::container::DynamicBitset]> set on variable 'db' by argument '-y,--dynamic-bitset'.\n"
+      "   Value <0000101010 [std::vector<bool>]> set on variable 'vb' by argument '-x,--vector-bool'.\n"
       "   Value <[callable]> set on variable 'TestCallbacks::void_member' by argument '--void-member'.\n"
       "   Value <[callable(value)]> set on variable 'TestCallbacks::value_member' by argument '--value-member'.\n"
    ));
@@ -875,3 +897,4 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
 
 
 // =====  END OF test_argh_summary_c.cpp  =====
+

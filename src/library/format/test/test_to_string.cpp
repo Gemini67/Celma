@@ -394,6 +394,22 @@ BOOST_AUTO_TEST_CASE( vector_bool_to_string)
       BOOST_REQUIRE_EQUAL( str, "00000000100000000001");
    } // end scope
 
+   // two bits set
+   {
+      std::vector< bool>  vb;
+
+      vb.resize( 10);
+
+      vb[ 1] = true;
+      vb[ 3] = true;
+      vb[ 5] = true;
+      vb[ 7] = true;
+
+      const auto  str( toString( vb));
+
+      BOOST_REQUIRE_EQUAL( str, "0010101010");
+   } // end scope
+
    // all bits set
    {
       std::vector< bool>  vb;
@@ -449,6 +465,20 @@ BOOST_AUTO_TEST_CASE( dynamic_bitset_to_string)
       const auto  str( toString( dbs));
 
       BOOST_REQUIRE_EQUAL( str, "100000000001");
+   } // end scope
+
+   // more bits set
+   {
+      DynamicBitset  dbs( 10);
+
+      dbs[ 2] = true;
+      dbs[ 4] = true;
+      dbs[ 6] = true;
+      dbs[ 8] = true;
+
+      const auto  str( toString( dbs));
+
+      BOOST_REQUIRE_EQUAL( str, "0101010100");
    } // end scope
 
    // all bits set

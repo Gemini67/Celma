@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -305,6 +305,40 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( int_val), "integer")
          ->checkOriginalValue( false), logic_error);
+   } // end scope
+
+   // ensure that calling "add key formatter" on a wrong type throws.
+   {
+      Handler  ah( 0);
+      bool     flag = false;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
+         ->addFormatKey( celma::prog_args::lowercase()),
+         std::logic_error);
+   } // end scope
+   {
+      Handler  ah( 0);
+      bool     flag = false;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
+         ->addFormatValue( celma::prog_args::lowercase()),
+         std::logic_error);
+   } // end scope
+   {
+      Handler            ah( 0);
+      std::vector< int>  ints;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( ints), "integers")
+         ->addFormatKey( celma::prog_args::lowercase()),
+         std::logic_error);
+   } // end scope
+   {
+      Handler  ah( 0);
+      std::vector< int>  ints;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( ints), "integers")
+         ->addFormatValue( celma::prog_args::lowercase()),
+         std::logic_error);
    } // end scope
 
 } // argument_setup_errors

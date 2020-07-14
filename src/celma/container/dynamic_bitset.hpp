@@ -15,8 +15,7 @@
 /// See documentation of class celma::container::DynamicBitset.
 
 
-#ifndef CELMA_CONTAINER_DYNAMIC_BITSET_HPP
-#define CELMA_CONTAINER_DYNAMIC_BITSET_HPP
+#pragma once
 
 
 #include <bitset>
@@ -445,7 +444,7 @@ template< typename T> std::string DynamicBitset::to_string( T zero, T one) const
    for (size_t idx = 0; idx < mData.size(); ++idx)
    {
       if (mData[ idx])
-         result[ idx] = one;
+         result[ mData.size() - idx - 1] = one;
    } // end for
    return result;
 } // DynamicBitset::to_string
@@ -536,9 +535,6 @@ public:
 
 
 } // namespace celma
-
-
-#endif   // CELMA_CONTAINER_DYNAMIC_BITSET_HPP
 
 
 // =====  END OF dynamic_bitset.hpp  =====
