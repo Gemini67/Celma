@@ -1192,7 +1192,7 @@ template< typename T>
 /// container, wrapped in a detail::KeyValueContainerAdapter<>.
 ///
 /// @tparam  T  The type of the key-value-pair container.
-/// @since  x.y.z, 09.02.2020
+/// @since  1.41.0, 09.02.2020
 template< typename T>
    class TypedArg< KeyValueContainerAdapter< T>>: public TypedArgBase
 {
@@ -1206,12 +1206,12 @@ public:
    ///    The destination variable to store the values in.
    /// @param[in]  vname
    ///    The name of the destination variable to store the value in.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    TypedArg( dest_type_t dest, const std::string& vname);
 
    /// Empty, virtual default destructor.
    ///
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    ~TypedArg() override = default;
 
    /// By default, the value mode for containers is set to "required". Here it
@@ -1233,21 +1233,21 @@ public:
    /// @throw
    ///    std::logic_error if the value mode is not "optional", or "clear before
    ///    assign" is not set.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
 
    /// Returns the name of the type of the destination variable (container of
    /// something).
    ///
    /// @return  The name of the type of the destination variable/container.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    const std::string varTypeName() const override;
 
    /// Returns if the destination has (at least) one value set.
    ///
    /// @return
    ///    \c true if the destination variable contains (at least) one value.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    bool hasValue() const override;
 
    /// Prints the current value of the destination variable.
@@ -1259,13 +1259,13 @@ public:
    /// @param[in]  print_type
    ///    Specifies if the type of the destination variable should be printed
    ///    too.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    void printValue( std::ostream& os, bool print_type) const override;
 
    /// Overloads TypedArgBase::setTakesMultiValue().
    ///
    /// @return  Pointer to this object.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    TypedArgBase* setTakesMultiValue() override;
 
    /// Specifies the list separator character to use for splitting lists of
@@ -1277,7 +1277,7 @@ public:
    /// @throw
    ///    std::invalid_argument if the given list separator is already set as
    ///    part of the pair separator string.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    TypedArgBase* setListSep( char sep) noexcept( false) override;
 
    /// Allows to set the separators to use to split key-value-pair.
@@ -1301,7 +1301,7 @@ public:
    /// @throw
    ///    std::invalid_argument if the pair separator string contains the list
    ///    separator character.
-   /// @since  x.y.z, 13.02.2020
+   /// @since  1.41.0, 13.02.2020
    TypedArgBase* setPairFormat( const std::string& separators) noexcept( false)
       override;
 
@@ -1318,7 +1318,7 @@ public:
    /// @throw
    ///    std::logic_error if the destination container type does not support
    ///    clearing.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    TypedArgBase* setClearBeforeAssign() noexcept( false) override;
 
    /// Key-value-pair containers either support duplicate key values like
@@ -1332,7 +1332,7 @@ public:
    ///    Set this flag if duplicate key values should be treated as errors,
    ///    otherwise they will be silently discarded.
    /// @return  This object.
-   /// @since  x.y.z, 20.02.2020
+   /// @since  1.41.0, 20.02.2020
    TypedArgBase* setUniqueData( bool duplicates_are_errors) override;
 
    /// Special method for key-value pair container: Set the formatter to use
@@ -1340,7 +1340,7 @@ public:
    ///
    /// @param[in]  f  Pointer to the formatter function to use for the key.
    /// @return   This object.
-   /// @since  x.y.z, 18.02.2020
+   /// @since  1.41.0, 18.02.2020
    TypedArgBase* addFormatKey( IFormat* f) override;
 
    /// Special method for key-value pair container: Set the formatter to use
@@ -1348,14 +1348,14 @@ public:
    ///
    /// @param[in]  f  Pointer to the formatter function to use for the value.
    /// @return   This object.
-   /// @since  x.y.z, 18.02.2020
+   /// @since  1.41.0, 18.02.2020
    TypedArgBase* addFormatValue( IFormat* f) override;
 
 protected:
    /// Used for printing an argument and its destination variable.
    ///
    /// @param[out]  os  The stream to print to.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    void dump( std::ostream& os) const override;
 
    /// Stores the value in the destination variable.
@@ -1364,14 +1364,14 @@ protected:
    /// @param[in]  inverted
    ///    Set when the argument supports inversion and when the argument was 
    ///    preceeded by an exclamation mark.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    void assign( const std::string& value, bool inverted) override;
 
    /// Returns if this object/container and the other container intersect, i.e.
    /// have at least one element in common.
    ///
    /// @return  \c true if the values in the two containers intersect.
-   /// @since  x.y.z, 09.02.2020
+   /// @since  1.41.0, 09.02.2020
    bool hasIntersection( TypedArgBase* arg) const noexcept( false) override;
 
 private:

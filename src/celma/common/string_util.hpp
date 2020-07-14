@@ -182,7 +182,7 @@ inline bool endsWith( const std::string& str, const std::string& end)
 /// @param[in]  separator
 ///    The character to use as separator to split the string.
 /// @return  A pair with the two substrings.
-/// @since  x.y.z, 13.02.2020
+/// @since  1.41.0, 13.02.2020
 inline auto split2( const std::string& src, char separator) -> decltype( auto)
 {
    auto const  pos = src.find_first_of( separator);

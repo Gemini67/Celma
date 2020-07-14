@@ -346,22 +346,20 @@ public:
    /// @since  1.32.0, 25.04.2019
    virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false);
 
-   /// 
-   /// @param[in]  f
-   ///    .
-   /// @return
-   ///    .
-   /// @since
-   ///    x.y.z, 18.02.2020
+   /// Defines a formatter for the key of containers with key-value pairs.
+   ///
+   /// @param[in]  f  Ignored here.
+   /// @return  Never in this base class.
+   /// @throw  std::logic_error when executed in the base class.
+   /// @since  1.41.0, 18.02.2020
    virtual TypedArgBase* addFormatKey( IFormat* f) noexcept( false);
 
+   /// Defines a formatter for the values of containers with key-value pairs.
    /// 
-   /// @param[in]  f
-   ///    .
-   /// @return
-   ///    .
-   /// @since
-   ///    x.y.z, 18.02.2020
+   /// @param[in]  f  Ignored here.
+   /// @return  Never in this base class.
+   /// @throw  std::logic_error when executed in the base class.
+   /// @since  1.41.0, 18.02.2020
    virtual TypedArgBase* addFormatValue( IFormat* f) noexcept( false);
 
    /// Calls all formatter methods defined for this argument. The formatter
@@ -411,7 +409,7 @@ public:
    ///    Specifies the separator(s) for pairs. Ignored here
    /// @return  Never returns here.
    /// @throw  std::invalid_argument when called in this base class.
-   /// @since   x.y.z, 13.02.2020
+   /// @since   1.41.0, 13.02.2020
    virtual TypedArgBase* setPairFormat( const std::string& separators)
       noexcept( false);
 

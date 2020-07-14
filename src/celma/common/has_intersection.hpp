@@ -100,7 +100,7 @@ template< typename C1, typename C2>
 /// @param[in]  cont2
 ///    The second container to check.
 /// @return  \c true if the values in the two containers intersect.
-/// @since  x.y.z, 18.03.2020
+/// @since  1.41.0, 18.03.2020
 template< typename K, typename V>
    bool hasIntersection( const std::unordered_map< K, V>& cont1,
       const std::unordered_map< K, V>& cont2)
@@ -136,7 +136,7 @@ template< typename K, typename V>
 /// @param[in]  cont2
 ///    The second container to check.
 /// @return  \c true if the values in the two containers intersect.
-/// @since  x.y.z, 12.07.2020
+/// @since  1.41.0, 12.07.2020
 template< typename K, typename V>
    bool hasIntersection( const std::unordered_multimap< K, V>& cont1,
       const std::unordered_multimap< K, V>& cont2)

@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE( check_ends_with)
 
 /// Check the string split function.
 ///
-/// @since  x.y.z, 13.02.2020
+/// @since  1.41.0, 13.02.2020
 BOOST_AUTO_TEST_CASE( split_string)
 {
 

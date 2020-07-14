@@ -38,7 +38,7 @@ namespace celma::prog_args::detail {
 ///
 /// @tparam  T
 ///    Type for this no container adapter is provided, e.g. std::string.
-/// @since  x.y.z, 09.02.2020
+/// @since  1.41.0, 09.02.2020
 template< typename T> class KeyValueContainerAdapter final
 {
 public:
@@ -62,7 +62,7 @@ public:
 ///    The type of the keys used by the map.
 /// @tparam  V
 ///    The type of the values stored in the map.
-/// @since  x.y.z, 07.01.2020
+/// @since  1.41.0, 07.01.2020
 template< typename K, typename V>
    class KeyValueContainerAdapter< std::map< K, V>> final:
       AdapterBase< std::map< K, V>>
@@ -96,7 +96,7 @@ public:
    /// Constructor.
    ///
    /// @param[in]  dest  The destination container.
-   /// @since  x.y.z, 07.01.2020
+   /// @since  1.41.0, 07.01.2020
    explicit KeyValueContainerAdapter( container_type_t& dest):
       AdapterBase< container_type_t>( dest)
    {
@@ -113,7 +113,7 @@ public:
    ///
    /// @param[in]  key    The key of the value to store.
    /// @param[in]  value  The value to store.
-   /// @since  x.y.z, 07.01.2020
+   /// @since  1.41.0, 07.01.2020
    void addValue( const K& key, const V& value)
    {
       mDestCont.insert( { key, value});
@@ -121,7 +121,7 @@ public:
 
    /// Clears the destination container.
    ///
-   /// @since  x.y.z, 07.01.2020
+   /// @since  1.41.0, 07.01.2020
    void clear()
    {
       mDestCont.clear();
@@ -131,7 +131,7 @@ public:
    ///
    /// @param[in]  key  The key to search in the container.
    /// @return  \c true if the key was found.
-   /// @since  x.y.z, 07.01.2020
+   /// @since  1.41.0, 07.01.2020
    bool contains( const K& key) const
    {
       return common::contains( mDestCont, key);
@@ -144,7 +144,7 @@ public:
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
-   /// @since  x.y.z, 16.02.2020
+   /// @since  1.41.0, 16.02.2020
    bool hasIntersection( const KeyValueContainerAdapter& other) const
    {
       return common::hasIntersection( mDestCont, other.mDestCont);
@@ -152,7 +152,7 @@ public:
 
    /// Sorts the values in the container.
    ///
-   /// @since  x.y.z, 07.01.2020
+   /// @since  1.41.0, 07.01.2020
    void sort() noexcept( false)
    {
       throw std::logic_error( "sort() is not necessary for maps");
@@ -161,7 +161,7 @@ public:
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the values from the container.
-   /// @since  x.y.z, 07.01.2020
+   /// @since  1.41.0, 07.01.2020
    std::string toString() const
    {
       return format::toString( mDestCont.begin(), mDestCont.end());
@@ -186,7 +186,7 @@ public:
 ///    The type of the keys used by the multi-map.
 /// @tparam  V
 ///    The type of the values stored in the multi-map.
-/// @since  x.y.z, 15.03.2020
+/// @since  1.41.0, 15.03.2020
 template< typename K, typename V>
    class KeyValueContainerAdapter< std::multimap< K, V>> final:
       AdapterBase< std::multimap< K, V>>
@@ -220,7 +220,7 @@ public:
    /// Constructor.
    ///
    /// @param[in]  dest  The destination container.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    explicit KeyValueContainerAdapter( container_type_t& dest):
       AdapterBase< container_type_t>( dest)
    {
@@ -237,7 +237,7 @@ public:
    ///
    /// @param[in]  key    The key of the value to store.
    /// @param[in]  value  The value to store.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void addValue( const K& key, const V& value)
    {
       mDestCont.insert( { key, value});
@@ -245,7 +245,7 @@ public:
 
    /// Clears the destination container.
    ///
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void clear()
    {
       mDestCont.clear();
@@ -255,7 +255,7 @@ public:
    ///
    /// @param[in]  key  The key to search in the container.
    /// @return  \c true if the key was found.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    bool contains( const K& key) const
    {
       return common::contains( mDestCont, key);
@@ -268,7 +268,7 @@ public:
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    bool hasIntersection( const KeyValueContainerAdapter& other) const
    {
       return common::hasIntersection( mDestCont, other.mDestCont);
@@ -276,7 +276,7 @@ public:
 
    /// Sorts the values in the container.
    ///
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void sort() noexcept( false)
    {
       throw std::logic_error( "sort() is not necessary for multi-maps");
@@ -285,7 +285,7 @@ public:
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the values from the container.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    std::string toString() const
    {
       return format::toString( mDestCont.begin(), mDestCont.end());
@@ -310,7 +310,7 @@ public:
 ///    The type of the keys used by the unordered map.
 /// @tparam  V
 ///    The type of the values stored in the unordered map.
-/// @since  x.y.z, 15.03.2020
+/// @since  1.41.0, 15.03.2020
 template< typename K, typename V>
    class KeyValueContainerAdapter< std::unordered_map< K, V>> final:
       AdapterBase< std::unordered_map< K, V>>
@@ -344,7 +344,7 @@ public:
    /// Constructor.
    ///
    /// @param[in]  dest  The destination container.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    explicit KeyValueContainerAdapter( container_type_t& dest):
       AdapterBase< container_type_t>( dest)
    {
@@ -361,7 +361,7 @@ public:
    ///
    /// @param[in]  key    The key of the value to store.
    /// @param[in]  value  The value to store.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void addValue( const K& key, const V& value)
    {
       mDestCont.insert( { key, value});
@@ -369,7 +369,7 @@ public:
 
    /// Clears the destination container.
    ///
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void clear()
    {
       mDestCont.clear();
@@ -379,7 +379,7 @@ public:
    ///
    /// @param[in]  key  The key to search in the container.
    /// @return  \c true if the key was found.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    bool contains( const K& key) const
    {
       return common::contains( mDestCont, key);
@@ -392,7 +392,7 @@ public:
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    bool hasIntersection( const KeyValueContainerAdapter& other) const
    {
       return common::hasIntersection( mDestCont, other.mDestCont);
@@ -400,7 +400,7 @@ public:
 
    /// Sorts the values in the container.
    ///
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void sort() noexcept( false)
    {
       throw std::logic_error( "sort() is not possible for unordered maps");
@@ -409,7 +409,7 @@ public:
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the values from the container.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    std::string toString() const
    {
       return format::toString( mDestCont.begin(), mDestCont.end());
@@ -434,7 +434,7 @@ public:
 ///    The type of the keys used by the unordered multi-map.
 /// @tparam  V
 ///    The type of the values stored in the unordered multi-map.
-/// @since  x.y.z, 15.03.2020
+/// @since  1.41.0, 15.03.2020
 template< typename K, typename V>
    class KeyValueContainerAdapter< std::unordered_multimap< K, V>> final:
       AdapterBase< std::unordered_multimap< K, V>>
@@ -468,7 +468,7 @@ public:
    /// Constructor.
    ///
    /// @param[in]  dest  The destination container.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    explicit KeyValueContainerAdapter( container_type_t& dest):
       AdapterBase< container_type_t>( dest)
    {
@@ -485,7 +485,7 @@ public:
    ///
    /// @param[in]  key    The key of the value to store.
    /// @param[in]  value  The value to store.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void addValue( const K& key, const V& value)
    {
       mDestCont.insert( { key, value});
@@ -493,7 +493,7 @@ public:
 
    /// Clears the destination container.
    ///
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void clear()
    {
       mDestCont.clear();
@@ -503,7 +503,7 @@ public:
    ///
    /// @param[in]  key  The key to search in the container.
    /// @return  \c true if the key was found.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    bool contains( const K& key) const
    {
       return common::contains( mDestCont, key);
@@ -516,7 +516,7 @@ public:
    /// @return
    ///    \c true if the data in this and the other object/containers intersect,
    ///    i.e. at least one value exists in both.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    bool hasIntersection( const KeyValueContainerAdapter& other) const
    {
       return common::hasIntersection( mDestCont, other.mDestCont);
@@ -524,7 +524,7 @@ public:
 
    /// Sorts the values in the container.
    ///
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    void sort() noexcept( false)
    {
       throw std::logic_error( "sort() is not possible for unordered maps");
@@ -533,7 +533,7 @@ public:
    /// Returns a string with the values from the container.
    ///
    /// @return  String with the values from the container.
-   /// @since  x.y.z, 15.03.2020
+   /// @since  1.41.0, 15.03.2020
    std::string toString() const
    {
       return format::toString( mDestCont.begin(), mDestCont.end());

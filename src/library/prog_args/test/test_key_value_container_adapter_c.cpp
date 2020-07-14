@@ -51,7 +51,7 @@ namespace {
 /// type.
 ///
 /// @return  \c true if all tests passed successfully.
-/// @since  x.y.z, 15.02.2020
+/// @since  1.41.0, 15.02.2020
 template< template< typename, typename> class C> bool checkContAdapt()
 {
 
@@ -87,7 +87,7 @@ template< template< typename, typename> class C> bool checkContAdapt()
 /// Verify that key-value container adapter exist only for those types that
 /// should be supported.
 ///
-/// @since  x.y.z, 15.02.2020
+/// @since  1.41.0, 15.02.2020
 BOOST_AUTO_TEST_CASE( no_adapter)
 {
 
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE( no_adapter)
 /// Check the features of the container adapter for maps.
 /// Also test that the values are stored in the destination map.
 ///
-/// @since  x.y.z, 15.02.2020
+/// @since  1.41.0, 15.02.2020
 BOOST_AUTO_TEST_CASE( map_adapter)
 {
 
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE( map_adapter)
 /// Check the features of the container adapter for multi-maps.
 /// Also test that the values are stored in the destination map.
 ///
-/// @since  x.y.z, 15.03.2020
+/// @since  1.41.0, 15.03.2020
 BOOST_AUTO_TEST_CASE( multi_map_adapter)
 {
 
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE( multi_map_adapter)
 /// Check the features of the container adapter for unordered maps.
 /// Also test that the values are stored in the destination map.
 ///
-/// @since  x.y.z, 18.03.2020
+/// @since  1.41.0, 18.03.2020
 BOOST_AUTO_TEST_CASE( unordered_map_adapter)
 {
 
@@ -306,7 +306,7 @@ BOOST_AUTO_TEST_CASE( unordered_map_adapter)
 /// Check the features of the container adapter for unordered multi-maps.
 /// Also test that the values are stored in the destination map.
 ///
-/// @since  x.y.z, 18.03.2020
+/// @since  1.41.0, 18.03.2020
 BOOST_AUTO_TEST_CASE( unordered_multi_map_adapter)
 {
 
@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE( unordered_multi_map_adapter)
 
 /// Test the key-value container adapter with a template.
 ///
-/// @since  x.y.z, 15.02.2020
+/// @since  1.41.0, 15.02.2020
 BOOST_AUTO_TEST_CASE( template_test)
 {
 

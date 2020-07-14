@@ -143,7 +143,7 @@ template< typename T>
 /// @param[in]  cname
 ///    The name of the variable/container.
 /// @return  The typed arg object for the type of the \a dest_cont.
-/// @since  x.y.z, 16.02.2020
+/// @since  1.41.0, 16.02.2020
 template< typename T>
    typename std::enable_if< detail::KeyValueContainerAdapter< T>::HasAdapter,
       detail::TypedArgBase*>::type

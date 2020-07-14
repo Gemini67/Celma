@@ -202,13 +202,12 @@ TypedArgBase* TypedArgBase::addFormatPos( int, IFormat* f)
 
 
 
-/// 
-/// @param[in]  f
-///    .
-/// @return
-///    .
-/// @since
-///    x.y.z, 18.02.2020
+/// Defines a formatter for the key of containers with key-value pairs.
+///
+/// @param[in]  f  Ignored here.
+/// @return  Never in this base class.
+/// @throw  std::logic_error when executed in the base class.
+/// @since  1.41.0, 18.02.2020
 TypedArgBase* TypedArgBase::addFormatKey( IFormat* f)
 {
 
@@ -218,17 +217,16 @@ TypedArgBase* TypedArgBase::addFormatKey( IFormat* f)
       "different key/value formatters");
 
    return nullptr;
-}
+} // TypedArgBase::addFormatKey
 
 
 
+/// Defines a formatter for the values of containers with key-value pairs.
 /// 
-/// @param[in]  f
-///    .
-/// @return
-///    .
-/// @since
-///    x.y.z, 18.02.2020
+/// @param[in]  f  Ignored here.
+/// @return  Never in this base class.
+/// @throw  std::logic_error when executed in the base class.
+/// @since  1.41.0, 18.02.2020
 TypedArgBase* TypedArgBase::addFormatValue( IFormat* f)
 {
 
