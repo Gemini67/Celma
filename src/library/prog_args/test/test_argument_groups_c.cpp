@@ -568,7 +568,7 @@ BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
          "\n"));
 
       // singleton Groups: have to clean up
-      Groups::instance().removeAllArgHandler();
+      Groups::reset();
    } // end scope
 
    // usage with a pre-argument list text
@@ -627,7 +627,7 @@ BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
          "\n"));
 
       // singleton Groups: have to clean up
-      Groups::instance().removeAllArgHandler();
+      Groups::reset();
    } // end scope
 
    // usage with a post-argument list text
@@ -686,7 +686,7 @@ BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
          "\n"));
 
       // singleton Groups: have to clean up
-      Groups::instance().removeAllArgHandler();
+      Groups::reset();
    } // end scope
 
    // and finally a usage with a pre- and post-argument list text
@@ -746,6 +746,9 @@ BOOST_FIXTURE_TEST_CASE( usage, GroupsCleanupFixture)
          "And now this even more interesting and meaningful text that will be printed\n"
          "after the list of arguments.\n"
          "\n"));
+
+      // singleton Groups: have to clean up
+      Groups::reset();
    } // end scope
 
 } // usage

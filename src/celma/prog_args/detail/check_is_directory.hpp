@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -39,7 +39,7 @@ public:
    CheckIsDirectory();
 
    /// Default destructor is fine.
-   virtual ~CheckIsDirectory() = default;
+   ~CheckIsDirectory() override = default;
 
    /// Checks if the value in \a val contains the (path and) name of an existing
    /// directory.

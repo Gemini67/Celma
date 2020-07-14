@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -63,6 +63,18 @@ public:
    /// @param[in]  other  The other object to copy the data from.
    /// @since  1.3.0, 16.05.2017
    StreamLineIterator( const StreamLineIterator& other) noexcept( false);
+
+   // default move-constructor is fine
+   StreamLineIterator( StreamLineIterator&&) = default;
+
+   // default destructor is fine
+   virtual ~StreamLineIterator() = default;
+
+   // copy-assignment is not allowed
+   StreamLineIterator& operator =( const StreamLineIterator& other) = delete;
+
+   // default move-assignment is fine
+   StreamLineIterator& operator =( StreamLineIterator&& other) = default;
 
    /// Equality comparison operator.
    /// @param[in]  other  The other iterator object to compare against.

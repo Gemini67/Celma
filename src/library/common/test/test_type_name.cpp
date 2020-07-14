@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/common/type_name.hpp"
 
 
@@ -28,6 +28,8 @@
 #include <boost/test/unit_test.hpp>
 
 
+#include <iostream>
+
 #define  BOOST_REQUIRE_EQUAL_STR( a, b) \
    BOOST_REQUIRE( ::strcmp( a, b) == 0)
 
@@ -39,15 +41,22 @@
 
 
 /// Test for POD data types.
+///
 /// @since  0.1, 15.03.2016
 BOOST_AUTO_TEST_CASE( pod_types)
 {
 
    static_assert( celma::type< bool>::name()[ 0] == 'b');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< bool>::name(),   "bool");
+   static_assert( celma::type< bool>::name()[ 1] == 'o');
+   static_assert( celma::type< bool>::name()[ 2] == 'o');
+   static_assert( celma::type< bool>::name()[ 3] == 'l');
+   static_assert( celma::type< bool>::name()[ 4] == '\0');
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< bool>::name(), "bool");
 
    static_assert( celma::type< char>::name()[ 0] == 'c');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< char>::name(),   "char");
+   static_assert( celma::type< char>::name()[ 4] == '\0');
+   BOOST_REQUIRE_EQUAL_STR( celma::type< char>::name(), "char");
 
    static_assert( celma::type< double>::name()[ 0] == 'd');
    BOOST_REQUIRE_EQUAL_STR( celma::type< double>::name(), "double");
@@ -56,7 +65,7 @@ BOOST_AUTO_TEST_CASE( pod_types)
    BOOST_REQUIRE_EQUAL_STR( celma::type< long double>::name(), "long double");
 
    static_assert( celma::type< float>::name()[ 0] == 'f');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< float>::name(),  "float");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< float>::name(), "float");
 
    static_assert( celma::type< int>::name()[ 0] == 'i');
    BOOST_REQUIRE_EQUAL_STR( celma::type< int>::name(),    "int");
@@ -887,6 +896,50 @@ BOOST_AUTO_TEST_CASE( nested_containers)
                             "std::vector<std::set<int>>");
 
 } // nested_containers
+
+
+
+/// Check the names of comparison classes.
+///
+/// @since  1.39.0, 09.07.2020
+BOOST_AUTO_TEST_CASE( comparison_classes)
+{
+
+   static_assert( celma::type< std::less< void>>::name()[ 0] == 's');
+   static_assert( celma::type< std::less< void>>::name()[ 3] == ':');
+   static_assert( celma::type< std::less< void>>::name()[ 5] == 'l');
+   static_assert( celma::type< std::less< void>>::name()[ 9] == '\0');
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::less< void>>::name(), "std::less");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::less< int>>::name(),
+      "std::less<int>");
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::less_equal< void>>::name(),
+      "std::less_equal");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::less_equal< long>>::name(),
+      "std::less_equal<long>");
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::equal_to< void>>::name(),
+      "std::equal_to");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::equal_to< unsigned int>>::name(),
+      "std::equal_to<unsigned int>");
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::not_equal_to< void>>::name(),
+      "std::not_equal_to");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::not_equal_to< float>>::name(),
+      "std::not_equal_to<float>");
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::greater_equal< void>>::name(),
+      "std::greater_equal");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::greater_equal< double>>::name(),
+      "std::greater_equal<double>");
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::greater< void>>::name(),
+      "std::greater");
+   BOOST_REQUIRE_EQUAL_STR( celma::type< std::greater< std::string>>::name(),
+      "std::greater<std::string>");
+
+} // comparison_classes
 
 
 

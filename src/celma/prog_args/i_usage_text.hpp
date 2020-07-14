@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -124,11 +124,12 @@ private:
 ///    The text to print.
 /// @since  0.2, 10.04.2016
 #define UsageText( c, p, t) \
-   class c ## _class : public celma::prog_args::IUsageText \
+   class c ## _class final : public celma::prog_args::IUsageText \
    { \
    public: \
-      c ## _class( celma::prog_args::Handler::UsagePos up): \
+      explicit c ## _class( celma::prog_args::Handler::UsagePos up): \
          celma::prog_args::IUsageText( up) { } \
+      ~ c ## _class() override = default; \
       void print( std::ostream& os) const override \
       { \
          os << t; \

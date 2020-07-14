@@ -6,7 +6,7 @@ Spezialisierung im Handler erfolgen soll, oder ob eine Hilfsklasse wie die
 speziellen Features benoetigt werden.
 Z.B. fuer den 'level-up value', wo bei jeder Verwendung der Wert um 1
 hochgezaehlt wird, muessen intern die auch Constraints angepasst werden. Deshalb
-besser als Feature für den Handler statt als separate Hilfsklasse.
+besser als Feature fÃ¼r den Handler statt als separate Hilfsklasse.
 Die 'triple logic' hingegen ist ein gutes Beispiel fuer eine Hilfsklasse.
 
 
@@ -41,12 +41,6 @@ Console:
 
 
 Handler:
-- Statt explizit einen Vektor fuer mehrfache Werte zu handeln, entweder den Typ
-  als nicht-template Typ, aber Container, speichern, oder einen back_inserter
-  als Parameter angeben
-- Bei Typen mit mehreren Werten: Test dass der gleiche Wert nicht mehrfach
-  vorkommt.
-  Parameter um zu definieren dass Wiederholungen erlaubt sind?
 - In der Basisklasse TypeBase muessen alle Features, die von den verschiedenen
   Typen verwendet werden koennen, entweder als rein virtuelle Methode oder als
   virtuelle Methode die eine Exception schmeisst, vorhanden sein. Schoener waere
@@ -126,13 +120,4 @@ Fragen:
 - Braucht es mehrere Format-Handler fuer einen Typ?
 - Oder reicht einer, und es wird eine andere Moeglichkeit geboten, mehrere
   Format-Handler zu kombinieren?
-
-
-Handler, Constraints:
-Basisklasse IConstraint aufteilen in 2 Klassen, 1 fuer Constraints die durch die
-Verwendung eines Arguments gesetzt werden, und 1 fuer Constraints die im Handler
-gesetzt werden.
-Namen?
-- IArgConstraint
-- IHandlerConstraint
 

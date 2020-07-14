@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,7 @@ class FormatStreamDefault: public IFormatStream
 {
 public:
    // default destructor is fine
-   virtual ~FormatStreamDefault() = default;
+   ~FormatStreamDefault() override = default;
 
 private:
    /// Implementation of the interface: Generate the log entry.

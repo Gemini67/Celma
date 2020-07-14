@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.34.1
+   \mainpage  CELMA v1.41.0
 
    \tableofcontents
 
@@ -47,6 +47,15 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
+   |   1.41.0 | 2020-07-14        | Added all key-value-pairs container as possible destination types in the argument handler. |
+   |   1.40.0 | 2020-07-12        | Added vector<bool> as destination type to argument handler. |
+   |   1.39.0 | 2020-07-12        | Added checks "file size" and "file modification time" to argument handler. |
+   |   1.38.0 | 2020-07-07        | Added function "string ends with" and check "file suffix" in program arguments handler. |
+   |   1.37.0 | 2020-06-28        | Added class dynamic bitset, created new sub-library container. |
+   |   1.36.0 | 2020-05-28        | Adapted to new compiler version. Due to a compiler bug currently only works correctly in debug mode. |
+   |   1.35.0 | 2020-03-10        | Patch: Fixed some minor bugs. |
+   |   1.35.0 | 2020-02-09        | Added feature "value unit" in argument handler. |
+   |   1.34.2 | 2020-01-19        | Fixed some issues found by SonarCloud. |
    |   1.34.1 | 2020-01-19        | Fixed problem with "has intersection" feature in argument handler. |
    |   1.34.0 | 2020-01-02        | Support all non-key std containers as destination type for argument handler variables. |
    |   1.33.2 | 2019-11-19        | New issues found by SonarCloud resolved. |

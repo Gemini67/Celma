@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -66,7 +66,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArgPair() = default;
+   ~TypedArgPair() override = default;
 
    /// Prints the two current values of the destination variables.<br>
    /// Does not check any flags, if a value has been set etc., simply prints the

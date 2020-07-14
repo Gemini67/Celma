@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -88,7 +88,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  0.2, 07.04.2016
-   virtual ~CelmaException() noexcept;
+   ~CelmaException() noexcept override;
 
    /// Returns the error text with the location information.
    /// @return  The error information in the format

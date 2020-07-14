@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -24,6 +24,7 @@
 #include <complex>
 #include <deque>
 #include <forward_list>
+#include <functional>
 #include <limits>
 #include <list>
 #include <map>
@@ -143,7 +144,7 @@ public:
    /// @since  0.10, 25.12.2016
    static constexpr const char* name()
    {
-      return &mName[ 0];
+      return mName.data();
    } // type< std::array< T>>::name
 
    /// Used to store the name of the type persistently.
@@ -169,7 +170,7 @@ public:
    /// @since  0.1, 15.03.2016
    static constexpr const char* name()
    {
-      return &mName[ 0];
+      return mName.data();
    } // type< std::bitset< N>>::name
 
    /// Used to store the name of the type persistently.
@@ -194,7 +195,7 @@ public:
    /// @since  1.16.0, 03.10.2018
    static constexpr const char* name()
    {
-      return &mName[ 0];
+      return mName.data();
    } // type< std::ratio< N, D>>::name
 
    /// Used to store the name of the type persistently.<br>
@@ -242,7 +243,7 @@ PROVIDE_TEMPLATE_TYPE_NAME( std::optional);
    public: \
       static constexpr const char* name() \
       { \
-         return &mName[ 0]; \
+         return mName.data(); \
       } \
       static constexpr auto const  mName = \
          common::string_concat( # c, "<", type< K>::mName, ",", \
@@ -255,6 +256,36 @@ PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::multimap);
 PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::pair);
 PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::unordered_map);
 PROVIDE_KEY_VALUE_TEMPLATE_TYPE_NAME( std::unordered_multimap);
+
+
+PROVIDE_TEMPLATE_TYPE_NAME( std::less);
+PROVIDE_TEMPLATE_TYPE_NAME( std::less_equal);
+PROVIDE_TEMPLATE_TYPE_NAME( std::equal_to);
+PROVIDE_TEMPLATE_TYPE_NAME( std::not_equal_to);
+PROVIDE_TEMPLATE_TYPE_NAME( std::greater_equal);
+PROVIDE_TEMPLATE_TYPE_NAME( std::greater);
+
+
+/// Macro to create the specialisation of comparison classes for type <void>.
+/// @param  c  The type of the comparison class.
+/// @since  1.39.0, 09.07.2020
+#define  PROVIDE_NAME_ONLY( c) \
+   template<> class type< c< void>> \
+   { \
+   public: \
+      static constexpr const char* name() \
+      { \
+         return # c; \
+      } \
+   }
+
+
+PROVIDE_NAME_ONLY( std::less);
+PROVIDE_NAME_ONLY( std::less_equal);
+PROVIDE_NAME_ONLY( std::equal_to);
+PROVIDE_NAME_ONLY( std::not_equal_to);
+PROVIDE_NAME_ONLY( std::greater_equal);
+PROVIDE_NAME_ONLY( std::greater);
 
 
 } // namespace celma

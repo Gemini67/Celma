@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -77,7 +77,7 @@ public:
    /// @since  1.26.0, 29.04.2019
    static constexpr const char* name()
    {
-      return &mName[ 0];
+      return mName.data();
    } // type< T[ N]>::name
 
    /// Used to store the name of the type persistently.

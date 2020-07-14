@@ -510,7 +510,6 @@ template< typename E, typename T>
 template< typename E, typename T> void EnumFlags< E, T>::reset() noexcept
 {
    mSetValue = 0;
-   return *this;
 } // EnumFlags< E, T>::reset
 
 

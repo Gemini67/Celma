@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -79,6 +79,10 @@ public:
       | Handler::hfUsageCont
       | Handler::hfEndValues
       | Handler::hfListArgGroups;
+
+   /// Empty, virtual default destructor.
+   /// @since  1.35.0, 10.03.2020
+   ~Groups() override = default;
 
    /// Returns the argument handler for the specified group name.
    /// If the argument handler does not exist yet, a new handler object will be

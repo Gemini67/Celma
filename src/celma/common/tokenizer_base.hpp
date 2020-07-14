@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -21,10 +21,10 @@
 
 #include <string>
 #include <boost/tokenizer.hpp>
-#include "celma/common/counting_iterator.hpp"
+#include "celma/container/counting_iterator.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Helper class to easily set up a string tokenizer for various separators.
@@ -32,7 +32,7 @@ namespace celma { namespace common {
 ///
 /// @tparam  T  The type of the separator to use.
 /// @since  0.2, 04.04.2016
-template< typename T> class TokenizerBase: public ICountResult
+template< typename T> class TokenizerBase: public container::ICountResult
 {
 public:
    /// Type of the tokenizer.
@@ -40,7 +40,7 @@ public:
    /// Type of the iterator.
    using iterator = typename BoostTokenizer::iterator;
 
-   friend class CountingIterator< typename BoostTokenizer::iterator>;
+   friend class container::CountingIterator< typename BoostTokenizer::iterator>;
 
    /// Constructor. Empty tokens are ignored.
    /// @param[in]  s          The string to split.
@@ -50,7 +50,7 @@ public:
 
    /// Default destructor is just fine.
    /// @since  0.2, 05.04.2016
-   virtual ~TokenizerBase() = default;
+   ~TokenizerBase() override = default;
 
    /// Returns an iterator that points to the first token.
    /// @return  Iterator that points to the first token.
@@ -63,7 +63,7 @@ public:
    iterator end();
 
    /// Type of the counting iterator.
-   using counting_iterator = CountingIterator< typename BoostTokenizer::iterator>;
+   using counting_iterator = container::CountingIterator< typename BoostTokenizer::iterator>;
 
    /// Returns a counting iterator that points to the first token.
    /// @return  Counting iterator that points to the first token.
@@ -159,8 +159,7 @@ template< typename T> void TokenizerBase< T>::setCount( int theCount)
 } // TokenizerBase< T>::setCount
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
 #endif   // CELMA_COMMON_TOKENIZER_BASE_HPP

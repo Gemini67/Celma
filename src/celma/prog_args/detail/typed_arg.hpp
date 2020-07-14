@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,20 +15,22 @@
 /// See documentation of template celma::prog_args::detail::TypedArg<>.<br>
 /// This file contains the base template plus all specialisations:
 /// - TypedArg< bool>
-/// - TypedArg< common::CheckAssign< T>>
-/// - TypedArg< common::CheckAssign< bool>>
+/// - TypedArg< celma::common::CheckAssign< T>>
+/// - TypedArg< celma::common::CheckAssign< bool>>
 /// - TypedArg< LevelCounter>
 /// - TypedArg< ContainerAdapter< T>><br>
 ///   This one is used for STL containers like std::set<>, std::vector<> etc.
+/// - TypedArg< KeyValueContainerAdapter< K, V>>
 /// - TypedArg< T[ N]>
 /// - TypedArg< std::array< T, N>>
 /// - TypedArg< std::tuple< T...>>
 /// - TypedArg< std::bitset< T...>>
-/// - TypedArg< common::ValueFilter< T>>
+/// - TypedArg< std::vector< bool>>
+/// - TypedArg< celma::container::DynamicBitset>
+/// - TypedArg< celma::common::ValueFilter< T>>
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
-#define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
+#pragma once
 
 
 #include <cstring>
@@ -42,17 +44,21 @@
 #include "celma/common/check_assign.hpp"
 #include "celma/common/contains.hpp"
 #include "celma/common/parse_filter_string.hpp"
+#include "celma/common/string_util.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
 #include "celma/common/value_filter.hpp"
+#include "celma/container/dynamic_bitset.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/container_adapter.hpp"
 #include "celma/prog_args/detail/cardinality_max.hpp"
+#include "celma/prog_args/detail/container_adapter.hpp"
+#include "celma/prog_args/detail/key_value_container_adapter.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 #include "celma/prog_args/level_counter.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 // Template TypedArg
@@ -81,7 +87,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the type of the destination variable as string.
    ///
@@ -289,7 +295,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns "bool".
    /// @return  The string "bool".
@@ -397,7 +403,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the variable handled by the CheckAssign<>
    /// object.
@@ -542,7 +548,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Always returns "bool".
    /// @return  The string "bool".
@@ -661,7 +667,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Always returns "LevelCounter".
    /// @return  The string "LevelCounter".
@@ -756,7 +762,7 @@ protected:
                "variable '" + mVarName + "'");
 
          const int          new_level = mDestVar.value() + 1;
-         const std::string  testval( boost::lexical_cast< std::string>( new_level));
+         const std::string  testval( std::to_string( new_level));
          check( testval);
 
          // when we get here, the new value is within the limits
@@ -822,8 +828,8 @@ public:
 
    /// Empty, virtual default destructor.
    ///
-   /// @@since  1.34.0, 22.11.2019
-   virtual ~TypedArg() = default;
+   /// @since  1.34.0, 22.11.2019
+   ~TypedArg() override = default;
 
    /// By default, the value mode for containers is set to "required". Here it
    /// can be changed to "optional" if "clear before assign" has been set before
@@ -1137,21 +1143,22 @@ template< typename T>
       if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
          mpCardinality->gotValue();
 
-      auto  listVal( *it);
+      auto  list_val( *it);
 
-      check( listVal);
+      check( list_val);
 
       if (!mFormats.empty())
       {
-         format( listVal);
+         format( list_val);
          // we use the position of the new value in the destination container to
          // determine which formatter should be used
          // this works with multiple, separate values as well as a container
          /// with default values
-         format( listVal, mDestVar.size());
+         if (dest_type_t::AllowsPositionFormat)
+            format( list_val, mDestVar.size());
       } // end if
 
-      auto const  dest_value = boost::lexical_cast< typename dest_type_t::value_type_t>( listVal);
+      auto const  dest_value = boost::lexical_cast< typename dest_type_t::value_type_t>( list_val);
       if (mUniqueData && mDestVar.contains( dest_value))
       {
          if (mTreatDuplicatesAsErrors)
@@ -1175,6 +1182,420 @@ template< typename T>
 {
    return mDestVar.hasIntersection( static_cast< const TypedArg< dest_type_t>*>( arg)->mDestVar);
 } // TypedArg< ContainerAdapter< T>>::hasIntersection
+
+
+// Template TypedArg< detail::KeyValueContainerAdapter< T>>
+// ========================================================
+
+
+/// Specialisation of TypedArg<> for destination variables that are of type
+/// container, wrapped in a detail::KeyValueContainerAdapter<>.
+///
+/// @tparam  T  The type of the key-value-pair container.
+/// @since  1.41.0, 09.02.2020
+template< typename T>
+   class TypedArg< KeyValueContainerAdapter< T>>: public TypedArgBase
+{
+public:
+   /// The type of the destination variable/container adapter.
+   using dest_type_t = KeyValueContainerAdapter< T>;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  1.41.0, 09.02.2020
+   TypedArg( dest_type_t dest, const std::string& vname);
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.41.0, 09.02.2020
+   ~TypedArg() override = default;
+
+   /// By default, the value mode for containers is set to "required". Here it
+   /// can be changed to "optional" if "clear before assign" has been set before
+   /// and the destination container contains (default) values.<br>
+   /// This allows the following scenario:
+   /// - Assign default values to the destination container.
+   /// - Define the argument with "clear before assign" and value mode
+   ///   "optional".
+   /// - If the argument is not used: Default values are used.
+   /// - If the argument is used without value(s): The container is cleared.
+   /// - Argument used with values: Only the values are stored in the container.
+   /// .
+   /// Can only be set on container types that support clearing.
+   ///
+   /// @param[in]  vm
+   ///    The new value mode, only allowed value is actually "optional".
+   /// @return  Pointer to this object.
+   /// @throw
+   ///    std::logic_error if the value mode is not "optional", or "clear before
+   ///    assign" is not set.
+   /// @since  1.41.0, 09.02.2020
+   TypedArgBase* setValueMode( ValueMode vm) noexcept( false) override;
+
+   /// Returns the name of the type of the destination variable (container of
+   /// something).
+   ///
+   /// @return  The name of the type of the destination variable/container.
+   /// @since  1.41.0, 09.02.2020
+   const std::string varTypeName() const override;
+
+   /// Returns if the destination has (at least) one value set.
+   ///
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  1.41.0, 09.02.2020
+   bool hasValue() const override;
+
+   /// Prints the current value of the destination variable.
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.41.0, 09.02.2020
+   void printValue( std::ostream& os, bool print_type) const override;
+
+   /// Overloads TypedArgBase::setTakesMultiValue().
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.41.0, 09.02.2020
+   TypedArgBase* setTakesMultiValue() override;
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   /// Default for key-value pairs is set to ";".
+   ///
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @throw
+   ///    std::invalid_argument if the given list separator is already set as
+   ///    part of the pair separator string.
+   /// @since  1.41.0, 09.02.2020
+   TypedArgBase* setListSep( char sep) noexcept( false) override;
+
+   /// Allows to set the separators to use to split key-value-pair.
+   /// The string must contain at least one character, which is then used to
+   /// separate. Example with separator = ";" (and list separator = ","):<br>
+   /// 1;2,3;4,5;6  --> key 1, value 2; key 3, value 4; key 5; value 6.<br>
+   /// Switching the separators would be a more common example (and that is the
+   /// default that is set): list separator = ";", separator here = ",":<br>
+   /// 1,2;3,4;5,6  --> key 1, value 2; key 3, value 4; key 5; value 6.<br>
+   /// If the string is 3 characters long, the 2 additional characters are
+   /// expected around a key-value-pair. Example: separator = ",{}", list
+   /// separator = ";":<br>
+   /// {1,2};{3,4};{5,6}  --> key 1, value 2; key 3, value 4; key 5; value 6.
+   ///
+   /// @param[in]  separators
+   ///    The string with the separator(s) as described above.
+   /// @return  Pointer to this object.
+   /// @throw
+   ///    std::runtime_error if the length of the given pair separator string is
+   ///    invalid, must be one (1) or three.
+   /// @throw
+   ///    std::invalid_argument if the pair separator string contains the list
+   ///    separator character.
+   /// @since  1.41.0, 13.02.2020
+   TypedArgBase* setPairFormat( const std::string& separators) noexcept( false)
+      override;
+
+   /// Special feature for destination variable type container:
+   /// Clear the contents of the container before assigning the value(s) from
+   /// the command line. If the feature is off (the default), the value(s) from
+   /// the command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination variable that should be overwritten by the argument's
+   /// values.<br>
+   /// Can only be set on containers that support clearing.
+   ///
+   /// @return  Pointer to this object.
+   /// @throw
+   ///    std::logic_error if the destination container type does not support
+   ///    clearing.
+   /// @since  1.41.0, 09.02.2020
+   TypedArgBase* setClearBeforeAssign() noexcept( false) override;
+
+   /// Key-value-pair containers either support duplicate key values like
+   /// std::multimap, or attempts to insert an already exiosting key are simply
+   /// ignored.
+   /// With this method it can be controlled that e.g. in a multi-map only
+   /// unique key values can be inserted, or that the attempt to insert an
+   /// already existing key value results in an error.
+   ///
+   /// @param[in]  duplicates_are_errors
+   ///    Set this flag if duplicate key values should be treated as errors,
+   ///    otherwise they will be silently discarded.
+   /// @return  This object.
+   /// @since  1.41.0, 20.02.2020
+   TypedArgBase* setUniqueData( bool duplicates_are_errors) override;
+
+   /// Special method for key-value pair container: Set the formatter to use
+   /// for the key.
+   ///
+   /// @param[in]  f  Pointer to the formatter function to use for the key.
+   /// @return   This object.
+   /// @since  1.41.0, 18.02.2020
+   TypedArgBase* addFormatKey( IFormat* f) override;
+
+   /// Special method for key-value pair container: Set the formatter to use
+   /// for the value.
+   ///
+   /// @param[in]  f  Pointer to the formatter function to use for the value.
+   /// @return   This object.
+   /// @since  1.41.0, 18.02.2020
+   TypedArgBase* addFormatValue( IFormat* f) override;
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   ///
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.41.0, 09.02.2020
+   void dump( std::ostream& os) const override;
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value  The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.41.0, 09.02.2020
+   void assign( const std::string& value, bool inverted) override;
+
+   /// Returns if this object/container and the other container intersect, i.e.
+   /// have at least one element in common.
+   ///
+   /// @return  \c true if the values in the two containers intersect.
+   /// @since  1.41.0, 09.02.2020
+   bool hasIntersection( TypedArgBase* arg) const noexcept( false) override;
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   dest_type_t  mDestVar;
+   /// The separator(s) to use to split a pair into key and value.
+   std::string  mPairSeparator;
+   /// The character to use as a list separator, default: ,
+   char         mListSep = ';';
+   /// If set, the contents of the container are cleared before the first
+   /// value(s) from the command line are assigned.
+   bool         mClearB4Assign = false;
+   /// If set, makes sure that the data in the container contains no duplicates.
+   bool         mUniqueData = false;
+   /// If set, trying to add a duplicate value to the container is treated as an
+   /// error, otherwise (the default) it is silently discarded.
+   bool         mTreatDuplicatesAsErrors = false;
+
+}; // TypedArg< KeyValueContainerAdapter< T>>
+
+
+// inlined methods
+// ===============
+
+
+template< typename T>
+   TypedArg< KeyValueContainerAdapter< T>>::TypedArg( dest_type_t dest,
+      const std::string& vname):
+         TypedArgBase( vname, ValueMode::required, false),
+         mDestVar( dest)
+{
+   mpCardinality.reset();
+   mPairSeparator = ",";
+} // TypedArg< KeyValueContainerAdapter< T>>::TypedArg
+
+
+template< typename T>
+   TypedArgBase* TypedArg< KeyValueContainerAdapter< T>>::setValueMode( ValueMode vm)
+{
+   if (vm == mValueMode)
+      return this;
+   if ((vm != ValueMode::optional) || !mClearB4Assign || mDestVar.empty())
+      throw std::logic_error( "can only set value mode 'optional' for "
+         "container, and ony if 'clear before assign' is set and the container "
+         "is not empty");
+   mValueMode = vm;
+   return this;
+} // TypedArg< KeyValueContainerAdapter< T>>::setValueMode
+
+
+template< typename T>
+   const std::string TypedArg< KeyValueContainerAdapter< T>>::varTypeName() const
+{
+   // application should not need or want to know that we are using an adapter
+   return type< T>::name();
+} // TypedArg< KeyValueContainerAdapter< T>>::varTypeName
+
+
+template< typename T> bool TypedArg< KeyValueContainerAdapter< T>>::hasValue() const
+{
+   return !mDestVar.empty();
+} // TypedArg< KeyValueContainerAdapter< T>>::hasValue
+
+
+template< typename T>
+   void TypedArg< KeyValueContainerAdapter< T>>::printValue( std::ostream& os,
+      bool print_type) const
+{
+   os << mDestVar.toString();
+   if (print_type)
+      os << " [" << varTypeName() << "]";
+} // TypedArg< KeyValueContainerAdapter< T>>::printValue
+
+
+template< typename T>
+   TypedArgBase* TypedArg< KeyValueContainerAdapter< T>>::setTakesMultiValue()
+{
+   mTakeMultipleValues = true;
+   return this;
+} // TypedArg< KeyValueContainerAdapter< T>>::setTakesMultiValue
+
+
+template< typename T>
+   TypedArgBase* TypedArg< KeyValueContainerAdapter< T>>::setListSep( char sep)
+{
+   if (!mPairSeparator.empty()
+       && (mPairSeparator.find( sep) != std::string::npos))
+      throw std::invalid_argument( "list-separator must not be set as pair-"
+         "separator too");
+   mListSep = sep;
+   return this;
+} // TypedArg< KeyValueContainerAdapter< T>>::setListSep
+
+
+template< typename T>
+   TypedArgBase*
+      TypedArg< KeyValueContainerAdapter< T>>::setPairFormat(
+         const std::string& separators) noexcept( false)
+{
+   if ((separators.length() != 1) && (separators.length() != 3))
+      throw std::invalid_argument( "length of pair-separator string must be "
+         "either 1 or 3");
+   if (separators.find( mListSep) != std::string::npos)
+      throw std::invalid_argument( "pair-separator string must not contain the "
+         "list separator character");
+   mPairSeparator = separators;
+   return this;
+} // TypedArg< KeyValueContainerAdapter< T>>::setPairFormat
+
+
+template< typename T>
+   TypedArgBase* TypedArg< KeyValueContainerAdapter< T>>::setClearBeforeAssign()
+{
+   mClearB4Assign = true;
+   return this;
+} // TypedArg< KeyValueContainerAdapter< T>>::setClearBeforeAssign
+
+
+template< typename T>
+   TypedArgBase*
+      TypedArg< KeyValueContainerAdapter< T>>::setUniqueData( bool duplicates_are_errors)
+{
+  mUniqueData = true;
+  mTreatDuplicatesAsErrors = duplicates_are_errors;
+  return this;
+} // TypedArg< KeyValueContainerAdapter< T>>::setUniqueData
+
+
+template< typename T>
+   TypedArgBase*
+      TypedArg< KeyValueContainerAdapter< T>>::addFormatKey( IFormat* f)
+{
+   return internAddFormat( 1, f);
+} // TypedArg< KeyValueContainerAdapter< T>>::addFormatKey
+
+
+template< typename T>
+   TypedArgBase*
+      TypedArg< KeyValueContainerAdapter< T>>::addFormatValue( IFormat* f)
+{
+   return internAddFormat( 2, f);
+} // TypedArg< KeyValueContainerAdapter< T>>::addFormatValue
+
+
+template< typename T>
+   void TypedArg< KeyValueContainerAdapter< T>>::dump( std::ostream& os) const
+{
+   os << "value type '" << varTypeName() << "', destination container '"
+      << mVarName << "', currently "
+      << (mDestVar.empty() ? "no" : std::to_string( mDestVar.size()))
+      << " values." << std::endl
+      << "   " << static_cast< const TypedArgBase&>( *this);
+} // TypedArg< KeyValueContainerAdapter< T>>::dump
+
+
+template< typename T>
+   void TypedArg< KeyValueContainerAdapter< T>>::assign( const std::string& value, bool)
+{
+   if (mClearB4Assign)
+   {
+      mDestVar.clear();
+      // clear only once
+      mClearB4Assign = false;
+   } // end if
+
+   common::Tokenizer  tok( value, mListSep);
+   for (auto it = tok.begin(); it != tok.end(); ++it)
+   {
+      if ((it != tok.begin()) && (mpCardinality.get() != nullptr))
+         mpCardinality->gotValue();
+
+      auto  list_val( *it);
+
+      check( list_val);
+
+      // split the string into key and value
+      if (mPairSeparator.length() == 3)
+      {
+         if ((list_val.front() == mPairSeparator[ 1])
+             && (list_val.back() == mPairSeparator[ 2]))
+            list_val = list_val.substr( 1, list_val.length() - 2);
+         else
+            throw std::runtime_error( "pair format not as expected");
+      } // end if
+
+      auto  key_value = common::split2( list_val, mPairSeparator[ 0]);
+
+      if (key_value.first.empty() || key_value.second.empty())
+            throw std::runtime_error( "pair format not as expected");
+
+      if (!mFormats.empty())
+      {
+         format( key_value.first, 0);
+         format( key_value.second, 1);
+      } // end if
+
+      auto const  dest_key   =
+         boost::lexical_cast< typename dest_type_t::key_type_t>(
+            key_value.first);
+
+      if (mUniqueData && mDestVar.contains( dest_key))
+      {
+         if (mTreatDuplicatesAsErrors)
+            throw std::runtime_error( "refuse to store duplicate values in"
+               " variable '" + mVarName + "'");
+         continue; // for
+      } // end if
+
+      auto const  dest_value =
+         boost::lexical_cast< typename dest_type_t::value_type_t>(
+            key_value.second);
+
+      mDestVar.addValue( dest_key, dest_value);
+   } // end for
+
+} // TypedArg< KeyValueContainerAdapter< T>>::assign
+
+
+template< typename T>
+   bool TypedArg< KeyValueContainerAdapter< T>>::hasIntersection( TypedArgBase* arg)
+      const noexcept( false)
+{
+   return mDestVar.hasIntersection( static_cast< const TypedArg< dest_type_t>*>( arg)->mDestVar);
+} // TypedArg< KeyValueContainerAdapter< T>>::hasIntersection
 
 
 // Template TypedArg< T[ N]>
@@ -1205,7 +1626,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the destination variable (array of
    /// something).
@@ -1419,17 +1840,17 @@ template< typename T, size_t N>
          throw std::runtime_error( "too many values for fixed-size array "
             "variable '" + mVarName + "'");
 
-      auto  listVal( *it);
+      auto  list_val( *it);
 
-      check( listVal);
+      check( list_val);
 
       if (!mFormats.empty())
       {
-         format( listVal);
-         format( listVal, mIndex);
+         format( list_val);
+         format( list_val, mIndex);
       } // end if
 
-      auto const  dest_value = boost::lexical_cast< T>( listVal);
+      auto const  dest_value = boost::lexical_cast< T>( list_val);
       if (mUniqueData)
       {
          if (common::contains( mDestVar, dest_value))
@@ -1482,7 +1903,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the destination variable (array of
    /// something).
@@ -1702,17 +2123,17 @@ template< typename T, size_t N>
          throw std::runtime_error( "too many values for fixed-size array "
             "variable '" + mVarName + "'");
 
-      auto  listVal( *it);
+      auto  list_val( *it);
 
-      check( listVal);
+      check( list_val);
 
       if (!mFormats.empty())
       {
-         format( listVal);
-         format( listVal, mIndex);
+         format( list_val);
+         format( list_val, mIndex);
       } // end if
 
-      auto const  dest_value = boost::lexical_cast< T>( listVal);
+      auto const  dest_value = boost::lexical_cast< T>( list_val);
       if (mUniqueData)
       {
          if (common::contains( mDestVar, dest_value))
@@ -1811,7 +2232,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the destination variable, the tuple.
    ///
@@ -2040,24 +2461,24 @@ template< typename... T>
       if ((it.currentNum() > 0) && (mpCardinality.get() != nullptr))
          mpCardinality->gotValue();
 
-      std::string  listVal( *it);
+      std::string  list_val( *it);
 
-      check( listVal);
+      check( list_val);
 
       if (!mFormats.empty())
       {
-         format( listVal, mNumValuesSet);
+         format( list_val, mNumValuesSet);
       } // end if
 
-      internal::TupleElementValueAssign  teva( listVal);
+      internal::TupleElementValueAssign  teva( list_val);
       common::tuple_at_index( mNumValuesSet, mDestVar, teva);
 
 #if 0
       // this should work ...
       common::tuple_at_index( mNumValuesSet, mDestVar,
-                              [&listVal]( auto& tuple_value)
+                              [&list_val]( auto& tuple_value)
         {
-           tuple_value = boost::lexical_cast< std::decltype( tuple_value)>( listVal);
+           tuple_value = boost::lexical_cast< std::decltype( tuple_value)>( list_val);
         });
 #endif
       ++mNumValuesSet;
@@ -2091,7 +2512,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the type of the destination variable.
    ///
@@ -2255,7 +2676,7 @@ template< size_t N>
 {
    os << "value type '" << varTypeName()
       << "', destination bitset '" << mVarName << "', currently "
-      << (mDestVar.none() ? "no" : boost::lexical_cast< std::string>( mDestVar.count()))
+      << (mDestVar.none() ? "no" : std::to_string( mDestVar.count()))
       << " values." << std::endl
       << "   " << static_cast< const TypedArgBase&>( *this);
 } // TypedArg< std::bitset< N>>::dump
@@ -2277,13 +2698,13 @@ template< size_t N>
       if (mpCardinality && (it != tok.begin()))
          mpCardinality->gotValue();
 
-      auto const&  listVal( *it);
+      auto const&  list_val( *it);
 
-      check( listVal);
+      check( list_val);
 
       if (!mFormats.empty())
       {
-         auto  valCopy( listVal);
+         auto  valCopy( list_val);
          format( valCopy);
          auto const  pos = boost::lexical_cast< size_t>( valCopy);
          if (pos >= N)
@@ -2292,7 +2713,7 @@ template< size_t N>
          mDestVar[ pos] = !mResetFlags;
       } else
       {
-         auto const  pos = boost::lexical_cast< size_t>( listVal);
+         auto const  pos = boost::lexical_cast< size_t>( list_val);
          if (pos >= N)
             throw std::runtime_error( "position " + std::to_string( pos)
                + " is outside the range of the bitset");
@@ -2300,6 +2721,400 @@ template< size_t N>
       } // end if
    } // end for
 } // TypedArg< std::bitset< N>>::assign
+
+
+// Template TypedArg< std::vector< bool>>
+// ======================================
+
+
+/// Specialisation of TypedArg<> for destination value type std::vector< bool>.
+///
+/// @since  1.40.0. 28.05.2020
+template<> class TypedArg< std::vector< bool>>: public TypedArgBase
+{
+public:
+   /// The type of the destination variable.
+   using vector_type = typename std::vector< bool>;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  1.40.0. 28.05.2020
+   TypedArg( vector_type& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::required, false),
+      mDestVar( dest)
+   {
+      mpCardinality.reset();
+   } // TypedArg< std::vector< bool>>::TypedArg
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.40.0. 28.05.2020
+   ~TypedArg() override = default;
+
+   /// Returns the type of the destination variable.
+   ///
+   /// @return  The name of the destination variable's type.
+   /// @since  1.40.0. 28.05.2020
+   const std::string varTypeName() const override
+   {
+      return type< vector_type>::name();
+   } // TypedArg< std::vector< bool>>::varTypeName
+
+   /// Returns if the destination has (at least) one value set.
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  1.40.0. 28.05.2020
+   bool hasValue() const override
+   {
+      return common::contains( mDestVar, true);
+   } // TypedArg< std::vector< bool>>::hasValue
+
+   /// Prints the current value of the destination variable.
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.40.0. 28.05.2020
+   void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << format::toString( mDestVar);
+      if (print_type)
+         os << " [" << varTypeName() << "]";
+   } // TypedArg< std::vector< bool>>::printValue
+
+   /// Overloads TypedArgBase::setTakesMultiValue().
+   /// For vector< bool> it is possible/allowed to activate this feature.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.40.0. 28.05.2020
+   TypedArgBase* setTakesMultiValue() override
+   {
+      mTakeMultipleValues = true;
+      return this;
+   } // TypedArg< std::vector< bool>>::setTakesMultiValue
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @since  1.40.0. 28.05.2020
+   TypedArgBase* setListSep( char sep) override
+   {
+      mListSep = sep;
+      return this;
+   } // TypedArg< std::vector< bool>>::setListSep
+
+   /// Special feature for destination variable type vector< bool>:
+   /// Clear the contents of the vector before assigning the value(s) from the
+   /// command line. If the feature is off (the default), the value(s from the
+   /// command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination vector that should be overwritten by the argument's values.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.40.0. 28.05.2020
+   TypedArgBase* setClearBeforeAssign() override
+   {
+      mClearB4Assign = true;
+      return this;
+   } // TypedArg< std::vector< bool>>::setClearBeforeAssign
+
+   /// Unset the flags (set to \c false the vector) when the argument is detected,
+   /// instead of setting it (the default).
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.40.0. 28.05.2020
+   TypedArgBase* unsetFlag() override
+   {
+      mResetFlags = true;
+      return this;
+   } // TypedArg< std::vector< bool>>::unsetFlag
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.40.0. 28.05.2020
+   void dump( std::ostream& os) const override
+   {
+      os << "value type '" << varTypeName()
+         << "', destination vector '" << mVarName << "', currently "
+         << (none() ? "no" : std::to_string( count()))
+         << " values." << std::endl
+         << "   " << static_cast< const TypedArgBase&>( *this);
+   } // TypedArg< std::vector< bool>>::dump
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.40.0. 28.05.2020
+   void assign( const std::string& value, bool) override
+   {
+      if (mClearB4Assign)
+      {
+         mDestVar.clear();
+         // clear only once
+         mClearB4Assign = false;
+      } // end if
+
+      if (mDestVar.size() == 0)
+         mDestVar.resize( 10);
+
+      common::Tokenizer  tok( value, mListSep);
+      for (auto it = tok.begin(); it != tok.end(); ++it)
+      {
+         if (mpCardinality && (it != tok.begin()))
+            mpCardinality->gotValue();
+
+         auto const&  listVal( *it);
+
+         check( listVal);
+
+         if (!mFormats.empty())
+         {
+            auto  valCopy( listVal);
+            format( valCopy);
+            auto const  pos = boost::lexical_cast< size_t>( valCopy);
+            if (pos >= mDestVar.size())
+               mDestVar.resize( pos * 1.5);
+            mDestVar[ pos] = !mResetFlags;
+         } else
+         {
+            auto const  pos = boost::lexical_cast< size_t>( listVal);
+            if (pos >= mDestVar.size())
+               mDestVar.resize( pos * 1.5);
+            mDestVar[ pos] = !mResetFlags;
+         } // end if
+      } // end for
+   } // TypedArg< std::vector< bool>>::assign
+
+private:
+   /// Returns if no bit is set.
+   ///
+   /// @return  \c true if no bit is set.
+   /// @since  1.40.0, 02.06.2020
+   bool none() const
+   {
+      return !common::contains( mDestVar, true);
+   } // TypedArg< std::vector< bool>>::none
+
+   /// Returns the number of bits that are set.
+   ///
+   /// @return  Number of bits set.
+   /// @since  1.40.0, 02.06.2020
+   size_t count() const
+   {
+      return std::count( mDestVar.begin(), mDestVar.end(), true);
+   } // TypedArg< std::vector< bool>>::count
+
+   /// Reference of the destination variable to store the value(s) in.
+   vector_type&  mDestVar;
+   /// The character to use as a list separator, default: ,
+   char          mListSep = ',';
+   /// If set, the contents of the vector are cleared before the first value(s)
+   /// from the command line are assigned.
+   bool          mClearB4Assign = false;
+   /// Specifies if the flags in the vector should set (the default) or reset.
+   bool          mResetFlags = false;
+
+
+}; // TypedArg< std::vector< bool>>
+
+
+// Template TypedArg< container::DynamicBitset>
+// ============================================
+
+
+/// Specialisation of TypedArg<> for destination value type
+/// container::DynamicBitset.
+///
+/// @since  1.37.0, 28.06.2020
+template<> class TypedArg< container::DynamicBitset>: public TypedArgBase
+{
+public:
+   /// The type of the destination variable.
+   using bitset_type = container::DynamicBitset;
+
+   /// Constructor.
+   ///
+   /// @param[in]  dest
+   ///    The destination variable to store the values in.
+   /// @param[in]  vname
+   ///    The name of the destination variable to store the value in.
+   /// @since  1.37.0, 28.06.2020
+   TypedArg( bitset_type& dest, const std::string& vname):
+      TypedArgBase( vname, ValueMode::required, false),
+      mDestVar( dest)
+   {
+      mpCardinality.reset();
+   } // TypedArg< container::DynamicBitset>::TypedArg
+
+   /// Empty, virtual default destructor.
+   ///
+   /// @since  1.37.0, 28.06.2020
+   ~TypedArg() override = default;
+
+   /// Returns the type of the destination variable.
+   ///
+   /// @return  The name of the destination variable's type.
+   /// @since  1.37.0, 28.06.2020
+   const std::string varTypeName() const override
+   {
+      return type< bitset_type>::name();
+   } // TypedArg< container::DynamicBitset>::varTypeName
+
+   /// Returns if the destination has (at least) one value set.
+   /// @return
+   ///    \c true if the destination variable contains (at least) one value.
+   /// @since  1.37.0, 28.06.2020
+   bool hasValue() const override
+   {
+      return mDestVar.any();
+   } // TypedArg< container::DynamicBitset>::hasValue
+
+   /// Prints the current value of the destination variable.
+   /// Does not check any flags, if a value has been set etc., simply prints the
+   /// value.
+   ///
+   /// @param[out]  os
+   ///    The stream to print the value to.
+   /// @param[in]  print_type
+   ///    Specifies if the type of the destination variable should be printed
+   ///    too.
+   /// @since  1.37.0, 28.06.2020
+   void printValue( std::ostream& os, bool print_type) const override
+   {
+      os << format::toString( mDestVar);
+      if (print_type)
+         os << " [" << varTypeName() << "]";
+   } // TypedArg< container::DynamicBitset>::printValue
+
+   /// Overloads TypedArgBase::setTakesMultiValue().
+   /// For dynamic bitsets it is possible/allowed to activate this feature.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.37.0, 28.06.2020
+   TypedArgBase* setTakesMultiValue() override
+   {
+      mTakeMultipleValues = true;
+      return this;
+   } // TypedArg< container::DynamicBitset>::setTakesMultiValue
+
+   /// Specifies the list separator character to use for splitting lists of
+   /// values.
+   /// @param[in]  sep  The character to use to split a list.
+   /// @return  Pointer to this object.
+   /// @since  1.37.0, 28.06.2020
+   TypedArgBase* setListSep( char sep) override
+   {
+      mListSep = sep;
+      return this;
+   } // TypedArg< container::DynamicBitset>::setListSep
+
+   /// Special feature for destination variable type bitset:
+   /// Clear the contents of the bitset before assigning the value(s) from the
+   /// command line. If the feature is off (the default), the value(s from the
+   /// command line are appended.<br>
+   /// Use this feature if some default value(s) have been assigned to the
+   /// destination bitset that should be overwritten by the argument's values.
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.37.0, 28.06.2020
+   TypedArgBase* setClearBeforeAssign() override
+   {
+      mClearB4Assign = true;
+      return this;
+   } // TypedArg< container::DynamicBitset>::setClearBeforeAssign
+
+   /// Unset the flags (reset in the bitset) when the argument is detected,
+   /// instead of setting it (the default).
+   ///
+   /// @return  Pointer to this object.
+   /// @since  1.37.0, 28.06.2020
+   TypedArgBase* unsetFlag() override
+   {
+      mResetFlags = true;
+      return this;
+   } // TypedArg< container::DynamicBitset>::unsetFlag
+
+protected:
+   /// Used for printing an argument and its destination variable.
+   /// @param[out]  os  The stream to print to.
+   /// @since  1.37.0, 28.06.2020
+   void dump( std::ostream& os) const override
+   {
+      os << "value type '" << varTypeName()
+         << "', destination bitset '" << mVarName << "', currently "
+         << (mDestVar.none() ? "no" : boost::lexical_cast< std::string>( mDestVar.count()))
+         << " values." << std::endl
+         << "   " << static_cast< const TypedArgBase&>( *this);
+   } // TypedArg< container::DynamicBitset>::dump
+
+   /// Stores the value in the destination variable.
+   ///
+   /// @param[in]  value
+   ///    The value to store in string format.
+   /// @param[in]  inverted
+   ///    Set when the argument supports inversion and when the argument was 
+   ///    preceeded by an exclamation mark.
+   /// @since  1.37.0, 28.06.2020
+   void assign( const std::string& value, bool) override
+   {
+      if (mClearB4Assign)
+      {
+         mDestVar.reset();
+         // clear only once
+         mClearB4Assign = false;
+      } // end if
+
+      common::Tokenizer  tok( value, mListSep);
+      for (auto it = tok.begin(); it != tok.end(); ++it)
+      {
+         if (mpCardinality && (it != tok.begin()))
+            mpCardinality->gotValue();
+
+         auto const&  listVal( *it);
+
+         check( listVal);
+
+         if (!mFormats.empty())
+         {
+            auto  valCopy( listVal);
+            format( valCopy);
+            auto const  pos = boost::lexical_cast< size_t>( valCopy);
+            mDestVar.set( pos, !mResetFlags);
+         } else
+         {
+            auto const  pos = boost::lexical_cast< size_t>( listVal);
+            mDestVar.set( pos, !mResetFlags);
+         } // end if
+      } // end for
+   } // TypedArg< container::DynamicBitset>::assign
+
+private:
+   /// Reference of the destination variable to store the value(s) in.
+   bitset_type&  mDestVar;
+   /// The character to use as a list separator, default: ,
+   char          mListSep = ',';
+   /// If set, the contents of the bitset are cleared before the first value(s)
+   /// from the command line are assigned.
+   bool          mClearB4Assign = false;
+   /// Specifies if the flags in the bitset should set (the default) or reset.
+   bool          mResetFlags = false;
+
+
+}; // TypedArg< container::DynamicBitset>
 
 
 // Template TypedArg< ValueFilter< T>>
@@ -2330,7 +3145,7 @@ public:
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 23.10.2019
-   virtual ~TypedArg() = default;
+   ~TypedArg() override = default;
 
    /// Returns the name of the type of the destination variable (ValueFilter of
    /// something).
@@ -2475,12 +3290,7 @@ template< typename T>
 } // TypedArg< common::ValueFilter< T>>::assign
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF typed_arg.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -45,7 +45,7 @@ public:
    /// Empty, virtual destructor.
    ///
    /// @since  1.14.0, 02.10.2018
-   virtual ~ConstraintExcludes() = default;
+   ~ConstraintExcludes() override = default;
    
    /// Adds the 'exludes' constraint to the current argument handler.
    ///

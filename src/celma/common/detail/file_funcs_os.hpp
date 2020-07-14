@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,7 +37,7 @@ public:
    /// Empty, virtual destructor.
    ///
    /// @since  1.4.0, 20.02.2018
-   virtual ~FileFuncsOs() = default;
+   ~FileFuncsOs() override = default;
 
    /// Calls ::rename() to actually rename a file.
    ///

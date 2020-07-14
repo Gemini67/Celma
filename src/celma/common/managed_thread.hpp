@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -32,7 +32,7 @@ namespace celma { namespace common {
 /// When this object is destroyed, it calls \c join(), so the calling
 /// application does not need to do that.
 /// @since  012, 19.01.2017
-class ManagedThread: public std::thread
+class ManagedThread final: public std::thread
 {
 public:
    /// Constructor, creates the thread which immediately starts its work.
@@ -45,6 +45,12 @@ public:
    template< class Function, class... Args>
       explicit ManagedThread( Function&& f, Args&&... args);
 
+   // copy-construction is not allowed
+   ManagedThread( const ManagedThread&) = delete;
+
+   // move-constructor is also not allowed
+   ManagedThread( ManagedThread&&) = delete;
+
    /// Destructor, calls std::thread::join(), i.e. would block if the thread is
    /// still running.
    /// @since  012, 19.01.2017
@@ -54,6 +60,12 @@ public:
    /// @return  \c true if the thread function is still active.
    /// @since  012, 19.01.2017
    bool isActive() const noexcept;
+
+   // copy-assignment is not allowed
+   ManagedThread& operator =( const ManagedThread&) = delete;
+
+   // move-assignment is also not allowed
+   ManagedThread& operator =( ManagedThread&&) = delete;
 
 private:
    /// Flag, set by the thread before the thread function is executed, cleared

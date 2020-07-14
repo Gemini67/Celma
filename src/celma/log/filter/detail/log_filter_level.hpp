@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,7 +37,7 @@ public:
    /// @since  0.3, 19.06.2016
    explicit LogFilterLevel( LogLevel ll);
 
-   virtual ~LogFilterLevel() = default;
+   ~LogFilterLevel() override = default;
 
    /// Fast check: Returns if the specified log level may be processed.
    /// @param[in]  l  The log level to check.

@@ -30,6 +30,9 @@
 
 // the specific checks are not actually needed here, but they are included
 // anyway for convenience of the user
+#include "celma/prog_args/detail/check_file_modification.hpp"
+#include "celma/prog_args/detail/check_file_size.hpp"
+#include "celma/prog_args/detail/check_file_suffix.hpp"
 #include "celma/prog_args/detail/check_is_absolute_path.hpp"
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
@@ -59,7 +62,7 @@
 #include "celma/prog_args/detail/constraint_requires.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Base class for storing type-specific handlers type-neutrally.<br>
@@ -216,21 +219,33 @@ public:
 
    /// Sets the flag if the default value of the destination variable should be
    /// printed in the usage or not.
-   /// @param[in]  doPrint
-   ///    \c true = do print the default value.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @param[in]  doPrint  \c true = do print the default value.
+   /// @return  Pointer to this object.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setPrintDefault( bool doPrint);
 
    /// Returns if the default value of the destination variable should be
    /// printed in the usage.
-   /// @return
-   ///    \c true if the default value should be printed.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @return  \c true if the default value should be printed.
+   /// @since  0.2, 10.04.2016
    bool printDefault() const;
+
+   /// If printing the default value in the usage is enabled, this function can
+   /// be used to specify the unit of the value. This will be displayed behind
+   /// the value in the usage.
+   ///
+   /// @param[in]  unit  The unit of the value to display in the usage.
+   /// @throw  std::logic_error if printing the default value is disabled.
+   /// @since  1.35.0, 09.02.2020
+   void setValueUnit( const std::string& unit) noexcept( false);
+
+   /// Returns the specified value unit string.
+   ///
+   /// @return  The value unit string if specified, an empty string otherwise.
+   /// @since  1.35.0, 09.02.2020
+   const std::string& valueUnit() const;
 
    /// Specifies that this argument is hidden.
    /// @return
@@ -331,6 +346,22 @@ public:
    /// @since  1.32.0, 25.04.2019
    virtual TypedArgBase* addFormatPos( int val_idx, IFormat* f) noexcept( false);
 
+   /// Defines a formatter for the key of containers with key-value pairs.
+   ///
+   /// @param[in]  f  Ignored here.
+   /// @return  Never in this base class.
+   /// @throw  std::logic_error when executed in the base class.
+   /// @since  1.41.0, 18.02.2020
+   virtual TypedArgBase* addFormatKey( IFormat* f) noexcept( false);
+
+   /// Defines a formatter for the values of containers with key-value pairs.
+   /// 
+   /// @param[in]  f  Ignored here.
+   /// @return  Never in this base class.
+   /// @throw  std::logic_error when executed in the base class.
+   /// @since  1.41.0, 18.02.2020
+   virtual TypedArgBase* addFormatValue( IFormat* f) noexcept( false);
+
    /// Calls all formatter methods defined for this argument. The formatter
    /// methods should throw an exception when a formatting failed.
    ///
@@ -352,7 +383,7 @@ public:
    /// @throw
    ///    std::logic_error when called for an argument that does not accept
    ///    values.
-   ///    std::invalid_argument when the given object pointer is NULL.
+   /// @throw  std::invalid_argument when the given object pointer is NULL.
    /// @since  0.2, 10.04.2016
    virtual TypedArgBase* addCheck( ICheck* c);
 
@@ -364,13 +395,23 @@ public:
 
    /// Specifies the list separator character to use for splitting lists of
    /// values.
-   /// @param[in]  sep
-   ///    The character to use to split a list.
-   /// @return
-   ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
+   ///
+   /// @param[in]  sep  The character to use to split a list. Ignored here.
+   /// @return  Never returns.
+   /// @throw  std::invalid_argument when called in this base class.
+   /// @since  0.2, 10.04.2016
    virtual TypedArgBase* setListSep( char sep) noexcept( false);
+
+   /// Is overwritten by types that support key-value pairs.
+   /// Here: Throws.
+   ///
+   /// @param[in]  separators
+   ///    Specifies the separator(s) for pairs. Ignored here
+   /// @return  Never returns here.
+   /// @throw  std::invalid_argument when called in this base class.
+   /// @since   1.41.0, 13.02.2020
+   virtual TypedArgBase* setPairFormat( const std::string& separators)
+      noexcept( false);
 
    /// Special feature for destination variable type vector:<br>
    /// Clear the contents of the vector before assigning the value(s) from the
@@ -706,6 +747,8 @@ protected:
    bool                            mAllowsInverting = false;
    /// The key of the argument that replaced this argument.
    std::string                     mReplacedBy;
+   /// When set: the unit string to display in the usage.
+   std::string                     mUnitString;
    /// Stores all the checks (objects) defined for this argument.
    std::vector< ICheck*>           mChecks;
    /// Stores all the formatters (objects) defined for this argument.<br>
@@ -835,6 +878,22 @@ inline bool TypedArgBase::printDefault() const
 } // TypedArgBase::printDefault
 
 
+inline void TypedArgBase::setValueUnit( const std::string& unit)
+   noexcept( false)
+{
+   if (!mPrintDefault)
+      throw std::logic_error( "unit string can only be set when printing the "
+         "default value is enabled");
+   mUnitString = unit;
+} // TypedArgBase::setValueUnit
+
+
+inline const std::string& TypedArgBase::valueUnit() const
+{
+   return mUnitString;
+} // TypedArgBase::valueUnit
+
+
 inline TypedArgBase* TypedArgBase::setIsHidden()
 {
    mIsHidden = true;
@@ -879,6 +938,14 @@ inline TypedArgBase* TypedArgBase::setListSep( char /* sep */)
    throw std::invalid_argument( "setting list separator not allowed for "
                                 "variable '" + mVarName + "'");
 } // TypedArgBase::setListSep
+
+
+inline TypedArgBase* TypedArgBase::setPairFormat( const std::string&)
+   noexcept( false)
+{
+   throw std::invalid_argument( "setting pair separator not allowed for "
+                                "variable '" + mVarName + "'");
+} // TypedArgBase::setPairFormat
 
 
 inline TypedArgBase* TypedArgBase::setClearBeforeAssign()
@@ -953,9 +1020,7 @@ inline void TypedArgBase::defaultValue( std::string& /* dest */) const
 } // TypedArgBase::defaultValue
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 #endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_BASE_HPP

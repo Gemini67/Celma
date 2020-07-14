@@ -16,7 +16,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args/detail/container_adapter.hpp"
 
 
@@ -30,7 +30,7 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE ValueHandlerTest
+#define BOOST_TEST_MODULE ContainerAdapterTest
 #include <boost/test/unit_test.hpp>
 
 
@@ -49,7 +49,7 @@ namespace {
 ///
 /// @return  \c true if all tests passed successfully.
 /// @since  1.34.0, 13.12.2019
-template< template< typename> class C> bool checkContAdapt()
+template< template< typename...> class C> bool checkContAdapt()
 {
 
    using container_t = C< int>;
@@ -109,6 +109,10 @@ BOOST_AUTO_TEST_CASE( no_adapter)
    // std::tuple
    static_assert( !ContainerAdapter< std::tuple< int>>::HasAdapter);
    BOOST_REQUIRE_EQUAL( ContainerAdapter< std::tuple< int>>::HasAdapter, false);
+
+   // std::vector< bool>
+   static_assert( !ContainerAdapter< std::vector< bool>>::HasAdapter);
+   BOOST_REQUIRE_EQUAL( ContainerAdapter< std::vector< bool>>::HasAdapter, false);
 
    // celma::common::CheckAssign
    static_assert( !ContainerAdapter<
@@ -612,13 +616,13 @@ BOOST_AUTO_TEST_CASE( unordered_multiset_adapter)
    caus.addValue( 17);
    caus.addValue( 9);
 
-   BOOST_REQUIRE_EQUAL( caus.toString(), "9, 17, 42, 13");
+   BOOST_REQUIRE_EQUAL( caus.toString(), "9, 17, 13, 42");
 
    BOOST_REQUIRE_THROW( caus.sort(), std::logic_error);
 
    // check with duplicate value
    BOOST_REQUIRE_NO_THROW( caus.addValue( 42));
-   BOOST_REQUIRE_EQUAL( caus.toString(), "9, 17, 42, 42, 13");
+   BOOST_REQUIRE_EQUAL( caus.toString(), "9, 17, 13, 42, 42");
 
 } // unordered_multiset_adapter
 
@@ -671,13 +675,13 @@ BOOST_AUTO_TEST_CASE( unordered_set_adapter)
    cas.addValue( 17);
    cas.addValue( 9);
 
-   BOOST_REQUIRE_EQUAL( cas.toString(), "9, 17, 42, 13");
+   BOOST_REQUIRE_EQUAL( cas.toString(), "9, 17, 13, 42");
 
    BOOST_REQUIRE_THROW( cas.sort(), std::logic_error);
 
    // check with duplicate value
    BOOST_REQUIRE_NO_THROW( cas.addValue( 42));
-   BOOST_REQUIRE_EQUAL( cas.toString(), "9, 17, 42, 13");
+   BOOST_REQUIRE_EQUAL( cas.toString(), "9, 17, 13, 42");
 
 } // unordered_set_adapter
 

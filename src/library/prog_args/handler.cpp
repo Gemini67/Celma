@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -40,11 +40,11 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
-#include "celma/common/clear_container.hpp"
 #include "celma/common/contains.hpp"
 #include "celma/common/reset_at_exit.hpp"
 #include "celma/common/scoped_value.hpp"
 #include "celma/common/tokenizer.hpp"
+#include "celma/container/clear_container.hpp"
 #include "celma/format/text_block.hpp"
 #include "celma/prog_args/destination.hpp"
 #include "celma/prog_args/detail/eval_arguments_error_exit.hpp"
@@ -54,7 +54,7 @@
 #include "celma/prog_args/i_usage_text.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 using std::endl;
@@ -184,7 +184,7 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
 Handler::~Handler()
 {
 
-   common::Vector::clear( mGlobalConstraints);
+   container::Vector::clear( mGlobalConstraints);
 
 } // Handler::~Handler
 
@@ -862,6 +862,14 @@ Handler::ArgResult
                                 const detail::ArgListParser::const_iterator& end)
 {
 
+   // make me the current argument handler
+   // do it here so it works for single argument handlers as well as argument
+   // groups
+   const common::ScopedValue< detail::ConstraintContainer*>
+      makeMeCurrent( detail::ConstraintContainer::mpCurrentConstraints,
+                     &mConstraints);
+
+
    switch (ai->mElementType)
    {
    default:
@@ -1183,12 +1191,6 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
 /// @since  0.2, 10.04.2016
 void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 {
-
-   /// make me the current argument handler
-   const common::ScopedValue< detail::ConstraintContainer*>
-      makeMeCurrent( detail::ConstraintContainer::mpCurrentConstraints,
-                     &mConstraints);
-
 
    for (auto ai = alp.begin(); ai != alp.end(); ++ai)
    {
@@ -1598,8 +1600,7 @@ void Handler::handleIdentifiedArg( detail::TypedArgBase* hdl,
 
 
 
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args
 
 
 // =====  END OF handler.cpp  =====

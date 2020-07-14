@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -60,7 +60,7 @@ public:
    /// Empty, default destructor.
    ///
    /// @since  1.32.0, 19.08.2019
-   virtual ~RemoveDigitFormatter() = default;
+   ~RemoveDigitFormatter() override = default;
 
    /// The formatting function: Remove all digits from the string.
    ///

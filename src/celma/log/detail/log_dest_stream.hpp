@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -50,7 +50,7 @@ public:
 
    /// Empty, virtual destructor.
    /// @since  1.0.0, 19.06.2016
-   virtual ~LogDestStream() = default;
+   ~LogDestStream() override = default;
 
    /// Sets the new formatter to use.<br>
    /// Although the pointer type is \a IFormatBase only, objects passed here

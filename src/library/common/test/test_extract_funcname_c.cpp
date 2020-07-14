@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -105,6 +105,21 @@ auto funcPtrReturningFunction( string& funcname)
    return ptrReturningFunction;
 } // funcPtrReturningFunction
 
+
+class Local
+{
+public:
+   static void staticMethod( std::string& funcname) 
+   {
+      funcname = extractFuncname( __PRETTY_FUNCTION__);
+   } // Local::staticMethod
+
+   void normalMethod( std::string& funcname) 
+   {
+      funcname = extractFuncname( __PRETTY_FUNCTION__);
+   } // Local::normalMethod
+
+};
 
 } // namespace
 
@@ -415,6 +430,16 @@ BOOST_AUTO_TEST_CASE( methods_test)
 
    BOOST_REQUIRE_EQUAL( TestClass::mLastFuncName, "TestClass::~TestClass");
 
+   // tests with a class in an unnamed namespace
+   {
+      Local::staticMethod( result);
+      BOOST_REQUIRE_EQUAL( result, "Local::staticMethod");
+
+      Local  l;
+      l.normalMethod( result);
+      BOOST_REQUIRE_EQUAL( result, "Local::normalMethod");
+   } // end scope
+
 } // methods_test
 
 
@@ -469,6 +494,7 @@ BOOST_AUTO_TEST_CASE( methods_namespace_test)
 
    BOOST_REQUIRE_EQUAL( project::TestClassProject::mLastFuncName,
                         "project::TestClassProject::~TestClassProject");
+
 } // methods_namespace_test
 
 
@@ -485,15 +511,18 @@ BOOST_AUTO_TEST_CASE( template_class_test)
       TemplateTestClass< uint32_t>  tplObj( result);
 
       BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::TemplateTestClass")
+                     || (result == "TemplateTestClass<unsigned int>::TemplateTestClass")
                      || (result == "TemplateTestClass<T>::TemplateTestClass"));
 
       tplObj.method1( result);
       BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::method1")
+                     || (result == "TemplateTestClass<unsigned int>::method1")
                      || (result == "TemplateTestClass<T>::method1"));
 
       int  my_value;
       tplObj.templateMethod( my_value, result);
       BOOST_REQUIRE( (result == "TemplateTestClass<uint32_t>::templateMethod")
+                     || (result == "TemplateTestClass<unsigned int>::templateMethod")
                      || (result == "TemplateTestClass<T>::templateMethod"));
    } // end scope
 

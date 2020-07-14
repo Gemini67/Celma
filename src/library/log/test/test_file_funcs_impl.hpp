@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,7 +46,7 @@ public:
       
    /// Empty, virtual destructor for base class.
    /// @since  1.4.0, 08.03.2018
-   virtual ~TestFileFuncsImpl() = default;
+   ~TestFileFuncsImpl() override = default;
 
    /// Gets called when a file should be renamed.
    /// @param[in]  dest  The new (pah and) name for the file.

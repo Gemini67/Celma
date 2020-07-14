@@ -28,15 +28,16 @@
 
 
 // project includes
-#include "celma/common/clear_container.hpp"
+#include "celma/container/clear_container.hpp"
 #include "celma/format/to_string.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 using std::ostream;
 using std::string;
+
 
 
 /// Destructor, frees dynamically allocated memory.
@@ -45,8 +46,8 @@ using std::string;
 TypedArgBase::~TypedArgBase()
 {
 
-   common::Vector::clear( mChecks);
-   common::Vector::clear( mConstraints);
+   container::Vector::clear( mChecks);
+   container::Vector::clear( mConstraints);
 
 } // TypedArgBase::~TypedArgBase
 
@@ -196,7 +197,46 @@ TypedArgBase* TypedArgBase::addFormatPos( int, IFormat* f)
    throw std::logic_error( "Variable '" + mVarName + "' does not store multiple"
       " values, use addFormat() without index paramater");
 
+   return nullptr;
 } // TypedArgBase::addFormatPos
+
+
+
+/// Defines a formatter for the key of containers with key-value pairs.
+///
+/// @param[in]  f  Ignored here.
+/// @return  Never in this base class.
+/// @throw  std::logic_error when executed in the base class.
+/// @since  1.41.0, 18.02.2020
+TypedArgBase* TypedArgBase::addFormatKey( IFormat* f)
+{
+
+   delete f;
+
+   throw std::logic_error( "Variable '" + mVarName + "' does not support "
+      "different key/value formatters");
+
+   return nullptr;
+} // TypedArgBase::addFormatKey
+
+
+
+/// Defines a formatter for the values of containers with key-value pairs.
+/// 
+/// @param[in]  f  Ignored here.
+/// @return  Never in this base class.
+/// @throw  std::logic_error when executed in the base class.
+/// @since  1.41.0, 18.02.2020
+TypedArgBase* TypedArgBase::addFormatValue( IFormat* f)
+{
+
+   delete f;
+
+   throw std::logic_error( "Variable '" + mVarName + "' does not support "
+      "different key/value formatters");
+
+   return nullptr;
+}
 
 
 
@@ -627,6 +667,7 @@ TypedArgBase::TypedArgBase( const std::string& vname, ValueMode vm,
    mValueMode( vm),
    mPrintDefault( printDef),
    mReplacedBy(),
+   mUnitString(),
    mChecks(),
    mFormats(),
    mpCardinality( new CardinalityMax( 1)),
@@ -779,9 +820,7 @@ ostream& operator <<( ostream& os, TypedArgBase::ValueMode vm)
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF typed_arg_base.cpp  =====

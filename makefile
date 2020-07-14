@@ -51,8 +51,8 @@ analyze:
 	@if [ ! -d build/analyze ]; then \
 	   mkdir -p build/analyze; \
 	   cd build/analyze; \
-	   export CC=clang-7; \
-	   export CXX=clang++-7; \
+	   export CC=clang; \
+	   export CXX=clang++; \
 	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
 	         -DBOOST_VERSION=${BOOST_VERSION} \
 	         -DCMAKE_BUILD_TYPE=Debug \
@@ -113,7 +113,7 @@ sonar:
 	   cd -; \
 	fi; \
 	cd build/sonar; \
-	build-wrapper-linux-x86-64 --out-dir bw-output make; \
+	build-wrapper-linux-x86-64 --out-dir bw-output make -j4; \
 	cd -; \
 	sonar-scanner -Dsonar.login=$(SONAR_LOGIN)
 

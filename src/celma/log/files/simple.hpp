@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,7 +46,7 @@ public:
 
    /// Default destructor.
    /// @since  1.0.0, 13.12.2017
-   virtual ~Simple() = default;
+   ~Simple() override = default;
 
    /// Copying and moving not needed.
    Simple& operator =( const Simple&) = delete;

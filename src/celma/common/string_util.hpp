@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,18 +12,24 @@
 
 
 /// @file
-/// See documentation of functions celma::common::ensure_last(),
-/// celma::common::remove_to_if() and all its variants.
+/// See documentation of functions
+/// - celma::common::ensure_last()
+/// - celma::common::remove_to_if()
+/// - celma::common::remove_to_if_first_incl()
+/// - celma::common::remove_to_if_first_excl()
+/// - celma::common::remove_to_if_last_incl()
+/// - celma::common::remove_to_if_last_excl()
+/// - celma::common::startsWith()
+/// - celma::common::endsWith()
 
 
-#ifndef CELMA_COMMON_STRING_UTIL_HPP
-#define CELMA_COMMON_STRING_UTIL_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Makes sure that the last character in a non-empty string is \a last_char.
@@ -152,11 +158,42 @@ inline bool startsWith( const std::string& str, const std::string& starts,
 } // startsWith
 
 
-} // namespace common
-} // namespace celma
+/// Returns if the given string ends with the specified text.
+///
+/// @param[in]  str
+///    The string to check the end of.
+/// @param[in]  end
+///    The expected end of the string.
+/// @return
+///    \c true if the strings ends with \c end.
+/// @since  1.38.0, 06.07.2020
+inline bool endsWith( const std::string& str, const std::string& end)
+{
+   if (str.length() < end.length())
+      return false;
+   return str.compare( str.length() - end.length(), end.length(), end) == 0;
+} // endsWith
 
 
-#endif   // CELMA_COMMON_STRING_UTIL_HPP
+/// Splits a string in two parts.
+///
+/// @param[in]  src
+///    The string to split.
+/// @param[in]  separator
+///    The character to use as separator to split the string.
+/// @return  A pair with the two substrings.
+/// @since  1.41.0, 13.02.2020
+inline auto split2( const std::string& src, char separator) -> decltype( auto)
+{
+   auto const  pos = src.find_first_of( separator);
+   if (pos == std::string::npos)
+      return std::pair< std::string, std::string>( "", "");
+   return std::pair< std::string, std::string>( src.substr( 0, pos),
+      src.substr( pos + 1));
+} // split2
+
+
+} // namespace celma::common
 
 
 // =====  END OF string_util.hpp  =====
