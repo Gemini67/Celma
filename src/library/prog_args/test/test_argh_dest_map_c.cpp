@@ -31,6 +31,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/test/check_for.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
@@ -143,6 +144,38 @@ BOOST_AUTO_TEST_CASE( test_map_errors)
          ->setSortData(), std::logic_error);
    } // end scope
 
+   // try to set the same separator as list and pair separator
+   {
+      Handler                      ah( 0);
+      std::map< int, std::string>  m;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "m", DEST_VAR( m), "values")
+         ->setListSep( ','), std::invalid_argument);
+   } // end scope
+
+   // wrong length of separator string
+   {
+      Handler                      ah( 0);
+      std::map< int, std::string>  m;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "m", DEST_VAR( m), "values")
+         ->setPairFormat( ""), std::invalid_argument);
+   } // end scope
+   {
+      Handler                      ah( 0);
+      std::map< int, std::string>  m;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "m", DEST_VAR( m), "values")
+         ->setPairFormat( "ab"), std::invalid_argument);
+   } // end scope
+   {
+      Handler                      ah( 0);
+      std::map< int, std::string>  m;
+
+      BOOST_REQUIRE_THROW( ah.addArgument( "m", DEST_VAR( m), "values")
+         ->setPairFormat( "abcd"), std::invalid_argument);
+   } // end scope
+
 } // test_map_errors
 
 
@@ -182,31 +215,28 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( m.size(), 3);
 
-      int  idx = 0;
-      for (auto map_iter : m)
+      CHECK_FOR (auto map_iter : m)
       {
-         switch (idx)
+         switch (counter)
          {
-         case 0:
+         case 1:
             BOOST_REQUIRE_EQUAL( map_iter.first, 4);
             BOOST_REQUIRE_EQUAL( map_iter.second, "four");
             break;
-         case 1:
+         case 2:
             BOOST_REQUIRE_EQUAL( map_iter.first, 5);
             BOOST_REQUIRE_EQUAL( map_iter.second, "five");
             break;
-         case 2:
+         case 3:
             BOOST_REQUIRE_EQUAL( map_iter.first, 6);
             BOOST_REQUIRE_EQUAL( map_iter.second, "six");
             break;
          default:
-            BOOST_REQUIRE( idx < 3);
+            BOOST_REQUIRE( counter == 0);
             break;
          } // end switch
-
-         ++idx;
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 3);
+      CHECK_FOR_COUNT( 3);
    } // end scope
 
    // now check with a custom list separator
@@ -214,39 +244,87 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       Handler                      ah( 0);
       std::map< int, std::string>  m;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m", DEST_VAR( m), "values")->
-         setListSep( '+')->setPairFormat( "-"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m", DEST_VAR( m), "values")
+         ->setListSep( '+')->setPairFormat( "-"));
 
       auto const  as2a = make_arg_array( "-m 4-four+5-five+6-six", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( m.size(), 3);
 
-      int  idx = 0;
-      for (auto map_iter : m)
+      CHECK_FOR (auto map_iter : m)
       {
-         switch (idx)
+         switch (counter)
          {
-         case 0:
+         case 1:
             BOOST_REQUIRE_EQUAL( map_iter.first, 4);
             BOOST_REQUIRE_EQUAL( map_iter.second, "four");
             break;
-         case 1:
+         case 2:
             BOOST_REQUIRE_EQUAL( map_iter.first, 5);
             BOOST_REQUIRE_EQUAL( map_iter.second, "five");
             break;
-         case 2:
+         case 3:
             BOOST_REQUIRE_EQUAL( map_iter.first, 6);
             BOOST_REQUIRE_EQUAL( map_iter.second, "six");
             break;
          default:
-            BOOST_REQUIRE( idx < 3);
+            BOOST_REQUIRE( counter == 0);
             break;
          } // end switch
-
-         ++idx;
       } // end for
-      BOOST_REQUIRE_EQUAL( idx, 3);
+      CHECK_FOR_COUNT( 3);
+   } // end scope
+
+   // specify a pair format, but the values don't match the format
+   {
+      Handler                      ah( 0);
+      std::map< int, std::string>  m;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m", DEST_VAR( m), "values")
+         ->setPairFormat( ",{}"));
+
+      auto const  as2a = make_arg_array( "-m (4,four);(5,five)", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   // and now with a special pair format
+   {
+      Handler                      ah( 0);
+      std::map< int, std::string>  m;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "m", DEST_VAR( m), "values")
+         ->setPairFormat( ",{}"));
+
+      auto const  as2a = make_arg_array( "-m {4,four};{5,five};{6,six}", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( m.size(), 3);
+
+      CHECK_FOR (auto map_iter : m)
+      {
+         switch (counter)
+         {
+         case 1:
+            BOOST_REQUIRE_EQUAL( map_iter.first, 4);
+            BOOST_REQUIRE_EQUAL( map_iter.second, "four");
+            break;
+         case 2:
+            BOOST_REQUIRE_EQUAL( map_iter.first, 5);
+            BOOST_REQUIRE_EQUAL( map_iter.second, "five");
+            break;
+         case 3:
+            BOOST_REQUIRE_EQUAL( map_iter.first, 6);
+            BOOST_REQUIRE_EQUAL( map_iter.second, "six");
+            break;
+         default:
+            BOOST_REQUIRE( counter == 0);
+            break;
+         } // end switch
+      } // end for
+      CHECK_FOR_COUNT( 3);
    } // end scope
 
 } // test_list_sep
@@ -270,7 +348,53 @@ BOOST_AUTO_TEST_CASE( test_cardinality)
 
    BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
       std::runtime_error);
+
+} // test_cardinality
+
+
+
+/// Check that formatting the values works.
+///
+/// @since  x.y.z, 13.07.2020
+BOOST_AUTO_TEST_CASE( formatting)
+{
+
+   Handler                              ah( 0);
+   std::map< std::string, std::string>  m;
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "m", DEST_VAR( m), "values")
+      ->addFormatKey( celma::prog_args::lowercase())
+      ->addFormatValue( celma::prog_args::uppercase()));
+
+   auto const  as2a = make_arg_array( "-m One,einS;tWo,ZwEi;ThReE,dREI",
+      nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( m.size(), 3);
+
+   CHECK_FOR (auto const& v : m)
+   {
+      switch (counter)
+      {
+      case 1:
+         BOOST_REQUIRE_EQUAL( v.first, "one");
+         BOOST_REQUIRE_EQUAL( v.second, "EINS");
+         break;
+      case 2:
+         BOOST_REQUIRE_EQUAL( v.first, "three");
+         BOOST_REQUIRE_EQUAL( v.second, "DREI");
+         break;
+      case 3:
+         BOOST_REQUIRE_EQUAL( v.first, "two");
+         BOOST_REQUIRE_EQUAL( v.second, "ZWEI");
+         break;
+      default:
+         BOOST_REQUIRE( counter == 0);
+         break;
+      } // end switch
+   } // end for
+   CHECK_FOR_COUNT( 3);
 
 } // test_cardinality
 

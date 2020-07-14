@@ -30,8 +30,7 @@
 /// - TypedArg< celma::common::ValueFilter< T>>
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
-#define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
+#pragma once
 
 
 #include <cstring>
@@ -1276,7 +1275,7 @@ public:
    /// @param[in]  sep  The character to use to split a list.
    /// @return  Pointer to this object.
    /// @throw
-   ///    std::runtime_error if the given list separator is already set as
+   ///    std::invalid_argument if the given list separator is already set as
    ///    part of the pair separator string.
    /// @since  x.y.z, 09.02.2020
    TypedArgBase* setListSep( char sep) noexcept( false) override;
@@ -1300,7 +1299,7 @@ public:
    ///    std::runtime_error if the length of the given pair separator string is
    ///    invalid, must be one (1) or three.
    /// @throw
-   ///    std::runtime_error if the pair separator string contains the list
+   ///    std::invalid_argument if the pair separator string contains the list
    ///    separator character.
    /// @since  x.y.z, 13.02.2020
    TypedArgBase* setPairFormat( const std::string& separators) noexcept( false)
@@ -1552,7 +1551,7 @@ template< typename T>
       if (mPairSeparator.length() == 3)
       {
          if ((list_val.front() == mPairSeparator[ 1])
-             && (list_val.back() == list_val[ 2]))
+             && (list_val.back() == mPairSeparator[ 2]))
             list_val = list_val.substr( 1, list_val.length() - 2);
          else
             throw std::runtime_error( "pair format not as expected");
@@ -2869,6 +2868,9 @@ protected:
          mClearB4Assign = false;
       } // end if
 
+      if (mDestVar.size() == 0)
+         mDestVar.resize( 10);
+
       common::Tokenizer  tok( value, mListSep);
       for (auto it = tok.begin(); it != tok.end(); ++it)
       {
@@ -3289,9 +3291,6 @@ template< typename T>
 
 
 } // namespace celma::prog_args::detail
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_HPP
 
 
 // =====  END OF typed_arg.hpp  =====
