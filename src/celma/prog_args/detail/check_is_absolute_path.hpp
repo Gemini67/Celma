@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::CheckIsAbsolutePath.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_IS_ABSOLTE_PATH_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_IS_ABSOLTE_PATH_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -24,12 +23,12 @@
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks if a value contains an absolute path.
 /// @since  1.4.2, 12.04.2018
-class CheckIsAbsolutePath: public ICheck
+class CheckIsAbsolutePath final : public ICheck
 {
 public:
    /// Constructor, sets the symbolic name in the base class.
@@ -94,11 +93,7 @@ inline detail::ICheck* isAbsolutePath()
 } // isAbsolutePath
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_IS_ABSOLTE_PATH_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_is_absolute_path.hpp  =====

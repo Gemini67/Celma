@@ -15,15 +15,14 @@
 /// See documentation of template celma::prog_args::detail::TypedArgPair.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_PAIR_HPP
-#define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_PAIR_HPP
+#pragma once
 
 
 #include <iostream>
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 // Template TypedArgPair
@@ -40,7 +39,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///    1.5.0, 20.06.2018  (derived from TypedArg<> instead of TypedArgBase).
 /// @since
 ///    0.2, 10.04.2016
-template< typename T1, typename T2> class TypedArgPair: public TypedArg< T1>
+template< typename T1, typename T2> class TypedArgPair final : public TypedArg< T1>
 {
 public:
    /// Constructor.
@@ -157,12 +156,7 @@ template< typename T1, typename T2>
 } // TypedArgPair< T1, T2>::assign
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_PAIR_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF typed_arg_pair.hpp  =====

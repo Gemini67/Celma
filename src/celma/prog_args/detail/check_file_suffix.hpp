@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::CheckFileSuffix.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_FILE_SUFFIX_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_FILE_SUFFIX_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -30,7 +29,7 @@ namespace celma::prog_args { namespace detail {
 
 /// Checks if a value contains a file name with a specific suffix.
 /// @since  1.38.0, 06.07.2020
-class CheckFileSuffix: public ICheck
+class CheckFileSuffix final : public ICheck
 {
 public:
    /// Constructor, stores the suffix to check and sets the symbolic name in the
@@ -120,9 +119,6 @@ inline detail::ICheck* fileSuffix( const std::string& suffix)
 
 
 } // namespace celma::prog_args
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_FILE_SUFFIX_HPP
 
 
 // =====  END OF check_file_suffix.hpp  =====

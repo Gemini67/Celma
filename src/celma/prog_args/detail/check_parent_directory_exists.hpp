@@ -16,8 +16,7 @@
 /// celma::prog_args::detail::CheckParentDirectoryExists.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_PARENT_DIRECTORY_EXISTS_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_PARENT_DIRECTORY_EXISTS_HPP
+#pragma once
 
 
 #include <cstring>
@@ -29,13 +28,13 @@
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks if the parent directory of the given value/path exists.
 ///
 /// @since  1.9.0, 04.08.2018
-class CheckParentDirectoryExists: public ICheck
+class CheckParentDirectoryExists final : public ICheck
 {
 public:
    /// Constructor, sets the symbolic name in the base class.
@@ -109,11 +108,7 @@ inline detail::ICheck* parentDirectoryExists()
 } // parentDirectoryExists
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_PARENT_DIRECTORY_EXISTS_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_parent_directory_exists.hpp  =====

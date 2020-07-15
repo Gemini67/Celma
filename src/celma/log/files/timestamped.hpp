@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::files::Timestamped.
 
 
-#ifndef CELMA_LOG_FILES_TIMESTAMPED_HPP
-#define CELMA_LOG_FILES_TIMESTAMPED_HPP
+#pragma once
 
 
 #include <ctime>
@@ -26,13 +25,13 @@
 #include "celma/log/files/policy_base.hpp"
 
 
-namespace celma { namespace log { namespace files {
+namespace celma::log::files {
 
 
 /// Policy to handle log file(s) by timestamp: All log messages with the same
 /// timestamp are written into the same file.
 /// @since  1.0.0, 13.12.2017
-class Timestamped: public PolicyBase
+class Timestamped final : public PolicyBase
 {
 public:
    /// Constructor. Checks if the given log filename definition contains a date
@@ -89,12 +88,7 @@ private:
 }; // Timestamped
 
 
-} // namespace files
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILES_TIMESTAMPED_HPP
+} // namespace celma::log::files
 
 
 // =====  END OF timestamped.hpp  =====

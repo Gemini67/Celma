@@ -15,8 +15,7 @@
 /// See documentation of template celma::prog_args::detail::CheckRange.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_RANGE_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_RANGE_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -26,13 +25,13 @@
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks a value if it is within the range lower <= x < upper.
 /// @tparam  T  The native type of the limit to check.
 /// @since  0.2, 10.04.2016
-template< typename T> class CheckRange : public ICheck
+template< typename T> class CheckRange final : public ICheck
 {
 public:
    /// Constructor.
@@ -124,11 +123,7 @@ template< typename T> detail::ICheck* range( T low, T upp)
 } // end range
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_RANGE_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_range.hpp  =====

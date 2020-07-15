@@ -15,8 +15,7 @@
 /// See documentation of template celma::prog_args::detail::TypedArgCallableValue.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_CALLABLE_VALUE_HPP
-#define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_CALLABLE_VALUE_HPP
+#pragma once
 
 
 #include <iostream>
@@ -25,14 +24,14 @@
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Helper class to store a function that serves as argument handler.
 /// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
-class TypedArgCallableValue: public TypedArgBase
+class TypedArgCallableValue final : public TypedArgBase
 {
 public:
    /// Constructor.
@@ -183,12 +182,7 @@ inline void TypedArgCallableValue::assign( const std::string& value,
 } // TypedArgCallableValue::assign
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_CALLABLE_VALUE_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF typed_arg_callable_value.hpp  =====

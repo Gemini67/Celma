@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ICheck.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP
-#define CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP
+#pragma once
 
 
 #include <iostream>
@@ -109,9 +108,6 @@ inline std::ostream& operator <<( std::ostream& os, ICheck* pc)
 
 
 } // namespace celma::prog_args::detail
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP
 
 
 // =====  END OF i_check.hpp  =====

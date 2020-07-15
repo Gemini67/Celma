@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::LogFilterClasses.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_FILTER_CLASSES_HPP
-#define CELMA_LOG_DETAIL_LOG_FILTER_CLASSES_HPP
+#pragma once
 
 
 #include <bitset>
@@ -26,12 +25,12 @@
 #include "celma/log/detail/log_msg.hpp"
 
 
-namespace celma { namespace log { namespace filter { namespace detail {
+namespace celma::log::filter::detail {
 
 
 /// Filter on log classes.
 /// @since  0.3, 19.06.2016
-class LogFilterClasses: public IFilter
+class LogFilterClasses final : public IFilter
 {
 public:
    /// Constructor, initialises the set of log classes to accept.
@@ -65,13 +64,7 @@ inline bool LogFilterClasses::pass( const log::detail::LogMsg& msg) const
 } // LogFilterClasses::pass
 
 
-} // namespace detail
-} // namespace filter
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_FILTER_CLASSES_HPP
+} // namespace celma::log::filter::detail
 
 
 // =====  END OF log_filter_classes.hpp  =====

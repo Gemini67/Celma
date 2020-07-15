@@ -20,8 +20,7 @@
 /// - celma::common::detail::MaximumValue<>
 
 
-#ifndef CELMA_COMMON_DETAIL_FILTERS_HPP
-#define CELMA_COMMON_DETAIL_FILTERS_HPP
+#pragma once
 
 
 #include <sstream>
@@ -30,7 +29,7 @@
 #include <vector>
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 // Template FilterBase
@@ -84,7 +83,7 @@ protected:
 ///
 /// @tparam  T  The type of the values to check.
 /// @since  1.31.0, 31.10.2017
-template< typename T> class SingleValue: public FilterBase< T>
+template< typename T> class SingleValue final : public FilterBase< T>
 {
 public:
    /// Constructor.
@@ -147,7 +146,7 @@ private:
 ///
 /// @tparam  T  The type of the values to check.
 /// @since  1.31.0, 31.10.2017
-template< typename T> class ValueRange: public FilterBase< T>
+template< typename T> class ValueRange final : public FilterBase< T>
 {
 public:
    /// Constructor, checks and stores the values of the range.
@@ -219,7 +218,7 @@ private:
 ///
 /// @tparam  T  The type of the values to check.
 /// @since  1.31.0, 01.11.2017
-template< typename T> class MinimumValue: public FilterBase< T>
+template< typename T> class MinimumValue final : public FilterBase< T>
 {
 public:
    /// Constructor, stores the minimum value to check against.
@@ -274,7 +273,7 @@ private:
 ///
 /// @tparam  T  The type of the values to check.
 /// @since  1.31.0, 01.11.2017
-template< typename T> class MaximumValue: public FilterBase< T>
+template< typename T> class MaximumValue final : public FilterBase< T>
 {
 public:
    /// Constructor, stores the maximum value to check against.
@@ -319,12 +318,7 @@ private:
 }; // MaximumValue< T>
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_FILTERS_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF filters.hpp  =====

@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.41.0
+   \mainpage  CELMA v1.41.1
 
    \tableofcontents
 
@@ -47,6 +47,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
+   |   1.41.1 | 2020-07-15        | Added keyword \c final where appropriate. |
    |   1.41.0 | 2020-07-14        | Added all key-value-pairs container as possible destination types in the argument handler. |
    |   1.40.0 | 2020-07-12        | Added vector<bool> as destination type to argument handler. |
    |   1.39.0 | 2020-07-12        | Added checks "file size" and "file modification time" to argument handler. |

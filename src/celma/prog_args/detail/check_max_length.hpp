@@ -15,21 +15,20 @@
 /// See documentation of template celma::prog_args::detail::CheckMaxLength.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_MAX_LENGTH_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_MAX_LENGTH_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks that a given string value has a maximum length.
 ///
 /// @since  1.23.0, 12.04.2019
-class CheckMaxLength : public ICheck
+class CheckMaxLength final : public ICheck
 {
 public:
    /// Constructor, stores the maximum length that will be checked.
@@ -82,11 +81,7 @@ inline detail::ICheck* maxLength( std::string::size_type max_length)
 } // maxLength
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_MAX_LENGTH_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_max_length.hpp  =====

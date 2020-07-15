@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::files::Simple.
 
 
-#ifndef CELMA_LOG_FILES_SIMPLE_HPP
-#define CELMA_LOG_FILES_SIMPLE_HPP
+#pragma once
 
 
 #include <string>
@@ -24,13 +23,13 @@
 #include "celma/log/files/policy_base.hpp"
 
 
-namespace celma { namespace log { namespace files {
+namespace celma::log::files {
 
 
 /// The most simple case for writing log messages into a file:<br>
 /// Open the file and write. No rolling, no generations, no nothing.
 /// @since  1.0.0, 13.12.2017
-class Simple: public PolicyBase
+class Simple final : public PolicyBase
 {
 public:
    /// Constructor.
@@ -77,12 +76,7 @@ private:
 }; // Simple
 
 
-} // namespace files
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILES_SIMPLE_HPP
+} // namespace celma::log::files
 
 
 // =====  END OF simple.hpp  =====

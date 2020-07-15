@@ -15,7 +15,7 @@
 --*/
 
 
-// modules to test header file includes
+// modules to test headerfile includes
 #include "celma/log/files/counted.hpp"
 #include "celma/log/files/max_size.hpp"
 #include "celma/log/files/simple.hpp"
@@ -52,7 +52,7 @@ namespace {
 
 /// Helper class to check that the correct file operations are executed.
 /// @since  1.11.0, 30.08.2018
-class TestFileFuncs: public celma::common::detail::FileFuncsBase
+class TestFileFuncs final : public celma::common::detail::FileFuncsBase
 {
 public:
    /// Looks like a default constructor.
@@ -155,7 +155,7 @@ private:
 /// through the base class and the method fileFuncsObject.
 ///
 /// @since  1.11.0, 30.08.2018
-class TestEnvironment: public celma::test::GlobalFixtureAccess< TestEnvironment>
+class TestEnvironment final : public celma::test::GlobalFixtureAccess< TestEnvironment>
 {
 public:
    /// Constructor. Creates the file functions object for the test and passes it

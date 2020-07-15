@@ -15,8 +15,7 @@
 /// See documentation of template class celma::container::detail::PropertyValue<>.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_VALUE_HPP
-#define CELMA_CONTAINER_DETAIL_PROPERTY_VALUE_HPP
+#pragma once
 
 
 #include <iostream>
@@ -31,7 +30,7 @@ namespace celma::container::detail {
 ///
 /// @tparam  T  The type of the value.
 /// @since  1.22.0, 19.10.2016
-template< typename T> class PropertyValue: public PropertyEntry
+template< typename T> class PropertyValue final : public PropertyEntry
 {
 public:
    /// Constructor.
@@ -100,9 +99,6 @@ template< typename T>
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_VALUE_HPP
 
 
 // =====  END OF property_value.hpp  =====

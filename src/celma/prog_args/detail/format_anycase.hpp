@@ -15,21 +15,20 @@
 /// See documentation of class celma::prog_args::detail::FormatAnycase.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_FORMAT_ANYCASE_HPP
-#define CELMA_PROG_ARGS_DETAIL_FORMAT_ANYCASE_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/prog_args/detail/i_format.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Formats the characters in a string according to the given pattern.
 ///
 /// @since  1.23.0, 11.04.2019
-class FormatAnycase: public IFormat
+class FormatAnycase final : public IFormat
 {
 public:
    /// Constructor, stores the pattern to use to format the value in
@@ -84,11 +83,7 @@ inline detail::IFormat* anycase( const std::string& pattern)
 } // anycase
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_FORMAT_ANYCASE_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF format_anycase.hpp  =====

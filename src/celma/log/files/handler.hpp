@@ -15,8 +15,7 @@
 /// See documentation of template class celma::log::files::Handler.
 
 
-#ifndef CELMA_LOG_FILES_HANDLER_HPP
-#define CELMA_LOG_FILES_HANDLER_HPP
+#pragma once
 
 
 #include <memory>
@@ -29,7 +28,7 @@
 #include "celma/log/detail/log_msg.hpp"
 
 
-namespace celma { namespace log { namespace files {
+namespace celma::log::files {
 
 
 /// Handles log files as log destinations.<br>
@@ -52,7 +51,7 @@ namespace celma { namespace log { namespace files {
 /// @since  1.15.1, 01.01.2018
 ///    (added lock policy for writing into the file)
 /// @since  1.0.0, 13.12.2017
-template< typename P, typename L = common::NoLock> class Handler:
+template< typename P, typename L = common::NoLock> class Handler final :
    public detail::ILogDest
 {
 public:
@@ -132,12 +131,7 @@ template< typename P, typename L>
 } // Handler< P, L>::message
 
 
-} // namespace files
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILES_HANDLER_HPP
+} // namespace celma::log::files
 
 
 // =====  END OF handler.hpp  =====

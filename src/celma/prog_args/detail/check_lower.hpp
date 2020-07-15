@@ -15,8 +15,7 @@
 /// See documentation of template celma::prog_args::detail::CheckLower.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_LOWER_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_LOWER_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -25,13 +24,13 @@
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks a value if it is greater-than or equal to a lower limit.
 /// @tparam  T  The native type of the limit to check.
 /// @since  0.2, 10.04.2016
-template< typename T> class CheckLower : public ICheck
+template< typename T> class CheckLower final : public ICheck
 {
 public:
    /// Constructor.
@@ -106,11 +105,7 @@ template< typename T> detail::ICheck* lower( T value)
 } // lower
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_LOWER_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_lower.hpp  =====

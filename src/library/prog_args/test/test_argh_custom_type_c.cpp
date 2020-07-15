@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -50,7 +50,7 @@ namespace {
 
 /// Custom type: set flags in a bitset.
 /// @since  0.2, 10.04.2016
-class TypedArgBitset: public TypedArgBase
+class TypedArgBitset final : public TypedArgBase
 {
 public:
    /// The type of the destination variable.

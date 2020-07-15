@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ConstraintAllOf.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ALL_OF_HPP
-#define CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ALL_OF_HPP
+#pragma once
 
 
 #include <memory>
@@ -26,7 +25,7 @@
 #include "celma/prog_args/detail/storage.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Global constraint: All of the specified arguments must be used.
@@ -34,7 +33,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @since  0.15.0, 19.07.2017
 ///    (use ArgumentKey type to handle keys)
 /// @since  0.2, 10.04.2016
-class ConstraintAllOf: public IHandlerConstraint
+class ConstraintAllOf final : public IHandlerConstraint
 {
 public:
    /// Constructor, does a basic validation of the argument list.
@@ -106,11 +105,7 @@ inline detail::IHandlerConstraint* all_of( const std::string& argSpec)
 } // all_of
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ALL_OF_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF constraint_all_of.hpp  =====

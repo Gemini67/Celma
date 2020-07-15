@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::LogDestStream.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_DEST_STREAM_HPP
-#define CELMA_LOG_DETAIL_LOG_DEST_STREAM_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -25,7 +24,7 @@
 #include "celma/log/detail/i_format_stream.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 class LogMsg;
@@ -35,7 +34,7 @@ class LogMsg;
 ///
 /// @since  1.24.1, 22.04.2019  (removed unused feature "add newline")
 /// @since  1.0.0, 19.06.2016
-class LogDestStream: public ILogDest
+class LogDestStream final : public ILogDest
 {
 public:
    /// Constructor.<br>
@@ -76,12 +75,7 @@ private:
 }; // LogDestStream
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_DEST_STREAM_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF log_dest_stream.hpp  =====

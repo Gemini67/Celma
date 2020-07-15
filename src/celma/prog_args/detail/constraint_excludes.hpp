@@ -15,15 +15,14 @@
 /// See documentation of class celma::prog_args::detail::ConstraintExcludes.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CONSTRAINT_EXCLUDES_HPP
-#define CELMA_PROG_ARGS_DETAIL_CONSTRAINT_EXCLUDES_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/prog_args/detail/i_arg_constraint.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Constraint: Argument forbids to use some other argument(s).
@@ -31,7 +30,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @since  0.15.0, 05.07.2017
 ///    (use Storage<> internally, pass argument keys as ArgumentKey objects)
 /// @since  0.2, 10.04.2016
-class ConstraintExcludes: public IArgConstraint
+class ConstraintExcludes final : public IArgConstraint
 {
 public:
    /// Constructor, stores the argument specification of the other, forbidden
@@ -82,11 +81,7 @@ inline detail::IArgConstraint* excludes( const std::string& argSpec)
 } // excludes
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_EXCLUDES_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF constraint_excludes.hpp  =====

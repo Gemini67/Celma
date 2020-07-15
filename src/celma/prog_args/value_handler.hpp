@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::ValueHandler.
 
 
-#ifndef CELMA_PROG_ARGS_VALUE_HANDLER_HPP
-#define CELMA_PROG_ARGS_VALUE_HANDLER_HPP
+#pragma once
 
 
 #include <map>
@@ -27,7 +26,7 @@
 #include "celma/prog_args/detail/argument_value.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 /// Extension of the Handler class that creates and stores the destination
@@ -47,7 +46,7 @@ namespace celma { namespace prog_args {
 /// base Handler class are hidden here.
 ///
 /// @since  0.14.0, 09.02.2017
-class ValueHandler: public Handler
+class ValueHandler final : public Handler
 {
 public:
    /// Constructor.
@@ -339,11 +338,7 @@ template< typename T> void ValueHandler::getValue( T& dest) const noexcept( fals
 } // ValueHandler::getValue
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_VALUE_HANDLER_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF value_handler.hpp  =====

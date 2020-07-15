@@ -15,8 +15,7 @@
 /// See documentation of class celma::common::TokenizerBase.
 
 
-#ifndef CELMA_COMMON_TOKENIZER_BASE_HPP
-#define CELMA_COMMON_TOKENIZER_BASE_HPP
+#pragma once
 
 
 #include <string>
@@ -160,9 +159,6 @@ template< typename T> void TokenizerBase< T>::setCount( int theCount)
 
 
 } // namespace celma::common
-
-
-#endif   // CELMA_COMMON_TOKENIZER_BASE_HPP
 
 
 // =====  END OF tokenizer_base.hpp  =====

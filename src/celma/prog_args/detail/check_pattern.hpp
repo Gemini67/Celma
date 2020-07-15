@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::CheckPattern.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_PATTERN_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_PATTERN_HPP
+#pragma once
 
 
 #include <regex>
@@ -24,13 +23,13 @@
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks a value if it matches a set of specified, allowed values.
 ///
 /// @since  1.19.0, 27.11.2018
-class CheckPattern: public ICheck
+class CheckPattern final : public ICheck
 {
 public:
    /// Constructor that takes a string with the regular expression.
@@ -104,11 +103,7 @@ inline detail::ICheck* pattern( const std::regex& reg_ex)
 } // pattern
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_PATTERN_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_pattern.hpp  =====

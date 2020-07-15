@@ -59,7 +59,7 @@ namespace {
 /// deletes them afterwards.
 ///
 /// @since  1.26.0, 08.03.2018
-class GlobalFixture: public celma::log::TestIDirList
+class GlobalFixture final : public celma::log::TestIDirList
 {
 public:
    /// Constructor, sets a special file operations policy that stores the names

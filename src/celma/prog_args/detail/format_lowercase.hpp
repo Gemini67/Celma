@@ -15,19 +15,18 @@
 /// See documentation of class celma::prog_args::detail::FormatLowercase.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_FORMAT_LOWERCASE_HPP
-#define CELMA_PROG_ARGS_DETAIL_FORMAT_LOWERCASE_HPP
+#pragma once
 
 
 #include "celma/prog_args/detail/i_format.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Changes all the characters in the passed string to lowercase.
 /// @since  0.2, 10.04.2016
-class FormatLowercase: public IFormat
+class FormatLowercase final : public IFormat
 {
 public:
    /// Default constructor.
@@ -68,11 +67,7 @@ inline detail::IFormat* lowercase()
 } // lowercase
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_FORMAT_LOWERCASE_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF format_lowercase.hpp  =====

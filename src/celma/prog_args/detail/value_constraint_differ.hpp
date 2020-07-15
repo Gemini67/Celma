@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ValueConstraintDiffer.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_VALUE_CONSTRAINT_DIFFER_HPP
-#define CELMA_PROG_ARGS_DETAIL_VALUE_CONSTRAINT_DIFFER_HPP
+#pragma once
 
 
 #include <sstream>
@@ -27,14 +26,14 @@
 #include "celma/prog_args/detail/i_handler_value_constraint.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Constraint: The values of the given arguments must be different.
 ///
 /// @tparam  T  The type of the values of the arguments to check.
 /// @since  1.31.0, 22.10.2019
-class ValueConstraintDiffer: public IHandlerValueConstraint
+class ValueConstraintDiffer final : public IHandlerValueConstraint
 {
 public:
    /// Constructor.
@@ -156,11 +155,7 @@ inline detail::IHandlerValueConstraint* differ( const std::string& argSpec)
 } // differ
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_VALUE_CONSTRAINT_DIFFER_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF value_constraint_differ.hpp  =====

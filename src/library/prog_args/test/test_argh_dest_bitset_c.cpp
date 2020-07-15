@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -59,7 +59,7 @@ enum bit_names
 /// Helper class to convert an enum name into its value.
 ///
 /// @since  1.23.0, 05.04.2019
-class EnumFormatter: public celma::prog_args::detail::IFormat
+class EnumFormatter final : public celma::prog_args::detail::IFormat
 {
 public:
    /// Constructor, sets the formatters name in the base class.

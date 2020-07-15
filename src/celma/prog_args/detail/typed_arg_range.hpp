@@ -15,8 +15,7 @@
 /// See documentation of template celma::prog_args::detail::TypedArgRange.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_RANGE_HPP
-#define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_RANGE_HPP
+#pragma once
 
 
 #include <iostream>
@@ -26,7 +25,7 @@
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Helper class to store a destination variable that is a container in which a
@@ -35,7 +34,8 @@ namespace celma { namespace prog_args { namespace detail {
 /// @tparam  T  The type of the value(s) to be stored in the container.
 /// @tparam  C  The type of the container to store the values in.
 /// @since  0.2, 10.04.2016
-template< typename T, typename C> class TypedArgRange: public TypedArgBase
+template< typename T, typename C> class TypedArgRange final :
+   public TypedArgBase
 {
 public:
    /// The type of the destination variable.
@@ -197,12 +197,7 @@ template< typename T, typename C>
 } // TypedArgRange< T, C>::evalRange
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_RANGE_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF typed_arg_range.hpp  =====

@@ -18,21 +18,20 @@
 /// See documentation of class celma::log::test::LogDestMsg.
 
 
-#ifndef CELMA_LOG_TEST_TEST_LOG_DEST_MSG_HPP
-#define CELMA_LOG_TEST_TEST_LOG_DEST_MSG_HPP
+#pragma once
 
 
 #include "celma/log/detail/i_log_dest.hpp"
 #include "celma/log/detail/log_msg.hpp"
 
 
-namespace celma { namespace log { namespace test {
+namespace celma::log::test {
 
 
 /// Implementation of a log destination that copies the data of the log message
 /// into another log message object.
 /// @since  0.3, 19.06.2016
-class LogDestMsg: public detail::ILogDest
+class LogDestMsg final : public detail::ILogDest
 {
 public:
    /// Constructor.
@@ -63,12 +62,7 @@ private:
 }; // LogDestMsg
 
 
-} // namespace test
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_TEST_TEST_LOG_DEST_MSG_HPP
+} // namespace celma::log::test
 
 
 // =====  END OF test_log_dest_msg.hpp  =====

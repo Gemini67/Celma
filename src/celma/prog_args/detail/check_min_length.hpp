@@ -15,21 +15,20 @@
 /// See documentation of template celma::prog_args::detail::CheckMinLength.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_MIN_LENGTH_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_MIN_LENGTH_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks that a given string value has a minimum length.
 ///
 /// @since  1.23.0, 11.04.2019
-class CheckMinLength : public ICheck
+class CheckMinLength final : public ICheck
 {
 public:
    /// Constructor, stores the minimum length that will be checked.
@@ -82,11 +81,7 @@ inline detail::ICheck* minLength( std::string::size_type min_length)
 } // minLength
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_MIN_LENGTH_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_min_length.hpp  =====

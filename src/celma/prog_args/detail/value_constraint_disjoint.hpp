@@ -16,8 +16,7 @@
 /// celma::prog_args::detail::ValueConstraintDisjoint<>.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_VALUE_CONSTRAINT_DISJOINT_HPP
-#define CELMA_PROG_ARGS_DETAIL_VALUE_CONSTRAINT_DISJOINT_HPP
+#pragma once
 
 
 #include <sstream>
@@ -28,14 +27,14 @@
 #include "celma/prog_args/detail/i_handler_value_constraint.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Constraint: The values of the given argument destinations, of type
 /// container,  must be different.
 ///
 /// @since  1.33.0, 30.10.2019
-class ValueConstraintDisjoint: public IHandlerValueConstraint
+class ValueConstraintDisjoint final : public IHandlerValueConstraint
 {
 public:
    /// Constructor.
@@ -169,11 +168,7 @@ inline detail::IHandlerValueConstraint* disjoint( const std::string& argSpec)
 } // disjoint
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_VALUE_CONSTRAINT_DISJOINT_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF value_constraint_disjoint.hpp  =====

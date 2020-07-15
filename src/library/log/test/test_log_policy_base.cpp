@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/log/files/policy_base.hpp"
 
 
@@ -41,7 +41,7 @@ namespace {
 /// Helper class to test the module PolicyBase.
 ///
 /// @since  1.25.0, 03.05.2019
-class TestPolicyBase: public celma::log::files::PolicyBase
+class TestPolicyBase final : public celma::log::files::PolicyBase
 {
 public:
    /// Constructor. Stores the object to use to create the log file names.

@@ -61,7 +61,7 @@ enum bit_names
 /// Helper class to convert an enum name into its value.
 ///
 /// @since  1.37.0, 28.06.2020
-class EnumFormatter: public celma::prog_args::detail::IFormat
+class EnumFormatter final : public celma::prog_args::detail::IFormat
 {
 public:
    /// Constructor, sets the formatters name in the base class.

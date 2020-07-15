@@ -15,20 +15,19 @@
 /// See documentation of class celma::appl::ProjectRoot.
 
 
-#ifndef CELMA_APPL_PROJECT_ROOT_HPP
-#define CELMA_APPL_PROJECT_ROOT_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/common/singleton.hpp"
 
 
-namespace celma { namespace appl {
+namespace celma::appl {
 
 
 /// Provides the path of the root directory of a project.
 /// @since  1.0.0, 18.10.2017  (extracted from ProjectPath)
-class ProjectRoot: public common::Singleton< ProjectRoot>
+class ProjectRoot final : public common::Singleton< ProjectRoot>
 {
 public:
    /// Specifies how the value for the 'project root' directory is determined:
@@ -124,11 +123,7 @@ inline ProjectRoot::ProjRootSrc ProjectRoot::projectRootSrc()
 } // ProjectRoot::projectRootSrc
 
 
-} // namespace appl
-} // namespace celma
-
-
-#endif   // CELMA_APPL_PROJECT_ROOT_HPP
+} // namespace celma::appl
 
 
 // =====  END OF project_root.hpp  =====

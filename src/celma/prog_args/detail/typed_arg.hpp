@@ -71,7 +71,7 @@ namespace celma::prog_args::detail {
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
-template< typename T> class TypedArg: public TypedArgBase
+template< typename T> class TypedArg : public TypedArgBase
 {
 public:
    /// Constructor.
@@ -386,7 +386,7 @@ private:
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
-template< typename T> class TypedArg< common::CheckAssign< T>>:
+template< typename T> class TypedArg< common::CheckAssign< T>> final :
    public TypedArgBase
 {
 public:
@@ -528,7 +528,7 @@ template< typename T>
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
-template<> class TypedArg< common::CheckAssign< bool>>: public TypedArgBase
+template<> class TypedArg< common::CheckAssign< bool>> final : public TypedArgBase
 {
 public:
    /// Constructor.
@@ -647,7 +647,7 @@ private:
 /// incremented, it is not possible to assign a value anymore, and vice versa.
 ///
 /// @since  1.10.0, 11.08.2018
-template<> class TypedArg< LevelCounter>: public TypedArgBase
+template<> class TypedArg< LevelCounter> final : public TypedArgBase
 {
 public:
    /// Constructor.
@@ -811,7 +811,8 @@ private:
 ///
 /// @tparam  T  The type of container.
 /// @since  1.34.0, 22.11.2019  (generalisation for all containers)
-template< typename T> class TypedArg< ContainerAdapter< T>>: public TypedArgBase
+template< typename T> class TypedArg< ContainerAdapter< T>> :
+   public TypedArgBase
 {
 public:
    /// The type of the destination variable/container adapter.
@@ -1194,7 +1195,7 @@ template< typename T>
 /// @tparam  T  The type of the key-value-pair container.
 /// @since  1.41.0, 09.02.2020
 template< typename T>
-   class TypedArg< KeyValueContainerAdapter< T>>: public TypedArgBase
+   class TypedArg< KeyValueContainerAdapter< T>> final : public TypedArgBase
 {
 public:
    /// The type of the destination variable/container adapter.
@@ -1611,7 +1612,8 @@ template< typename T>
 /// @tparam  N
 ///    Number of elements the array can hold.
 /// @since  1.26.0, 29.04.2019
-template< typename T, size_t N> class TypedArg< T[ N]>: public TypedArgBase
+template< typename T, size_t N> class TypedArg< T[ N]> final :
+   public TypedArgBase
 {
 public:
    /// Constructor.
@@ -1885,7 +1887,7 @@ template< typename T, size_t N>
 ///    Number of elements the array can hold.
 /// @since  1.26.0, 26.04.2019
 template< typename T, size_t N>
-   class TypedArg< std::array< T, N>>: public TypedArgBase
+   class TypedArg< std::array< T, N>> final : public TypedArgBase
 {
 public:
    /// The type of the destination variable.
@@ -2179,7 +2181,7 @@ public:
    /// Empty default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
-   virtual ~TupleElementValueAssign() = default;
+   ~TupleElementValueAssign() = default;
 
    /// Operator called for the tuple element. Converts the value from #mValue to
    /// the required destination type and assigns it to \a tuple_value, i.e. the
@@ -2216,7 +2218,8 @@ private:
 /// @since  0.11, 07.01.2017
 ///    (converted from TypedArgTuple into specialisation)
 /// @since  0.11, 19.12.2016
-template< typename... T> class TypedArg< std::tuple< T...>>: public TypedArgBase
+template< typename... T> class TypedArg< std::tuple< T...>> final :
+   public TypedArgBase
 {
 public:
    /// Constructor.
@@ -2494,7 +2497,7 @@ template< typename... T>
 ///
 /// @tparam  N  The size of the bitset.
 /// @since  1.4.3, 29.04.2018
-template< size_t N> class TypedArg< std::bitset< N>>: public TypedArgBase
+template< size_t N> class TypedArg< std::bitset< N>> : public TypedArgBase
 {
 public:
    /// The type of the destination variable.
@@ -2730,7 +2733,7 @@ template< size_t N>
 /// Specialisation of TypedArg<> for destination value type std::vector< bool>.
 ///
 /// @since  1.40.0. 28.05.2020
-template<> class TypedArg< std::vector< bool>>: public TypedArgBase
+template<> class TypedArg< std::vector< bool>> final : public TypedArgBase
 {
 public:
    /// The type of the destination variable.
@@ -2940,7 +2943,7 @@ private:
 /// container::DynamicBitset.
 ///
 /// @since  1.37.0, 28.06.2020
-template<> class TypedArg< container::DynamicBitset>: public TypedArgBase
+template<> class TypedArg< container::DynamicBitset> final : public TypedArgBase
 {
 public:
    /// The type of the destination variable.
@@ -3126,7 +3129,7 @@ private:
 ///
 /// @tparam  T  The type of the value(s) to create the filter(s) for.
 /// @since  1.31.0, 17.10.2019
-template< typename T> class TypedArg< common::ValueFilter< T>>:
+template< typename T> class TypedArg< common::ValueFilter< T>> final :
    public TypedArgBase
 {
 public:

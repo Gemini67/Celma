@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::TypedArgBase.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_BASE_HPP
-#define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_BASE_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -1021,9 +1020,6 @@ inline void TypedArgBase::defaultValue( std::string& /* dest */) const
 
 
 } // namespace celma::prog_args::detail
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_BASE_HPP
 
 
 // =====  END OF typed_arg_base.hpp  =====

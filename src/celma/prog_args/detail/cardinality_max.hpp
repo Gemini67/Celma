@@ -15,15 +15,14 @@
 /// See documentation of class celma::prog_args::detail::CardinalityMax.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CARDINALITY_MAX_HPP
-#define CELMA_PROG_ARGS_DETAIL_CARDINALITY_MAX_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks cardinality for a maximum of values:
@@ -31,7 +30,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// - check() never throws.
 ///
 /// @since  0.2, 10.04.2016
-class CardinalityMax: public ICardinality
+class CardinalityMax final : public ICardinality
 {
 public:
    /// Constructor.
@@ -92,11 +91,7 @@ inline detail::ICardinality* cardinality_max( int max_calls)
 } // cardinality_max
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_MAX_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF cardinality_max.hpp  =====
