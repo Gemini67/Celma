@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::CheckIsFile.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_IS_FILE_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_IS_FILE_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -31,7 +30,7 @@ namespace celma::prog_args { namespace detail {
 /// Checks if a value contains the (path and) name of file.
 ///
 /// @since  1.4.1, 02.03.2018
-class CheckIsFile: public ICheck
+class CheckIsFile final : public ICheck
 {
 public:
    /// Constructor, sets the symbolic name in the base class.
@@ -102,9 +101,6 @@ inline detail::ICheck* isFile()
 
 
 } // namespace celma::prog_args
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_IS_FILE_HPP
 
 
 // =====  END OF check_is_file.hpp  =====

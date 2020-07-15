@@ -18,8 +18,7 @@
 /// celma::container::detail::DynamicBitsetReverseIterator<>.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
-#define CELMA_CONTAINER_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
+#pragma once
 
 
 #include <cassert>
@@ -140,7 +139,7 @@ protected:
 ///    Here: Always celma::container::DynamicBitset. Set as template parameter to
 ///    break dependency cycle.
 /// @since  1.37.0, 18.06.2020
-template< typename T> class DynamicBitsetIterator:
+template< typename T> class DynamicBitsetIterator final :
    public DynamicBitsetIteratorBase< T>
 {
 public:
@@ -251,7 +250,7 @@ private:
 ///    Here: Always celma::container::DynamicBitset. Set as template parameter to
 ///    break dependency cycle.
 /// @since  1.37.0, 18.06.2020
-template< typename T> class DynamicBitsetReverseIterator:
+template< typename T> class DynamicBitsetReverseIterator final :
    public DynamicBitsetIteratorBase< T>
 {
 public:
@@ -352,9 +351,6 @@ private:
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_DYNAMIC_BITSET_ITERATOR_HPP
 
 
 // =====  END OF dynamic_bitset_iterator.hpp  =====

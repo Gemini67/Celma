@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -46,7 +46,7 @@ namespace {
 /// Helper class: An additional formatter.
 ///
 /// @since  1.32.0, 19.08.2019
-class RemoveDigitFormatter: public celma::prog_args::detail::IFormat
+class RemoveDigitFormatter final : public celma::prog_args::detail::IFormat
 {
 public:
    /// Default constructor.

@@ -15,8 +15,7 @@
 /// See documentation of template celma::prog_args::detail::CheckUpper.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_UPPER_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_UPPER_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -26,13 +25,13 @@
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks a value if it is less-than an upper limit.
 /// @tparam  T  The native type of the limit to check.
 /// @since  0.2, 10.04.2016
-template< typename T> class CheckUpper : public ICheck
+template< typename T> class CheckUpper final : public ICheck
 {
 public:
    /// Constructor.
@@ -109,11 +108,7 @@ template< typename T> detail::ICheck* upper( T value)
 } // end upper
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_UPPER_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_upper.hpp  =====

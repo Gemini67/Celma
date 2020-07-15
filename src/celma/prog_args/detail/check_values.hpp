@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::CheckValues.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_VALUES_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_VALUES_HPP
+#pragma once
 
 
 #include <string>
@@ -24,13 +23,13 @@
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks a value if it matches a set of specified, allowed values.
 ///
 /// @since  0.2, 10.04.2016
-class CheckValues: public ICheck
+class CheckValues final : public ICheck
 {
 public:
    /// Constructor.
@@ -79,11 +78,7 @@ inline detail::ICheck* values( const std::string& valueList)
 } // end values
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_VALUES_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_values.hpp  =====

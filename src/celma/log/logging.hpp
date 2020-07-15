@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::Logging.
 
 
-#ifndef CELMA_LOG_LOGGING_HPP
-#define CELMA_LOG_LOGGING_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -27,7 +26,7 @@
 #include "celma/log/detail/log_defs.hpp"
 
 
-namespace celma { namespace log {
+namespace celma::log {
 
 
 namespace detail {
@@ -78,7 +77,7 @@ class LogMsg;
 /// value of the attribute that was added last is used.
 ///
 /// @since  0.3, 19.06.2016
-class Logging: public common::Singleton< Logging>
+class Logging final : public common::Singleton< Logging>
 {
 public:
    friend class common::Singleton< Logging>;
@@ -201,8 +200,7 @@ inline std::string Logging::getAttribute( const std::string& attr_name) const
 } // Logging::getAtribute
 
 
-} // namespace log
-} // namespace celma
+} // namespace celma::log
 
 
 /// @example
@@ -213,9 +211,6 @@ inline std::string Logging::getAttribute( const std::string& attr_name) const
 /// Logging::instance().getLog( trace_log)->addDestination( "stream", new LogDestStream( cout));
 /// LOG( trace_log) << "log trace message written to stdout";
 /// </pre>
-
-
-#endif   // CELMA_LOG_LOGGING_HPP
 
 
 // =====  END OF logging.hpp  =====

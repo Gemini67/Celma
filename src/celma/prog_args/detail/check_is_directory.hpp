@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::CheckIsDirectory.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_IS_DIRECTORY_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_IS_DIRECTORY_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -25,12 +24,12 @@
 #include "celma/prog_args/detail/i_check.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks if a value contains the (path and) name of directory.
 /// @since  1.4.1, 02.03.2018
-class CheckIsDirectory: public ICheck
+class CheckIsDirectory final : public ICheck
 {
 public:
    /// Constructor, sets the symbolic name in the base class.
@@ -96,11 +95,7 @@ inline detail::ICheck* isDirectory()
 } // isDirectory
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_IS_DIRECTORY_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF check_is_directory.hpp  =====

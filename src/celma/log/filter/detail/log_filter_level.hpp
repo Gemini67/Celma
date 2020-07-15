@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::LogFilterLevel.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_FILTER_LEVEL_HPP
-#define CELMA_LOG_DETAIL_LOG_FILTER_LEVEL_HPP
+#pragma once
 
 
 #include "celma/log/filter/detail/i_filter.hpp"
@@ -24,12 +23,12 @@
 #include "celma/log/detail/log_msg.hpp"
 
 
-namespace celma { namespace log { namespace filter { namespace detail {
+namespace celma::log::filter::detail {
 
 
 /// Filter for a specific log level.
 /// @since  0.3, 19.06.2016
-class LogFilterLevel: public IFilter
+class LogFilterLevel final : public IFilter
 {
 public:
    /// Constructor.
@@ -82,13 +81,7 @@ inline bool LogFilterLevel::pass( const log::detail::LogMsg& msg) const
 } // LogFilterLevel::pass
 
 
-} // namespace detail
-} // namespace filter
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_FILTER_LEVEL_HPP
+} // namespace celma::log::filter::detail
 
 
 // =====  END OF log_filter_level.hpp  =====

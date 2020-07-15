@@ -50,7 +50,7 @@ enum class VerboseLevels
 };
 
 
-class EnumFormatter: public celma::prog_args::detail::IFormat
+class EnumFormatter final : public celma::prog_args::detail::IFormat
 {
 public:
    /// Constructor, sets the formatters name in the base class.

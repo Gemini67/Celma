@@ -15,8 +15,7 @@
 /// See documentation of template celma::prog_args::detail::TypedArgValue.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_VALUE_HPP
-#define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_VALUE_HPP
+#pragma once
 
 
 #include <cstring>
@@ -31,7 +30,7 @@
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 // Template TypedArgValue
@@ -49,7 +48,7 @@ namespace celma { namespace prog_args { namespace detail {
 ///
 /// @tparam  T  The type of the value.
 /// @since  1.1.0, 25.09.2017
-template< typename T> class TypedArgValue: public TypedArgBase
+template< typename T> class TypedArgValue final : public TypedArgBase
 {
 public:
    /// Constructor.
@@ -233,12 +232,7 @@ template< typename T> void TypedArgValue< T>::assign( const std::string&, bool)
 } // TypedArgValue< T>::assign
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_VALUE_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF typed_arg_value.hpp  =====

@@ -15,15 +15,14 @@
 /// See documentation of class celma::prog_args::detail::ConstraintRequires.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CONSTRAINT_REQUIRES_HPP
-#define CELMA_PROG_ARGS_DETAIL_CONSTRAINT_REQUIRES_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/prog_args/detail/i_arg_constraint.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Constraint: Argument requires another argument to be used.
@@ -31,7 +30,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// @since  0.15.0, 05.07.2017  (use Storage<> internally, pass argument keys as
 ///                             ArgumentKey objects)
 /// @since  0.2, 10.04.2016
-class ConstraintRequires: public IArgConstraint
+class ConstraintRequires final : public IArgConstraint
 {
 public:
    /// Constructor, stores the argument specification of the other, requried
@@ -82,11 +81,7 @@ inline detail::IArgConstraint* requires( const std::string& argSpec)
 } // requires
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_REQUIRES_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF constraint_requires.hpp  =====

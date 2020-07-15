@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::files::Counted.
 
 
-#ifndef CELMA_LOG_FILES_COUNTED_HPP
-#define CELMA_LOG_FILES_COUNTED_HPP
+#pragma once
 
 
 #include <string>
@@ -25,14 +24,14 @@
 #include "celma/log/files/policy_base.hpp"
 
 
-namespace celma { namespace log { namespace files {
+namespace celma::log::files {
 
 
 /// Log file policy that rolls a log file when it contains a specified number of
 /// entries.
 ///
 /// @since  1.11.0, 05.09.2018
-class Counted: public PolicyBase
+class Counted final : public PolicyBase
 {
 public:
    /// Constructor. Checks that the given log filename definition contains a log
@@ -114,12 +113,7 @@ private:
 }; // Counted
 
 
-} // namespace files
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILES_COUNTED_HPP
+} // namespace celma::log::files
 
 
 // =====  END OF counted.hpp  =====

@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::Groups.
 
 
-#ifndef CELMA_PROG_ARGS_GROUPS_HPP
-#define CELMA_PROG_ARGS_GROUPS_HPP
+#pragma once
 
 
 #include <iostream>
@@ -28,7 +27,7 @@
 #include "celma/prog_args/value_handler.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 class Handler;
@@ -60,7 +59,7 @@ class Handler;
 ///
 /// @since  0.13.0, 05.02.2017  (redesign to handle special parameters)
 /// @since  0.2, 10.04.2016
-class Groups: public common::Singleton< Groups>
+class Groups final : public common::Singleton< Groups>
 {
 
    friend class common::Singleton< Groups>;
@@ -400,11 +399,7 @@ inline void Groups::setUsageLineLength( int useLen)
 } // Groups::setUsageLineLength
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_GROUPS_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF groups.hpp  =====

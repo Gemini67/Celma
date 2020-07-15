@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// include of the tested module's header file
+// include of the tested module's headerfile
 #include "celma/log/detail/stream_log.hpp"
 
 
@@ -226,3 +226,4 @@ BOOST_AUTO_TEST_CASE( add_different_attributes)
 
 
 // =====  END OF test_stream_log.cpp  =====
+

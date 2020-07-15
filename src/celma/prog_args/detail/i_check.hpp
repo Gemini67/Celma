@@ -15,15 +15,14 @@
 /// See documentation of class celma::prog_args::detail::ICheck.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP
-#define CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP
+#pragma once
 
 
 #include <iostream>
 #include <string>
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Base class for value checks.
@@ -108,12 +107,7 @@ inline std::ostream& operator <<( std::ostream& os, ICheck* pc)
 } // operator <<
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_I_CHECK_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF i_check.hpp  =====

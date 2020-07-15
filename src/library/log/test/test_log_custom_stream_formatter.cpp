@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,7 +46,7 @@
 using celma::log::Logging;
 
 
-class CustomStreamFormatter: public celma::log::detail::IFormatStream
+class CustomStreamFormatter final : public celma::log::detail::IFormatStream
 {
 private:
    /// Interface definition of the method to be implmented by derived classes.
@@ -163,4 +163,5 @@ BOOST_FIXTURE_TEST_CASE( test_log_formatter, TestCaseLogDestStream)
 
 
 
-// ===============  END OF test_log_custom_stream_formatter.cpp  ===============
+// =====  END OF test_log_custom_stream_formatter.cpp  =====
+

@@ -14,8 +14,7 @@
 /// See description of template class celma::indirect_access::detail::Field.
 
 
-#ifndef CELMA_INDIRECT_ACCESS_FIELD_HPP
-#define CELMA_INDIRECT_ACCESS_FIELD_HPP
+#pragma once
 
 
 #include <string>
@@ -24,7 +23,7 @@
 #include "celma/indirect_access/detail/i_field.hpp"
 
 
-namespace celma { namespace indirect_access { namespace detail {
+namespace celma::indirect_access::detail {
 
 
 /// This class actually handles the access indirect to a field.
@@ -32,7 +31,7 @@ namespace celma { namespace indirect_access { namespace detail {
 /// @since  1.2.1, 08.01.2018  (renamed to Field, copying is not allowed)
 /// @since  0.5, 03.11.2016  (feature renamed to 'indirect access')
 /// @since  0.4, 02.05.2016
-template< typename T> class Field: public IField
+template< typename T> class Field final : public IField
 {
 public:
    /// Constructor.
@@ -46,7 +45,7 @@ public:
    Field& operator =( const Field&) = delete;
 
    /// Default destructor.
-   ~Field() = default;
+   ~Field() override = default;
 
    /// Sets a new value.
    /// @param[in]  new_value  The new value to set.
@@ -99,12 +98,7 @@ template< typename T> const std::string Field< T>::str() const noexcept( false)
 } // Field< T>::str
 
 
-} // namespace detail
-} // namespace indirect_access
-} // namespace celma
-
-
-#endif   // CELMA_INDIRECT_ACCESS_FIELD_HPP
+} // namespace celma::indirect_access::detail
 
 
 // =====  END OF field.hpp  =====

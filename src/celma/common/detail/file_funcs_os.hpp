@@ -15,15 +15,14 @@
 /// See documentation of class celma::common::detail::FileFuncsOs.
 
 
-#ifndef CELMA_COMMON_DETAIL_FILE_FUNCS_OS_HPP
-#define CELMA_COMMON_DETAIL_FILE_FUNCS_OS_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/common/detail/file_funcs_base.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Implementation of file functions for really calling the OS functions.
@@ -31,7 +30,7 @@ namespace celma { namespace common { namespace detail {
 /// @since  1.26.0, 21.05.2019
 ///    (re-added mkdir, originally implemented 08.03.2018)
 /// @since  1.4.0, 20.02.2018
-class FileFuncsOs: public FileFuncsBase
+class FileFuncsOs final : public FileFuncsBase
 {
 public:
    /// Empty, virtual destructor.
@@ -69,12 +68,7 @@ public:
 }; // FileFuncsOs
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_FILE_FUNCS_OS_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF file_funcs_os.hpp  =====

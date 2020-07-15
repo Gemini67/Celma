@@ -31,15 +31,14 @@
 ///   Stores a reference to a variable, plus stores the name of the variable.
 
 
-#ifndef CELMA_COMMON_ANY_TYPE_BASE_HPP
-#define CELMA_COMMON_ANY_TYPE_BASE_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/common/type_name.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 // forward declaration
@@ -243,11 +242,7 @@ inline const TypeNameBase< AnyBase>* AnyBase::getTypeNameBase() const
 } // AnyBase::getTypeNameBase
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_ANY_TYPE_BASE_HPP
+} // namespace celma::common
 
 
 // =====  END OF any_type_base.hpp  =====

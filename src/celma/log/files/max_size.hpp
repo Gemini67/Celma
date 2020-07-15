@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::files::MaxSize.
 
 
-#ifndef CELMA_LOG_FILES_MAX_SIZE_HPP
-#define CELMA_LOG_FILES_MAX_SIZE_HPP
+#pragma once
 
 
 #include <string>
@@ -25,13 +24,13 @@
 #include "celma/log/files/policy_base.hpp"
 
 
-namespace celma { namespace log { namespace files {
+namespace celma::log::files {
 
 
 /// Log file policy that ensures a maximum log file size.
 ///
 /// @since  1.0.0, 13.12.2017
-class MaxSize: public PolicyBase
+class MaxSize final : public PolicyBase
 {
 public:
    /// Constructor. Checks that the given log filename definition contains a log
@@ -114,12 +113,7 @@ private:
 }; // MaxSize
 
 
-} // namespace files
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILES_MAX_SIZE_HPP
+} // namespace celma::log::files
 
 
 // =====  END OF max_size.hpp  =====

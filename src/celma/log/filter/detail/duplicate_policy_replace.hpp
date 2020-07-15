@@ -15,21 +15,20 @@
 /// See documentation of class celma::log::filter::detail::DuplicatePolicyReplace.
 
 
-#ifndef CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_REPLACE_HPP
-#define CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_REPLACE_HPP
+#pragma once
 
 
 #include "celma/log/filter/detail/i_duplicate_policy.hpp"
 
 
-namespace celma { namespace log { namespace filter { namespace detail {
+namespace celma::log::filter::detail {
 
 
 /// Implementation of the duplicate handler policy 'replace': Replace existing
 /// filter with new filter object/value.
 /// @since  1.15.1, 09.01.2018  (moved into namespace log::filter)
 /// @since  0.3, 19.06.2016
-class DuplicatePolicyReplace: public IDuplicatePolicy
+class DuplicatePolicyReplace final : public IDuplicatePolicy
 {
 public:
    /// Virtual, empty destructor.
@@ -55,13 +54,7 @@ public:
 }; // DuplicatePolicyReplace
 
 
-} // namespace detail
-} // namespace filter
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_REPLACE_HPP
+} // namespace celma::log::filter::detail
 
 
 // =====  END OF duplicate_policy_replace.hpp  =====

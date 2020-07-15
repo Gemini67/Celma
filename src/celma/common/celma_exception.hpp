@@ -15,8 +15,7 @@
 /// See documentation of template celma::common::CelmaException.
 
 
-#ifndef CELMA_COMMON_CELMA_EXCEPTION_HPP
-#define CELMA_COMMON_CELMA_EXCEPTION_HPP
+#pragma once
 
 
 #include <cstdarg>
@@ -27,7 +26,7 @@
 #include "celma/common/exception_base.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Extension of the standard exception classes: Provides more information
@@ -192,8 +191,7 @@ using CelmaLogicError = CelmaException< std::logic_error>;
 using CelmaRuntimeError = CelmaException< std::runtime_error>;
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
 /// Macro to easily throw a 'Celma logic error' with the standard information
@@ -209,9 +207,6 @@ using CelmaRuntimeError = CelmaException< std::runtime_error>;
 /// @since  0.2, 07.04.2016
 #define  CELMA_RuntimeError( t) \
    celma::common::CelmaRuntimeError( __FILE__, __PRETTY_FUNCTION__, __LINE__, t)
-
-
-#endif   // CELMA_COMMON_CELMA_EXCEPTION_HPP
 
 
 // =====  END OF celma_exception.hpp  =====
