@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,8 +16,7 @@
 /// celma::prog_args::detail::IHandlerValueConstraint.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_I_HANDLER_VALUE_CONSTRAINT_HPP
-#define CELMA_PROG_ARGS_DETAIL_I_HANDLER_VALUE_CONSTRAINT_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -26,7 +25,7 @@
 #include "celma/prog_args/detail/i_handler_constraint.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 class TypedArgBase;
@@ -40,13 +39,13 @@ class TypedArgBase;
 /// constraints need access to the argument handler objects.
 ///
 /// @since  1.31.0, 22.10.2019
-class IHandlerValueConstraint: public IHandlerConstraint
+class IHandlerValueConstraint : public IHandlerConstraint
 {
 public:
    /// Empty, virtual destructor required for base classes.
    ///
    /// @since  1.31.0, 22.10.2019
-   virtual ~IHandlerValueConstraint() = default;
+   ~IHandlerValueConstraint() override = default;
 
    /// Returns \c true.
    ///
@@ -117,12 +116,7 @@ inline size_t IHandlerValueConstraint::numArguments() const
 } // IHandlerValueConstraint::numArguments
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_I_HANDLER_VALUE_CONSTRAINT_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF i_handler_value_constraint.hpp  =====

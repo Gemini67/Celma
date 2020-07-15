@@ -15,22 +15,21 @@
 /// See documentation of class celma::prog_args::detail::ConstraintAnyOf.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ANY_OF_HPP
-#define CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ANY_OF_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/prog_args/detail/i_handler_constraint.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Constraint: None or just one of the specified arguments may be used.
 ///
 /// @since  0.15.0, 19.07.2017  (use ArgumentKey type to handle keys)
 /// @since  0.2, 10.04.2016
-class ConstraintAnyOf: public IHandlerConstraint
+class ConstraintAnyOf final : public IHandlerConstraint
 {
 public:
    /// Constructor.
@@ -98,11 +97,7 @@ inline detail::IHandlerConstraint* any_of( const std::string& argSpec)
 } // any_of
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_ANY_OF_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF constraint_any_of.hpp  =====

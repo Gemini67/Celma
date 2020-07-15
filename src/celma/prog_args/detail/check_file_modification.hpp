@@ -38,7 +38,7 @@ namespace celma::prog_args { namespace detail {
 ///
 /// @tparam  C  The type of the size comparison class.
 /// @since  1.39.0, 11.07.2020
-template< template< typename> class C> class CheckFileModification:
+template< template< typename> class C> class CheckFileModification final :
    public ICheck
 {
 public:

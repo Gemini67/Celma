@@ -17,8 +17,7 @@
 /// - celma::prog_args::detail::ContainerAdapter<>
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CONTAINER_ADAPTER_HPP
-#define CELMA_PROG_ARGS_DETAIL_CONTAINER_ADAPTER_HPP
+#pragma once
 
 
 #include <algorithm>
@@ -37,7 +36,7 @@
 #include "celma/format/to_string.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Base class for container adapters.
@@ -120,7 +119,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the queue.
 /// @since  1.34.0, 04.12.2019
-template< typename T> class ContainerAdapter< std::deque< T>> final:
+template< typename T> class ContainerAdapter< std::deque< T>> final :
    AdapterBase< std::deque< T>>
 {
 public:
@@ -236,7 +235,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the forward-list.
 /// @since  1.34.0, 30.12.2019
-template< typename T> class ContainerAdapter< std::forward_list< T>> final:
+template< typename T> class ContainerAdapter< std::forward_list< T>> final :
    AdapterBase< std::forward_list< T>>
 {
 public:
@@ -360,7 +359,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the list.
 /// @since  1.34.0, 11.12.2019
-template< typename T> class ContainerAdapter< std::list< T>> final:
+template< typename T> class ContainerAdapter< std::list< T>> final :
    AdapterBase< std::list< T>>
 {
 public:
@@ -476,7 +475,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the multi-set.
 /// @since  1.34.0, 13.12.2019
-template< typename T> class ContainerAdapter< std::multiset< T>> final:
+template< typename T> class ContainerAdapter< std::multiset< T>> final :
    AdapterBase< std::multiset< T>>
 {
 public:
@@ -596,7 +595,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the priority_queue.
 /// @since  1.34.0, 20.12.2019
-template< typename T> class ContainerAdapter< std::priority_queue< T>> final:
+template< typename T> class ContainerAdapter< std::priority_queue< T>> final :
    AdapterBase< std::priority_queue< T>>
 {
 public:
@@ -721,7 +720,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the queue.
 /// @since  1.34.0, 29.12.2019
-template< typename T> class ContainerAdapter< std::queue< T>> final:
+template< typename T> class ContainerAdapter< std::queue< T>> final :
    AdapterBase< std::queue< T>>
 {
 public:
@@ -841,7 +840,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the set.
 /// @since  1.34.0, 22.11.2019
-template< typename T> class ContainerAdapter< std::set< T>> final:
+template< typename T> class ContainerAdapter< std::set< T>> final :
    AdapterBase< std::set< T>>
 {
 public:
@@ -961,7 +960,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the stack.
 /// @since  1.34.0, 22.11.2019
-template< typename T> class ContainerAdapter< std::stack< T>> final:
+template< typename T> class ContainerAdapter< std::stack< T>> final :
    AdapterBase< std::stack< T>>
 {
 public:
@@ -1086,7 +1085,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the unordered multi-set.
 /// @since  1.34.0, 17.12.2019
-template< typename T> class ContainerAdapter< std::unordered_multiset< T>> final:
+template< typename T> class ContainerAdapter< std::unordered_multiset< T>> final :
    AdapterBase< std::unordered_multiset< T>>
 {
 public:
@@ -1205,7 +1204,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the unordered set.
 /// @since  1.34.0, 04.12.2019
-template< typename T> class ContainerAdapter< std::unordered_set< T>> final:
+template< typename T> class ContainerAdapter< std::unordered_set< T>> final :
    AdapterBase< std::unordered_set< T>>
 {
 public:
@@ -1323,7 +1322,7 @@ public:
 /// Container adapter for std::vector< bool>.
 ///
 /// @since  1.40.0, 04.06.2020
-template<> class ContainerAdapter< std::vector< bool>> final:
+template<> class ContainerAdapter< std::vector< bool>> final :
    AdapterBase< std::vector< bool>>
 {
 public:
@@ -1338,7 +1337,7 @@ public:
 ///
 /// @tparam  T  The type of the values stored in the vector.
 /// @since  1.34.0, 22.11.2019
-template< typename T> class ContainerAdapter< std::vector< T>> final:
+template< typename T> class ContainerAdapter< std::vector< T>> final :
    AdapterBase< std::vector< T>>
 {
 public:
@@ -1450,12 +1449,7 @@ public:
 }; // ContainerAdapter< std::vector< T>>
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CONTAINER_ADAPTER_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF container_adapter.hpp  =====

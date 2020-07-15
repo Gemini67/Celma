@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::IFormatStream.
 
 
-#ifndef CELMA_LOG_DETAIL_I_FORMAT_STREAM_HPP
-#define CELMA_LOG_DETAIL_I_FORMAT_STREAM_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -24,12 +23,12 @@
 #include "log_msg.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 /// Interface definition of a (log) stream output formatter.
 /// @since  0.3, 19.06.2016
-class IFormatStream: public IFormatBase
+class IFormatStream : public IFormatBase
 {
 public:
    /// Empty, virtual destructor.
@@ -62,12 +61,7 @@ inline void IFormatStream::formatMsg( std::ostream& out, const LogMsg& msg) cons
 } // IFormatStream::formatMsg
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_I_FORMAT_STREAM_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF i_format_stream.hpp  =====

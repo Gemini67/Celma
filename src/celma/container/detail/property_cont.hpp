@@ -15,8 +15,7 @@
 /// See documentation of class celma::container::detail::PropertyCont.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_CONT_HPP
-#define CELMA_CONTAINER_DETAIL_PROPERTY_CONT_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -34,7 +33,7 @@ namespace celma::container::detail {
 /// Handles a property map which can contain values and property maps.
 ///
 /// @since  1.22.0, 19.10.2016
-class PropertyCont: public PropertyEntry
+class PropertyCont final : public PropertyEntry
 {
 public:
    /// Constructor.
@@ -257,9 +256,6 @@ inline const property_map_t& PropertyCont::map() const
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_CONT_HPP
 
 
 // =====  END OF property_cont.hpp  =====

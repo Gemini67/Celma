@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::FormatStreamDefault.
 
 
-#ifndef CELMA_LOG_DETAIL_FORMAT_STREAM_DEFAULT_HPP
-#define CELMA_LOG_DETAIL_FORMAT_STREAM_DEFAULT_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -24,14 +23,14 @@
 #include "celma/log/detail/log_msg.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 /// Default formatter for stream output.<br>
 /// Generates a log entry with the format:
 ///    <pre>pid|line-nbr|log-class|log-level|error-nbr|text</pre>
 /// @since  1.0.0, 19.06.2016
-class FormatStreamDefault: public IFormatStream
+class FormatStreamDefault final : public IFormatStream
 {
 public:
    // default destructor is fine
@@ -47,12 +46,7 @@ private:
 }; // FormatStreamDefault
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_FORMAT_STREAM_DEFAULT_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF format_stream_default.hpp  =====

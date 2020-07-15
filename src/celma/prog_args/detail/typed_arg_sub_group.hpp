@@ -15,14 +15,13 @@
 /// See documentation of class celma::prog_args::detail::TypedArgSubGroup.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_TYPED_ARG_SUB_GROUP_HPP
-#define CELMA_PROG_ARGS_DETAIL_TYPED_ARG_SUB_GROUP_HPP
+#pragma once
 
 
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 // forward declaration
@@ -37,7 +36,7 @@ namespace detail {
 /// @since  0.15.0, 17.07.2017  (use type ArgumentKey instead of string for
 ///                             arguments)
 /// @since  0.2, 10.04.2016
-class TypedArgSubGroup: public TypedArgBase
+class TypedArgSubGroup final : public TypedArgBase
 {
 public:
    /// Constructor.
@@ -114,11 +113,7 @@ inline Handler* TypedArgSubGroup::obj() const
 
 
 } // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_TYPED_ARG_SUB_GROUP_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF typed_arg_sub_group.hpp  =====

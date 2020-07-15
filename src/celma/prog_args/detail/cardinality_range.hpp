@@ -15,15 +15,14 @@
 /// See documentation of class celma::prog_args::detail::CardinalityRange.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CARDINALITY_RANGE_HPP
-#define CELMA_PROG_ARGS_DETAIL_CARDINALITY_RANGE_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks cardinality for a range of calls/values:
@@ -31,7 +30,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// - check() throws if the specified minimum of calls/values was not reached.
 ///
 /// @since  0.2, 10.04.2016
-class CardinalityRange: public ICardinality
+class CardinalityRange final : public ICardinality
 {
 public:
    /// Constructor.
@@ -99,11 +98,7 @@ inline detail::ICardinality* cardinality_range( int min_num_values,
 } // cardinality_range
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_RANGE_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF cardinality_range.hpp  =====

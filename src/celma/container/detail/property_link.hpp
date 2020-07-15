@@ -15,8 +15,7 @@
 /// See documentation of class celma::container::detail::PropertyLink.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_LINK_HPP
-#define CELMA_CONTAINER_DETAIL_PROPERTY_LINK_HPP
+#pragma once
 
 
 #include <iostream>
@@ -34,7 +33,7 @@ namespace celma::container::detail {
 /// to the entry itself.
 ///
 /// @since  1.22.0, 20.03.2019
-class PropertyLink: public PropertyEntry
+class PropertyLink final : public PropertyEntry
 {
 public:
    /// Constructor.
@@ -105,9 +104,6 @@ inline void PropertyLink::dump( std::ostream& os, std::string indent) const
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_LINK_HPP
 
 
 // =====  END OF property_link.hpp  =====

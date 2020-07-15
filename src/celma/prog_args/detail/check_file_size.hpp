@@ -16,8 +16,7 @@
 /// celma::prog_args::detail::CheckFileSize<>.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CHECK_FILE_SIZE_HPP
-#define CELMA_PROG_ARGS_DETAIL_CHECK_FILE_SIZE_HPP
+#pragma once
 
 
 #include <functional>
@@ -36,7 +35,7 @@ namespace celma::prog_args { namespace detail {
 ///
 /// @tparam  C  The type of the size comparison class.
 /// @since  1.39.0, 08.07.2020
-template< template< typename> class C> class CheckFileSize: public ICheck
+template< template< typename> class C> class CheckFileSize final : public ICheck
 {
 public:
    /// Constructor, stores the file size to compare against.
@@ -122,9 +121,6 @@ template< template< typename> class C>
 
 
 } // namespace celma::prog_args
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CHECK_FILE_SIZE_HPP
 
 
 // =====  END OF check_file_size.hpp  =====

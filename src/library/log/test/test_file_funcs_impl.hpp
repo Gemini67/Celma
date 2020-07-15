@@ -11,8 +11,7 @@
 --*/
 
 
-#ifndef CELMA_LOG_TEST_TEST_FILE_FUNCS_IMPL_HPP
-#define CELMA_LOG_TEST_TEST_FILE_FUNCS_IMPL_HPP
+#pragma once
 
 
 #include <string>
@@ -21,7 +20,7 @@
 #include "test_i_dir_list.hpp"
 
 
-namespace celma { namespace log {
+namespace celma::log {
 
 
 /// Helper class for cleaning up the temporary directories that were created
@@ -30,7 +29,7 @@ namespace celma { namespace log {
 /// the function that is called when a directory should be created, it
 /// additionally calls the function in the object given in the constructor.
 /// @since  1.26.0, 08.03.2018
-class TestFileFuncsImpl: public common::detail::FileFuncsBase
+class TestFileFuncsImpl final : public common::detail::FileFuncsBase
 {
 public:
    /// Constructor, stores the object whose callback function is called when
@@ -90,11 +89,7 @@ private:
 }; // FileFuncsBase
 
 
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_TEST_TEST_FILE_FUNCS_IMPL_HPP
+} // namespace celma::log
 
 
 // =====  END OF test_file_funcs_impl.hpp  =====

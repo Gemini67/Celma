@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::detail::CardinalityExact.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
+#pragma once
 #define CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
 
 
@@ -23,7 +23,7 @@
 #include "celma/prog_args/detail/i_cardinality.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Checks cardinality exact, i.e. the argument must be used with exactly the
@@ -32,7 +32,7 @@ namespace celma { namespace prog_args { namespace detail {
 /// - check() throws at the end-check when not enough values were passed.
 ///
 /// @since  0.2, 10.04.2016
-class CardinalityExact: public ICardinality
+class CardinalityExact final : public ICardinality
 {
 public:
    /// Constructor.
@@ -95,11 +95,7 @@ inline detail::ICardinality* cardinality_exact( int num_values)
 } // cardinality_exact
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF cardinality_exact.hpp  =====

@@ -15,15 +15,14 @@
 /// See documentation of class celma::prog_args::IUsageText.
 
 
-#ifndef CELMA_PROG_ARGS_I_USAGE_TEXT_HPP
-#define CELMA_PROG_ARGS_I_USAGE_TEXT_HPP
+#pragma once
 
 
 #include <memory>
 #include "celma/prog_args/handler.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 /// Base class for classes that print additional information for the usage.
@@ -107,8 +106,7 @@ private:
 }; // IUsageText
 
 
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args
 
 
 /// Macro to easily define the output function.
@@ -136,9 +134,6 @@ private:
       } \
    }; \
    static std::unique_ptr< c ## _class>  c( new c ## _class ( celma::prog_args::Handler::UsagePos:: p))
-
-
-#endif   // CELMA_PROG_ARGS_I_USAGE_TEXT_HPP
 
 
 // =====  END OF i_usage_text.hpp  =====

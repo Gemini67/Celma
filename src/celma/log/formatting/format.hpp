@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::formatting::Format.
 
 
-#ifndef CELMA_LOG_FORMATTING_FORMAT_HPP
-#define CELMA_LOG_FORMATTING_FORMAT_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -25,7 +24,7 @@
 #include "celma/log/detail/i_format_stream.hpp"
 
 
-namespace celma { namespace log {
+namespace celma::log {
 
 namespace detail {
 class LogMsg;
@@ -38,14 +37,19 @@ namespace formatting {
 /// format the fields.
 ///
 /// @since  1.0.0, 07.12.2016
-class Format: public detail::IFormatStream, private Definition
+class Format final : public detail::IFormatStream, private Definition
 {
 public:
    /// Constructor.
    ///
    /// @param[in]  def  The object with the format definition.
    /// @since  1.0.0, 07.12.2016
-   Format( const Definition& def);
+   explicit Format( const Definition& def);
+
+   /// Default destructor is fine.
+   ///
+   /// @since  1.41.1, 15.07.2020
+   ~Format() override = default;
 
    /// Formats the data of the log messagr object according to the format
    /// definition passed into the constructor.
@@ -90,11 +94,7 @@ private:
 
 
 } // namespace formatting
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FORMATTING_FORMAT_HPP
+} // namespace celma::log
 
 
 // =====  END OF format.hpp  =====

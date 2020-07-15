@@ -15,19 +15,18 @@
 /// See documentation of class celma::prog_args::detail::FormatUppercase.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_FORMAT_UPPERCASE_HPP
-#define CELMA_PROG_ARGS_DETAIL_FORMAT_UPPERCASE_HPP
+#pragma once
 
 
 #include "celma/prog_args/detail/i_format.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args { namespace detail {
 
 
 /// Changes all the characters in the passed string to uppercase.
 /// @since  0.2, 10.04.2016
-class FormatUppercase: public IFormat
+class FormatUppercase final : public IFormat
 {
 public:
    /// Default constructor.
@@ -68,11 +67,7 @@ inline detail::IFormat* uppercase()
 } // end uppercase
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_FORMAT_UPPERCASE_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF format_uppercase.hpp  =====
