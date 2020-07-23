@@ -61,7 +61,7 @@ public:
 ///
 /// @return  The newly created FormatUppercase object.
 /// @since  0.2, 10.04.2016
-inline detail::IFormat* uppercase()
+[[nodiscard]] inline detail::IFormat* uppercase()
 {
    return new detail::FormatUppercase();
 } // end uppercase

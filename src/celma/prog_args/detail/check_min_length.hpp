@@ -75,7 +75,7 @@ private:
 /// @param[in]  min_length  The minimum length check against.
 /// @return  The newly created CheckMinLength object.
 /// @since  1.23.0, 11.04.2019
-inline detail::ICheck* minLength( std::string::size_type min_length)
+[[nodiscard]] inline detail::ICheck* minLength( std::string::size_type min_length)
 {
    return new detail::CheckMinLength( min_length);
 } // minLength

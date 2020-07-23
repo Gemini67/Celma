@@ -14,8 +14,7 @@ Here is a list of the features provided by the sub-library for argument handling
 
 - Argument handling is (mostly always) done in 3 steps: Define the variables, define the arguments, evaluate the program arguments. Then you're done and the values from the commandline arguments are stored in their destination variables, with the correct type.
 - Therefore, argument keys (e.g. `-h`, `--help`) need to be specified only once.
-- Supports flags (boolean values), PODs, strings, vectors of values, bitsets, tuples and custom types as destination variables/
-  types.<br>
+- Supports flags (boolean values), PODs, strings, all standard C++ library containers like std::vector, std::set, std::lists, also key-value-pair containers like std::map or std::unordered_map, bitsets, tuples and custom types as destination variables/types.<br>
   This means also that some features are turned off or on, depending on the type of the destination variable.
 - Values from the command line may be formatted (e.g. to uppercase) or converted automatically (string to destination type) or by
   using custom conversion functions, e.g. to convert the string into an enum value.
@@ -39,15 +38,17 @@ Here is a list of the features provided by the sub-library for argument handling
   - maximum value
   - range
   - list of acceptable values
-- When storing values from the command line in a vector, you can specify that
-  - the vector should be cleared before the first value is assigned
-  - the values should sorted
+- When storing values from the command line in a container, you can specify that
+  - the container should be cleared before the first value is assigned
+  - the values should sorted (on containers that support/need sorting)
   - duplicate values are not allowed
 - If the value of a parameter specifies a file system entry, you can add checks if
   - the file exists
   - the given path entry is a directory
   - an absolute path was given
   - the parent directory of the given path exists
+  - check for the size of a file (any comparison)
+  - check for how long since the file was last modified
 - Relations between arguments may be defined.
 - Can read arguments from a file, or can store the current arguments in a file for later re-use.
 - After evaluating the arguments from the command line, a summary can be printed (list of arguments used and values set).
@@ -76,5 +77,9 @@ If the program is run with any other argument than these help arguments, an erro
     } // main
 
 Output when called with argument `--help`:
+
+    Usage:
+    Optional arguments:
+       -h,--help    Prints the program usage.
 
 Output when called with an unknown argument, e.g. `--filename`:

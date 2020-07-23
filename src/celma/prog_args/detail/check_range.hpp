@@ -117,7 +117,7 @@ template< typename T> std::string CheckRange< T>::toString() const
 /// @param[in]  upp  The upper limit to check against.
 /// @return  The newly created CheckRange object.
 /// @since  0.2, 10.04.2016
-template< typename T> detail::ICheck* range( T low, T upp)
+template< typename T> [[nodiscard]] detail::ICheck* range( T low, T upp)
 {
    return new detail::CheckRange< T>( low, upp);
 } // end range

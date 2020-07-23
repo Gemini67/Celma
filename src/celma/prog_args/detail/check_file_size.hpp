@@ -114,7 +114,7 @@ template< template< typename> class C> std::string CheckFileSize< C>::toString()
 /// @return  The newly created CheckFileSize object.
 /// @since  1.39.0, 08.07.2020
 template< template< typename> class C>
-   detail::ICheck* fileSize( size_t file_size)
+   [[nodiscard]] detail::ICheck* fileSize( size_t file_size)
 {
    return new detail::CheckFileSize< C>( file_size);
 } // fileSize

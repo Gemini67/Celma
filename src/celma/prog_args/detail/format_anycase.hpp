@@ -77,7 +77,7 @@ private:
 ///
 /// @return  The newly created FormatAnycase object.
 /// @since  1.23.0, 11.04.2016
-inline detail::IFormat* anycase( const std::string& pattern)
+[[nodiscard]] inline detail::IFormat* anycase( const std::string& pattern)
 {
    return new detail::FormatAnycase( pattern);
 } // anycase

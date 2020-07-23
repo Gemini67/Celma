@@ -87,7 +87,7 @@ inline std::string CheckIsAbsolutePath::toString() const
 /// Usage:  addArgument( ...)->addCheck( isAbsolutePath());
 /// @return  The newly created CheckIsAbsolutePath object.
 /// @since  1.4.2, 12.04.2018
-inline detail::ICheck* isAbsolutePath()
+[[nodiscard]] inline detail::ICheck* isAbsolutePath()
 {
    return new detail::CheckIsAbsolutePath();
 } // isAbsolutePath

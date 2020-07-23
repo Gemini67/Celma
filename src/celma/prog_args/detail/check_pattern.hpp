@@ -97,7 +97,7 @@ inline detail::ICheck* pattern( const std::string& pattern_str)
 /// @param[in]  reg_ex  The regular expression.
 /// @return  The newly created CheckPattern object.
 /// @since  1.19.0, 27.11.2018
-inline detail::ICheck* pattern( const std::regex& reg_ex)
+[[nodiscard]] inline detail::ICheck* pattern( const std::regex& reg_ex)
 {
    return new detail::CheckPattern( reg_ex);
 } // pattern

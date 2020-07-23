@@ -94,7 +94,7 @@ inline std::string CheckIsFile::toString() const
 ///
 /// @return  The newly created CheckIsFile object.
 /// @since  1.4.1, 02.03.2018
-inline detail::ICheck* isFile()
+[[nodiscard]] inline detail::ICheck* isFile()
 {
    return new detail::CheckIsFile();
 } // isFile

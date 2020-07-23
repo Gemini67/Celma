@@ -72,7 +72,7 @@ private:
 /// @param[in]  valueList  The value-list to check against.
 /// @return  The newly created CheckValues object.
 /// @since  0.2, 10.04.2016
-inline detail::ICheck* values( const std::string& valueList)
+[[nodiscard]] inline detail::ICheck* values( const std::string& valueList)
 {
    return new detail::CheckValues( valueList);
 } // end values

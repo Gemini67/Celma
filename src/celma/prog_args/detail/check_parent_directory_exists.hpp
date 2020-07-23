@@ -102,7 +102,7 @@ inline std::string CheckParentDirectoryExists::toString() const
 ///
 /// @return  The newly created CheckParentDirectoryExists object.
 /// @since  1.9.0, 04.08.2018
-inline detail::ICheck* parentDirectoryExists()
+[[nodiscard]] inline detail::ICheck* parentDirectoryExists()
 {
    return new detail::CheckParentDirectoryExists();
 } // parentDirectoryExists
