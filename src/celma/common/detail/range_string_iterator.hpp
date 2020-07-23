@@ -15,8 +15,7 @@
 /// See documentation of template celma::common::detail::RangeStringIterator.
 
 
-#ifndef CELMA_COMMON_DETAIL_RANGE_STRING_ITERATOR_HPP
-#define CELMA_COMMON_DETAIL_RANGE_STRING_ITERATOR_HPP
+#pragma once
 
 
 #include <iterator>
@@ -27,7 +26,7 @@
 #include "celma/common/detail/range_generator.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Range string iterator, returning the next value computed from the specified
@@ -250,7 +249,7 @@ template< typename T, typename TF>
 
 
 template< typename T, typename TF>
-   typename RangeStringIterator< T, TF>::Ranger*
+   [[nodiscard]] typename RangeStringIterator< T, TF>::Ranger*
       RangeStringIterator< T, TF>::createRanger( const RangeExpression& re)
 {
    if (!re.hasRangeEnd())
@@ -288,12 +287,7 @@ template< typename T, typename TF>
 } // RangeStringIterator< T, TF>::createRanger
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_RANGE_STRING_ITERATOR_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF range_string_iterator.hpp  =====

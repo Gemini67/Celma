@@ -75,7 +75,7 @@ public:
 ///    The argument specification of the other, forbidden argument.
 /// @return  The newly created constraint object.
 /// @since  0.2, 10.04.2016
-inline detail::IArgConstraint* excludes( const std::string& argSpec)
+[[nodiscard]] inline detail::IArgConstraint* excludes( const std::string& argSpec)
 {
    return new detail::ConstraintExcludes( argSpec);
 } // excludes

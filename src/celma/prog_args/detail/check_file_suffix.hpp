@@ -112,7 +112,7 @@ inline std::string CheckFileSuffix::toString() const
 ///
 /// @return  The newly created CheckFileSuffix object.
 /// @since  1.38.0, 06.07.2020
-inline detail::ICheck* fileSuffix( const std::string& suffix)
+[[nodiscard]] inline detail::ICheck* fileSuffix( const std::string& suffix)
 {
    return new detail::CheckFileSuffix( suffix);
 } // fileSuffix

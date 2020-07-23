@@ -15,8 +15,7 @@
 /// See documentation of functions celma::container::detail::propetyFactory().
 
 
-#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_FACTORY_HPP
-#define CELMA_CONTAINER_DETAIL_PROPERTY_FACTORY_HPP
+#pragma once
 
 
 #include <string>
@@ -40,8 +39,9 @@ namespace celma::container::detail {
 ///    The value to store as property.
 /// @return  New propety value object.
 /// @since  1.22.0, 20.03.2019
-template< typename T> PropertyEntry* propertyFactory( const std::string& name,
-   const std::string& full_path_name, const T& value)
+template< typename T> [[nodiscard]] PropertyEntry*
+   propertyFactory( const std::string& name, const std::string& full_path_name,
+      const T& value)
 {
    return new PropertyValue< T>( name, full_path_name, value);
 } // propertyFactory
@@ -57,7 +57,7 @@ template< typename T> PropertyEntry* propertyFactory( const std::string& name,
 ///    The iterator pointing to the other entry to link to.
 /// @return  New propety link object.
 /// @since  1.22.0, 20.03.2019
-inline PropertyEntry* propertyFactory( const std::string& name,
+[[nodiscard]] inline PropertyEntry* propertyFactory( const std::string& name,
    const std::string& full_path_name,
    const property_map_t::const_iterator link_dest)
 {
@@ -66,9 +66,6 @@ inline PropertyEntry* propertyFactory( const std::string& name,
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_FACTORY_HPP
 
 
 // =====  END OF property_factory.hpp  =====

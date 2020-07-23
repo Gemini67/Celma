@@ -23,12 +23,14 @@
 ///   the argument, not on the command line.
 /// - \c DEST_PAIR: Pair of destination variables, the value for the second
 ///   variable is specified with the argument.
+/// - \c DEST_START_END: Pair of destination variables, the value is assigned to
+///   the second variable too if it was not assigned a value yet.
 /// - \c DEST_RANGE: The argument value is a range string, whose values are
 ///   stored in the destination variable.
 /// - \c DEST_RANGE_BITSET: Again, the argument is a range string, but here the
 ///   corresponding bits are set in the bitset.
 /// - \c DEST_FUNCTION: The specified function is called when the argument is
-///   used. The function does not accept a valur.
+///   used. The function does not accept a values.
 /// - \c DEST_FUNCTION_VALUE: Here also the specified function is called when
 ///   the argument is used, but this time the function requires a value.
 /// - \c DEST_MEMBER_METHOD: Calls a member function of the current object.
@@ -39,8 +41,7 @@
 ///   Passes the value from the command line.
 
 
-#ifndef CELMA_PROG_ARGS_DESTINATION_HPP
-#define CELMA_PROG_ARGS_DESTINATION_HPP
+#pragma once
 
 
 #include <type_traits>
@@ -53,10 +54,11 @@
 #include "celma/prog_args/detail/typed_arg.hpp"
 #include "celma/prog_args/detail/typed_arg_pair.hpp"
 #include "celma/prog_args/detail/typed_arg_range.hpp"
+#include "celma/prog_args/detail/typed_arg_start_end.hpp"
 #include "celma/prog_args/detail/typed_arg_value.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 /// Returns the typed argument object corresponding to the type of the
@@ -73,10 +75,11 @@ namespace celma { namespace prog_args {
 /// @return  The typed arg object for the type of the \a dest_var.
 /// @since  0.16.0, 09.11.2017
 template< typename T>
-   typename std::enable_if< !detail::ContainerAdapter< T>::HasAdapter
-      && !detail::KeyValueContainerAdapter< T>::HasAdapter,
-      detail::TypedArgBase*>::type
-   destination( T& dest_var, const std::string vname)
+   [[nodiscard]]
+      typename std::enable_if< !detail::ContainerAdapter< T>::HasAdapter
+         && !detail::KeyValueContainerAdapter< T>::HasAdapter,
+         detail::TypedArgBase*>::type
+      destination( T& dest_var, const std::string vname)
 {
    return new detail::TypedArg< T>( dest_var, vname);
 } // destination
@@ -97,8 +100,8 @@ template< typename T>
 /// @return  The typed arg object for the type of the \a dest_var.
 /// @since  1.1.0, 15.11.2017
 template< typename T>
-   detail::TypedArgBase* destination( T& dest_var, const std::string vname,
-      const T& value)
+   [[nodiscard]] detail::TypedArgBase* destination( T& dest_var,
+      const std::string vname, const T& value)
 {
    return new detail::TypedArgValue< T>( dest_var, vname, value);
 } // destination
@@ -120,7 +123,7 @@ template< typename T>
 /// @return  The typed arg object for the type of the \a dest_cont.
 /// @since  1.34.0, 22.11.2019
 template< typename T>
-   typename std::enable_if< detail::ContainerAdapter< T>::HasAdapter,
+   [[nodiscard]] typename std::enable_if< detail::ContainerAdapter< T>::HasAdapter,
       detail::TypedArgBase*>::type
    destination( T& dest_cont, const std::string cname)
 {
@@ -145,7 +148,7 @@ template< typename T>
 /// @return  The typed arg object for the type of the \a dest_cont.
 /// @since  1.41.0, 16.02.2020
 template< typename T>
-   typename std::enable_if< detail::KeyValueContainerAdapter< T>::HasAdapter,
+   [[nodiscard]] typename std::enable_if< detail::KeyValueContainerAdapter< T>::HasAdapter,
       detail::TypedArgBase*>::type
    destination( T& dest_cont, const std::string cname)
 {
@@ -175,7 +178,7 @@ template< typename T>
 /// @return  The typed argument object for the pair of variables.
 /// @since  0.16.0, 10.11.2017
 template< typename T1, typename T2>
-   typename std::enable_if< !detail::ContainerAdapter< T1>::HasAdapter,
+   [[nodiscard]] typename std::enable_if< !detail::ContainerAdapter< T1>::HasAdapter,
       detail::TypedArgBase*>::type
    destination( T1& dest_var1, const std::string vname1,
       T2& dest_var2, const std::string vname2, const T2& value2)
@@ -205,7 +208,7 @@ template< typename T1, typename T2>
 /// @return  The typed argument object for the pair of variables.
 /// @since  1.34.0, 28.11.2019
 template< typename T1, typename T2>
-   typename std::enable_if< detail::ContainerAdapter< T1>::HasAdapter,
+   [[nodiscard]] typename std::enable_if< detail::ContainerAdapter< T1>::HasAdapter,
       detail::TypedArgBase*>::type
    destination( T1& dest_var1, const std::string vname1,
       T2& dest_var2, const std::string vname2, const T2& value2)
@@ -230,11 +233,35 @@ template< typename T1, typename T2>
 /// @return  The typed argument object for range strings.
 /// @since  0.16.0, 10.11.2017
 template< typename T, typename C>
-   detail::TypedArgBase*
+   [[nodiscard]] detail::TypedArgBase*
       destination( const common::RangeDest< T, C>& dest,
          const std::string vname)
 {
    return new detail::TypedArgRange< T, C>( dest, vname);
+} // destination
+
+
+/// Overload for creating a typed argument object to handle two destination
+/// variables, where the second variable is updated too if it wasn't updated
+/// before.
+///
+/// @tparam  T
+///    The type of the values to create by the range string.
+/// @param[in]  dest
+///    The destination object to store the value from the command line in.
+/// @param[in]  vname
+///    The name of the destination variable.
+/// @param[in]  dest2
+///    The second destination object to additionally store the value from the
+///    command line in, if it wasn't assigned a value yet.
+/// @return  The typed argument object for range strings.
+/// @since  1.41.2, 21.07.2020
+template< typename T>
+   [[nodiscard]] typename std::enable_if< !detail::ContainerAdapter< T>::HasAdapter,
+      detail::TypedArgBase*>::type
+   destination( T& dest, const std::string vname, T& dest2)
+{
+   return new detail::TypedArgStartEnd( dest, vname, dest2);
 } // destination
 
 
@@ -250,8 +277,8 @@ template< typename T, typename C>
 /// @return
 ///    The object managing this argument, may be used to apply further settings.
 /// @since  0.16.0, 10.11.2017
-inline detail::TypedArgBase* destination( detail::ArgHandlerCallable fun,
-   const std::string fname)
+[[nodiscard]] inline detail::TypedArgBase*
+   destination( detail::ArgHandlerCallable fun, const std::string fname)
 {
    return new detail::TypedArgCallable( fun, fname);
 } // destination
@@ -273,15 +300,15 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallable fun,
 /// @return
 ///    The object managing this argument, may be used to apply further settings.
 /// @since  0.16.0, 10.11.2017
-inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
-   const std::string fname, bool)
+[[nodiscard]] inline detail::TypedArgBase*
+   destination( detail::ArgHandlerCallableValue fun,
+      const std::string fname, bool)
 {
    return new detail::TypedArgCallableValue( fun, fname);
 } // destination
 
 
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args
 
 
 // macros
@@ -320,6 +347,17 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
 /// @since  0.16.0, 10.11.2017
 #define  DEST_PAIR( dv1, dv2, val2)  \
    celma::prog_args::destination( dv1, #dv1, dv2, #dv2, val2)
+
+/// Macro used to call the celma::prog_args::destination() function for a pair
+/// of destination variables.
+///
+/// @param  dv1
+///    The first destination variable.
+/// @param  dv2
+///    The second destination variable.
+/// @since  1.41.2, 21.07.2020
+#define DEST_START_END( dv1, dv2)  \
+   celma::prog_args::destination( dv1, #dv1, dv2)
 
 /// Macro used to call the celma::prog_args::destination() function for a
 /// destination variable that accepts a range string as value.
@@ -438,9 +476,6 @@ inline detail::TypedArgBase* destination( detail::ArgHandlerCallableValue fun,
    celma::prog_args::destination( \
       std::bind( & c :: m, &o, std::placeholders::_1, std::placeholders::_2), \
          #c "::" #m, true)
-
-
-#endif   // CELMA_PROG_ARGS_DESTINATION_HPP
 
 
 // =====  END OF destination.hpp  =====

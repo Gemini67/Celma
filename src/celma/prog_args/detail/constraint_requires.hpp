@@ -75,7 +75,7 @@ public:
 ///    The argument specification of the other, required argument.
 /// @return  The newly created constraint object.
 /// @since  0.2, 10.04.2016
-inline detail::IArgConstraint* requires( const std::string& argSpec)
+[[nodiscard]] inline detail::IArgConstraint* requires( const std::string& argSpec)
 {
    return new detail::ConstraintRequires( argSpec);
 } // requires

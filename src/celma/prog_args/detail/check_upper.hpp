@@ -102,7 +102,7 @@ template< typename T> std::string CheckUpper< T>::toString() const
 /// @param[in]  value  The value to check against.
 /// @return  The newly created CheckUpper object.
 /// @since  0.2, 10.04.2016
-template< typename T> detail::ICheck* upper( T value)
+template< typename T> [[nodiscard]] detail::ICheck* upper( T value)
 {
    return new detail::CheckUpper< T>( value);
 } // end upper

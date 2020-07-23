@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,7 +14,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args/detail/arg_list_parser.hpp"
 
 
@@ -375,52 +375,115 @@ BOOST_AUTO_TEST_CASE( short_long)
 
 
 /// Test handling of one single character argument with a value.
+///
 /// @since  0.2, 09.04.2016
 BOOST_AUTO_TEST_CASE( short_value)
 {
 
-   auto const     as2a = make_arg_array( "-f filename", nullptr);
-   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
-   auto           it = alp.cbegin();
+   {
+      auto const     as2a = make_arg_array( "-f filename", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+      auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
-   BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
+      BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
 
-   ++it;
-   BOOST_REQUIRE( it != alp.cend());
+      ++it;
+      BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
-   BOOST_REQUIRE_EQUAL( it->mValue, "filename");
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
+      BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
-   ++it;
-   BOOST_REQUIRE( it == alp.cend());
+      ++it;
+      BOOST_REQUIRE( it == alp.cend());
+   } // end scope
+
+   {
+      auto const     as2a = make_arg_array( "-f   filename", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+      auto           it = alp.cbegin();
+
+
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
+      BOOST_REQUIRE_EQUAL( it->mArgChar, 'f');
+
+      ++it;
+      BOOST_REQUIRE( it != alp.cend());
+
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
+      BOOST_REQUIRE_EQUAL( it->mValue, "filename");
+
+      ++it;
+      BOOST_REQUIRE( it == alp.cend());
+   } // end scope
 
 } // short_value
 
 
 
 /// Test handling of one long argument with a value.
+///
 /// @since  0.2, 09.04.2016
 BOOST_AUTO_TEST_CASE( long_value)
 {
 
-   auto const     as2a = make_arg_array( "--inputfile filename", nullptr);
-   ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
-   auto           it = alp.cbegin();
+   {
+      auto const     as2a = make_arg_array( "--inputfile filename", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+      auto           it = alp.cbegin();
 
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
-   BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
+      BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
 
-   ++it;
-   BOOST_REQUIRE( it != alp.cend());
+      ++it;
+      BOOST_REQUIRE( it != alp.cend());
 
-   BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
-   BOOST_REQUIRE_EQUAL( it->mValue, "filename");
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
+      BOOST_REQUIRE_EQUAL( it->mValue, "filename");
 
-   ++it;
-   BOOST_REQUIRE( it == alp.cend());
+      ++it;
+      BOOST_REQUIRE( it == alp.cend());
+   } // end scope
+
+   {
+      auto const     as2a = make_arg_array( "--inputfile   filename", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+      auto           it = alp.cbegin();
+
+
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
+      BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
+
+      ++it;
+      BOOST_REQUIRE( it != alp.cend());
+
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
+      BOOST_REQUIRE_EQUAL( it->mValue, "filename");
+
+      ++it;
+      BOOST_REQUIRE( it == alp.cend());
+   } // end scope
+
+   {
+      auto const     as2a = make_arg_array( "--inputfile=filename", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+      auto           it = alp.cbegin();
+
+
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::stringArg);
+      BOOST_REQUIRE_EQUAL( it->mArgString, "inputfile");
+
+      ++it;
+      BOOST_REQUIRE( it != alp.cend());
+
+      BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::value);
+      BOOST_REQUIRE_EQUAL( it->mValue, "filename");
+
+      ++it;
+      BOOST_REQUIRE( it == alp.cend());
+   } // end scope
 
 } // long_value
 

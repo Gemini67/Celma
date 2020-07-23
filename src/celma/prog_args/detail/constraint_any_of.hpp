@@ -91,7 +91,7 @@ private:
 ///    must be used.
 /// @return  The newly created constraint object.
 /// @since  0.2, 10.04.2016
-inline detail::IHandlerConstraint* any_of( const std::string& argSpec)
+[[nodiscard]] inline detail::IHandlerConstraint* any_of( const std::string& argSpec)
 {
    return new detail::ConstraintAnyOf( argSpec);
 } // any_of

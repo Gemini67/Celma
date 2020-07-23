@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::appl::ArgString2Array.
 
 
-#ifndef CELMA_APPL_ARG_STRING_2_ARRAY_HPP
-#define CELMA_APPL_ARG_STRING_2_ARRAY_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace appl {
+namespace celma::appl {
 
 
 /// Helper class to convert an argument string (e.g. '-n PROC1 -v -d /tmp') into
@@ -107,11 +106,8 @@ ArgString2Array make_arg_array( const std::string& cmd_line,
    const char* prog_name);
 
 
-} // namespace appl
-} // namespace celma
-
-
-#endif   // CELMA_APPL_ARG_STRING_2_ARRAY_HPP
+} // namespace celma::appl
 
 
 // =====  END OF arg_string_2_array.hpp  =====
+

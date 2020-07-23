@@ -91,8 +91,8 @@ private:
 ///                             corresponding argument.
 /// @return  The newly created object for checking maximum cardinality.
 /// @since  0.2, 10.04.2016
-inline detail::ICardinality* cardinality_range( int min_num_values,
-                                                int max_num_values)
+[[nodiscard]] inline detail::ICardinality*
+   cardinality_range( int min_num_values, int max_num_values)
 {
    return new detail::CardinalityRange( min_num_values, max_num_values);
 } // cardinality_range

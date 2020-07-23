@@ -75,7 +75,7 @@ private:
 /// @param[in]  max_length  The maximum length check against.
 /// @return  The newly created CheckMaxLength object.
 /// @since  1.23.0, 12.04.2019
-inline detail::ICheck* maxLength( std::string::size_type max_length)
+[[nodiscard]] inline detail::ICheck* maxLength( std::string::size_type max_length)
 {
    return new detail::CheckMaxLength( max_length);
 } // maxLength

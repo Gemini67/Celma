@@ -15,7 +15,7 @@
 /// See documentation of class celma::appl::ArgString2Array.
 
 
-// module header file include
+// module headerfile include
 #include "celma/appl/arg_string_2_array.hpp"
 
 
@@ -25,11 +25,10 @@
 
 
 // C++ Standard Library includes
-#include <string>
 #include <vector>
 
 
-namespace celma { namespace appl {
+namespace celma::appl {
 
 
 namespace {
@@ -224,8 +223,11 @@ void splitString( StringVec& arguments, const std::string& argstring)
          usedQuoteChar = next_char;
       } else if (next_char == ' ')
       {
-         arguments.push_back( currWord);
-         currWord.clear();
+         if (!currWord.empty())
+         {
+            arguments.push_back( currWord);
+            currWord.clear();
+         } // end if
       } else
       {
          currWord.append( 1, next_char);
@@ -269,8 +271,7 @@ void copyArguments( int& argc, char* argv[], const StringVec& arguments)
 } // namespace
 
 
-} // namespace appl
-} // namespace celma
+} // namespace celma::appl
 
 
 // =====  END OF arg_string_2_array.cpp  =====

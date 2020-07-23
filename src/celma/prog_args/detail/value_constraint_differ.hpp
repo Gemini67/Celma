@@ -149,7 +149,7 @@ inline std::string ValueConstraintDiffer::toString() const
 ///    different.
 /// @return  The newly created constraint object.
 /// @since  1.31.0, 22.10.2019
-inline detail::IHandlerValueConstraint* differ( const std::string& argSpec)
+[[nodiscard]] inline detail::IHandlerValueConstraint* differ( const std::string& argSpec)
 {
    return new detail::ValueConstraintDiffer( argSpec);
 } // differ

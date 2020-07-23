@@ -89,7 +89,7 @@ inline std::string CheckIsDirectory::toString() const
 /// Usage:  addArgument( ...)->addCheck( isDirectory());
 /// @return  The newly created CheckIsDirectory object.
 /// @since  1.4.1, 02.03.2018
-inline detail::ICheck* isDirectory()
+[[nodiscard]] inline detail::ICheck* isDirectory()
 {
    return new detail::CheckIsDirectory();
 } // isDirectory

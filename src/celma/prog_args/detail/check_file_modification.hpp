@@ -123,7 +123,7 @@ template< template< typename> class C>
 /// @return  The newly created CheckFileSize object.
 /// @since  1.39.0, 08.07.2020
 template< template< typename> class C>
-   detail::ICheck* fileMod( std::chrono::seconds mod_time_diff)
+   [[nodiscard]] detail::ICheck* fileMod( std::chrono::seconds mod_time_diff)
 {
    return new detail::CheckFileModification< C>( mod_time_diff);
 } // fileSize

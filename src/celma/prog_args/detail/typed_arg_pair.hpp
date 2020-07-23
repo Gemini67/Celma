@@ -19,7 +19,7 @@
 
 
 #include <iostream>
-#include "celma/prog_args/detail/typed_arg_base.hpp"
+#include "celma/prog_args/detail/typed_arg.hpp"
 
 
 namespace celma::prog_args::detail {

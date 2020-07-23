@@ -16,7 +16,6 @@
 
 
 #pragma once
-#define CELMA_PROG_ARGS_DETAIL_CARDINALITY_EXACT_HPP
 
 
 #include <string>
@@ -89,7 +88,7 @@ private:
 ///                         argument.
 /// @return  The newly created object for checking exact cardinality.
 /// @since  0.2, 10.04.2016
-inline detail::ICardinality* cardinality_exact( int num_values)
+[[nodiscard]] inline detail::ICardinality* cardinality_exact( int num_values)
 {
    return new detail::CardinalityExact( num_values);
 } // cardinality_exact

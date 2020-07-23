@@ -61,7 +61,7 @@ public:
 ///
 /// @return  The newly created FormatLowercase object.
 /// @since  0.2, 10.04.2016
-inline detail::IFormat* lowercase()
+[[nodiscard]] inline detail::IFormat* lowercase()
 {
    return new detail::FormatLowercase();
 } // lowercase

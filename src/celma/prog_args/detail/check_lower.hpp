@@ -99,7 +99,7 @@ template< typename T> std::string CheckLower< T>::toString() const
 /// @param[in]  value  The value to check against.
 /// @return  The newly created CheckLower object.
 /// @since  0.2, 10.04.2016
-template< typename T> detail::ICheck* lower( T value)
+template< typename T> [[nodiscard]] detail::ICheck* lower( T value)
 {
    return new detail::CheckLower< T>( value);
 } // lower

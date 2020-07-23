@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of class celma::log::filter::detail::DuplicatePolicyFactory.
 
 
-// module header file include
+// module headerfile include
 #include "celma/log/filter/detail/duplicate_policy_factory.hpp"
 
 
@@ -26,11 +26,12 @@
 #include "celma/log/filter/detail/duplicate_policy_exception.hpp"
 
 
-namespace celma { namespace log { namespace filter { namespace detail {
+namespace celma::log::filter::detail {
 
 
 
 /// Creates the object that implements the specified policy.
+///
 /// @param[in]  policy  The policy to create the object for.
 /// @return  Pointer to the newly created object.
 /// @since  0.3, 19.06.2016
@@ -49,10 +50,7 @@ IDuplicatePolicy* DuplicatePolicyFactory::createPolicy( DuplicatePolicy policy)
 
 
 
-} // namespace detail
-} // namespace filter
-} // namespace log
-} // namespace celma
+} // namespace celma::log::filter::detail
 
 
 // =====  END OF duplicate_policy_factory.cpp  =====
