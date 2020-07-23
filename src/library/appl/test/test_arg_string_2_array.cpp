@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,7 +11,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/appl/arg_string_2_array.hpp"
 
 
@@ -22,6 +22,7 @@
 
 using celma::appl::ArgString2Array;
 using celma::appl::make_arg_array;
+
 
 
 /// Test argument strings without an argument.
@@ -108,6 +109,60 @@ BOOST_AUTO_TEST_CASE( single_argument)
    } // end scope
 
 } // single_argument
+
+
+
+/// Test argument strings with a single argument and a value.
+///
+/// @since  1.41.2, 23.07.2020
+BOOST_AUTO_TEST_CASE( single_argument_value)
+{
+
+   {
+      const ArgString2Array  as2a( "-v 42", nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "42");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+   {
+      const ArgString2Array  as2a( "-v   42", nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "-v");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "42");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+   {
+      const ArgString2Array  as2a( "--value 42", nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "42");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+   {
+      const ArgString2Array  as2a( "--value=42", nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 2);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value=42");
+      BOOST_REQUIRE( as2a.mpArgV[ 2] == nullptr);
+   } // end scope
+
+   {
+      const ArgString2Array  as2a( "--value   42", nullptr);
+      BOOST_REQUIRE_EQUAL( as2a.mArgC, 3);
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 0], "programname");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 1], "--value");
+      BOOST_REQUIRE_EQUAL( as2a.mpArgV[ 2], "42");
+      BOOST_REQUIRE( as2a.mpArgV[ 3] == nullptr);
+   } // end scope
+
+} // single_argument_value
 
 
 

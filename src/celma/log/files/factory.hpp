@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of functions celma::log::files::factory().
 
 
-#ifndef CELMA_LOG_FILES_FACTORY_HPP
-#define CELMA_LOG_FILES_FACTORY_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -29,7 +28,7 @@
 #include "celma/log/files/timestamped.hpp"
 
 
-namespace celma { namespace log { namespace files {
+namespace celma::log::files {
 
 
 /// List of log file types supported by the factory functions:
@@ -63,7 +62,7 @@ template< LogFileTypes> detail::ILogDest*
 /// @return  Pointer to the newly created object for a simple log file.
 /// @since  1.26.0, 13.03.2018
 template<>
-   detail::ILogDest*
+   [[nodiscard]] detail::ILogDest*
       factory< LogFileTypes::simple>( filename::Definition& name_def)
 {
    return new Handler< Simple>( new Simple( name_def));
@@ -78,7 +77,7 @@ template<>
 /// @return  Pointer to the newly created object for a "timestamped" log file.
 /// @since  1.26.0, 13.03.2018
 template<>
-   detail::ILogDest*
+   [[nodiscard]] detail::ILogDest*
       factory< LogFileTypes::timestamped>( filename::Definition& name_def)
 {
    return new Handler< Timestamped>( new Timestamped( name_def));
@@ -99,19 +98,14 @@ template<>
 ///    Maximum number of generations of log files to keep.
 /// @return  Pointer to the newly created object for a "maximum size" log file.
 /// @since  1.26.0, 13.03.2018
-detail::ILogDest* factory( filename::Definition& name_def,
+[[nodiscard]] detail::ILogDest* factory( filename::Definition& name_def,
    size_t max_file_size, int max_gen)
 {
    return new Handler< MaxSize>( new MaxSize( name_def, max_file_size, max_gen));
 } // factory
 
 
-} // namespace files
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILES_FACTORY_HPP
+} // namespace celma::log::files
 
 
 // =====  END OF factory.hpp  =====

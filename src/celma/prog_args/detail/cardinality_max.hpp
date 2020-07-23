@@ -85,7 +85,7 @@ private:
 ///                        argument.
 /// @return  The newly created object for checking maximum cardinality.
 /// @since  0.2, 10.04.2016
-inline detail::ICardinality* cardinality_max( int max_calls)
+[[nodiscard]] inline detail::ICardinality* cardinality_max( int max_calls)
 {
    return new detail::CardinalityMax( max_calls);
 } // cardinality_max

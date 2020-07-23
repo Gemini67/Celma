@@ -84,7 +84,7 @@ private:
 /// @param[in]  pattern_str  The regular expression pattern string.
 /// @return  The newly created CheckPattern object.
 /// @since  1.19.0, 27.11.2018
-inline detail::ICheck* pattern( const std::string& pattern_str)
+[[nodiscard]] inline detail::ICheck* pattern( const std::string& pattern_str)
 {
    return new detail::CheckPattern( pattern_str);
 } // pattern

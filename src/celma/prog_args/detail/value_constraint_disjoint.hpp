@@ -162,7 +162,8 @@ inline std::string ValueConstraintDisjoint::toString() const
 ///    different.
 /// @return  The newly created constraint object.
 /// @since  1.33.0, 30.10.2019
-[[nodiscard]] inline detail::IHandlerValueConstraint* disjoint( const std::string& argSpec)
+[[nodiscard]] inline detail::IHandlerValueConstraint*
+   disjoint( const std::string& argSpec)
 {
    return new detail::ValueConstraintDisjoint( argSpec);
 } // disjoint
