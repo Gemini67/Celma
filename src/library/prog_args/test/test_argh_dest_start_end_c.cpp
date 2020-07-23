@@ -40,7 +40,7 @@ using celma::prog_args::Handler;
 /// Check the different combinations that are possible with two variables used
 /// as start/end pair.
 ///
-/// @since  x.y.z, 21.07.2020
+/// @since  1.41.2, 21.07.2020
 BOOST_AUTO_TEST_CASE( combinations)
 {
 

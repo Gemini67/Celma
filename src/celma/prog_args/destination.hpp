@@ -41,8 +41,7 @@
 ///   Passes the value from the command line.
 
 
-#ifndef CELMA_PROG_ARGS_DESTINATION_HPP
-#define CELMA_PROG_ARGS_DESTINATION_HPP
+#pragma once
 
 
 #include <type_traits>
@@ -59,7 +58,7 @@
 #include "celma/prog_args/detail/typed_arg_value.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 /// Returns the typed argument object corresponding to the type of the
@@ -256,7 +255,7 @@ template< typename T, typename C>
 ///    The second destination object to additionally store the value from the
 ///    command line in, if it wasn't assigned a value yet.
 /// @return  The typed argument object for range strings.
-/// @since  x.y.z, 21.07.2020
+/// @since  1.41.2, 21.07.2020
 template< typename T>
    [[nodiscard]] typename std::enable_if< !detail::ContainerAdapter< T>::HasAdapter,
       detail::TypedArgBase*>::type
@@ -309,8 +308,7 @@ template< typename T>
 } // destination
 
 
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args
 
 
 // macros
@@ -357,7 +355,7 @@ template< typename T>
 ///    The first destination variable.
 /// @param  dv2
 ///    The second destination variable.
-/// @since  x.y.z, 21.07.2020
+/// @since  1.41.2, 21.07.2020
 #define DEST_START_END( dv1, dv2)  \
    celma::prog_args::destination( dv1, #dv1, dv2)
 
@@ -478,9 +476,6 @@ template< typename T>
    celma::prog_args::destination( \
       std::bind( & c :: m, &o, std::placeholders::_1, std::placeholders::_2), \
          #c "::" #m, true)
-
-
-#endif   // CELMA_PROG_ARGS_DESTINATION_HPP
 
 
 // =====  END OF destination.hpp  =====
