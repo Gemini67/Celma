@@ -1970,6 +1970,40 @@ BOOST_AUTO_TEST_CASE( value_from_env_var)
          "\n"));
    } // end scope
 
+   // test output of "list argument variables"
+   {
+      std::ostringstream        std_out;
+      std::ostringstream        std_err;
+      Handler                   ah( std_out, std_err, Handler::hfListArgVar);
+      std::string               name;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "n,name", DEST_VAR( name), "name")
+         ->envVarValue( "TEST_HANDLER_NAME", false));
+
+      auto const  as2a = make_arg_array( "--list-arg-vars -n Hugentobler "
+         "--list-arg-vars", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !name.empty());
+      BOOST_REQUIRE_EQUAL( name, "Hugentobler");
+
+      BOOST_REQUIRE( !std_out.str().empty());
+      std::cerr << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
+         "'-n,--name' value type 'std::string', destination 'name', value = \"Hugentobler\".\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, value from env-var 'TEST_HANDLER_NAME', no checks, no formats.\n"
+         "\n"
+         "Arguments:\n"
+         "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
+         "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
+         "'-n,--name' value type 'std::string', destination 'name', value = \"Hugentobler\".\n"
+         "   value 'required' (2), optional, does not take multiple&separate values, print dflt, value from env-var 'TEST_HANDLER_NAME', no checks, no formats.\n"
+         "\n"));
+   } // end scope
+
    ::unsetenv( "TEST_HANDLER_NAME");
    ::unsetenv( "TEST_HANDLER_AGE");
 
