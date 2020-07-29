@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -804,6 +804,7 @@ BOOST_AUTO_TEST_CASE( multi_values)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                none\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    -\n"
@@ -863,6 +864,7 @@ BOOST_AUTO_TEST_CASE( no_value_method)
          "   is mandatory:               false\n"
          "   value mode:                 'none' (0)\n"
          "   cardinality:                at most 1\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    -\n"
@@ -880,3 +882,4 @@ BOOST_AUTO_TEST_CASE( no_value_method)
 
 
 // =====  END OF test_argh_callables_c.cpp  =====
+

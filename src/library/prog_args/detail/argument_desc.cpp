@@ -176,9 +176,9 @@ void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
 
    using std::endl;
 
-   for (size_t i = 0; i < mArguments.size(); ++i)
+   for (auto const& curr_arg : mArguments)
    {
-      if (!mArguments[ i].doPrint( printIsMandatory,
+      if (!curr_arg.doPrint( printIsMandatory,
           mpUsageParams->printHidden(),
           mpUsageParams->printDeprecated(),
           mpUsageParams->contents()))
@@ -199,44 +199,49 @@ void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
 
       if (sameLine)
          os << mIndention << std::setw( max_length) << std::left
-            << mArguments[ i].key( mpUsageParams->contents()) << mIndention;
+            << curr_arg.key( mpUsageParams->contents()) << mIndention;
       else
          os << mIndention << std::left
-            << mArguments[ i].key( mpUsageParams->contents())
+            << curr_arg.key( mpUsageParams->contents())
             << endl;
 
       // if the destination variable contains the default value for an optional
       // argument, add this to the usage
-      auto  descCopy( mArguments[ i].mDescription);
-      if (!mArguments[ i].mpArgObj->isMandatory()
-          && mArguments[ i].mpArgObj->printDefault())
+      auto  descCopy( curr_arg.mDescription);
+      if (!curr_arg.mpArgObj->isMandatory()
+          && curr_arg.mpArgObj->printDefault())
       {
          descCopy.append( "\nDefault value: ");
-         mArguments[ i].mpArgObj->defaultValue(descCopy);
-         if (!mArguments[ i].mpArgObj->valueUnit().empty())
-            descCopy.append( " [").append( mArguments[ i].mpArgObj->valueUnit())
+         curr_arg.mpArgObj->defaultValue(descCopy);
+         if (!curr_arg.mpArgObj->valueUnit().empty())
+            descCopy.append( " [").append( curr_arg.mpArgObj->valueUnit())
                .append( "]");
       } // end if
-      if (mArguments[ i].mpArgObj->hasCheck())
+      if (curr_arg.mpArgObj->hasCheck())
       {
          descCopy.append( "\nCheck: ")
-            .append( mArguments[ i].mpArgObj->checkStr());
+            .append( curr_arg.mpArgObj->checkStr());
       } // end if
-      if (mArguments[ i].mpArgObj->hasConstraint())
+      if (curr_arg.mpArgObj->hasEnvVar())
+      {
+         descCopy.append( "\nValue from environment variable: ")
+            .append( curr_arg.mpArgObj->envVarStr());
+      } // end if
+      if (curr_arg.mpArgObj->hasConstraint())
       {
          descCopy.append( "\nConstraint: ")
-            .append( mArguments[ i].mpArgObj->constraintStr());
+            .append( curr_arg.mpArgObj->constraintStr());
       } // end if
 
-      if (mArguments[ i].mpArgObj->isDeprecated())
+      if (curr_arg.mpArgObj->isDeprecated())
       {
-         if (mArguments[ i].mpArgObj->isReplaced())
+         if (curr_arg.mpArgObj->isReplaced())
             descCopy.append( "\n[replaced by '")
-               .append( mArguments[ i].mpArgObj->replacedBy()).append( "']");
+               .append( curr_arg.mpArgObj->replacedBy()).append( "']");
          else
             descCopy.append( "\n[deprecated]");
       } // end if
-      if (mArguments[ i].mpArgObj->isHidden())
+      if (curr_arg.mpArgObj->isHidden())
          descCopy.append( "\n[hidden]");
 
       tb.format( os, descCopy);

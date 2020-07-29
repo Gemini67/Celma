@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -173,6 +173,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                none\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    -\n"
@@ -217,6 +218,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                exactly 3\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    -\n"
@@ -258,6 +260,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                at most 4\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    -\n"
@@ -300,6 +303,7 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                between 3 and 7\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    -\n"
@@ -737,3 +741,4 @@ BOOST_AUTO_TEST_CASE( vector_range_2_5)
 
 
 // =====  END OF test_argh_cardinality_c.cpp  =====
+

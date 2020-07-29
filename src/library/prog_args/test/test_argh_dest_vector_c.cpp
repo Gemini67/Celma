@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -555,6 +555,7 @@ BOOST_AUTO_TEST_CASE( different_format_values)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                none\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    all: lowercase; idx 1: uppercase\n"

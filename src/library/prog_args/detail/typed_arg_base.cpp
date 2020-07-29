@@ -19,6 +19,10 @@
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
+// OS/C lib includes
+#include <cstdlib>
+
+
 // C++ Standard Library includes
 #include <iostream>
 
@@ -64,6 +68,46 @@ void TypedArgBase::setKey( const ArgumentKey& key)
    mKey = key;
 
 } // TypedArgBase::setKey
+
+
+
+/// Assigns the value from the environment variable with the given name.
+/// To make sure that checks, formatters etc. can be applied to the value
+/// from the environment variable too, this function does not return the
+/// handler object to make sure it is used as last element when setting up
+/// the argument.<br>
+/// If an argument has been defined as mandatory, the value is always treated
+/// as a "full argument" with all side-effects (counted as value etc.) If an
+/// argument is not defined as mandatory, but the values from the environment
+/// variable should be treated just like a value given on the command line,
+/// set the parameter \a full_arg to \c true.<br>
+/// If the parameter \a full_arg is not set, the value from the environment
+/// variable is just like another default value for the destination variable.
+///
+/// @param[in]  env_name
+///    The name of the environment variable to take the value from.
+/// @param[in]  full_arg
+///    Set to \c true if the value from the environment variable should be
+///    treated like a value from the command line.<br>
+///    This is the case if the argument is mandatory.
+/// @since  x.y.z, 26.07.2020
+void TypedArgBase::envVarValue( const std::string& env_name, bool full_arg)
+{
+
+   const char* const env = ::getenv( env_name.c_str());
+
+
+   if (env != nullptr)
+   {
+      if (full_arg || mIsMandatory)
+         assignValue( false, env, false);
+      else
+         assign( env, false);
+   } // end if
+
+   mEnvVar = env_name;
+
+} // TypedArgBase::envVarValue
 
 
 
@@ -609,6 +653,7 @@ void TypedArgBase::printProperties( std::ostream& os) const
       << '\n'
       << "   value mode:                 " << mValueMode << '\n'
       << "   cardinality:                " << cardinalityStr() << '\n'
+      << "   env-var name:               " << envVarStr() << '\n'
       << "   checks:                     " << checkStr() << '\n'
       << "   check original value:       " << mCheckOrigValue << '\n'
       << "   formats:                    " << formatStr() << '\n'
@@ -772,8 +817,14 @@ size_t TypedArgBase::numFormats() const
 ostream& operator <<( ostream& os, const TypedArgBase& tab)
 {
 
+   std::string  env_var_str;
    std::string  deprecated_str;
 
+
+   if (!tab.mEnvVar.empty())
+   {
+      env_var_str = "value from env-var '" + tab.mEnvVar + "', ";
+   } // end if
 
    if (tab.mIsDeprecated)
    {
@@ -788,6 +839,7 @@ ostream& operator <<( ostream& os, const TypedArgBase& tab)
       << (tab.mIsMandatory ? "mandatory, " : "optional, ")
       << (tab.takesMultiValue() ? "takes" : "does not take") << " multiple&separate values, "
       << (tab.mPrintDefault ? "" : "don't ") << "print dflt, "
+      << env_var_str
       << (tab.mIsHidden ? "hidden, " : "")
       << deprecated_str
       << (tab.mChecks.empty() ? "no" : boost::lexical_cast< string>( tab.mChecks.size()))

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -462,6 +462,7 @@ BOOST_AUTO_TEST_CASE( usage_help)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                none\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    -\n"

@@ -32,6 +32,7 @@
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args/helpers/triple_logic.hpp"
+#include "celma/test/multiline_string_compare.hpp"
 
 
 using celma::appl::ArgString2Array;
@@ -1799,6 +1800,180 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
 } // int_and_string
+
+
+
+/// Test setting the value through an environment variable.
+///
+/// @since  x.y.z, 26.07.2020
+BOOST_AUTO_TEST_CASE( value_from_env_var)
+{
+
+   // environment variable specified, but env-var does not exist
+   {
+      Handler      ah( 0);
+      std::string  name;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "n,name", DEST_VAR( name), "Name")
+         ->envVarValue( "TEST_HANDLER_NAME", false));
+      BOOST_REQUIRE( name.empty());
+   } // end scope
+
+   // environment variable specified, but env-var does not exist and argument is
+   // mandatory
+   {
+      Handler      ah( 0);
+      std::string  name;
+      int          age = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "n,name", DEST_VAR( name), "Name")
+         ->setIsMandatory()
+         ->envVarValue( "TEST_HANDLER_NAME", false));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a,age", DEST_VAR( name), "Age")
+         ->envVarValue( "TEST_HANDLER_AGE", false));
+      BOOST_REQUIRE( name.empty());
+      BOOST_REQUIRE_EQUAL( age, -1);
+
+      auto const  as2a = make_arg_array( "-a 42", nullptr);
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   ::setenv( "TEST_HANDLER_NAME", "Hugentobler", true);
+
+   // take value from env-var
+   {
+      Handler      ah( 0);
+      std::string  name;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "n,name", DEST_VAR( name), "Name")
+         ->envVarValue( "TEST_HANDLER_NAME", false));
+      BOOST_REQUIRE( !name.empty());
+      BOOST_REQUIRE_EQUAL( name, "Hugentobler");
+   } // end scope
+
+   // if a formatter is set, it must be executed too
+   {
+      Handler      ah( 0);
+      std::string  name;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "n,name", DEST_VAR( name), "Name")
+         ->addFormat( celma::prog_args::uppercase())
+         ->envVarValue( "TEST_HANDLER_NAME", false));
+      BOOST_REQUIRE( !name.empty());
+      BOOST_REQUIRE_EQUAL( name, "HUGENTOBLER");
+   } // end scope
+
+   // environment variable specified, env-var exists for mandatory argument
+   {
+      Handler      ah( 0);
+      std::string  name;
+      int          age = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "n,name", DEST_VAR( name), "Name")
+         ->setIsMandatory()
+         ->envVarValue( "TEST_HANDLER_NAME", false));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a,age", DEST_VAR( age), "Age")
+         ->envVarValue( "TEST_HANDLER_AGE", false));
+      BOOST_REQUIRE( !name.empty());
+      BOOST_REQUIRE_EQUAL( name, "Hugentobler");
+      BOOST_REQUIRE_EQUAL( age, -1);
+
+      auto const  as2a = make_arg_array( "-a 42", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( age, 42);
+   } // end scope
+
+   ::setenv( "TEST_HANDLER_AGE", "42", true);
+
+   // take value from env-var
+   {
+      Handler  ah( 0);
+      int      age = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a,age", DEST_VAR( age), "Age")
+         ->envVarValue( "TEST_HANDLER_AGE", false));
+      BOOST_REQUIRE_EQUAL( age, 42);
+   } // end scope
+
+   // assigning an(other) value is still possible
+   {
+      Handler  ah( 0);
+      int      age = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a,age", DEST_VAR( age), "Age")
+         ->envVarValue( "TEST_HANDLER_AGE", false));
+      BOOST_REQUIRE_EQUAL( age, 42);
+
+      auto const  as2a = make_arg_array( "-a 53", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( age, 53);
+   } // end scope
+
+   // assigning an(other) value is not possible anymore after value from env-var
+   // is treated as full var
+   {
+      Handler  ah( 0);
+      int      age = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "a,age", DEST_VAR( age), "Age")
+         ->envVarValue( "TEST_HANDLER_AGE", true));
+      BOOST_REQUIRE_EQUAL( age, 42);
+
+      auto const  as2a = make_arg_array( "-a 53", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   // test argument help
+   {
+      std::ostringstream  std_out;
+      std::ostringstream  std_err;
+      Handler             ah( std_out, std_err, Handler::hfUsageCont
+         | Handler::hfHelpArgFull);
+      std::string         name;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "n,name", DEST_VAR( name), "name")
+         ->envVarValue( "TEST_HANDLER_NAME", false));
+
+      auto const  as2a = make_arg_array( "-n Miller --help-arg-full n",
+         nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( !name.empty());
+      BOOST_REQUIRE_EQUAL( name, "Miller");
+
+      BOOST_REQUIRE( std_err.str().empty());
+      BOOST_REQUIRE( !std_out.str().empty());
+      // std::cerr << "\n" << std_out.str() << std::endl;
+      BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
+         "Argument '-n', usage:\n"
+         "   name\n"
+         "Properties:\n"
+         "   destination variable name:  name\n"
+         "   destination variable type:  std::string\n"
+         "   is mandatory:               false\n"
+         "   value mode:                 'required' (2)\n"
+         "   cardinality:                at most 1\n"
+         "   env-var name:               TEST_HANDLER_NAME\n"
+         "   checks:                     -\n"
+         "   check original value:       false\n"
+         "   formats:                    -\n"
+         "   constraints:                -\n"
+         "   is hidden:                  false\n"
+         "   takes multiple values:      false\n"
+         "   allows inverting:           false\n"
+         "   is deprecated:              false\n"
+         "   is replaced:                false\n"
+         "\n"));
+   } // end scope
+
+   ::unsetenv( "TEST_HANDLER_NAME");
+   ::unsetenv( "TEST_HANDLER_AGE");
+
+} // value_from_env_var
 
 
 

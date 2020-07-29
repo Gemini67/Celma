@@ -350,6 +350,7 @@ BOOST_AUTO_TEST_CASE( multiple_formatters)
          "   is mandatory:               false\n"
          "   value mode:                 'required' (2)\n"
          "   cardinality:                at most 1\n"
+         "   env-var name:               -\n"
          "   checks:                     -\n"
          "   check original value:       false\n"
          "   formats:                    all: lowercase, remove-digit\n"

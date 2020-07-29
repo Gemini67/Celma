@@ -95,7 +95,7 @@ class TypedArgBase
 {
 public:
    /// List of possible settings if a value is needed for an argument:
-   enum class ValueMode
+   enum class ValueMode : uint8_t
    {
       none,       //!< The argument does not accept a value.<br>
                   //!< This is the default for boolean arguments.
@@ -230,6 +230,42 @@ public:
    /// @return  \c true if the default value should be printed.
    /// @since  0.2, 10.04.2016
    bool printDefault() const;
+
+   /// Assigns the value from the environment variable with the given name.
+   /// To make sure that checks, formatters etc. can be applied to the value
+   /// from the environment variable too, this function does not return the
+   /// handler object to make sure it is used as last element when setting up
+   /// the argument.<br>
+   /// If an argument has been defined as mandatory, the value is always treated
+   /// as a "full argument" with all side-effects (counted as value etc.) If an
+   /// argument is not defined as mandatory, but the values from the environment
+   /// variable should be treated just like a value given on the command line,
+   /// set the parameter \a full_arg to \c true.<br>
+   /// If the parameter \a full_arg is not set, the value from the environment
+   /// variable is just like another default value for the destination variable.
+   ///
+   /// @param[in]  env_name
+   ///    The name of the environment variable to take the value from.
+   /// @param[in]  full_arg
+   ///    Set to \c true if the value from the environment variable should be
+   ///    treated like a value from the command line.<br>
+   ///    This is the case if the argument is mandatory.
+   /// @since  x.y.z, 26.07.2020
+   void envVarValue( const std::string& env_name, bool full_arg);
+
+   /// 
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 29.07.2020
+   bool hasEnvVar() const;
+
+   /// 
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 29.07.2020
+   const std::string& envVarStr() const;
 
    /// If printing the default value in the usage is enabled, this function can
    /// be used to specify the unit of the value. This will be displayed behind
@@ -723,6 +759,8 @@ protected:
    /// The value mode of this argument, set depending on the type of the
    /// destination variable.
    ValueMode                       mValueMode;
+   /// The name of the environment variable set by envVarValue().
+   std::string                     mEnvVar;
    /// Set if this argument is mandatory, not set by default.
    bool                            mIsMandatory = false;
    /// Set if this argument can handle multiple, separate values in the
@@ -771,7 +809,7 @@ private:
    static void formatStr( std::ostream& os,
       const value_format_cont_t& formatters);
 
-   /// Should assign a value to the specified destination variable.<br>
+   /// Should assign a value to the specified destination variable.
    /// Value parameter is obviously always passed, if the destination type
    /// doesn't accept values or supports usage without value(s), the string is/
    /// may be empty.<br>
@@ -875,6 +913,19 @@ inline bool TypedArgBase::printDefault() const
 {
    return mPrintDefault;
 } // TypedArgBase::printDefault
+
+
+inline bool TypedArgBase::hasEnvVar() const
+{
+   return !mEnvVar.empty();
+} // TypedArgBase::hasEnvVar
+
+
+inline const std::string& TypedArgBase::envVarStr() const
+{
+   static const std::string  none( "-");
+   return mEnvVar.empty() ? none : mEnvVar;
+} // TypedArgBase::envVarStr
 
 
 inline void TypedArgBase::setValueUnit( const std::string& unit)

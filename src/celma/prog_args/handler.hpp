@@ -291,7 +291,7 @@ public:
       /// Set this when additional program arguments should be read from an
       /// environment variable. Default name of the environment variable is the
       /// name of the program file in uppercase letters.
-      hfEnvVarArgs = hfReadProgArg << 1,
+      hfEnvVarArgs      = hfReadProgArg << 1,
       /// Produces verbose output when a value is assigned to a variable.
       hfVerboseArgs     = hfEnvVarArgs << 1,
       /// Specifies that hidden arguments should be printed too in the usage.
