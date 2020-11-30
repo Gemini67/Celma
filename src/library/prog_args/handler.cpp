@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::Handler.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/handler.hpp"
 
 
@@ -110,8 +110,8 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mVerbose( (flag_set & hfVerboseArgs) != 0),
    mUsageContinues( (flag_set & hfUsageCont) != 0),
    mpUsageParams( new detail::UsageParams()),
-   mArguments(),
-   mSubGroupArgs( true),
+   mArguments( (flag_set & hfNoAbbr) == 0),
+   mSubGroupArgs( (flag_set & hfNoAbbr) == 0, true),
    mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
@@ -160,8 +160,8 @@ Handler::Handler( Handler& main_ah, int flag_set, IUsageText* txt1,
    mVerbose( main_ah.mVerbose),
    mUsageContinues( main_ah.mUsageContinues),
    mpUsageParams( main_ah.mpUsageParams),
-   mArguments(),
-   mSubGroupArgs(),
+   mArguments( (flag_set & hfNoAbbr) == 0),
+   mSubGroupArgs( (flag_set & hfNoAbbr) == 0),
    mDescription( mpUsageParams),
    mpOpeningBracketHdlr(),
    mpClosingBracketHdlr(),
