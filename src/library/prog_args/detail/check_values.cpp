@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,21 +23,31 @@
 #include <sstream>
 
 
+// Boost Library includes
+#include <boost/algorithm/string/predicate.hpp>
+
+
 // project includes
 #include "celma/common/tokenizer.hpp"
 #include "celma/format/to_string.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 
 /// Constructor.
-/// @param[in]  valueList  The list of allowed values in string format.
+///
+/// @param[in]  value_list   The list of allowed values in string format.
+/// @param[in]  ignore_case  Set if the value comparison should ignore lower/
+///                          uppercase.
+/// @since  1.42.0, 12.11.2020
+///    (added parameter \a ignore_case)
 /// @since  0.2, 10.04.2016
-CheckValues::CheckValues( const std::string& valueList):
+CheckValues::CheckValues( const std::string& valueList, bool ignore_case):
    ICheck( "values"),
-   mValues()
+   mValues(),
+   mIgnoreCase( ignore_case)
 {
 
    common::Tokenizer  tokenizer( valueList, ',');
@@ -60,6 +70,16 @@ CheckValues::CheckValues( const std::string& valueList):
 /// @since  0.2, 10.04.2016
 void CheckValues::checkValue( const std::string& val) const
 {
+
+   if (mIgnoreCase)
+   {
+      for (auto const& v : mValues)
+      {
+         if (boost::iequals( val, v))
+            return;
+      } // end for
+      throw std::out_of_range( "Value '" + val + "' is not in the list of allowed values");
+   } // end if
 
    if (mValues.find( val)== mValues.end())
       throw std::out_of_range( "Value '" + val + "' is not in the list of allowed values");
@@ -84,9 +104,7 @@ std::string CheckValues::toString() const
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF check_values.cpp  =====

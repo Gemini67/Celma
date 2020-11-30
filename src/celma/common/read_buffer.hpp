@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,17 +15,17 @@
 /// See documentation of template class celma::common::ReadBuffer<>.
 
 
-#ifndef CELMA_COMMON_READ_BUFFER_HPP
-#define CELMA_COMMON_READ_BUFFER_HPP
+#pragma once
 
 
 #include <cassert>
 #include <cstddef>
 #include <cstring>
 #include <memory>
+#include <stdexcept>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 // Class EmptyReadPolicy
@@ -331,11 +331,7 @@ template< size_t N, typename P> void ReadBuffer< N, P>::fillBuffer( size_t min_l
 } // ReadBuffer< N, P>::fillBuffer
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_READ_BUFFER_HPP
+} // namespace celma::common
 
 
 // =====  END OF read_buffer.hpp  =====
