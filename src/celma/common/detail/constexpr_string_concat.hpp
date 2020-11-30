@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,15 +18,15 @@
 /// answer from user Yakk. Thank you very much!
 
 
-#ifndef CELMA_COMMON_DETAIL_CONSTEXPR_STRING_CONCAT_HPP
-#define CELMA_COMMON_DETAIL_CONSTEXPR_STRING_CONCAT_HPP
+#pragma once
 
 
+#include <unistd.h>
 #include <array>
 #include <utility>
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Template alias for the type of an element of a sequence.
@@ -160,12 +160,7 @@ template< class Lhs, class Rhs, unsigned... I1, unsigned... I2>
 } // concat_impl
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_CONSTEXPR_STRING_CONCAT_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF constexpr_string_concat.hpp  =====
