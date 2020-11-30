@@ -1050,6 +1050,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       BOOST_REQUIRE( !name.hasValue());
    } // end scope
 
+   // correct name but capitalisation is wrong
    {
       Handler                    ah( 0);
       CheckAssign< std::string>  name;
@@ -1062,6 +1063,21 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
       BOOST_REQUIRE( !name.hasValue());
+   } // end scope
+
+   // ignore capitalisation
+   {
+      Handler                    ah( 0);
+      CheckAssign< std::string>  name;
+
+      ah.addArgument( "n", DEST_VAR( name), "Name")
+                    ->addCheck( values( "Peter,Paul,Mary", true));
+
+      auto const  as2a = make_arg_array( "-n peter", nullptr);
+
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE_EQUAL( name.value(), "peter");
    } // end scope
 
    {

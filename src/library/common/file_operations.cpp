@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,19 @@
 /// See documentation of class celma::FileOperations.
 
 
-// module header file include
+// module headerfile include
 #include "celma/common/file_operations.hpp"
+
+
+// C++ Standard Library includes
+#include <stdexcept>
 
 
 // project includes
 #include "celma/common/detail/file_funcs_os.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 std::unique_ptr< detail::FileFuncsBase>
@@ -96,8 +100,7 @@ int FileOperations::mkdir( const std::string& dir_name, int mode)
 
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
 // =====  END OF file_operations.cpp  =====

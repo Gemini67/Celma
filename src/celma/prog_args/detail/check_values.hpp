@@ -33,9 +33,15 @@ class CheckValues final : public ICheck
 {
 public:
    /// Constructor.
-   /// @param[in]  valueList  The list of allowed values in string format.
+   ///
+   /// @param[in]  value_list   The list of allowed values in string format.
+   /// @param[in]  ignore_case  Set if the value comparison should ignore lower/
+   ///                          uppercase.
+   /// @since  1.42.0, 12.11.2020
+   ///    (added parameter \a ignore_case)
    /// @since  0.2, 10.04.2016
-   explicit CheckValues( const std::string& valueList) noexcept( false);
+   explicit CheckValues( const std::string& valueList, bool ignore_case = false)
+      noexcept( false);
 
    /// Default destructor is fine.
    ~CheckValues() override = default;
@@ -55,7 +61,10 @@ private:
    using StringSet = std::set< std::string>;
 
    /// The allowed values.
-   StringSet  mValues;
+   StringSet   mValues;
+   /// Flag if the comparison should be done considering the capitalisation or
+   /// not.
+   const bool  mIgnoreCase;
 
 }; // CheckValues
 
@@ -69,13 +78,18 @@ private:
 
 /// Helper function to create a lower-limit check more easily: Simply call this
 /// function with the check-value as parameter to TypedArgBase::addCheck().
-/// @param[in]  valueList  The value-list to check against.
+/// @param[in]  valueList    The value-list to check against.
+/// @param[in]  ignore_case  Set if the value comparison should ignore lower/
+///                          uppercase.
 /// @return  The newly created CheckValues object.
+/// @since  1.42.0, 12.11.2020
+///    (added parameter \a ignore_case)
 /// @since  0.2, 10.04.2016
-[[nodiscard]] inline detail::ICheck* values( const std::string& valueList)
+[[nodiscard]] inline detail::ICheck* values( const std::string& valueList,
+   bool ignore_case = false)
 {
-   return new detail::CheckValues( valueList);
-} // end values
+   return new detail::CheckValues( valueList, ignore_case);
+} // values
 
 
 } // namespace celma::prog_args
