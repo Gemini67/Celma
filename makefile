@@ -120,3 +120,10 @@ sonar:
 edit-release:
 	nedit doc/main_page.txt CMakeLists.txt README.md celma.doxy sonar-project.properties &
 
+
+circle-validate:
+	circleci config validate
+
+circle-process:
+	circleci config process .circleci/config.yml
+
