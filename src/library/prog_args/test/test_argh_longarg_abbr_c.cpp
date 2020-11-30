@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test, header file include
+// module to test, headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -105,6 +105,68 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    } // end scope
 
 } // long_arg_abbr
+
+
+
+/// Test that abbreviations are not allowed when disabled.
+/// @since  1.42.0, 30.11.2020
+BOOST_AUTO_TEST_CASE( abbr_disabled)
+{
+
+   Handler            ah( Handler::hfNoAbbr);
+   CheckAssign< int>  inputVal;
+   CheckAssign< int>  inplaceVal;
+   CheckAssign< int>  outputVal;
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "input",   DEST_VAR( inputVal),   "Integer"));
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "inplace", DEST_VAR( inplaceVal), "Integer"));
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "output",  DEST_VAR( outputVal),  "Integer"));
+
+   {
+      auto const  as2a = make_arg_array( "--in 5", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           std::runtime_error);
+   } // end scope
+
+   {
+      auto const  as2a = make_arg_array( "--inp 5", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+                           std::runtime_error);
+   } // end scope
+
+   {
+      auto const  as2a = make_arg_array( "--inpu 5", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   inputVal.reset();
+   inplaceVal.reset();
+   outputVal.reset();
+
+   {
+      auto const  as2a = make_arg_array( "--inpl 5", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+   inputVal.reset();
+   inplaceVal.reset();
+   outputVal.reset();
+
+   {
+      auto const  as2a = make_arg_array( "--ou 5", nullptr);
+
+      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+         std::runtime_error);
+   } // end scope
+
+} // abbr_disabled
 
 
 

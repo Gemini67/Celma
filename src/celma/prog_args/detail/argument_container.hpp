@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ArgumentContainer.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_ARGUMENT_CONTAINER_HPP
-#define CELMA_PROG_ARGS_DETAIL_ARGUMENT_CONTAINER_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -27,7 +26,7 @@
 #include "celma/prog_args/summary_options.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Extracted from ArgumentHandler: Store an argument which may use the short
@@ -40,14 +39,18 @@ class ArgumentContainer
 public:
    /// Constructor.
    ///
+   /// @param[in]  abbr_allowed
+   ///    Set if abbreviations of long arguments should be allowed.
    /// @param[in]  stores_sub_args
    ///    Set if the object is used to store sub-arguments, i.e. arguments that
    ///    are related to another (parent) argument.
    /// @since
+   ///    1.42.0, 30.11..2020  (parameter \a abbr_allowed added)
+   /// @since
    ///    1.8.0, 12.07.2018  (parameter stores_sub_args added)
    /// @since
    ///    0.2, 10.04.2016
-   ArgumentContainer( bool stores_sub_args = false);
+   explicit ArgumentContainer( bool abbr_allowed, bool stores_sub_args = false);
 
    /// Adds a new argument.
    /// @param[in]  argHandler  The object used to handle this argument.
@@ -69,8 +72,10 @@ public:
    void checkArgMix( const std::string& ownName, const std::string& otherName,
                      const ArgumentContainer& otherAH) const;
 
-   /// Searches if this short or long argument is defined.<br>
-   /// If a long argument name was used, also search for partial matches.
+   /// Searches if this short or long argument is defined.
+   /// If a long argument name was used, also search for partial matches if it
+   /// is allowed.
+   ///
    /// @param[in]  key  The short and/or long argument name to check.
    /// @return  Pointer to the argument handler object if the argument is
    ///          defined, NULL otherwise.
@@ -78,7 +83,7 @@ public:
    /// @since  0.2, 10.04.2016
    TypedArgBase* findArg( const ArgumentKey& key) const;
 
-   /// Specifies the line length to use when printing the usage.<br>
+   /// Specifies the line length to use when printing the usage.
    /// Used when this container is used to store te sub-group arguments.
    /// @param[in]  useLen  The new line length to use.<br>
    ///                     The value must be in the range 60 <= useLen < 240.
@@ -118,6 +123,9 @@ private:
 
    /// All arguments set.
    Storage< shared_handler_t>  mArguments;
+   /// Flag, also set by the constructor, specifies if abbreviations of long
+   /// arguments are allowed or not.
+   const bool  mAbbrAllowed;
    /// Flag, set by the constructor, specifies if this container stores sub-
    /// arguments or not.
    const bool  mStoreSubArgs;
@@ -135,12 +143,7 @@ inline bool ArgumentContainer::empty() const
 } // ArgumentContainer::empty
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_ARGUMENT_CONTAINER_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF argument_container.hpp  =====

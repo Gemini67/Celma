@@ -47,7 +47,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
-   |   1.42.0 | 202?-??-??        | Adapted for g++10. Allow case insensitive value list comparison for arguments. |
+   |   1.42.0 | 2020-11-30        | Adapted for g++10. Allow case insensitive value list comparison for arguments. Added flag to suppress use of abbreviations for long arguments. |
    |   1.41.2 | 2020-07-23        | Added destination type 'start-end pair'. Fixed bug in argument string splitter. |
    |   1.41.1 | 2020-07-15        | Added keyword \c final where appropriate. |
    |   1.41.0 | 2020-07-14        | Added all key-value-pairs container as possible destination types in the argument handler. |

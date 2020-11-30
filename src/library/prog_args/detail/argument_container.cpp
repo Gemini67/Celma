@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ArgumentContainer.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/detail/argument_container.hpp"
 
 
@@ -35,20 +35,25 @@ using std::runtime_error;
 using std::string;
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Constructor.
 ///
+/// @param[in]  abbr_allowed
+///    Set if abbreviations of long arguments should be allowed.
 /// @param[in]  stores_sub_args
 ///    Set if the object is used to store sub-arguments, i.e. arguments that
 ///    are related to another (parent) argument.
 /// @since
+///    1.42.0, 30.11..2020  (parameter \a abbr_allowed added)
+/// @since
 ///    1.8.0, 12.07.2018  (parameter stores_sub_args added)
 /// @since
 ///    0.2, 10.04.2016
-ArgumentContainer::ArgumentContainer( bool stores_sub_args):
+ArgumentContainer::ArgumentContainer( bool abbr_allowed, bool stores_sub_args /* = false */):
    mArguments(),
+   mAbbrAllowed( abbr_allowed),
    mStoreSubArgs( stores_sub_args)
 {
 } // ArgumentContainer::ArgumentContainer
@@ -145,7 +150,7 @@ TypedArgBase* ArgumentContainer::findArg( const ArgumentKey& key) const
       if (argi == key)
          return argi.data().get();
 
-      if (argi.key().startsWith( key))
+      if (mAbbrAllowed && argi.key().startsWith( key))
       {
          // found a match using the long argument as abbreviation
          if (part_match == nullptr)
@@ -236,9 +241,7 @@ std::ostream& operator <<( std::ostream& os, const ArgumentContainer& ac)
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF argument_container.cpp  =====
