@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::Handler.
 
 
-#ifndef CELMA_PROG_ARGS_HANDLER_HPP
-#define CELMA_PROG_ARGS_HANDLER_HPP
+#pragma once
 
 
 #include <functional>
@@ -33,7 +32,7 @@
 #include "celma/prog_args/summary_options.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 class IUsageText;
@@ -81,7 +80,7 @@ class IHandlerValueConstraint;
 /// - The value mode can also be used to flag a parameter that means:
 ///   The remaining command line arguments are not for this program/
 ///   application.<br>
-///   Use the vakue mode 'command' for this.<br>
+///   Use the value mode 'command' for this.<br>
 ///   If such an argument is used, the remaining argument string is passed as
 ///   value to its destination variable.
 /// - Additionally you can use the following modifiers for each argument to
@@ -291,11 +290,13 @@ public:
       /// Set this when additional program arguments should be read from an
       /// environment variable. Default name of the environment variable is the
       /// name of the program file in uppercase letters.
-      hfEnvVarArgs = hfReadProgArg << 1,
+      hfEnvVarArgs      = hfReadProgArg << 1,
       /// Produces verbose output when a value is assigned to a variable.
       hfVerboseArgs     = hfEnvVarArgs << 1,
+      /// Disables abbreviations for long arguments completely.
+      hfNoAbbr          = hfVerboseArgs << 1,
       /// Specifies that hidden arguments should be printed too in the usage.
-      hfUsageHidden     = hfVerboseArgs << 1,
+      hfUsageHidden     = hfNoAbbr << 1,
       /// Allows the argument '--print-hidden' to print the hidden arguments in
       /// the usage.
       hfArgHidden       = hfUsageHidden << 1,
@@ -1060,8 +1061,9 @@ private:
 
    /// List of values/flags for the different read mode.<br>
    /// The flags for "reading from file" and "processing environment variable"
-   /// may be set in parallel.
-   enum ReadMode
+   /// may be set in parallel.<br>
+   /// As long as there are not more values, the values are usable as flags :-)
+   enum ReadMode : uint8_t
    {
       commandLine,   //!< Normal evaluation of command line arguments.
       file,          //!< Flag/Bit set when evaluating an argument file.
@@ -1137,11 +1139,7 @@ inline void Handler::printSummary( std::ostream& os)
 } // Handler::printSummary
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_HANDLER_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF handler.hpp  =====
