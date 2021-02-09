@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE( errors)
       bool     dummy;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "d", DEST_VAR( dummy), "no name")
-         ->addConstraint( celma::prog_args::requires( "")),
+         ->addConstraint( celma::prog_args::requiresArg( "")),
          std::invalid_argument);
 
       BOOST_REQUIRE_THROW( ah.addArgument( "d", DEST_VAR( dummy), "no name")
@@ -119,10 +119,10 @@ BOOST_AUTO_TEST_CASE( errors)
 
 
 
-/// Check the argument-constraint 'requires'.
+/// Check the argument-constraint 'requiresArg'.
 ///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( constraint_requires)
+BOOST_AUTO_TEST_CASE( constraint_requires_arg)
 {
 
    std::string  name;
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
       auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
       auto const  as2a = make_arg_array( "-n name1", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
@@ -160,21 +160,21 @@ BOOST_AUTO_TEST_CASE( constraint_requires)
       auto const  as2a = make_arg_array( "-n name1 -i 5", nullptr);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i"));
       ah.addArgument( "i", DEST_VAR( idx),  "Index");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-} // constraint_requires
+} // constraint_requires_arg
 
 
 
-/// Check the argument-constraint 'requires' with one argument that requires two
-/// other arguments.
+/// Check the argument-constraint 'requiresArg' with one argument that requires
+/// two other arguments.
 ///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( constraint_requires_two)
+BOOST_AUTO_TEST_CASE( constraint_requires_arg_two)
 {
 
    std::string  name;
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i;o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i;o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       auto const  as2a = make_arg_array( "-n name1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i;o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i;o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       auto const  as2a = make_arg_array( "-n name1 -i 5", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i;o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i;o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       auto const  as2a = make_arg_array( "-n name1 -i 5 -o all", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i;o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i;o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       auto const  as2a = make_arg_array( "-n name1 -i 5 --opt all", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i;o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i;o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
@@ -255,7 +255,7 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       auto const  as2a = make_arg_array( "-n name1 -o all -i 5", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i;o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i;o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
@@ -268,24 +268,24 @@ BOOST_AUTO_TEST_CASE( constraint_requires_two)
       auto const  as2a = make_arg_array( "-n name1 --opt all -i 5", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i;o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i;o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index");
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-} // constraint_requires_two
+} // constraint_requires_arg_two
 
 
 
-/// Check the argument-constraint 'requires' with an argument that requires a
+/// Check the argument-constraint 'requiresArg' with an argument that requires a
 /// second one, which in turn requires a third one.<br>
 /// Logic-wise this is the same as the previous test case, but the runtime
 /// implications are different.
 ///
 /// @since  0.2, 10.04.2016
-BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
+BOOST_AUTO_TEST_CASE( constraint_requires_arg_chaining)
 {
 
    std::string  name;
@@ -299,9 +299,9 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
       auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -313,9 +313,9 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
       auto const  as2a = make_arg_array( "-n name1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
@@ -328,9 +328,9 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
       auto const  as2a = make_arg_array( "-n name1 -i 5", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
@@ -343,9 +343,9 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
       auto const  as2a = make_arg_array( "-n name1 -i 5 -o all", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -357,19 +357,19 @@ BOOST_AUTO_TEST_CASE( constraint_requires_chaining)
       auto const  as2a = make_arg_array( "-n name1 -i 5 --opt all", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "i"));
+                    ->addConstraint( celma::prog_args::requiresArg( "i"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    } // end scope
 
-} // constraint_requires_chaining
+} // constraint_requires_arg_chaining
 
 
 
-/// Check the argument-constraint 'requires' with two different arguments that
+/// Check the argument-constraint 'requiresArg' with two different arguments that
 /// both require a third argument.
 ///
 /// @since  0.2, 10.04.2016
@@ -387,9 +387,9 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
       auto const  as2a = make_arg_array( "", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -401,9 +401,9 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
       auto const  as2a = make_arg_array( "-n name1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
@@ -416,9 +416,9 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
       auto const  as2a = make_arg_array( "-i 56", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
@@ -431,9 +431,9 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
       auto const  as2a = make_arg_array( "-n name1 -i 56", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
@@ -446,9 +446,9 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
       auto const  as2a = make_arg_array( "-n name1 -o 1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -460,9 +460,9 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
       auto const  as2a = make_arg_array( "-i 56 -o 1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -474,9 +474,9 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
       auto const  as2a = make_arg_array( "-n name1 -i 56 -o 1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -488,9 +488,9 @@ BOOST_AUTO_TEST_CASE( constraint_required_twice)
       auto const  as2a = make_arg_array( "-n name1 -i 56 --opt=1", nullptr);
 
       ah.addArgument( "n",     DEST_VAR( name), "Name")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "i",     DEST_VAR( idx),  "Index")
-                    ->addConstraint( celma::prog_args::requires( "o,opt"));
+                    ->addConstraint( celma::prog_args::requiresArg( "o,opt"));
       ah.addArgument( "o,opt", DEST_VAR( opt),  "Optional");
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
@@ -963,7 +963,7 @@ BOOST_AUTO_TEST_CASE( constraint_mix)
                        ->setIsMandatory();
          ah.addArgument( "i,input",   DEST_VAR( input_name),  "Input Name");
          ah.addArgument( "p,path",    DEST_VAR( path),        "Path")
-                       ->addConstraint( celma::prog_args::requires( "f,format"));
+                       ->addConstraint( celma::prog_args::requiresArg( "f,format"));
          ah.addArgument( "f,format",  DEST_VAR( format_name), "Format");
          ah.addArgument( "d,display", DEST_VAR( display),     "Display");
          ah.addArgument( "w,write",   DEST_VAR( do_write),    "Write");

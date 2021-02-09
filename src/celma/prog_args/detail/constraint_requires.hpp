@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -69,16 +69,18 @@ public:
 
 
 /// Helper function to easily add a 'requires' constraint.<br>
-/// Usage:  addArgument( ...)->addConstraint( requires( "..."));
+/// Usage:  addArgument( ...)->addConstraint( requiresArg( "..."));
 ///
 /// @param[in]  argSpec
 ///    The argument specification of the other, required argument.
 /// @return  The newly created constraint object.
+/// @since  x.y.z, 09.02.2021
+///    (name changed from requires() due to conflict with new C++ standard 20)
 /// @since  0.2, 10.04.2016
-[[nodiscard]] inline detail::IArgConstraint* requires( const std::string& argSpec)
+[[nodiscard]] inline detail::IArgConstraint* requiresArg( const std::string& argSpec)
 {
    return new detail::ConstraintRequires( argSpec);
-} // requires
+} // requiresArg
 
 
 } // namespace celma::prog_args
