@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -498,7 +498,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
                  ->addCheck( celma::prog_args::lower( 20));
    ah.addArgument( "index2", DEST_VAR( opt_int_arg2), "Integer argument two")
                  ->addCheck( celma::prog_args::upper( 100))
-                 ->addConstraint( celma::prog_args::requires( "index3"));
+                 ->addConstraint( celma::prog_args::requiresArg( "index3"));
    ah.addArgument( "index3", DEST_VAR( opt_int_arg3), "Integer argument three")
                  ->addCheck( celma::prog_args::range( 20, 100));
    ah.addArgument( "f,file", DEST_VAR( file), "Existing file")
