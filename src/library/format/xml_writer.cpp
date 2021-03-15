@@ -23,6 +23,13 @@ namespace celma::format {
 
 
 
+/// Constructor.
+///
+/// @param[in]  dest
+///    Destination stream to write the XML into.
+/// @param[in]  indent_size
+///    Number of spaces to use for indention.
+/// @since  x.y.z, 02.03.2021
 XmlWriter::XmlWriter( std::ostream& dest, int indent_size):
    mDest( dest),
    mIndent( 0, indent_size)
@@ -31,6 +38,11 @@ XmlWriter::XmlWriter( std::ostream& dest, int indent_size):
 
 
 
+/// Insertion operator to handle manipulators.
+///
+/// @param[in]  m  The manipulator to call with this object.
+/// @return  This object.
+/// @since  x.y.z, 03.03.2021
 XmlWriter& XmlWriter::operator <<( XmlWriter&( *m)( XmlWriter&))
 {
 
@@ -41,6 +53,10 @@ XmlWriter& XmlWriter::operator <<( XmlWriter&( *m)( XmlWriter&))
 
 
 
+/// Called to set the type of the next field/value.
+///
+/// @param[in]  type  The type of the next field/value to set.
+/// @since  x.y.z, 03.03.2021
 void XmlWriter::nextField( XmlWriter::Field type)
 {
 
@@ -50,13 +66,11 @@ void XmlWriter::nextField( XmlWriter::Field type)
 
 
 
-/*
-/// 
-/// @param[in]  bvalue
-///    .
-/// @since
-///    x.y.z, 05.03.2021
-void XmlWriter::handle( bool bvalue)
+/// Handles a boolean value.
+///
+/// @param[in]  bvalue  The boolean value to write.
+/// @since  x.y.z, 05.03.2021
+void XmlWriter::handleBool( bool bvalue)
 {
 
    if (mNextFieldType == Field::attr_val)
@@ -70,15 +84,15 @@ void XmlWriter::handle( bool bvalue)
 
    mNextFieldType = Field::unknown;
 
-} // XmlWriter::handle
-*/
+} // XmlWriter::handleBool
 
 
 
-/// 
-/// @param[in]  ivalue  .
+/// Handles an integer value.
+///
+/// @param[in]  ivalue  The integer value to write.
 /// @since  x.y.z, 03.03.2021
-void XmlWriter::handle( int ivalue)
+void XmlWriter::handleInt( int ivalue)
 {
 
    if (mNextFieldType == Field::attr_val)
@@ -92,14 +106,15 @@ void XmlWriter::handle( int ivalue)
 
    mNextFieldType = Field::unknown;
 
-} // XmlWriter::handle
+} // XmlWriter::handleInt
 
 
 
-/// 
-/// @param[in]  fvalue  .
+/// Handles a double value.
+///
+/// @param[in]  fvalue  The floating point value to write.
 /// @since  x.y.z, 04.03.2021
-void XmlWriter::handle( double fvalue)
+void XmlWriter::handleDouble( double fvalue)
 {
 
    if (mNextFieldType == Field::attr_val)
@@ -113,14 +128,15 @@ void XmlWriter::handle( double fvalue)
 
    mNextFieldType = Field::unknown;
 
-} // XmlWriter::handle
+} // XmlWriter::handleDouble
 
 
 
-/// 
-/// @param[in]  str  .
+/// Handles a string value.
+///
+/// @param[in]  str  The string to write.
 /// @since  x.y.z, 03.03.2021
-void XmlWriter::handle( const std::string& str)
+void XmlWriter::handleString( const std::string& str)
 {
 
    switch (mNextFieldType)
@@ -145,16 +161,20 @@ void XmlWriter::handle( const std::string& str)
 
    mNextFieldType = Field::unknown;
 
-} // XmlWriter::handle
+} // XmlWriter::handleString
 
 
 
+/// Writes the closing tag.
+///
+/// @since  x.y.z, 03.03.2021
+void closeTag();
 void XmlWriter::closeTag()
 {
 
    mDest << "</" << mCurrentTagName << '>' << std::endl;
 
-} // 
+} // XmlWriter::closeTag
 
 
 
