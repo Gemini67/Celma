@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,9 +18,9 @@
 #pragma once
 
 
+#include <filesystem>
 #include <stdexcept>
 #include <string>
-#include "celma/common/file_info.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 
 
@@ -70,7 +70,7 @@ inline CheckIsFile::CheckIsFile():
 
 inline void CheckIsFile::checkValue( const std::string& val) const
 {
-   if (!common::fileInfo( val).isFile())
+   if (!std::filesystem::is_regular_file( val))
       throw std::invalid_argument( std::string( "'") + val
          + "' is not an existing file");
 } // CheckIsFile::checkValue
