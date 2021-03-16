@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,7 +37,6 @@
 
 
 using celma::appl::make_arg_array;
-using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 
 
@@ -171,20 +170,20 @@ BOOST_AUTO_TEST_CASE( lower_limit)
    using celma::prog_args::lower;
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
       auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
@@ -192,35 +191,35 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::underflow_error);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
       auto const  as2a = make_arg_array( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10);
    } // end scope
 
    {
-      std::ostringstream  std_out;
-      std::ostringstream  std_err;
-      Handler             ah( std_out, std_err, Handler::hfUsageCont
+      std::ostringstream   std_out;
+      std::ostringstream   std_err;
+      Handler              ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      CheckAssign< int>  iVal;
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
       auto const  as2a = make_arg_array( "-i 10000 --help-arg-full i", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10000);
 
       BOOST_REQUIRE( std_err.str().empty());
@@ -340,20 +339,20 @@ BOOST_AUTO_TEST_CASE( upper_limit)
    using celma::prog_args::upper;
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
       auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
@@ -361,12 +360,12 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::overflow_error);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
@@ -374,35 +373,35 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::overflow_error);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
       auto const  as2a = make_arg_array( "-i 99", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 99);
    } // end scope
 
    {
-      std::ostringstream  std_out;
-      std::ostringstream  std_err;
-      Handler             ah( std_out, std_err, Handler::hfUsageCont
+      std::ostringstream    std_out;
+      std::ostringstream    std_err;
+      Handler               ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      CheckAssign< int>   iVal;
+      std::optional< int>   iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
       auto const  as2a = make_arg_array( "-i 1 --help-arg-full i", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 1);
 
       BOOST_REQUIRE( std_err.str().empty());
@@ -536,8 +535,8 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
    using celma::prog_args::upper;
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -545,12 +544,12 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -559,12 +558,12 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::underflow_error);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -572,16 +571,16 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       auto const  as2a = make_arg_array( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10);
    } // end scope
 
    {
-      std::ostringstream  std_out;
-      std::ostringstream  std_err;
-      Handler             ah( std_out, std_err, Handler::hfUsageCont
+      std::ostringstream    std_out;
+      std::ostringstream    std_err;
+      Handler               ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      CheckAssign< int>   iVal;
+      std::optional< int>   iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -589,7 +588,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       auto const  as2a = make_arg_array( "-i 99 --help-arg-full i", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 99);
 
       BOOST_REQUIRE( std_err.str().empty());
@@ -617,8 +616,8 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -627,12 +626,12 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::overflow_error);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
@@ -641,7 +640,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::overflow_error);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
 } // lower_upper_limit
@@ -788,8 +787,8 @@ BOOST_AUTO_TEST_CASE( check_range)
    using celma::prog_args::range;
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -797,12 +796,12 @@ BOOST_AUTO_TEST_CASE( check_range)
       auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -811,12 +810,12 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -824,13 +823,13 @@ BOOST_AUTO_TEST_CASE( check_range)
       auto const  as2a = make_arg_array( "-i 10", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -838,13 +837,13 @@ BOOST_AUTO_TEST_CASE( check_range)
       auto const  as2a = make_arg_array( "-i 99", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 99);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -853,12 +852,12 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
@@ -867,7 +866,7 @@ BOOST_AUTO_TEST_CASE( check_range)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
 } // check_range
@@ -1038,8 +1037,8 @@ BOOST_AUTO_TEST_CASE( check_values_string)
    using celma::prog_args::values;
 
    {
-      Handler                    ah( 0);
-      CheckAssign< std::string>  name;
+      Handler                      ah( 0);
+      std::optional< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1047,13 +1046,13 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( !name.hasValue());
+      BOOST_REQUIRE( !name.has_value());
    } // end scope
 
    // correct name but capitalisation is wrong
    {
-      Handler                    ah( 0);
-      CheckAssign< std::string>  name;
+      Handler                      ah( 0);
+      std::optional< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1062,13 +1061,13 @@ BOOST_AUTO_TEST_CASE( check_values_string)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
-      BOOST_REQUIRE( !name.hasValue());
+      BOOST_REQUIRE( !name.has_value());
    } // end scope
 
    // ignore capitalisation
    {
-      Handler                    ah( 0);
-      CheckAssign< std::string>  name;
+      Handler                      ah( 0);
+      std::optional< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary", true));
@@ -1076,13 +1075,13 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       auto const  as2a = make_arg_array( "-n peter", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "peter");
    } // end scope
 
    {
-      Handler                    ah( 0);
-      CheckAssign< std::string>  name;
+      Handler                      ah( 0);
+      std::optional< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1091,12 +1090,12 @@ BOOST_AUTO_TEST_CASE( check_values_string)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
-      BOOST_REQUIRE( !name.hasValue());
+      BOOST_REQUIRE( !name.has_value());
    } // end scope
 
    {
-      Handler                    ah( 0);
-      CheckAssign< std::string>  name;
+      Handler                      ah( 0);
+      std::optional< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1105,12 +1104,12 @@ BOOST_AUTO_TEST_CASE( check_values_string)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
-      BOOST_REQUIRE( !name.hasValue());
+      BOOST_REQUIRE( !name.has_value());
    } // end scope
 
    {
-      Handler                    ah( 0);
-      CheckAssign< std::string>  name;
+      Handler                      ah( 0);
+      std::optional< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1118,13 +1117,13 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       auto const  as2a = make_arg_array( "-n Peter", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "Peter");
    } // end scope
 
    {
-      Handler                    ah( 0);
-      CheckAssign< std::string>  name;
+      Handler                      ah( 0);
+      std::optional< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1132,16 +1131,16 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       auto const  as2a = make_arg_array( "-n Paul", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "Paul");
    } // end scope
 
    {
-      std::ostringstream        std_out;
-      std::ostringstream        std_err;
-      Handler                   ah( std_out, std_err, Handler::hfUsageCont
+      std::ostringstream          std_out;
+      std::ostringstream          std_err;
+      Handler                     ah( std_out, std_err, Handler::hfUsageCont
          | Handler::hfHelpArgFull);
-      CheckAssign< std::string>  name;
+      std::optional< std::string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
@@ -1149,7 +1148,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       auto const  as2a = make_arg_array( "-n Mary --help-arg-full n", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "Mary");
 
       BOOST_REQUIRE( std_err.str().empty());
@@ -1189,9 +1188,8 @@ BOOST_AUTO_TEST_CASE( check_values_int)
    using celma::prog_args::values;
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
@@ -1199,13 +1197,12 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
@@ -1214,13 +1211,12 @@ BOOST_AUTO_TEST_CASE( check_values_int)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
@@ -1229,13 +1225,12 @@ BOOST_AUTO_TEST_CASE( check_values_int)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
          std::out_of_range);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
@@ -1243,14 +1238,13 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       auto const  as2a = make_arg_array( "-i 11", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 11);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
@@ -1258,14 +1252,13 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       auto const  as2a = make_arg_array( "-i 111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 111);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
@@ -1273,7 +1266,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       auto const  as2a = make_arg_array( "-i 1111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 1111);
    } // end scope
 
@@ -2510,8 +2503,8 @@ BOOST_AUTO_TEST_CASE( application_check)
 {
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
@@ -2519,13 +2512,12 @@ BOOST_AUTO_TEST_CASE( application_check)
       auto const  as2a = make_arg_array( "", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
@@ -2534,12 +2526,12 @@ BOOST_AUTO_TEST_CASE( application_check)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
@@ -2548,13 +2540,12 @@ BOOST_AUTO_TEST_CASE( application_check)
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
                            std::runtime_error);
-      BOOST_REQUIRE( !iVal.hasValue());
+      BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
@@ -2562,14 +2553,13 @@ BOOST_AUTO_TEST_CASE( application_check)
       auto const  as2a = make_arg_array( "-i 11", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 11);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
-
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
@@ -2577,13 +2567,13 @@ BOOST_AUTO_TEST_CASE( application_check)
       auto const  as2a = make_arg_array( "-i 111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 111);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal;
+      Handler              ah( 0);
+      std::optional< int>  iVal;
 
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
@@ -2592,7 +2582,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       auto const  as2a = make_arg_array( "-i 1111", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( iVal.hasValue());
+      BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 1111);
    } // end scope
 

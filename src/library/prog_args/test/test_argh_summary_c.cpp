@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -227,8 +227,8 @@ public:
    celma::prog_args::LevelCounter     verbose_level;
    std::string                        pair_first_arg;
    int                                pair_second_arg = -1;
-   celma::common::CheckAssign< int>   optional_int;
-   celma::common::CheckAssign< bool>  optional_bool;
+   std::optional< int>                optional_int;
+   std::optional< bool>               optional_bool;
    int                                my_c_array[ 3] = { 0, 0, 0 };
    std::array< int, 3>                my_array = { 0, 0, 0 };
    celma::common::ValueFilter< int>   value_filter;
