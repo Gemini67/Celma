@@ -383,7 +383,7 @@ private:
 /// Specialisation of TypedArg<> for values wrapped in std::optional<>.
 ///
 /// @tparam  T  The native type of the value.
-/// @since  x.y.z, 15.03.2021
+/// @since  1.44.0, 15.03.2021
 ///    (use std::optional<> instead of CheckAssign<>)
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
@@ -528,7 +528,7 @@ template< typename T>
 /// Specialization of the TypedArg< std::optional< T>> template for boolean
 /// flags.
 ///
-/// @since  x.y.z, 15.03.2021
+/// @since  1.44.0, 15.03.2021
 ///    (use std::optional<> instead of CheckAssign<>)
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)

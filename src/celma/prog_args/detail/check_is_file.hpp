@@ -27,7 +27,7 @@
 namespace celma::prog_args { namespace detail {
 
 
-/// Checks if a value contains the (path and) name of file.
+/// Checks if a value contains the (path and) name of an existing file.
 ///
 /// @since  1.4.1, 02.03.2018
 class CheckIsFile final : public ICheck
