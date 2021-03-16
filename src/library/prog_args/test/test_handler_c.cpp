@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,7 +36,6 @@
 
 using celma::appl::ArgString2Array;
 using celma::appl::make_arg_array;
-using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 using celma::prog_args::helpers::TripleLogic;
 using std::bad_cast;
@@ -111,7 +110,7 @@ BOOST_AUTO_TEST_CASE( std_args_not_used)
 BOOST_AUTO_TEST_CASE( argument_setup_errors)
 {
 
-   CheckAssign< int>  iVal;
+   std::optional< int>  iVal;
 
 
    // specify the same short argument twice
@@ -182,8 +181,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  i;
+      Handler              ah( 0);
+      std::optional< int>  i;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i), "int")
                                          ->unsetFlag(),
@@ -200,8 +199,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  s;
+      Handler                 ah( 0);
+      std::optional< string>  s;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( s), "string")
                                          ->unsetFlag(),
@@ -228,8 +227,8 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    } // end scope
 
    {
-      Handler             ah( 0);
-      CheckAssign< bool>  flag;
+      Handler               ah( 0);
+      std::optional< bool>  flag;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "int")
                                          ->setIsMandatory(),
@@ -375,8 +374,8 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
 BOOST_AUTO_TEST_CASE( no_argument)
 {
 
-   Handler             ah( 0);
-   CheckAssign< bool>  flag;
+   Handler               ah( 0);
+   std::optional< bool>  flag;
 
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
@@ -384,7 +383,7 @@ BOOST_AUTO_TEST_CASE( no_argument)
    auto const  as2a = make_arg_array( "", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( !flag.hasValue());
+   BOOST_REQUIRE( !flag.has_value());
 
 } // no_argument
 
@@ -402,9 +401,9 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
    // mandatory argument missing
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal1;
-      CheckAssign< int>  iVal2;
+      Handler              ah( 0);
+      std::optional< int>  iVal1;
+      std::optional< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
@@ -417,9 +416,9 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
    // unknown argument
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal1;
-      CheckAssign< int>  iVal2;
+      Handler              ah( 0);
+      std::optional< int>  iVal1;
+      std::optional< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
@@ -432,9 +431,9 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
    // unknown long argument
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal1;
-      CheckAssign< int>  iVal2;
+      Handler              ah( 0);
+      std::optional< int>  iVal1;
+      std::optional< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
@@ -448,9 +447,9 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
    // Argument with required value without a value (at beginning, i.e. followed
    // by another argument)
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal1;
-      CheckAssign< int>  iVal2;
+      Handler              ah( 0);
+      std::optional< int>  iVal1;
+      std::optional< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
@@ -463,9 +462,9 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
    // Argument with required value without a value (at end)
    {
-      Handler            ah( 0);
-      CheckAssign< int>  iVal1;
-      CheckAssign< int>  iVal2;
+      Handler              ah( 0);
+      std::optional< int>  iVal1;
+      std::optional< int>  iVal2;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
                                             ->setIsMandatory());
@@ -584,10 +583,10 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
 
    // mandatory free value missing
    {
-      Handler               ah( 0);
-      CheckAssign< bool>    flag;
-      CheckAssign< int>     iVal;
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< bool>    flag;
+      std::optional< int>     iVal;
+      std::optional< string>  name;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,flag", DEST_VAR( flag), "Flag"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",  DEST_VAR( iVal), "Flag"));
@@ -601,10 +600,10 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
 
    // mandatory free value missing
    {
-      Handler               ah( 0);
-      CheckAssign< bool>    flag;
-      CheckAssign< int>     iVal;
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< bool>    flag;
+      std::optional< int>     iVal;
+      std::optional< string>  name;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,flag", DEST_VAR( flag), "Flag"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",  DEST_VAR( iVal), "Flag"));
@@ -613,7 +612,7 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
 
       auto const  as2a = make_arg_array( "-f PROCESS1", nullptr);
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
@@ -645,8 +644,8 @@ BOOST_AUTO_TEST_CASE( one_free_value)
 BOOST_AUTO_TEST_CASE( one_short_flag)
 {
 
-   Handler             ah( 0);
-   CheckAssign< bool>  flag;
+   Handler               ah( 0);
+   std::optional< bool>  flag;
 
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
@@ -654,7 +653,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag)
    auto const  as2a = make_arg_array( "-f", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( flag.hasValue());
+   BOOST_REQUIRE( flag.has_value());
    BOOST_REQUIRE( flag.value());
 
 } // one_short_flag
@@ -688,8 +687,8 @@ BOOST_AUTO_TEST_CASE( one_short_flag_unset)
 BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
 {
 
-   Handler             ah( 0);
-   CheckAssign< bool>  flag;
+   Handler               ah( 0);
+   std::optional< bool>  flag;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag")
@@ -698,7 +697,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
    auto const  as2a = make_arg_array( "-f", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( flag.hasValue());
+   BOOST_REQUIRE( flag.has_value());
    BOOST_REQUIRE( !flag.value());
 
 } // one_short_flag_checked_unset
@@ -710,8 +709,8 @@ BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
 BOOST_AUTO_TEST_CASE( one_long_flag)
 {
 
-   Handler             ah( 0);
-   CheckAssign< bool>  flag;
+   Handler               ah( 0);
+   std::optional< bool>  flag;
 
 
    ah.addArgument( "flag", DEST_VAR( flag), "Boolean flag");
@@ -719,7 +718,7 @@ BOOST_AUTO_TEST_CASE( one_long_flag)
    auto const  as2a = make_arg_array( "--flag", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( flag.hasValue());
+   BOOST_REQUIRE( flag.has_value());
    BOOST_REQUIRE( flag.value());
 
 } // one_long_flag
@@ -732,28 +731,28 @@ BOOST_AUTO_TEST_CASE( one_flag_both)
 {
 
    {
-      Handler             ah( 0);
-      CheckAssign< bool>  flag;
+      Handler               ah( 0);
+      std::optional< bool>  flag;
 
       ah.addArgument( "f,flag", DEST_VAR( flag), "Boolean flag");
 
       auto const  as2a = make_arg_array( "-f", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( flag.hasValue());
+      BOOST_REQUIRE( flag.has_value());
       BOOST_REQUIRE( flag.value());
    } // end scope
 
    {
-      Handler             ah( 0);
-      CheckAssign< bool>  flag;
+      Handler               ah( 0);
+      std::optional< bool>  flag;
 
       ah.addArgument( "f,flag", DEST_VAR( flag), "Boolean flag");
 
       auto const  as2a = make_arg_array( "--flag", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( flag.hasValue());
+      BOOST_REQUIRE( flag.has_value());
       BOOST_REQUIRE( flag.value());
    } // end scope
 
@@ -767,28 +766,28 @@ BOOST_AUTO_TEST_CASE( one_short_int)
 {
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "m", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "-m 500", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "m", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "-m500", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
 
@@ -802,41 +801,41 @@ BOOST_AUTO_TEST_CASE( one_long_int)
 {
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "--max_value 2000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 2000);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "--max_value=7000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 7000);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "--max_value=-81", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), -81);
    } // end scope
 
@@ -849,8 +848,8 @@ BOOST_AUTO_TEST_CASE( one_long_int)
 BOOST_AUTO_TEST_CASE( one_free_int)
 {
 
-   Handler            ah( 0);
-   CheckAssign< int>  repetitions;
+   Handler              ah( 0);
+   std::optional< int>  repetitions;
 
 
    ah.addArgument( "-", DEST_VAR( repetitions), "Number of repetitions");
@@ -858,7 +857,7 @@ BOOST_AUTO_TEST_CASE( one_free_int)
    auto const  as2a = make_arg_array( "123", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( repetitions.hasValue());
+   BOOST_REQUIRE( repetitions.has_value());
    BOOST_REQUIRE_EQUAL( repetitions.value(), 123);
 
 } // one_free_int
@@ -871,67 +870,67 @@ BOOST_AUTO_TEST_CASE( one_int_both)
 {
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "-m 500", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "-m500", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "--max_value 2000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 2000);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "--max_value=7000", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 7000);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  maxValue;
+      Handler              ah( 0);
+      std::optional< int>  maxValue;
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
       auto const  as2a = make_arg_array( "--max_value=-135", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( maxValue.hasValue());
+      BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), -135);
    } // end scope
 
@@ -945,28 +944,28 @@ BOOST_AUTO_TEST_CASE( one_short_double)
 {
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "f", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "-f 7.5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "f", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "-f7.5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
 
@@ -980,41 +979,41 @@ BOOST_AUTO_TEST_CASE( one_long_double)
 {
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "--factor 0.9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 0.9);
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "--factor=1.3", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 1.3);
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "--factor=-125.75", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), -125.75);
    } // end scope
 
@@ -1027,8 +1026,8 @@ BOOST_AUTO_TEST_CASE( one_long_double)
 BOOST_AUTO_TEST_CASE( one_free_double)
 {
 
-   Handler               ah( 0);
-   CheckAssign< double>  factor;
+   Handler                 ah( 0);
+   std::optional< double>  factor;
 
 
    ah.addArgument( "-", DEST_VAR( factor), "Factor");
@@ -1036,7 +1035,7 @@ BOOST_AUTO_TEST_CASE( one_free_double)
    auto const  as2a = make_arg_array( "99.98", nullptr);
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( factor.hasValue());
+   BOOST_REQUIRE( factor.has_value());
    BOOST_REQUIRE_EQUAL( factor.value(), 99.98);
 
 } // one_free_double
@@ -1049,54 +1048,54 @@ BOOST_AUTO_TEST_CASE( one_double_both)
 {
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "-f 7.5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "-f7.5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "--factor 0.9", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 0.9);
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< double>  factor;
+      Handler                 ah( 0);
+      std::optional< double>  factor;
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
       auto const  as2a = make_arg_array( "--factor=58.9653", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( factor.hasValue());
+      BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 58.9653);
    } // end scope
 
@@ -1110,28 +1109,28 @@ BOOST_AUTO_TEST_CASE( one_short_string)
 {
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name");
 
       auto const  as2a = make_arg_array( "-n PROCESS1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< string>  name;
 
       ah.addArgument( "n", DEST_VAR( name), "Name");
 
       auto const  as2a = make_arg_array( "-nPROCESS1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
@@ -1145,28 +1144,28 @@ BOOST_AUTO_TEST_CASE( one_long_string)
 {
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< string>  name;
 
       ah.addArgument( "name", DEST_VAR( name), "Name");
 
       auto const  as2a = make_arg_array( "--name MY_PROCESS", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "MY_PROCESS");
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< string>  name;
 
       ah.addArgument( "name", DEST_VAR( name), "Name");
 
       auto const  as2a = make_arg_array( "--name=OTHER_PROCESS", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "OTHER_PROCESS");
    } // end scope
 
@@ -1179,15 +1178,15 @@ BOOST_AUTO_TEST_CASE( one_long_string)
 BOOST_AUTO_TEST_CASE( one_free_string)
 {
 
-   Handler               ah( 0);
-   CheckAssign< string>  name;
-   auto const            as2a = make_arg_array( "PROCESS1", nullptr);
+   Handler                 ah( 0);
+   std::optional< string>  name;
+   auto const              as2a = make_arg_array( "PROCESS1", nullptr);
 
 
    ah.addArgument( "-", DEST_VAR( name), "Name");
 
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-   BOOST_REQUIRE( name.hasValue());
+   BOOST_REQUIRE( name.has_value());
    BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
 
 } // one_free_string
@@ -1200,54 +1199,54 @@ BOOST_AUTO_TEST_CASE( one_string_both)
 {
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< string>  name;
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
       auto const  as2a = make_arg_array( "-n PROCESS1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< string>  name;
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
       auto const  as2a = make_arg_array( "-nPROCESS1", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< string>  name;
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
       auto const  as2a = make_arg_array( "--name MY_PROCESS", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "MY_PROCESS");
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< string>  name;
+      Handler                 ah( 0);
+      std::optional< string>  name;
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
       auto const  as2a = make_arg_array( "--name OTHER_PROCESS", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "OTHER_PROCESS");
    } // end scope
 
@@ -1281,9 +1280,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
       /// The argument handler.
       Handler                ah;
       /// First checked boolean parameter.
-      CheckAssign< bool>     faster;
+      std::optional< bool>   faster;
       /// Second checked boolean parameter.
-      CheckAssign< bool>     slower;
+      std::optional< bool>   slower;
       /// Argument string split to argc, argv.
       const ArgString2Array  as2a;
    }; // TestData
@@ -1292,25 +1291,25 @@ BOOST_AUTO_TEST_CASE( two_flags)
       TestData  td( "");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.faster.hasValue());
-      BOOST_REQUIRE( !td.slower.hasValue());
+      BOOST_REQUIRE( !td.faster.has_value());
+      BOOST_REQUIRE( !td.slower.has_value());
    } // end scope
 
    {
       TestData  td( "-f");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.faster.hasValue());
+      BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
-      BOOST_REQUIRE( !td.slower.hasValue());
+      BOOST_REQUIRE( !td.slower.has_value());
    } // end scope
 
    {
       TestData  td( "-s");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.faster.hasValue());
-      BOOST_REQUIRE( td.slower.hasValue());
+      BOOST_REQUIRE( !td.faster.has_value());
+      BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
@@ -1318,9 +1317,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
       TestData  td( "-fs");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.faster.hasValue());
+      BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
-      BOOST_REQUIRE( td.slower.hasValue());
+      BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
@@ -1328,9 +1327,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
       TestData  td( "-f -s");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.faster.hasValue());
+      BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
-      BOOST_REQUIRE( td.slower.hasValue());
+      BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
@@ -1338,9 +1337,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
       TestData  td( "-s -f");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.faster.hasValue());
+      BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
-      BOOST_REQUIRE( td.slower.hasValue());
+      BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
@@ -1348,9 +1347,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
       TestData  td( "-sf");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.faster.hasValue());
+      BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
-      BOOST_REQUIRE( td.slower.hasValue());
+      BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
@@ -1358,9 +1357,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
       TestData  td( "-s --faster");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.faster.hasValue());
+      BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
-      BOOST_REQUIRE( td.slower.hasValue());
+      BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
@@ -1368,9 +1367,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
       TestData  td( "--slower -f");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.faster.hasValue());
+      BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
-      BOOST_REQUIRE( td.slower.hasValue());
+      BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
@@ -1378,9 +1377,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
       TestData  td( "--slower --faster");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.faster.hasValue());
+      BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
-      BOOST_REQUIRE( td.slower.hasValue());
+      BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
@@ -1411,22 +1410,22 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       } // end TestData::TestData
 
       /// The argument handler.
-      Handler                ah;
+      Handler                 ah;
       /// First checked parameter, boolean.
-      CheckAssign< bool>     flag;
+      std::optional< bool>    flag;
       /// Second checked parameter, string.
-      CheckAssign< string>   name;
+      std::optional< string>  name;
       /// Argument string split to argc, argv.
-      const ArgString2Array  as2a;
+      const ArgString2Array   as2a;
    }; // TestData
 
    {
       TestData  td( "-f -n PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1434,9 +1433,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "-f -nPROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1444,9 +1443,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "-n PROCESS1 -f");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1454,9 +1453,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "-nPROCESS1 -f");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1464,9 +1463,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "-f --name PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1474,9 +1473,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "--name PROCESS1 -f");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1484,9 +1483,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "--flag --name PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1494,9 +1493,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "--name PROCESS1 --flag");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1504,9 +1503,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "-fn PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1514,9 +1513,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       TestData  td( "-fnPROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.flag.hasValue());
+      BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1548,13 +1547,13 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      Handler                ah;
+      Handler                 ah;
       /// Destination variable.
-      CheckAssign< int>      maxValue;
+      std::optional< int>     maxValue;
       /// Destination variable.
-      CheckAssign< string>   name;
+      std::optional< string>  name;
       /// Argument string split into argc, argv.
-      const ArgString2Array  as2a;
+      const ArgString2Array   as2a;
 
    }; // TestData
 
@@ -1562,52 +1561,52 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.maxValue.hasValue());
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.maxValue.has_value());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "-m 500");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "-m500");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "--max_value 1000");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "--max_value=4711");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 4711);
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "-n PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.maxValue.hasValue());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( !td.maxValue.has_value());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1615,8 +1614,8 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-nPROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.maxValue.hasValue());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( !td.maxValue.has_value());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1624,8 +1623,8 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--name MY_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.maxValue.hasValue());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( !td.maxValue.has_value());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "MY_PROCESS");
    } // end scope
 
@@ -1633,8 +1632,8 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--name=OTHER_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.maxValue.hasValue());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( !td.maxValue.has_value());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "OTHER_PROCESS");
    } // end scope
 
@@ -1642,9 +1641,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-m 500 -n PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1652,9 +1651,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-m500 -n PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1662,9 +1661,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-m 500 -nPROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1672,9 +1671,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-m500 -nPROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1682,9 +1681,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--max_value 1000 -n PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1692,9 +1691,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--max_value 1000 -nPROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1702,9 +1701,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--max_value=2000 -n PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1712,9 +1711,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--max_value=2000 -nPROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1722,9 +1721,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-m 500 --name MY_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "MY_PROCESS");
    } // end scope
 
@@ -1732,9 +1731,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-m500 --name MY_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "MY_PROCESS");
    } // end scope
 
@@ -1742,9 +1741,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-m 500 --name=OTHER_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "OTHER_PROCESS");
    } // end scope
 
@@ -1752,9 +1751,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "-m500 --name=OTHER_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "OTHER_PROCESS");
    } // end scope
 
@@ -1762,9 +1761,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--max_value 1000 --name MY_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "MY_PROCESS");
    } // end scope
 
@@ -1772,9 +1771,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--max_value=2000 --name MY_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "MY_PROCESS");
    } // end scope
 
@@ -1782,9 +1781,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--max_value 1000 --name=OTHER_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "OTHER_PROCESS");
    } // end scope
 
@@ -1792,9 +1791,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       TestData  td( "--max_value=3000 --name=OTHER_PROCESS");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 3000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "OTHER_PROCESS");
    } // end scope
 
@@ -1826,13 +1825,13 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-      Handler                ah;
+      Handler                 ah;
       /// Destination variable.
-      CheckAssign< int>      maxValue;
+      std::optional< int>     maxValue;
       /// Destination variable.
-      CheckAssign< string>   name;
+      std::optional< string>  name;
       /// Argument string split into argc, argv.
-      const ArgString2Array  as2a;
+      const ArgString2Array   as2a;
 
    }; // TestData
 
@@ -1840,52 +1839,52 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       TestData  td( "");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.maxValue.hasValue());
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.maxValue.has_value());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "-m 500");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "-m500");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "--max_value 1000");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "--max_value=4711");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 4711);
-      BOOST_REQUIRE( !td.name.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
       TestData  td( "PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.maxValue.hasValue());
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( !td.maxValue.has_value());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1893,9 +1892,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       TestData  td( "-m 500 PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1903,9 +1902,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       TestData  td( "-m500 PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1913,9 +1912,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       TestData  td( "--max_value 1000 PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1923,9 +1922,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       TestData  td( "--max_value=2000 PROCESS1");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1934,9 +1933,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       TestData  td( "PROCESS1 --max_value=2000");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.maxValue.hasValue());
+      BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
@@ -1950,41 +1949,41 @@ BOOST_AUTO_TEST_CASE( application_uses_std_arg)
 {
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  valor;
+      Handler              ah( 0);
+      std::optional< int>  valor;
 
       ah.addArgument( "v", DEST_VAR( valor), "Valor number");
 
       auto const  as2a = make_arg_array( "-v 25", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( valor.hasValue());
+      BOOST_REQUIRE( valor.has_value());
       BOOST_REQUIRE_EQUAL( valor.value(), 25);
    } // end scope
 
    {
-      Handler            ah( 0);
-      CheckAssign< int>  valor;
+      Handler              ah( 0);
+      std::optional< int>  valor;
 
       ah.addArgument( "v", DEST_VAR( valor), "Valor number");
 
       auto const  as2a = make_arg_array( "-v25", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( valor.hasValue());
+      BOOST_REQUIRE( valor.has_value());
       BOOST_REQUIRE_EQUAL( valor.value(), 25);
    } // end scope
 
    {
-      Handler             ah( 0);
-      CheckAssign< bool>  doVerbose;
+      Handler               ah( 0);
+      std::optional< bool>  doVerbose;
 
       ah.addArgument( "verbose", DEST_VAR( doVerbose), "Set verbose on");
 
       auto const  as2a = make_arg_array( "--verbose", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( doVerbose.hasValue());
+      BOOST_REQUIRE( doVerbose.has_value());
       BOOST_REQUIRE( doVerbose.value());
    } // end scope
 
@@ -1998,10 +1997,10 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
 {
 
    {
-      Handler               ah( 0);
-      CheckAssign< int>     iVal;
-      CheckAssign< double>  fVal;
-      CheckAssign< string>  sVal;
+      Handler                 ah( 0);
+      std::optional< int>     iVal;
+      std::optional< double>  fVal;
+      std::optional< string>  sVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
@@ -2012,10 +2011,10 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< int>     iVal;
-      CheckAssign< double>  fVal;
-      CheckAssign< string>  sVal;
+      Handler                 ah( 0);
+      std::optional< int>     iVal;
+      std::optional< double>  fVal;
+      std::optional< string>  sVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
@@ -2026,10 +2025,10 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< int>     iVal;
-      CheckAssign< double>  fVal;
-      CheckAssign< string>  sVal;
+      Handler                 ah( 0);
+      std::optional< int>     iVal;
+      std::optional< double>  fVal;
+      std::optional< string>  sVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
@@ -2040,10 +2039,10 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< int>     iVal;
-      CheckAssign< double>  fVal;
-      CheckAssign< string>  sVal;
+      Handler                 ah( 0);
+      std::optional< int>     iVal;
+      std::optional< double>  fVal;
+      std::optional< string>  sVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
@@ -2054,10 +2053,10 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< int>     iVal;
-      CheckAssign< double>  fVal;
-      CheckAssign< string>  sVal;
+      Handler                 ah( 0);
+      std::optional< int>     iVal;
+      std::optional< double>  fVal;
+      std::optional< string>  sVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
@@ -2068,10 +2067,10 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
    } // end scope
 
    {
-      Handler               ah( 0);
-      CheckAssign< int>     iVal;
-      CheckAssign< double>  fVal;
-      CheckAssign< string>  sVal;
+      Handler                 ah( 0);
+      std::optional< int>     iVal;
+      std::optional< double>  fVal;
+      std::optional< string>  sVal;
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer");
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
@@ -2221,13 +2220,13 @@ BOOST_AUTO_TEST_CASE( hyphen)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-     Handler                 ah;
+      Handler                 ah;
       /// Destination variable.
-      CheckAssign< string>   name;
+      std::optional< string>  name;
       /// Destination variable.
-      CheckAssign< int>      minVal;
+      std::optional< int>     minVal;
       /// Argument string split into argc, argv.
-      const ArgString2Array  as2a;
+      const ArgString2Array   as2a;
 
    }; // TestData
 
@@ -2236,8 +2235,8 @@ BOOST_AUTO_TEST_CASE( hyphen)
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
-      BOOST_REQUIRE( !td.name.hasValue());
-      BOOST_REQUIRE( !td.minVal.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
+      BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
@@ -2245,8 +2244,8 @@ BOOST_AUTO_TEST_CASE( hyphen)
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
-      BOOST_REQUIRE( !td.name.hasValue());
-      BOOST_REQUIRE( !td.minVal.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
+      BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
@@ -2254,7 +2253,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
-      BOOST_REQUIRE( !td.minVal.hasValue());
+      BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
@@ -2262,42 +2261,42 @@ BOOST_AUTO_TEST_CASE( hyphen)
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
                            runtime_error);
-      BOOST_REQUIRE( !td.minVal.hasValue());
+      BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
       TestData  td( "-n -- -hyphenName");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "-hyphenName");
-      BOOST_REQUIRE( !td.minVal.hasValue());
+      BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
       TestData  td( "--name=-hyphenName");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "-hyphenName");
-      BOOST_REQUIRE( !td.minVal.hasValue());
+      BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
       TestData  td( "--name -- -hyphenName");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( td.name.hasValue());
+      BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "-hyphenName");
-      BOOST_REQUIRE( !td.minVal.hasValue());
+      BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
       TestData  td( "-m -- -30");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.name.hasValue());
-      BOOST_REQUIRE( td.minVal.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
+      BOOST_REQUIRE( td.minVal.has_value());
       BOOST_REQUIRE_EQUAL( td.minVal.value(), -30);
    } // end scope
 
@@ -2305,8 +2304,8 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "--min -- -70");
 
       BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
-      BOOST_REQUIRE( !td.name.hasValue());
-      BOOST_REQUIRE( td.minVal.hasValue());
+      BOOST_REQUIRE( !td.name.has_value());
+      BOOST_REQUIRE( td.minVal.has_value());
       BOOST_REQUIRE_EQUAL( td.minVal.value(), -70);
    } // end scope
 
@@ -2338,13 +2337,13 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       } // end TestData::TestData
 
       /// The argument handler object for the test.
-     Handler                 ah;
+      Handler                 ah;
       /// Destination variable.
-      CheckAssign< int>      iarg;
+      std::optional< int>     iarg;
       /// Destination variable.
-      CheckAssign< string>   name;
+      std::optional< string>  name;
       /// Argument string split into argc, argv.
-      const ArgString2Array  as2a;
+      const ArgString2Array   as2a;
 
    }; // TestData
 
@@ -2390,7 +2389,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       } // end TestData2::TestData2
 
       /// Additional destination variable.
-      CheckAssign< int>  iarg2;
+      std::optional< int>  iarg2;
 
    }; // TestData2
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,7 +29,6 @@
 
 
 using celma::appl::make_arg_array;
-using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 
 
@@ -39,10 +38,10 @@ using celma::prog_args::Handler;
 BOOST_AUTO_TEST_CASE( long_arg_abbr)
 {
 
-   Handler            ah( 0);
-   CheckAssign< int>  inputVal;
-   CheckAssign< int>  inplaceVal;
-   CheckAssign< int>  outputVal;
+   Handler              ah( 0);
+   std::optional< int>  inputVal;
+   std::optional< int>  inplaceVal;
+   std::optional< int>  outputVal;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "input",   DEST_VAR( inputVal),   "Integer"));
@@ -67,11 +66,11 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
       auto const  as2a = make_arg_array( "--inpu 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( inputVal.hasValue());
+      BOOST_REQUIRE( inputVal.has_value());
       BOOST_REQUIRE_EQUAL( inputVal.value(), 5);
 
-      BOOST_REQUIRE( !inplaceVal.hasValue());
-      BOOST_REQUIRE( !outputVal.hasValue());
+      BOOST_REQUIRE( !inplaceVal.has_value());
+      BOOST_REQUIRE( !outputVal.has_value());
    } // end scope
 
    inputVal.reset();
@@ -82,11 +81,11 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
       auto const  as2a = make_arg_array( "--inpl 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( inplaceVal.hasValue());
+      BOOST_REQUIRE( inplaceVal.has_value());
       BOOST_REQUIRE_EQUAL( inplaceVal.value(), 5);
 
-      BOOST_REQUIRE( !inputVal.hasValue());
-      BOOST_REQUIRE( !outputVal.hasValue());
+      BOOST_REQUIRE( !inputVal.has_value());
+      BOOST_REQUIRE( !outputVal.has_value());
    } // end scope
 
    inputVal.reset();
@@ -97,11 +96,11 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
       auto const  as2a = make_arg_array( "--ou 5", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( outputVal.hasValue());
+      BOOST_REQUIRE( outputVal.has_value());
       BOOST_REQUIRE_EQUAL( outputVal.value(), 5);
 
-      BOOST_REQUIRE( !inputVal.hasValue());
-      BOOST_REQUIRE( !inplaceVal.hasValue());
+      BOOST_REQUIRE( !inputVal.has_value());
+      BOOST_REQUIRE( !inplaceVal.has_value());
    } // end scope
 
 } // long_arg_abbr
@@ -113,10 +112,10 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
 BOOST_AUTO_TEST_CASE( abbr_disabled)
 {
 
-   Handler            ah( Handler::hfNoAbbr);
-   CheckAssign< int>  inputVal;
-   CheckAssign< int>  inplaceVal;
-   CheckAssign< int>  outputVal;
+   Handler              ah( Handler::hfNoAbbr);
+   std::optional< int>  inputVal;
+   std::optional< int>  inplaceVal;
+   std::optional< int>  outputVal;
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "input",   DEST_VAR( inputVal),   "Integer"));
