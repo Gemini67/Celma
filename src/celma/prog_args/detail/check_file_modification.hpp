@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2020-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,10 +20,10 @@
 
 
 #include <chrono>
+#include <filesystem>
 #include <functional>
 #include <stdexcept>
 #include <string>
-#include "celma/common/file_info.hpp"
 #include "celma/common/type_name.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
@@ -93,8 +93,8 @@ template< template< typename> class C>
 template< template< typename> class C>
    void CheckFileModification< C>::checkValue( const std::string& val) const
 {
-   auto const  now = std::chrono::system_clock::now();
-   auto const  mod_time = common::fileInfo( val).modTime();
+   auto const  now = std::filesystem::file_time_type::clock::now();
+   auto const  mod_time = std::filesystem::last_write_time( val);
    if (!C()( now - mod_time, mModTimeDiff))
       throw std::invalid_argument( "file modification time check failed");
 } // CheckFileModification< C>::checkValue

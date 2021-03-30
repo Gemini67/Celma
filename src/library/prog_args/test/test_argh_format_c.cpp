@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE( errors)
 BOOST_AUTO_TEST_CASE( format_case)
 {
 
-   celma::common::CheckAssign< std::string>  name;
+   std::optional< std::string>  name;
 
 
    {
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE( format_case)
          ->addFormat( celma::prog_args::uppercase());
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
 
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE( format_case)
          ->addFormat( celma::prog_args::lowercase());
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( name.hasValue());
+      BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "process1");
    } // end scope
 

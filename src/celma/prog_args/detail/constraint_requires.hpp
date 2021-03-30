@@ -74,7 +74,7 @@ public:
 /// @param[in]  argSpec
 ///    The argument specification of the other, required argument.
 /// @return  The newly created constraint object.
-/// @since  x.y.z, 09.02.2021
+/// @since  1.43.0, 09.02.2021
 ///    (name changed from requires() due to conflict with new C++ standard 20)
 /// @since  0.2, 10.04.2016
 [[nodiscard]] inline detail::IArgConstraint* requiresArg( const std::string& argSpec)
