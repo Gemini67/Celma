@@ -1,5 +1,7 @@
 # Celma
-C++ Extension Library Modules for Application<br>
+
+## C++ Extension Library Modules for Application
+
 Version: 1.43.0
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Gemini67_Celma&metric=alert_status)](https://sonarcloud.io/dashboard?id=Gemini67_Celma)
@@ -31,3 +33,29 @@ Requirements:
 - Boost library
 - C++ 17 compliant compiler
 
+
+## Building
+
+### Requirements
+
+To build the software, the following components are required: 
+- Boost Development: Libraries and headerfiles.
+- CMake
+- g++ compiler
+
+To build the documentation, doxygen is required.<br>
+To run the coverage analysis, lcov is needed additionally.
+
+### Compile
+
+There is a makefile in the top-level directory that supports all build targets:
+- make debug<br>Builds the debug version with the lowest C++ version that is currently supported, e.g. C++ 17.
+- make release<br>Builds the release version (optimised) with the lowest C++ version that is currently supported, e.g. C++ 17.
+- make debug-<C++ version>/make release-<C++ version><br>Builds the debug or release version with the specified C++ version.
+- make doxgen<br>Creates the HTML documentation from the source code using doxygen.
+
+The steps for building are:
+- Check if the build/<target> directory exists.
+- If not:
+- Create the directory.
+ 
