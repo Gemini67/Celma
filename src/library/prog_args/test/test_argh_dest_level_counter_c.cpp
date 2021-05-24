@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
       auto const  as2a = make_arg_array( "-v 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    // turn off increment (no value), then it should throw
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
       auto const  as2a = make_arg_array( "-v", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    // try to set value mode "command" on a level counter

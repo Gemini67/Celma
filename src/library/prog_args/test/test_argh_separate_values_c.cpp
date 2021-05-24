@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test, header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_CASE( mixed_single_free)
       TestData  td( "-v 1 2 3 --endvalues 4711");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           std::runtime_error);
+                           std::invalid_argument);
    } // end scope
 
 
@@ -576,7 +576,7 @@ BOOST_AUTO_TEST_CASE( mixed_multiple_free)
       TestData  td( "-v 1 2 3 --endvalues 4711");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           std::runtime_error);
+                           std::invalid_argument);
    } // end scope
 
    {
