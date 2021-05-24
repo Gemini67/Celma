@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.44.0
+   \mainpage  CELMA v1.45.0
 
    \tableofcontents
 
@@ -47,7 +47,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
-   |   1.??.? | 2021-??-??        | Adapted module "length type".. |
+   |   1.45.0 | 2021-05-24        | Adapted module "length type". Added exception "argument error", used in argument handler. Added module "random range". |
    |   1.44.0 | 2021-03-16        | Replaced module "file info" by functions of std::filesystem. Replaced module "check assign" by std::optional. |
    |   1.43.0 | 2021-02-09        | Adapted for g++10, C++20. |
    |   1.42.0 | 2020-11-30        | Adapted for g++10. Allow case insensitive value list comparison for arguments. Added flag to suppress use of abbreviations for long arguments. |

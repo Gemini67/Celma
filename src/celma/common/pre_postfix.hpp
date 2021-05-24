@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// Defines special values for defining pre- and postfix operators.
 
 
-#ifndef STD_PRE_POSTFIX_HPP
-#define STD_PRE_POSTFIX_HPP
+#pragma once
 
 
 namespace std
@@ -40,8 +39,5 @@ using postfix = int;
 } // namespace std
 
 
-#endif   // STD_PRE_POSTFIX_HPP
-
-
-// =========================  END OF Pre_postfix.hpp  =========================
+// =====  END OF pre_postfix.hpp  =====
 

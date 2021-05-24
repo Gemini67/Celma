@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -223,7 +223,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       auto const  as2a = make_arg_array( "-s 4,5,6 7", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    // first check with the default behaviour: no multi-values, additional value
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       auto const  as2a = make_arg_array( "-s 4,5,6 7 --endvalues 8", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    // accept multi-values, but still add a free value
