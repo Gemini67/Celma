@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
       auto const  as2a = make_arg_array( "-v", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    // try to set value mode "command" on a level counter

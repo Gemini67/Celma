@@ -466,7 +466,7 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
 
       auto const  as2a = make_arg_array( "-c 8 -i", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
    } // end scope
 
 } // parameter_string_errors
@@ -2229,7 +2229,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "-n -hyphenName");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
       BOOST_REQUIRE( !td.name.has_value());
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
@@ -2238,7 +2238,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "--name -hyphenName");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
       BOOST_REQUIRE( !td.name.has_value());
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
@@ -2247,7 +2247,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "-m -25");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
@@ -2255,7 +2255,7 @@ BOOST_AUTO_TEST_CASE( hyphen)
       TestData  td( "--min -25");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
@@ -2406,7 +2406,7 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       TestData2  td( "-n");
 
       BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
    } // end scope
 
    {
@@ -2457,7 +2457,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       auto const  as2a = make_arg_array( "-i", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
    } // end scope
 
    {
@@ -2687,7 +2687,7 @@ BOOST_AUTO_TEST_CASE( control_args)
       auto const  as2a = make_arg_array( "-c ! 42", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    {

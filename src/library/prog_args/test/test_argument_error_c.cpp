@@ -29,7 +29,8 @@ using celma::prog_args::argument_error;
 
 
 /// Create an exception using a C string.
-/// @since  x.y.z, 20.05.2021
+///
+/// @since  1.45.0, 20.05.2021
 BOOST_AUTO_TEST_CASE( error_c_string)
 {
 
@@ -43,7 +44,8 @@ BOOST_AUTO_TEST_CASE( error_c_string)
 
 
 /// Create an exception using a std::string.
-/// @since  x.y.z, 21.05.2021
+///
+/// @since  1.45.0, 21.05.2021
 BOOST_AUTO_TEST_CASE( error_std_string)
 {
 

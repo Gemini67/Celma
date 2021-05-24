@@ -24,8 +24,9 @@ namespace celma::prog_args {
 
 
 /// Constructor with a std::string.
+///
 /// @param[in]  arg  Text for the exception.
-/// @since  x.y.z, 20.05.2021
+/// @since  1.45.0, 20.05.2021
 argument_error::argument_error( const std::string& arg) noexcept( true):
    std::runtime_error( arg)
 {
@@ -34,8 +35,9 @@ argument_error::argument_error( const std::string& arg) noexcept( true):
 
 
 /// Constructor with a C string.
+///
 /// @param[in]  arg  Text for the exception.
-/// @since  x.y.z, 20.05.2021
+/// @since  1.45.0, 20.05.2021
 argument_error::argument_error( const char* arg) noexcept( true):
    std::runtime_error( arg)
 {
