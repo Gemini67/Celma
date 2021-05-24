@@ -561,19 +561,18 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
 BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
 {
 
-   using celma::common::CheckAssign;
    using celma::prog_args::LevelCounter;
 
-   ostringstream       std_out;
-   ostringstream       err_out;
-   Handler             ah( std_out, err_out,
-                           Handler::AllHelp | Handler::hfUsageCont |
-                           Handler::hfListArgVar | Handler::hfVerboseArgs);
-   string              string_arg;
-   int                 opt_int_arg = 42;
-   CheckAssign< int>   optional_int;
-   CheckAssign< bool>  optional_bool;
-   LevelCounter        verbose_level;
+   ostringstream         std_out;
+   ostringstream         err_out;
+   Handler               ah( std_out, err_out,
+                             Handler::AllHelp | Handler::hfUsageCont |
+                             Handler::hfListArgVar | Handler::hfVerboseArgs);
+   string                string_arg;
+   int                   opt_int_arg = 42;
+   std::optional< int>   optional_int;
+   std::optional< bool>  optional_bool;
+   LevelCounter          verbose_level;
 
 
    ah.addArgument( "s",          DEST_VAR( string_arg),    "String argument")
@@ -602,9 +601,9 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
       "   value 'required' (2), mandatory, does not take multiple&separate values, print dflt, no checks, no formats.\n"
       "'-i,--index' value type 'int', destination 'opt_int_arg', value not set.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
-      "'-o,--opt-int' value type 'int', destination 'CheckAssign< optional_int>', value not set.\n"
+      "'-o,--opt-int' value type 'int', destination 'std::optional< optional_int>', value not set.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-      "'--opt-bool' sets boolean flag on 'CheckAssign< optional_bool>'.\n"
+      "'--opt-bool' sets boolean flag on 'std::optional< optional_bool>'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "'-v,--verbose' value type 'LevelCounter', destination variable 'verbose_level', current value 0.\n"
       "   value 'optional' (1), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
@@ -626,9 +625,9 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
       "   value 'required' (2), mandatory, does not take multiple&separate values, print dflt, no checks, no formats.\n"
       "'-i,--index' value type 'int', destination 'opt_int_arg', value = 4711.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
-      "'-o,--opt-int' value type 'int', destination 'CheckAssign< optional_int>', value = 13.\n"
+      "'-o,--opt-int' value type 'int', destination 'std::optional< optional_int>', value = 13.\n"
       "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-      "'--opt-bool' sets boolean flag on 'CheckAssign< optional_bool>'.\n"
+      "'--opt-bool' sets boolean flag on 'std::optional< optional_bool>'.\n"
       "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
       "'-v,--verbose' value type 'LevelCounter', destination variable 'verbose_level', current value 2.\n"
       "   value 'optional' (1), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
