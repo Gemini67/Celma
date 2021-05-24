@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,9 +18,9 @@
 #pragma once
 
 
+#include <filesystem>
 #include <stdexcept>
 #include <string>
-#include "celma/common/file_info.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 
 
@@ -66,7 +66,7 @@ inline CheckIsDirectory::CheckIsDirectory():
 
 inline void CheckIsDirectory::checkValue( const std::string& val) const
 {
-   if (!common::fileInfo( val).isDirectory())
+   if (!std::filesystem::is_directory( val))
       throw std::runtime_error( std::string( "'") + val
          + "' is not an existing directory");
 } // CheckIsDirectory::checkValue

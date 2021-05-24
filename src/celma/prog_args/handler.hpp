@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -862,6 +862,8 @@ private:
    ///                      groups).
    /// @param[in]      end  Iterator pointing to the end of the argument list.
    /// @return  Result of handling the current argument.
+   /// @throws  celma::prog_args::argument_error if a value is missing for an
+   ///          argument.
    /// @since  0.15.0, 17.07.2017  (only ArgumentKey as parameter, no template
    ///                             anymore)
    /// @since  0.2, 10.04.2016
@@ -923,6 +925,7 @@ private:
 
    /// Iterates over the arguments and evaluates them.
    /// @param[in]  alp  The parser object used to access the arguments.
+   /// @throws  std::invalid_argument when an unknown argument is found.
    /// @since  0.2, 10.04.2016
    void iterateArguments( detail::ArgListParser& alp) noexcept( false);
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,7 +18,7 @@
 /// @todo: Mandatory free values
 
 
-// module to test, header file include
+// module to test, headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -29,13 +29,14 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE ProgAgsHandlerTest
+#define BOOST_TEST_MODULE ArgumentHandlerCallablesTest
 #include <boost/test/unit_test.hpp>
 
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/multi_setter.hpp"
+#include "celma/prog_args/argument_error.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
@@ -71,7 +72,8 @@ void handlerFunValue( const string& v, bool)
 {
 
    if (v.empty())
-      throw std::runtime_error( "handlerFun() always expects a value!");
+      throw celma::prog_args::argument_error( "handlerFunValue() always expects"
+         " a value!");
 
    gotVal = v;
 
@@ -91,7 +93,7 @@ public:
    void handlerFunc( const string& s, bool)
    {
       if (s.empty())
-         throw std::runtime_error( "TestArgFunc::handlerFunc() always expects "
+         throw celma::prog_args::argument_error( "handlerFunc() always expects "
             "a value!");
 
       mValue = s;
@@ -111,8 +113,8 @@ public:
    void boolFunc( const string& optValue, bool)
    {
       if (!optValue.empty())
-         throw std::runtime_error( "TestArgFunc::boolFunc() must not be called "
-            "with a value!");
+         throw celma::prog_args::argument_error( "TestArgFunc::boolFunc() must "
+            "not be called with a value!");
 
       mBoolValue = true;
    } // TestArgFunc::boolFunc
@@ -227,7 +229,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
       auto const  as2a = make_arg_array( "-v juhu", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    // pass no value to a method that does require values
@@ -240,7 +242,7 @@ BOOST_AUTO_TEST_CASE( errors)
 
       auto const  as2a = make_arg_array( "-f", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
 } // errors
@@ -275,7 +277,7 @@ BOOST_AUTO_TEST_CASE( function_check)
 
       auto const  as2a = make_arg_array( "-f hello", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    gotCalled = false;
@@ -289,7 +291,7 @@ BOOST_AUTO_TEST_CASE( function_check)
 
       auto const  as2a = make_arg_array( "-f", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    // function that does expect a value
@@ -314,7 +316,7 @@ BOOST_AUTO_TEST_CASE( function_check)
 
       auto const  as2a = make_arg_array( "-f", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    gotVal.clear();
@@ -368,7 +370,7 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
       auto const  as2a = make_arg_array( "-f", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    gotVal.clear();
@@ -398,7 +400,7 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
       auto const  as2a = make_arg_array( "--fun", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    gotVal.clear();
@@ -453,7 +455,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
 
       auto const  as2a = make_arg_array( "-m", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -468,7 +470,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
 
       auto const  as2a = make_arg_array( "-m", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -497,7 +499,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
 
       auto const  as2a = make_arg_array( "--method", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -512,7 +514,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
 
       auto const  as2a = make_arg_array( "--method", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    myTestObj.resetValue();
@@ -605,7 +607,7 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
 
       auto const  as2a = make_arg_array( "-m true", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           std::invalid_argument);
    } // end scope
 
    {
@@ -633,7 +635,7 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
       auto const  as2a = make_arg_array( "--bool true", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
    } // end scope
 
    {
@@ -647,7 +649,7 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
       auto const  as2a = make_arg_array( "--bool=true", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           celma::prog_args::argument_error);
    } // end scope
 
 } // bool_method_check

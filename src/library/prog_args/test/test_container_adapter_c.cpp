@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,6 @@
 
 
 // project includes
-#include "celma/common/check_assign.hpp"
 #include "celma/test/check_return.hpp"
 
 
@@ -114,11 +113,10 @@ BOOST_AUTO_TEST_CASE( no_adapter)
    static_assert( !ContainerAdapter< std::vector< bool>>::HasAdapter);
    BOOST_REQUIRE_EQUAL( ContainerAdapter< std::vector< bool>>::HasAdapter, false);
 
-   // celma::common::CheckAssign
-   static_assert( !ContainerAdapter<
-      celma::common::CheckAssign< int>>::HasAdapter);
+   // std::optional
+   static_assert( !ContainerAdapter< std::optional< int>>::HasAdapter);
    BOOST_REQUIRE_EQUAL(
-      ContainerAdapter< celma::common::CheckAssign< int>>::HasAdapter, false);
+      ContainerAdapter< std::optional< int>>::HasAdapter, false);
 
 } // no_adapter
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2020-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
          nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    // first check with the default behaviour: no multi-values, additional value
@@ -343,7 +343,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
          "--endvalues 8", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    // accept multi-values, but still add a free value

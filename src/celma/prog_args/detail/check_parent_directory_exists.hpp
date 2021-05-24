@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,12 +19,9 @@
 #pragma once
 
 
-#include <cstring>
-#include <libgen.h>
-#include <memory>
+#include <filesystem>
 #include <stdexcept>
 #include <string>
-#include "celma/common/file_info.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 
 
@@ -72,14 +69,10 @@ inline CheckParentDirectoryExists::CheckParentDirectoryExists():
 
 inline void CheckParentDirectoryExists::checkValue( const std::string& val) const
 {
-   // cannot use FileInfo here, since the file may not exist
-   std::unique_ptr< char[]>  copy( new char[ val.length()]);
-   ::strcpy( copy.get(), val.c_str());
-
-   auto const  parentDir( ::dirname( copy.get()));
-
-   if (!common::fileInfo( parentDir).isDirectory())
-      throw std::runtime_error( std::string( "'") + parentDir
+   const std::filesystem::path  start( val);
+   
+   if (!std::filesystem::is_directory( start.parent_path()))
+      throw std::runtime_error( std::string( "'") + start.parent_path().string()
          + "' is not an existing directory");
 } // CheckParentDirectoryExists::checkValue
 

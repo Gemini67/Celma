@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test, header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -313,7 +313,7 @@ BOOST_FIXTURE_TEST_CASE( test_wrong_usage_carg, TestFixtureCharArg)
    auto const  as2a = make_arg_array( "-vx list vars", nullptr);
 
    BOOST_REQUIRE_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV),
-                        std::runtime_error);
+                        celma::prog_args::argument_error);
 
 } // test_wrong_usage_carg
 

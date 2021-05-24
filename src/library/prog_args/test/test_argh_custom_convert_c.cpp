@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -59,6 +59,8 @@ enum MyEnum
 };
 
 
+BOOST_TEST_DONT_PRINT_LOG_VALUE( std::optional< MyEnum>)
+
 
 /// Helper function to convert an enum name in string format into the
 /// corresponding enum.
@@ -77,6 +79,7 @@ static MyEnum string2enum( const std::string& enumText)
 
 /// Conversion function called by boost::lexical_cast<>: Converts the value in
 /// the string into the corresponding enum.
+///
 /// @param[in]   source  The stream to read the string value from.
 /// @param[out]  me      The enum variable to store the value in.
 /// @return  The stream as passed as input parameter.
@@ -96,6 +99,7 @@ static std::istream& operator >>( std::istream& source, MyEnum& me)
 
 
 /// Checks if user-supplied conversion to a user-defined data type works.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( basic_conversion)
 {
@@ -121,19 +125,17 @@ BOOST_AUTO_TEST_CASE( basic_conversion)
 
 
 /// Checks if user-supplied conversion to a user-defined data type wrapped
-/// in a CheckAssign<> object works.
+/// in a std::optional<> object works.
 ///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( check_assign_conversion)
 {
 
-   using celma::common::CheckAssign;
-
-   using enum_check_assign = CheckAssign< MyEnum>;
+   using optional_enum = std::optional< MyEnum>;
 
    {
-      Handler            ah( 0);
-      enum_check_assign  enumedValue;
+      Handler        ah( 0);
+      optional_enum  enumedValue;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));
@@ -141,7 +143,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       auto const  as2a = make_arg_array( "-e meVal2", nullptr);
 
       BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-      BOOST_REQUIRE( enumedValue.hasValue());
+      BOOST_REQUIRE( enumedValue.has_value());
       BOOST_REQUIRE_EQUAL( enumedValue, meVal2);
    } // end scope
 
@@ -151,7 +153,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::AllHelp
          | Handler::hfUsageCont | Handler::hfListArgVar);
-      enum_check_assign  enumedValue;
+      optional_enum       enumedValue;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));
@@ -180,7 +182,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::AllHelp
          | Handler::hfUsageCont | Handler::hfListArgVar);
-      enum_check_assign   enumedValue;
+      optional_enum       enumedValue;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e,enum", DEST_VAR( enumedValue),
          "Enum"));
@@ -201,7 +203,7 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
          "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "'--list-arg-vars' calls function/method 'Handler::listArgVars'.\n"
          "   value 'none' (0), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-         "'-e,--enum' value type 'unknown', destination 'CheckAssign< enumedValue>', value = 2.\n"
+         "'-e,--enum' value type 'unknown', destination 'std::optional< enumedValue>', value = 2.\n"
          "   value 'required' (2), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
          "\n"));
 
@@ -224,7 +226,8 @@ BOOST_AUTO_TEST_CASE( check_assign_conversion)
 
 
 /// Checks if user-supplied conversion to a user-defined data type wrapped
-/// in a CheckAssign<> object works.
+/// in a std::optional<> object works.
+///
 /// @since  0.2, 10.04.2016
 BOOST_AUTO_TEST_CASE( vector_conversion)
 {

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -22,7 +22,6 @@
 #include <iostream>
 #include <stdexcept>
 #include <boost/lexical_cast.hpp>
-#include "celma/common/check_assign.hpp"
 #include "celma/common/tokenizer.hpp"
 #include "celma/common/type_name.hpp"
 #include "celma/format/to_string.hpp"

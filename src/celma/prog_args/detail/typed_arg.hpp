@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,8 @@
 /// See documentation of template celma::prog_args::detail::TypedArg<>.<br>
 /// This file contains the base template plus all specialisations:
 /// - TypedArg< bool>
-/// - TypedArg< celma::common::CheckAssign< T>>
-/// - TypedArg< celma::common::CheckAssign< bool>>
+/// - TypedArg< std::optional< T>>
+/// - TypedArg< std::optional< bool>>
 /// - TypedArg< LevelCounter>
 /// - TypedArg< ContainerAdapter< T>><br>
 ///   This one is used for STL containers like std::set<>, std::vector<> etc.
@@ -39,9 +39,9 @@
 #include <bitset>
 #include <iomanip>
 #include <iostream>
+#include <optional>
 #include <tuple>
 #include <boost/lexical_cast.hpp>
-#include "celma/common/check_assign.hpp"
 #include "celma/common/contains.hpp"
 #include "celma/common/parse_filter_string.hpp"
 #include "celma/common/string_util.hpp"
@@ -376,17 +376,19 @@ private:
 }; // TypedArg< bool>
 
 
-// Template TypedArg< common::CheckAssign< T>>
-// ===========================================
+// Template TypedArg< std::optional< T>>
+// =====================================
 
 
-/// Specialisation of TypedArg<> for values wrapped in CheckAssign<>.
+/// Specialisation of TypedArg<> for values wrapped in std::optional<>.
 ///
 /// @tparam  T  The native type of the value.
+/// @since  1.44.0, 15.03.2021
+///    (use std::optional<> instead of CheckAssign<>)
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
-template< typename T> class TypedArg< common::CheckAssign< T>> final :
+template< typename T> class TypedArg< std::optional< T>> final :
    public TypedArgBase
 {
 public:
@@ -398,14 +400,14 @@ public:
    ///    The name of the destination variable to store the value in.
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArg( common::CheckAssign< T>& dest, const std::string& vname);
+   TypedArg( std::optional< T>& dest, const std::string& vname);
 
    /// Empty, virtual default destructor.
    ///
    /// @since  1.32.0, 27.08.2019
    ~TypedArg() override = default;
 
-   /// Returns the name of the type of the variable handled by the CheckAssign<>
+   /// Returns the name of the type of the variable handled by the std::optional<>
    /// object.
    ///
    /// @return  The name of the type of the destination variable.
@@ -449,9 +451,9 @@ private:
    void assign( const std::string& value, bool inverted) override;
 
    /// Reference of the destination variable to store the value in.
-   common::CheckAssign< T>&  mDestVar;
+   std::optional< T>&  mDestVar;
 
-}; // TypedArg< CheckAssign< T>>
+}; // TypedArg< std::optional< T>>
 
 
 // inlined methods
@@ -459,52 +461,52 @@ private:
 
 
 template< typename T>
-   TypedArg< common::CheckAssign< T>>::TypedArg( common::CheckAssign< T>& dest,
-                                                 const std::string& vname):
-      TypedArgBase( vname, ValueMode::required, false),
-      mDestVar( dest)
+   TypedArg< std::optional< T>>::TypedArg( std::optional< T>& dest,
+      const std::string& vname):
+         TypedArgBase( vname, ValueMode::required, false),
+         mDestVar( dest)
 {
-} // TypedArg< common::CheckAssign< T>>::TypedArg
+} // TypedArg< std::optional< T>>::TypedArg
 
 
 template< typename T>
-   const std::string TypedArg< common::CheckAssign< T>>::varTypeName() const
+   const std::string TypedArg< std::optional< T>>::varTypeName() const
 {
    return type< T>::name();
-} // TypedArg< common::CheckAssign< T>>::varTypeName
+} // TypedArg< std::optional< T>>::varTypeName
 
 
-template< typename T> bool TypedArg< common::CheckAssign< T>>::hasValue() const
+template< typename T> bool TypedArg< std::optional< T>>::hasValue() const
 {
-   return mDestVar.hasValue();
-} // TypedArg< common::CheckAssign< T>>::hasValue
+   return mDestVar.has_value();
+} // TypedArg< std::optional< T>>::hasValue
 
 
 template< typename T>
-   void TypedArg< common::CheckAssign< T>>::printValue( std::ostream& os,
+   void TypedArg< std::optional< T>>::printValue( std::ostream& os,
       bool print_type) const
 {
-   os << format::toString( static_cast< T>( mDestVar));
+   os << format::toString( mDestVar.value());
    if (print_type)
       os << " [" << varTypeName() << "]";
-} // TypedArg< common::CheckAssign< T>>::printValue
+} // TypedArg< std::optional< T>>::printValue
 
 
-template< typename T> void TypedArg< common::CheckAssign< T>>::dump( std::ostream& os) const
+template< typename T>
+   void TypedArg< std::optional< T>>::dump( std::ostream& os) const
 {
    os << "value type '" << type< T>::name()
-      << "', destination 'CheckAssign< " << mVarName << ">', value ";
-   if (mDestVar.hasValue())
-      os << "= " << static_cast< T>( mDestVar) << "." << std::endl;
+      << "', destination 'std::optional< " << mVarName << ">', value ";
+   if (mDestVar.has_value())
+      os << "= " << mDestVar.value() << "." << std::endl;
    else
       os << "not set." << std::endl;
    os << "   " << static_cast< const TypedArgBase&>( *this);
-} // TypedArg< common::CheckAssign< T>>::dump
+} // TypedArg< std::optional< T>>::dump
 
 
 template< typename T>
-   void TypedArg< common::CheckAssign< T>>::assign( const std::string& value,
-      bool)
+   void TypedArg< std::optional< T>>::assign( const std::string& value, bool)
 {
    check( value);
    if (!mFormats.empty())
@@ -516,19 +518,22 @@ template< typename T>
    {
       mDestVar = boost::lexical_cast< T>( value);
    } // end if
-} // TypedArg< CheckAssign< T>>::assign
+} // TypedArg< std::optional< T>>::assign
 
 
-// Template TypedArg< common::CheckAssign< bool>>
-// ==============================================
+// Template TypedArg< std::optional< bool>>
+// ========================================
 
 
-/// Specialization of the TypedArg< CheckAssign< T>> template for boolean flags.
+/// Specialization of the TypedArg< std::optional< T>> template for boolean
+/// flags.
 ///
+/// @since  1.44.0, 15.03.2021
+///    (use std::optional<> instead of CheckAssign<>)
 /// @since  0.15.0, 17.07.2017
 ///    (use type ArgumentKey instead of string for arguments)
 /// @since  0.2, 10.04.2016
-template<> class TypedArg< common::CheckAssign< bool>> final : public TypedArgBase
+template<> class TypedArg< std::optional< bool>> final : public TypedArgBase
 {
 public:
    /// Constructor.
@@ -539,11 +544,11 @@ public:
    ///    The name of the destination variable to store the value in.
    /// @since  0.16.0, 10.11.2017  (removed key parameter)
    /// @since  0.2, 10.04.2016
-   TypedArg( common::CheckAssign< bool>& dest, const std::string& vname):
+   TypedArg( std::optional< bool>& dest, const std::string& vname):
       TypedArgBase( vname, ValueMode::none, false),
       mDestVar( dest)
    {
-   } // TypedArg< common::CheckAssign< bool>>::TypedArg
+   } // TypedArg< std::optional< bool>>::TypedArg
 
    /// Empty, virtual default destructor.
    ///
@@ -551,12 +556,13 @@ public:
    ~TypedArg() override = default;
 
    /// Always returns "bool".
+   ///
    /// @return  The string "bool".
    /// @since  1.14.0, 28.09.2018
    const std::string varTypeName() const override
    {
       return "bool";
-   } // TypedArg< common::CheckAssign< bool>>::varTypeName
+   } // TypedArg< std::optional< bool>>::varTypeName
 
    /// Returns if the destination has a value set.
    ///
@@ -564,8 +570,8 @@ public:
    /// @since  0.2, 10.04.2016
    bool hasValue() const override
    {
-      return mDestVar.hasValue();
-   } // TypedArg< common::CheckAssign< bool>>::hasValue
+      return mDestVar.has_value();
+   } // TypedArg< std::optional< bool>>::hasValue
 
    /// Prints the current value of the destination variable.
    /// Does not check any flags, if a value has been set etc., simply prints the
@@ -582,7 +588,7 @@ public:
       os << std::boolalpha << static_cast< bool>( mDestVar);
       if (print_type)
          os << " [" << varTypeName() << "]";
-   } // TypedArg< common::CheckAssign< bool>>::printValue
+   } // TypedArg< std::optional< bool>>::printValue
 
    /// Would specify that the argument is mandatory (required). This does not
    /// make sense for a flag/boolean value: Throw exception.
@@ -594,7 +600,7 @@ public:
    {
       throw std::logic_error( "Cannot make boolean argument for variable '" +
                               mVarName + "' mandatory");
-   } // TypedArg< common::CheckAssign< bool>>::setIsMandatory
+   } // TypedArg< std::optional< bool>>::setIsMandatory
 
    /// Unset the flag (set to \c false) when the argument is detected, instead
    /// of setting it (the default).
@@ -605,7 +611,7 @@ public:
    {
       mValue2Set = false;
       return this;
-   } // TypedArg< common::CheckAssign< bool>>::unsetFlag
+   } // TypedArg< std::optional< bool>>::unsetFlag
 
 protected:
    /// Used for printing an argument and its destination variable.
@@ -614,9 +620,9 @@ protected:
    /// @since  0.2, 10.04.2016
    void dump( std::ostream& os) const override
    {
-      os << "sets boolean flag on 'CheckAssign< " << mVarName << ">'." << std::endl
+      os << "sets boolean flag on 'std::optional< " << mVarName << ">'." << std::endl
          << "   " << static_cast< const TypedArgBase&>( *this);
-   } // TypedArg< common::CheckAssign< bool>>::dump
+   } // TypedArg< std::optional< bool>>::dump
 
 private:
    /// Stores the value in the destination variable.
@@ -625,14 +631,14 @@ private:
    void assign( const std::string& /* value */, bool /* inverted */) override
    {
       mDestVar = mValue2Set;
-   } // TypedArg< common::CheckAssign< bool>>::assign
+   } // TypedArg< std::optional< bool>>::assign
 
    /// Reference of the destination variable to store the value in.
-   common::CheckAssign< bool>&  mDestVar;
+   std::optional< bool>&  mDestVar;
    /// The value to set when assign is called. Default = \c true.
-   bool                         mValue2Set = true;
+   bool                   mValue2Set = true;
 
-}; // TypedArg< common::CheckAssign< bool>>
+}; // TypedArg< std::optional< bool>>
 
 
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -38,7 +38,6 @@
 
 using celma::appl::ArgString2Array;
 using celma::appl::make_arg_array;
-using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 
 
@@ -321,8 +320,8 @@ BOOST_AUTO_TEST_CASE( cardinality_printed)
 BOOST_AUTO_TEST_CASE( boolean_used_twice)
 {
 
-   Handler             ah( 0);
-   CheckAssign< bool>  flag;
+   Handler               ah( 0);
+   std::optional< bool>  flag;
 
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
@@ -341,8 +340,8 @@ BOOST_AUTO_TEST_CASE( boolean_used_twice)
 BOOST_AUTO_TEST_CASE( int_set_twice)
 {
 
-   Handler            ah( 0);
-   CheckAssign< int>  value;
+   Handler              ah( 0);
+   std::optional< int>  value;
 
 
    ah.addArgument( "v", DEST_VAR( value), "integer value");
@@ -366,8 +365,8 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
 
    // set just one value
    {
-      Handler            ah( 0);
-      CheckAssign< int>  value;
+      Handler              ah( 0);
+      std::optional< int>  value;
 
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( cardinality_max( 2));
@@ -379,8 +378,8 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
 
    // set two values, still okay
    {
-      Handler            ah( 0);
-      CheckAssign< int>  value;
+      Handler              ah( 0);
+      std::optional< int>  value;
 
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( cardinality_max( 2));
@@ -392,8 +391,8 @@ BOOST_AUTO_TEST_CASE( int_allow_max_two)
 
    // setting three values should fail
    {
-      Handler            ah( 0);
-      CheckAssign< int>  value;
+      Handler              ah( 0);
+      std::optional< int>  value;
 
       ah.addArgument( "v", DEST_VAR( value), "integer value")
                     ->setCardinality( cardinality_max( 2));

@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -12,12 +12,18 @@ cmake_minimum_required( VERSION 3.5 )
 project( Celma )
 
 set( MAJORVERSION    1 )
-set( MINORVERSION    42 )
+set( MINORVERSION    45 )
 set( RELEASE_VERSION 0 )
 set( PATCHLEVEL      0 )
 
-set( CMAKE_CXX_STANDARD 17 )
+if ( CPP_VERSION STREQUAL "20" )
+   set( CMAKE_CXX_STANDARD 20 )
+else()
+   set( CMAKE_CXX_STANDARD 17 )
+endif()
+
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
+
 
 enable_testing()
 include( CTest)
