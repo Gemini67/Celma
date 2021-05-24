@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,13 +26,13 @@ int main( int argc, char* argv[])
 
    try
    {
-      celma::prog_args::Handler         ah( celma::prog_args::Handler::AllHelp);
-      bool                              flagArg = false;
-      int                               intArgMandatory;
-      int                               intArgOptDef = 4711;
-      std::string                       stringArgOptDef( "hello world");
-      std::vector< int>                 vectorArgOpt;
-      celma::common::CheckAssign< int>  intArgOptDef2;
+      celma::prog_args::Handler  ah( celma::prog_args::Handler::AllHelp);
+      bool                       flagArg = false;
+      int                        intArgMandatory;
+      int                        intArgOptDef = 4711;
+      std::string                stringArgOptDef( "hello world");
+      std::vector< int>          vectorArgOpt;
+      std::optional< int>        intArgOptDef2;
 
       ah.addArgument( "f,flag",      DEST_VAR( flagArg),
                       "Boolean flag, no default");
@@ -45,7 +45,7 @@ int main( int argc, char* argv[])
       ah.addArgument( "l,list",      DEST_VAR( vectorArgOpt),
                       "Optional vector argument, don't print default");
       ah.addArgument( "c,checked",   DEST_VAR( intArgOptDef2),
-                      "Optional integer argument, using CheckAssign<>, *with* default");
+                      "Optional integer argument, using std::optional<>, *with* default");
 
       ah.evalArguments( argc, argv);
    } catch (const std::exception& e)

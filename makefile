@@ -16,8 +16,7 @@ debug:
 	   cd -; \
 	fi; \
 	cd build/debug; \
-	make -j${CPUS}; \
-	make install
+	make -j${CPUS}
 
 release:
 	@+if [ ! -d build/release ]; then \
@@ -30,8 +29,7 @@ release:
 	   cd -; \
 	fi; \
 	cd build/release; \
-	make -j${CPUS}; \
-	make install
+	make -j${CPUS}
 
 debug-20:
 	+if [ ! -d build/debug-20 ]; then \
@@ -45,8 +43,7 @@ debug-20:
 	   cd -; \
 	fi; \
 	cd build/debug-20; \
-	make -j${CPUS}; \
-	make install
+	make -j${CPUS}
 
 release-20:
 	@+if [ ! -d build/release-20 ]; then \
@@ -60,8 +57,7 @@ release-20:
 	   cd -; \
 	fi; \
 	cd build/release-20; \
-	make -j${CPUS}; \
-	make install
+	make -j${CPUS}
 
 release-dbg:
 	@+if [ ! -d build/release-dbg ]; then \
@@ -74,8 +70,7 @@ release-dbg:
 	   cd -; \
 	fi; \
 	cd build/release-dbg; \
-	make -j${CPUS}; \
-	make install
+	make -j${CPUS}
 
 analyze:
 	@if [ ! -d build/analyze ]; then \
@@ -146,7 +141,7 @@ coverage:
 	   cd -; \
 	fi; \
 	cd build/coverage; \
-	/usr/bin/time --format="-- Build Duration: %E" make -j${CPUS} install; \
+	/usr/bin/time --format="-- Build Duration: %E" make -j${CPUS}; \
 	/usr/bin/time --format="-- Build Duration: %E" make Celma_coverage
 
 sonar:

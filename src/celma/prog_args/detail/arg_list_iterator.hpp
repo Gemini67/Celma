@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ArgListIterator.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_ARG_LIST_ITERATOR_HPP
-#define CELMA_PROG_ARGS_DETAIL_ARG_LIST_ITERATOR_HPP
+#pragma once
 
 
 #include <cstring>
@@ -25,9 +24,10 @@
 #include <stdexcept>
 #include "celma/common/pre_postfix.hpp"
 #include "celma/common/reset_at_exit.hpp"
+#include "celma/prog_args/argument_error.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Iterator for a list of program arguments.<br>
@@ -81,18 +81,24 @@ public:
    /// @param[in]  include_myself  If set, the current argument is also included
    ///                             in the result string.
    /// @return  The remaining arguments as string.
+   /// @throws  celma::prog_args::argument_error when called while evaluating a
+   ///          group of single-character arguments.
    /// @since  0.14.2, 12.05.2017
-   std::string argsAsString( bool include_myself = true) const;
+   std::string argsAsString( bool include_myself = true) const noexcept( false);
 
    /// Prefix increment operator.
    /// @return  This object.
+   /// @throws  celma::prog_args::argument_error if an invalid character is
+   ///          found in the argument list.
    /// @since  0.2, 09.04.2016
-   ArgListIterator& operator ++( std::prefix);
+   ArgListIterator& operator ++( std::prefix) noexcept( false);
 
    /// Postfix increment operator.
    /// @return  Object that points the previous element.
+   /// @throws  celma::prog_args::argument_error if an invalid character is
+   ///          found in the argument list.
    /// @since  0.2, 09.04.2016
-   ArgListIterator operator ++( std::postfix);
+   ArgListIterator operator ++( std::postfix) noexcept( false);
 
    /// Dereference operator.
    /// @return  Pointer to the data element.
@@ -130,26 +136,26 @@ private:
    /// List of arguments strings.
    char**    mpArgV;
    /// Current index of this iterator object.
-   int       mArgIndex;
+   int       mArgIndex = -1;
    /// Position of the single character arguments within the current argument
    /// string.
-   size_t    mArgCharPos;
+   size_t    mArgCharPos = -1;
    /// Stores the current element data for external access.
    E         mCurrElement;
    /// Length of the current argument string.
-   size_t    mCurrArgStringLen;
+   size_t    mCurrArgStringLen = 0L;
    /// Set when the token '--' was found in the argument list: Accept dashed
    /// values as simple values.
-   bool      mAcceptDashedValue;
+   bool      mAcceptDashedValue = false;
 
    /// Internal flag, set when a long argument followed by an equal sign and a
    /// value is found (--\<long_arg\>=\<value\>).<br>
    /// In this case, the argument is returned and this flag set so that the
    /// next call of the iterator returns the value.
-   bool      mNextIsValue;
+   bool      mNextIsValue = false;
    /// If set, the operator++ may treat the remaining part of the current
    /// argument string as value.
-   bool      mRemainingArgumentStringAsValue;
+   bool      mRemainingArgumentStringAsValue = false;
 
 }; // ArgListIterator< T, E>
 
@@ -163,13 +169,7 @@ template< typename T, typename E>
       mpSource( &src),
       mArgC( mpSource->argCount()),
       mpArgV( mpSource->argVector()),
-      mArgIndex( -1),
-      mArgCharPos( -1),
-      mCurrElement(),
-      mCurrArgStringLen( 0L),
-      mAcceptDashedValue( false),
-      mNextIsValue( false),
-      mRemainingArgumentStringAsValue( false)
+      mCurrElement()
 {
 
    if (asEnd || (mArgC == 1))
@@ -185,7 +185,7 @@ template< typename T, typename E>
       if (mpArgV[ mArgIndex][ 0] == '-')
       {
          if (mCurrArgStringLen == 1)
-            throw std::runtime_error( "single dash in argument list");
+            throw argument_error( "single dash in argument list");
 
          determineNextArg();
       } else
@@ -222,10 +222,11 @@ template< typename T, typename E> void ArgListIterator< T, E>::remArgStrAsVal()
 
 template< typename T, typename E>
    std::string ArgListIterator< T, E>::argsAsString( bool include_myself) const
+      noexcept( false)
 {
    if (!include_myself && !isSingleArg())
-      throw std::runtime_error( "cannot build remaining arguments string "
-                                "when included argument is not single argument");
+      throw argument_error( "cannot build remaining arguments string when "
+         "included argument is not single argument");
 
    int          argi = include_myself ? mCurrElement.mArgIndex : mArgIndex;
    std::string  remaining( mpArgV[ argi++]);
@@ -241,6 +242,7 @@ template< typename T, typename E>
 
 template< typename T, typename E>
    ArgListIterator< T, E>& ArgListIterator< T, E>::operator ++( std::prefix)
+      noexcept( false)
 {
    const common::ResetAtExit< bool>  rae( mRemainingArgumentStringAsValue, false);
 
@@ -279,7 +281,7 @@ template< typename T, typename E>
             return *this;
          } // end if
          if (mCurrArgStringLen == 1)
-            throw std::runtime_error( "single dash in argument list");
+            throw argument_error( "single dash in argument list");
          mArgCharPos = 1;
       } // end if
 
@@ -292,6 +294,7 @@ template< typename T, typename E>
 
 template< typename T, typename E>
    ArgListIterator< T, E> ArgListIterator< T, E>::operator ++( std::postfix)
+      noexcept( false)
 {
    ArgListIterator  prev( *this);
    operator ++();
@@ -380,12 +383,7 @@ template< typename T, typename E>
 } // ArgListIterator< T, E>::isSingleArg
 
    
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_ARG_LIST_ITERATOR_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF arg_list_iterator.hpp  =====

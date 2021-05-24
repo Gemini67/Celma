@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// by the STL.
 
 
-#ifndef CELMA_DETAIL_TYPE_NAME_STL_STORE_HPP
-#define CELMA_DETAIL_TYPE_NAME_STL_STORE_HPP
+#pragma once
 
 
 #include <tuple>
@@ -111,9 +110,6 @@ public:
 
 
 } // namespace celma
-
-
-#endif   // CELMA_DETAIL_TYPE_NAME_STL_STORE_HPP
 
 
 // =====  END OF type_name_stl_store.hpp  =====

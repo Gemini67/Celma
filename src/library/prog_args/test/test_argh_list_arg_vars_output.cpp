@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -11,7 +11,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -23,7 +23,6 @@
 
 
 using celma::appl::make_arg_array;
-using celma::common::CheckAssign;
 using celma::prog_args::Handler;
 using std::cerr;
 using std::endl;
@@ -52,7 +51,7 @@ int main( int /* argc */, char* argv[])
          ah.evalArguments( as2a.mArgC, as2a.mpArgV);
          cerr << "*** ERROR: Expected exception for 'unknown argument!" << endl;
          return EXIT_FAILURE;
-      } catch (const std::runtime_error& e)
+      } catch (const std::invalid_argument& e)
       {
          if (strcmp( e.what(), "Unknown argument 'list-arg-vars'") != 0)
          {
@@ -106,15 +105,15 @@ int main( int /* argc */, char* argv[])
 
       ah.addArgumentListArgVars( "V");
 
-      const string          args( "-V --integer 42 --sl schubidu -V");
-      auto const            as2a = make_arg_array( args, argv[ 0]);
-      bool                  my_flag = false;
-      int                   my_int;
-      long                  my_long;
-      uint64_t              my_ulong;
-      string                my_string;
-      CheckAssign< string>  my_ca_string;
-      std::vector< string>  my_string_list;
+      const string            args( "-V --integer 42 --sl schubidu -V");
+      auto const              as2a = make_arg_array( args, argv[ 0]);
+      bool                    my_flag = false;
+      int                     my_int;
+      long                    my_long;
+      uint64_t                my_ulong;
+      string                  my_string;
+      std::optional< string>  my_ca_string;
+      std::vector< string>    my_string_list;
 
       ah.addArgument( "f",        DEST_VAR( my_flag),    "My flag.");
       ah.addArgument( "integer",  DEST_VAR( my_int),     "My integer.")
@@ -128,7 +127,7 @@ int main( int /* argc */, char* argv[])
       ah.addArgument( "call",     DEST_FUNCTION( callable_function),
                       "My function.");
       ah.addArgument( "cas",      DEST_VAR( my_ca_string),
-                      "My CheckAssign string");
+                      "My std::optional string");
       ah.addArgument( "sl",       DEST_VAR( my_string_list),
                       "My string list");
 
