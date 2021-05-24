@@ -40,14 +40,14 @@ namespace {
 
 /// Class with some basic member variables.
 ///
-/// @since  x.y.z, 02.03.2021
+/// @since  1.45.0, 02.03.2021
 class Simple
 {
 public:
    /// Returns the XML tag to use for data of objects from this class.
    ///
    /// @return  The tag name to use in XML for data from objects of this class.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    static const char* xmlTag()
    {
       return "simple_data";
@@ -61,7 +61,7 @@ public:
    ///    The value to store in the #mValue member variable.
    /// @param[in]  ratio
    ///    The value to store in the #mRatio member variable.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    Simple( const std::string& str, int value, double ratio):
       mText( str),
       mValue( value),
@@ -74,7 +74,7 @@ public:
    /// @param[in]  dest
    ///    The XML writer to stream the data into.<br>
    ///    Must be passed by value so the indent is incremented correctly etc.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    void toXml( XmlWriter dest) const
    {
       namespace xml = celma::format::xml;
@@ -101,14 +101,14 @@ private:
 
 /// Class with member variables of type object.
 ///
-/// @since  x.y.z, 02.03.2021
+/// @since  1.45.0, 02.03.2021
 class Complex
 {
 public:
    /// Returns the XML tag to use for data of objects from this class.
    ///
    /// @return  The tag name to use in XML for data from objects of this class.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    static const char* xmlTag()
    {
       return "complex_data";
@@ -116,7 +116,7 @@ public:
 
    /// Constructor.
    ///
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    Complex():
       mSimple1( "hello world", 42, 3.1415),
       mSimple2( "thank you for all the fish", 13, 7.25)
@@ -128,7 +128,7 @@ public:
    /// @param[in]  dest
    ///    The XML writer to stream the data into.<br>
    ///    Must be passed by value so the indent is incremented correctly etc.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    void toXml( XmlWriter dest) const
    {
       dest << mSimple1 << mSimple2;
@@ -145,14 +145,14 @@ private:
 
 /// Class with a container as member variable.
 ///
-/// @since  x.y.z, 07.03.2021
+/// @since  1.45.0, 07.03.2021
 class Container
 {
 public:
    /// Returns the XML tag to use for data of objects from this class.
    ///
    /// @return  The tag name to use in XML for data from objects of this class.
-   /// @since  x.y.z, 07.03.2021
+   /// @since  1.45.0, 07.03.2021
    static const char* xmlTag()
    {
       return "container_data";
@@ -160,7 +160,7 @@ public:
 
    /// Constructor.
    ///
-   /// @since  x.y.z, 07.03.2021
+   /// @since  1.45.0, 07.03.2021
    Container()
    {
       mSimples.emplace_back( Simple{ "hello world", 42, 3.1415 });
@@ -172,7 +172,7 @@ public:
    /// @param[in]  dest
    ///    The XML writer to stream the data into.<br>
    ///    Must be passed by value so the indent is incremented correctly etc.
-   /// @since  x.y.z, 07.03.2021
+   /// @since  1.45.0, 07.03.2021
    void toXml( XmlWriter dest) const
    {
       dest << mSimples;
@@ -191,7 +191,7 @@ private:
 
 /// Test writing the data of an object of the class Simple in XML.
 ///
-/// @since  x.y.z, 02.03.2021
+/// @since  1.45.0, 02.03.2021
 BOOST_AUTO_TEST_CASE( simple)
 {
 
@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE( simple)
 
 /// Test writing the data of an object of the class Complex in XML.
 /// 
-/// @since  x.y.z, 02.03.2021
+/// @since  1.45.0, 02.03.2021
 BOOST_AUTO_TEST_CASE( complex)
 {
 
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE( complex)
 
 /// Test writing the data of an object of the class Container in XML.
 /// 
-/// @since  x.y.z, 07.03.2021
+/// @since  1.45.0, 07.03.2021
 BOOST_AUTO_TEST_CASE( container)
 {
 

@@ -32,7 +32,7 @@ using celma::format::ScopedIndent;
 
 /// Test indention.
 ///
-/// @since  x.y.z, 02.03.2021
+/// @since  1.45.0, 02.03.2021
 BOOST_AUTO_TEST_CASE( simple)
 {
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( simple)
 
 /// Test indention with increasing levels.
 ///
-/// @since  x.y.z, 02.03.2021
+/// @since  1.45.0, 02.03.2021
 BOOST_AUTO_TEST_CASE( nested)
 {
 
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE( nested)
 
 /// Test indention with scoped indention.
 ///
-/// @since  x.y.z, 02.03.2021
+/// @since  1.45.0, 02.03.2021
 BOOST_AUTO_TEST_CASE( scoped)
 {
 

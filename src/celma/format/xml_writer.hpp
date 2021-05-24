@@ -49,7 +49,7 @@ namespace celma::format {
 ///    "value"    -> "unknown" [];
 /// }
 /// \enddot
-/// @since  x.y.z, 02.03.2021
+/// @since  1.45.0, 02.03.2021
 class XmlWriter
 {
 public:
@@ -69,7 +69,7 @@ public:
    ///    Destination stream to write the XML into.
    /// @param[in]  indent_size
    ///    Number of spaces to use for indention.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    explicit XmlWriter( std::ostream& dest, int indent_size = 3);
 
    /// Copy constructor.
@@ -77,14 +77,14 @@ public:
    /// of all members to exactly the right thing.
    ///
    /// @param[in]  other  The other object to copy the data from.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    XmlWriter( const XmlWriter& other) = default;
 
    /// Insertion operator to handle manipulators.
    ///
    /// @param[in]  m  The manipulator to call with this object.
    /// @return  This object.
-   /// @since  x.y.z, 03.03.2021
+   /// @since  1.45.0, 03.03.2021
    XmlWriter& operator <<( XmlWriter&( *m)( XmlWriter&));
 
    /// Insertion operator for everything.
@@ -94,21 +94,21 @@ public:
    /// @param[in]  obj
    ///    The object to write into the XML stream.
    /// @return  This object.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    template< typename T>
       friend XmlWriter& operator <<( XmlWriter& dest, const T& obj);
 
    /// Called to set the type of the next field/value.
    ///
    /// @param[in]  type  The type of the next field/value to set.
-   /// @since  x.y.z, 03.03.2021
+   /// @since  1.45.0, 03.03.2021
    void nextField( XmlWriter::Field type);
 
 private:
    /// Helper class to handle the different types correctly.
    /// This class works as intended thanks to the explicit constructors.
    ///
-   /// @since  x.y.z, 07.03.2021
+   /// @since  1.45.0, 07.03.2021
    class Handler
    {
    public:
@@ -118,7 +118,7 @@ private:
       ///    The XML writer object to use for writing the boolean value.
       /// @param[in]  value
       ///    The value to write.
-      /// @since  x.y.z, 07.03.2021
+      /// @since  1.45.0, 07.03.2021
       explicit Handler( XmlWriter& dest, bool value)
       {
          dest.handleBool( value);
@@ -130,7 +130,7 @@ private:
       ///    The XML writer object to use for writing the integer value.
       /// @param[in]  value
       ///    The value to write.
-      /// @since  x.y.z, 07.03.2021
+      /// @since  1.45.0, 07.03.2021
       explicit Handler( XmlWriter& dest, int value)
       {
          dest.handleInt( value);
@@ -142,7 +142,7 @@ private:
       ///    The XML writer object to use for writing the C string value.
       /// @param[in]  value
       ///    The value to write.
-      /// @since  x.y.z, 07.03.2021
+      /// @since  1.45.0, 07.03.2021
       explicit Handler( XmlWriter& dest, const char* value)
       {
          dest.handleString( value);
@@ -154,7 +154,7 @@ private:
       ///    The XML writer object to use for writing the double value.
       /// @param[in]  value
       ///    The value to write.
-      /// @since  x.y.z, 07.03.2021
+      /// @since  1.45.0, 07.03.2021
       explicit Handler( XmlWriter& dest, double value)
       {
          dest.handleDouble( value);
@@ -166,7 +166,7 @@ private:
       ///    The XML writer object to use for writing the std::string value.
       /// @param[in]  value
       ///    The value to write.
-      /// @since  x.y.z, 07.03.2021
+      /// @since  1.45.0, 07.03.2021
       explicit Handler( XmlWriter& dest, const std::string& value)
       {
          dest.handleString( value);
@@ -178,7 +178,7 @@ private:
       ///    The XML writer object to use for writing the values from the vector.
       /// @param[in]  value
       ///    The vector with the values to write.
-      /// @since  x.y.z, 07.03.2021
+      /// @since  1.45.0, 07.03.2021
       template< typename T> explicit Handler( XmlWriter& dest, const std::vector< T>& value)
       {
          dest.handleVector( value);
@@ -190,7 +190,7 @@ private:
       ///    The XML writer object to use for writing the object.
       /// @param[in]  obj
       ///    The object to write.
-      /// @since  x.y.z, 07.03.2021
+      /// @since  1.45.0, 07.03.2021
       template< typename T> Handler( XmlWriter& dest, const T& obj)
       {
          dest.writeObject( obj);
@@ -201,7 +201,7 @@ private:
    /// Writes the data of an object within its tag.
    ///
    /// @param[in]  obj  The object to write the data into the XML stream.
-   /// @since  x.y.z, 02.03.2021
+   /// @since  1.45.0, 02.03.2021
    template< typename T> void writeObject( const T& obj);
 
    // methods for different types
@@ -211,36 +211,36 @@ private:
    /// Handles a boolean value.
    ///
    /// @param[in]  bvalue  The boolean value to write.
-   /// @since  x.y.z, 05.03.2021
+   /// @since  1.45.0, 05.03.2021
    void handleBool( bool bvalue);
 
    /// Handles an integer value.
    ///
    /// @param[in]  ivalue  The integer value to write.
-   /// @since  x.y.z, 03.03.2021
+   /// @since  1.45.0, 03.03.2021
    void handleInt( int ivalue);
 
    /// Handles a double value.
    ///
    /// @param[in]  fvalue  The floating point value to write.
-   /// @since  x.y.z, 04.03.2021
+   /// @since  1.45.0, 04.03.2021
    void handleDouble( double fvalue);
 
    /// Handles a string value.
    ///
    /// @param[in]  str  The string to write.
-   /// @since  x.y.z, 03.03.2021
+   /// @since  1.45.0, 03.03.2021
    void handleString( const std::string& str);
 
    /// Handles a vector with values.
    ///
    /// @param[in]  v  The vector with the values to write.
-   /// @since  x.y.z, 03.03.2021
+   /// @since  1.45.0, 03.03.2021
    template< typename T> void handleVector( const std::vector< T>& v);
 
    /// Writes the closing tag.
    ///
-   /// @since  x.y.z, 03.03.2021
+   /// @since  1.45.0, 03.03.2021
    void closeTag();
 
    /// The stream to write the XML into.
@@ -290,7 +290,7 @@ namespace xml {
 ///
 /// @param[in]  dest  The object to set the next field type on.
 /// @return  The object as passed in.
-/// @since  x.y.z, 03.03.2021
+/// @since  1.45.0, 03.03.2021
 inline XmlWriter& tag( XmlWriter& dest)
 {
    dest.nextField( XmlWriter::Field::tag);
@@ -302,7 +302,7 @@ inline XmlWriter& tag( XmlWriter& dest)
 ///
 /// @param[in]  dest  The object to set the next field type on.
 /// @return  The object as passed in.
-/// @since  x.y.z, 03.03.2021
+/// @since  1.45.0, 03.03.2021
 inline XmlWriter& attr( XmlWriter& dest)
 {
    dest.nextField( XmlWriter::Field::attr);
@@ -314,7 +314,7 @@ inline XmlWriter& attr( XmlWriter& dest)
 ///
 /// @param[in]  dest  The object to set the next field type on.
 /// @return  The object as passed in.
-/// @since  x.y.z, 03.03.2021
+/// @since  1.45.0, 03.03.2021
 inline XmlWriter& attr_val( XmlWriter& dest)
 {
    dest.nextField( XmlWriter::Field::attr_val);
@@ -326,7 +326,7 @@ inline XmlWriter& attr_val( XmlWriter& dest)
 ///
 /// @param[in]  dest  The object to set the next field type on.
 /// @return  The object as passed in.
-/// @since  x.y.z, 03.03.2021
+/// @since  1.45.0, 03.03.2021
 inline XmlWriter& value( XmlWriter& dest)
 {
    dest.nextField( XmlWriter::Field::value);
