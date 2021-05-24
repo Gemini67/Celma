@@ -1026,5 +1026,29 @@ BOOST_AUTO_TEST_CASE( value_after_arg)
 
 
 
+/// Test some errors in the list of arguments.
+/// @since  x.y.z, 21.05.2021
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   {
+      auto const     as2a = make_arg_array( "- -l", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+
+      BOOST_REQUIRE_THROW( alp.begin(), celma::prog_args::argument_error);
+   } // end scope
+
+   {
+      auto const     as2a = make_arg_array( "-a - -b", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+      auto           it = alp.begin();
+
+      BOOST_REQUIRE_THROW( ++it, celma::prog_args::argument_error);
+   } // end scope
+
+} // errors
+
+
+
 // =====  END OF test_arg_list_parser_c.cpp  =====
 
