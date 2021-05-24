@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE( test_value_filter_errors)
 
       auto const  args = make_arg_array( "-v", nullptr);
       BOOST_REQUIRE_THROW( ah.evalArguments( args.mArgC, args.mpArgV),
-         std::runtime_error);
+         celma::prog_args::argument_error);
    } // end scope
 
    // failed cardinality check

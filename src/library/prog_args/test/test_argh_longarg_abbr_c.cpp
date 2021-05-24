@@ -126,21 +126,21 @@ BOOST_AUTO_TEST_CASE( abbr_disabled)
       auto const  as2a = make_arg_array( "--in 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           std::invalid_argument);
    } // end scope
 
    {
       auto const  as2a = make_arg_array( "--inp 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+                           std::invalid_argument);
    } // end scope
 
    {
       auto const  as2a = make_arg_array( "--inpu 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    inputVal.reset();
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE( abbr_disabled)
       auto const  as2a = make_arg_array( "--inpl 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
    inputVal.reset();
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE( abbr_disabled)
       auto const  as2a = make_arg_array( "--ou 5", nullptr);
 
       BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+         std::invalid_argument);
    } // end scope
 
 } // abbr_disabled
