@@ -758,6 +758,8 @@ void Handler::crossCheckArguments( const string ownName,
 ///                      groups).
 /// @param[in]      end  Iterator pointing to the end of the argument list.
 /// @return  Result of handling the current argument.
+/// @throws  celma::prog_args::argument_error if a value is missing for an
+///          argument.
 /// @since  0.15.0, 17.07.2017  (only ArgumentKey as parameter, no template
 ///                             anymore)
 /// @since  0.2, 10.04.2016
@@ -825,8 +827,8 @@ Handler::ArgResult
       if (p_arg_hdl->valueMode() == ValueMode::optional)
          handleIdentifiedArg( p_arg_hdl, key);
       else
-         throw runtime_error( "Argument '" + format::toString( key)
-                              + "' requires value(s)");
+         throw argument_error( "Argument '" + format::toString( key)
+                               + "' requires value(s)");
    } else
    {
       // have a next value, and value mode can only be 'optional' or 'required'
@@ -1188,6 +1190,7 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
 /// Iterates over the arguments and evaluates them.
 ///
 /// @param[in]  alp  The parser object used to access the arguments.
+/// @throws  std::invalid_argument when an unknown argument is found.
 /// @since  0.2, 10.04.2016
 void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
 {
@@ -1198,12 +1201,12 @@ void Handler::iterateArguments( detail::ArgListParser& alp) noexcept( false)
       if (result == ArgResult::unknown)
       {
          if (ai->mElementType == detail::ArgListElement::Type::value)
-            throw runtime_error( "Unknown argument '" + ai->mValue + "'");
+            throw invalid_argument( "Unknown argument '" + ai->mValue + "'");
          if ((ai->mElementType == detail::ArgListElement::Type::singleCharArg)
              || (ai->mElementType == detail::ArgListElement::Type::control))
-            throw runtime_error( "Unknown argument '" + string( 1, ai->mArgChar)
+            throw invalid_argument( "Unknown argument '" + string( 1, ai->mArgChar)
                                     + "'");
-         throw runtime_error( "Unknown argument '" + ai->mArgString + "'");
+         throw invalid_argument( "Unknown argument '" + ai->mArgString + "'");
       } // end if
 
       if (result == ArgResult::last)

@@ -51,7 +51,7 @@ int main( int /* argc */, char* argv[])
          ah.evalArguments( as2a.mArgC, as2a.mpArgV);
          cerr << "*** ERROR: Expected exception for 'unknown argument!" << endl;
          return EXIT_FAILURE;
-      } catch (const std::runtime_error& e)
+      } catch (const std::invalid_argument& e)
       {
          if (strcmp( e.what(), "Unknown argument 'list-arg-vars'") != 0)
          {

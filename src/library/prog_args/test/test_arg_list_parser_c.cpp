@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE( error_single_dash_only)
    ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
 
 
-   BOOST_REQUIRE_THROW( alp.cbegin(), std::runtime_error);
+   BOOST_REQUIRE_THROW( alp.cbegin(), celma::prog_args::argument_error);
 
 } // error_single_dash_only
 
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE( error_single_dash)
    BOOST_REQUIRE_EQUAL( it->mElementType, ArgListElement::Type::singleCharArg);
    BOOST_REQUIRE_EQUAL( it->mArgChar, 'l');
 
-   BOOST_REQUIRE_THROW( ++it, std::runtime_error);
+   BOOST_REQUIRE_THROW( ++it, celma::prog_args::argument_error);
 
 } // error_single_dash
 
@@ -1023,6 +1023,30 @@ BOOST_AUTO_TEST_CASE( value_after_arg)
    BOOST_REQUIRE( it == alp.cend());
 
 } // value_after_arg
+
+
+
+/// Test some errors in the list of arguments.
+/// @since  1.45.0, 21.05.2021
+BOOST_AUTO_TEST_CASE( errors)
+{
+
+   {
+      auto const     as2a = make_arg_array( "- -l", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+
+      BOOST_REQUIRE_THROW( alp.begin(), celma::prog_args::argument_error);
+   } // end scope
+
+   {
+      auto const     as2a = make_arg_array( "-a - -b", nullptr);
+      ArgListParser  alp( as2a.mArgC, as2a.mpArgV);
+      auto           it = alp.begin();
+
+      BOOST_REQUIRE_THROW( ++it, celma::prog_args::argument_error);
+   } // end scope
+
+} // errors
 
 
 
