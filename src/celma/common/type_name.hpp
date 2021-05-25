@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -21,6 +21,7 @@
 #include "celma/common/detail/type_name_iostream.hpp"
 #include "celma/common/detail/type_name_smart_ptr.hpp"
 #include "celma/common/detail/type_name_stl_store.hpp"
+#include "celma/common/detail/type_name_celma.hpp"
 
 
 // =====  END OF type_name.hpp  =====
