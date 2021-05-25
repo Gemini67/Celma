@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,6 +37,7 @@
 
 
 // project includes
+#include "celma/common/fixed_string.hpp"
 #include "celma/container/dynamic_bitset.hpp"
 #include "celma/prog_args/detail/usage_params.hpp"
 
@@ -86,6 +87,13 @@ BOOST_AUTO_TEST_CASE( test_basics)
    {
       std::string  str( "hello world");
       auto         result = toString( str);
+
+      BOOST_REQUIRE_EQUAL( result, "\"hello world\"");
+   } // end scope
+
+   {
+      celma::common::FixedString< 20>  str( "hello world");
+      auto                             result = toString( str);
 
       BOOST_REQUIRE_EQUAL( result, "\"hello world\"");
    } // end scope

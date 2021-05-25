@@ -18,6 +18,8 @@
 #pragma once
 
 
+#include <cstdarg>
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
@@ -40,16 +42,15 @@ namespace celma::common {
 /// counterpart in the std::string class throws.<br>
 /// The design of this class e.g. also allows to store the fixed string in
 /// shared memory.
+///
 /// @tparam  L  The length of the string to handle, without the trailing zero.
-/// @since  x.y.z, 13.01.2021
+/// @since  1.46.0, 13.01.2021
 /// @todo  Every append(), insert() or replace() method that takes iterator(s)
 ///        as parameter should also be implemented accepting iterators from a
 ///        fixed string with a different length.
 /// @todo  Every append(), insert() or replace() method that takes iterator(s)
 ///        as parameter should also be implemented accepting std::string
 ///        iterators.
-/// @todo  Add sprintf() method, internally implemented using snprintf().
-/// @todo  Add stream interface (separate class).
 template< size_t L> class FixedString
 {
 public:
@@ -62,17 +63,20 @@ public:
       detail::FixedStringReverseIterator< const char, const FixedString< L>>;
 
    /// Default constructor for an empty string.
-   /// @since  x.y.z, 13.01.2021
+   ///
+   /// @since  1.46.0, 13.01.2021
    FixedString() = default;
 
    /// Copies the given C string.
+   ///
    /// @param[in]  str  The string to copy.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    explicit FixedString( const char* str) noexcept;
 
    /// Copies the given std::string.
+   ///
    /// @param[in]  str  The string to copy.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    explicit FixedString( const std::string& str) noexcept;
 
    /// Default copy constructor is fine.
@@ -80,383 +84,479 @@ public:
 
    /// Copies the string from another fixed string object with a different
    /// maximum length.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  other  The other fixed string object to copy the string from.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    template< size_t S> FixedString( const FixedString< S>& other) noexcept;
 
    /// Move constructor.
+   ///
    /// @param[in]  other The other string object to copy from.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    FixedString( FixedString&& other) noexcept;
 
    /// Default destructor is fine.
-   /// @since  x.y.z, 13.01.2021
+   ///
+   /// @since  1.46.0, 13.01.2021
    ~FixedString() = default;
 
    /// Returns the internal string in an std::string object.
+   ///
    /// @return  std::string with a copy of the internal string.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    std::string str() const noexcept;
 
    /// Returns a pointer to the internal C string.
+   ///
    /// @return  The internal C string.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    const char* c_str() const noexcept;
 
    /// Returns the length of the string.
    /// This is the number of characters currently stored in the string, without
    /// the trailing zero.
+   ///
    /// @return  The length of the string.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    size_t length() const noexcept;
 
    /// Returns if the string is currently empty.
+   ///
    /// @return  \c true if the string is empty.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    bool empty() const noexcept;
 
    /// Assigns the given C string.
+   ///
    /// @param[in]  str  Pointer to the C string to assign.
    /// @return  This object.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    FixedString& assign( const char* str) noexcept;
 
    /// Assigns the contents of the given std::string.
+   ///
    /// @param[in]  str  The std::string to copy the string from.
    /// @return  This object.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    FixedString& assign( const std::string& str) noexcept;
 
    /// Assigns the contents from another fixed string object.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  str  The other fixed string object to copy the string from.
    /// @return  This object.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    template< size_t S> FixedString& assign( const FixedString< S>& str) noexcept;
 
    /// Clears the string.
-   /// @since  x.y.z, 13.01.2021
+   ///
+   /// @since  1.46.0, 13.01.2021
    void clear() noexcept;
 
    /// Returns the character at the given position, with range checking.
+   ///
    /// @param[in]  idx  The position/index of the character to return.
    /// @return  The character at the given position.
    /// @throws
    ///    std::out_of_range if the given index is after the end of the string.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    char& at( size_t idx) noexcept( false);
 
    /// Returns the character at the given position, with range checking.
+   ///
    /// @param[in]  idx  The position/index of the character to return.
    /// @return  The non-modifyable character at the given position.
    /// @throws
    ///    std::out_of_range if the given index is after the end of the string.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    const char& at( size_t idx) const noexcept( false);
 
    /// Returns the character at the given position, without any range checking.
    /// If the given index is invalid, i.e. after the end of the string or even
    /// after the end of the buffer, the behaviour is undefined.
+   ///
    /// @param[in]  idx  The position/index of the character to return.
    /// @return  The character at the given position.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    char& operator []( size_t idx) noexcept;
 
    /// Returns the character at the given position, without any range checking.
    /// If the given index is invalid, i.e. after the end of the string or even
    /// after the end of the buffer, the behaviour is undefined.
+   ///
    /// @param[in]  idx  The position/index of the character to return.
    /// @return  The character at the given position.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    const char& operator []( size_t idx) const noexcept;
 
    /// Returns the first character of the string.
    /// If the string buffer is empty, this returns the zero character.
+   ///
    /// @return  The first character of the string.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    char& front() noexcept;
 
    /// Returns the first character of the string.
    /// If the string buffer is empty, this returns the zero character.
+   ///
    /// @return  The first character of the string.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    const char& front() const noexcept;
 
    /// Returns the last character of the string.
    /// If the string buffer is empty, this returns the zero character.
+   ///
    /// @return  The last character of the string.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    char& back() noexcept;
 
    /// Returns the last character of the string.
    /// If the string buffer is empty, this returns the zero character.
+   ///
    /// @return  The last character of the string.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    const char& back() const noexcept;
 
    /// Returns the internal C string.
+   ///
    /// @return  Pointer to the internal C string.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    char* data() noexcept;
 
    /// Returns the internal C string.
+   ///
    /// @return  Pointer to the internal C string.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    const char* data() const noexcept;
 
    /// Returns an iterator pointing to the first character of the string.
+   ///
    /// @return  Iterator pointing to the beginning of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    iterator begin() noexcept;
 
    /// Returns a const iterator pointing to the first character of the string.
+   ///
    /// @return  Const iterator pointing to the beginning of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    const_iterator begin() const noexcept;
 
    /// Returns a const iterator pointing to the first character of the string.
+   ///
    /// @return  Const iterator pointing to the beginning of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    const_iterator cbegin() const noexcept;
 
    /// Returns an iterator pointing behind the last character of the string.
+   ///
    /// @return  Iterator pointing behind the end of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    iterator end() noexcept;
 
    /// Returns a const iterator pointing behind the last character of the string.
+   ///
    /// @return  Const iterator pointing behind the end of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    const_iterator end() const noexcept;
 
    /// Returns a const iterator pointing behind the last character of the string.
+   ///
    /// @return  Const iterator pointing behind the end of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    const_iterator cend() const noexcept;
 
    /// Returns a reverse iterator pointing to the last character of the string.
+   ///
    /// @return  Reverse iterator pointing to the last character of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    reverse_iterator rbegin() noexcept;
 
    /// Returns a const reverse iterator pointing to the last character of the
    /// string.
-   /// @return  Const reverse iterator pointing to the last character of the
-   ///         string.
-   /// @since  x.y.z, 22.01.2021
+   ///
+   /// @return
+   ///    Const reverse iterator pointing to the last character of the string.
+   /// @since  1.46.0, 22.01.2021
    const_reverse_iterator rbegin() const noexcept;
 
    /// Returns a const reverse iterator pointing to the last character of the
    /// string.
-   /// @return  Const reverse iterator pointing to the last character of the
-   ///         string.
-   /// @since  x.y.z, 22.01.2021
+   ///
+   /// @return
+   ///    Const reverse iterator pointing to the last character of the string.
+   /// @since  1.46.0, 22.01.2021
    const_reverse_iterator crbegin() const noexcept;
 
    /// Returns a reverse iterator pointing behind the end of the string.
+   ///
    /// @return  Reverse iterator pointing behind the end of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    reverse_iterator rend() noexcept;
 
    /// Returns a const reverse iterator pointing behind the end of the string.
+   ///
    /// @return  Const reverse iterator pointing behind the end of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    const_reverse_iterator rend() const noexcept;
 
    /// Returns a const reverse iterator pointing behind the end of the string.
+   ///
    /// @return  Const reverse iterator pointing behind the end of the string.
-   /// @since  x.y.z, 22.01.2021
+   /// @since  1.46.0, 22.01.2021
    const_reverse_iterator crend() const noexcept;
 
    /// Insert \a count repetitions of the character \a ch at the given position.
-   /// @param[in]  index  The position to insert the repeated characters at.
-   /// @param[in]  count  Number of times to insert the character.
-   /// @param[in]  ch     The character to insert.
+   ///
+   /// @param[in]  index
+   ///    The position to insert the repeated characters at.
+   /// @param[in]  count
+   ///    Number of times to insert the character.
+   /// @param[in]  ch
+   ///    The character to insert.
    /// @return  This object.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    FixedString& insert( size_t index, size_t count, char ch) noexcept;
 
    /// Inserts \a count characters of the given C string at the given position.
-   /// @param[in]  index  The position/index to insert the part of the C string.
-   /// @param[in]  str    Pointer to the string to insert.
-   /// @param[in]  count  Number of characters from the C string to insert.
+   ///
+   /// @param[in]  index
+   ///    The position/index to insert the part of the C string.
+   /// @param[in]  str
+   ///    Pointer to the string to insert.
+   /// @param[in]  count
+   ///    Number of characters from the C string to insert.
    /// @return  This object.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    FixedString& insert( size_t index, const char* str, size_t count) noexcept;
 
    /// Inserts a C string.
-   /// @param[in]  index  The position/index to insert the C string.
-   /// @param[in]  str    The C string to insert.
+   ///
+   /// @param[in]  index
+   ///    The position/index to insert the C string.
+   /// @param[in]  str
+   ///    The C string to insert.
    /// @return  This object.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    FixedString& insert( size_t index, const char* str) noexcept;
 
    /// Inserts a std::string.
-   /// @param[in]  index  The position/index to insert the std::string.
-   /// @param[in]  str    The std::string with the text to insert.
+   ///
+   /// @param[in]  index
+   ///    The position/index to insert the std::string.
+   /// @param[in]  str
+   ///    The std::string with the text to insert.
    /// @return  This object.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    FixedString& insert( size_t index, const std::string& str) noexcept;
 
    /// Inserts the substring (\a index_str, \a count) from the std::string.
-   /// @param[in]  index      The position/index to insert the part from the
-   ///                        std::string.
-   /// @param[in]  str        The std::string to insert a part from.
-   /// @param[in]  index_str  Start position in the std::string to copy from.
-   /// @param[in]  count      Number of characters to copy from the std::string.
+   ///
+   /// @param[in]  index
+   ///    The position/index to insert the part from the std::string.
+   /// @param[in]  str
+   ///    The std::string to insert a part from.
+   /// @param[in]  index_str
+   ///    Start position in the std::string to copy from.
+   /// @param[in]  count
+   ///    Number of characters to copy from the std::string.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& insert( size_t index, const std::string& str, size_t index_str,
       size_t count = std::string::npos) noexcept;
 
    /// Inserts a fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
-   /// @param[in]  index  The position/index to insert the fixed string.
-   /// @param[in]  str    The other fixed string object to copy the text from.
+   /// @param[in]  index
+   ///    The position/index to insert the fixed string.
+   /// @param[in]  str
+   ///    The other fixed string object to copy the text from.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    template< size_t S>
       FixedString& insert( size_t index, const FixedString< S>& str) noexcept;
 
    /// Inserts a part of a fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
-   /// @param[in]  index      The position/index to insert the part of the fixed
-   ///                        string.
-   /// @param[in]  str        The other fixed string object to copy the text
-   ///                        from.
-   /// @param[in]  index_str  Start position in the fixed string to copy from.
-   /// @param[in]  count      Number of characters to copy from the other fixed
-   ///                        string.
+   /// @param[in]  index
+   ///    The position/index to insert the part of the fixed string.
+   /// @param[in]  str
+   ///    The other fixed string object to copy the text from.
+   /// @param[in]  index_str
+   ///    Start position in the fixed string to copy from.
+   /// @param[in]  count
+   ///    Number of characters to copy from the other fixed string.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    template< size_t S>
       FixedString& insert( size_t index, const FixedString< S>& str,
          size_t index_str, size_t count = std::string::npos) noexcept;
 
    /// Inserts the given character at the given position.
-   /// @param[in]  pos  Iterator pointing to the position to insert the
-   ///                  character.
-   /// @param[in]  ch   The character to insert.
-   /// @return  Iterator pointing to the position where the character was
-   ///          inserted, pointing to end if the given position was invalid.
-   /// @since  x.y.z, 25.01.2021
+   ///
+   /// @param[in]  pos
+   ///    Iterator pointing to the position to insert the character.
+   /// @param[in]  ch
+   ///    The character to insert.
+   /// @return
+   ///    Iterator pointing to the position where the character was inserted,
+   ///    pointing to end if the given position was invalid.
+   /// @since  1.46.0, 25.01.2021
    iterator insert( const_iterator pos, char ch) noexcept;
 
    /// Inserts \a count repetitions of the given character at the given position.
-   /// @param[in]  pos    Iterator pointing to the position to insert the
-   ///                    character(s>.
-   /// @param[in]  count  Number of repetitions of the character to insert.
-   /// @param[in]  ch     The character to insert.
-   /// @return  Iterator pointing to the position of the first character that
-   ///          was inserted, pointing to the if the given position was invalid.
-   /// @since  x.y.z, 25.01.2021
+   ///
+   /// @param[in]  pos
+   ///    Iterator pointing to the position to insert the character(s>.
+   /// @param[in]  count
+   ///    Number of repetitions of the character to insert.
+   /// @param[in]  ch
+   ///    The character to insert.
+   /// @return
+   ///    Iterator pointing to the position of the first character that was
+   ///    inserted, pointing to the if the given position was invalid.
+   /// @since  1.46.0, 25.01.2021
    iterator insert( const_iterator pos, size_t count, char ch) noexcept;
 
    /// Inserts the string from the initializer list at the given position.
-   /// @param[in]  pos    The position to insert.
-   /// @param[in]  ilist  The list of characters to insert.
-   /// @return  Iterator pointing to the position of the first character that
-   ///          was inserted, pointing to the if the given position was invalid.
-   /// @since  x.y.z, 25.01.2021
+   ///
+   /// @param[in]  pos
+   ///    The position to insert.
+   /// @param[in]  ilist
+   ///    The list of characters to insert.
+   /// @return
+   ///    Iterator pointing to the position of the first character that was
+   ///    inserted, pointing to the if the given position was invalid.
+   /// @since  1.46.0, 25.01.2021
    iterator insert( const_iterator pos, std::initializer_list< char> ilist)
       noexcept;
 
    /// Erases \a count characters from the string, starting at position \a index.
    /// If no count is given, everything starting from a index is deleted.
-   /// @param[in]  index  The index of the first character to delete.
-   /// @param[in]  count  Number of characters to delete, when not set
-   ///                    everything to the end of the string is deleted.
+   ///
+   /// @param[in]  index
+   ///    The index of the first character to delete.
+   /// @param[in]  count
+   ///    Number of characters to delete, when not set everything to the end of
+   ///    the string is deleted.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& erase( size_t index = 0, size_t count = std::string::npos)
       noexcept;
 
    /// Erases the character at the given position.
-   /// @param[in]  position  Iterator poiting to the character to erase.
-   /// @return  Iterator pointing to the position where the character was
-   ///          erased, poiting to end if the position was invalid.
-   /// @since  x.y.z, 25.01.2021
+   ///
+   /// @param[in]  position  Iterator pointing to the character to erase.
+   /// @return
+   ///    Iterator pointing to the position where the character was erased,
+   ///    pointing to end if the position was invalid.
+   /// @since  1.46.0, 25.01.2021
    iterator erase( const_iterator position) noexcept;
 
    /// Erases all characters in the range [first, last).
-   /// @param[in]  first  Iterator pointing to the first character to erase.
-   /// @param[in]  last   Iterator pointing behind the last character to erase.
-   /// @return  Iterator pointing to the position where the first character was
-   ///          erased, poiting to end if the position was invalid.
-   /// @since  x.y.z, 25.01.2021
+   ///
+   /// @param[in]  first
+   ///    Iterator pointing to the first character to erase.
+   /// @param[in]  last
+   ///    Iterator pointing behind the last character to erase.
+   /// @return
+   ///    Iterator pointing to the position where the first character was
+   ///    erased, pointing to end if the position was invalid.
+   /// @since  1.46.0, 25.01.2021
    iterator erase( const_iterator first, const_iterator last) noexcept;
 
    /// Pushes the given character to the end of the string.
+   ///
    /// @param[in]  ch  The character to push to the end of the string.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& push_back( char ch) noexcept;
 
    /// Pops the last character from the end of the string.
+   ///
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& pop_back() noexcept;
 
    /// Appends \a count repetitions of the given character to the string.
-   /// @param[in]  count  Number of repetitions of the character to append.
-   /// @param[in]  ch     The character to append.
+   ///
+   /// @param[in]  count
+   ///    Number of repetitions of the character to append.
+   /// @param[in]  ch
+   ///    The character to append.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& append( size_t count, char ch) noexcept;
 
    /// Appends a std::string.
+   ///
    /// @param[in]  str  The std::string with the text to append.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& append( const std::string& str) noexcept;
 
    /// Appends the contents of another fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  fs  The other fixed string to append the contents of.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    template< size_t S> FixedString& append( const FixedString< S>& fs) noexcept;
 
    /// Appends a part of a std::string.
-   /// @param[in]  str    The std::string with the text to append.
-   /// @param[in]  pos    The position of the first character in \a str to
-   ///                    append.
-   /// @param[in]  count  Number of characters from \a str to append.
+   ///
+   /// @param[in]  str
+   ///    The std::string with the text to append.
+   /// @param[in]  pos
+   ///    The position of the first character in \a str to append.
+   /// @param[in]  count
+   ///    Number of characters from \a str to append.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& append( const std::string& str, size_t pos,
       size_t count = std::string::npos) noexcept;
 
    /// Appends a part of another fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
-   /// @param[in]  str    The other fixed string to append a part of its text
-   ///                    from.
-   /// @param[in]  pos    Start position of the substring in \a str to append.
-   /// @param[in]  count  Number of characters from \a str to append.
+   /// @param[in]  str
+   ///    The other fixed string to append a part of its text from.
+   /// @param[in]  pos
+   ///    Start position of the substring in \a str to append.
+   /// @param[in]  count
+   ///    Number of characters from \a str to append.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    template< size_t S> FixedString& append( const FixedString< S>& str,
       size_t pos, size_t count = std::string::npos) noexcept;
 
    /// Appends a C string.
-   /// @param[in]  str    Pointer to the C string (character array) to append.
-   /// @param[in]  count  Number of characters from \a str to append.
+   ///
+   /// @param[in]  str
+   ///    Pointer to the C string (character array) to append.
+   /// @param[in]  count
+   ///    Number of characters from \a str to append.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& append( const char* str, size_t count) noexcept;
 
    /// Appends a C string.
+   ///
    /// @param[in]  str  Pointer to the C string (character array) to append.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& append( const char* str) noexcept;
 
    /// Appends the characters from the range [first, last).
-   /// @param[in]  first  Iterator pointing to the first character to append.
-   /// @param[in]  last   Iterator pointing behind the last character to append.
+   ///
+   /// @param[in]  first
+   ///    Iterator pointing to the first character to append.
+   /// @param[in]  last
+   ///    Iterator pointing behind the last character to append.
    /// @return  This object.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    FixedString& append( const_iterator first, const_iterator last) noexcept;
 
 /*
@@ -465,284 +565,355 @@ public:
          typename FixedString< S>::const_iterator last) noexcept;
 */
 
+   /// Creates a formatted string using a C-sprintf like format string.
+   ///
+   /// @param[in]  format
+   ///    Format string.
+   /// @param[in]  ...
+   ///    Additional parameters.
+   /// @return  This object.
+   /// @since  1.46.0, 08.02.2021
+   FixedString& sprintf( const char* format, ...) noexcept;
+
    /// Appends the contents from another fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  str  The other fixed string to append the text from.
    /// @return  This object.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    template< size_t S> FixedString& operator +=( const FixedString< S>& str)
       noexcept;
 
    /// Appends to contents from a std::string.
+   ///
    /// @param[in]  str  The std::string to append the contents from.
    /// @return  This object.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    FixedString& operator +=( const std::string& str) noexcept;
 
    /// Appends a C string.
+   ///
    /// @param[in]  str  The C string to append.
    /// @return  This object.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    FixedString& operator +=( const char* str) noexcept;
 
    /// Appends a single character.
+   ///
    /// @param[in]  ch  The character to append.
    /// @return  This object.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    FixedString& operator +=( char ch) noexcept;
 
    /// Compares the string against the one of another fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  fs  The other fixed string object to compare against.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    template< size_t S> int compare( const FixedString< S>& fs) const noexcept;
 
    /// Compares the string against the one of a std::string.
+   ///
    /// @param[in]  fs  The std::string object to compare against.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    int compare( const std::string& str) const noexcept;
 
    /// Compares the string against a C string.
+   ///
    /// @param[in]  fs  The C string object to compare against.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    int compare( const char* str) const noexcept;
 
    /// Compares the characters in the range [pos1, pos1+count1) against the
    /// other fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
-   /// @param[in]  pos1    The position of the first character to start the
-   ///                     comparison with.
-   /// @param[in]  count1  Number of characters to compare.
-   /// @param[in]  str     The other fixed string to compare against.
+   /// @param[in]  pos1
+   ///    The position of the first character to start the comparison with.
+   /// @param[in]  count1
+   ///    Number of characters to compare.
+   /// @param[in]  str
+   ///    The other fixed string to compare against.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    template< size_t S>
       int compare( size_t pos1, size_t count1, const FixedString< S>& str) const
          noexcept;
 
    /// Compares the characters in the range [pos1, pos1+count1) against the
    /// std::string.
-   /// @param[in]  pos1    The position of the first character to start the
-   ///                     comparison with.
-   /// @param[in]  count1  Number of characters to compare.
-   /// @param[in]  str     The std::string to compare against.
+   ///
+   /// @param[in]  pos1
+   ///    The position of the first character to start the comparison with.
+   /// @param[in]  count1
+   ///    Number of characters to compare.
+   /// @param[in]  str
+   ///    The std::string to compare against.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    int compare( size_t pos1, size_t count1, const std::string& str) const
       noexcept;
 
    /// Compares the characters in the range [pos1, pos1+count1) against the C
    /// string.
-   /// @param[in]  pos1    The position of the first character to start the
-   ///                     comparison with.
-   /// @param[in]  count1  Number of characters to compare.
-   /// @param[in]  str     The C string to compare against.
+   ///
+   /// @param[in]  pos1
+   ///    The position of the first character to start the comparison with.
+   /// @param[in]  count1
+   ///    Number of characters to compare.
+   /// @param[in]  str
+   ///    The C string to compare against.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    int compare( size_t pos1, size_t count1, const char* str) const noexcept;
 
    /// Compares the characters in the range [pos1, pos1+count1) of this string
    /// against the range [pos2, pos2+count2) of the other fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
-   /// @param[in]  pos1    The position of the first character to start the
-   ///                     comparison with.
-   /// @param[in]  count1  Number of characters to compare.
-   /// @param[in]  str     The other fixed string to compare against.
-   /// @param[in]  pos2    The position of the first character in the other
-   ///                     fixed string to start the comparison with.
-   /// @param[in]  count2  Number of characters from the other fixed string to
-   ///                     compare.
+   /// @param[in]  pos1
+   ///    The position of the first character to start the comparison with.
+   /// @param[in]  count1
+   ///    Number of characters to compare.
+   /// @param[in]  str
+   ///    The other fixed string to compare against.
+   /// @param[in]  pos2
+   ///    The position of the first character in the other fixed string to start
+   ///    the comparison with.
+   /// @param[in]  count2
+   ///    Number of characters from the other fixed string to compare.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    template< size_t S>
       int compare( size_t pos1, size_t count1, const FixedString< S>& str,
          size_t pos2, size_t count2) const noexcept;
 
    /// Compares the characters in the range [pos1, pos1+count1) of this string
    /// against the range [pos2, pos2+count2) of the std::string.
-   /// @param[in]  pos1    The position of the first character to start the
-   ///                     comparison with.
-   /// @param[in]  count1  Number of characters to compare.
-   /// @param[in]  str     The other fixed string to compare against.
-   /// @param[in]  pos2    The position of the first character in the std::fixed
-   ///                     string to start the comparison with.
-   /// @param[in]  count2  Number of characters from the std::string to compare.
+   ///
+   /// @param[in]  pos1
+   ///    The position of the first character to start the comparison with.
+   /// @param[in]  count1
+   ///    Number of characters to compare.
+   /// @param[in]  str
+   ///    The other fixed string to compare against.
+   /// @param[in]  pos2
+   ///    The position of the first character in the std::fixed string to start
+   ///    the comparison with.
+   /// @param[in]  count2
+   ///    Number of characters from the std::string to compare.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    int compare( size_t pos1, size_t count1, const std::string& str,
       size_t pos2, size_t count2) const noexcept;
 
    /// Compares the characters in the range [pos1, pos1+count1) of this string
    /// against the \a count2 characters of the C string.
-   /// @param[in]  pos1    The position of the first character to start the
-   ///                     comparison with.
-   /// @param[in]  count1  Number of characters to compare.
-   /// @param[in]  str     The C string to compare against.
-   /// @param[in]  count2  Number of characters from the C to compare.
+   ///
+   /// @param[in]  pos1
+   ///    The position of the first character to start the comparison with.
+   /// @param[in]  count1
+   ///    Number of characters to compare.
+   /// @param[in]  str
+   ///    The C string to compare against.
+   /// @param[in]  count2
+   ///    Number of characters from the C to compare.
    /// @return
    ///    - value &lt; 0: this string is smaller than the other.
    ///    - value = 0: both strings are equal.
    ///    - value &gt; 0: the other string is smaller than this.
-   /// @since  x.y.z, 18.01.2021
+   /// @since  1.46.0, 18.01.2021
    int compare( size_t pos1, size_t count1, const char* str, size_t count2)
       const noexcept;
 
    /// Returns if the first characters of this string match those in the other
    /// fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  str  The other fixed string object to compare against.
-   /// @return  \c true if the first characters of this string match those in
-   ///          the other fixed string.
-   /// @since  x.y.z, 18.01.2021
+   /// @return
+   ///    \c true if the first characters of this string match those in the
+   ///    other fixed string.
+   /// @since  1.46.0, 18.01.2021
    template< size_t S> bool starts_with( const FixedString< S>& str) const
       noexcept;
 
    /// Returns if the first characters of this string match those in the
    /// std::string.
+   ///
    /// @param[in]  str  The std::string object to compare against.
-   /// @return  \c true if the first characters of this string match those in
-   ///          the std::string.
-   /// @since  x.y.z, 20.01.2021
+   /// @return
+   ///    \c true if the first characters of this string match those in the
+   //     std::string.
+   /// @since  1.46.0, 20.01.2021
    bool starts_with( const std::string& str) const noexcept;
 
    /// Returns if the first characters of this string match those in the C
    /// string.
+   ///
    /// @param[in]  str  The C string to compare against.
-   /// @return  \c true if the first characters of this string match those in
-   ///          the C string.
-   /// @since  x.y.z, 20.01.2021
+   /// @return
+   ///    \c true if the first characters of this string match those in the C
+   ///    string.
+   /// @since  1.46.0, 20.01.2021
    bool starts_with( const char* str) const noexcept;
 
    /// Returns if the string starts with the given character.
+   ///
    /// @param[in]  ch  The character to compare against.
    /// @return  \c true if the string starts with this character.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    bool starts_with( char ch) const noexcept;
 
    /// Returns if the last characters of this string match those in the other
    /// fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  str  The other fixed string object to compare against.
-   /// @return  \c true if the last characters of this string match those in the
-   ///          other fixed string.
-   /// @since  x.y.z, 20.01.2021
+   /// @return
+   ///    \c true if the last characters of this string match those in the other
+   ///    fixed string.
+   /// @since  1.46.0, 20.01.2021
    template< size_t S> bool ends_with( const FixedString< S>& str) const
       noexcept;
 
    /// Returns if the last characters of this string match those in the
    /// std::string.
+   ///
    /// @param[in]  str  The std::string object to compare against.
-   /// @return  \c true if the last characters of this string match those in the
-   ///          std::string.
-   /// @since  x.y.z, 20.01.2021
+   /// @return
+   ///    \c true if the last characters of this string match those in the
+   ///    std::string.
+   /// @since  1.46.0, 20.01.2021
    bool ends_with( const std::string& str) const noexcept;
 
    /// Returns if the last characters of this string match those in the C
    /// string.
+   ///
    /// @param[in]  str  The C string to compare against.
-   /// @return  \c true if the last characters of this string match those in the
-   ///          C string.
-   /// @since  x.y.z, 20.01.2021
+   /// @return
+   ///    \c true if the last characters of this string match those in the C
+   ///    string.
+   /// @since  1.46.0, 20.01.2021
    bool ends_with( const char* str) const noexcept;
 
    /// Returns if the string ends with the given character.
+   ///
    /// @param[in]  ch  The character to compare against.
    /// @return  \c true if the string ends with this character.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    bool ends_with( char ch) const noexcept;
 
    /// Returns if this string contains a sub-string equal to that in the other
    /// fixed string object.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  str  The other fixed string object with the sub-string to
    ///                  search.
-   /// @return  \c true if this string contains a sub-string equal to that in
-   ///          \a str.
-   /// @since  x.y.z, 20.01.2021
+   /// @return
+   ///    \c true if this string contains a sub-string equal to that in \a str.
+   /// @since  1.46.0, 20.01.2021
    template< size_t S> bool contains( const FixedString< S>& str) const noexcept;
 
    /// Returns if this string contains a sub-string equal to that in the
    /// std::string.
+   ///
    /// @param[in]  str  The std::string object with the sub-string to search.
-   /// @return  \c true if this string contains a sub-string equal to that in
-   ///          \a str.
-   /// @since  x.y.z, 20.01.2021
+   /// @return
+   ///    \c true if this string contains a sub-string equal to that in \a str.
+   /// @since  1.46.0, 20.01.2021
    bool contains( const std::string& str) const noexcept;
 
    /// Returns if this string contains a sub-string equal to that in the C
    /// string.
+   ///
    /// @param[in]  str  The C string to search.
-   /// @return  \c true if this string contains a sub-string equal to that in
-   ///          \a str.
-   /// @since  x.y.z, 20.01.2021
+   /// @return
+   ///    \c true if this string contains a sub-string equal to that in \a str.
+   /// @since  1.46.0, 20.01.2021
    bool contains( const char* str) const noexcept;
 
    /// Returns if the string contains the given character.
+   ///
    /// @param[in]  ch  The character to search for.
    /// @return  \c true if this string contains the given character.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    bool contains( char ch) const noexcept;
 
    /// Replaces the sub-string in the range [pos, pos+count) with the contents
    /// of the other fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
-   /// @param[in]  pos    The position of the first character to replace.
-   /// @param[in]  count  Number of characters in this string to replace.
-   /// @param[in]  str    Another fixed string with the string to insert here.
+   /// @param[in]  pos
+   ///    The position of the first character to replace.
+   /// @param[in]  count
+   ///    Number of characters in this string to replace.
+   /// @param[in]  str
+   ///    Another fixed string with the string to insert here.
    /// @return  This object.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    template< size_t S> FixedString& replace( size_t pos, size_t count,
       const FixedString< S>& str) noexcept;
 
    /// Replaces the sub-string in the range [pos, pos+count) with the contents
    /// of the std::string.
-   /// @param[in]  pos    The position of the first character to replace.
-   /// @param[in]  count  Number of characters in this string to replace.
-   /// @param[in]  str    A std::string with the string to insert here.
+   ///
+   /// @param[in]  pos
+   ///    The position of the first character to replace.
+   /// @param[in]  count
+   ///    Number of characters in this string to replace.
+   /// @param[in]  str
+   ///    A std::string with the string to insert here.
    /// @return  This object.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    FixedString& replace( size_t pos, size_t count, const std::string& str)
       noexcept;
 
    /// Replaces the sub-string in the range [pos1, pos1+count1) with the
    /// sub-string in the range [pos2, pos2+count2) from the other fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
-   /// @param[in]  pos1    The position of the first character to replace.
-   /// @param[in]  count1  Number of characters in this string to replace.
-   /// @param[in]  str     Another fixed string with the string to insert here.
-   /// @param[in]  pos2    The position of the first character in the other
-   ///                     fixed string to use for replacement.
-   /// @param[in]  count2  Number of characters from the other fixed string to
-   ///                     use for replacement.
+   /// @param[in]  pos1
+   ///    The position of the first character to replace.
+   /// @param[in]  count1
+   ///    Number of characters in this string to replace.
+   /// @param[in]  str
+   ///    Another fixed string with the string to insert here.
+   /// @param[in]  pos2
+   ///    The position of the first character in the other fixed string to use
+   ///    for replacement.
+   /// @param[in]  count2
+   ///    Number of characters from the other fixed string to use for
+   ///    replacement.
    /// @return  This object.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    template< size_t S>
       FixedString& replace( size_t pos1, size_t count1,
          const FixedString< S>& str, size_t pos2,
@@ -750,125 +921,157 @@ public:
 
    /// Replaces the sub-string in the range [pos1, pos1+count1) with the
    /// sub-string in the range [pos2, pos2+count2) from the std::string.
-   /// @param[in]  pos1    The position of the first character to replace.
-   /// @param[in]  count1  Number of characters in this string to replace.
-   /// @param[in]  str     A std::string with the string to insert here.
-   /// @param[in]  pos2    The position of the first character in the
-   ///                     std::string to use for replacement.
-   /// @param[in]  count2  Number of characters from the std::string to use for
-   ///                     replacement.
+   ///
+   /// @param[in]  pos1
+   ///    The position of the first character to replace.
+   /// @param[in]  count1
+   ///    Number of characters in this string to replace.
+   /// @param[in]  str
+   ///    A std::string with the string to insert here.
+   /// @param[in]  pos2
+   ///    The position of the first character in the std::string to use for
+   ///    replacement.
+   /// @param[in]  count2
+   ///    Number of characters from the std::string to use for replacement.
    /// @return  This object.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    FixedString& replace( size_t pos1, size_t count1, const std::string& str,
       size_t pos2, size_t count2 = std::string::npos) noexcept;
 
    /// Replaces the sub-string in the range [first, last) with the sub-string in
    /// the range [first2, last2).
-   /// @param[in]  first   Iterator pointing to the first character to replace.
-   /// @param[in]  last    Iterator pointing behind the last character to
-   ///                     replace.
-   /// @param[in]  first2  Iterator pointing to the first character to use for
-   ///                     replacement.
-   /// @param[in]  last2   Iterator pointing behind the last character to use
-   ///                     for replacement.
+   ///
+   /// @param[in]  first
+   ///    Iterator pointing to the first character to replace.
+   /// @param[in]  last
+   ///    Iterator pointing behind the last character to replace.
+   /// @param[in]  first2
+   ///    Iterator pointing to the first character to use for replacement.
+   /// @param[in]  last2
+   ///    Iterator pointing behind the last character to use for replacement.
    /// @return  This object.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    FixedString& replace( const_iterator first, const_iterator last,
       iterator first2, iterator last2) noexcept;
 
    /// Replaces the sub-string in the range [first, last) with the sub-string in
    /// the range [first2, last2).
-   /// @param[in]  first   Iterator pointing to the first character to replace.
-   /// @param[in]  last    Iterator pointing behind the last character to
-   ///                     replace.
-   /// @param[in]  first2  Iterator pointing to the first character to use for
-   ///                     replacement.
-   /// @param[in]  last2   Iterator pointing behind the last character to use
-   ///                     for replacement.
+   ///
+   /// @param[in]  first
+   ///    Iterator pointing to the first character to replace.
+   /// @param[in]  last
+   ///    Iterator pointing behind the last character to replace.
+   /// @param[in]  first2
+   ///    Iterator pointing to the first character to use for replacement.
+   /// @param[in]  last2
+   ///    Iterator pointing behind the last character to use for replacement.
    /// @return  This object.
-   /// @since  x.y.z, 28.01.2021
+   /// @since  1.46.0, 28.01.2021
    FixedString& replace( const_iterator first, const_iterator last,
       std::string::iterator first2, std::string::iterator last2) noexcept;
 
    /// Replaces the sub-string in the range [first, last) with the characters
    /// from the beginning of the C string.
-   /// @param[in]  first   Iterator pointing to the first character to replace.
-   /// @param[in]  last    Iterator pointing behind the last character to
-   ///                     replace.
-   /// @param[in]  str     Pointer to the C string to use for the replacement.
-   /// @param[in]  count2  Number of characters from the C string to use for the
-   ///                     replacement.
+   ///
+   /// @param[in]  first
+   ///    Iterator pointing to the first character to replace.
+   /// @param[in]  last
+   ///    Iterator pointing behind the last character to replace.
+   /// @param[in]  str
+   ///    Pointer to the C string to use for the replacement.
+   /// @param[in]  count2
+   ///    Number of characters from the C string to use for the replacement.
    /// @return  This object.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    FixedString& replace( const_iterator first, const_iterator last,
       const char* str, size_t count2) noexcept;
 
    /// Replaces the sub-string in the range [pos1, pos1+count1) with the
    /// contents of the C string.
-   /// @param[in]  pos1    The position of the first character to replace.
-   /// @param[in]  count1  Number of characters in this string to replace.
-   /// @param[in]  str     Pointer to the C string to use for the replacement.
+   ///
+   /// @param[in]  pos1
+   ///    The position of the first character to replace.
+   /// @param[in]  count1
+   ///    Number of characters in this string to replace.
+   /// @param[in]  str
+   ///    Pointer to the C string to use for the replacement.
    /// @return  This object.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    FixedString& replace( size_t pos1, size_t count1, const char* str) noexcept;
 
    /// Replaces the sub-string in the range [pos1, pos1+count1) with the
    /// characters from the beginning of the C string.
-   /// @param[in]  pos1    The position of the first character to replace.
-   /// @param[in]  count1  Number of characters in this string to replace.
-   /// @param[in]  str     Pointer to the C string to use for the replacement.
-   /// @param[in]  count2  Number of characters from the C string to use for the
-   ///                     replacement.
+   ///
+   /// @param[in]  pos1
+   ///    The position of the first character to replace.
+   /// @param[in]  count1
+   ///    Number of characters in this string to replace.
+   /// @param[in]  str
+   ///    Pointer to the C string to use for the replacement.
+   /// @param[in]  count2
+   ///    Number of characters from the C string to use for the replacement.
    /// @return  This object.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    FixedString& replace( size_t pos1, size_t count1, const char* str,
       size_t count2) noexcept;
 
    /// Replaces the sub-string in the range [first, last) with the contents of
    /// the C string.
-   /// @param[in]  first   Iterator pointing to the first character to replace.
-   /// @param[in]  last    Iterator pointing behind the last character to
-   ///                     replace.
-   /// @param[in]  str     Pointer to the C string to use for the replacement.
+   ///
+   /// @param[in]  first
+   ///    Iterator pointing to the first character to replace.
+   /// @param[in]  last
+   ///    Iterator pointing behind the last character to replace.
+   /// @param[in]  str
+   ///    Pointer to the C string to use for the replacement.
    /// @return  This object.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    FixedString& replace( const_iterator first, const_iterator last,
       const char* str) noexcept;
 
    /// Replaces the sub-string in the range [pos, pos+count) with \a count2
    /// repetitions of the given character.
-   /// @param[in]  pos     The position of the first character to replace.
-   /// @param[in]  count   Number of characters in this string to replace.
-   /// @param[in]  count2  Number of repetitions of the character to use for the
-   ///                     replacement.
-   /// @param[in]  ch      The character to use for the replacement.
+   ///
+   /// @param[in]  pos
+   ///    The position of the first character to replace.
+   /// @param[in]  count
+   ///    Number of characters in this string to replace.
+   /// @param[in]  count2
+   ///    Number of repetitions of the character to use for the replacement.
+   /// @param[in]  ch
+   ///    The character to use for the replacement.
    /// @return  This object.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    FixedString& replace( size_t pos, size_t count, size_t count2, char ch)
       noexcept;
 
    /// Replaces the sub-string in the range [first, last) with \a count2
    /// repetitions of the given character.
-   /// @param[in]  first   Iterator pointing to the first character to replace.
-   /// @param[in]  last    Iterator pointing behind the last character to
-   ///                     replace.
-   /// @param[in]  count2  Number of repetitions of the character to use for the
-   ///                     replacement.
-   /// @param[in]  ch      The character to use for the replacement.
+   ///
+   /// @param[in]  first
+   ///    Iterator pointing to the first character to replace.
+   /// @param[in]  last
+   ///    Iterator pointing behind the last character to replace.
+   /// @param[in]  count2
+   ///    Number of repetitions of the character to use for the replacement.
+   /// @param[in]  ch
+   ///    The character to use for the replacement.
    /// @return  This object.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    FixedString& replace( const_iterator first, const_iterator last,
       size_t count2, char ch) noexcept;
 
    /// Replaces the sub-string in the range [first, last) with the contents of
    /// the initializer list.
-   /// @param[in]  first  Iterator pointing to the first character to replace.
-   /// @param[in]  last   Iterator pointing behind the last character to
-   ///                    replace.
-   /// @param[in]  ilist  The initializer list with the characters to use for
-   ///                    the replacement.
+   ///
+   /// @param[in]  first
+   ///    Iterator pointing to the first character to replace.
+   /// @param[in]  last
+   ///    Iterator pointing behind the last character to replace.
+   /// @param[in]  ilist
+   ///    The initializer list with the characters to use for the replacement.
    /// @return  This object.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    FixedString& replace( const_iterator first, const_iterator last,
       std::initializer_list< char> ilist) noexcept;
 
@@ -877,27 +1080,33 @@ public:
 */
 
    /// Returns the substring with the range[pos, pos+count).
-   /// @param[in]  pos    The starting position of the substring to return.
-   /// @param[in]  count  Number of characters to return with the substring,
-   ///                    if not set everything after the start position is
-   ///                    returned.
+   ///
+   /// @param[in]  pos
+   ///    The starting position of the substring to return.
+   /// @param[in]  count
+   ///    Number of characters to return with the substring, if not set
+   ///    everything after the start position is returned.
    /// @return  A std::string object with the specified substring.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    std::string substr( size_t pos, size_t count = std::string::npos) noexcept;
 
    /// Copies \a count characters into the given C string.
-   /// @param[in]  dest   The C string to copy the string into.
-   /// @param[in]  count  Number of characters to copy.
-   /// @param[in]  pos    Starting position for copying, if not set copying
-   ///                    starts at the beginning of the string.
+   ///
+   /// @param[in]  dest
+   ///    The C string to copy the string into.
+   /// @param[in]  count
+   ///    Number of characters to copy.
+   /// @param[in]  pos
+   ///    Starting position for copying, if not set copying starts at the
+   ///    beginning of the string.
    /// @return  Number of characters that were actually copied.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    size_t copy( char* dest, size_t count, size_t pos = 0) noexcept;
 
    /// Swaps the contents == string between this object and the other fixed
    /// string.
    /// @param[in]  other  The other fixed string to swap the contents with.
-   /// @since  x.y.z, 25.01.2021
+   /// @since  1.46.0, 25.01.2021
    void swap( FixedString& other) noexcept;
 
 /*
@@ -905,367 +1114,483 @@ public:
 */
 
    /// Searches for the given string.
-   /// @param[in]  str  The string to search for.
-   /// @param[in]  pos  Start position for searching, if not set searching
-   ///                  starts at the beginning of the string.
-   /// @return  The index of the position where the string was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  pos
+   ///    Start position for searching, if not set searching starts at the
+   ///    beginning of the string.
+   /// @return
+   ///    The index of the position where the string was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t find( const FixedString& str, size_t pos = 0) const noexcept;
 
    /// Searches for the given string.
-   /// @param[in]  str  The string to search for.
-   /// @param[in]  pos  Start position for searching, if not set searching
-   ///                  starts at the beginning of the string.
-   /// @return  The index of the position where the string was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  pos
+   ///    Start position for searching, if not set searching starts at the
+   ///    beginning of the string.
+   /// @return
+   ///    The index of the position where the string was found,
+   //     std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t find( const std::string& str, size_t pos = 0) const noexcept;
 
    /// Searches for the given string.
-   /// @param[in]  str    The string to search for.
-   /// @param[in]  pos    Start position for searching, if not set searching
-   ///                    starts at the beginning of the string.
-   /// @param[in]  count  Length of the string to search for.
-   /// @return  The index of the position where the string was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  pos
+   ///    Start position for searching, if not set searching starts at the
+   ///    beginning of the string.
+   /// @param[in]  count
+   ///    Length of the string to search for.
+   /// @return
+   ///    The index of the position where the string was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t find( const char* str, size_t pos, size_t count) const noexcept;
 
    /// Searches for the given string.
-   /// @param[in]  str  The string to search for.
-   /// @param[in]  pos  Start position for searching, if not set searching
-   ///                  starts at the beginning of the string.
-   /// @return  The index of the position where the string was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  pos
+   ///    Start position for searching, if not set searching starts at the
+   ///    beginning of the string.
+   /// @return
+   ///    The index of the position where the string was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t find( const char* str, size_t pos = 0) const noexcept;
 
    /// Searches for the given character.
-   /// @param[in]  ch   The single character to search for.
-   /// @param[in]  pos  Start position for searching, if not set searching
-   ///                  starts at the beginning of the string.
-   /// @return  The index of the position where the character was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  ch
+   ///    The single character to search for.
+   /// @param[in]  pos
+   ///    Start position for searching, if not set searching starts at the
+   ///    beginning of the string.
+   /// @return
+   ///    The index of the position where the character was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t find( char ch, size_t pos = 0) const noexcept;
 
    /// Searches backwards from the end of the string to find the last occurrence
    /// of the given string.
-   /// @param[in]  str  The string to search for.
-   /// @param[in]  pos  Starting position for searching the string, if not set
-   ///                  searching starts at the end of the string.
-   /// @return  The index of the position where the string was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the string, if not set searching
+   ///    starts at the end of the string.
+   /// @return
+   ///    The index of the position where the string was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t rfind( const FixedString& str, size_t pos = std::string::npos) const
       noexcept;
 
    /// Searches backwards from the end of the string to find the last occurrence
    /// of the given string.
-   /// @param[in]  str  The string to search for.
-   /// @param[in]  pos  Starting position for searching the string, if not set
-   ///                  searching starts at the end of the string.
-   /// @return  The index of the position where the string was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the string, if not set searching
+   ///    starts at the end of the string.
+   /// @return
+   ///    The index of the position where the string was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t rfind( const std::string& str, size_t pos = std::string::npos) const
       noexcept;
 
    /// Searches backwards from the end of the string to find the last occurrence
    /// of the given string.
-   /// @param[in]  str    The string to search for.
-   /// @param[in]  pos    Starting position for searching the string, if not set
-   ///                    searching starts at the end of the string.
-   /// @param[in]  count  Number of characters of the given string to search for.
-   /// @return  The index of the position where the string was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the string, if not set searching
+   ///    starts at the end of the string.
+   /// @param[in]  count
+   ///    Number of characters of the given string to search for.
+   /// @return
+   ///    The index of the position where the string was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t rfind( const char* str, size_t pos, size_t count) const noexcept;
 
    /// Searches backwards from the end of the string to find the last occurrence
    /// of the given string.
-   /// @param[in]  str  The string to search for.
-   /// @param[in]  pos  Starting position for searching the string, if not set
-   ///                  searching starts at the end of the string.
-   /// @return  The index of the position where the string was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the string, if not set searching
+   ///    starts at the end of the string.
+   /// @return
+   ///    The index of the position where the string was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t rfind( const char* str, size_t pos = std::string::npos) const noexcept;
 
    /// Searches backwards from the end of the string to find the last occurrence
    /// of the given character.
-   /// @param[in]  ch   The single character to search for.
-   /// @param[in]  pos  Starting position for searching the character, if not
-   ///                  set searching starts at the end of the string.
-   /// @return  The index of the position where the character was found,
-   ///          std::string::npos if the string was not found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  ch
+   ///    The single character to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the character, if not set searching
+   ///    starts at the end of the string.
+   /// @return
+   ///    The index of the position where the character was found,
+   ///    std::string::npos if the string was not found.
+   /// @since  1.46.0, 26.01.2021
    size_t rfind( char ch, size_t pos = std::string::npos) const noexcept;
 
    /// Searches for the first occurrence of one of the characters in the given
    /// string.
-   /// @param[in]  str  The string with the characters to search for.
-   /// @param[in]  pos  Starting position for searching the characters, if not
-   ///                  set searching starts at the beginning of the string.
-   /// @return  The index of the position where one of the characters was found,
-   ///          std::string::npos if none of those characters were found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the characters, if not set searching
+   ///    starts at the beginning of the string.
+   /// @return
+   ///    The index of the position where one of the characters was found,
+   ///    std::string::npos if none of those characters were found.
+   /// @since  1.46.0, 26.01.2021
    size_t find_first_of( const FixedString& str, size_t pos = 0) const noexcept;
 
    /// Searches for the first occurrence of one of the characters in the given
    /// string.
-   /// @param[in]  str  The string with the characters to search for.
-   /// @param[in]  pos  Starting position for searching the characters, if not
-   ///                  set searching starts at the beginning of the string.
-   /// @return  The index of the position where one of the characters was found,
-   ///          std::string::npos if none of those characters were found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the characters, if not set searching
+   ///    starts at the beginning of the string.
+   /// @return
+   ///    The index of the position where one of the characters was found,
+   ///    std::string::npos if none of those characters were found.
+   /// @since  1.46.0, 26.01.2021
    size_t find_first_of( const std::string& str, size_t pos = 0) const noexcept;
 
    /// Searches for the first occurrence of one of the characters in the given
    /// string.
-   /// @param[in]  str    The string with the characters to search for.
-   /// @param[in]  pos    Starting position for searching the characters, if not
-   ///                    set searching starts at the beginning of the string.
-   /// @param[in]  count  Number of characters in the string to actually use for
-   ///                    searching. The range [0,count) may even contain null
-   ///                    characters.
-   /// @return  The index of the position where one of the characters was found,
-   ///          std::string::npos if none of those characters were found.
-   /// @since  x.y.z, 26.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the characters, if not set searching
+   ///    starts at the beginning of the string.
+   /// @param[in]  count
+   ///    Number of characters in the string to actually use for searching. The
+   ///    range [0,count) may even contain null characters.
+   /// @return
+   ///    The index of the position where one of the characters was found,
+   ///    std::string::npos if none of those characters were found.
+   /// @since  1.46.0, 26.01.2021
    size_t find_first_of( const char* str, size_t pos, size_t count) const
       noexcept;
 
    /// Searches for the first occurrence of one of the characters in the given
    /// string.
-   /// @param[in]  str  The string with the characters to search for.
-   /// @param[in]  pos  Starting position for searching the characters, if not
-   ///                  set searching starts at the beginning of the string.
-   /// @return  The index of the position where one of the characters was found,
-   ///          std::string::npos if none of those characters were found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the characters, if not set searching
+   ///    starts at the beginning of the string.
+   /// @return
+   ///    The index of the position where one of the characters was found,
+   ///    std::string::npos if none of those characters were found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_first_of( const char* str, size_t pos = 0) const noexcept;
 
    /// Searches for the first occurrence of the given character.
-   /// @param[in]  ch   The single character to search for.
-   /// @param[in]  pos  Starting position for searching the character, if not
-   ///                  set searching starts at the beginning of the string.
-   /// @return  The index of the position where the character was found for the
-   ///          first time, std::string::npos if the character was not found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  ch
+   ///    The single character to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the character, if not set searching
+   ///    starts at the beginning of the string.
+   /// @return
+   ///    The index of the position where the character was found for the first
+   ///    time, std::string::npos if the character was not found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_first_of( char ch, size_t pos = 0) const noexcept;
 
    /// Searches for the first occurrence of a character that is not part of the
    /// given search string.
-   /// @param[in]  str  The string with the characters to ignore.
-   /// @param[in]  pos  Starting position for searching the non-matching
-   ///                  characters, if not set searching starts at the beginning
-   ///                  of the string.
-   /// @return  The index of the first position where a character was found that
-   ///          was not part of the given string, std::string::npos if no such
-   ///          character was found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching characters, if not
+   ///    set searching starts at the beginning of the string.
+   /// @return
+   ///    The index of the first position where a character was found that was
+   ///    not part of the given string, std::string::npos if no such character
+   ///    was found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_first_not_of( const FixedString& str, size_t pos = 0) const
       noexcept;
 
    /// Searches for the first occurrence of a character that is not part of the
    /// given search string.
-   /// @param[in]  str  The string with the characters to ignore.
-   /// @param[in]  pos  Starting position for searching the non-matching
-   ///                  characters, if not set searching starts at the beginning
-   ///                  of the string.
-   /// @return  The index of the first position where a character was found that
-   ///          was not part of the given string, std::string::npos if no such
-   ///          character was found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching characters, if not
+   ///    set searching starts at the beginning of the string.
+   /// @return
+   ///    The index of the first position where a character was found that was
+   ///    not part of the given string, std::string::npos if no such character
+   ///    was found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_first_not_of( const std::string& str, size_t pos = 0) const
       noexcept;
 
    /// Searches for the first occurrence of a character that is not part of the
    /// given search string.
-   /// @param[in]  str    The string with the characters to ignore.
-   /// @param[in]  pos    Starting position for searching the non-matching
-   ///                    characters, if not set searching starts at the
-   ///                    beginning of the string.
-   /// @param[in]  count  Number of characters in the string to actually use for
-   ///                    searching. The range [0,count) may even contain null
-   ///                    characters.
-   /// @return  The index of the first position where a character was found that
-   ///          was not part of the given string, std::string::npos if no such
-   ///          character was found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching characters, if not
+   ///    set searching starts at the beginning of the string.
+   /// @param[in]  count
+   ///    Number of characters in the string to actually use for searching. The
+   ///    range [0,count) may even contain null characters.
+   /// @return
+   ///    The index of the first position where a character was found that was
+   ///    not part of the given string, std::string::npos if no such character
+   ///    was found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_first_not_of( const char* str, size_t pos, size_t count) const
       noexcept;
 
    /// Searches for the first occurrence of a character that is not part of the
    /// given search string.
-   /// @param[in]  str  The string with the characters to ignore.
-   /// @param[in]  pos  Starting position for searching the non-matching
-   ///                  characters, if not set searching starts at the beginning
-   ///                  of the string.
-   /// @return  The index of the first position where a character was found that
-   ///          was not part of the given string, std::string::npos if no such
-   ///          character was found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching characters, if no
+   ///    set searching starts at the beginning of the string.
+   /// @return
+   ///    The index of the first position where a character was found that was
+   ///    not part of the given string, std::string::npos if no such character
+   ///    was found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_first_not_of( const char* str, size_t pos = 0) const noexcept;
 
    /// Searches for the first occurrence of another character than the given
    /// one.
-   /// @param[in]  ch   The single character to ignore.
-   /// @param[in]  pos  Starting position for searching the non-matching
-   ///                  character, if not set searching starts at the beginning
-   ///                  of the string.
-   /// @return  The index of the first position where another character was
-   ///          found, std::string::npos if no such character was found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  ch
+   ///    The single character to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching character, if not set
+   ///    searching starts at the beginning of the string.
+   /// @return
+   ///    The index of the first position where another character was found,
+   ///    std::string::npos if no such character was found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_first_not_of( char ch, size_t pos = 0) const noexcept;
 
    /// Searches for the last occurrence of one of the characters in the given
    /// string.
-   /// @param[in]  str  The string with the characters to search for.
-   /// @param[in]  pos  Starting position for searching the characters, if not
-   ///                  set searching starts at the end of the string.
-   /// @return  The index of the position where the last of these characters was
-   ///          found, std::string::npos if none of those characters were found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the characters, if not set searching
+   ///    starts at the end of the string.
+   /// @return
+   ///    The index of the position where the last of these characters was
+   ///    found, std::string::npos if none of those characters were found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_last_of( const FixedString& str, size_t pos = std::string::npos)
       const noexcept;
 
    /// Searches for the last occurrence of one of the characters in the given
    /// string.
-   /// @param[in]  str  The string with the characters to search for.
-   /// @param[in]  pos  Starting position for searching the characters, if not
-   ///                  set searching starts at the end of the string.
-   /// @return  The index of the position where the last of these characters was
-   ///          found, std::string::npos if none of those characters were found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the characters, if not set searching
+   ///    starts at the end of the string.
+   /// @return
+   ///    The index of the position where the last of these characters was
+   ///    found, std::string::npos if none of those characters were found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_last_of( const std::string& str, size_t pos = std::string::npos)
       const noexcept;
 
    /// Searches for the last occurrence of one of the characters in the given
    /// string.
-   /// @param[in]  str    The string with the characters to search for.
-   /// @param[in]  pos    Starting position for searching the characters, if not
-   ///                    set searching starts at the end of the string.
-   /// @param[in]  count  Number of characters in the string to actually use for
-   ///                    searching. The range [0,count) may even contain null
-   ///                    characters.
-   /// @return  The index of the position where the last of these characters was
-   ///          found, std::string::npos if none of those characters were found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the characters, if not set searching
+   ///    starts at the end of the string.
+   /// @param[in]  count
+   ///    Number of characters in the string to actually use for searching. The
+   ///    range [0,count) may even contain null characters.
+   /// @return
+   ///    The index of the position where the last of these characters was
+   ///    found, std::string::npos if none of those characters were found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_last_of( const char* str, size_t pos, size_t count) const
       noexcept;
 
    /// Searches for the last occurrence of one of the characters in the given
    /// string.
-   /// @param[in]  str  The string with the characters to search for.
-   /// @param[in]  pos  Starting position for searching the characters, if not
-   ///                  set searching starts at the end of the string.
-   /// @return  The index of the position where the last of these characters was
-   ///          found, std::string::npos if none of those characters were found.
-   /// @since  x.y.z, 28.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the characters, if not set searching
+   ///    starts at the end of the string.
+   /// @return
+   ///    The index of the position where the last of these characters was
+   ///    found, std::string::npos if none of those characters were found.
+   /// @since  1.46.0, 28.01.2021
    size_t find_last_of( const char* str, size_t pos = std::string::npos) const
       noexcept;
 
    /// Searches for the last occurrence of a character.
-   /// @param[in]  ch   The single character to search for.
-   /// @param[in]  pos  Starting position for searching the character, if not
-   ///                  set searching starts at the end of the string.
-   /// @return  The index of the last position where this character was found,
-   ///          std::string::npos if no such character was found.
-   /// @since  x.y.z, 28.01.2021
+   ///
+   /// @param[in]  ch
+   ///    The single character to search for.
+   /// @param[in]  pos
+   ///    Starting position for searching the character, if not set searching
+   ///    starts at the end of the string.
+   /// @return
+   ///    The index of the last position where this character was found,
+   ///    std::string::npos if no such character was found.
+   /// @since  1.46.0, 28.01.2021
    size_t find_last_of( char ch, size_t pos = std::string::npos) const noexcept;
 
    /// Searches for the last occurrence of a character that is not part of the
    /// given search string.
-   /// @param[in]  str  The string with the characters to ignore.
-   /// @param[in]  pos  Starting position for searching the non-matching
-   ///                  characters, if not set searching starts at the end of
-   ///                  the string.
-   /// @return  The index of the last position where a character was found that
-   ///          was not part of the given string, std::string::npos if no such
-   ///          character was found.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching characters, if not
+   ///    set searching starts at the end of the string.
+   /// @return
+   ///    The index of the last position where a character was found that was
+   ///    not part of the given string, std::string::npos if no such character
+   ///    was found.
+   /// @since  1.46.0, 27.01.2021
    size_t find_last_not_of( const FixedString& str,
       size_t pos = std::string::npos) const noexcept;
 
    /// Searches for the last occurrence of a character that is not part of the
    /// given search string.
-   /// @param[in]  str  The string with the characters to ignore.
-   /// @param[in]  pos  Starting position for searching the non-matching
-   ///                  characters, if not set searching starts at the end of
-   ///                  the string.
-   /// @return  The index of the last position where a character was found that
-   ///          was not part of the given string, std::string::npos if no such
-   ///          character was found.
-   /// @since  x.y.z, 28.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching characters, if not
+   ///    set searching starts at the end of the string.
+   /// @return
+   ///    The index of the last position where a character was found that was
+   ///    not part of the given string, std::string::npos if no such character
+   ///    was found.
+   /// @since  1.46.0, 28.01.2021
    size_t find_last_not_of( const std::string& str,
       size_t pos = std::string::npos) const noexcept;
 
    /// Searches for the last occurrence of a character that is not part of the
    /// given search string.
-   /// @param[in]  str    The string with the characters to ignore.
-   /// @param[in]  pos    Starting position for searching the non-matching
-   ///                    characters, if not set searching starts at the end of
-   ///                    the string.
-   /// @param[in]  count  Number of characters in the string to actually use for
-   ///                    searching. The range [0,count) may even contain null
-   ///                    characters.
-   /// @return  The index of the last position where a character was found that
-   ///          was not part of the given string, std::string::npos if no such
-   ///          character was found.
-   /// @since  x.y.z, 28.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching characters, if not
+   ///    set searching starts at the end of the string.
+   /// @param[in]  count
+   ///    Number of characters in the string to actually use for searching. The
+   ///    range [0,count) may even contain null characters.
+   /// @return
+   ///    The index of the last position where a character was found that was
+   ///    not part of the given string, std::string::npos if no such character
+   ///    was found.
+   /// @since  1.46.0, 28.01.2021
    size_t find_last_not_of( const char* str, size_t pos, size_t count) const
       noexcept;
 
    /// Searches for the last occurrence of a character that is not part of the
    /// given search string.
-   /// @param[in]  str  The string with the characters to ignore.
-   /// @param[in]  pos  Starting position for searching the non-matching
-   ///                  characters, if not set searching starts at the end of
-   ///                  the string.
-   /// @return  The index of the last position where a character was found that
-   ///          was not part of the given string, std::string::npos if no such
-   ///          character was found.
-   /// @since  x.y.z, 28.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching characters, if not
+   ///    set searching starts at the end of the string.
+   /// @return
+   ///    The index of the last position where a character was found that was
+   ///    not part of the given string, std::string::npos if no such character
+   ///    was found.
+   /// @since  1.46.0, 28.01.2021
    size_t find_last_not_of( const char* str, size_t pos = std::string::npos)
       const noexcept;
 
    /// Searches for the last occurrence of another character than the given one.
-   /// @param[in]  ch   The single character to ignore.
-   /// @param[in]  pos  Starting position for searching the non-matching
-   ///                  character, if not set searching starts at the end of the
-   ///                  string.
-   /// @return  The index of the last position where this character was found,
-   ///          std::string::npos if no such character was found.
-   /// @since  x.y.z, 28.01.2021
+   ///
+   /// @param[in]  ch
+   ///    The single character to ignore.
+   /// @param[in]  pos
+   ///    Starting position for searching the non-matching character, if not set
+   ///    searching starts at the end of the string.
+   /// @return
+   ///    The index of the last position where this character was found,
+   ///    std::string::npos if no such character was found.
+   /// @since  1.46.0, 28.01.2021
    size_t find_last_not_of( char ch, size_t pos = std::string::npos) const
       noexcept;
 
    /// Copies a C string into the internal buffer.
+   ///
    /// @param[in]  str  The C string to copy.
    /// @return  This object.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    FixedString& operator =( const char* str) noexcept;
 
    /// Copies a std::string into the internal buffer.
+   ///
    /// @param[in]  str  The std::string to copy from.
    /// @return  This object.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    FixedString& operator =( const std::string& str) noexcept;
 
    /// Default assignment operator is fine.
+   ///
    /// @param[in]  str  The other fixed string object with the same size.
    /// @return  This object.
-   /// @since  x.y.z, 14.01.2021
+   /// @since  1.46.0, 14.01.2021
    FixedString& operator =( const FixedString& str) = default;
 
    /// Copies the contents of another fixed string.
+   ///
    /// @tparam  S  The maximum length of the other fixed string class.
    /// @param[in]  str  The other fixed string object to copy from.
    /// @return  This object.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    template< size_t S> FixedString& operator =( const FixedString< S>& str)
       noexcept;
 
@@ -1276,145 +1601,193 @@ private:
 
    /// Copies #mLength bytes from the given string pointer.
    /// So, obviously #mLength must be set before correctly.
+   ///
    /// @param[in]  src  Pointer to the string buffer to copy from.
-   /// @since  x.y.z, 13.01.2021
+   /// @since  1.46.0, 13.01.2021
    void internalCopy( const char* src) noexcept;
 
    /// Actual implementation of appending a string.
    /// The calling function must ensure that pos + count is within the given
    /// string.
-   /// @param[in]  str    Pointer to the string to append.
-   /// @param[in]  pos    Start position in the string to append from.
-   /// @param[in]  count  Number of characters from the string to append.
+   ///
+   /// @param[in]  str
+   ///    Pointer to the string to append.
+   /// @param[in]  pos
+   ///    Start position in the string to append from.
+   /// @param[in]  count
+   ///    Number of characters from the string to append.
    /// @return  This object.
-   /// @since  x.y.z, 15.01.2021
+   /// @since  1.46.0, 15.01.2021
    FixedString& appendImpl( const char* str, size_t pos, size_t count) noexcept;
 
    /// Compares the string of this object with the given, other string.
-   /// @param[in]  str  The other string to compare against.
-   /// @param[in]  len  Length of the other string.
+   ///
+   /// @param[in]  str
+   ///    The other string to compare against.
+   /// @param[in]  len
+   ///    Length of the other string.
    /// @return
-   /// - &lt; 0 if this string is smaller (or shorter) than the other string.
-   /// - 0 if both strings are equal and have the same length.
-   /// - &gt; 0 if the other string is greater (or longer) than this string.
-   /// @since  x.y.z, 18.01.2021
+   ///    - &lt; 0 if this string is smaller (or shorter) than the other string.
+   ///    - 0 if both strings are equal and have the same length.
+   ///    - &gt; 0 if the other string is greater (or longer) than this string.
+   /// @since  1.46.0, 18.01.2021
    int fullCompareImpl( const char* str, size_t len) const noexcept;
 
    /// Compares the range [pos1, pos1+count1) of this string with the given
    /// string.
-   /// @param[in]  pos1    The start position within this string for the
-   ///                     comparison.
-   /// @param[in]  count1  Number of characters of this string to use for the
-   ///                     comparison.
-   /// @param[in]  str     The other string to compare against.
-   /// @param[in]  len2    Number of characters of the other string to use for
-   ///                     the comparison.
+   ///
+   /// @param[in]  pos1
+   ///    The start position within this string for the comparison.
+   /// @param[in]  count1
+   ///    Number of characters of this string to use for the comparison.
+   /// @param[in]  str
+   ///    The other string to compare against.
+   /// @param[in]  len2
+   ///    Number of characters of the other string to use for the comparison.
    /// @return
-   /// - &lt; 0 if this string is smaller (or shorter) than the other string.
-   /// - 0 if both strings are equal and have the same length.
-   /// - &gt; 0 if the other string is greater (or longer) than this string.
-   /// @since  x.y.z, 18.01.2021
+   ///    - &lt; 0 if this string is smaller (or shorter) than the other string.
+   ///    - 0 if both strings are equal and have the same length.
+   ///    - &gt; 0 if the other string is greater (or longer) than this string.
+   /// @since  1.46.0, 18.01.2021
    int partCompareImpl( size_t pos1, size_t count1, const char* str,
       size_t len2) const noexcept;
 
    /// Compares the range [pos1, pos1+count1) of this string with the range
    /// [pos2, pos2+count2) of the other string.
-   /// @param[in]  pos1    The start position within this string for the
-   ///                     comparison.
-   /// @param[in]  count1  Number of characters of this string to use for the
-   ///                     comparison.
-   /// @param[in]  str     The other string to compare against.
-   /// @param[in]  len2    The full length of the other string.
-   /// @param[in]  pos2    The start position within the other string.
-   /// @param[in]  count2  Number of characters of the other string to use for
-   ///                     the comparison.
+   ///
+   /// @param[in]  pos1
+   ///    The start position within this string for the comparison.
+   /// @param[in]  count1
+   ///    Number of characters of this string to use for the comparison.
+   /// @param[in]  str
+   ///    The other string to compare against.
+   /// @param[in]  len2
+   ///    The full length of the other string.
+   /// @param[in]  pos2
+   ///    The start position within the other string.
+   /// @param[in]  count2
+   ///    Number of characters of the other string to use for the comparison.
    /// @return
-   /// - &lt; 0 if this string is smaller (or shorter) than the other string.
-   /// - 0 if both strings are equal and have the same length.
-   /// - &gt; 0 if the other string is greater (or longer) than this string.
-   /// @since  x.y.z, 18.01.2021
+   ///    - &lt; 0 if this string is smaller (or shorter) than the other string.
+   ///    - 0 if both strings are equal and have the same length.
+   ///    - &gt; 0 if the other string is greater (or longer) than this string.
+   /// @since  1.46.0, 18.01.2021
    int partPartCompareImpl( size_t pos1, size_t count1, const char* str,
       size_t len2, size_t pos2, size_t count2) const noexcept;
 
    /// Checks if the first part of this string equals the given string.
-   /// @param[in]  str      The string to compare against.
-   /// @param[in]  str_len  The length of the string to compare against.
+   ///
+   /// @param[in]  str
+   ///    The string to compare against.
+   /// @param[in]  str_len
+   ///    The length of the string to compare against.
    /// @return  \c true if this string starts with the given string.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    bool startsWithImpl( const char* str, size_t str_len) const noexcept;
 
    /// Checks if the last part of this string equals the given string.
-   /// @param[in]  str      The string to compare against.
-   /// @param[in]  str_len  The length of the string to compare against.
+   ///
+   /// @param[in]  str
+   ///    The string to compare against.
+   /// @param[in]  str_len
+   ///    The length of the string to compare against.
    /// @return  \c true if this string ends with the given string.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    bool endsWithImpl( const char* str, size_t str_len) const noexcept;
 
    /// Checks if this string contains the given string.
-   /// @param[in]  str      The string to search for.
-   /// @param[in]  str_len  The length of the string to search for.
+   ///
+   /// @param[in]  str
+   ///    The string to search for.
+   /// @param[in]  str_len
+   ///    The length of the string to search for.
    /// @return  \c true if this string contains the given string.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    bool containsImpl( const char* str, size_t str_len) const noexcept;
 
    /// Replaces the characters in the range [pos1, pos1+count1) with the
    /// characters from the given string in the range [pos2, pos2+count2).
-   /// @param[in]  pos1    The position of the first character to replace.
-   /// @param[in]  count1  Number of characters to replace from this string.
-   /// @param[in]  str     Pointer to the string with the new contents.
-   /// @param[in]  pos2    Start position of the range to use for the
-   ///                     replacement.
-   /// @param[in]  count2  Number of characters to take from the other string.
+   ///
+   /// @param[in]  pos1
+   ///    The position of the first character to replace.
+   /// @param[in]  count1
+   ///    Number of characters to replace from this string.
+   /// @param[in]  str
+   ///    Pointer to the string with the new contents.
+   /// @param[in]  pos2
+   ///    Start position of the range to use for the replacement.
+   /// @param[in]  count2
+   ///    Number of characters to take from the other string.
    /// @return  This object.
-   /// @since  x.y.z, 20.01.2021
+   /// @since  1.46.0, 20.01.2021
    FixedString& replaceImpl( size_t pos1, size_t count1, const char* str,
       size_t pos2, size_t count2) noexcept;
 
    /// Returns the position of the first occurrence of any character from the
    /// given search string.
-   /// @param[in]  str    The string with the characters to search for.
-   /// @param[in]  pos    Start position for searching.
-   /// @param[in]  count  Length of the string with the search characters, only
-   ///                    used to ensure it is not 0.
-   /// @return  The index of the first character from this string that was found
-   ///          in the search string.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Start position for searching.
+   /// @param[in]  count
+   ///    Length of the string with the search characters, only used to ensure
+   ///    it is not 0.
+   /// @return
+   ///    The index of the first character from this string that was found in
+   ///    the search string.
+   /// @since  1.46.0, 27.01.2021
    size_t findFirstOfImpl( const char* str, size_t pos, size_t count) const
       noexcept;
 
    /// Returns the position of the first occurrence of any character from this
    /// string that does not occur in the given search string.
-   /// @param[in]  str    The string with the characters to ignore.
-   /// @param[in]  pos    Start position for searching.
-   /// @param[in]  count  Length of the string with the search characters, only
-   ///                    used to ensure it is not 0.
-   /// @return  The index of the first character from this string that was not
-   ///          found in the search string.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Start position for searching.
+   /// @param[in]  count
+   ///    Length of the string with the search characters, only used to ensure
+   ///    it is not 0.
+   /// @return
+   ///    The index of the first character from this string that was not found
+   ///    in the search string.
+   /// @since  1.46.0, 27.01.2021
    size_t findFirstNotOfImpl( const char* str, size_t pos, size_t count) const
       noexcept;
 
    /// Returns the position of the last occurrence of any character from the
    /// given search string.
-   /// @param[in]  str    The string with the characters to search for.
-   /// @param[in]  pos    Start position for searching.
-   /// @param[in]  count  Length of the string with the search characters, only
-   ///                    used to ensure it is not 0.
-   /// @return  The index of the last character from this string that was found
-   ///          in the search string.
-   /// @since  x.y.z, 27.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to search for.
+   /// @param[in]  pos
+   ///    Start position for searching.
+   /// @param[in]  count
+   ///    Length of the string with the search characters, only used to ensure
+   ///    it is not 0.
+   /// @return
+   ///    The index of the last character from this string that was found in the
+   ///    search string.
+   /// @since  1.46.0, 27.01.2021
    size_t findLastOfImpl( const char* str, size_t pos, size_t count) const
       noexcept;
 
    /// Returns the position of the last occurrence of any character from this
    /// string that does not occur in the given search string.
-   /// @param[in]  str    The string with the characters to ignore.
-   /// @param[in]  pos    Start position for searching.
-   /// @param[in]  count  Length of the string with the search characters, only
-   ///                    used to ensure it is not 0.
-   /// @return  The index of the last character from this string that was not
-   ///          found in the search string.
-   /// @since  x.y.z, 28.01.2021
+   ///
+   /// @param[in]  str
+   ///    The string with the characters to ignore.
+   /// @param[in]  pos
+   ///    Start position for searching.
+   /// @param[in]  count
+   ///    Length of the string with the search characters, only used to ensure
+   ///    it is not 0.
+   /// @return
+   ///    The index of the last character from this string that was not found in
+   ///    the search string.
+   /// @since  1.46.0, 28.01.2021
    size_t findLastNotOfImpl( const char* str, size_t pos, size_t count) const
       noexcept;
 
@@ -2041,6 +2414,22 @@ template< size_t L> template< size_t S>
    return appendImpl( &(*first), 0, count);
 } // FixedString< L>::append
 */
+
+template< size_t L>
+   FixedString< L>& FixedString< L>::sprintf( const char* format, ...) noexcept
+{
+   va_list  ap;
+
+   ::va_start( ap, format);
+   mLength = ::vsnprintf( mString, L + 1, format, ap);
+   ::va_end( ap);
+
+   mLength = std::min( L, static_cast< size_t>( mLength));
+   mString[ mLength] = '\0';
+
+   return *this;
+} // FixedString< L>::sprintf
+
 
 template< size_t L> template< size_t S>
    FixedString< L>& FixedString< L>::operator +=( const FixedString< S>& str)
@@ -3066,28 +3455,34 @@ template< size_t L> void FixedString< L>::clear() noexcept
 
 
 /// Insertion operator for fixed strings.
+///
 /// @tparam  L  The size of the fixed string buffer.
-/// @param[in]  os  The stream to write into.
-/// @param[in]  fs  The fixed string object to dump the contents of.
+/// @param[in]  os
+///    The stream to write into.
+/// @param[in]  fs
+///    The fixed string object to dump the contents of.
 /// @return  The stream as passed in.
-/// @since  x.y.z, 13.01.2021
+/// @since  1.46.0, 13.01.2021
 template< size_t L>
    std::ostream& operator <<( std::ostream& os, const FixedString< L>& fs)
       noexcept
 {
-   return os << '\'' << fs.c_str() << '\'';
+   return os << fs.c_str();
 } // operator <<
 
 
 /// Equality comparison operator as free function, is capable of comparing two
 /// fixed strings with different sizes.
 /// Objects are considered equal if the strings they store are equal.
-/// tparam  L  The buffer size of the first fixed string object.
-/// tparam  S  The buffer size of the second fixed string object.
-/// @param[in]  lhs  The first fixed string object.
-/// @param[in]  rhs  The second fixed string object.
+///
+/// @tparam  L  The buffer size of the first fixed string object.
+/// @tparam  S  The buffer size of the second fixed string object.
+/// @param[in]  lhs
+///    The first fixed string object.
+/// @param[in]  rhs
+///    The second fixed string object.
 /// @return  \c true if the strings in the two objects are identical.
-/// @since  x.y.z, 13.01.2021
+/// @since  1.46.0, 13.01.2021
 template< size_t L, size_t S>
    bool operator ==( const FixedString< L>& lhs, const FixedString< S>& rhs)
       noexcept
@@ -3100,12 +3495,15 @@ template< size_t L, size_t S>
 /// Inequality comparison operator as free function, is capable of comparing two
 /// fixed strings with different sizes.
 /// Objects are considered not equal if the strings they store are not equal.
+///
 /// tparam  L  The buffer size of the first fixed string object.
 /// tparam  S  The buffer size of the second fixed string object.
-/// @param[in]  lhs  The first fixed string object.
-/// @param[in]  rhs  The second fixed string object.
+/// @param[in]  lhs
+///    The first fixed string object.
+/// @param[in]  rhs
+///    The second fixed string object.
 /// @return  \c true if the strings in the two objects are diferent.
-/// @since  x.y.z, 13.01.2021
+/// @since  1.46.0, 13.01.2021
 template< size_t L, size_t S>
    bool operator !=( const FixedString< L>& lhs, const FixedString< S>& rhs)
       noexcept

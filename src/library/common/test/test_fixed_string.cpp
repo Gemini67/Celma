@@ -31,7 +31,8 @@ using celma::common::FixedString;
 
 
 /// Construct fixed strings.
-/// @since  x.y.z, 13.01.2021
+///
+/// @since  1.46.0, 13.01.2021
 BOOST_AUTO_TEST_CASE( constructor)
 {
 
@@ -78,7 +79,7 @@ BOOST_AUTO_TEST_CASE( constructor)
 
       std::ostringstream  oss;
       oss << fs;
-      BOOST_REQUIRE_EQUAL( oss.str(), "'hello world'");
+      BOOST_REQUIRE_EQUAL( oss.str(), "hello world");
    } // end scope
 
    // long C string that is truncated
@@ -125,7 +126,8 @@ BOOST_AUTO_TEST_CASE( constructor)
 
 
 /// Test assigning a string.
-/// @since  x.y.z, 13.01.2021
+///
+/// @since  1.46.0, 13.01.2021
 BOOST_AUTO_TEST_CASE( assign)
 {
 
@@ -229,7 +231,8 @@ BOOST_AUTO_TEST_CASE( assign)
 
 
 /// Test assigning a string using the assignment operator.
-/// @since  x.y.z, 14.01.2021
+///
+/// @since  1.46.0, 14.01.2021
 BOOST_AUTO_TEST_CASE( assign_operator)
 {
 
@@ -333,7 +336,8 @@ BOOST_AUTO_TEST_CASE( assign_operator)
 
 
 /// Test assigning a string using the assignment operator.
-/// @since  x.y.z, 14.01.2021
+///
+/// @since  1.46.0, 14.01.2021
 BOOST_AUTO_TEST_CASE( element_access)
 {
 
@@ -478,7 +482,8 @@ BOOST_AUTO_TEST_CASE( element_access)
 
 
 /// Verify that the correct iterators are returned by the begin/end methods.
-/// @since  x.y.z, 22.01.2021
+///
+/// @since  1.46.0, 22.01.2021
 BOOST_AUTO_TEST_CASE( iterators)
 {
 
@@ -588,7 +593,8 @@ BOOST_AUTO_TEST_CASE( iterators)
 
 
 /// Insert a repetition of a single character into a fixed string.
-/// @since  x.y.z, 14.01.2021
+///
+/// @since  1.46.0, 14.01.2021
 BOOST_AUTO_TEST_CASE( insert_char_repetition)
 {
 
@@ -755,7 +761,8 @@ BOOST_AUTO_TEST_CASE( insert_char_repetition)
 
 
 /// Insert a C string into a fixed string.
-/// @since  x.y.z, 14.01.2021
+///
+/// @since  1.46.0, 14.01.2021
 BOOST_AUTO_TEST_CASE( insert_c_string)
 {
 
@@ -884,7 +891,8 @@ BOOST_AUTO_TEST_CASE( insert_c_string)
 
 
 /// Insert a part of a C string into a fixed string.
-/// @since  x.y.z, 14.01.2021
+///
+/// @since  1.46.0, 14.01.2021
 BOOST_AUTO_TEST_CASE( insert_c_string_part)
 {
 
@@ -1013,7 +1021,8 @@ BOOST_AUTO_TEST_CASE( insert_c_string_part)
 
 
 /// Insert a std::string into a fixed string.
-/// @since  x.y.z, 14.01.2021
+///
+/// @since  1.46.0, 14.01.2021
 BOOST_AUTO_TEST_CASE( insert_std_string)
 {
 
@@ -1144,7 +1153,8 @@ BOOST_AUTO_TEST_CASE( insert_std_string)
 /// Insert a part of a std::string into a fixed string.
 /// This results in a call to insert of an std::string, so there is no need to
 /// test all cases again.
-/// @since  x.y.z, 15.01.2021
+///
+/// @since  1.46.0, 15.01.2021
 BOOST_AUTO_TEST_CASE( insert_std_string_part)
 {
 
@@ -1175,7 +1185,8 @@ BOOST_AUTO_TEST_CASE( insert_std_string_part)
 /// Insert a fixed string into a fixed string.
 /// This results in a call to insert of C string with given length, so there is
 /// no need to test all cases again.
-/// @since  x.y.z, 15.01.2021
+///
+/// @since  1.46.0, 15.01.2021
 BOOST_AUTO_TEST_CASE( insert_fixed_string)
 {
 
@@ -1219,7 +1230,8 @@ BOOST_AUTO_TEST_CASE( insert_fixed_string)
 /// Insert a part of a fixed string into a fixed string.
 /// This results in a call to insert of a C string, so there is no need to test
 /// all cases again.
-/// @since  x.y.z, 15.01.2021
+///
+/// @since  1.46.0, 15.01.2021
 BOOST_AUTO_TEST_CASE( insert_fixed_string_part)
 {
 
@@ -1261,7 +1273,8 @@ BOOST_AUTO_TEST_CASE( insert_fixed_string_part)
 
 
 /// Insert an initializer list.
-/// @since  x.y.z, 25.01.2021
+///
+/// @since  1.46.0, 25.01.2021
 BOOST_AUTO_TEST_CASE( insert_std_initializer_list)
 {
 
@@ -1322,7 +1335,8 @@ BOOST_AUTO_TEST_CASE( insert_std_initializer_list)
 
 
 /// Erase a part of a string.
-/// @since  x.y.z, 15.01.2021
+///
+/// @since  1.46.0, 15.01.2021
 BOOST_AUTO_TEST_CASE( erase)
 {
 
@@ -1450,7 +1464,8 @@ BOOST_AUTO_TEST_CASE( erase)
 
 
 /// Push and pop characters.
-/// @since  x.y.z, 15.01.2021
+///
+/// @since  1.46.0, 15.01.2021
 BOOST_AUTO_TEST_CASE( push_and_pop)
 {
 
@@ -1495,7 +1510,8 @@ BOOST_AUTO_TEST_CASE( push_and_pop)
 
 
 /// Append to an existing fixed string.
-/// @since  x.y.z, 15.01.2021
+///
+/// @since  1.46.0, 15.01.2021
 BOOST_AUTO_TEST_CASE( append)
 {
 
@@ -1618,7 +1634,8 @@ BOOST_AUTO_TEST_CASE( append)
 
 
 /// Append to an existing fixed string using the += operator.
-/// @since  x.y.z, 18.01.2021
+///
+/// @since  1.46.0, 18.01.2021
 BOOST_AUTO_TEST_CASE( append_operator)
 {
 
@@ -1661,7 +1678,8 @@ BOOST_AUTO_TEST_CASE( append_operator)
 
 
 /// Compare a fixed string with another string.
-/// @since  x.y.z, 18.01.2021
+///
+/// @since  1.46.0, 18.01.2021
 BOOST_AUTO_TEST_CASE( compare_all)
 {
 
@@ -1746,7 +1764,8 @@ BOOST_AUTO_TEST_CASE( compare_all)
 
 
 /// Compare a part of a fixed string with another string.
-/// @since  x.y.z, 18.01.2021
+///
+/// @since  1.46.0, 18.01.2021
 BOOST_AUTO_TEST_CASE( compare_part)
 {
 
@@ -1872,7 +1891,8 @@ BOOST_AUTO_TEST_CASE( compare_part)
 
 
 /// Compare a part of a fixed string with a part of another string.
-/// @since  x.y.z, 18.01.2021
+///
+/// @since  1.46.0, 18.01.2021
 BOOST_AUTO_TEST_CASE( compare_part_part)
 {
 
@@ -2010,7 +2030,8 @@ BOOST_AUTO_TEST_CASE( compare_part_part)
 
 
 /// Check starts_with.
-/// @since  x.y.z, 18.01.2021
+///
+/// @since  1.46.0, 18.01.2021
 BOOST_AUTO_TEST_CASE( starts_with)
 {
 
@@ -2101,7 +2122,8 @@ BOOST_AUTO_TEST_CASE( starts_with)
 
 
 /// Check ends_with.
-/// @since  x.y.z, 20.01.2021
+///
+/// @since  1.46.0, 20.01.2021
 BOOST_AUTO_TEST_CASE( ends_with)
 {
 
@@ -2192,7 +2214,8 @@ BOOST_AUTO_TEST_CASE( ends_with)
 
 
 /// Check contains.
-/// @since  x.y.z, 20.01.2021
+///
+/// @since  1.46.0, 20.01.2021
 BOOST_AUTO_TEST_CASE( contains)
 {
 
@@ -2258,7 +2281,8 @@ BOOST_AUTO_TEST_CASE( contains)
 
 
 /// Check replace.
-/// @since  x.y.z, 20.01.2021
+///
+/// @since  1.46.0, 20.01.2021
 BOOST_AUTO_TEST_CASE( replace)
 {
 
@@ -2418,7 +2442,8 @@ BOOST_AUTO_TEST_CASE( replace)
 
 
 /// Replace a part of a string with a part of another string.
-/// @since  x.y.z, 20.01.2021
+///
+/// @since  1.46.0, 20.01.2021
 BOOST_AUTO_TEST_CASE( replace_part)
 {
 
@@ -2799,7 +2824,8 @@ BOOST_AUTO_TEST_CASE( replace_part)
 
 
 /// Check that the correct substring is returned.
-/// @since  x.y.z, 25.01.2021
+///
+/// @since  1.46.0, 25.01.2021
 BOOST_AUTO_TEST_CASE( sub_str)
 {
 
@@ -2835,7 +2861,8 @@ BOOST_AUTO_TEST_CASE( sub_str)
 
 
 /// Checks the copy() function.
-/// @since  x.y.z, 25.01.2021
+///
+/// @since  1.46.0, 25.01.2021
 BOOST_AUTO_TEST_CASE( copy_str)
 {
 
@@ -2871,7 +2898,8 @@ BOOST_AUTO_TEST_CASE( copy_str)
 
 
 /// Checks the swap() function.
-/// @since  x.y.z, 25.01.2021
+///
+/// @since  1.46.0, 25.01.2021
 BOOST_AUTO_TEST_CASE( swap)
 {
 
@@ -2916,7 +2944,8 @@ BOOST_AUTO_TEST_CASE( swap)
 
 
 /// Checks the find() function.
-/// @since  x.y.z, 26.01.2021
+///
+/// @since  1.46.0, 26.01.2021
 BOOST_AUTO_TEST_CASE( find)
 {
 
@@ -3091,7 +3120,8 @@ BOOST_AUTO_TEST_CASE( find)
 
 
 /// Checks the rfind() function.
-/// @since  x.y.z, 26.01.2021
+///
+/// @since  1.46.0, 26.01.2021
 BOOST_AUTO_TEST_CASE( rfind)
 {
 
@@ -3275,7 +3305,8 @@ BOOST_AUTO_TEST_CASE( rfind)
 
    
 /// Checks the find_first_of() function.
-/// @since  x.y.z, 26.01.2021
+///
+/// @since  1.46.0, 26.01.2021
 BOOST_AUTO_TEST_CASE( find_first_of)
 {
 
@@ -3376,7 +3407,8 @@ BOOST_AUTO_TEST_CASE( find_first_of)
 
 
 /// Checks the find_first_not_of() function.
-/// @since  x.y.z, 27.01.2021
+///
+/// @since  1.46.0, 27.01.2021
 BOOST_AUTO_TEST_CASE( find_first_not_of)
 {
 
@@ -3483,7 +3515,8 @@ BOOST_AUTO_TEST_CASE( find_first_not_of)
 
 
 /// Checks the find_last_of() function.
-/// @since  x.y.z, 27.01.2021
+///
+/// @since  1.46.0, 27.01.2021
 BOOST_AUTO_TEST_CASE( find_last_of)
 {
 
@@ -3583,7 +3616,8 @@ BOOST_AUTO_TEST_CASE( find_last_of)
 
 
 /// Checks the find_last_not_of() function.
-/// @since  x.y.z, 28.01.2021
+///
+/// @since  1.46.0, 28.01.2021
 BOOST_AUTO_TEST_CASE( find_last_not_of)
 {
 
@@ -3689,6 +3723,56 @@ BOOST_AUTO_TEST_CASE( find_last_not_of)
    } // end scope
 
 } // find_last_not_of
+
+
+
+/// Verifies that the sprintf method works correctly.
+///
+/// @since  1.46.0, 08.02.2021
+BOOST_AUTO_TEST_CASE( sprintf_length)
+{
+
+   {
+      FixedString< 8>  fs( "goodbye and farewell");
+
+      fs.sprintf( "%s", "hello world");
+      BOOST_REQUIRE_EQUAL( fs.length(), 8);
+      BOOST_REQUIRE_EQUAL( fs.str(), "hello wo");
+   } // end scope
+
+   {
+      FixedString< 9>  fs( "goodbye and farewell");
+
+      fs.sprintf( "%s", "hello world");
+      BOOST_REQUIRE_EQUAL( fs.length(), 9);
+      BOOST_REQUIRE_EQUAL( fs.str(), "hello wor");
+   } // end scope
+
+   {
+      FixedString< 10>  fs( "goodbye and farewell");
+
+      fs.sprintf( "%s", "hello world");
+      BOOST_REQUIRE_EQUAL( fs.length(), 10);
+      BOOST_REQUIRE_EQUAL( fs.str(), "hello worl");
+   } // end scope
+
+   {
+      FixedString< 11>  fs( "goodbye and farewell");
+
+      fs.sprintf( "%s", "hello world");
+      BOOST_REQUIRE_EQUAL( fs.length(), 11);
+      BOOST_REQUIRE_EQUAL( fs.str(), "hello world");
+   } // end scope
+
+   {
+      FixedString< 20>  fs( "goodbye and farewell");
+
+      fs.sprintf( "%s", "hello world");
+      BOOST_REQUIRE_EQUAL( fs.length(), 11);
+      BOOST_REQUIRE_EQUAL( fs.str(), "hello world");
+   } // end scope
+
+} // sprintf_length
 
 
 

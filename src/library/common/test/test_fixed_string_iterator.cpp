@@ -30,7 +30,8 @@ using celma::common::detail::FixedStringIterator;
 
 
 /// Construct fixed string iterators.
-/// @since  x.y.z, 20.01.2021
+///
+/// @since  1.46.0, 20.01.2021
 BOOST_AUTO_TEST_CASE( constructor)
 {
 
@@ -74,7 +75,8 @@ BOOST_AUTO_TEST_CASE( constructor)
 
 
 /// Iterate forward over the string.
-/// @since  x.y.z, 20.01.2021
+///
+/// @since  1.46.0, 20.01.2021
 BOOST_AUTO_TEST_CASE( forward)
 {
 
@@ -144,7 +146,8 @@ BOOST_AUTO_TEST_CASE( forward)
 
 
 /// Iterate backwards over the string.
-/// @since  x.y.z, 20.01.2021
+///
+/// @since  1.46.0, 20.01.2021
 BOOST_AUTO_TEST_CASE( backward)
 {
 
@@ -191,7 +194,8 @@ BOOST_AUTO_TEST_CASE( backward)
 
 
 /// Check the equality comparison operator.
-/// @since  x.y.z, 25.01.2021
+///
+/// @since  1.46.0, 25.01.2021
 BOOST_AUTO_TEST_CASE( comparisons)
 {
 
