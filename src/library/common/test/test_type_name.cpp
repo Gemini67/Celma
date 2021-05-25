@@ -35,7 +35,6 @@
 
 /// @todo
 /// - date/time classes
-/// - variant
 /// - random classes
 
 
@@ -908,6 +907,28 @@ BOOST_AUTO_TEST_CASE( comparison_classes)
       "std::greater<std::string>");
 
 } // comparison_classes
+
+
+
+/// Check the names of classes from Celma.
+///
+/// @since  1.46.0, 16.03.2021
+BOOST_AUTO_TEST_CASE( celma_classes)
+{
+
+   using fs20 = celma::common::FixedString< 20>;
+
+   static_assert( celma::type< fs20>::name()[ 0] == 'c');
+   static_assert( celma::type< fs20>::name()[ 15] == 'F');
+   static_assert( celma::type< fs20>::name()[ 20] == 'S');
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< fs20>::name(),
+      "celma::common::FixedString< 20>");
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< celma::container::DynamicBitset>::name(),
+      "celma::container::DynamicBitset");
+
+} // celma_classes
 
 
 
