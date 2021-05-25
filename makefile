@@ -3,7 +3,7 @@ PATH := $(shell pwd)/scripts:$(PATH)
 CPUS := $(shell lscpu -p | fgrep -v '\#' | wc -l)
 
 
-all:	debug release release-dbg
+all:	debug release release-dbg debug-20 release-20
 
 debug:
 	+if [ ! -d build/debug ]; then \
@@ -16,8 +16,7 @@ debug:
 	   cd -; \
 	fi; \
 	cd build/debug; \
-	make -j${CPUS}; \
-	make install
+	make -j${CPUS}
 
 release:
 	@+if [ ! -d build/release ]; then \
@@ -30,8 +29,35 @@ release:
 	   cd -; \
 	fi; \
 	cd build/release; \
-	make -j${CPUS}; \
-	make install
+	make -j${CPUS}
+
+debug-20:
+	+if [ ! -d build/debug-20 ]; then \
+	   mkdir -p build/debug-20; \
+	   cd build/debug-20; \
+	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
+	         -DBOOST_VERSION=${BOOST_VERSION} \
+	         -DCMAKE_BUILD_TYPE=Debug \
+	         -DCPP_VERSION=20 \
+	         ../..; \
+	   cd -; \
+	fi; \
+	cd build/debug-20; \
+	make -j${CPUS}
+
+release-20:
+	@+if [ ! -d build/release-20 ]; then \
+	   mkdir -p build/release-20; \
+	   cd build/release-20; \
+	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
+	         -DBOOST_VERSION=${BOOST_VERSION} \
+	         -DCMAKE_BUILD_TYPE=Release \
+	         -DCPP_VERSION=20 \
+	         ../..; \
+	   cd -; \
+	fi; \
+	cd build/release-20; \
+	make -j${CPUS}
 
 release-dbg:
 	@+if [ ! -d build/release-dbg ]; then \
@@ -44,8 +70,7 @@ release-dbg:
 	   cd -; \
 	fi; \
 	cd build/release-dbg; \
-	make -j${CPUS}; \
-	make install
+	make -j${CPUS}
 
 analyze:
 	@if [ ! -d build/analyze ]; then \
@@ -66,7 +91,7 @@ analyze:
 cppcheck:
 	cppcheck --enable=all --quiet --inline-suppr --force --std=c++11 -I src src
 
-test:	test-release test-debug
+test:	test-release test-debug test-release-20 test-debug-20
 
 test-debug:
 	@if [ -d build/debug ]; then \
@@ -84,6 +109,23 @@ test-release:
 	   echo "*** Error: build/release does not exist!" >&2; \
 	fi
 
+test-debug-20:
+	@if [ -d build/debug-20 ]; then \
+	   cd build/debug-20; \
+	   make test; \
+	else \
+	   echo "*** Error: build/debug-20 does not exist!" >&2; \
+	fi
+
+test-release-20:
+	@if [ -d build/release-20 ]; then \
+	   cd build/release-20; \
+	   make test; \
+	else \
+	   echo "*** Error: build/release-20 does not exist!" >&2; \
+	fi
+
+
 doxygen:
 	doxygen celma.doxy
 
@@ -99,7 +141,7 @@ coverage:
 	   cd -; \
 	fi; \
 	cd build/coverage; \
-	/usr/bin/time --format="-- Build Duration: %E" make -j${CPUS} install; \
+	/usr/bin/time --format="-- Build Duration: %E" make -j${CPUS}; \
 	/usr/bin/time --format="-- Build Duration: %E" make Celma_coverage
 
 sonar:

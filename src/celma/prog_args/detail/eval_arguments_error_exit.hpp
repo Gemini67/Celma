@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,11 +12,11 @@
 
 
 /// @file
-/// See documentation of class celma::prog_args::detail::@@@.
+/// See documentation of function
+/// celma::prog_args::detail::evalArgumentsErrorExit().
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_EVAL_ARGUMENTS_ERROR_EXIT_HPP
-#define CELMA_PROG_ARGS_DETAIL_EVAL_ARGUMENTS_ERROR_EXIT_HPP
+#pragma once
 
 
 #include <cstdlib>
@@ -24,9 +24,10 @@
 #include <stdexcept>
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include "celma/prog_args/argument_error.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Unified evaluation of program arguments and error handling for single
@@ -58,6 +59,18 @@ template< typename T>
       arg_obj.evalArguments( argc, argv);
       return;   // return here, easier error exit below
 
+   // application-specific exceptions
+   } catch (const argument_error& ae)
+   {
+      err_out << prefix << "Caught 'argument error' exception: " << ae.what()
+         << "!" << std::endl;
+
+   // 3rd party libraries exceptions
+   } catch (const boost::bad_lexical_cast& blc)
+   {
+      err_out << prefix << "Caught boost " << blc.what() << "!" << std::endl;
+
+   // specific standard library exceptions
    } catch (const std::invalid_argument& ia)
    {
       err_out << prefix << "Caught 'invalid argument' exception: " << ia.what()
@@ -78,17 +91,18 @@ template< typename T>
    {
       err_out << prefix << "Caught 'underflow' exception: " << ue.what() << "!"
          << std::endl;
+
+   // generic standard library exceptions
    } catch (const std::runtime_error& rte)
    {
       err_out << prefix << "Caught 'runtime error' exception: " << rte.what()
          << "!" << std::endl;
-   } catch (const boost::bad_lexical_cast& blc)
-   {
-      err_out << prefix << "Caught boost " << blc.what() << "!" << std::endl;
    } catch (const std::exception& e)
    {
       err_out << prefix << "Caught unspecific std::exception: " << e.what()
          << "!" << std::endl;
+
+   // all the rest
    } catch (...)
    {
       err_out << prefix << "Caught unknown exception!" << std::endl;
@@ -98,12 +112,7 @@ template< typename T>
 } // evalArgumentsErrorExit
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_EVAL_ARGUMENTS_ERROR_EXIT_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF eval_arguments_error_exit.hpp  =====

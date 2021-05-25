@@ -28,7 +28,7 @@ using celma::common::LengthType;
 
 
 /// Test the sizes of the types.
-/// @since  x.y.z, 23.01.2021
+/// @since  1.45.0, 23.01.2021
 BOOST_AUTO_TEST_CASE( type_by_size)
 {
 

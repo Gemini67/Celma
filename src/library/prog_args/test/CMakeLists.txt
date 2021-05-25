@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -163,8 +163,8 @@ set( test_argh_print_def_result
      "   -p,--optional-string   Optional string argument, \\*with\\* default\n"
      "                          Default value: \"hello world\"\n"
      "   -l,--list              Optional vector argument, don't print default\n"
-     "   -c,--checked           Optional integer argument, using CheckAssign<>, \\*with\\*\n"
-     "                          default\n"
+     "   -c,--checked           Optional integer argument, using std::optional<>,\n"
+     "                          \\*with\\* default\n"
      "\n$"
 )
 
@@ -503,7 +503,7 @@ set( test_argh_list_arg_vars_output_result
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
    "'--call' calls function/method 'callable_function'.\n"
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-   "'--cas' value type 'std::string', destination 'CheckAssign< my_ca_string>', value not set.\n"
+   "'--cas' value type 'std::string', destination 'std::optional< my_ca_string>', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--sl' value type 'std::vector<std::string>', destination container 'my_string_list', currently no values.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
@@ -523,7 +523,7 @@ set( test_argh_list_arg_vars_output_result
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, print dflt, no checks, no formats.\n"
    "'--call' calls function/method 'callable_function'.\n"
    "   value 'none' \\(0\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
-   "'--cas' value type 'std::string', destination 'CheckAssign< my_ca_string>', value not set.\n"
+   "'--cas' value type 'std::string', destination 'std::optional< my_ca_string>', value not set.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"
    "'--sl' value type 'std::vector<std::string>', destination container 'my_string_list', currently 1 values.\n"
    "   value 'required' \\(2\\), optional, does not take multiple&separate values, don't print dflt, no checks, no formats.\n"

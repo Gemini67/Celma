@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2020-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,10 +19,10 @@
 #pragma once
 
 
+#include <filesystem>
 #include <functional>
 #include <stdexcept>
 #include <string>
-#include "celma/common/file_info.hpp"
 #include "celma/common/type_name.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
@@ -87,7 +87,7 @@ template< template< typename> class C>
 template< template< typename> class C>
    void CheckFileSize< C>::checkValue( const std::string& val) const
 {
-   if (!C()( common::fileInfo( val).size(), mFileSize))
+   if (!C()( std::filesystem::file_size( val), mFileSize))
       throw std::invalid_argument( "file size check failed");
 } // CheckFileSize< C>::checkValue
 

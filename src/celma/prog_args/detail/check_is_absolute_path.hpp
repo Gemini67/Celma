@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,8 +18,8 @@
 #pragma once
 
 
+#include <filesystem>
 #include <stdexcept>
-#include "celma/common/file_info.hpp"
 #include "celma/prog_args/detail/i_check.hpp"
 
 
@@ -64,7 +64,7 @@ inline CheckIsAbsolutePath::CheckIsAbsolutePath():
 
 inline void CheckIsAbsolutePath::checkValue( const std::string& val) const
 {
-   if (val[ 0] != '/')
+   if (!std::filesystem::path( val).is_absolute())
       throw std::runtime_error( std::string( "'") + val
          + "' is not an absolute path");
 } // CheckIsAbsolutePath::checkValue

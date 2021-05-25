@@ -36,7 +36,7 @@ namespace detail {
 /// - 2 [bytes] for values up to 64 k
 /// - 4 [bytes] for values up to 4 G
 /// - 8 [bytes] otherwise.
-/// @since  x.y.z, 23.01.2021
+/// @since  1.45.0, 23.01.2021
 constexpr int bytesNeeded( uint64_t length)
 {
    return (length < 256) ? 1 : (length < 65'536) ? 2
@@ -49,7 +49,7 @@ template< uint64_t L> class type4length;
 
 
 /// Template that provides the type needed to store a one byte value.
-/// @since  x.y.z, 23.01.2021
+/// @since  1.45.0, 23.01.2021
 template<> class type4length< 1>
 {
 public:
@@ -59,7 +59,7 @@ public:
 
 
 /// Template that provides the type needed to store a two byte value.
-/// @since  x.y.z, 23.01.2021
+/// @since  1.45.0, 23.01.2021
 template<> class type4length< 2>
 {
 public:
@@ -69,7 +69,7 @@ public:
 
 
 /// Template that provides the type needed to store a four byte value.
-/// @since  x.y.z, 23.01.2021
+/// @since  1.45.0, 23.01.2021
 template<> class type4length< 4>
 {
 public:
@@ -79,7 +79,7 @@ public:
 
 
 /// Template that provides the type needed to store an eight byte value.
-/// @since  x.y.z, 23.01.2021
+/// @since  1.45.0, 23.01.2021
 template<> class type4length< 8>
 {
 public:
@@ -94,7 +94,7 @@ public:
 /// Provides the minimum type needed for a variable to store the given value.
 /// Usage:  <pre> typename six::foundation::LengthType< 200>::type  my_var; </pre>
 /// @tparam  L  The maximum value to store in the variable.
-/// @since  x.y.z, 23.01.2021
+/// @since  1.45.0, 23.01.2021
 template< uint64_t L> class LengthType
 {
 public:

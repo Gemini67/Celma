@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,6 +28,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "celma/common/fixed_string.hpp"
 #include "celma/common/tuple_at_index.hpp"
 #include "celma/common/tuple_length.hpp"
 #include "celma/container/dynamic_bitset.hpp"
@@ -103,6 +104,27 @@ inline std::string toString( const double val)
 /// @since
 ///    0.14.3, 20.06.2017
 inline std::string toString( const std::string& data)
+{
+
+   std::ostringstream  oss;
+
+
+   oss << '"' << data << '"';
+
+   return oss.str();
+} // toString
+
+
+/// Function to write a fixed string into the string.
+/// Add double quotation marks to the string, to make sure multiple-words
+/// strings are interpreted correctly afterwards.
+/// @param[in]  data
+///    The fixed string to write.
+/// @return
+///    String with the quoted input string.
+/// @since
+///    1.46.0, 08.02.2021
+template< size_t L> std::string toString( const common::FixedString< L>& data)
 {
 
    std::ostringstream  oss;

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,6 @@
 
 /// @todo
 /// - date/time classes
-/// - variant
 /// - random classes
 
 
@@ -127,14 +126,7 @@ BOOST_AUTO_TEST_CASE( pod_types)
 BOOST_AUTO_TEST_CASE( stl_types)
 {
 
-#if have_any == 1
-#   ifdef experimental_any
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::any>::name(),
-                          "std::experimental::any");
-#   else
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::any>::name(), "std::any");
-#   endif
-#endif
 
    static_assert( celma::type< std::bitset< 128>>::name()[ 0] == 's');
    static_assert( celma::type< std::bitset< 128>>::name()[ 5] == 'b');
@@ -177,18 +169,6 @@ BOOST_AUTO_TEST_CASE( stl_types)
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::wstring>::name(),
                           "std::wstring");
 
-
-#if have_string_view == 1
-#   ifdef experimental_string_view
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::string_view>::name(),
-                            "std::experimental::string_view");
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::u16string_view>::name(),
-                            "std::experimental::u16string_view");
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::u32string_view>::name(),
-                            "std::experimental::u32string_view");
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::wstring_view>::name(),
-                            "std::experimental::wstring_view");
-#   else
    static_assert( celma::type< std::string_view>::name()[ 5] == 's');
    static_assert( celma::type< std::string_view>::name()[ 12] == 'v');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::string_view>::name(),
@@ -210,9 +190,6 @@ BOOST_AUTO_TEST_CASE( stl_types)
    static_assert( celma::type< std::wstring_view>::name()[ 13] == 'v');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::wstring_view>::name(),
                             "std::wstring_view");
-#   endif
-#endif
-
 
    using int_array = std::array< int, 10>;
    using string_array = std::array< std::string, 15>;
@@ -259,20 +236,10 @@ BOOST_AUTO_TEST_CASE( stl_types)
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::multiset< std::string>>::name(),
                           "std::multiset<std::string>");
 
-#if have_optional
-#   ifdef experimental_optional
-   static_assert( celma::type< std::experimental::optional< std::string>>::name()[ 5] == 'e');
-   static_assert( celma::type< std::experimental::optional< std::string>>::name()[ 19] == 'o');
-   static_assert( celma::type< std::experimental::optional< std::string>>::name()[ 33] == 's');
-   BOOST_REQUIRE_EQUAL_STR( celma::type< std::experimental::optional< std::string>>::name(),
-                          "std::experimental::optional<std::string>");
-#   else
    static_assert( celma::type< std::optional< std::string>>::name()[ 5] == 'o');
    static_assert( celma::type< std::optional< std::string>>::name()[ 19] == 's');
    BOOST_REQUIRE_EQUAL_STR( celma::type< std::optional< std::string>>::name(),
                           "std::optional<std::string>");
-#   endif
-#endif
 
    static_assert( celma::type< std::priority_queue< long>>::name()[ 5] == 'p');
    static_assert( celma::type< std::priority_queue< long>>::name()[ 20] == 'l');
@@ -940,6 +907,28 @@ BOOST_AUTO_TEST_CASE( comparison_classes)
       "std::greater<std::string>");
 
 } // comparison_classes
+
+
+
+/// Check the names of classes from Celma.
+///
+/// @since  1.46.0, 16.03.2021
+BOOST_AUTO_TEST_CASE( celma_classes)
+{
+
+   using fs20 = celma::common::FixedString< 20>;
+
+   static_assert( celma::type< fs20>::name()[ 0] == 'c');
+   static_assert( celma::type< fs20>::name()[ 15] == 'F');
+   static_assert( celma::type< fs20>::name()[ 20] == 'S');
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< fs20>::name(),
+      "celma::common::FixedString< 20>");
+
+   BOOST_REQUIRE_EQUAL_STR( celma::type< celma::container::DynamicBitset>::name(),
+      "celma::container::DynamicBitset");
+
+} // celma_classes
 
 
 
