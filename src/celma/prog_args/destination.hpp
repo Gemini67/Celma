@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,9 +30,13 @@
 /// - \c DEST_RANGE_BITSET: Again, the argument is a range string, but here the
 ///   corresponding bits are set in the bitset.
 /// - \c DEST_FUNCTION: The specified function is called when the argument is
-///   used. The function does not accept a values.
+///   used. The function does not accept a value.
 /// - \c DEST_FUNCTION_VALUE: Here also the specified function is called when
 ///   the argument is used, but this time the function requires a value.
+/// - \c DEST_LAMBDA: The specified lambda is called when the argument is used.
+///   The lambda does not accept a value.
+/// - \c DEST_LAMBDA_VALUE: Here also the specified lambda is called when the
+///   argument is used, but this time the lambda requires a value.
 /// - \c DEST_MEMBER_METHOD: Calls a member function of the current object.
 /// - \c DEST_METHOD: Calls a member function of the given object.
 /// - \c DEST_MEMBER_METHOD_VALUE: Calls the member function of the current
@@ -415,6 +419,23 @@ template< typename T>
 #define  DEST_FUNCTION_VALUE( f)  \
    celma::prog_args::destination( \
       std::bind( &f, std::placeholders::_1, std::placeholders::_2), #f, true)
+
+/// Macro used to call the celma::prog_args::destination() function for a lambda
+/// that takes no value as argument handler.
+///
+/// @param  l  Lambda.
+/// @since  x.y.z, 19.08.2021
+#define  DEST_LAMBDA( l)  \
+   celma::prog_args::destination( std::bind( l, std::placeholders::_1), "lambda")
+
+/// Macro used to call the celma::prog_args::destination() function for a lambda
+/// that accepts a value.
+///
+/// @param  l  Lambda.
+/// @since  x.y.z, 19.08.2021
+#define  DEST_LAMBDA_VALUE( l)  \
+   celma::prog_args::destination( \
+      std::bind( l, std::placeholders::_1, std::placeholders::_2), "value-lambda", true)
 
 /// Macro used to call the celma::prog_args::destination() function for a
 /// method (class member function) of the current object that takes no value.

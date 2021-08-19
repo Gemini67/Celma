@@ -881,4 +881,44 @@ BOOST_AUTO_TEST_CASE( no_value_method)
 
 
 
+/// Check using a lambda that is executed when the argument is used.
+///
+/// @since  x.y.z, 19.08.2021
+BOOST_AUTO_TEST_CASE( lambda)
+{
+
+   // lambda without a value
+   {
+      Handler  ah( 0);
+      int      v = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
+         DEST_LAMBDA( [&v]( bool) -> void { v = 42; }), "lambda"));
+
+      auto const  as2a = make_arg_array( "-v", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( v, 42);
+   } // end scope
+
+   // lambda with a value
+   {
+      Handler  ah( 0);
+      int      v = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
+         DEST_LAMBDA_VALUE( [&v]( const std::string& val, bool) -> void
+            {
+               v = std::stoi( val);
+            }), "lambda"));
+
+      auto const  as2a = make_arg_array( "-v 42", nullptr);
+      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_EQUAL( v, 42);
+   } // end scope
+
+} // lambda
+
+
+
 // =====  END OF test_argh_callables_c.cpp  =====
+
