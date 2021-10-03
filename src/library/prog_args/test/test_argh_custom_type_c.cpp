@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -32,7 +32,7 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/common/tokenizer.hpp"
 
 
@@ -188,9 +188,7 @@ BOOST_AUTO_TEST_CASE( custom_bitset)
       ah.addArgument( "b,bitset", new TypedArgBitset( kilobits, "bitset"),
                       "a bit set")->setIsMandatory());
 
-   const celma::appl::ArgString2Array  as2a( "-b 1,2,3,5,7,11", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 1,2,3,5,7,11"));
    BOOST_REQUIRE_EQUAL( kilobits.count(), 6);
    BOOST_REQUIRE( kilobits[  1]);
    BOOST_REQUIRE( kilobits[  2]);

@@ -29,11 +29,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -126,10 +125,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
       std::bitset< 10>  b;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
-
-      auto const  as2a = make_arg_array( "-b this,should,throw", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b this,should,throw"),
          std::bad_cast);
    } // end scope
 
@@ -139,11 +135,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
       std::bitset< 10>  b;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
-
-      auto const  as2a = make_arg_array( "-b 10", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b 10"), std::runtime_error);
    } // end scope
 
    // try to set a bit that is outside the range of the bitset
@@ -152,10 +144,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
       std::bitset< 10>  b;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
-
-      auto const  as2a = make_arg_array( "-b 3,25", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b 3,25"),
          std::runtime_error);
    } // end scope
 
@@ -166,10 +155,7 @@ BOOST_AUTO_TEST_CASE( test_bitset_errors)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->addFormat( new EnumFormatter()));
-
-      auto const  as2a = make_arg_array( "-b first,tenth", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b first,tenth"),
          std::runtime_error);
    } // end scope
 
@@ -189,10 +175,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       std::bitset< 10>  b;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6"));
       BOOST_REQUIRE_EQUAL( b.count(), 3);
       BOOST_REQUIRE( b[ 4]);
       BOOST_REQUIRE( b[ 5]);
@@ -206,10 +189,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setListSep( '.'));
-
-      auto const  as2a = make_arg_array( "-b 4.5.6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4.5.6"));
       BOOST_REQUIRE_EQUAL( b.count(), 3);
       BOOST_REQUIRE( b[ 4]);
       BOOST_REQUIRE( b[ 5]);
@@ -232,10 +212,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       std::bitset< 10>  b;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6 7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b 4,5,6 7"),
          std::invalid_argument);
    } // end scope
 
@@ -248,10 +225,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6 7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6 7"));
       BOOST_REQUIRE_EQUAL( b.count(), 3);
       BOOST_REQUIRE( b[ 4]);
       BOOST_REQUIRE( b[ 5]);
@@ -266,10 +240,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-b 4,5,6 7 8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6 7 8"));
       BOOST_REQUIRE_EQUAL( b.count(), 5);
       BOOST_REQUIRE( b[ 4]);
       BOOST_REQUIRE( b[ 5]);
@@ -286,10 +257,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6 7 --endvalues 8", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b 4,5,6 7 --endvalues 8"),
          std::invalid_argument);
    } // end scope
 
@@ -302,10 +270,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6 7 --endvalues 8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6 7 --endvalues 8"));
       BOOST_REQUIRE_EQUAL( b.count(), 4);
       BOOST_REQUIRE( b[ 4]);
       BOOST_REQUIRE( b[ 5]);
@@ -321,10 +286,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setCardinality( celma::prog_args::cardinality_max( 3)));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6"));
    } // end scope
 
    // allow a maximum of 3 bits to be set, try to set 4
@@ -334,10 +296,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setCardinality( celma::prog_args::cardinality_max( 3)));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6,7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b 4,5,6,7"),
          std::runtime_error);
    } // end scope
 
@@ -348,10 +307,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->addFormat( new EnumFormatter()));
-
-      auto const  as2a = make_arg_array( "-b second,fifth,seventh", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b second,fifth,seventh"));
       BOOST_REQUIRE_EQUAL( b.count(), 3);
       BOOST_REQUIRE( b[ 2]);
       BOOST_REQUIRE( b[ 5]);
@@ -377,10 +333,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       b.set( 3);
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6"));
       BOOST_REQUIRE_EQUAL( b.count(), 5);
       BOOST_REQUIRE( b[ 2]);
       BOOST_REQUIRE( b[ 3]);
@@ -399,10 +352,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->setClearBeforeAssign());
-
-      auto const  as2a = make_arg_array( "-b 4,5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5"));
       BOOST_REQUIRE_EQUAL( b.count(), 2);
       BOOST_REQUIRE( b[ 4]);
       BOOST_REQUIRE( b[ 5]);
@@ -431,10 +381,7 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->unsetFlag());
-
-      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6"));
       BOOST_REQUIRE_EQUAL( b.count(), 2);
       BOOST_REQUIRE( b[ 2]);
       BOOST_REQUIRE( b[ 7]);
@@ -453,10 +400,7 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values")
          ->unsetFlag()->setTakesMultiValue()->setListSep( '.'));
-
-      auto const  as2a = make_arg_array( "-b 4.5.6 7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4.5.6 7"));
       BOOST_REQUIRE_EQUAL( b.count(), 1);
       BOOST_REQUIRE( b[ 2]);
    } // end scope
@@ -479,11 +423,8 @@ BOOST_AUTO_TEST_CASE( list_var)
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( b), "values"));
-
-   auto const  as2a = make_arg_array( "--list-arg-var -b 4,5,6 --list-arg-var",
-      nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW(
+      evalArgumentString( ah, "--list-arg-var -b 4,5,6 --list-arg-var"));
 
    BOOST_REQUIRE( oss_err.str().empty());
    // std::cerr << "\n" << oss_std.str() << std::endl;

@@ -424,7 +424,7 @@ template< typename T>
 /// that takes no value as argument handler.
 ///
 /// @param  l  Lambda.
-/// @since  x.y.z, 19.08.2021
+/// @since  1.46.1, 19.08.2021
 #define  DEST_LAMBDA( l)  \
    celma::prog_args::destination( std::bind( l, std::placeholders::_1), "lambda")
 
@@ -432,7 +432,7 @@ template< typename T>
 /// that accepts a value.
 ///
 /// @param  l  Lambda.
-/// @since  x.y.z, 19.08.2021
+/// @since  1.46.1, 19.08.2021
 #define  DEST_LAMBDA_VALUE( l)  \
    celma::prog_args::destination( \
       std::bind( l, std::placeholders::_1, std::placeholders::_2), "value-lambda", true)

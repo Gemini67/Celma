@@ -29,10 +29,9 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -150,9 +149,7 @@ BOOST_AUTO_TEST_CASE( test_wrong_dest_type)
 BOOST_FIXTURE_TEST_CASE( test_no_args_pos, TestFixturePositional)
 {
 
-   auto const  as2a = make_arg_array( "", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, ""));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE( mCommand.empty());
@@ -166,9 +163,7 @@ BOOST_FIXTURE_TEST_CASE( test_no_args_pos, TestFixturePositional)
 BOOST_FIXTURE_TEST_CASE( test_no_args_carg, TestFixtureCharArg)
 {
 
-   auto const  as2a = make_arg_array( "", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, ""));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE( mCommand.empty());
@@ -182,9 +177,7 @@ BOOST_FIXTURE_TEST_CASE( test_no_args_carg, TestFixtureCharArg)
 BOOST_FIXTURE_TEST_CASE( test_only_flag_pos, TestFixturePositional)
 {
 
-   auto const  as2a = make_arg_array( "-v", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, "-v"));
    BOOST_REQUIRE( mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE( mCommand.empty());
@@ -198,9 +191,7 @@ BOOST_FIXTURE_TEST_CASE( test_only_flag_pos, TestFixturePositional)
 BOOST_FIXTURE_TEST_CASE( test_only_flag_carg, TestFixtureCharArg)
 {
 
-   auto const  as2a = make_arg_array( "-v", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, "-v"));
    BOOST_REQUIRE( mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE( mCommand.empty());
@@ -214,9 +205,7 @@ BOOST_FIXTURE_TEST_CASE( test_only_flag_carg, TestFixtureCharArg)
 BOOST_FIXTURE_TEST_CASE( test_only_cmd_pos, TestFixturePositional)
 {
 
-   auto const  as2a = make_arg_array( "command list vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, "command list vars"));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE_EQUAL( mCommand, "command list vars");
@@ -230,9 +219,7 @@ BOOST_FIXTURE_TEST_CASE( test_only_cmd_pos, TestFixturePositional)
 BOOST_FIXTURE_TEST_CASE( test_only_cmd_carg, TestFixtureCharArg)
 {
 
-   auto const  as2a = make_arg_array( "-x list vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, "-x list vars"));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE_EQUAL( mCommand, "list vars");
@@ -246,9 +233,7 @@ BOOST_FIXTURE_TEST_CASE( test_only_cmd_carg, TestFixtureCharArg)
 BOOST_FIXTURE_TEST_CASE( test_cmd_after_flag_pos, TestFixturePositional)
 {
 
-   auto const  as2a = make_arg_array( "-v command list vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, "-v command list vars"));
    BOOST_REQUIRE( mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE_EQUAL( mCommand, "command list vars");
@@ -262,9 +247,7 @@ BOOST_FIXTURE_TEST_CASE( test_cmd_after_flag_pos, TestFixturePositional)
 BOOST_FIXTURE_TEST_CASE( test_cmd_after_flag_carg, TestFixtureCharArg)
 {
 
-   auto const  as2a = make_arg_array( "-v -x list vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, "-v -x list vars"));
    BOOST_REQUIRE( mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 0);
    BOOST_REQUIRE_EQUAL( mCommand, "list vars");
@@ -278,9 +261,7 @@ BOOST_FIXTURE_TEST_CASE( test_cmd_after_flag_carg, TestFixtureCharArg)
 BOOST_FIXTURE_TEST_CASE( test_cmd_after_value_pos, TestFixturePositional)
 {
 
-   auto const  as2a = make_arg_array( "-c 42 command list vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, "-c 42 command list vars"));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 42);
    BOOST_REQUIRE_EQUAL( mCommand, "command list vars");
@@ -294,9 +275,7 @@ BOOST_FIXTURE_TEST_CASE( test_cmd_after_value_pos, TestFixturePositional)
 BOOST_FIXTURE_TEST_CASE( test_cmd_after_value_carg, TestFixtureCharArg)
 {
 
-   auto const  as2a = make_arg_array( "-c 42 -x list vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( mArgH, "-c 42 -x list vars"));
    BOOST_REQUIRE( !mVerbose);
    BOOST_REQUIRE_EQUAL( mCount, 42);
    BOOST_REQUIRE_EQUAL( mCommand, "list vars");
@@ -310,10 +289,8 @@ BOOST_FIXTURE_TEST_CASE( test_cmd_after_value_carg, TestFixtureCharArg)
 BOOST_FIXTURE_TEST_CASE( test_wrong_usage_carg, TestFixtureCharArg)
 {
 
-   auto const  as2a = make_arg_array( "-vx list vars", nullptr);
-
-   BOOST_REQUIRE_THROW( mArgH.evalArguments( as2a.mArgC, as2a.mpArgV),
-                        celma::prog_args::argument_error);
+   BOOST_REQUIRE_THROW( evalArgumentString( mArgH, "-vx list vars"),
+      celma::prog_args::argument_error);
 
 } // test_wrong_usage_carg
 

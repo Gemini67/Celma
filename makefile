@@ -96,7 +96,7 @@ test:	test-release test-debug test-release-20 test-debug-20
 test-debug:
 	@if [ -d build/debug ]; then \
 	   cd build/debug; \
-	   make test; \
+	   make test ARGS=-j${CPUS}; \
 	else \
 	   echo "*** Error: build/debug does not exist!" >&2; \
 	fi
@@ -104,7 +104,7 @@ test-debug:
 test-release:
 	@if [ -d build/release ]; then \
 	   cd build/release; \
-	   make test; \
+	   make test ARGS=-j${CPUS}; \
 	else \
 	   echo "*** Error: build/release does not exist!" >&2; \
 	fi
@@ -112,7 +112,7 @@ test-release:
 test-debug-20:
 	@if [ -d build/debug-20 ]; then \
 	   cd build/debug-20; \
-	   make test; \
+	   make test ARGS=-j${CPUS}; \
 	else \
 	   echo "*** Error: build/debug-20 does not exist!" >&2; \
 	fi
@@ -120,7 +120,7 @@ test-debug-20:
 test-release-20:
 	@if [ -d build/release-20 ]; then \
 	   cd build/release-20; \
-	   make test; \
+	   make test ARGS=-j${CPUS}; \
 	else \
 	   echo "*** Error: build/release-20 does not exist!" >&2; \
 	fi

@@ -31,12 +31,11 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/format/unit_prefixes.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -175,9 +174,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
@@ -187,9 +184,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "-i 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 5"),
          std::underflow_error);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -200,9 +195,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "-i 10", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 10"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10);
    } // end scope
@@ -216,9 +209,7 @@ BOOST_AUTO_TEST_CASE( lower_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "-i 10000 --help-arg-full i", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 10000 --help-arg-full i"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10000);
 
@@ -264,9 +255,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -276,9 +265,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "-i 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 5"),
          std::underflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -289,9 +276,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "-i 10", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 10"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 10);
@@ -303,9 +288,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "-i 10000", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 10000"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 10000);
@@ -317,9 +300,7 @@ BOOST_AUTO_TEST_CASE( lower_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10));
 
-      auto const  as2a = make_arg_array( "-i 10,5,10000", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 10,5,10000"),
          std::underflow_error);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
@@ -344,9 +325,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
@@ -356,9 +335,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 500", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 500"),
          std::overflow_error);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -369,9 +346,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 100", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 100"),
          std::overflow_error);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -382,9 +357,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 99", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 99"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 99);
    } // end scope
@@ -398,9 +371,7 @@ BOOST_AUTO_TEST_CASE( upper_limit)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 1 --help-arg-full i", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 1 --help-arg-full i"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 1);
 
@@ -446,9 +417,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -458,9 +427,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 500", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 500"),
          std::overflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -471,9 +438,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 100", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 100"),
          std::overflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -484,9 +449,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 99", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 99"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 99);
@@ -498,9 +461,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 1", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 1"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 1);
@@ -512,9 +473,7 @@ BOOST_AUTO_TEST_CASE( upper_limit_vector)
 
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 50,100", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 50,100"),
          std::overflow_error);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
@@ -541,9 +500,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
@@ -554,9 +511,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 5"),
          std::underflow_error);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -568,9 +523,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 10", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 10"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10);
    } // end scope
@@ -585,9 +538,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 99 --help-arg-full i", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 99 --help-arg-full i"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 99);
 
@@ -622,9 +573,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 100", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 100"),
          std::overflow_error);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -636,9 +585,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 10000", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 10000"),
          std::overflow_error);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -664,9 +611,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -677,9 +622,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 5"),
          std::underflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -691,9 +634,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 10", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 10"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 10);
@@ -706,9 +647,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 99", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 99"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 99);
@@ -721,9 +660,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 100", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 100"),
          std::overflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -735,9 +672,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 10000", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 10000"),
          std::overflow_error);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -749,9 +684,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 10,200", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 10,200"),
          std::overflow_error);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
@@ -765,9 +698,7 @@ BOOST_AUTO_TEST_CASE( lower_upper_limit_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")->addCheck( lower( 10))
          ->addCheck( upper( 100));
 
-      auto const  as2a = make_arg_array( "-i 20,5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 20,5"),
          std::underflow_error);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
@@ -793,9 +724,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
@@ -806,9 +735,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 5"),
          std::out_of_range);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -820,9 +747,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 10", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 10"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 10);
    } // end scope
@@ -834,9 +759,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 99", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 99"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 99);
    } // end scope
@@ -848,9 +771,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 100", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 100"),
          std::out_of_range);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -862,9 +783,7 @@ BOOST_AUTO_TEST_CASE( check_range)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 10000", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 10000"),
          std::out_of_range);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -888,9 +807,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -901,9 +818,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 5"),
          std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -915,9 +830,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 10", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 10"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 10);
@@ -933,9 +846,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 99 --help-arg-full i", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 99 --help-arg-full i"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 99);
@@ -971,9 +882,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 100", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 100"),
          std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -985,9 +894,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 10000", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 10000"),
          std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -999,9 +906,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 10,200", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 10,200"),
          std::out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
@@ -1015,9 +920,7 @@ BOOST_AUTO_TEST_CASE( check_range_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer")
          ->addCheck( range( 10, 100));
 
-      auto const  as2a = make_arg_array( "-i 20,5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 20,5"),
          std::out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
@@ -1043,9 +946,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( !name.has_value());
    } // end scope
 
@@ -1057,9 +958,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
 
-      auto const  as2a = make_arg_array( "-n peter", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-n peter"),
          std::out_of_range);
       BOOST_REQUIRE( !name.has_value());
    } // end scope
@@ -1072,9 +971,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary", true));
 
-      auto const  as2a = make_arg_array( "-n peter", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n peter"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "peter");
    } // end scope
@@ -1086,9 +983,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
 
-      auto const  as2a = make_arg_array( "-n Paule", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-n Paule"),
          std::out_of_range);
       BOOST_REQUIRE( !name.has_value());
    } // end scope
@@ -1100,9 +995,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
 
-      auto const  as2a = make_arg_array( "-n Pete", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-n Pete"),
          std::out_of_range);
       BOOST_REQUIRE( !name.has_value());
    } // end scope
@@ -1114,9 +1007,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
 
-      auto const  as2a = make_arg_array( "-n Peter", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n Peter"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "Peter");
    } // end scope
@@ -1128,9 +1019,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
 
-      auto const  as2a = make_arg_array( "-n Paul", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n Paul"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "Paul");
    } // end scope
@@ -1145,9 +1034,7 @@ BOOST_AUTO_TEST_CASE( check_values_string)
       ah.addArgument( "n", DEST_VAR( name), "Name")
                     ->addCheck( values( "Peter,Paul,Mary"));
 
-      auto const  as2a = make_arg_array( "-n Mary --help-arg-full n", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n Mary --help-arg-full n"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "Mary");
 
@@ -1194,9 +1081,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
@@ -1207,9 +1092,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 1", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 1"),
          std::out_of_range);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -1221,9 +1104,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 110", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 110"),
          std::out_of_range);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -1235,9 +1116,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 11", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 11"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 11);
    } // end scope
@@ -1249,9 +1128,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 111", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 111"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 111);
    } // end scope
@@ -1263,9 +1140,7 @@ BOOST_AUTO_TEST_CASE( check_values_int)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 1111", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 1111"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 1111);
    } // end scope
@@ -1290,9 +1165,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( iVal.empty());
    } // end scope
 
@@ -1304,9 +1177,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 1", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 1"),
          std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -1319,9 +1190,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 110", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 110"),
          std::out_of_range);
       BOOST_REQUIRE( iVal.empty());
    } // end scope
@@ -1334,9 +1203,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 11", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 11"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 11);
@@ -1350,9 +1217,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 111", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 111"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 111);
@@ -1366,9 +1231,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 1111", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 1111"));
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
       BOOST_REQUIRE_EQUAL( iVal[ 0], 1111);
@@ -1382,9 +1245,7 @@ BOOST_AUTO_TEST_CASE( check_values_int_vector)
       ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                     ->addCheck( values( "11,111,1111"));
 
-      auto const  as2a = make_arg_array( "-i 11,1", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 11,1"),
          std::out_of_range);
       BOOST_REQUIRE( !iVal.empty());
       BOOST_REQUIRE_EQUAL( iVal.size(), 1);
@@ -1410,9 +1271,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
 
       ah.addArgument( "f", DEST_VAR( dest), "File")->addCheck( isFile());
 
-      auto const  as2a = make_arg_array( "-f /tmp", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f /tmp"),
          std::invalid_argument);
    } // end scope
 
@@ -1422,9 +1281,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
 
       ah.addArgument( "f", DEST_VAR( dest), "File")->addCheck( isFile());
 
-      auto const  as2a = make_arg_array( "-f /etc/passwd", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f /etc/passwd"));
    } // end scope
 
    {
@@ -1434,9 +1291,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
       ah.addArgument( "d", DEST_VAR( dest), "Directory")
          ->addCheck( isDirectory());
 
-      auto const  as2a = make_arg_array( "-d /etc/passwd", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-d /etc/passwd"),
          std::runtime_error);
    } // end scope
 
@@ -1450,9 +1305,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
       ah.addArgument( "d", DEST_VAR( dest), "Directory")
          ->addCheck( isDirectory());
 
-      auto const  as2a = make_arg_array( "-d /tmp --help-arg-full d", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-d /tmp --help-arg-full d"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -1485,9 +1338,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_file_directory)
       ah.addArgument( "d", DEST_VAR( dest), "Directory")
          ->addCheck( isDirectory());
 
-      auto const  as2a = make_arg_array( "-d /tmp", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-d /tmp"));
    } // end scope
 
 } // correctly_check_file_directory
@@ -1508,9 +1359,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
-      auto const  as2a = make_arg_array( "-p ./data/file.dat", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-p ./data/file.dat"),
          std::runtime_error);
    } // end scope
 
@@ -1520,9 +1369,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
-      auto const  as2a = make_arg_array( "-p data/file.dat", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-p data/file.dat"),
          std::runtime_error);
    } // end scope
 
@@ -1532,9 +1379,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
-      auto const  as2a = make_arg_array( "-p ~/data/file.dat", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-p ~/data/file.dat"),
          std::runtime_error);
    } // end scope
 
@@ -1544,9 +1389,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
-      auto const  as2a = make_arg_array( "-p /etc/passwd", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-p /etc/passwd"));
    } // end scope
 
    {
@@ -1558,9 +1401,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_absolute_path)
 
       ah.addArgument( "p", DEST_VAR( dest), "Path")->addCheck( isAbsolutePath());
 
-      auto const  as2a = make_arg_array( "-p /etc/passwd --help-arg-full p", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-p /etc/passwd --help-arg-full p"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -1607,9 +1448,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
 
-      auto const  as2a = make_arg_array( "-d /etc/passwd", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-d /etc/passwd"),
          std::runtime_error);
    } // end scope
 
@@ -1620,9 +1459,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
 
-      auto const  as2a = make_arg_array( "-d etc", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-d etc"),
          std::runtime_error);
    } // end scope
 
@@ -1633,9 +1470,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
 
-      auto const  as2a = make_arg_array( "-d ./etc", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-d ./etc"),
          std::runtime_error);
    } // end scope
 
@@ -1646,9 +1481,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
 
-      auto const  as2a = make_arg_array( "-d /etc", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-d /etc"));
    } // end scope
 
    {
@@ -1661,9 +1494,7 @@ BOOST_AUTO_TEST_CASE( check_directory_and_absolute_path)
       ah.addArgument( "d", DEST_VAR( dest), "Dir")->addCheck( isAbsolutePath())
          ->addCheck( isDirectory());
 
-      auto const  as2a = make_arg_array( "-d /etc --help-arg-full d", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-d /etc --help-arg-full d"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -1709,9 +1540,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_directory_exists)
       ah.addArgument( "f", DEST_VAR( dest), "path and filename")
          ->addCheck( parentDirectoryExists());
 
-      auto const  as2a = make_arg_array( "-f /home/anyusername/textfile.txt", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f /home/anyusername/textfile.txt"),
          std::runtime_error);
    } // end scope
 
@@ -1723,9 +1552,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_directory_exists)
       ah.addArgument( "f", DEST_VAR( dest), "path and filename")
          ->addCheck( parentDirectoryExists());
 
-      auto const  as2a = make_arg_array( "-f /etc/services/textfile.txt", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f /etc/services/textfile.txt"),
          std::runtime_error);
    } // end scope
 
@@ -1736,9 +1563,7 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_directory_exists)
       ah.addArgument( "f", DEST_VAR( dest), "path and filename")
          ->addCheck( parentDirectoryExists());
 
-      auto const  as2a = make_arg_array( "-f /etc/textfile.txt", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f /etc/textfile.txt"));
    } // end scope
 
    {
@@ -1751,10 +1576,8 @@ BOOST_AUTO_TEST_CASE( correctly_check_parent_directory_exists)
       ah.addArgument( "f", DEST_VAR( dest), "path and filename")
          ->addCheck( parentDirectoryExists());
 
-      auto const  as2a = make_arg_array( "-f /etc/textfile.txt --help-arg-full f",
-         nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah,
+         "-f /etc/textfile.txt --help-arg-full f"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -1799,9 +1622,7 @@ BOOST_AUTO_TEST_CASE( file_suffix)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileSuffix( "txt")));
 
-      auto const  as2a = make_arg_array( "-f myfile", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f myfile"),
          std::invalid_argument);
    } // end scope
 
@@ -1812,9 +1633,7 @@ BOOST_AUTO_TEST_CASE( file_suffix)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileSuffix( "txt")));
 
-      auto const  as2a = make_arg_array( "-f myfile.bin", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f myfile.bin"),
          std::invalid_argument);
    } // end scope
 
@@ -1825,9 +1644,7 @@ BOOST_AUTO_TEST_CASE( file_suffix)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileSuffix( "txt")));
 
-      auto const  as2a = make_arg_array( "-f myfile.txt", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f myfile.txt"));
    } // end scope
 
    {
@@ -1837,9 +1654,7 @@ BOOST_AUTO_TEST_CASE( file_suffix)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileSuffix( ".txt")));
 
-      auto const  as2a = make_arg_array( "-f myfile.txt", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f myfile.txt"));
    } // end scope
 
    {
@@ -1849,9 +1664,7 @@ BOOST_AUTO_TEST_CASE( file_suffix)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileSuffix( ".txt")));
 
-      auto const  as2a = make_arg_array( "-f myfile.today.txt", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f myfile.today.txt"));
    } // end scope
 
    {
@@ -1864,10 +1677,8 @@ BOOST_AUTO_TEST_CASE( file_suffix)
       ah.addArgument( "f", DEST_VAR( dest), "filename")
          ->addCheck( fileSuffix( "tgz"));
 
-      auto const  as2a = make_arg_array( "-f transfer.tgz --help-arg-full f",
-         nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah,
+         "-f transfer.tgz --help-arg-full f"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -1912,9 +1723,7 @@ BOOST_AUTO_TEST_CASE( file_size)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileSize< std::greater>( 1)));
 
-      auto const  as2a = make_arg_array( "-f /etc/passwd", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f /etc/passwd"));
    } // end scope
 
    {
@@ -1924,9 +1733,7 @@ BOOST_AUTO_TEST_CASE( file_size)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileSize< std::greater_equal>( 1_TiB)));
 
-      auto const  as2a = make_arg_array( "-f /etc/passwd", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f /etc/passwd"),
          std::invalid_argument);
    } // end scope
 
@@ -1940,10 +1747,8 @@ BOOST_AUTO_TEST_CASE( file_size)
       ah.addArgument( "f", DEST_VAR( dest), "filename")
          ->addCheck( fileSize< std::less>( 1_MiB));
 
-      auto const  as2a = make_arg_array( "-f /etc/passwd --help-arg-full f",
-         nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah,
+         "-f /etc/passwd --help-arg-full f"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -1989,9 +1794,7 @@ BOOST_AUTO_TEST_CASE( file_modification_time)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileMod< std::greater>( 24h)));
 
-      auto const  as2a = make_arg_array( "-f /etc/protocols", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f /etc/protocols"));
    } // end scope
 
    {
@@ -2001,9 +1804,7 @@ BOOST_AUTO_TEST_CASE( file_modification_time)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( file), "Filename")
          ->addCheck( fileMod< std::greater_equal>( 100 * 365 * 24h)));
 
-      auto const  as2a = make_arg_array( "-f /etc/protocols", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f /etc/protocols"),
          std::invalid_argument);
    } // end scope
 
@@ -2017,10 +1818,8 @@ BOOST_AUTO_TEST_CASE( file_modification_time)
       ah.addArgument( "f", DEST_VAR( dest), "filename")
          ->addCheck( fileMod< std::greater_equal>( 365 * 24h));
 
-      auto const  as2a = make_arg_array( "-f /etc/protocols --help-arg-full f",
-         nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah,
+         "-f /etc/protocols --help-arg-full f"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -2066,9 +1865,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
 
-      auto const  as2a = make_arg_array( "-n Peter", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n Peter"));
    } // end scope
 
    // check against a pattern for a name: one word starting with an uppercase
@@ -2079,9 +1876,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
 
-      auto const  as2a = make_arg_array( "-n HansPeter", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-n HansPeter"),
          std::out_of_range);
    } // end scope
 
@@ -2093,9 +1888,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
 
-      auto const  as2a = make_arg_array( "-n peter", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-n peter"),
          std::out_of_range);
    } // end scope
 
@@ -2107,9 +1900,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
 
-      auto const  as2a = make_arg_array( "-n Peter123", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-n Peter123"),
          std::out_of_range);
    } // end scope
 
@@ -2123,9 +1914,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( "^[A-Z][a-z]+"));
 
-      auto const  as2a = make_arg_array( "-n Peterchen --help-arg-full n", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n Peterchen --help-arg-full n"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -2160,9 +1949,7 @@ BOOST_AUTO_TEST_CASE( pattern_check)
       ah.addArgument( "n", DEST_VAR( name), "A name")
          ->addCheck( pattern( reg_ex));
 
-      auto const  as2a = make_arg_array( "-n Peter", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n Peter"));
    } // end scope
 
 } // pattern_check
@@ -2193,9 +1980,7 @@ BOOST_AUTO_TEST_CASE( minimum_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( minLength( 6)));
 
-      auto const  as2a = make_arg_array( "-s hello", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-s hello"),
          std::underflow_error);
    } // end scope
 
@@ -2207,9 +1992,7 @@ BOOST_AUTO_TEST_CASE( minimum_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( minLength( 6)));
 
-      auto const  as2a = make_arg_array( "-s worlds", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s worlds"));
    } // end scope
 
    {
@@ -2222,9 +2005,7 @@ BOOST_AUTO_TEST_CASE( minimum_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( minLength( 6)));
 
-      auto const  as2a = make_arg_array( "-s worlds --help-arg-full s", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s worlds --help-arg-full s"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -2278,9 +2059,7 @@ BOOST_AUTO_TEST_CASE( maximum_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( maxLength( 6)));
 
-      auto const  as2a = make_arg_array( "-s wonderful", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-s wonderful"),
          std::overflow_error);
    } // end scope
 
@@ -2292,9 +2071,7 @@ BOOST_AUTO_TEST_CASE( maximum_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( maxLength( 6)));
 
-      auto const  as2a = make_arg_array( "-s worlds", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s worlds"));
    } // end scope
 
    {
@@ -2307,9 +2084,7 @@ BOOST_AUTO_TEST_CASE( maximum_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( maxLength( 6)));
 
-      auto const  as2a = make_arg_array( "-s worlds --help-arg-full s", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s worlds --help-arg-full s"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -2357,9 +2132,7 @@ BOOST_AUTO_TEST_CASE( min_max_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
 
-      auto const  as2a = make_arg_array( "-s hello", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-s hello"),
          std::underflow_error);
    } // end scope
 
@@ -2371,9 +2144,7 @@ BOOST_AUTO_TEST_CASE( min_max_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
 
-      auto const  as2a = make_arg_array( "-s wonderful", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s wonderful"));
    } // end scope
 
    // value too long
@@ -2384,9 +2155,7 @@ BOOST_AUTO_TEST_CASE( min_max_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
 
-      auto const  as2a = make_arg_array( "-s outstandingly", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-s outstandingly"),
          std::overflow_error);
    } // end scope
 
@@ -2400,9 +2169,7 @@ BOOST_AUTO_TEST_CASE( min_max_length)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( dest), "string")
          ->addCheck( minLength( 6))->addCheck( maxLength( 12)));
 
-      auto const  as2a = make_arg_array( "-s wonderful --help-arg-full s", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s wonderful --help-arg-full s"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -2509,9 +2276,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
 
@@ -2522,9 +2287,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      auto const  as2a = make_arg_array( "-i 1", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 1"),
                            std::runtime_error);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -2536,9 +2299,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      auto const  as2a = make_arg_array( "-i 110", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 110"),
                            std::runtime_error);
       BOOST_REQUIRE( !iVal.has_value());
    } // end scope
@@ -2550,9 +2311,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      auto const  as2a = make_arg_array( "-i 11", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 11"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 11);
    } // end scope
@@ -2564,9 +2323,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      auto const  as2a = make_arg_array( "-i 111", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 111"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 111);
    } // end scope
@@ -2579,9 +2336,7 @@ BOOST_AUTO_TEST_CASE( application_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer value")
                                             ->addCheck( tripple( 11, 111, 1111)));
 
-      auto const  as2a = make_arg_array( "-i 1111", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 1111"));
       BOOST_REQUIRE( iVal.has_value());
       BOOST_REQUIRE_EQUAL( iVal.value(), 1111);
    } // end scope
@@ -2604,8 +2359,7 @@ BOOST_AUTO_TEST_CASE( control_check)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( value), "some value"));
 
    {
-      auto const  as2a = make_arg_array( "-v 45 ! -v 47", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 45 ! -v 47"),
                            std::runtime_error);
       BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
    } // end scope

@@ -34,13 +34,12 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/common/multi_setter.hpp"
 #include "celma/prog_args/argument_error.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using std::string;
 
@@ -227,8 +226,7 @@ BOOST_AUTO_TEST_CASE( errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
          DEST_METHOD( NoValueTest, assign, nvt), "Method without value"));
 
-      auto const  as2a = make_arg_array( "-v juhu", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v juhu"),
          std::invalid_argument);
    } // end scope
 
@@ -240,8 +238,7 @@ BOOST_AUTO_TEST_CASE( errors)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
          DEST_METHOD_VALUE( MultiValueTest, assign, mvt), "Method with value"));
 
-      auto const  as2a = make_arg_array( "-f", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -261,8 +258,7 @@ BOOST_AUTO_TEST_CASE( function_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
          DEST_FUNCTION( handlerFun), "Function"));
 
-      auto const  as2a = make_arg_array( "-f", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f"));
       BOOST_REQUIRE( gotCalled);
    } // end scope
 
@@ -275,8 +271,7 @@ BOOST_AUTO_TEST_CASE( function_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
          DEST_FUNCTION( handlerFun), "Function"));
 
-      auto const  as2a = make_arg_array( "-f hello", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f hello"),
          std::invalid_argument);
    } // end scope
 
@@ -289,8 +284,7 @@ BOOST_AUTO_TEST_CASE( function_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
          DEST_FUNCTION_VALUE( handlerFunValue), "Function"));
 
-      auto const  as2a = make_arg_array( "-f", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -301,8 +295,7 @@ BOOST_AUTO_TEST_CASE( function_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f,fun",
          DEST_FUNCTION_VALUE( handlerFunValue), "Function"));
 
-      auto const  as2a = make_arg_array( "-f hello", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f hello"));
       BOOST_REQUIRE_EQUAL( gotVal, "hello");
    } // end scope
 
@@ -314,8 +307,7 @@ BOOST_AUTO_TEST_CASE( function_check)
          DEST_FUNCTION_VALUE( handlerFunValue), "Function")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "-f", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -329,8 +321,7 @@ BOOST_AUTO_TEST_CASE( function_check)
          DEST_FUNCTION_VALUE( handlerFunValue), "Function")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "-f v1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f v1"));
       BOOST_REQUIRE_EQUAL( gotVal, "v1");
    } // end scope
 
@@ -352,10 +343,7 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
          DEST_FUNCTION_VALUE( handlerFunValue), "Function")
          ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::runtime_error);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, ""), std::runtime_error);
    } // end scope
 
    gotVal.clear();
@@ -367,9 +355,7 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
          DEST_FUNCTION_VALUE( handlerFunValue), "Function")
          ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
 
-      auto const  as2a = make_arg_array( "-f", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -382,9 +368,7 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
          DEST_FUNCTION_VALUE( handlerFunValue), "Function")
          ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
 
-      auto const  as2a = make_arg_array( "-f v1", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f v1"));
       BOOST_REQUIRE_EQUAL( gotVal, "v1");
    } // end scope
 
@@ -397,9 +381,7 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
          DEST_FUNCTION_VALUE( handlerFunValue), "Function")
          ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
 
-      auto const  as2a = make_arg_array( "--fun", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "--fun"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -412,9 +394,7 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
          DEST_FUNCTION_VALUE( handlerFunValue), "Function")
          ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
 
-      auto const  as2a = make_arg_array( "--fun v2", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--fun v2"));
       BOOST_REQUIRE_EQUAL( gotVal, "v2");
    } // end scope
 
@@ -427,9 +407,7 @@ BOOST_AUTO_TEST_CASE( mandatory_function_check)
          DEST_FUNCTION_VALUE( handlerFunValue), "Function")
          ->setValueMode( Handler::ValueMode::optional)->setIsMandatory());
 
-      auto const  as2a = make_arg_array( "--fun=v3", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--fun=v3"));
       BOOST_REQUIRE_EQUAL( gotVal, "v3");
    } // end scope
 
@@ -453,8 +431,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method"));
 
-      auto const  as2a = make_arg_array( "-m", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "-m"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -468,8 +445,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "-m", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "-m"),
                            celma::prog_args::argument_error);
    } // end scope
 
@@ -483,8 +459,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "-m v1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-m v1"));
       BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
    } // end scope
 
@@ -497,8 +472,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,method",
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method"));
 
-      auto const  as2a = make_arg_array( "--method", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "--method"),
                            celma::prog_args::argument_error);
    } // end scope
 
@@ -512,8 +486,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "--method", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "--method"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -527,8 +500,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "--method v1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--method v1"));
       BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
    } // end scope
 
@@ -542,8 +514,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "--method=v1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--method=v1"));
       BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
    } // end scope
 
@@ -557,8 +528,7 @@ BOOST_AUTO_TEST_CASE( value_method_check)
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "--method=v1 --list-arg-var", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--method=v1 --list-arg-var"));
       BOOST_REQUIRE_EQUAL( myTestObj.value(), "v1");
 
       BOOST_REQUIRE( std_err.str().empty());
@@ -591,9 +561,7 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
          DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "-b", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b"));
       BOOST_REQUIRE_EQUAL( myTestObj.boolValue(), true);
    } // end scope
 
@@ -605,8 +573,7 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
          DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "-m true", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "-m true"),
                            std::invalid_argument);
    } // end scope
 
@@ -618,9 +585,7 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
          DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "--bool", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--bool"));
       BOOST_REQUIRE_EQUAL( myTestObj.boolValue(), true);
    } // end scope
 
@@ -632,9 +597,7 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
          DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "--bool true", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "--bool true"),
                            celma::prog_args::argument_error);
    } // end scope
 
@@ -646,9 +609,7 @@ BOOST_AUTO_TEST_CASE( bool_method_check)
          DEST_METHOD_VALUE( TestArgFunc, boolFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::optional));
 
-      auto const  as2a = make_arg_array( "--bool=true", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "--bool=true"),
                            celma::prog_args::argument_error);
    } // end scope
 
@@ -672,9 +633,7 @@ BOOST_AUTO_TEST_CASE( multi_setter2_check)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,multi",
       DEST_METHOD_VALUE( my_setter, assign, ms), "multi-setter2"));
 
-   auto const  as2a = make_arg_array( "-m 42", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-m 42"));
    BOOST_REQUIRE_EQUAL( var1, 42);
    BOOST_REQUIRE_EQUAL( var2, "hello world");
 
@@ -700,9 +659,7 @@ BOOST_AUTO_TEST_CASE( multi_setter3_check)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "m,multi",
       DEST_METHOD_VALUE( my_setter, assign, ms), "multi-setter3"));
 
-   auto const  as2a = make_arg_array( "-m now", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-m now"));
    BOOST_REQUIRE_EQUAL( string_var1, "now");
    BOOST_REQUIRE_EQUAL( int_var2, 42);
    BOOST_REQUIRE_EQUAL( string_var3, "hello world");
@@ -721,10 +678,8 @@ BOOST_AUTO_TEST_CASE( free_value)
 
       ah.addArgument( "-", DEST_FUNCTION_VALUE( handlerFunValue), "Function");
 
-      auto const  as2a = make_arg_array( "hello", nullptr);
-
       gotVal.clear();
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "hello"));
       BOOST_REQUIRE_EQUAL( gotVal, "hello");
    } // end scope
 
@@ -736,9 +691,7 @@ BOOST_AUTO_TEST_CASE( free_value)
          DEST_METHOD_VALUE( TestArgFunc, handlerFunc, myTestObj), "Method")
          ->setValueMode( Handler::ValueMode::required));
 
-      auto const  as2a = make_arg_array( "again", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "again"));
       BOOST_REQUIRE_EQUAL( myTestObj.value(), "again");
    } // end scope
 
@@ -760,8 +713,7 @@ BOOST_AUTO_TEST_CASE( multi_values)
          DEST_METHOD_VALUE( MultiValueTest, assign, mvt),
          "Method that can be called multiple times")->setCardinality( nullptr));
 
-      auto const  as2a = make_arg_array( "-v 1 -v 2 -v 3", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 1 -v 2 -v 3"));
       BOOST_REQUIRE_EQUAL( mvt.numValues(), 3);
    } // end scope
 
@@ -774,8 +726,7 @@ BOOST_AUTO_TEST_CASE( multi_values)
          "Method that can be called multiple times")->setCardinality( nullptr)
          ->setTakesMultiValue());
 
-      auto const  as2a = make_arg_array( "-v 1 2 3", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 1 2 3"));
       BOOST_REQUIRE_EQUAL( mvt.numValues(), 3);
    } // end scope
 
@@ -791,8 +742,7 @@ BOOST_AUTO_TEST_CASE( multi_values)
          "Method that can be called multiple times")->setCardinality( nullptr)
          ->setTakesMultiValue());
 
-      auto const  as2a = make_arg_array( "--help-arg v", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg v"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -835,8 +785,7 @@ BOOST_AUTO_TEST_CASE( no_value_method)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
          DEST_METHOD( NoValueTest, assign, nvt), "Method for flag"));
 
-      auto const  as2a = make_arg_array( "-f", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f"));
       BOOST_REQUIRE_EQUAL( nvt.numCalls(), 1);
    } // end scope
 
@@ -850,8 +799,7 @@ BOOST_AUTO_TEST_CASE( no_value_method)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
          DEST_METHOD( NoValueTest, assign, nvt), "Method for flag"));
 
-      auto const  as2a = make_arg_array( "--help-arg f", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg f"));
 
       BOOST_REQUIRE( std_err.str().empty());
       BOOST_REQUIRE( !std_out.str().empty());
@@ -883,7 +831,7 @@ BOOST_AUTO_TEST_CASE( no_value_method)
 
 /// Check using a lambda that is executed when the argument is used.
 ///
-/// @since  x.y.z, 19.08.2021
+/// @since  1.46.1, 19.08.2021
 BOOST_AUTO_TEST_CASE( lambda)
 {
 
@@ -895,8 +843,7 @@ BOOST_AUTO_TEST_CASE( lambda)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
          DEST_LAMBDA( [&v]( bool) -> void { v = 42; }), "lambda"));
 
-      auto const  as2a = make_arg_array( "-v", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v"));
       BOOST_REQUIRE_EQUAL( v, 42);
    } // end scope
 
@@ -911,8 +858,7 @@ BOOST_AUTO_TEST_CASE( lambda)
                v = std::stoi( val);
             }), "lambda"));
 
-      auto const  as2a = make_arg_array( "-v 42", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 42"));
       BOOST_REQUIRE_EQUAL( v, 42);
    } // end scope
 

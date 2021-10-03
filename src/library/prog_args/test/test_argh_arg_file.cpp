@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test, header file include
+// module to test, headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -25,12 +25,11 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/global_fixture_access.hpp"
 #include "celma/test/test_prog_arguments.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -97,16 +96,14 @@ BOOST_AUTO_TEST_CASE( invalid_file)
    ah.addArgument( "i", DEST_VAR( int_val), "An integer");
    ah.addArgumentFile( "arg-file");
 
-   auto const  as2a = make_arg_array( "--arg-file xyz", "testprogname");
-
-   BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+   BOOST_REQUIRE_THROW( evalArgumentString( ah, "--arg-file xyz"),
       std::runtime_error);
 
 } // invalid_file
 
 
 
-/// Test that no error is generated when the file does not exist.
+/// Test that no error is generated when the argument file does not exist.
 ///
 /// @since  1.23.0, 05.04.2019
 BOOST_AUTO_TEST_CASE( file_through_flag)
@@ -118,13 +115,10 @@ BOOST_AUTO_TEST_CASE( file_through_flag)
 
    ah.addArgument( "i", DEST_VAR( int_val), "An integer");
 
-   auto const  as2a = make_arg_array( "", "testprogname");
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "", "testprogname"));
    BOOST_REQUIRE_EQUAL( int_val, 6);
 
 } // file_through_flag
-
 
 
 
@@ -148,9 +142,8 @@ BOOST_AUTO_TEST_CASE( file_through_arg)
 
    file_path.append( "/test_file_args.txt");
 
-   auto const  as2a = make_arg_array( "--arg-file " + file_path, "testprogname");
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--arg-file " + file_path,
+      "testprogname"));
 
    BOOST_REQUIRE_EQUAL( int_val, 42);
 
@@ -170,11 +163,9 @@ BOOST_AUTO_TEST_CASE( no_home)
 
    ah.addArgument( "i", DEST_VAR( int_val), "An integer");
 
-   auto const  as2a = make_arg_array( "", "testprogname");
-
    ::unsetenv( "HOME");
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "", "testprogname"));
    BOOST_REQUIRE_EQUAL( int_val, 6);
 
 } // no_home
