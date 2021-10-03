@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,12 +29,11 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using celma::test::multilineStringCompare;
 using std::ostringstream;
@@ -56,9 +55,7 @@ BOOST_AUTO_TEST_CASE( unknown_argument)
 
    ah.addArgument( "f", DEST_VAR( bool_arg), "A boolean flag");
 
-   auto const  as2a = make_arg_array( "--help-arg=-x", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg=-x"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( std_out.str().empty());
    BOOST_REQUIRE( !err_out.str().empty());
@@ -81,9 +78,7 @@ BOOST_AUTO_TEST_CASE( unknown_subgroup)
 
    ah.addArgument( "f", DEST_VAR( bool_arg), "A boolean flag");
 
-   auto const  as2a = make_arg_array( "--help-arg=-g/x", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg=-g/x"));
    // std::cerr << "\n" << err_out.str() << std::endl;
    BOOST_REQUIRE( std_out.str().empty());
    BOOST_REQUIRE( multilineStringCompare( err_out,
@@ -110,9 +105,7 @@ BOOST_AUTO_TEST_CASE( flag_usage)
       "context.\n"
       "Not that it is already tested thoroughly through the usage formatting.");
 
-   auto const  as2a = make_arg_array( "--help-arg=-f", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg=-f"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-f', usage:\n"
@@ -143,9 +136,7 @@ BOOST_AUTO_TEST_CASE( flag_full)
       "context.\n"
       "Not that it is already tested thoroughly through the usage formatting.");
 
-   auto const  as2a = make_arg_array( "--help-arg f", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg f"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-f', usage:\n"
@@ -189,9 +180,7 @@ BOOST_AUTO_TEST_CASE( mandatory_usage)
    ah.addArgument( "s", DEST_VAR( string_arg), "Some funny string argument.")
       ->setIsMandatory();
 
-   auto const  as2a = make_arg_array( "--help-arg=s", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg=s"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-s', usage:\n"
@@ -217,9 +206,7 @@ BOOST_AUTO_TEST_CASE( mandatory_full)
    ah.addArgument( "s", DEST_VAR( string_arg), "Some funny string argument.")
       ->setIsMandatory();
 
-   auto const  as2a = make_arg_array( "--help-arg=-s", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg=-s"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-s', usage:\n"
@@ -262,9 +249,7 @@ BOOST_AUTO_TEST_CASE( pair_full)
    ah.addArgument( "p,pair", DEST_PAIR( string_arg, int_arg, 42),
       "A pair of a string and an integer argument.");
 
-   auto const  as2a = make_arg_array( "--help-arg pair", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg pair"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '--pair', usage:\n"
@@ -321,9 +306,7 @@ BOOST_AUTO_TEST_CASE( subgroup_full)
    subOutput.addArgument( "q", DEST_PAIR( outputName, outputType, 3), "queue name");
    masterAH.addArgument( "o", subOutput, "output arguments");
 
-   auto const  as2a = make_arg_array( "--help-arg o", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "--help-arg o"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-o', usage:\n"
@@ -381,9 +364,7 @@ BOOST_AUTO_TEST_CASE( subgroup_arg_full)
    subOutput.addArgument( "q", DEST_PAIR( outputName, outputType, 3), "queue name");
    masterAH.addArgument( "o", subOutput, "output arguments");
 
-   auto const  as2a = make_arg_array( "--help-arg i/f", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "--help-arg i/f"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '-f', usage:\n"
@@ -428,9 +409,7 @@ BOOST_AUTO_TEST_CASE( vector_max_values_usage)
       ->addConstraint( celma::prog_args::excludes( "names"))
       ->addCheck( celma::prog_args::range( 1, 100));
 
-   auto const  as2a = make_arg_array( "--help-arg=--values", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg=--values"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '--values', usage:\n"
@@ -459,9 +438,7 @@ BOOST_AUTO_TEST_CASE( vector_max_values_full)
       ->addConstraint( celma::prog_args::excludes( "names"))
       ->addCheck( celma::prog_args::range( 1, 100));
 
-   auto const  as2a = make_arg_array( "--help-arg values", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-arg values"));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Argument '--values', usage:\n"
@@ -489,3 +466,4 @@ BOOST_AUTO_TEST_CASE( vector_max_values_full)
 
 
 // =====  END OF test_argh_arg_help_c.cpp  =====
+

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,11 +28,11 @@ int main( int argc, char* argv[])
 
    auto  ah1( Groups::instance().getArgHandler( "Program Arguments:"));
    auto  ah2( Groups::instance().getArgHandler( "Standard Arguments:", Handler::AllHelp));
-   bool  quietFlag;
-   bool  debugMode;
-   int   manInt1;
-   bool  printVersion;
-   bool  printModList;
+   bool  quietFlag = false;
+   bool  debugMode = false;
+   int   manInt1 = 0;
+   bool  printVersion = false;
+   bool  printModList = false;
 
 
    ah1->addArgument( "q",             DEST_VAR( quietFlag), "be quiet");
@@ -48,7 +48,7 @@ int main( int argc, char* argv[])
    } catch (const std::exception& e)
    {
       std::cerr << "caught exception: " << e.what() << std::endl;
-      exit( EXIT_FAILURE);
+      std::exit( EXIT_FAILURE);
    } // end try
 
    return EXIT_SUCCESS;
@@ -56,4 +56,5 @@ int main( int argc, char* argv[])
 
 
 
-// ====================  END OF test_arg_groups_usage.cpp  ====================
+// =====  END OF test_arg_groups_usage.cpp  =====
+

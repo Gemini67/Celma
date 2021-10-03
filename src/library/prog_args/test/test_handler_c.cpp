@@ -30,12 +30,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args/helpers/triple_logic.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 
 
-using celma::appl::ArgString2Array;
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using celma::prog_args::helpers::TripleLogic;
 
@@ -68,31 +66,23 @@ BOOST_AUTO_TEST_CASE( std_args_not_used)
 
 
    {
-      auto const  as2a = make_arg_array( "-v", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v"),
+         std::invalid_argument);
    } // end scope
 
    {
-      auto const  as2a = make_arg_array( "--verbose", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "--verbose"),
+         std::invalid_argument);
    } // end scope
 
    {
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-h"),
+         std::invalid_argument);
    } // end scope
 
    {
-      auto const  as2a = make_arg_array( "--help", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "--help"),
+         std::invalid_argument);
    } // end scope
 
 } // std_args_not_used
@@ -112,7 +102,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer"));
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( iVal), "Integer"),
-                           std::invalid_argument);
+         std::invalid_argument);
    } // end scope
 
    // specify the same long argument twice
@@ -120,7 +110,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "int", DEST_VAR( iVal), "Integer"));
       BOOST_REQUIRE_THROW( ah.addArgument( "int", DEST_VAR( iVal), "Integer"),
-                           std::invalid_argument);
+         std::invalid_argument);
    } // end scope
 
    // specify the same short argument twice (together with different long arguments)
@@ -128,7 +118,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int", DEST_VAR( iVal), "Integer"));
       BOOST_REQUIRE_THROW( ah.addArgument( "i,max", DEST_VAR( iVal), "Integer"),
-                           std::invalid_argument);
+         std::invalid_argument);
    } // end scope
 
    // specify the same long argument twice (together with different short arguments)
@@ -136,7 +126,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       Handler  ah( 0);
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int", DEST_VAR( iVal), "Integer"));
       BOOST_REQUIRE_THROW( ah.addArgument( "m,int", DEST_VAR( iVal), "Integer"),
-                           std::invalid_argument);
+         std::invalid_argument);
    } // end scope
 
    // specify to use standard short help argument and then specify an application
@@ -144,7 +134,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    {
       Handler  ah( Handler::hfHelpShort);
       BOOST_REQUIRE_THROW( ah.addArgument( "h", DEST_VAR( iVal), "Integer"),
-                           std::invalid_argument);
+         std::invalid_argument);
    } // end scope
 
    // specify to use standard long help argument and then specify an application
@@ -152,7 +142,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
    {
       Handler  ah( Handler::hfHelpLong);
       BOOST_REQUIRE_THROW( ah.addArgument( "help", DEST_VAR( iVal), "Integer"),
-                           std::invalid_argument);
+         std::invalid_argument);
    } // end scope
 
    // Ensure that calling unsetFlag() on a wrong type throws.
@@ -161,8 +151,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       bool     flag = false;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
-                                         ->unsetFlag(),
-                           std::logic_error);
+         ->unsetFlag(), std::logic_error);
    } // end scope
 
    {
@@ -170,8 +159,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       int      i = -1;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i), "int")
-                                         ->unsetFlag(),
-                           std::logic_error);
+         ->unsetFlag(), std::logic_error);
    } // end scope
 
    {
@@ -179,8 +167,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       std::optional< int>  i;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i), "int")
-                                         ->unsetFlag(),
-                           std::logic_error);
+         ->unsetFlag(), std::logic_error);
    } // end scope
 
    {
@@ -188,8 +175,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       std::string  s;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( s), "string")
-                                         ->unsetFlag(),
-                           std::logic_error);
+         ->unsetFlag(), std::logic_error);
    } // end scope
 
    {
@@ -197,8 +183,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       std::optional< std::string>  s;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( s), "string")
-                                         ->unsetFlag(),
-                           std::logic_error);
+         ->unsetFlag(), std::logic_error);
    } // end scope
 
    {
@@ -206,8 +191,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       std::vector< int>  vi;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_VAR( vi), "int vector")
-                                         ->unsetFlag(),
-                           std::logic_error);
+         ->unsetFlag(), std::logic_error);
    } // end scope
 
    // flags == boolean arguments cannot be defined mandatory
@@ -216,8 +200,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       bool     flag = false;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
-                                         ->setIsMandatory(),
-                           std::logic_error);
+         ->setIsMandatory(), std::logic_error);
    } // end scope
 
    {
@@ -225,8 +208,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       std::optional< bool>  flag;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "int")
-                                         ->setIsMandatory(),
-                           std::logic_error);
+         ->setIsMandatory(), std::logic_error);
    } // end scope
 
    // ensure that calling setSortData() on a wrong type throws.
@@ -235,8 +217,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       bool     flag = false;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
-                                         ->setSortData(),
-                           std::logic_error);
+         ->setSortData(), std::logic_error);
    } // end scope
 
    {
@@ -244,8 +225,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       int      i_val = -1;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i_val), "int")
-                                         ->setSortData(),
-                           std::logic_error);
+         ->setSortData(), std::logic_error);
    } // end scope
 
    {
@@ -253,8 +233,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       std::string  str;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "s", DEST_VAR( str), "string")
-                                         ->setSortData(),
-                           std::logic_error);
+         ->setSortData(), std::logic_error);
    } // end scope
 
    // ensure that calling setUniqueData() on a wrong type throws.
@@ -263,8 +242,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       bool     flag = false;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "f", DEST_VAR( flag), "boolean")
-                                         ->setUniqueData(),
-                           std::logic_error);
+         ->setUniqueData(), std::logic_error);
    } // end scope
 
    {
@@ -272,8 +250,7 @@ BOOST_AUTO_TEST_CASE( argument_setup_errors)
       int      i_val = -1;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "i", DEST_VAR( i_val), "int")
-                                         ->setUniqueData(),
-                           std::logic_error);
+         ->setUniqueData(), std::logic_error);
    } // end scope
 
    {
@@ -345,17 +322,13 @@ BOOST_AUTO_TEST_CASE( std_args_not_matching)
 
    {
       Handler     ah( Handler::hfHelpShort);
-      auto const  as2a = make_arg_array( "--help", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "--help"),
          std::invalid_argument);
    } // end scope
 
    {
       Handler     ah( Handler::hfHelpLong);
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-h"),
          std::invalid_argument);
    } // end scope
 
@@ -374,9 +347,7 @@ BOOST_AUTO_TEST_CASE( no_argument)
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
 
-   auto const  as2a = make_arg_array( "", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
    BOOST_REQUIRE( !flag.has_value());
 
 } // no_argument
@@ -399,13 +370,13 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
       std::optional< int>  iVal1;
       std::optional< int>  iVal2;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
-                                            ->setIsMandatory());
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1),
+         "count")->setIsMandatory());
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2),
+         "int"));
 
-      auto const  as2a = make_arg_array( "-i 17", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 17"),
+         std::runtime_error);
    } // end scope
 
    // unknown argument
@@ -414,13 +385,13 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
       std::optional< int>  iVal1;
       std::optional< int>  iVal2;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
-                                            ->setIsMandatory());
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1),
+         "count")->setIsMandatory());
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2),
+         "int"));
 
-      auto const  as2a = make_arg_array( "-h -c 5", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-h -c 5"),
+         std::invalid_argument);
    } // end scope
 
    // unknown long argument
@@ -429,13 +400,12 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
       std::optional< int>  iVal1;
       std::optional< int>  iVal2;
 
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1), "count")
-                                            ->setIsMandatory());
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "c,count", DEST_VAR( iVal1),
+         "count")->setIsMandatory());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
 
-      auto const  as2a = make_arg_array( "-c 85 --history", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-c 85 --history"),
+         std::invalid_argument);
    } // end scope
 
    // Argument with required value without a value (at beginning, i.e. followed
@@ -449,9 +419,8 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
                                             ->setIsMandatory());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
 
-      auto const  as2a = make_arg_array( "-i -c 9", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           celma::prog_args::argument_error);
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i -c 9"),
+        celma::prog_args::argument_error);
    } // end scope
 
    // Argument with required value without a value (at end)
@@ -464,9 +433,8 @@ BOOST_AUTO_TEST_CASE( parameter_string_errors)
                                             ->setIsMandatory());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i,int",   DEST_VAR( iVal2), "int"));
 
-      auto const  as2a = make_arg_array( "-c 8 -i", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           celma::prog_args::argument_error);
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "-c 8 -i"),
+        celma::prog_args::argument_error);
    } // end scope
 
 } // parameter_string_errors
@@ -480,23 +448,21 @@ BOOST_AUTO_TEST_CASE( unexpected_free_value)
 
    // single, unexpected free value
    {
-      Handler     ah( 0);
-      auto const  as2a = make_arg_array( "free_value", nullptr);
+      Handler  ah( 0);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "free_value"),
                            std::invalid_argument);
    } // end scope
 
    // unexpected free value after argument
    {
-      Handler     ah( 0);
-      auto const  as2a = make_arg_array( "-i 56 free_value", nullptr);
-      int         int_val;
+      Handler  ah( 0);
+      int      int_val;
 
       ah.addArgument( "i", DEST_VAR( int_val), "integer");
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 56 free_value"),
+         std::invalid_argument);
    } // end scope
 
 } // unexpected_free_value
@@ -533,9 +499,7 @@ BOOST_AUTO_TEST_CASE( unsupported_exclamation_mark)
 
       ah.addArgument( "f", DEST_VAR( flag), "a flag");
 
-      auto const  as2a = make_arg_array( "! -f", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "! -f"),
                            std::invalid_argument);
    } // end scope
 
@@ -545,9 +509,7 @@ BOOST_AUTO_TEST_CASE( unsupported_exclamation_mark)
 
       ah.addArgument( "i", DEST_VAR( ival), "an integer value");
 
-      auto const  as2a = make_arg_array( "! -i 42", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "! -i 42"),
                            std::invalid_argument);
    } // end scope
 
@@ -558,9 +520,7 @@ BOOST_AUTO_TEST_CASE( unsupported_exclamation_mark)
 
       ah.addArgument( "i", DEST_VAR( ival), "an integer value");
 
-      auto const  as2a = make_arg_array( "-i ! 42", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i ! 42"),
                            celma::prog_args::argument_error);
    } // end scope
 
@@ -587,8 +547,7 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-",      DEST_VAR( name), "Name")
                                             ->setIsMandatory());
 
-      auto const  as2a = make_arg_array( "-i 17", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+     BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 17"),
                            std::runtime_error);
    } // end scope
 
@@ -604,8 +563,7 @@ BOOST_AUTO_TEST_CASE( free_value_handling)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-",      DEST_VAR( name), "Name")
                                             ->setIsMandatory());
 
-      auto const  as2a = make_arg_array( "-f PROCESS1", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+     BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f PROCESS1"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
@@ -645,9 +603,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag)
 
    ah.addArgument( "f", DEST_VAR( flag), "Boolean flag");
 
-   auto const  as2a = make_arg_array( "-f", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f"));
    BOOST_REQUIRE( flag.has_value());
    BOOST_REQUIRE( flag.value());
 
@@ -667,9 +623,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag_unset)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag"));
 
-   auto const  as2a = make_arg_array( "-f", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f"));
    BOOST_REQUIRE( !flag);
 
 } // one_short_flag_unset
@@ -689,9 +643,7 @@ BOOST_AUTO_TEST_CASE( one_short_flag_checked_unset)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "f", DEST_VAR( flag), "Boolean flag")
       ->unsetFlag());
 
-   auto const  as2a = make_arg_array( "-f", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f"));
    BOOST_REQUIRE( flag.has_value());
    BOOST_REQUIRE( !flag.value());
 
@@ -710,9 +662,7 @@ BOOST_AUTO_TEST_CASE( one_long_flag)
 
    ah.addArgument( "flag", DEST_VAR( flag), "Boolean flag");
 
-   auto const  as2a = make_arg_array( "--flag", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--flag"));
    BOOST_REQUIRE( flag.has_value());
    BOOST_REQUIRE( flag.value());
 
@@ -731,9 +681,7 @@ BOOST_AUTO_TEST_CASE( one_flag_both)
 
       ah.addArgument( "f,flag", DEST_VAR( flag), "Boolean flag");
 
-      auto const  as2a = make_arg_array( "-f", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f"));
       BOOST_REQUIRE( flag.has_value());
       BOOST_REQUIRE( flag.value());
    } // end scope
@@ -744,9 +692,7 @@ BOOST_AUTO_TEST_CASE( one_flag_both)
 
       ah.addArgument( "f,flag", DEST_VAR( flag), "Boolean flag");
 
-      auto const  as2a = make_arg_array( "--flag", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--flag"));
       BOOST_REQUIRE( flag.has_value());
       BOOST_REQUIRE( flag.value());
    } // end scope
@@ -766,9 +712,7 @@ BOOST_AUTO_TEST_CASE( one_short_int)
 
       ah.addArgument( "m", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "-m 500", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-m 500"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
@@ -779,9 +723,7 @@ BOOST_AUTO_TEST_CASE( one_short_int)
 
       ah.addArgument( "m", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "-m500", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-m500"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
@@ -801,9 +743,7 @@ BOOST_AUTO_TEST_CASE( one_long_int)
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "--max_value 2000", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--max_value 2000"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 2000);
    } // end scope
@@ -814,9 +754,7 @@ BOOST_AUTO_TEST_CASE( one_long_int)
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "--max_value=7000", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--max_value=7000"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 7000);
    } // end scope
@@ -827,9 +765,7 @@ BOOST_AUTO_TEST_CASE( one_long_int)
 
       ah.addArgument( "max_value", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "--max_value=-81", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--max_value=-81"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), -81);
    } // end scope
@@ -849,9 +785,7 @@ BOOST_AUTO_TEST_CASE( one_free_int)
 
    ah.addArgument( "-", DEST_VAR( repetitions), "Number of repetitions");
 
-   auto const  as2a = make_arg_array( "123", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "123"));
    BOOST_REQUIRE( repetitions.has_value());
    BOOST_REQUIRE_EQUAL( repetitions.value(), 123);
 
@@ -870,9 +804,7 @@ BOOST_AUTO_TEST_CASE( one_int_both)
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "-m 500", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-m 500"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
@@ -883,9 +815,7 @@ BOOST_AUTO_TEST_CASE( one_int_both)
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "-m500", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-m500"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 500);
    } // end scope
@@ -896,9 +826,7 @@ BOOST_AUTO_TEST_CASE( one_int_both)
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "--max_value 2000", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--max_value 2000"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 2000);
    } // end scope
@@ -909,9 +837,7 @@ BOOST_AUTO_TEST_CASE( one_int_both)
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "--max_value=7000", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--max_value=7000"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), 7000);
    } // end scope
@@ -922,9 +848,7 @@ BOOST_AUTO_TEST_CASE( one_int_both)
 
       ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
 
-      auto const  as2a = make_arg_array( "--max_value=-135", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--max_value=-135"));
       BOOST_REQUIRE( maxValue.has_value());
       BOOST_REQUIRE_EQUAL( maxValue.value(), -135);
    } // end scope
@@ -944,9 +868,7 @@ BOOST_AUTO_TEST_CASE( one_short_double)
 
       ah.addArgument( "f", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "-f 7.5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f 7.5"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
@@ -957,9 +879,7 @@ BOOST_AUTO_TEST_CASE( one_short_double)
 
       ah.addArgument( "f", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "-f7.5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f7.5"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
@@ -979,9 +899,7 @@ BOOST_AUTO_TEST_CASE( one_long_double)
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "--factor 0.9", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--factor 0.9"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 0.9);
    } // end scope
@@ -992,9 +910,7 @@ BOOST_AUTO_TEST_CASE( one_long_double)
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "--factor=1.3", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--factor=1.3"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 1.3);
    } // end scope
@@ -1005,9 +921,7 @@ BOOST_AUTO_TEST_CASE( one_long_double)
 
       ah.addArgument( "factor", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "--factor=-125.75", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--factor=-125.75"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), -125.75);
    } // end scope
@@ -1027,9 +941,7 @@ BOOST_AUTO_TEST_CASE( one_free_double)
 
    ah.addArgument( "-", DEST_VAR( factor), "Factor");
 
-   auto const  as2a = make_arg_array( "99.98", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "99.98"));
    BOOST_REQUIRE( factor.has_value());
    BOOST_REQUIRE_EQUAL( factor.value(), 99.98);
 
@@ -1048,9 +960,7 @@ BOOST_AUTO_TEST_CASE( one_double_both)
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "-f 7.5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f 7.5"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
@@ -1061,9 +971,7 @@ BOOST_AUTO_TEST_CASE( one_double_both)
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "-f7.5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f7.5"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 7.5);
    } // end scope
@@ -1074,9 +982,7 @@ BOOST_AUTO_TEST_CASE( one_double_both)
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "--factor 0.9", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--factor 0.9"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 0.9);
    } // end scope
@@ -1087,9 +993,7 @@ BOOST_AUTO_TEST_CASE( one_double_both)
 
       ah.addArgument( "f,factor", DEST_VAR( factor), "Factor");
 
-      auto const  as2a = make_arg_array( "--factor=58.9653", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--factor=58.9653"));
       BOOST_REQUIRE( factor.has_value());
       BOOST_REQUIRE_EQUAL( factor.value(), 58.9653);
    } // end scope
@@ -1109,9 +1013,7 @@ BOOST_AUTO_TEST_CASE( one_short_string)
 
       ah.addArgument( "n", DEST_VAR( name), "Name");
 
-      auto const  as2a = make_arg_array( "-n PROCESS1", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n PROCESS1"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
@@ -1122,9 +1024,7 @@ BOOST_AUTO_TEST_CASE( one_short_string)
 
       ah.addArgument( "n", DEST_VAR( name), "Name");
 
-      auto const  as2a = make_arg_array( "-nPROCESS1", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-nPROCESS1"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
@@ -1144,9 +1044,7 @@ BOOST_AUTO_TEST_CASE( one_long_string)
 
       ah.addArgument( "name", DEST_VAR( name), "Name");
 
-      auto const  as2a = make_arg_array( "--name MY_PROCESS", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--name MY_PROCESS"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "MY_PROCESS");
    } // end scope
@@ -1157,9 +1055,7 @@ BOOST_AUTO_TEST_CASE( one_long_string)
 
       ah.addArgument( "name", DEST_VAR( name), "Name");
 
-      auto const  as2a = make_arg_array( "--name=OTHER_PROCESS", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--name=OTHER_PROCESS"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "OTHER_PROCESS");
    } // end scope
@@ -1175,12 +1071,11 @@ BOOST_AUTO_TEST_CASE( one_free_string)
 
    Handler                      ah( 0);
    std::optional< std::string>  name;
-   auto const                   as2a = make_arg_array( "PROCESS1", nullptr);
 
 
    ah.addArgument( "-", DEST_VAR( name), "Name");
 
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "PROCESS1"));
    BOOST_REQUIRE( name.has_value());
    BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
 
@@ -1199,9 +1094,7 @@ BOOST_AUTO_TEST_CASE( one_string_both)
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
-      auto const  as2a = make_arg_array( "-n PROCESS1", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n PROCESS1"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
@@ -1212,9 +1105,7 @@ BOOST_AUTO_TEST_CASE( one_string_both)
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
-      auto const  as2a = make_arg_array( "-nPROCESS1", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-nPROCESS1"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
@@ -1225,9 +1116,7 @@ BOOST_AUTO_TEST_CASE( one_string_both)
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
-      auto const  as2a = make_arg_array( "--name MY_PROCESS", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--name MY_PROCESS"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "MY_PROCESS");
    } // end scope
@@ -1238,9 +1127,7 @@ BOOST_AUTO_TEST_CASE( one_string_both)
 
       ah.addArgument( "n,name", DEST_VAR( name), "Name");
 
-      auto const  as2a = make_arg_array( "--name OTHER_PROCESS", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--name OTHER_PROCESS"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "OTHER_PROCESS");
    } // end scope
@@ -1261,57 +1148,53 @@ BOOST_AUTO_TEST_CASE( two_flags)
    {
    public:
       /// Constructor, initialises the Handler.
-      /// @param[in]  argstring  The argument string to pass to
-      ///                        \c ArgString2Array.
+      /// @since  1.46.1, 2208.2021  (no argument string parameter anymore)
       /// @since  0.2, 10.04.2016
-      explicit TestData( const std::string& argstring):
-         ah( 0),
-         as2a( argstring, nullptr)
+      TestData():
+         ah( 0)
       {
          ah.addArgument( "f,faster", DEST_VAR( faster), "Faster");
          ah.addArgument( "slower,s", DEST_VAR( slower), "Slower");
       } // end TestData::TestData
 
       /// The argument handler.
-      Handler                ah;
+      Handler               ah;
       /// First checked boolean parameter.
-      std::optional< bool>   faster;
+      std::optional< bool>  faster;
       /// Second checked boolean parameter.
-      std::optional< bool>   slower;
-      /// Argument string split to argc, argv.
-      const ArgString2Array  as2a;
+      std::optional< bool>  slower;
    }; // TestData
 
    {
-      TestData  td( "");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, ""));
       BOOST_REQUIRE( !td.faster.has_value());
       BOOST_REQUIRE( !td.slower.has_value());
    } // end scope
 
    {
-      TestData  td( "-f");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-f"));
       BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
       BOOST_REQUIRE( !td.slower.has_value());
    } // end scope
 
    {
-      TestData  td( "-s");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-s"));
       BOOST_REQUIRE( !td.faster.has_value());
       BOOST_REQUIRE( td.slower.has_value());
       BOOST_REQUIRE( td.slower.value());
    } // end scope
 
    {
-      TestData  td( "-fs");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-fs"));
       BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
       BOOST_REQUIRE( td.slower.has_value());
@@ -1319,9 +1202,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
    } // end scope
 
    {
-      TestData  td( "-f -s");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-f -s"));
       BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
       BOOST_REQUIRE( td.slower.has_value());
@@ -1329,9 +1212,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
    } // end scope
 
    {
-      TestData  td( "-s -f");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-s -f"));
       BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
       BOOST_REQUIRE( td.slower.has_value());
@@ -1339,9 +1222,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
    } // end scope
 
    {
-      TestData  td( "-sf");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-sf"));
       BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
       BOOST_REQUIRE( td.slower.has_value());
@@ -1349,9 +1232,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
    } // end scope
 
    {
-      TestData  td( "-s --faster");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-s --faster"));
       BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
       BOOST_REQUIRE( td.slower.has_value());
@@ -1359,9 +1242,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
    } // end scope
 
    {
-      TestData  td( "--slower -f");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--slower -f"));
       BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
       BOOST_REQUIRE( td.slower.has_value());
@@ -1369,9 +1252,9 @@ BOOST_AUTO_TEST_CASE( two_flags)
    } // end scope
 
    {
-      TestData  td( "--slower --faster");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--slower --faster"));
       BOOST_REQUIRE( td.faster.has_value());
       BOOST_REQUIRE( td.faster.value());
       BOOST_REQUIRE( td.slower.has_value());
@@ -1393,12 +1276,10 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    struct TestData
    {
       /// Constructor, initialises the Handler.
-      /// @param[in]  argstring  The argument string to pass to
-      ///                        \c ArgString2Array.
+      /// @since  1.46.1, 22.08.2021  (no argument string anymore)
       /// @since  0.2, 10.04.2016
-      explicit TestData( const std::string& argstring):
-         ah( 0),
-         as2a( argstring, nullptr)
+      TestData():
+         ah( 0)
       {
          ah.addArgument( "flag,f", DEST_VAR( flag), "Flag");
          ah.addArgument( "n,name", DEST_VAR( name), "Name");
@@ -1410,14 +1291,12 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
       std::optional< bool>         flag;
       /// Second checked parameter, string.
       std::optional< std::string>  name;
-      /// Argument string split to argc, argv.
-      const ArgString2Array        as2a;
    }; // TestData
 
    {
-      TestData  td( "-f -n PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-f -n PROCESS1"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1425,9 +1304,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "-f -nPROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-f -nPROCESS1"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1435,9 +1314,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "-n PROCESS1 -f");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-n PROCESS1 -f"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1445,9 +1324,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "-nPROCESS1 -f");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-nPROCESS1 -f"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1455,9 +1334,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "-f --name PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-f --name PROCESS1"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1465,9 +1344,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "--name PROCESS1 -f");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--name PROCESS1 -f"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1475,9 +1354,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "--flag --name PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--flag --name PROCESS1"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1485,9 +1364,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "--name PROCESS1 --flag");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--name PROCESS1 --flag"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1495,9 +1374,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "-fn PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-fn PROCESS1"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1505,9 +1384,9 @@ BOOST_AUTO_TEST_CASE( flag_and_string)
    } // end scope
 
    {
-      TestData  td( "-fnPROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-fnPROCESS1"));
       BOOST_REQUIRE( td.flag.has_value());
       BOOST_REQUIRE( td.flag.value());
       BOOST_REQUIRE( td.name.has_value());
@@ -1529,13 +1408,12 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    {
    public:
       /// Constructor, does all the work.
-      /// @param[in]  argstring  The argument string for this test.
+      /// @since  1.46.1, 22.08.2021  (no argument string parameter anymore)
       /// @since  0.2, 10.04.2016
-      explicit TestData( const std::string& argstring):
+      TestData():
          ah( 0),
          maxValue(),
-         name(),
-         as2a( argstring, nullptr)
+         name()
       {
          ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
          ah.addArgument( "n,name",      DEST_VAR( name),     "Name");
@@ -1547,95 +1425,93 @@ BOOST_AUTO_TEST_CASE( int_and_string)
       std::optional< int>          maxValue;
       /// Destination variable.
       std::optional< std::string>  name;
-      /// Argument string split into argc, argv.
-      const ArgString2Array        as2a;
 
    }; // TestData
 
    {
-      TestData  td( "");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, ""));
       BOOST_REQUIRE( !td.maxValue.has_value());
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "-m 500");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m 500"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "-m500");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m500"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "--max_value 1000");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value 1000"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "--max_value=4711");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value=4711"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 4711);
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "-n PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-n PROCESS1"));
       BOOST_REQUIRE( !td.maxValue.has_value());
       BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
    {
-      TestData  td( "-nPROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-nPROCESS1"));
       BOOST_REQUIRE( !td.maxValue.has_value());
       BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
    {
-      TestData  td( "--name MY_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--name MY_PROCESS"));
       BOOST_REQUIRE( !td.maxValue.has_value());
       BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "MY_PROCESS");
    } // end scope
 
    {
-      TestData  td( "--name=OTHER_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--name=OTHER_PROCESS"));
       BOOST_REQUIRE( !td.maxValue.has_value());
       BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "OTHER_PROCESS");
    } // end scope
 
    {
-      TestData  td( "-m 500 -n PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m 500 -n PROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1643,9 +1519,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "-m500 -n PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m500 -n PROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1653,9 +1529,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "-m 500 -nPROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m 500 -nPROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1663,9 +1539,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "-m500 -nPROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m500 -nPROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1673,9 +1549,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "--max_value 1000 -n PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value 1000 -n PROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1683,9 +1559,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "--max_value 1000 -nPROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value 1000 -nPROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1693,9 +1569,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "--max_value=2000 -n PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value=2000 -n PROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1703,9 +1579,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "--max_value=2000 -nPROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value=2000 -nPROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1713,9 +1589,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "-m 500 --name MY_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m 500 --name MY_PROCESS"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1723,9 +1599,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "-m500 --name MY_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m500 --name MY_PROCESS"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1733,9 +1609,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "-m 500 --name=OTHER_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m 500 --name=OTHER_PROCESS"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1743,9 +1619,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "-m500 --name=OTHER_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m500 --name=OTHER_PROCESS"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1753,9 +1629,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "--max_value 1000 --name MY_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value 1000 --name MY_PROCESS"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1763,9 +1639,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "--max_value=2000 --name MY_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value=2000 --name MY_PROCESS"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1773,9 +1649,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "--max_value 1000 --name=OTHER_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value 1000 --name=OTHER_PROCESS"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1783,9 +1659,9 @@ BOOST_AUTO_TEST_CASE( int_and_string)
    } // end scope
 
    {
-      TestData  td( "--max_value=3000 --name=OTHER_PROCESS");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value=3000 --name=OTHER_PROCESS"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 3000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1807,13 +1683,12 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
    {
    public:
       /// Constructor, does all the work.
-      /// @param[in]  argstring  The argument string for this test.
+      /// @since  1.46.1, 22.08.2021  (no argument string parameter anymore)
       /// @since  0.2, 10.04.2016
-      explicit TestData( const std::string& argstring):
+      TestData():
          ah( 0),
          maxValue(),
-         name(),
-         as2a( argstring, nullptr)
+         name()
       {
          ah.addArgument( "max_value,m", DEST_VAR( maxValue), "Maximum value");
          ah.addArgument( "-",           DEST_VAR( name),     "Name");
@@ -1825,68 +1700,66 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
       std::optional< int>          maxValue;
       /// Destination variable.
       std::optional< std::string>  name;
-      /// Argument string split into argc, argv.
-      const ArgString2Array        as2a;
 
    }; // TestData
 
    {
-      TestData  td( "");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, ""));
       BOOST_REQUIRE( !td.maxValue.has_value());
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "-m 500");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m 500"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "-m500");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m500"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "--max_value 1000");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value 1000"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "--max_value=4711");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value=4711"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 4711);
       BOOST_REQUIRE( !td.name.has_value());
    } // end scope
 
    {
-      TestData  td( "PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "PROCESS1"));
       BOOST_REQUIRE( !td.maxValue.has_value());
       BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "PROCESS1");
    } // end scope
 
    {
-      TestData  td( "-m 500 PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m 500 PROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1894,9 +1767,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
    } // end scope
 
    {
-      TestData  td( "-m500 PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m500 PROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 500);
       BOOST_REQUIRE( td.name.has_value());
@@ -1904,9 +1777,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
    } // end scope
 
    {
-      TestData  td( "--max_value 1000 PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value 1000 PROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 1000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1914,9 +1787,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
    } // end scope
 
    {
-      TestData  td( "--max_value=2000 PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--max_value=2000 PROCESS1"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1925,9 +1798,9 @@ BOOST_AUTO_TEST_CASE( int_and_free_string)
 
    // free value before named argument
    {
-      TestData  td( "PROCESS1 --max_value=2000");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "PROCESS1 --max_value=2000"));
       BOOST_REQUIRE( td.maxValue.has_value());
       BOOST_REQUIRE_EQUAL( td.maxValue.value(), 2000);
       BOOST_REQUIRE( td.name.has_value());
@@ -1949,9 +1822,7 @@ BOOST_AUTO_TEST_CASE( application_uses_std_arg)
 
       ah.addArgument( "v", DEST_VAR( valor), "Valor number");
 
-      auto const  as2a = make_arg_array( "-v 25", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 25"));
       BOOST_REQUIRE( valor.has_value());
       BOOST_REQUIRE_EQUAL( valor.value(), 25);
    } // end scope
@@ -1962,9 +1833,7 @@ BOOST_AUTO_TEST_CASE( application_uses_std_arg)
 
       ah.addArgument( "v", DEST_VAR( valor), "Valor number");
 
-      auto const  as2a = make_arg_array( "-v25", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v25"));
       BOOST_REQUIRE( valor.has_value());
       BOOST_REQUIRE_EQUAL( valor.value(), 25);
    } // end scope
@@ -1975,9 +1844,7 @@ BOOST_AUTO_TEST_CASE( application_uses_std_arg)
 
       ah.addArgument( "verbose", DEST_VAR( doVerbose), "Set verbose on");
 
-      auto const  as2a = make_arg_array( "--verbose", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--verbose"));
       BOOST_REQUIRE( doVerbose.has_value());
       BOOST_REQUIRE( doVerbose.value());
    } // end scope
@@ -2001,8 +1868,7 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      auto const  as2a = make_arg_array( "-i 3.5", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), std::bad_cast);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 3.5"), std::bad_cast);
    } // end scope
 
    {
@@ -2015,8 +1881,7 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      auto const  as2a = make_arg_array( "-i3.5", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), std::bad_cast);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i3.5"), std::bad_cast);
    } // end scope
 
    {
@@ -2029,8 +1894,7 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      auto const  as2a = make_arg_array( "-i myName", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), std::bad_cast);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i myName"), std::bad_cast);
    } // end scope
 
    {
@@ -2043,8 +1907,7 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      auto const  as2a = make_arg_array( "-imyName", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), std::bad_cast);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-imyName"), std::bad_cast);
    } // end scope
 
    {
@@ -2057,8 +1920,7 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      auto const  as2a = make_arg_array( "-f myName", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), std::bad_cast);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-f myName"), std::bad_cast);
    } // end scope
 
    {
@@ -2071,8 +1933,7 @@ BOOST_AUTO_TEST_CASE( type_mismatch)
       ah.addArgument( "f", DEST_VAR( fVal), "Double");
       ah.addArgument( "s", DEST_VAR( sVal), "String");
 
-      auto const  as2a = make_arg_array( "-fmyName", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV), std::bad_cast);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-fmyName"), std::bad_cast);
    } // end scope
 
 } // type_mismatch
@@ -2105,8 +1966,7 @@ BOOST_AUTO_TEST_CASE( test_value_mode)
                       "A value")
                     ->setValueMode( Handler::ValueMode::optional);
 
-      auto const  as2a = make_arg_array( "", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE_EQUAL( value, -1);
    } // end scope
 
@@ -2120,8 +1980,7 @@ BOOST_AUTO_TEST_CASE( test_value_mode)
                       "A value")
                     ->setValueMode( Handler::ValueMode::optional);
 
-      auto const  as2a = make_arg_array( "-v", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v"));
       BOOST_REQUIRE_EQUAL( value, 0);
    } // end scope
 
@@ -2135,8 +1994,7 @@ BOOST_AUTO_TEST_CASE( test_value_mode)
                       "A value")
                     ->setValueMode( Handler::ValueMode::optional);
 
-      auto const  as2a = make_arg_array( "-v 42", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 42"));
       BOOST_REQUIRE_EQUAL( value, 42);
    } // end scope
 
@@ -2152,8 +2010,7 @@ BOOST_AUTO_TEST_CASE( test_value_mode)
                       "A value")
                     ->setValueMode( Handler::ValueMode::optional);
 
-      auto const  as2a = make_arg_array( "", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE_EQUAL( value, "hello world");
    } // end scope
 
@@ -2167,8 +2024,7 @@ BOOST_AUTO_TEST_CASE( test_value_mode)
                       "A value")
                     ->setValueMode( Handler::ValueMode::optional);
 
-      auto const  as2a = make_arg_array( "-v", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v"));
       BOOST_REQUIRE_EQUAL( value, "me, myself and I");
    } // end scope
 
@@ -2182,8 +2038,7 @@ BOOST_AUTO_TEST_CASE( test_value_mode)
                       "A value")
                     ->setValueMode( Handler::ValueMode::optional);
 
-      auto const  as2a = make_arg_array( "-v wonderworld", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v wonderworld"));
       BOOST_REQUIRE_EQUAL( value, "wonderworld");
    } // end scope
 
@@ -2202,13 +2057,12 @@ BOOST_AUTO_TEST_CASE( hyphen)
    {
    public:
       /// Constructor, does all the work.
-      /// @param[in]  argstring  The argument string for this test.
+      /// @since  1.46.1, 22.08.2021  (no argument string parameter anymore)
       /// @since  0.2, 10.04.2016
-      explicit TestData( const std::string& argstring):
+      TestData():
          ah( 0),
          name(),
-         minVal(),
-         as2a( argstring, nullptr)
+         minVal()
       {
          ah.addArgument( "n,name", DEST_VAR( name),   "Name");
          ah.addArgument( "m,min",  DEST_VAR( minVal), "Minimum value");
@@ -2220,85 +2074,83 @@ BOOST_AUTO_TEST_CASE( hyphen)
       std::optional< std::string>  name;
       /// Destination variable.
       std::optional< int>          minVal;
-      /// Argument string split into argc, argv.
-      const ArgString2Array        as2a;
 
    }; // TestData
 
    {
-      TestData  td( "-n -hyphenName");
+      TestData  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           celma::prog_args::argument_error);
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, "-n -hyphenName"),
+         celma::prog_args::argument_error);
       BOOST_REQUIRE( !td.name.has_value());
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
-      TestData  td( "--name -hyphenName");
+      TestData  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           celma::prog_args::argument_error);
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, "--name -hyphenName"),
+         celma::prog_args::argument_error);
       BOOST_REQUIRE( !td.name.has_value());
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
-      TestData  td( "-m -25");
+      TestData  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           celma::prog_args::argument_error);
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, "-m -25"),
+         celma::prog_args::argument_error);
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
-      TestData  td( "--min -25");
+      TestData  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
-                           celma::prog_args::argument_error);
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, "--min -25"),
+         celma::prog_args::argument_error);
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
-      TestData  td( "-n -- -hyphenName");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-n -- -hyphenName"));
       BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "-hyphenName");
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
-      TestData  td( "--name=-hyphenName");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--name=-hyphenName"));
       BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "-hyphenName");
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
-      TestData  td( "--name -- -hyphenName");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--name -- -hyphenName"));
       BOOST_REQUIRE( td.name.has_value());
       BOOST_REQUIRE_EQUAL( td.name.value(), "-hyphenName");
       BOOST_REQUIRE( !td.minVal.has_value());
    } // end scope
 
    {
-      TestData  td( "-m -- -30");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-m -- -30"));
       BOOST_REQUIRE( !td.name.has_value());
       BOOST_REQUIRE( td.minVal.has_value());
       BOOST_REQUIRE_EQUAL( td.minVal.value(), -30);
    } // end scope
 
    {
-      TestData  td( "--min -- -70");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--min -- -70"));
       BOOST_REQUIRE( !td.name.has_value());
       BOOST_REQUIRE( td.minVal.has_value());
       BOOST_REQUIRE_EQUAL( td.minVal.value(), -70);
@@ -2319,13 +2171,12 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
    {
    public:
       /// Constructor, does all the work.
-      /// @param[in]  argstring  The argument string for this test.
+      /// @since  1.46.1, 22.08.2021  (no argument string parameter anymore)
       /// @since  0.2, 10.04.2016
-      explicit TestData( const std::string& argstring):
+      TestData():
          ah( 0),
          iarg(),
-         name(),
-         as2a( argstring, nullptr)
+         name()
       {
          ah.addArgument( "iarg,i", DEST_VAR( iarg), "integer arg")->setIsMandatory();
          ah.addArgument( "n,name", DEST_VAR( name), "Name");
@@ -2337,35 +2188,33 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
       std::optional< int>          iarg;
       /// Destination variable.
       std::optional< std::string>  name;
-      /// Argument string split into argc, argv.
-      const ArgString2Array        as2a;
 
    }; // TestData
 
    {
-      TestData  td( "");
+      TestData  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, ""),
                            std::runtime_error);
    } // end scope
 
    {
-      TestData  td( "-n PROCESS1");
+      TestData  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, "-n PROCESS1"),
                            std::runtime_error);
    } // end scope
 
    {
-      TestData  td( "-i 55");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-i 55"));
    } // end scope
 
    {
-      TestData  td( "--iarg=5");
+      TestData  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "--iarg=5"));
    } // end scope
 
    /// Helper class used to create/initialise the objects for the test.
@@ -2374,10 +2223,10 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
    {
    public:
       /// Constructor, does all the work.
-      /// @param[in]  argstring  The argument string for this test.
+      /// @since  1.46.1, 22.08.2021  (no argument string parameter anymore)
       /// @since  0.2, 10.04.2016
-      explicit TestData2( const std::string& argstring):
-         TestData( argstring),
+      TestData2():
+         TestData(),
          iarg2()
       {
          ah.addArgument( "count,c", DEST_VAR( iarg2), "count")->setIsMandatory();
@@ -2389,36 +2238,36 @@ BOOST_AUTO_TEST_CASE( missing_mandatory)
    }; // TestData2
 
    {
-      TestData2  td( "-f");
+      TestData2  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, "-f"),
                            std::invalid_argument);
    } // end scope
 
    {
-      TestData2  td( "-c 5");
+      TestData2  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, "-c 5"),
                            std::runtime_error);
    } // end scope
 
    {
-      TestData2  td( "-n");
+      TestData2  td;
 
-      BOOST_REQUIRE_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( td.ah, "-n"),
                            celma::prog_args::argument_error);
    } // end scope
 
    {
-      TestData2  td( "-i 1 -c 2");
+      TestData2  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-i 1 -c 2"));
    } // end scope
 
    {
-      TestData2  td( "-c 5 -i 9");
+      TestData2  td;
 
-      BOOST_REQUIRE_NO_THROW( td.ah.evalArguments( td.as2a.mArgC, td.as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.ah, "-c 5 -i 9"));
    } // end scope
 
 } // missing_mandatory
@@ -2455,8 +2304,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument")
                                             ->setListSep( ';'));
 
-      auto const  as2a = make_arg_array( "-i", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i"),
                            celma::prog_args::argument_error);
    } // end scope
 
@@ -2467,8 +2315,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument")
                                             ->setListSep( ';'));
 
-      auto const  as2a = make_arg_array( "-i 17", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 17"));
       BOOST_REQUIRE_EQUAL( intVec.size(), 1);
       BOOST_REQUIRE_EQUAL( intVec[ 0], 17);
    } // end scope
@@ -2479,8 +2326,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument"));
 
-      auto const  as2a = make_arg_array( "-i 17,99", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 17,99"));
       BOOST_REQUIRE_EQUAL( intVec.size(), 2);
       BOOST_REQUIRE_EQUAL( intVec[ 0], 17);
       BOOST_REQUIRE_EQUAL( intVec[ 1], 99);
@@ -2493,8 +2339,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument")
                                             ->setListSep( ';'));
 
-      auto const  as2a = make_arg_array( "-i 17;99", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 17;99"));
       BOOST_REQUIRE_EQUAL( intVec.size(), 2);
       BOOST_REQUIRE_EQUAL( intVec[ 0], 17);
       BOOST_REQUIRE_EQUAL( intVec[ 1], 99);
@@ -2506,8 +2351,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument"));
 
-      auto const  as2a = make_arg_array( "-i 17 -i 88", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 17 -i 88"));
       BOOST_REQUIRE_EQUAL( intVec.size(), 2);
       BOOST_REQUIRE_EQUAL( intVec[ 0], 17);
       BOOST_REQUIRE_EQUAL( intVec[ 1], 88);
@@ -2519,8 +2363,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument"));
 
-      auto const  as2a = make_arg_array( "-s hello", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s hello"));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 1);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
    } // end scope
@@ -2531,8 +2374,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument"));
 
-      auto const  as2a = make_arg_array( "-s hello,world", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s hello,world"));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 2);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
       BOOST_REQUIRE_EQUAL( stringVec[ 1], "world");
@@ -2544,8 +2386,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument"));
 
-      auto const  as2a = make_arg_array( "-s hello -s world", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s hello -s world"));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 2);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
       BOOST_REQUIRE_EQUAL( stringVec[ 1], "world");
@@ -2558,8 +2399,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument")
                                             ->setListSep( '-'));
 
-      auto const  as2a = make_arg_array( "-s hello", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s hello"));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 1);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
    } // end scope
@@ -2571,8 +2411,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument")
                                             ->setListSep( '-'));
 
-      auto const  as2a = make_arg_array( "-s hello-world", nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s hello-world"));
       BOOST_REQUIRE_EQUAL( stringVec.size(), 2);
       BOOST_REQUIRE_EQUAL( stringVec[ 0], "hello");
       BOOST_REQUIRE_EQUAL( stringVec[ 1], "world");
@@ -2586,9 +2425,7 @@ BOOST_AUTO_TEST_CASE( vector_argument)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i", DEST_VAR( intVec), "vector<int> argument"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( stringVec), "vector<string> argument"));
 
-      auto const  as2a = make_arg_array( "-i 3 -s hello -i 89 -s my,world -i 77,57", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 3 -s hello -i 89 -s my,world -i 77,57"));
       BOOST_REQUIRE_EQUAL( intVec.size(), 4);
       BOOST_REQUIRE_EQUAL( intVec[ 0],  3);
       BOOST_REQUIRE_EQUAL( intVec[ 1], 89);
@@ -2669,9 +2506,7 @@ BOOST_AUTO_TEST_CASE( control_args)
          std::bind( &TestControlArgs::open, &tca),
          std::bind( &TestControlArgs::close, &tca)));
 
-      auto const  as2a = make_arg_array( "-i 11 ( -j 13 ) ! -c 42", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 11 ( -j 13 ) ! -c 42"));
       BOOST_REQUIRE_EQUAL( tca.getOpen(), 1);
       BOOST_REQUIRE_EQUAL( tca.getClose(), 1);
    } // end scope
@@ -2684,9 +2519,7 @@ BOOST_AUTO_TEST_CASE( control_args)
          DEST_METHOD_VALUE( TestControlArgs, assign, tca), "check")
          ->allowsInversion());
 
-      auto const  as2a = make_arg_array( "-c ! 42", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-c ! 42"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -2698,9 +2531,7 @@ BOOST_AUTO_TEST_CASE( control_args)
          DEST_METHOD_VALUE( TestControlArgs, assign, tca), "check")
          ->allowsInversion());
 
-   auto const  as2a = make_arg_array( "-i 11 ( ! -j 13 )", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-i 11 ( ! -j 13 )"),
          std::invalid_argument);
    } // end scope
 
