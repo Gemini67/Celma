@@ -658,6 +658,16 @@ BOOST_AUTO_TEST_CASE( insert_char_repetition)
       BOOST_REQUIRE_EQUAL( fs.data(), "Goodb");
    } // end scope
 
+   // insert into string fills to end
+   {
+      FixedString< 3>  fs( "Gdb");
+
+      fs.insert( 1, 2, 'o');
+
+      BOOST_REQUIRE_EQUAL( fs.str(), "Goo");
+      BOOST_REQUIRE_EQUAL( fs.data(), "Goo");
+   } // end scope
+
    // insert into string 1 character before end
    {
       FixedString< 50>  fs( "Goodbe");

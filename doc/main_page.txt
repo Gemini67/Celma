@@ -47,7 +47,7 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
-   |   1.46.1 | 2021-10-03        | Added support for calling lambdas in the argument handler.<br>Added function evalArgumentString() which simplifies test programs. |
+   |   1.46.1 | 2021-10-03        | Added support for calling lambdas in the argument handler.<br>Added function evalArgumentString() which simplifies test programs. Fixed bug in module fixed string. |
    |   1.46.0 | 2021-05-25        | Added module "fixed string". |
    |   1.45.0 | 2021-05-24        | Adapted module "length type". Added exception "argument error", used in argument handler. Added modules "random range" and "XML Writer". |
    |   1.44.0 | 2021-03-16        | Replaced module "file info" by functions of std::filesystem. Replaced module "check assign" by std::optional. |

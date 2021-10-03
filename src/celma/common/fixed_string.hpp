@@ -1809,7 +1809,7 @@ template< size_t L> inline void FixedString< L>::internalCopy( const char* src)
 {
    if (mLength > 0)
    {
-      ::memcpy( mString, src, mLength);
+      std::memcpy( mString, src, mLength);
    } // end if
    mString[ mLength] = '\0';
 } // FixedString< L>::internalCopy
@@ -1826,7 +1826,7 @@ template< size_t L> template< size_t S>
 
 
 template< size_t L> FixedString< L>::FixedString( const char* str) noexcept:
-   mLength( std::min( L, ::strlen( str)))
+   mLength( std::min( L, std::strlen( str)))
 {
    internalCopy( str);
 } // FixedString< L>::FixedString
@@ -1877,7 +1877,7 @@ template< size_t L> bool FixedString< L>::empty() const noexcept
 template< size_t L> FixedString< L>& FixedString< L>::assign( const char* str)
    noexcept
 {
-   mLength = std::min( L, ::strlen( str));
+   mLength = std::min( L, std::strlen( str));
    internalCopy( str);
    return *this;
 } // FixedString< L>::assign
@@ -2074,25 +2074,25 @@ template< size_t L>
          // aaaccccc\0, insert( 3, 4, 'b')
          // length = 8, L > 11
          // --> aaa____ccccc\0
-         ::memmove( &mString[ index + count], &mString[ index], mLength - index + 1);
+         std::memmove( &mString[ index + count], &mString[ index], mLength - index + 1);
          // --> aaabbbbccccc\0
-         ::memset( &mString[ index], ch, count);
+         std::memset( &mString[ index], ch, count);
          mLength += count;
       } else if (index + count <= L)
       {
          // aaaccccc\0, insert( 3, 4, 'b')
          // length = 8, L = 10
          // --> aaa____ccc\0
-         ::memmove( &mString[ index + count], &mString[ index], mLength - index + 1);
+         std::memmove( &mString[ index + count], &mString[ index], L - index - 1);
          // --> aaabbbbccc\0
-         ::memset( &mString[ index], ch, count);
+         std::memset( &mString[ index], ch, count);
          mLength = L;
       } else // index + count > L
       {
          // aaaccccc\0, insert( 3, 6, 'b')
          // length = 8, L = 8
          // --> aaabbbbb\0
-         ::memset( &mString[ index], ch, L - index);
+         std::memset( &mString[ index], ch, L - index);
          mLength = L;
       } // end if
    } else
@@ -2101,7 +2101,7 @@ template< size_t L>
       if (mLength + count > L)
          count = L - mLength;
 
-      ::memset( &mString[ mLength], ch, count);
+      std::memset( &mString[ mLength], ch, count);
       mLength += count;
    } // end if
 
@@ -2122,27 +2122,27 @@ template< size_t L>
          // aaaccccc\0, insert( 3, "bbbb")
          // length = 8, L > 11
          // --> aaa____ccccc\0
-         ::memmove( &mString[ index + count], &mString[ index],
+         std::memmove( &mString[ index + count], &mString[ index],
             mLength - index + 1);
          // --> aaabbbbccccc\0
-         ::memcpy( &mString[ index], str, count);
+         std::memcpy( &mString[ index], str, count);
          mLength += count;
       } else if (index + count <= L)
       {
          // aaaccccc\0, insert( 3, "bbbb")
          // length = 8, L = 10
          // --> aaa____ccc\0
-         ::memmove( &mString[ index + count], &mString[ index],
+         std::memmove( &mString[ index + count], &mString[ index],
             mLength - index + 1);
          // --> aaabbbbccc\0
-         ::memcpy( &mString[ index], str, count);
+         std::memcpy( &mString[ index], str, count);
          mLength = L;
       } else // index + count > L
       {
          // aaaccccc\0, insert( 3, "bbbbbb")
          // length = 8, L = 8
          // --> aaabbbbb\0
-         ::memcpy( &mString[ index], str, L - index);
+         std::memcpy( &mString[ index], str, L - index);
          mLength = L;
       } // end if
    } else
@@ -2151,7 +2151,7 @@ template< size_t L>
       if (mLength + count > L)
          count = L - mLength;
 
-      ::memcpy( &mString[ mLength], str, count);
+      std::memcpy( &mString[ mLength], str, count);
       mLength += count;
    } // end if
 
@@ -2164,7 +2164,7 @@ template< size_t L>
    FixedString< L>& FixedString< L>::insert( size_t index, const char* str)
       noexcept
 {
-   return insert( index, str, ::strlen( str));
+   return insert( index, str, std::strlen( str));
 } // FixedString< L>::insert
 
 
@@ -2262,7 +2262,7 @@ template< size_t L>
    // really delete a part from within the string
    // aaabbbbccccc, erase( 3, 4)
    // length = 12
-   ::memmove( &mString[ index], &mString[ index + count],
+   std::memmove( &mString[ index], &mString[ index + count],
       mLength - index - count);
    mLength -= count;
    mString[ mLength] = '\0';
@@ -2325,7 +2325,7 @@ template< size_t L> inline
    if (count > 0)
    {
       const size_t  append_len = std::min( L - mLength, count);
-      ::memcpy( &mString[ mLength], &str[ pos], append_len);
+      std::memcpy( &mString[ mLength], &str[ pos], append_len);
       mLength += append_len;
       mString[ mLength] = '\0';
    } // end if
@@ -2377,14 +2377,14 @@ template< size_t L>
    FixedString< L>& FixedString< L>::append( const char* str, size_t count)
       noexcept
 {
-   return appendImpl( str, 0, std::min( count, ::strlen( str)));
+   return appendImpl( str, 0, std::min( count, std::strlen( str)));
 } // FixedString< L>::append
 
 
 template< size_t L>
    FixedString< L>& FixedString< L>::append( const char* str) noexcept
 {
-   return appendImpl( str, 0, ::strlen( str));
+   return appendImpl( str, 0, std::strlen( str));
 } // FixedString< L>::append
 
 
@@ -2421,7 +2421,7 @@ template< size_t L>
    va_list  ap;
 
    ::va_start( ap, format);
-   mLength = ::vsnprintf( mString, L + 1, format, ap);
+   mLength = std::vsnprintf( mString, L + 1, format, ap);
    ::va_end( ap);
 
    mLength = std::min( L, static_cast< size_t>( mLength));
@@ -2466,7 +2466,7 @@ template< size_t L>
       noexcept
 {
    const size_t  max_cmp_len = std::min( static_cast< size_t>( mLength), len);
-   const int     cmp_result = ::memcmp( mString, str, max_cmp_len);
+   const int     cmp_result = std::memcmp( mString, str, max_cmp_len);
 
    if (cmp_result == 0)
    {
@@ -2494,7 +2494,7 @@ template< size_t L>
 template< size_t L>
    int FixedString< L>::compare( const char* str) const noexcept
 {
-   return fullCompareImpl( str, ::strlen( str));
+   return fullCompareImpl( str, std::strlen( str));
 } // FixedString< L>::compare
 
 
@@ -2507,7 +2507,7 @@ template< size_t L> inline
 
    const size_t  use_len = (pos1 + count1 > mLength) ? (mLength - pos1) : count1;
    const size_t  max_cmp_len = std::min( use_len, len2);
-   const int     cmp_result = ::memcmp( &mString[ pos1], str, max_cmp_len);
+   const int     cmp_result = std::memcmp( &mString[ pos1], str, max_cmp_len);
 
    if (cmp_result == 0)
    {
@@ -2538,7 +2538,7 @@ template< size_t L>
    int FixedString< L>::compare( size_t pos1, size_t count1, const char* str)
       const noexcept
 {
-   return partCompareImpl( pos1, count1, str, ::strlen( str));
+   return partCompareImpl( pos1, count1, str, std::strlen( str));
 } // FixedString< L>::compare
 
 
@@ -2554,7 +2554,7 @@ template< size_t L> inline
    const size_t  str_len1 = (count1 > mLength - pos1) ? (mLength - pos1) : count1;
    const size_t  str_len2 = (count2 > len2 - pos2) ? (len2 - pos2) : count2;
    const size_t  max_cmp_len = std::min( str_len1, str_len2);
-   const int     cmp_result = ::memcmp( &mString[ pos1], &str[ pos2], max_cmp_len);
+   const int     cmp_result = std::memcmp( &mString[ pos1], &str[ pos2], max_cmp_len);
 
    if (cmp_result == 0)
    {
@@ -2587,7 +2587,7 @@ template< size_t L>
    int FixedString< L>::compare( size_t pos1, size_t count1, const char* str,
       size_t count2) const noexcept
 {
-   return partPartCompareImpl( pos1, count1, str, ::strlen( str), 0, count2);
+   return partPartCompareImpl( pos1, count1, str, std::strlen( str), 0, count2);
 } // FixedString< L>::compare
 
 
@@ -2599,7 +2599,7 @@ template< size_t L> inline
       return true;
    if (str_len > mLength)
       return false;
-   return ::memcmp( mString, str, str_len) == 0;
+   return std::memcmp( mString, str, str_len) == 0;
 } // FixedString< L>::startsWithImpl
 
 
@@ -2620,7 +2620,7 @@ template< size_t L>
 template< size_t L>
    bool FixedString< L>::starts_with( const char* str) const noexcept
 {
-   return startsWithImpl( str, ::strlen( str));
+   return startsWithImpl( str, std::strlen( str));
 } // FixedString< L>::starts_with
 
 
@@ -2638,7 +2638,7 @@ template< size_t L> inline
       return true;
    if (str_len > mLength)
       return false;
-   return ::memcmp( &mString[ mLength - str_len], str, str_len) == 0;
+   return std::memcmp( &mString[ mLength - str_len], str, str_len) == 0;
 } // FixedString< L>::startsWithImpl
 
 
@@ -2658,7 +2658,7 @@ template< size_t L>
 template< size_t L> bool FixedString< L>::ends_with( const char* str) const
    noexcept
 {
-   return endsWithImpl( str, ::strlen( str));
+   return endsWithImpl( str, std::strlen( str));
 } // FixedString< L>::ends_with
 
 
@@ -2701,7 +2701,7 @@ template< size_t L>
 template< size_t L>
    bool FixedString< L>::contains( const char* str) const noexcept
 {
-   return containsImpl( str, ::strlen( str));
+   return containsImpl( str, std::strlen( str));
 } // FixedString< L>::contains
 
 
@@ -2728,12 +2728,12 @@ template< size_t L> inline
       // replace from pos until the end of the string
       if (pos1 + copy_len > L)
          copy_len = L - pos1;
-      ::memcpy( &mString[ pos1], &str[ pos2], copy_len);
+      std::memcpy( &mString[ pos1], &str[ pos2], copy_len);
       mLength = pos1 + copy_len;
       mString[ mLength] = '\0';
    } else if (count1 == copy_len)
    {
-      ::memcpy( &mString[ pos1], &str[ pos2], copy_len);
+      std::memcpy( &mString[ pos1], &str[ pos2], copy_len);
    } else if (count1 < copy_len)
    {
       // goodbyexfarewell
@@ -2741,10 +2741,10 @@ template< size_t L> inline
       // str.length() == 5
       // make space:  goodbyex....farewell
       // copy:        goodbye and farewell
-      ::memmove( &mString[ pos1 + copy_len - count1 + 1],
+      std::memmove( &mString[ pos1 + copy_len - count1 + 1],
          &mString[ pos1 + count1],
          mLength - pos1 - count1);
-      ::memcpy( &mString[ pos1], &str[ pos2], copy_len);
+      std::memcpy( &mString[ pos1], &str[ pos2], copy_len);
       mLength = mLength - count1 + copy_len;
       mString[ mLength] = '\0';
    } else // count1 > copy_len
@@ -2754,9 +2754,9 @@ template< size_t L> inline
       // str.length() == 5
       // adjust end of string:  goodbyexxxxxfarewell
       // copy:                  goodbye and farewell
-      ::memmove( &mString[ pos1 + copy_len], &mString[ pos1 + count1],
+      std::memmove( &mString[ pos1 + copy_len], &mString[ pos1 + count1],
          mLength - pos1 - count1);
-      ::memcpy( &mString[ pos1], &str[ pos2], copy_len);
+      std::memcpy( &mString[ pos1], &str[ pos2], copy_len);
       mLength -= (count1 - copy_len);
       mString[ mLength] = '\0';
    } // end if
@@ -2806,7 +2806,7 @@ template< size_t L>
    FixedString< L>& FixedString< L>::replace( size_t pos1, size_t count1,
       const char* str) noexcept
 {
-   return replaceImpl( pos1, count1, str, 0, ::strlen( str));
+   return replaceImpl( pos1, count1, str, 0, std::strlen( str));
 } // FixedString< L>::replace
 
 
@@ -2814,7 +2814,7 @@ template< size_t L>
    FixedString< L>& FixedString< L>::replace( size_t pos1, size_t count1,
       const char* str, size_t count2) noexcept
 {
-   return replaceImpl( pos1, count1, str, 0, std::min( count2, ::strlen( str)));
+   return replaceImpl( pos1, count1, str, 0, std::min( count2, std::strlen( str)));
 } // FixedString< L>::replace
 
 
@@ -2827,7 +2827,7 @@ template< size_t L>
       return *this;
    const size_t  idx = first - cbegin();
    const size_t  count1 = (last == cend()) ? (mLength - idx) : (last - first);
-   const size_t  count2 = (last2 == end()) ? ::strlen( &(*first2))
+   const size_t  count2 = (last2 == end()) ? std::strlen( &(*first2))
       : (last2 - first2);
    return replaceImpl( idx, count1, &(*first2), 0, count2);
 } // FixedString< L>::replace
@@ -2865,7 +2865,7 @@ template< size_t L>
       FixedString< L>::replace( const_iterator first, const_iterator last,
          const char* str) noexcept
 {
-   return (str == nullptr) ? *this : replace( first, last, str, ::strlen( str));
+   return (str == nullptr) ? *this : replace( first, last, str, std::strlen( str));
 } // FixedString< L>::replace
 
 
@@ -2918,7 +2918,7 @@ template< size_t L>
       return 0;
    if (pos + count >= mLength)
       count = mLength - pos;
-   ::memcpy( dest, &mString[ pos], count);
+   std::memcpy( dest, &mString[ pos], count);
    return count;
 } // FixedString< L>::copy
 
@@ -2929,14 +2929,14 @@ template< size_t L> void FixedString< L>::swap( FixedString& other) noexcept
    {
       if (other.mLength > 0)
       {
-         ::memcpy( mString, other.mString, other.mLength);
+         std::memcpy( mString, other.mString, other.mLength);
          mLength = other.mLength;
          other.mString[ 0] = '\0';
          other.mLength = 0;
       } // end if
    } else if (other.mLength == 0)
    {
-      ::memcpy( other.mString, mString, mLength);
+      std::memcpy( other.mString, mString, mLength);
       other.mLength = mLength;
       mString[ 0] = '\0';
       mLength = 0;
@@ -2947,10 +2947,10 @@ template< size_t L> void FixedString< L>::swap( FixedString& other) noexcept
       // finally copy buffer into other
       char          buffer[ L];
       const size_t  length = mLength;
-      ::memcpy( buffer, mString, mLength + 1);
-      ::memcpy( mString, other.mString, other.mLength + 1);
+      std::memcpy( buffer, mString, mLength + 1);
+      std::memcpy( mString, other.mString, other.mLength + 1);
       mLength = other.mLength;
-      ::memcpy( other.mString, buffer, length + 1);
+      std::memcpy( other.mString, buffer, length + 1);
       other.mLength = length;
    } // end if
 } // FixedString< L>::swap
@@ -3005,7 +3005,7 @@ template< size_t L>
 template< size_t L>
    size_t FixedString< L>::find( const char* str, size_t pos) const noexcept
 {
-   return find( str, pos, ::strlen( str));
+   return find( str, pos, std::strlen( str));
 } // FixedString< L>::find
 
 
@@ -3065,7 +3065,7 @@ template< size_t L>
 {
    if ((mLength == 0) || (str == nullptr))
       return std::string::npos;
-   const size_t  str_len = ::strlen( str);
+   const size_t  str_len = std::strlen( str);
    if (str_len == 0)
       return std::string::npos;
    if (count > str_len)
@@ -3087,7 +3087,7 @@ template< size_t L>
 template< size_t L>
    size_t FixedString< L>::rfind( const char* str, size_t pos) const noexcept
 {
-   return rfind( str, pos, ::strlen( str));
+   return rfind( str, pos, std::strlen( str));
 } // FixedString< L>::rfind
 
 
@@ -3161,7 +3161,7 @@ template< size_t L>
    size_t FixedString< L>::find_first_of( const char* str, size_t pos) const
       noexcept
 {
-   return findFirstOfImpl( str, pos, ::strlen( str));
+   return findFirstOfImpl( str, pos, std::strlen( str));
 } // FixedString< L>::find_first_of
 
 
@@ -3254,7 +3254,7 @@ template< size_t L>
    size_t FixedString< L>::find_first_not_of( const char* str, size_t pos) const
       noexcept
 {
-   return findFirstNotOfImpl( str, pos, ::strlen( str));
+   return findFirstNotOfImpl( str, pos, std::strlen( str));
 } // FixedString< L>::find_first_not_of
 
 
@@ -3316,7 +3316,7 @@ template< size_t L>
    size_t FixedString< L>::find_last_of( const char* str, size_t pos) const
       noexcept
 {
-   return findLastOfImpl( str, pos, ::strlen( str));
+   return findLastOfImpl( str, pos, std::strlen( str));
 } // FixedString< L>::find_last_of
 
 
@@ -3402,7 +3402,7 @@ template< size_t L>
    size_t FixedString< L>::find_last_not_of( const char* str, size_t pos) const
       noexcept
 {
-   return findLastNotOfImpl( str, pos, ::strlen( str));
+   return findLastNotOfImpl( str, pos, std::strlen( str));
 } // FixedString< L>::find_last_not_of
 
 
