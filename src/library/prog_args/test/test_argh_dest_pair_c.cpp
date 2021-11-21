@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,16 +26,15 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE ArgHOutputStreams
+#define BOOST_TEST_MODULE ArgHandlerDestPairTest
 #include <boost/test/unit_test.hpp>
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using celma::test::multilineStringCompare;
 using std::ostringstream;
@@ -59,10 +58,7 @@ BOOST_AUTO_TEST_CASE( destination_bool)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
          DEST_PAIR( dest_flag, second_flag, true), "two flags"));
-
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -83,10 +79,7 @@ BOOST_AUTO_TEST_CASE( destination_bool)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
          DEST_PAIR( dest_flag, second_flag, true), "two flags"));
-
-      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
@@ -107,10 +100,7 @@ BOOST_AUTO_TEST_CASE( destination_bool)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
          DEST_PAIR( dest_flag, second_flag, true), "two flags"));
-
-      auto const  as2a = make_arg_array( "-f", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f"));
       BOOST_REQUIRE( dest_flag);
       BOOST_REQUIRE( second_flag);
    } // end scope
@@ -123,10 +113,7 @@ BOOST_AUTO_TEST_CASE( destination_bool)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "f",
          DEST_PAIR( dest_flag, second_flag, true), "two flags"));
-
-      auto const  as2a = make_arg_array( "-f", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f"));
       BOOST_REQUIRE( !dest_flag);
       BOOST_REQUIRE( second_flag);
    } // end scope
@@ -153,10 +140,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
          DEST_PAIR( dest_int, second_string, std::string( "int set")), "int and string"));
-
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -179,10 +163,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
          DEST_PAIR( dest_int, second_string, std::string( "int set")),
          "int and string")->setPrintDefault( false));
-
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -204,10 +185,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
          DEST_PAIR( dest_int, second_string, std::string( "int set")),
          "int and string"));
-
-      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
@@ -229,10 +207,7 @@ BOOST_AUTO_TEST_CASE( destination_int)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
          DEST_PAIR( dest_int, second_string, std::string( "int set")),
          "int and string"));
-
-      auto const  as2a = make_arg_array( "-i 25", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 25"));
       BOOST_REQUIRE_EQUAL( dest_int, 25);
       BOOST_REQUIRE_EQUAL( second_string, "int set");
    } // end scope
@@ -246,12 +221,39 @@ BOOST_AUTO_TEST_CASE( destination_int)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
          DEST_PAIR( dest_int, second_string, std::string( "int set")),
          "int and string"));
-
-      auto const  as2a = make_arg_array( "-i -- -25", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i -- -25"));
       BOOST_REQUIRE_EQUAL( dest_int, -25);
       BOOST_REQUIRE_EQUAL( second_string, "int set");
+   } // end scope
+
+   // integer value optional, boolean value for control
+   {
+      Handler  ah( 0);
+      int      dest_int = 5;
+      bool     flag_set = false;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
+         DEST_PAIR( dest_int, flag_set, true),
+         "int with optional value")
+         ->setValueMode( Handler::ValueMode::optional));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i"));
+      BOOST_REQUIRE_EQUAL( dest_int, 5);
+      BOOST_REQUIRE( flag_set);
+   } // end scope
+
+   // integer value optional, boolean value for control
+   {
+      Handler  ah( 0);
+      int      dest_int = 5;
+      bool     flag_set = false;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
+         DEST_PAIR( dest_int, flag_set, true),
+         "int with optional value")
+         ->setValueMode( Handler::ValueMode::optional));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 13"));
+      BOOST_REQUIRE_EQUAL( dest_int, 13);
+      BOOST_REQUIRE( flag_set);
    } // end scope
 
 } // destination_int
@@ -276,10 +278,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s",
          DEST_PAIR( dest_string, second_int, 42), "string and int"));
-
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -302,10 +301,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s",
          DEST_PAIR( dest_string, second_int, 42), "string and int")
          ->setPrintDefault( false));
-
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -326,10 +322,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s",
          DEST_PAIR( dest_string, second_int, 42), "string and int"));
-
-      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
@@ -350,10 +343,7 @@ BOOST_AUTO_TEST_CASE( destination_string)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "s",
          DEST_PAIR( dest_string, second_int, 42), "string and int"));
-
-      auto const  as2a = make_arg_array( "-s 'hello world'", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s 'hello world'"));
       BOOST_REQUIRE_EQUAL( dest_string, "hello world");
       BOOST_REQUIRE_EQUAL( second_int, 42);
    } // end scope
@@ -382,10 +372,7 @@ BOOST_AUTO_TEST_CASE( destination_vector)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
          DEST_PAIR( dest_vector, second_string, std::string( "vec set")),
          "vector and string"));
-
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -407,10 +394,7 @@ BOOST_AUTO_TEST_CASE( destination_vector)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
          DEST_PAIR( dest_vector, second_string, std::string( "vec set")),
          "vector and string"));
-
-      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
@@ -432,10 +416,7 @@ BOOST_AUTO_TEST_CASE( destination_vector)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v",
          DEST_PAIR( dest_vector, second_string, std::string( "vec set")),
          "vector and string"));
-
-      auto const  as2a = make_arg_array( "-v 2,3,5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,5"));
       BOOST_REQUIRE_EQUAL( dest_vector.size(), 3);
       BOOST_REQUIRE_EQUAL( second_string, "vec set");
    } // end scope
@@ -453,10 +434,7 @@ BOOST_AUTO_TEST_CASE( destination_vector)
          DEST_PAIR( dest_vector, second_string, std::string( "vec set")),
          "vector and string")->setListSep( '-')->setClearBeforeAssign()
          ->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 2-4-6 10-15-20", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2-4-6 10-15-20"));
       BOOST_REQUIRE_EQUAL( dest_vector.size(), 6);
       BOOST_REQUIRE_EQUAL( second_string, "vec set");
    } // end scope
@@ -482,10 +460,7 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b",
          DEST_PAIR( dest_bitset, second_int, 42), "bitset and int"));
-
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -506,10 +481,7 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b",
          DEST_PAIR( dest_bitset, second_int, 42), "bitset and int"));
-
-      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Arguments:\n"
          "'-h' calls function/method 'Handler::usage'.\n"
@@ -530,10 +502,7 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b",
          DEST_PAIR( dest_bitset, second_int, 42), "bitset and int"));
-
-      auto const  as2a = make_arg_array( "-b 2,4,8'", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 2,4,8'"));
       BOOST_REQUIRE_EQUAL( dest_bitset.count(), 3);
       BOOST_REQUIRE_EQUAL( second_int, 42);
    } // end scope
@@ -548,12 +517,10 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
          DEST_PAIR( dest_bitset, second_int, 42), "bitset and int")
          ->setListSep( '-')->setClearBeforeAssign());
 
-      auto const  as2a = make_arg_array( "-b 2-4-8'", nullptr);
-
       dest_bitset[ 3] = true;
       dest_bitset[ 7] = true;
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 2-4-8'"));
       BOOST_REQUIRE_EQUAL( dest_bitset.count(), 3);
       BOOST_REQUIRE_EQUAL( second_int, 42);
    } // end scope
@@ -563,3 +530,4 @@ BOOST_AUTO_TEST_CASE( destination_bitset)
 
 
 // =====  END OF test_argh_dest_pair_c.cpp  =====
+

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,13 +29,11 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/prog_args.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
-using std::string;
 
 
 
@@ -44,18 +42,17 @@ using std::string;
 BOOST_AUTO_TEST_CASE( one_sub_group)
 {
 
-   auto const  as2a = make_arg_array( "-oc mycache", nullptr);
-   Handler     masterAH( 0);
-   Handler     subAH( 0);
-   string      outputName;
-   int         outputType = 0;
+   Handler      masterAH( 0);
+   Handler      subAH( 0);
+   std::string  outputName;
+   int          outputType = 0;
 
 
    BOOST_REQUIRE_NO_THROW( subAH.addArgument( "c",
       DEST_PAIR( outputName, outputType, 1), "cache name"));
    BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subAH,
       "output arguments"));
-   BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-oc mycache"));
    BOOST_REQUIRE_EQUAL( outputType, 1);
    BOOST_REQUIRE_EQUAL( outputName, "mycache");
 
@@ -74,12 +71,12 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       Handler        masterAH( Handler::hfVerboseArgs);
 
       Handler        subInput( Handler::hfVerboseArgs);
-      string         inputName;
+      std::string    inputName;
       int            inputType = 0;
       TypedArgBase*  subInputAH = nullptr;
 
       Handler        subOutput( Handler::hfVerboseArgs);
-      string         outputName;
+      std::string    outputName;
       int            outputType = 0;
       TypedArgBase*  subOutputAH = nullptr;
 
@@ -101,8 +98,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_NO_THROW( subOutputAH = masterAH.addArgument( "o",
          subOutput, "output arguments"));
 
-      auto const  as2a = make_arg_array( "-oc mycache", nullptr);
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-oc mycache"));
 
       BOOST_REQUIRE( !subInputAH->hasValue());
       BOOST_REQUIRE_EQUAL( inputType,  0);
@@ -117,12 +113,12 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       Handler        masterAH( Handler::hfVerboseArgs);
 
       Handler        subInput( Handler::hfVerboseArgs);
-      string         inputName;
+      std::string    inputName;
       int            inputType = 0;
       TypedArgBase*  subInputAH = nullptr;
 
       Handler        subOutput( Handler::hfVerboseArgs);
-      string         outputName;
+      std::string    outputName;
       int            outputType = 0;
       TypedArgBase*  subOutputAH = nullptr;
 
@@ -144,8 +140,7 @@ BOOST_AUTO_TEST_CASE( two_sub_groups)
       BOOST_REQUIRE_NO_THROW( subOutputAH = masterAH.addArgument( "o",
          subOutput, "output arguments"));
 
-      auto const  as2a = make_arg_array( "-if myfile -o -q myqueue", nullptr);
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-if myfile -o -q myqueue"));
 
       BOOST_REQUIRE( subInputAH->hasValue());
       BOOST_REQUIRE_EQUAL( inputType,  2);
@@ -167,18 +162,18 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
 {
 
    {
-      Handler  masterAH( 0);
-      string   paramC;
-      string   paramL;
-      string   paramA;
+      Handler      masterAH( 0);
+      std::string  paramC;
+      std::string  paramL;
+      std::string  paramA;
 
-      Handler  subInput( 0);
-      string   inputName;
-      int      inputType = 0;
+      Handler      subInput( 0);
+      std::string  inputName;
+      int          inputType = 0;
 
-      Handler  subOutput( 0);
-      string   outputName;
-      int      outputType = 0;
+      Handler      subOutput( 0);
+      std::string  outputName;
+      int          outputType = 0;
 
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "c", DEST_VAR( paramC),
          "top-level argument c"));
@@ -205,8 +200,8 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
-      auto const  as2a = make_arg_array( "-c valc -oc mycache -l last", nullptr);
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-c valc "
+         "-oc mycache -l last"));
       BOOST_REQUIRE_EQUAL( paramC, "valc");
       BOOST_REQUIRE_EQUAL( inputType,  0);
       BOOST_REQUIRE( inputName.empty());
@@ -217,18 +212,18 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
    } // end scope
 
    {
-      Handler  masterAH( 0);
-      string   paramC;
-      string   paramL;
-      string   paramA;
+      Handler      masterAH( 0);
+      std::string  paramC;
+      std::string  paramL;
+      std::string  paramA;
 
-      Handler  subInput( 0);
-      string   inputName;
-      int      inputType = 0;
+      Handler      subInput( 0);
+      std::string  inputName;
+      int          inputType = 0;
 
-      Handler  subOutput( 0);
-      string   outputName;
-      int      outputType = 0;
+      Handler      subOutput( 0);
+      std::string  outputName;
+      int          outputType = 0;
 
 
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "c", DEST_VAR( paramC),
@@ -256,9 +251,8 @@ BOOST_AUTO_TEST_CASE( two_sub_groups_mixed_toplevel)
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
-      auto const  as2a = make_arg_array( "-c otherValC -if myfile -a howdy -o "
-         "-q myqueue -l lastagain", nullptr);
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-c otherValC"
+         " -if myfile -a howdy -o -q myqueue -l lastagain"));
       BOOST_REQUIRE_EQUAL( paramC, "otherValC");
       BOOST_REQUIRE_EQUAL( inputType,  2);
       BOOST_REQUIRE_EQUAL( inputName, "myfile");
@@ -278,22 +272,22 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
 {
 
    {
-      Handler  masterAH( 0);
-      string   paramC;
-      string   paramL;
-      string   paramA;
+      Handler      masterAH( 0);
+      std::string  paramC;
+      std::string  paramL;
+      std::string  paramA;
 
-      Handler  subInput( 0);
-      string   inputName;
-      int      inputType = 0;
-      bool     inputFlag1 = false;
-      bool     inputFlag2 = false;
+      Handler      subInput( 0);
+      std::string  inputName;
+      int          inputType = 0;
+      bool         inputFlag1 = false;
+      bool         inputFlag2 = false;
 
-      Handler  subOutput( 0);
-      string   outputName;
-      int      outputType = 0;
-      bool     outputFlag1 = false;
-      bool     outputFlag2 = false;
+      Handler      subOutput( 0);
+      std::string  outputName;
+      int          outputType = 0;
+      bool         outputFlag1 = false;
+      bool         outputFlag2 = false;
 
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "c", DEST_VAR( paramC),
          "top-level argument c"));
@@ -328,9 +322,8 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
-      auto const  as2a = make_arg_array( "-c valc -oc mycache -v -l last",
-         nullptr);
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-c valc "
+         "-oc mycache -v -l last"));
       BOOST_REQUIRE_EQUAL( paramC, "valc");
       BOOST_REQUIRE_EQUAL( inputType,  0);
       BOOST_REQUIRE( inputName.empty());
@@ -345,22 +338,22 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
    } // end scope
 
    {
-      Handler  masterAH( 0);
-      string   paramC;
-      string   paramL;
-      string   paramA;
+      Handler      masterAH( 0);
+      std::string  paramC;
+      std::string  paramL;
+      std::string  paramA;
 
-      Handler  subInput( 0);
-      string   inputName;
-      int      inputType = 0;
-      bool     inputFlag1 = false;
-      bool     inputFlag2 = false;
+      Handler      subInput( 0);
+      std::string  inputName;
+      int          inputType = 0;
+      bool         inputFlag1 = false;
+      bool         inputFlag2 = false;
 
-      Handler  subOutput( 0);
-      string   outputName;
-      int      outputType = 0;
-      bool     outputFlag1 = false;
-      bool     outputFlag2 = false;
+      Handler      subOutput( 0);
+      std::string  outputName;
+      int          outputType = 0;
+      bool         outputFlag1 = false;
+      bool         outputFlag2 = false;
 
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "c", DEST_VAR( paramC),
          "top-level argument c"));
@@ -393,9 +386,8 @@ BOOST_AUTO_TEST_CASE( sub_multi_args)
       BOOST_REQUIRE_NO_THROW( masterAH.addArgument( "o", subOutput,
          "output arguments"));
 
-      auto const  as2a = make_arg_array( "-c otherValC -if myfile -z -a howdy "
-         "-ovq myqueue -l lastagain", nullptr);
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-c otherValC "
+         "-if myfile -z -a howdy -ovq myqueue -l lastagain"));
       BOOST_REQUIRE_EQUAL( paramC, "otherValC");
       BOOST_REQUIRE_EQUAL( inputType,  2);
       BOOST_REQUIRE_EQUAL( inputName, "myfile");

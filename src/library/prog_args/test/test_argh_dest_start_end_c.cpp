@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2020-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,10 +29,9 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -55,9 +54,7 @@ BOOST_AUTO_TEST_CASE( combinations)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e",
          DEST_START_END( end_date, start_date), "the end date"));
 
-      auto const  as2a = make_arg_array( "-s 20200610", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s 20200610"));
       BOOST_REQUIRE_EQUAL( start_date, 20200610);
       BOOST_REQUIRE_EQUAL( end_date, 20200610);
    } // end scope
@@ -73,9 +70,7 @@ BOOST_AUTO_TEST_CASE( combinations)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e",
          DEST_START_END( end_date, start_date), "the end date"));
 
-      auto const  as2a = make_arg_array( "-e 20200610", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-e 20200610"));
       BOOST_REQUIRE_EQUAL( start_date, 20200610);
       BOOST_REQUIRE_EQUAL( end_date, 20200610);
    } // end scope
@@ -91,9 +86,7 @@ BOOST_AUTO_TEST_CASE( combinations)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e",
          DEST_START_END( end_date, start_date), "the end date"));
 
-      auto const  as2a = make_arg_array( "-s 20200610 -e 20200721", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s 20200610 -e 20200721"));
       BOOST_REQUIRE_EQUAL( start_date, 20200610);
       BOOST_REQUIRE_EQUAL( end_date, 20200721);
    } // end scope
@@ -109,9 +102,7 @@ BOOST_AUTO_TEST_CASE( combinations)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "e",
          DEST_START_END( end_date, start_date), "the end date"));
 
-      auto const  as2a = make_arg_array( "-e 20200721 -s 20200610", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-e 20200721 -s 20200610"));
       BOOST_REQUIRE_EQUAL( start_date, 20200610);
       BOOST_REQUIRE_EQUAL( end_date, 20200721);
    } // end scope

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -25,7 +25,7 @@
 
 
 // project include
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/prog_args.hpp"
 
 
@@ -38,9 +38,6 @@ using std::endl;
 int main( int argc, char* argv[])
 {
 
-   auto const  as2a = celma::appl::make_arg_array( "-h", nullptr);
-
-
    if (argc != 2)
    {
       cerr << "Need exactly one argument:" << endl
@@ -51,7 +48,7 @@ int main( int argc, char* argv[])
       return EXIT_FAILURE;
    } // end if
 
-   if (::atoi( argv[ 1]) == 1)
+   if (std::atoi( argv[ 1]) == 1)
    {
       Handler      ah( Handler::AllHelp);
       std::string  includeName;
@@ -63,10 +60,10 @@ int main( int argc, char* argv[])
                       "be split unto multiple lines in order to get a decent "
                       "output.");
 
-      ah.evalArguments( as2a.mArgC, as2a.mpArgV);
+      evalArgumentString( ah, "-h");
    } // end if
 
-   if (atoi( argv[ 1]) == 2)
+   if (std::atoi( argv[ 1]) == 2)
    {
       Handler      ah( Handler::AllHelp);
       std::string  includeName;
@@ -74,10 +71,10 @@ int main( int argc, char* argv[])
       ah.addArgument( "i,include-from-this-absolute-directory-path", DEST_VAR( includeName),
                       "Long parameter");
 
-      ah.evalArguments( as2a.mArgC, as2a.mpArgV);
+      evalArgumentString( ah, "-h");
    } // end scope
 
-   if (::atoi( argv[ 1]) == 3)
+   if (std::atoi( argv[ 1]) == 3)
    {
       Handler      ah( Handler::AllHelp);
       std::string  includeName;
@@ -89,10 +86,10 @@ int main( int argc, char* argv[])
                       "be split unto multiple lines in order to get a decent "
                       "output.");
 
-      ah.evalArguments( as2a.mArgC, as2a.mpArgV);
+      evalArgumentString( ah, "-h");
    } // end scope
 
-   if (::atoi( argv[ 1]) == 4)
+   if (std::atoi( argv[ 1]) == 4)
    {
       Handler      ah( Handler::AllHelp);
       std::string  includeName;
@@ -105,7 +102,7 @@ int main( int argc, char* argv[])
                       "be split unto multiple lines in order to get a decent "
                       "output.");
 
-      ah.evalArguments( as2a.mArgC, as2a.mpArgV);
+      evalArgumentString( ah, "-h");
    } // end scope
 
    cerr << "Invalid value '" << argv[ 1] << "'!" << endl;

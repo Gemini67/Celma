@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,11 +29,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -84,9 +83,7 @@ BOOST_AUTO_TEST_CASE( test_errors)
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "left", DEST_VAR_VALUE( my_dest, -1), "left"));
 
-      auto const  as2a = make_arg_array( "--left --left", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "--left --left"),
                            std::runtime_error);
    } // end scope
 
@@ -109,9 +106,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right"));
 
-      auto const  as2a = make_arg_array( "--left", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--left"));
       BOOST_REQUIRE_EQUAL( my_dest, -1);
    } // end scope
 
@@ -125,9 +120,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right"));
 
-      auto const  as2a = make_arg_array( "--right", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--right"));
       BOOST_REQUIRE_EQUAL( my_dest, 1);
    } // end scope
 
@@ -141,9 +134,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
       BOOST_REQUIRE_NO_THROW(
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right"));
 
-      auto const  as2a = make_arg_array( "--right --left", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "--right --left"),
                            std::runtime_error);
    } // end scope
 
@@ -159,9 +150,7 @@ BOOST_AUTO_TEST_CASE( test_value_arg)
          ah.addArgument( "right", DEST_VAR_VALUE( my_dest, 1), "right")
             ->checkOriginalValue( false));
 
-      auto const  as2a = make_arg_array( "--right --left", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--right --left"));
       BOOST_REQUIRE_EQUAL( my_dest, -1);
    } // end scope
 
@@ -188,9 +177,7 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
          ah.addArgument( "r,right", DEST_VAR_VALUE( my_dest, 1), "right")
             ->setPrintDefault( false));
 
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
 
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());
@@ -220,9 +207,7 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
          ah.addArgument( "r,right", DEST_VAR_VALUE( my_dest, 1), "right")
             ->setPrintDefault( false));
 
-      auto const  as2a = make_arg_array( "--list-arg-vars", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars"));
 
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());
@@ -255,9 +240,7 @@ BOOST_AUTO_TEST_CASE( usage_and_info)
          ah.addArgument( "r,right", DEST_VAR_VALUE( my_dest, 1), "right")
             ->setPrintDefault( false));
 
-      auto const  as2a = make_arg_array( "-r --list-arg-vars", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-r --list-arg-vars"));
 
       BOOST_REQUIRE( oss_err.str().empty());
       BOOST_REQUIRE( !oss_std.str().empty());

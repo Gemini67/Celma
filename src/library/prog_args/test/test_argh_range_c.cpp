@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test, header file include
+// module to test, headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -32,12 +32,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
-using std::vector;
 
 
 
@@ -48,27 +46,22 @@ BOOST_AUTO_TEST_CASE( test_errors)
 
    // wrong setup: value checks not allowed on ranges
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
-
-      BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
+      BOOST_REQUIRE_THROW( ah.addArgument( "v", DEST_RANGE( myVec, int, std::vector), "Integer")
                                          ->addCheck( celma::prog_args::range( 1, 100)),
                            std::logic_error);
    } // end scope
 
    // wrong usage: mandatory free argument not found
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer")
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_RANGE( myVec, int, std::vector), "Integer")
                                             ->setIsMandatory());
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, ""), std::runtime_error);
    } // end scope
 
 } // test_errors
@@ -81,28 +74,22 @@ BOOST_AUTO_TEST_CASE( test_vector)
 {
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
+      ah.addArgument( "v", DEST_RANGE( myVec, int, std::vector), "Integer");
 
-      ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
-
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( myVec.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
+      ah.addArgument( "v", DEST_RANGE( myVec, int, std::vector), "Integer");
 
-      ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
-
-      auto const  as2a = make_arg_array( "-v 10,20,40", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 10,20,40"));
       BOOST_REQUIRE( !myVec.empty());
       BOOST_REQUIRE_EQUAL( myVec.size(), 3);
       BOOST_REQUIRE_EQUAL( myVec[ 0], 10);
@@ -111,15 +98,12 @@ BOOST_AUTO_TEST_CASE( test_vector)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
+      ah.addArgument( "v", DEST_RANGE( myVec, int, std::vector), "Integer");
 
-      ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer");
-
-      auto const  as2a = make_arg_array( "-v 3-9", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 3-9"));
       BOOST_REQUIRE( !myVec.empty());
       BOOST_REQUIRE_EQUAL( myVec.size(), 7);
       BOOST_REQUIRE_EQUAL( myVec[ 0], 3);
@@ -141,28 +125,22 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
 {
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
+      ah.addArgument( "-", DEST_RANGE( myVec, int, std::vector), "Integer");
 
-      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
-
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( myVec.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
+      ah.addArgument( "-", DEST_RANGE( myVec, int, std::vector), "Integer");
 
-      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
-
-      auto const  as2a = make_arg_array( "10,20,40", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "10,20,40"));
       BOOST_REQUIRE( !myVec.empty());
       BOOST_REQUIRE_EQUAL( myVec.size(), 3);
       BOOST_REQUIRE_EQUAL( myVec[ 0], 10);
@@ -171,15 +149,12 @@ BOOST_AUTO_TEST_CASE( test_vector_free)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
+      ah.addArgument( "-", DEST_RANGE( myVec, int, std::vector), "Integer");
 
-      ah.addArgument( "-", DEST_RANGE( myVec, int, vector), "Integer");
-
-      auto const  as2a = make_arg_array( "3-9", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "3-9"));
       BOOST_REQUIRE( !myVec.empty());
       BOOST_REQUIRE_EQUAL( myVec.size(), 7);
       BOOST_REQUIRE_EQUAL( myVec[ 0], 3);
@@ -204,12 +179,9 @@ BOOST_AUTO_TEST_CASE( test_bitset)
       Handler             ah( 0);
       std::bitset< 1024>  myBitset;
 
-
       ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( myBitset.none());
    } // end scope
 
@@ -217,12 +189,9 @@ BOOST_AUTO_TEST_CASE( test_bitset)
       Handler             ah( 0);
       std::bitset< 1024>  myBitset;
 
-
       ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
-      auto const  as2a = make_arg_array( "-v 10,20,40", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 10,20,40"));
       BOOST_REQUIRE( !myBitset.none());
       BOOST_REQUIRE_EQUAL( myBitset.count(), 3);
       BOOST_REQUIRE( myBitset[ 10]);
@@ -234,12 +203,9 @@ BOOST_AUTO_TEST_CASE( test_bitset)
       Handler             ah( 0);
       std::bitset< 1024>  myBitset;
 
-
       ah.addArgument( "v", DEST_RANGE_BITSET( myBitset, 1024), "Integer");
 
-      auto const  as2a = make_arg_array( "-v 3-9", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 3-9"));
       BOOST_REQUIRE( !myBitset.none());
       BOOST_REQUIRE_EQUAL( myBitset.count(), 7);
       BOOST_REQUIRE( myBitset[ 3]);
@@ -297,28 +263,24 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
 {
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
-      ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
+      ah.addArgument( "v", DEST_RANGE( myVec, int, std::vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
       BOOST_REQUIRE( myVec.empty());
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
-      ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
+      ah.addArgument( "v", DEST_RANGE( myVec, int, std::vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      auto const  as2a = make_arg_array( "-v 10,20", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 10,20"));
       BOOST_REQUIRE( !myVec.empty());
       BOOST_REQUIRE_EQUAL( myVec.size(), 2);
       BOOST_REQUIRE_EQUAL( myVec[ 0], 10);
@@ -326,15 +288,13 @@ BOOST_AUTO_TEST_CASE( test_vector_format)
    } // end scope
 
    {
-      Handler       ah( 0);
-      vector< int>  myVec;
+      Handler            ah( 0);
+      std::vector< int>  myVec;
 
-      ah.addArgument( "v", DEST_RANGE( myVec, int, vector), "Integer")
+      ah.addArgument( "v", DEST_RANGE( myVec, int, std::vector), "Integer")
                     ->addFormat( new WildcardRangeFormat());
 
-      auto const  as2a = make_arg_array( "-v all", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v all"));
       BOOST_REQUIRE( !myVec.empty());
       BOOST_REQUIRE_EQUAL( myVec.size(), 1);
       BOOST_REQUIRE_EQUAL( myVec[ 0], 0);

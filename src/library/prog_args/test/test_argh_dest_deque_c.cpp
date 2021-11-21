@@ -29,11 +29,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -78,10 +77,7 @@ BOOST_AUTO_TEST_CASE( test_deque_errors)
       std::deque< int>  d;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values"));
-
-      auto const  as2a = make_arg_array( "-v this,should,throw", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v this,should,throw"),
          std::bad_cast);
    } // end scope
 
@@ -118,10 +114,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       std::deque< int>  d;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values"));
-
-      auto const  as2a = make_arg_array( "-v 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6"));
       BOOST_REQUIRE_EQUAL( d.size(), 3);
 
       int  idx = 0;
@@ -141,10 +134,7 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setListSep( '.'));
-
-      auto const  as2a = make_arg_array( "-v 4.5.6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4.5.6"));
       BOOST_REQUIRE_EQUAL( d.size(), 3);
 
       int  idx = 0;
@@ -173,10 +163,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       std::deque< int>  d;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values"));
-
-      auto const  as2a = make_arg_array( "-v 4,5,6 7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 4,5,6 7"),
          std::invalid_argument);
    } // end scope
 
@@ -189,10 +176,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
-
-      auto const  as2a = make_arg_array( "-v 4,5,6 7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6 7"));
       BOOST_REQUIRE_EQUAL( d.size(), 3);
 
       int  idx = 0;
@@ -214,10 +198,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 4,5,6 7 8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6 7 8"));
       BOOST_REQUIRE_EQUAL( d.size(), 5);
 
       int  idx = 0;
@@ -238,10 +219,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
-
-      auto const  as2a = make_arg_array( "-v 4,5,6 7 --endvalues 8", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 4,5,6 7 --endvalues 8"),
          std::invalid_argument);
    } // end scope
 
@@ -254,10 +232,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
-
-      auto const  as2a = make_arg_array( "-v 4,5,6 7 --endvalues 8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6 7 --endvalues 8"));
       BOOST_REQUIRE_EQUAL( d.size(), 4);
 
       int  idx = 0;
@@ -288,10 +263,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       std::deque< int>  d = { 1, 2, 3 };
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values"));
-
-      auto const  as2a = make_arg_array( "-v 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6"));
       BOOST_REQUIRE_EQUAL( d.size(), 6);
 
       int  idx = 0;
@@ -311,10 +283,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setClearBeforeAssign());
-
-      auto const  as2a = make_arg_array( "-v 4,5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5"));
       BOOST_REQUIRE_EQUAL( d.size(), 2);
 
       int  idx = 0;
@@ -335,10 +304,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setClearBeforeAssign()->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 4,5 6,7,8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5 6,7,8"));
       BOOST_REQUIRE_EQUAL( d.size(), 5);
 
       int  idx = 0;
@@ -359,10 +325,7 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setClearBeforeAssign()->setValueMode( Handler::ValueMode::optional));
-
-      auto const  as2a = make_arg_array( "-v", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v"));
       BOOST_REQUIRE( d.empty());
    } // end scope
 
@@ -382,10 +345,7 @@ BOOST_AUTO_TEST_CASE( format_values)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
       ->addFormat( celma::prog_args::lowercase()));
-
-   auto const  as2a = make_arg_array( "-v monday,TUESDAY,wEdNeSdAy", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v monday,TUESDAY,wEdNeSdAy"));
    BOOST_REQUIRE_EQUAL( d.size(), 3);
 
    int  idx = 0;
@@ -419,10 +379,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
       std::deque< int>  d;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values"));
-
-      auto const  as2a = make_arg_array( "-v 34532,9876,33,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 34532,9876,33,6"));
       BOOST_REQUIRE_EQUAL( d.size(), 4);
 
       int  idx = 0;
@@ -450,10 +407,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setSortData());
-
-      auto const  as2a = make_arg_array( "-v 34532,9876,33,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 34532,9876,33,6"));
       BOOST_REQUIRE_EQUAL( d.size(), 4);
 
       int  idx = 0;
@@ -481,10 +435,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setSortData()->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 34532,9876,33,6 42,13,4711", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 34532,9876,33,6 42,13,4711"));
       BOOST_REQUIRE_EQUAL( d.size(), 7);
 
       int  idx = 0;
@@ -513,10 +464,7 @@ BOOST_AUTO_TEST_CASE( test_sort_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setSortData()->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 34532,9876,33,6 42,13,4711", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 34532,9876,33,6 42,13,4711"));
       BOOST_REQUIRE_EQUAL( d.size(), 10);
 
       int  idx = 0;
@@ -557,10 +505,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
       std::deque< int>  d;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values"));
-
-      auto const  as2a = make_arg_array( "-v 2,3,4,4,6,7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,4,4,6,7"));
       BOOST_REQUIRE_EQUAL( d.size(), 6);
 
       int  idx = 0;
@@ -588,10 +533,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setUniqueData());
-
-      auto const  as2a = make_arg_array( "-v 2,3,4,4,6,7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,4,4,6,7"));
       BOOST_REQUIRE_EQUAL( d.size(), 5);
 
       int  idx = 0;
@@ -618,10 +560,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setUniqueData()->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 2,3,4 3,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,4 3,5,6"));
       BOOST_REQUIRE_EQUAL( d.size(), 5);
 
       int  idx = 0;
@@ -648,10 +587,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setUniqueData()->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 2,3,4 3,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,4 3,5,6"));
       BOOST_REQUIRE_EQUAL( d.size(), 5);
 
       int  idx = 0;
@@ -678,10 +614,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( d), "values")
          ->setUniqueData( true)->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 2,4 6,7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 2,4 6,7"),
          std::runtime_error);
    } // end scope
 
@@ -704,10 +637,8 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( d), "values")
       ->addFormat( celma::prog_args::lowercase()));
 
-   auto const  as2a = make_arg_array( "--list-arg-vars "
-      "-s MONDAY,tuesday,wEdNeSdAy --list-arg-vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars "
+      "-s MONDAY,tuesday,wEdNeSdAy --list-arg-vars"));
 
    BOOST_REQUIRE( !std_out.str().empty());
    // std::cerr << std_out.str() << std::endl;

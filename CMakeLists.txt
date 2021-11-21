@@ -13,8 +13,8 @@ project( Celma )
 
 set( MAJORVERSION    1 )
 set( MINORVERSION    46 )
-set( RELEASE_VERSION 1 )
-set( PATCHLEVEL      1 )
+set( RELEASE_VERSION 2 )
+set( PATCHLEVEL      0 )
 
 if ( CPP_VERSION STREQUAL "20" )
    set( CMAKE_CXX_STANDARD 20 )

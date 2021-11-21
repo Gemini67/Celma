@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of class celma::celma::prog_args::@@@.
+/// See documentation of functions celma::celma::prog_args::evalArgumentString().
 
 
 // module headerfile include
@@ -21,6 +21,7 @@
 
 // project includes
 #include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/handler.hpp"
 
 
@@ -45,6 +46,27 @@ void evalArgumentString( Handler& handler, const std::string& arg_string,
 
 
    handler.evalArguments( as2a.mArgC, as2a.mpArgV);
+
+} // evalArgumentString
+
+
+
+/// Evaluates a complete argument string with an argument group.
+/// This can be used e.g. if an argument string is passed to a function and
+/// should be evaluated like main function arguments, or in test
+/// programs.
+///
+/// @param[in]  arg_string  Complete argument and values string.
+/// @param[in]  prog_name   Optional program name to be set.
+/// @since  1.46.2, 04.10.2021
+void evalArgumentString( const std::string& arg_string, const char* prog_name)
+   noexcept( false)
+{
+
+   auto const  as2a = appl::make_arg_array( arg_string, prog_name);
+
+
+   Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV);
 
 } // evalArgumentString
 

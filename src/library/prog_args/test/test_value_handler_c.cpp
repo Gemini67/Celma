@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -27,11 +27,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/prog_args/groups.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::common::RangeDest;
 using celma::prog_args::Groups;
 using celma::prog_args::ValueHandler;
@@ -53,9 +52,7 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
 
       ah.addValueArgument< bool>( "b", "Boolean.");
 
-      auto const  as2a = make_arg_array( "", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
 
       celma::prog_args::detail::TypedArgBase*  arg_handler = nullptr;
 
@@ -78,9 +75,7 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
 
       ah.addValueArgument< bool>( "b", "Boolean.");
 
-      auto const  as2a = make_arg_array( "-b", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b"));
 
       celma::prog_args::detail::TypedArgBase*  arg_handler = nullptr;
 
@@ -103,9 +98,7 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
 
       ah.addValueArgument< int>( "n", "Number.");
 
-      auto const  as2a = make_arg_array( "-n 5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n 5"));
 
       celma::prog_args::detail::TypedArgBase*  arg_handler = nullptr;
 
@@ -128,9 +121,7 @@ BOOST_AUTO_TEST_CASE( test_simple_args)
 
       ah.addValueArgument< std::string>( "n", "Name.");
 
-      auto const  as2a = make_arg_array( "-n Bianca", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n Bianca"));
 
       celma::prog_args::detail::TypedArgBase*  arg_handler = nullptr;
 
@@ -163,9 +154,7 @@ BOOST_AUTO_TEST_CASE( test_complex_types)
 
       ah.addValueArgument< std::vector< int>>( "v", "Values.");
 
-      auto const  as2a = make_arg_array( "-v 1,2,3,4,5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 1,2,3,4,5"));
 
       std::vector< int>  result_value;
       BOOST_REQUIRE_NO_THROW( ah.getValue< std::vector< int>>( result_value, "v"));
@@ -178,9 +167,7 @@ BOOST_AUTO_TEST_CASE( test_complex_types)
 
       ah.addRangeValueArgument< int, std::vector< int>>( "r", "Range.");
 
-      auto const  as2a = make_arg_array( "-r 1-5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-r 1-5"));
 
       std::vector< int>  result_value;
       BOOST_REQUIRE_NO_THROW( ah.getValue< std::vector< int>>( result_value, "r"));
@@ -195,9 +182,7 @@ BOOST_AUTO_TEST_CASE( test_complex_types)
 
       ah.addValueArgument< tuple_t>( "t", "Tuple values.");
 
-      auto const  as2a = make_arg_array( "-t 42,hello", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-t 42,hello"));
 
       tuple_t  result_value;
       BOOST_REQUIRE_NO_THROW( ah.getValue< tuple_t>( result_value, "t"));
@@ -220,9 +205,7 @@ BOOST_AUTO_TEST_CASE( test_free_value_arg)
 
       ah.addValueArgument< int>( "Free number.");
 
-      auto const  as2a = make_arg_array( "5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "5"));
 
       int  result_value = -1;
       BOOST_REQUIRE_NO_THROW( ah.getValue< int>( result_value));
@@ -239,9 +222,7 @@ BOOST_AUTO_TEST_CASE( test_free_value_arg)
 
       ah.addRangeValueArgument< int, std::vector< int>>( "Range.");
 
-      auto const  as2a = make_arg_array( "1-5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "1-5"));
 
       std::vector< int>  result_value;
       BOOST_REQUIRE_NO_THROW( ah.getValue< std::vector< int>>( result_value));

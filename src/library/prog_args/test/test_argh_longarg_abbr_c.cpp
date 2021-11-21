@@ -25,10 +25,9 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -48,24 +47,14 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "inplace", DEST_VAR( inplaceVal), "Integer"));
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "output",  DEST_VAR( outputVal),  "Integer"));
 
-   {
-      auto const  as2a = make_arg_array( "--in 5", nullptr);
+   BOOST_REQUIRE_THROW( evalArgumentString( ah, "--in 5"),
+      std::runtime_error);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
-   } // end scope
-
-   {
-      auto const  as2a = make_arg_array( "--inp 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::runtime_error);
-   } // end scope
+   BOOST_REQUIRE_THROW( evalArgumentString( ah, "--inp 5"),
+      std::runtime_error);
 
    {
-      auto const  as2a = make_arg_array( "--inpu 5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--inpu 5"));
       BOOST_REQUIRE( inputVal.has_value());
       BOOST_REQUIRE_EQUAL( inputVal.value(), 5);
 
@@ -78,9 +67,7 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    outputVal.reset();
 
    {
-      auto const  as2a = make_arg_array( "--inpl 5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--inpl 5"));
       BOOST_REQUIRE( inplaceVal.has_value());
       BOOST_REQUIRE_EQUAL( inplaceVal.value(), 5);
 
@@ -93,9 +80,7 @@ BOOST_AUTO_TEST_CASE( long_arg_abbr)
    outputVal.reset();
 
    {
-      auto const  as2a = make_arg_array( "--ou 5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--ou 5"));
       BOOST_REQUIRE( outputVal.has_value());
       BOOST_REQUIRE_EQUAL( outputVal.value(), 5);
 
@@ -122,48 +107,20 @@ BOOST_AUTO_TEST_CASE( abbr_disabled)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "inplace", DEST_VAR( inplaceVal), "Integer"));
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "output",  DEST_VAR( outputVal),  "Integer"));
 
-   {
-      auto const  as2a = make_arg_array( "--in 5", nullptr);
+   BOOST_REQUIRE_THROW( evalArgumentString( ah, "--in 5"),
+      std::invalid_argument);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
-   } // end scope
+   BOOST_REQUIRE_THROW( evalArgumentString( ah, "--inp 5"),
+      std::invalid_argument);
 
-   {
-      auto const  as2a = make_arg_array( "--inp 5", nullptr);
+   BOOST_REQUIRE_THROW( evalArgumentString( ah, "--inpu 5"),
+      std::invalid_argument);
 
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-                           std::invalid_argument);
-   } // end scope
+   BOOST_REQUIRE_THROW( evalArgumentString( ah, "--inpl 5"),
+      std::invalid_argument);
 
-   {
-      auto const  as2a = make_arg_array( "--inpu 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::invalid_argument);
-   } // end scope
-
-   inputVal.reset();
-   inplaceVal.reset();
-   outputVal.reset();
-
-   {
-      auto const  as2a = make_arg_array( "--inpl 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::invalid_argument);
-   } // end scope
-
-   inputVal.reset();
-   inplaceVal.reset();
-   outputVal.reset();
-
-   {
-      auto const  as2a = make_arg_array( "--ou 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
-         std::invalid_argument);
-   } // end scope
+   BOOST_REQUIRE_THROW( evalArgumentString( ah, "--ou 5"),
+      std::invalid_argument);
 
 } // abbr_disabled
 

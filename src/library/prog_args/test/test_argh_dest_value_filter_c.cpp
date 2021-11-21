@@ -25,11 +25,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::common::ValueFilter;
 using celma::prog_args::Handler;
 
@@ -137,9 +136,7 @@ BOOST_AUTO_TEST_CASE( test_value_filter_errors)
       ValueFilter< int>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "value filter"));
-
-      auto const  args = make_arg_array( "-v", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( args.mArgC, args.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -149,9 +146,7 @@ BOOST_AUTO_TEST_CASE( test_value_filter_errors)
       ValueFilter< int>  v;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( v), "value filter"));
-
-      auto const  args = make_arg_array( "-v 42 -v 4711", nullptr);
-      BOOST_REQUIRE_THROW( ah.evalArguments( args.mArgC, args.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 42 -v 4711"),
          std::runtime_error);
    } // end scope
 
@@ -188,10 +183,7 @@ BOOST_AUTO_TEST_CASE( basics)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( my_filter),
          "value filter"));
-
-      auto const  args = make_arg_array( "-v 42", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( args.mArgC, args.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 42"));
 
       BOOST_REQUIRE( !my_filter.empty());
       BOOST_REQUIRE_EQUAL( my_filter.size(), 1);
@@ -209,10 +201,7 @@ BOOST_AUTO_TEST_CASE( basics)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( my_filter),
          "value filter"));
-
-      auto const  args = make_arg_array( "-v 42,100-200+!150,4711", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( args.mArgC, args.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 42,100-200+!150,4711"));
 
       BOOST_REQUIRE( !my_filter.empty());
       BOOST_REQUIRE_EQUAL( my_filter.size(), 3);
@@ -258,10 +247,8 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( my_filter),
       "value filter"));
-
-   auto const  args = make_arg_array( "--list-arg-vars -v 42,4711 --list-arg-vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( args.mArgC, args.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars -v 42,4711 "
+      "--list-arg-vars"));
    BOOST_REQUIRE( err_oss.str().empty());
 
    // std::cout << std_oss.str() << std::endl;
