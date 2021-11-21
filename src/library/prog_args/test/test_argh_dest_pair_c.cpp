@@ -226,36 +226,6 @@ BOOST_AUTO_TEST_CASE( destination_int)
       BOOST_REQUIRE_EQUAL( second_string, "int set");
    } // end scope
 
-   // integer value optional, boolean value for control
-   {
-      Handler  ah( 0);
-      int      dest_int = 5;
-      bool     flag_set = false;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
-         DEST_PAIR( dest_int, flag_set, true),
-         "int with optional value")
-         ->setValueMode( Handler::ValueMode::optional));
-      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i"));
-      BOOST_REQUIRE_EQUAL( dest_int, 5);
-      BOOST_REQUIRE( flag_set);
-   } // end scope
-
-   // integer value optional, boolean value for control
-   {
-      Handler  ah( 0);
-      int      dest_int = 5;
-      bool     flag_set = false;
-
-      BOOST_REQUIRE_NO_THROW( ah.addArgument( "i",
-         DEST_PAIR( dest_int, flag_set, true),
-         "int with optional value")
-         ->setValueMode( Handler::ValueMode::optional));
-      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-i 13"));
-      BOOST_REQUIRE_EQUAL( dest_int, 13);
-      BOOST_REQUIRE( flag_set);
-   } // end scope
-
 } // destination_int
 
 
