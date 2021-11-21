@@ -2351,7 +2351,6 @@ BOOST_AUTO_TEST_CASE( application_check)
 BOOST_AUTO_TEST_CASE( control_check)
 {
 
-
    Handler  ah( 0);
    int      value = -1;
 
@@ -2359,12 +2358,35 @@ BOOST_AUTO_TEST_CASE( control_check)
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( value), "some value"));
 
    {
-     BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 45 ! -v 47"),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 45 ! -v 47"),
                            std::runtime_error);
       BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
    } // end scope
 
 } // control_check
+
+
+
+/// Test checks using a lambda.
+///
+/// @since  x.y.z, 02.11.2021
+BOOST_AUTO_TEST_CASE( check_by_function)
+{
+
+   Handler  ah( 0);
+   int      value = -1;
+
+
+   BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( value), "some value")
+      ->addCheck( celma::prog_args::check_function( []( const std::string& val)
+        {
+           return !val.empty();
+        }, "not empty")));
+
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 45"));
+   BOOST_REQUIRE_EQUAL( value, 45);  // since the first part should pass
+
+} // check_by_function
 
 
 

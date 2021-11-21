@@ -261,6 +261,62 @@ BOOST_AUTO_TEST_CASE( format_anycase)
 
 
 
+/// Check formatting by a function.
+///
+/// @since  x.y.z, 21.11.2021
+BOOST_AUTO_TEST_CASE( format_function)
+{
+
+   auto formatter = []( std::string& val)
+   {
+      int  i_value = std::atoi( val.c_str());
+      if (val.back() == 'k')  i_value *= 1024;
+      if (val.back() == 'M')  i_value *= 1024 * 1024;
+      val = std::to_string( i_value);
+   };
+
+   {
+      Handler  ah( 0);
+      int      buffer_size = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( buffer_size),
+         "buffer size")->addFormat( celma::prog_args::formatFunction(
+            formatter, "apply size suffix")));
+
+      evalArgumentString( ah, "-b 900");
+      BOOST_REQUIRE_EQUAL( buffer_size, 900);
+   } // end scope
+
+
+   {
+      Handler  ah( 0);
+      int      buffer_size = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( buffer_size),
+         "buffer size")->addFormat( celma::prog_args::formatFunction(
+            formatter, "apply size suffix")));
+
+      evalArgumentString( ah, "-b 900k");
+      BOOST_REQUIRE_EQUAL( buffer_size, 921'600);
+   } // end scope
+
+
+   {
+      Handler  ah( 0);
+      int      buffer_size = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( buffer_size),
+         "buffer size")->addFormat( celma::prog_args::formatFunction(
+            formatter, "apply size suffix")));
+
+      evalArgumentString( ah, "-b 900M");
+      BOOST_REQUIRE_EQUAL( buffer_size, 943'718'400);
+   } // end scope
+
+} // format_function
+
+
+
 /// Add multiple formatters.
 ///
 /// @since  1.32.0, 19.08.2019

@@ -32,6 +32,7 @@
 #include "celma/prog_args/detail/check_file_modification.hpp"
 #include "celma/prog_args/detail/check_file_size.hpp"
 #include "celma/prog_args/detail/check_file_suffix.hpp"
+#include "celma/prog_args/detail/check_function.hpp"
 #include "celma/prog_args/detail/check_is_absolute_path.hpp"
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
@@ -47,6 +48,7 @@
 // also the specific formatters are not actually needed here, but they are also
 // included anyway for convenience of the user
 #include "celma/prog_args/detail/format_anycase.hpp"
+#include "celma/prog_args/detail/format_function.hpp"
 #include "celma/prog_args/detail/format_lowercase.hpp"
 #include "celma/prog_args/detail/format_uppercase.hpp"
 

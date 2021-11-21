@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of template celma::prog_args::detail::CheckLower.
+/// See documentation of template class celma::prog_args::detail::CheckLower<>.
 
 
 #pragma once
