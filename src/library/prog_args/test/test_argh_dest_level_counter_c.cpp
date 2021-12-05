@@ -29,11 +29,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/prog_args/level_counter.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using celma::prog_args::LevelCounter;
 
@@ -118,10 +117,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level"));
-
-      auto const  as2a = make_arg_array( "-v -v 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v -v 5"),
          std::runtime_error);
    } // end scope
 
@@ -132,10 +128,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level"));
-
-      auto const  as2a = make_arg_array( "-v 5 -v", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 5 -v"),
          std::runtime_error);
    } // end scope
 
@@ -146,10 +139,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level"));
-
-      auto const  as2a = make_arg_array( "-v 5 -v 7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 5 -v 7"),
          std::runtime_error);
    } // end scope
 
@@ -160,10 +150,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level")->setValueMode( Handler::ValueMode::none));
-
-      auto const  as2a = make_arg_array( "-v 5", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 5"),
          std::invalid_argument);
    } // end scope
 
@@ -174,10 +161,7 @@ BOOST_AUTO_TEST_CASE( error_cases)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level")->setValueMode( Handler::ValueMode::required));
-
-      auto const  as2a = make_arg_array( "-v", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v"),
          celma::prog_args::argument_error);
    } // end scope
 
@@ -207,10 +191,7 @@ BOOST_AUTO_TEST_CASE( used_once)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
       "verbose level"));
-
-   auto const  as2a = make_arg_array( "-v", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v"));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 1);
 
 } // used_once
@@ -230,10 +211,7 @@ BOOST_AUTO_TEST_CASE( multiple_increment_in_one_arg)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
       "verbose level"));
-
-   auto const  as2a = make_arg_array( "-vvv", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-vvv"));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 3);
 
 } // multiple_increment_in_one_arg
@@ -252,10 +230,7 @@ BOOST_AUTO_TEST_CASE( multiple_increment_args)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
       "verbose level"));
-
-   auto const  as2a = make_arg_array( "-v -vv -vvv", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v -vv -vvv"));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 6);
 
 } // multiple_increment_args
@@ -274,10 +249,7 @@ BOOST_AUTO_TEST_CASE( assign_level)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
       "verbose level"));
-
-   auto const  as2a = make_arg_array( "--verbose 4", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--verbose 4"));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 4);
 
 } // assign_level
@@ -298,10 +270,7 @@ BOOST_AUTO_TEST_CASE( max_value)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level")->addCheck( upper( 5)));
-
-      auto const  as2a = make_arg_array( "-v -vv -vvv", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v -vv -vvv"),
          std::runtime_error);
    } // end scope
 
@@ -311,10 +280,7 @@ BOOST_AUTO_TEST_CASE( max_value)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level")->addCheck( upper( 5)));
-
-      auto const  as2a = make_arg_array( "-v 6", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 6"),
          std::runtime_error);
    } // end scope
 
@@ -334,10 +300,7 @@ BOOST_AUTO_TEST_CASE( mixing_arguments)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level")->setAllowMixIncSet());
-
-      auto const  as2a = make_arg_array( "-v -v 5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v -v 5"));
       BOOST_REQUIRE_EQUAL( verbose_level.value(), 5);
    } // end scope
 
@@ -347,10 +310,7 @@ BOOST_AUTO_TEST_CASE( mixing_arguments)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level")->setAllowMixIncSet());
-
-      auto const  as2a = make_arg_array( "-v 5 -vv", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 5 -vv"));
       BOOST_REQUIRE_EQUAL( verbose_level.value(), 7);
    } // end scope
 
@@ -360,10 +320,7 @@ BOOST_AUTO_TEST_CASE( mixing_arguments)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
          "verbose level")->setAllowMixIncSet());
-
-      auto const  as2a = make_arg_array( "-v 5 -v 7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 5 -v 7"));
       BOOST_REQUIRE_EQUAL( verbose_level.value(), 7);
    } // end scope
 
@@ -383,10 +340,7 @@ BOOST_AUTO_TEST_CASE( level_through_enum)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v,verbose", DEST_VAR( verbose_level),
       "verbose level")->addFormat( new EnumFormatter()));
-
-   auto const  as2a = make_arg_array( "-v low", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v low"));
    BOOST_REQUIRE_EQUAL( verbose_level.value(), 1);
 
 } // level_through_enum

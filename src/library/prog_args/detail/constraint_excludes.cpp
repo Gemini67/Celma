@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ConstraintExcludes.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/detail/constraint_excludes.hpp"
 
 
@@ -31,18 +31,23 @@
 #include "celma/prog_args/detail/constraint_container.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 
 /// Constructor, stores the argument specification of the other, forbidden
 /// argument(s).
 ///
+/// @param[in]  container
+///    Pointer to the container to which the argument will be added.
 /// @param[in]  reqArgSpec
 ///    The argument specification of the forbidden argument(s).
+/// @since  1.47.0, 05.12.2021
+///    (parameter \a container added)
 /// @since  0.2, 10.04.2016
-ConstraintExcludes::ConstraintExcludes( const std::string& reqArgSpec):
-   IArgConstraint( "excludes", reqArgSpec)
+ConstraintExcludes::ConstraintExcludes( ConstraintContainer* container,
+   const std::string& reqArgSpec):
+      IArgConstraint( "excludes", reqArgSpec, container)
 {
 } // ConstraintExcludes::ConstraintExcludes
 
@@ -55,9 +60,7 @@ ConstraintExcludes::ConstraintExcludes( const std::string& reqArgSpec):
 void ConstraintExcludes::executeConstraint( const ArgumentKey& key)
 {
 
-   assert( ConstraintContainer::mpCurrentConstraints != nullptr);
-
-   ConstraintContainer::mpCurrentConstraints->
+   mpConstraintsContainer->
       addConstraint( ConstraintContainer::Constraint::excluded,
                      mConstraints, format::toString( key));
 
@@ -82,9 +85,7 @@ std::string ConstraintExcludes::toString() const
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF constraint_excludes.cpp  =====

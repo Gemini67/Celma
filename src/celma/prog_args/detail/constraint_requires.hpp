@@ -27,8 +27,8 @@ namespace celma::prog_args { namespace detail {
 
 /// Constraint: Argument requires another argument to be used.
 ///
-/// @since  0.15.0, 05.07.2017  (use Storage<> internally, pass argument keys as
-///                             ArgumentKey objects)
+/// @since  0.15.0, 05.07.2017
+///    (use Storage<> internally, pass argument keys as ArgumentKey objects)
 /// @since  0.2, 10.04.2016
 class ConstraintRequires final : public IArgConstraint
 {
@@ -36,10 +36,15 @@ public:
    /// Constructor, stores the argument specification of the other, requried
    /// argument.
    ///
+   /// @param[in]  container
+   ///    Pointer to the container to which the argument will be added.
    /// @param[in]  reqArgSpec
    ///    The argument specification of the required argument.
+   /// @since  1.47.0, 05.12.2021
+   ///    (parameter \a container added)
    /// @since  0.2, 10.04.2016
-   explicit ConstraintRequires( const std::string& reqArgSpec);
+   ConstraintRequires( ConstraintContainer* container,
+      const std::string& reqArgSpec);
 
    /// Empty, virtual destructor.
    ///
@@ -73,13 +78,19 @@ public:
 ///
 /// @param[in]  argSpec
 ///    The argument specification of the other, required argument.
-/// @return  The newly created constraint object.
+/// @return
+///    Lambda that will create the constraints object with additional parameters.
+/// @since  1.47.0, 05.12.2021
+///    (now returns a lambda)
 /// @since  1.43.0, 09.02.2021
 ///    (name changed from requires() due to conflict with new C++ standard 20)
 /// @since  0.2, 10.04.2016
-[[nodiscard]] inline detail::IArgConstraint* requiresArg( const std::string& argSpec)
+[[nodiscard]] inline auto requiresArg( const std::string& argSpec)
 {
-   return new detail::ConstraintRequires( argSpec);
+   return [=]( detail::ConstraintContainer* container)
+   {
+      return new detail::ConstraintRequires( container, argSpec);
+   };
 } // requiresArg
 
 

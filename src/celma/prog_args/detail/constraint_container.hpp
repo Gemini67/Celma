@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ConstraintContainer.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_CONSTRAINT_CONTAINER_HPP
-#define CELMA_PROG_ARGS_DETAIL_CONSTRAINT_CONTAINER_HPP
+#pragma once
 
 
 #include <string>
@@ -25,7 +24,7 @@
 #include "celma/prog_args/detail/storage.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Handles the argument constraints:<br>
@@ -58,10 +57,6 @@ public:
                   //!< least one of them.
       oneOf       //!< Exactly one argument of a group of argumnts must be used.
    };
-
-   /// Sometimes need acceess to the current constraint container from other
-   /// classes/methods. This member variable points to it.
-   static ConstraintContainer*  mpCurrentConstraints;
 
    /// Constructor.
    /// @since  0.15.0, 26.06.2017
@@ -126,13 +121,8 @@ protected:
 }; // ConstraintContainer
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
-#endif   // CELMA_PROG_ARGS_DETAIL_CONSTRAINT_CONTAINER_HPP
-
-
-// =====================  END OF constraint_container.hpp  =====================
+// =====  END OF constraint_container.hpp  =====
 

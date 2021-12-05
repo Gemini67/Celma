@@ -29,11 +29,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -127,9 +126,7 @@ BOOST_AUTO_TEST_CASE( test_vector_bool_errors)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values"));
 
-      auto const  as2a = make_arg_array( "-b this,should,throw", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b this,should,throw"),
          std::bad_cast);
    } // end scope
 
@@ -149,10 +146,8 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       std::vector< bool>  vb;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6"));
 
-      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 4]);
       BOOST_REQUIRE( vb[ 5]);
       BOOST_REQUIRE( vb[ 6]);
@@ -165,10 +160,8 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->setListSep( '.'));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4.5.6"));
 
-      auto const  as2a = make_arg_array( "-b 4.5.6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 4]);
       BOOST_REQUIRE( vb[ 5]);
       BOOST_REQUIRE( vb[ 6]);
@@ -190,10 +183,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       std::vector< bool>  vb;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values"));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6 7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b 4,5,6 7"),
          std::invalid_argument);
    } // end scope
 
@@ -206,10 +196,8 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6 7"));
 
-      auto const  as2a = make_arg_array( "-b 4,5,6 7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 4]);
       BOOST_REQUIRE( vb[ 5]);
       BOOST_REQUIRE( vb[ 6]);
@@ -223,10 +211,8 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->setTakesMultiValue());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6 7 8"));
 
-      auto const  as2a = make_arg_array( "-b 4,5,6 7 8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 4]);
       BOOST_REQUIRE( vb[ 5]);
       BOOST_REQUIRE( vb[ 6]);
@@ -242,10 +228,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6 7 --endvalues 8", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b 4,5,6 7 --endvalues 8"),
          std::invalid_argument);
    } // end scope
 
@@ -258,10 +241,8 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6 7 --endvalues 8"));
 
-      auto const  as2a = make_arg_array( "-b 4,5,6 7 --endvalues 8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 4]);
       BOOST_REQUIRE( vb[ 5]);
       BOOST_REQUIRE( vb[ 6]);
@@ -276,10 +257,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->setCardinality( celma::prog_args::cardinality_max( 3)));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6"));
    } // end scope
 
    // allow a maximum of 3 bits to be set, try to set 4
@@ -289,10 +267,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->setCardinality( celma::prog_args::cardinality_max( 3)));
-
-      auto const  as2a = make_arg_array( "-b 4,5,6,7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-b 4,5,6,7"),
          std::runtime_error);
    } // end scope
 
@@ -303,10 +278,8 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->addFormat( new EnumFormatter()));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b second,fifth,seventh"));
 
-      auto const  as2a = make_arg_array( "-b second,fifth,seventh", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 2]);
       BOOST_REQUIRE( vb[ 5]);
       BOOST_REQUIRE( vb[ 7]);
@@ -331,10 +304,8 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       vb[ 3] = true;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6"));
 
-      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 2]);
       BOOST_REQUIRE( vb[ 3]);
       BOOST_REQUIRE( vb[ 4]);
@@ -352,10 +323,8 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->setClearBeforeAssign());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5"));
 
-      auto const  as2a = make_arg_array( "-b 4,5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( !vb[ 2]);
       BOOST_REQUIRE( !vb[ 3]);
       BOOST_REQUIRE( vb[ 4]);
@@ -385,10 +354,8 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->unsetFlag());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4,5,6"));
 
-      auto const  as2a = make_arg_array( "-b 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 2]);
       BOOST_REQUIRE( !vb[ 4]);
       BOOST_REQUIRE( !vb[ 5]);
@@ -409,10 +376,8 @@ BOOST_AUTO_TEST_CASE( test_resetting_flags)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values")
          ->unsetFlag()->setTakesMultiValue()->setListSep( '.'));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-b 4.5.6 7"));
 
-      auto const  as2a = make_arg_array( "-b 4.5.6 7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( vb[ 2]);
       BOOST_REQUIRE( !vb[ 4]);
       BOOST_REQUIRE( !vb[ 5]);
@@ -438,11 +403,8 @@ BOOST_AUTO_TEST_CASE( list_var)
 
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( vb), "values"));
-
-   auto const  as2a = make_arg_array( "--list-arg-var -b 4,5,6 --list-arg-var",
-      nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-var -b 4,5,6 "
+      "--list-arg-var"));
 
    BOOST_REQUIRE( oss_err.str().empty());
    // std::cerr << "\n" << oss_std.str() << std::endl;

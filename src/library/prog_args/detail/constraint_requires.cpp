@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -28,18 +28,23 @@
 #include "celma/prog_args/detail/constraint_container.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 
-/// Constructor, stores the argument specification of the other, requried
+/// Constructor, stores the argument specification of the other, required
 /// argument.
 ///
+/// @param[in]  container
+///    Pointer to the container to which the argument will be added.
 /// @param[in]  reqArgSpec
 ///    The argument specification of the required argument.
+/// @since  1.47.0, 05.12.2021
+///    (parameter \a container added)
 /// @since  0.2, 10.04.2016
-ConstraintRequires::ConstraintRequires( const std::string& reqArgSpec):
-   IArgConstraint( "requires", reqArgSpec)
+ConstraintRequires::ConstraintRequires( ConstraintContainer* container,
+   const std::string& reqArgSpec):
+      IArgConstraint( "requires", reqArgSpec, container)
 {
 } // ConstraintRequires::ConstraintRequires
 
@@ -52,11 +57,9 @@ ConstraintRequires::ConstraintRequires( const std::string& reqArgSpec):
 void ConstraintRequires::executeConstraint( const ArgumentKey& key)
 {
 
-   assert( ConstraintContainer::mpCurrentConstraints != nullptr);
-
-   ConstraintContainer::mpCurrentConstraints->
-      addConstraint( ConstraintContainer::Constraint::required,
-                     mConstraints, format::toString( key));
+   mpConstraintsContainer->addConstraint(
+      ConstraintContainer::Constraint::required,
+      mConstraints, format::toString( key));
 
 } // ConstraintRequires::executeConstraint
 
@@ -78,9 +81,7 @@ std::string ConstraintRequires::toString() const
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF constraint_requires.cpp  =====

@@ -1,6 +1,6 @@
 
 /*!
-   \mainpage  CELMA v1.46.1
+   \mainpage  CELMA v1.47.0
 
    \tableofcontents
 
@@ -47,6 +47,8 @@
    | Version  | Publish Date      | Description |
    | ------:  | ----------------: | ----------- |
    |   x.y.z  | under development | Thread safe logging, multi-process logging, logging configuration file, ... |
+   |   1.47.0 | 2021-12-05        | Argument handler is now thread-safe: Use lambdas for adding constrints, no more global variable. |
+   |   1.46.2 | 2021-11-21        | Added function for pass argument list string to argument group handler. Adapted remaining test program to use new functions. |
    |   1.46.1 | 2021-10-03        | Added support for calling lambdas in the argument handler.<br>Added function evalArgumentString() which simplifies test programs. Fixed bug in module fixed string. |
    |   1.46.0 | 2021-05-25        | Added module "fixed string". |
    |   1.45.0 | 2021-05-24        | Adapted module "length type". Added exception "argument error", used in argument handler. Added modules "random range" and "XML Writer". |

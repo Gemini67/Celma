@@ -29,17 +29,13 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/prog_args.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::ArgString2Array;
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 using celma::test::multilineStringCompare;
-using std::ostringstream;
-using std::string;
 
 
 
@@ -49,14 +45,13 @@ using std::string;
 BOOST_AUTO_TEST_CASE( help_usage)
 {
 
-   ostringstream   std_out;
-   ostringstream   err_out;
-   Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
+   std::ostringstream  std_out;
+   std::ostringstream  err_out;
+   Handler             ah( std_out, err_out, Handler::AllHelp
+      | Handler::hfUsageCont);
 
 
-   auto const  as2a = make_arg_array( "-h", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
    BOOST_REQUIRE( celma::test::multilineStringCompare( std_out,
       "Usage:\n"
       "Optional arguments:\n"
@@ -75,16 +70,14 @@ BOOST_AUTO_TEST_CASE( help_usage)
 BOOST_AUTO_TEST_CASE( custom_help_usage)
 {
 
-   ostringstream   std_out;
-   ostringstream   err_out;
-   Handler         ah( std_out, err_out, Handler::hfUsageCont);
+   std::ostringstream  std_out;
+   std::ostringstream  err_out;
+   Handler             ah( std_out, err_out, Handler::hfUsageCont);
 
 
    ah.addHelpArgument( "u,usage", "Custom arguments for help");
 
-   auto const  as2a = make_arg_array( "-u", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-u"));
    BOOST_REQUIRE( multilineStringCompare( std_out,
       "Usage:\n"
       "Optional arguments:\n"
@@ -101,20 +94,19 @@ BOOST_AUTO_TEST_CASE( custom_help_usage)
 BOOST_AUTO_TEST_CASE( argument_output)
 {
 
-   ostringstream   std_out;
-   ostringstream   err_out;
-   Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
-   string          string_arg;
-   int             opt_int_arg = 42;
+   std::ostringstream  std_out;
+   std::ostringstream  err_out;
+   Handler             ah( std_out, err_out, Handler::AllHelp
+      | Handler::hfUsageCont);
+   std::string         string_arg;
+   int                 opt_int_arg = 42;
 
 
    ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")
       ->setIsMandatory();
    ah.addArgument( "i,index", DEST_VAR( opt_int_arg), "Integer argument");
 
-   auto const  as2a = make_arg_array( "-h", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Usage:\nMandatory arguments:\n"
                         "   -s           String argument\n"
@@ -137,11 +129,12 @@ BOOST_AUTO_TEST_CASE( argument_output)
 BOOST_AUTO_TEST_CASE( value_unit)
 {
 
-   ostringstream   std_out;
-   ostringstream   err_out;
-   Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
-   string          string_arg;
-   int             throughput = 100;
+   std::ostringstream  std_out;
+   std::ostringstream  err_out;
+   Handler             ah( std_out, err_out, Handler::AllHelp
+      | Handler::hfUsageCont);
+   std::string         string_arg;
+   int                 throughput = 100;
 
 
    ah.addArgument( "s", DEST_VAR( string_arg),  "String argument")
@@ -149,9 +142,7 @@ BOOST_AUTO_TEST_CASE( value_unit)
    ah.addArgument( "t,throughput", DEST_VAR( throughput), "Throughput rate")
       ->setValueUnit( "msgs/s");
 
-   auto const  as2a = make_arg_array( "-h", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
    BOOST_REQUIRE( multilineStringCompare( std_out,
                         "Usage:\nMandatory arguments:\n"
                         "   -s                String argument\n"
@@ -183,17 +174,18 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
    {
    public:
       /// Constructor, initialises the Handler.
-      /// @param[in]  argstring
-      ///    The argument string to pass to \c ArgString2Array.
+      ///
+      /// @param[in]  flag_set  Set of flags to pass to the argument handler.
+      /// @since
+      ///   1.46.2  (no argument string parameter anymore)
       /// @since
       ///    1.6.0, 30.04.2018
-      TestData( int flag_set, const string& argstring):
+      TestData( int flag_set):
          mStdOut(),
          mErrOut(),
          mHandler( mStdOut, mErrOut, Handler::AllHelp | Handler::hfUsageCont | flag_set),
          mStringArg(),
-         mReplacedBy(),
-         mAs2a( argstring, nullptr)
+         mReplacedBy()
       {
          mHandler.addArgument( "s", DEST_VAR( mStringArg), "String argument")
             ->setIsMandatory();
@@ -209,30 +201,27 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
       } // end TestData::TestData
 
       /// Captures the output to \c stdout.
-      ostringstream          mStdOut;
+      std::ostringstream  mStdOut;
       /// Captures the output to \c stderr.
-      ostringstream          mErrOut;
+      std::ostringstream  mErrOut;
       /// The argument handler object used for the test.
-      Handler                mHandler;
+      Handler             mHandler;
       /// Mandatory string argument.
-      string                 mStringArg;
+      std::string         mStringArg;
       /// Optional integer argument.
-      int                    mOptIntArg = 42;
+      int                 mOptIntArg = 42;
       /// Deprecated argument variable.
-      bool                   mDummy = false;
+      bool                mDummy = false;
       /// Argument "replaced by".
-      string                 mReplacedBy;
+      std::string         mReplacedBy;
       /// Hidden variable.
-      bool                   mHidden = false;
-      /// Argument string split to argc, argv.
-      const ArgString2Array  mAs2a;
+      bool                mHidden = false;
    }; // TestData
 
    {
-      TestData  td( 0, "-h");
+      TestData  td( 0);
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler, "-h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s           String argument\n"
@@ -247,10 +236,9 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
    } // end scope
 
    {
-      TestData  td( Handler::hfUsageHidden, "-h");
+      TestData  td( Handler::hfUsageHidden);
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler, "-h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s           String argument\n"
@@ -267,10 +255,9 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
    } // end scope
 
    {
-      TestData  td( Handler::hfUsageDeprecated, "-h");
+      TestData  td( Handler::hfUsageDeprecated);
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler, "-h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s             String argument\n"
@@ -289,10 +276,9 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
    } // end scope
 
    {
-      TestData  td( Handler::hfUsageHidden | Handler::hfUsageDeprecated, "-h");
+      TestData  td( Handler::hfUsageHidden | Handler::hfUsageDeprecated);
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler, "-h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s             String argument\n"
@@ -314,12 +300,11 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
    // set a custom argument to activate "print hidden", but don't use it
    {
-      TestData  td( 0, "-h");
+      TestData  td( 0);
 
       td.mHandler.addArgumentPrintHidden( "-H");
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler, "-h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s           String argument\n"
@@ -336,12 +321,11 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 
    // use a custom argument to activate "print hidden"
    {
-      TestData  td( 0, "-H -h");
+      TestData  td( 0);
 
       td.mHandler.addArgumentPrintHidden( "-H", "Print hidden arguments too.");
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler, "-H -h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s           String argument\n"
@@ -359,10 +343,10 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
    } // end scope
 
    {
-      TestData  td( Handler::hfArgHidden, "--print-hidden -h");
+      TestData  td( Handler::hfArgHidden);
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler, "--print-hidden "
+         "-h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s               String argument\n"
@@ -380,10 +364,10 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
    } // end scope
 
    {
-      TestData  td( Handler::hfArgDeprecated, "--print-deprecated -h");
+      TestData  td( Handler::hfArgDeprecated);
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler,
+         "--print-deprecated -h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s                   String argument\n"
@@ -404,11 +388,10 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
    } // end scope
 
    {
-      TestData  td( Handler::hfArgHidden | Handler::hfArgDeprecated,
-         "--print-hidden --print-deprecated -h");
+      TestData  td( Handler::hfArgHidden | Handler::hfArgDeprecated);
 
-      BOOST_REQUIRE_NO_THROW( td.mHandler.evalArguments( td.mAs2a.mArgC,
-         td.mAs2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( td.mHandler, "--print-hidden "
+         "--print-deprecated -h"));
       BOOST_REQUIRE( multilineStringCompare( td.mStdOut,
          "Usage:\nMandatory arguments:\n"
          "   -s                   String argument\n"
@@ -440,11 +423,12 @@ BOOST_AUTO_TEST_CASE( usage_with_special_arguments)
 BOOST_AUTO_TEST_CASE( argument_output_custom_help)
 {
 
-   ostringstream   std_out;
-   ostringstream   err_out;
-   Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
-   string          string_arg;
-   int             opt_int_arg = 42;
+   std::ostringstream  std_out;
+   std::ostringstream  err_out;
+   Handler             ah( std_out, err_out, Handler::AllHelp
+      | Handler::hfUsageCont);
+   std::string         string_arg;
+   int                 opt_int_arg = 42;
 
 
    ah.addHelpArgument( "u,usage", "Custom arguments for help");
@@ -452,9 +436,7 @@ BOOST_AUTO_TEST_CASE( argument_output_custom_help)
    ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")->setIsMandatory();
    ah.addArgument( "i,index", DEST_VAR( opt_int_arg), "Integer argument");
 
-   auto const  as2a = make_arg_array( "--usage", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--usage"));
    BOOST_REQUIRE( multilineStringCompare( std_out,
       "Usage:\nMandatory arguments:\n"
       "   -s           String argument\n"
@@ -477,18 +459,19 @@ BOOST_AUTO_TEST_CASE( argument_output_custom_help)
 BOOST_AUTO_TEST_CASE( test_usage_output_checks)
 {
 
-   ostringstream   std_out;
-   ostringstream   err_out;
-   Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
-   string          string_arg;
-   int             opt_int_arg1 = 42;
-   int             opt_int_arg2 = 42;
-   int             opt_int_arg3 = 42;
-   std::string     file;
-   std::string     dir;
-   std::string     existing_parent_dir;
-   std::string     absolute_path;
-   std::string     name;
+   std::ostringstream  std_out;
+   std::ostringstream  err_out;
+   Handler             ah( std_out, err_out, Handler::AllHelp
+      | Handler::hfUsageCont);
+   std::string         string_arg;
+   int                 opt_int_arg1 = 42;
+   int                 opt_int_arg2 = 42;
+   int                 opt_int_arg3 = 42;
+   std::string         file;
+   std::string         dir;
+   std::string         existing_parent_dir;
+   std::string         absolute_path;
+   std::string         name;
 
 
    ah.addArgument( "s",       DEST_VAR( string_arg),  "String argument")
@@ -517,9 +500,7 @@ BOOST_AUTO_TEST_CASE( test_usage_output_checks)
                  ->addCheck( celma::prog_args::pattern( "^[A-Z][a-z]+"))
                  ->setPrintDefault( false);
 
-   auto const  as2a = make_arg_array( "-h", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
    BOOST_REQUIRE( multilineStringCompare( std_out,
       "Usage:\nMandatory arguments:\n"
             "   -s           String argument\n"
@@ -563,12 +544,12 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
 
    using celma::prog_args::LevelCounter;
 
-   ostringstream         std_out;
-   ostringstream         err_out;
+   std::ostringstream    std_out;
+   std::ostringstream    err_out;
    Handler               ah( std_out, err_out,
-                             Handler::AllHelp | Handler::hfUsageCont |
-                             Handler::hfListArgVar | Handler::hfVerboseArgs);
-   string                string_arg;
+      Handler::AllHelp | Handler::hfUsageCont | Handler::hfListArgVar
+      | Handler::hfVerboseArgs);
+   std::string           string_arg;
    int                   opt_int_arg = 42;
    std::optional< int>   optional_int;
    std::optional< bool>  optional_bool;
@@ -582,10 +563,8 @@ BOOST_AUTO_TEST_CASE( argument_verbose_assignment)
    ah.addArgument( "opt-bool",   DEST_VAR( optional_bool), "Optional boolean argument");
    ah.addArgument( "v,verbose",  DEST_VAR( verbose_level), "Verbose level counter");
 
-   auto const  as2a = make_arg_array( "-s text --list-arg-vars --index 4711 -o 13 --opt-bool -vv --list-arg-vars",
-      nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-s text --list-arg-vars "
+      "--index 4711 -o 13 --opt-bool -vv --list-arg-vars"));
    // std::cerr << std::endl << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
       "string_arg: value 'text' is assigned\n"
@@ -645,21 +624,19 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
    // activate argument for short usage only, but don't use it
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         ah( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             ah( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort);
-      int             intArg1 = 0;
-      int             intArg2 = 0;
-      int             intArg3 = 0;
+      int                 intArg1 = 0;
+      int                 intArg2 = 0;
+      int                 intArg3 = 0;
 
       ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
       ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
 
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -678,21 +655,19 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
    // use the flag and standard argument for short usage
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         ah( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             ah( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort);
-      int             intArg1 = 0;
-      int             intArg2 = 0;
-      int             intArg3 = 0;
+      int                 intArg1 = 0;
+      int                 intArg2 = 0;
+      int                 intArg3 = 0;
 
       ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
       ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
 
-      auto const  as2a = make_arg_array( "--help-short -h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-short -h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -707,13 +682,13 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
    // set a custom argument for short usage only, but don't use it
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         ah( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             ah( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont);
-      int             intArg1 = 0;
-      int             intArg2 = 0;
-      int             intArg3 = 0;
+      int                 intArg1 = 0;
+      int                 intArg2 = 0;
+      int                 intArg3 = 0;
 
       ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
@@ -721,9 +696,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
       ah.addArgumentUsageShort( "S");
 
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -742,13 +715,13 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
    // set and use a custom argument for short usage
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         ah( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             ah( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont);
-      int             intArg1 = 0;
-      int             intArg2 = 0;
-      int             intArg3 = 0;
+      int                 intArg1 = 0;
+      int                 intArg2 = 0;
+      int                 intArg3 = 0;
 
       ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
@@ -756,9 +729,7 @@ BOOST_AUTO_TEST_CASE( test_usage_short)
 
       ah.addArgumentUsageShort( "S", "Short usage only.");
 
-      auto const  as2a = make_arg_array( "-S -h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-S -h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -783,21 +754,19 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
    // activate argument for long usage only, but don't use it
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         ah( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             ah( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageLong);
-      int             intArg1 = 0;
-      int             intArg2 = 0;
-      int             intArg3 = 0;
+      int                 intArg1 = 0;
+      int                 intArg2 = 0;
+      int                 intArg3 = 0;
 
       ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
       ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
 
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -816,21 +785,19 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
    // use the flag and standard argument for long usage
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         ah( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             ah( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageLong);
-      int             intArg1 = 0;
-      int             intArg2 = 0;
-      int             intArg3 = 0;
+      int                 intArg1 = 0;
+      int                 intArg2 = 0;
+      int                 intArg3 = 0;
 
       ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
       ah.addArgument( "third", DEST_VAR( intArg3), "The third argument.");
 
-      auto const  as2a = make_arg_array( "--help-long -h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--help-long -h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -847,13 +814,13 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
    // set a custom argument for long usage only, but don't use it
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         ah( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             ah( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont);
-      int             intArg1 = 0;
-      int             intArg2 = 0;
-      int             intArg3 = 0;
+      int                 intArg1 = 0;
+      int                 intArg2 = 0;
+      int                 intArg3 = 0;
 
       ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
@@ -861,9 +828,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
       ah.addArgumentUsageLong( "L");
 
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -882,13 +847,13 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
    // set and use a custom argument for short usage
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         ah( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             ah( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont);
-      int             intArg1 = 0;
-      int             intArg2 = 0;
-      int             intArg3 = 0;
+      int                 intArg1 = 0;
+      int                 intArg2 = 0;
+      int                 intArg3 = 0;
 
       ah.addArgument( "f", DEST_VAR( intArg1), "The first argument.");
       ah.addArgument( "s,second", DEST_VAR( intArg2), "The second argument.");
@@ -896,9 +861,7 @@ BOOST_AUTO_TEST_CASE( test_usage_long)
 
       ah.addArgumentUsageLong( "L", "Long arguments only.");
 
-      auto const  as2a = make_arg_array( "-L -h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-L -h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -922,18 +885,18 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
 {
 
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         masterAH( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             masterAH( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort);
 
-      Handler         subInput( 0);
-      string          inputName;
-      int             inputType = 0;
+      Handler             subInput( 0);
+      std::string         inputName;
+      int                 inputType = 0;
 
-      Handler         subOutput( 0);
-      string          outputName;
-      int             outputType = 0;
+      Handler             subOutput( 0);
+      std::string         outputName;
+      int                 outputType = 0;
 
       subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
          "cache name")->setPrintDefault( false);
@@ -951,9 +914,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", subOutput, "output arguments");
 
-      auto const  as2a = make_arg_array( "-h", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-h"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -967,19 +928,19 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
    } // end scope
 
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         masterAH( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             masterAH( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort
          | Handler::hfUsageLong);
 
-      Handler         subInput( masterAH, Handler::AllHelp);
-      string          inputName;
-      int             inputType = 0;
+      Handler             subInput( masterAH, Handler::AllHelp);
+      std::string         inputName;
+      int                 inputType = 0;
 
-      Handler         subOutput( masterAH, Handler::AllHelp);
-      string          outputName;
-      int             outputType = 0;
+      Handler             subOutput( masterAH, Handler::AllHelp);
+      std::string         outputName;
+      int                 outputType = 0;
 
       subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
          "cache name")->setPrintDefault( false);
@@ -997,9 +958,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", subOutput, "output arguments");
 
-      auto const  as2a = make_arg_array( "-ih", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "-ih"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"
@@ -1013,19 +972,19 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
    } // end scope
 
    {
-      ostringstream   std_out;
-      ostringstream   err_out;
-      Handler         masterAH( std_out, err_out,
+      std::ostringstream  std_out;
+      std::ostringstream  err_out;
+      Handler             masterAH( std_out, err_out,
          Handler::AllHelp | Handler::hfUsageCont | Handler::hfUsageShort
          | Handler::hfUsageLong);
 
-      Handler         subInput( masterAH, Handler::AllHelp);
-      string          inputName;
-      int             inputType = 0;
+      Handler             subInput( masterAH, Handler::AllHelp);
+      std::string         inputName;
+      int                 inputType = 0;
 
-      Handler         subOutput( masterAH, Handler::AllHelp);
-      string          outputName;
-      int             outputType = 0;
+      Handler             subOutput( masterAH, Handler::AllHelp);
+      std::string         outputName;
+      int                 outputType = 0;
 
       subInput.addArgument( "c", DEST_PAIR( inputName, inputType, 1),
          "cache name")->setPrintDefault( false);
@@ -1043,9 +1002,7 @@ BOOST_AUTO_TEST_CASE( test_usage_subgroup_short)
          "queue name")->setPrintDefault( false);
       masterAH.addArgument( "o", subOutput, "output arguments");
 
-      auto const  as2a = make_arg_array( "--help-short -ih", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( masterAH, "--help-short -ih"));
       BOOST_REQUIRE( multilineStringCompare( std_out,
          "Usage:\n"
          "Optional arguments:\n"

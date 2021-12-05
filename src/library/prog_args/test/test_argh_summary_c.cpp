@@ -29,13 +29,12 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::common::operator |;
 using celma::prog_args::Handler;
 using celma::prog_args::SummaryOptions;
@@ -202,14 +201,13 @@ public:
       tcb.addVoidMember( ah);
       tcb.addValueMember( ah);
 
-      auto const  as2a = make_arg_array( "-i 42 -f -b 2,3,4 --names peter,paul,mary "
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah,
+         "-i 42 -f -b 2,3,4 --names peter,paul,mary "
          "-r 2,5-7 -d --range-bitset 3,5,7 --void-func --value-func=some_value "
          "--void-method --value-method another_value -t 28,unbelievable,12.75 "
          "--void-member --value-member=last_value -vv --pair juhu -o 0 "
          "--opt-bool -c 9,19,29 -a 5,4,3 --value-filter 42,4711 -s 13.24.4711 2 "
-         "--stack goodbye+and+hello --map 1,one;2,two -y 2,4,6,8 -x 1,3,5",
-         nullptr);
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+         "--stack goodbye+and+hello --map 1,one;2,two -y 2,4,6,8 -x 1,3,5"));
    } // AllTypesFixture::AllTypesFixture
 
    Handler                            ah;
@@ -269,8 +267,7 @@ BOOST_AUTO_TEST_CASE( no_argument_used)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   auto const  as2a = make_arg_array( "", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, ""));
 
    ah.printSummary( oss);
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
@@ -299,9 +296,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   auto const  as2a = make_arg_array( "-f 34", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
-
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f 34"));
    ah.printSummary( oss);
    BOOST_REQUIRE( oss.str() != empty);
    BOOST_REQUIRE_EQUAL( oss.str(),
@@ -374,9 +369,8 @@ BOOST_AUTO_TEST_CASE( groups_summary)
    ah_input->addArgument( "input-name", DEST_VAR( input_name), "input name");
    ah_output->addArgument( "output-name", DEST_VAR( output_name), "output name");
 
-   auto const  as2a = make_arg_array( "--input-name source --output-name destination",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( celma::prog_args::evalArgumentString(
+      "--input-name source --output-name destination"));
 
    Groups::instance().printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -416,9 +410,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary)
    ah.addArgument( "i,input", ah_input, "input parameters");
    ah.addArgument( "o,output", ah_output, "output parameters");
 
-   auto const  as2a = make_arg_array( "-if input_file_name --output --queue output_queue_name",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-if input_file_name "
+      "--output --queue output_queue_name"));
 
    ah.printSummary( oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -452,8 +445,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_with_type)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   auto const  as2a = make_arg_array( "-f 34", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f 34"));
 
    ah.printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( oss.str() != empty);
@@ -529,9 +521,8 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_type)
    ah_input->addArgument( "input-name", DEST_VAR( input_name), "input name");
    ah_output->addArgument( "output-name", DEST_VAR( output_name), "output name");
 
-   auto const  as2a = make_arg_array( "--input-name source --output-name destination",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( celma::prog_args::evalArgumentString(
+      "--input-name source --output-name destination"));
 
    Groups::instance().printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -571,9 +562,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_type)
    ah.addArgument( "i,input", ah_input, "input parameters");
    ah.addArgument( "o,output", ah_output, "output parameters");
 
-   auto const  as2a = make_arg_array( "-if input_file_name --output --queue output_queue_name",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-if input_file_name "
+      "--output --queue output_queue_name"));
 
    ah.printSummary( SummaryOptions::with_type, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -607,8 +597,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_with_key)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   auto const  as2a = make_arg_array( "-f 34", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f 34"));
 
    ah.printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( oss.str() != empty);
@@ -684,9 +673,8 @@ BOOST_AUTO_TEST_CASE( groups_summary_with_key)
    ah_input->addArgument( "input-name", DEST_VAR( input_name), "input name");
    ah_output->addArgument( "output-name", DEST_VAR( output_name), "output name");
 
-   auto const  as2a = make_arg_array( "--input-name source --output-name destination",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( celma::prog_args::evalArgumentString(
+      "--input-name source --output-name destination"));
 
    Groups::instance().printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -726,9 +714,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_with_key)
    ah.addArgument( "i,input", ah_input, "input parameters");
    ah.addArgument( "o,output", ah_output, "output parameters");
 
-   auto const  as2a = make_arg_array( "-if input_file_name --output --queue output_queue_name",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-if input_file_name "
+      "--output --queue output_queue_name"));
 
    ah.printSummary( SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());
@@ -761,8 +748,7 @@ BOOST_AUTO_TEST_CASE( one_argument_summary_full)
    BOOST_REQUIRE_EQUAL( oss.str(), empty);
    oss.str( "");
 
-   auto const  as2a = make_arg_array( "-f 34", nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-f 34"));
 
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
    BOOST_REQUIRE( oss.str() != empty);
@@ -837,9 +823,8 @@ BOOST_AUTO_TEST_CASE( groups_summary_full)
    ah_input->addArgument( "input-name", DEST_VAR( input_name), "input name");
    ah_output->addArgument( "output-name", DEST_VAR( output_name), "output name");
 
-   auto const  as2a = make_arg_array( "--input-name source --output-name destination",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( Groups::instance().evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( celma::prog_args::evalArgumentString(
+      "--input-name source --output-name destination"));
 
    Groups::instance().printSummary(
      SummaryOptions::with_type | SummaryOptions::with_key,
@@ -880,9 +865,8 @@ BOOST_AUTO_TEST_CASE( subgroups_summary_full)
    ah.addArgument( "i,input", ah_input, "input parameters");
    ah.addArgument( "o,output", ah_output, "output parameters");
 
-   auto const  as2a = make_arg_array( "-if input_file_name --output --queue output_queue_name",
-      nullptr);
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-if input_file_name "
+      "--output --queue output_queue_name"));
 
    ah.printSummary( SummaryOptions::with_type | SummaryOptions::with_key, oss);
    BOOST_REQUIRE( !oss.str().empty());

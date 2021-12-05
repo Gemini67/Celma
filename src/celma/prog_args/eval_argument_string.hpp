@@ -12,7 +12,7 @@
 
 
 /// @file
-/// See documentation of class celma::celma::prog_args::@@@.
+/// See documentation of functions celma::celma::prog_args::evalArgumentString().
 
 
 #pragma once
@@ -37,6 +37,18 @@ class Handler;
 /// @param[in]  prog_name   Optional program name to be set.
 /// @since  1.46.1, 19.08.2021
 void evalArgumentString( Handler& handler, const std::string& arg_string,
+   const char* prog_name = nullptr) noexcept( false);
+
+
+/// Evaluates a complete argument string with an argument group.
+/// This can be used e.g. if an argument string is passed to a function and
+/// should be evaluated like main function arguments, or in test
+/// programs.
+///
+/// @param[in]  arg_string  Complete argument and values string.
+/// @param[in]  prog_name   Optional program name to be set.
+/// @since  1.46.2, 04.10.2021
+void evalArgumentString( const std::string& arg_string,
    const char* prog_name = nullptr) noexcept( false);
 
 

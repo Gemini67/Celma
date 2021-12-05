@@ -29,11 +29,10 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -78,10 +77,7 @@ BOOST_AUTO_TEST_CASE( test_unordered_multiset_errors)
       std::unordered_multiset< int>  ums;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values"));
-
-      auto const  as2a = make_arg_array( "-v this,should,throw", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v this,should,throw"),
          std::bad_cast);
    } // end scope
 
@@ -118,10 +114,8 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
       std::unordered_multiset< int>  ums = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6"));
 
-      auto const  as2a = make_arg_array( "-v 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 6);
 
       for (int i = 1; i < 7; ++i)
@@ -137,10 +131,8 @@ BOOST_AUTO_TEST_CASE( test_list_sep)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setListSep( '.'));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4.5.6"));
 
-      auto const  as2a = make_arg_array( "-v 4.5.6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 6);
 
       for (int i = 1; i < 7; ++i)
@@ -165,10 +157,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       std::unordered_multiset< int>  ums = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values"));
-
-      auto const  as2a = make_arg_array( "-v 4,5,6 7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 4,5,6 7"),
          std::invalid_argument);
    } // end scope
 
@@ -181,10 +170,8 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values"));
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6 7"));
 
-      auto const  as2a = make_arg_array( "-v 4,5,6 7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 6);
 
       for (int i = 1; i < 7; ++i)
@@ -202,10 +189,8 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setTakesMultiValue());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6 7 8"));
 
-      auto const  as2a = make_arg_array( "-v 4,5,6 7 8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 8);
 
       for (int i = 1; i < 9; ++i)
@@ -223,10 +208,7 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
-
-      auto const  as2a = make_arg_array( "-v 4,5,6 7 --endvalues 8", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 4,5,6 7 --endvalues 8"),
          std::invalid_argument);
    } // end scope
 
@@ -239,10 +221,8 @@ BOOST_AUTO_TEST_CASE( test_multi_values)
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setTakesMultiValue());
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "-", DEST_VAR( free), "free value"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6 7 --endvalues 8"));
 
-      auto const  as2a = make_arg_array( "-v 4,5,6 7 --endvalues 8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 7);
 
       for (int i = 1; i < 8; ++i)
@@ -269,10 +249,8 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
       std::unordered_multiset< int>  ums = { 1, 2, 3};
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5,6"));
 
-      auto const  as2a = make_arg_array( "-v 4,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 6);
 
       for (int i = 1; i < 6; ++i)
@@ -288,10 +266,8 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setClearBeforeAssign());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5"));
 
-      auto const  as2a = make_arg_array( "-v 4,5", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 2);
 
       for (int i = 4; i < 6; ++i)
@@ -308,10 +284,8 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setClearBeforeAssign()->setTakesMultiValue());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 4,5 6,7,8"));
 
-      auto const  as2a = make_arg_array( "-v 4,5 6,7,8", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 5);
 
       for (int i = 4; i < 9; ++i)
@@ -328,10 +302,8 @@ BOOST_AUTO_TEST_CASE( test_clear_dest)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setClearBeforeAssign()->setValueMode( Handler::ValueMode::optional));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v"));
 
-      auto const  as2a = make_arg_array( "-v", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE( ums.empty());
    } // end scope
 
@@ -352,10 +324,8 @@ BOOST_AUTO_TEST_CASE( format_values)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
       ->addFormat( celma::prog_args::lowercase()));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v monday,TUESDAY,wEdNeSdAy"));
 
-   auto const  as2a = make_arg_array( "-v monday,TUESDAY,wEdNeSdAy", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    BOOST_REQUIRE_EQUAL( ums.size(), 3);
 
    BOOST_REQUIRE( ums.find( "monday") != ums.end());
@@ -379,10 +349,8 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
       std::unordered_multiset< int>  ums;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values"));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,4,4,6,7"));
 
-      auto const  as2a = make_arg_array( "-v 2,3,4,4,6,7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 6);
    } // end scope
 
@@ -393,10 +361,8 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setUniqueData());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,4,4,6,7"));
 
-      auto const  as2a = make_arg_array( "-v 2,3,4,4,6,7", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 5);
    } // end scope
 
@@ -407,10 +373,8 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setUniqueData()->setTakesMultiValue());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,4 3,5,6"));
 
-      auto const  as2a = make_arg_array( "-v 2,3,4 3,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 5);
    } // end scope
 
@@ -421,10 +385,8 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setUniqueData()->setTakesMultiValue());
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-v 2,3,4 3,5,6"));
 
-      auto const  as2a = make_arg_array( "-v 2,3,4 3,5,6", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
       BOOST_REQUIRE_EQUAL( ums.size(), 5);
    } // end scope
 
@@ -435,10 +397,7 @@ BOOST_AUTO_TEST_CASE( test_unique_values)
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "v", DEST_VAR( ums), "values")
          ->setUniqueData( true)->setTakesMultiValue());
-
-      auto const  as2a = make_arg_array( "-v 2,4 6,7", nullptr);
-
-      BOOST_REQUIRE_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV),
+      BOOST_REQUIRE_THROW( evalArgumentString( ah, "-v 2,4 6,7"),
          std::runtime_error);
    } // end scope
 
@@ -461,11 +420,8 @@ BOOST_AUTO_TEST_CASE( list_arg_vars)
 
    BOOST_REQUIRE_NO_THROW( ah.addArgument( "s", DEST_VAR( ums), "values")
       ->addFormat( celma::prog_args::lowercase()));
-
-   auto const  as2a = make_arg_array( "--list-arg-vars "
-      "-s MONDAY,tuesday,wEdNeSdAy --list-arg-vars", nullptr);
-
-   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars "
+      "-s MONDAY,tuesday,wEdNeSdAy --list-arg-vars"));
 
    BOOST_REQUIRE( !std_out.str().empty());
    // std::cerr << std_out.str() << std::endl;

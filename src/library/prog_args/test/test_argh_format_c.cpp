@@ -31,12 +31,11 @@
 
 
 // project includes
-#include "celma/appl/arg_string_2_array.hpp"
 #include "celma/prog_args/detail/i_format.hpp"
+#include "celma/prog_args/eval_argument_string.hpp"
 #include "celma/test/multiline_string_compare.hpp"
 
 
-using celma::appl::make_arg_array;
 using celma::prog_args::Handler;
 
 
@@ -163,13 +162,12 @@ BOOST_AUTO_TEST_CASE( format_case)
 
 
    {
-      Handler     ah( 0);
-      auto const  as2a = make_arg_array( "-n process1", nullptr);
+      Handler  ah( 0);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
          ->addFormat( celma::prog_args::uppercase());
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n process1"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "PROCESS1");
    } // end scope
@@ -177,13 +175,12 @@ BOOST_AUTO_TEST_CASE( format_case)
    name.reset();
 
    {
-      Handler     ah( 0);
-      auto const  as2a = make_arg_array( "-n PROceSS1", nullptr);
+      Handler  ah( 0);
 
       ah.addArgument( "n", DEST_VAR( name), "Name")
          ->addFormat( celma::prog_args::lowercase());
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-n PROceSS1"));
       BOOST_REQUIRE( name.has_value());
       BOOST_REQUIRE_EQUAL( name.value(), "process1");
    } // end scope
@@ -191,13 +188,12 @@ BOOST_AUTO_TEST_CASE( format_case)
    // test with a string directly
    {
       Handler      ah( 0);
-      auto const   as2a = make_arg_array( "-a PROceSS1", nullptr);
       std::string  my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
          ->addFormat( celma::prog_args::uppercase());
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-a PROceSS1"));
       BOOST_REQUIRE( !my_string.empty());
       BOOST_REQUIRE_EQUAL( my_string, "PROCESS1");
    } // end scope
@@ -215,7 +211,6 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    // must throw when the format string is empty
    {
       Handler      ah( 0);
-      auto const   as2a = make_arg_array( "-a bigSmAlL", nullptr);
       std::string  my_string;
 
       BOOST_REQUIRE_THROW( ah.addArgument( "a", DEST_VAR( my_string),
@@ -226,13 +221,12 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    // test special anycase formatting
    {
       Handler      ah( 0);
-      auto const   as2a = make_arg_array( "-a bigSmAlL", nullptr);
       std::string  my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
          ->addFormat( celma::prog_args::anycase( "UUUlllll"));
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-a bigSmAlL"));
       BOOST_REQUIRE( !my_string.empty());
       BOOST_REQUIRE_EQUAL( my_string, "BIGsmall");
    } // end scope
@@ -240,13 +234,12 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    // format string longer than input string
    {
       Handler      ah( 0);
-      auto const   as2a = make_arg_array( "-a bigS", nullptr);
       std::string  my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
          ->addFormat( celma::prog_args::anycase( "UUUlllll"));
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-a bigS"));
       BOOST_REQUIRE( !my_string.empty());
       BOOST_REQUIRE_EQUAL( my_string, "BIGs");
    } // end scope
@@ -254,18 +247,71 @@ BOOST_AUTO_TEST_CASE( format_anycase)
    // format string shorter than input string
    {
       Handler      ah( 0);
-      auto const   as2a = make_arg_array( "-a bigSmAlL", nullptr);
       std::string  my_string;
 
       ah.addArgument( "a", DEST_VAR( my_string), "another string")
          ->addFormat( celma::prog_args::anycase( "UUUl"));
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-a bigSmAlL"));
       BOOST_REQUIRE( !my_string.empty());
       BOOST_REQUIRE_EQUAL( my_string, "BIGsmAlL");
    } // end scope
 
 } // format_anycase
+
+
+
+/// Check formatting by a function.
+///
+/// @since  1.47.0, 21.11.2021
+BOOST_AUTO_TEST_CASE( format_function)
+{
+
+   auto formatter = []( std::string& val)
+   {
+      int  i_value = std::atoi( val.c_str());
+      if (val.back() == 'k')  i_value *= 1024;
+      if (val.back() == 'M')  i_value *= 1024 * 1024;
+      val = std::to_string( i_value);
+   };
+
+   {
+      Handler  ah( 0);
+      int      buffer_size = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( buffer_size),
+         "buffer size")->addFormat( celma::prog_args::formatFunction(
+            formatter, "apply size suffix")));
+
+      evalArgumentString( ah, "-b 900");
+      BOOST_REQUIRE_EQUAL( buffer_size, 900);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      int      buffer_size = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( buffer_size),
+         "buffer size")->addFormat( celma::prog_args::formatFunction(
+            formatter, "apply size suffix")));
+
+      evalArgumentString( ah, "-b 900k");
+      BOOST_REQUIRE_EQUAL( buffer_size, 921'600);
+   } // end scope
+
+   {
+      Handler  ah( 0);
+      int      buffer_size = -1;
+
+      BOOST_REQUIRE_NO_THROW( ah.addArgument( "b", DEST_VAR( buffer_size),
+         "buffer size")->addFormat( celma::prog_args::formatFunction(
+            formatter, "apply size suffix")));
+
+      evalArgumentString( ah, "-b 900M");
+      BOOST_REQUIRE_EQUAL( buffer_size, 943'718'400);
+   } // end scope
+
+} // format_function
 
 
 
@@ -277,14 +323,13 @@ BOOST_AUTO_TEST_CASE( multiple_formatters)
 
    {
       Handler      ah( 0);
-      auto const   as2a = make_arg_array( "-a Hello123World", nullptr);
       std::string  my_string;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( my_string),
          "another string")->addFormat( celma::prog_args::lowercase())
          ->addFormat( noDigit()));
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-a Hello123World"));
       BOOST_REQUIRE( !my_string.empty());
       BOOST_REQUIRE_EQUAL( my_string, "helloworld");
    } // end if
@@ -293,15 +338,14 @@ BOOST_AUTO_TEST_CASE( multiple_formatters)
       std::ostringstream  std_out;
       std::ostringstream  std_err;
       Handler             ah( std_out, std_err, Handler::hfListArgVar);
-      auto const          as2a = make_arg_array( "--list-arg-vars -a Hello123World "
-         "--list-arg-vars", nullptr);
       std::string         my_string;
 
       BOOST_REQUIRE_NO_THROW( ah.addArgument( "a", DEST_VAR( my_string),
          "another string")->addFormat( celma::prog_args::lowercase())
          ->addFormat( noDigit()));
 
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "--list-arg-vars "
+         "-a Hello123World --list-arg-vars"));
 
       BOOST_REQUIRE( !std_out.str().empty());
       // std::cerr << std_out.str() << std::endl;
@@ -332,9 +376,8 @@ BOOST_AUTO_TEST_CASE( multiple_formatters)
          "another string")->addFormat( celma::prog_args::lowercase())
          ->addFormat( noDigit()));
 
-      auto const  as2a = make_arg_array( "-a AND4now --help-arg-full a", nullptr);
-
-      BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+      BOOST_REQUIRE_NO_THROW( evalArgumentString( ah, "-a AND4now "
+         "--help-arg-full a"));
       BOOST_REQUIRE( !my_string.empty());
       BOOST_REQUIRE_EQUAL( my_string, "andnow");
 

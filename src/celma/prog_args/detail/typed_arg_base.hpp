@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,6 +18,7 @@
 #pragma once
 
 
+#include <functional>
 #include <iosfwd>
 #include <string>
 #include <vector>
@@ -32,6 +33,7 @@
 #include "celma/prog_args/detail/check_file_modification.hpp"
 #include "celma/prog_args/detail/check_file_size.hpp"
 #include "celma/prog_args/detail/check_file_suffix.hpp"
+#include "celma/prog_args/detail/check_function.hpp"
 #include "celma/prog_args/detail/check_is_absolute_path.hpp"
 #include "celma/prog_args/detail/check_is_directory.hpp"
 #include "celma/prog_args/detail/check_is_file.hpp"
@@ -47,6 +49,7 @@
 // also the specific formatters are not actually needed here, but they are also
 // included anyway for convenience of the user
 #include "celma/prog_args/detail/format_anycase.hpp"
+#include "celma/prog_args/detail/format_function.hpp"
 #include "celma/prog_args/detail/format_lowercase.hpp"
 #include "celma/prog_args/detail/format_uppercase.hpp"
 
@@ -62,6 +65,9 @@
 
 
 namespace celma::prog_args::detail {
+
+
+class ConstraintContainer;
 
 
 /// Base class for storing type-specific handlers type-neutrally.<br>
@@ -132,6 +138,17 @@ public:
    /// @since
    ///    0.16.0, 09.11.2017
    void setKey( const ArgumentKey& key);
+
+   /// Stores the pointer to the constraint container to use for checking/adding
+   /// constraints.
+   ///
+   /// @param[in]  container
+   ///    Pointer to the constraints container to store.
+   /// @since  1.47.0, 05.12.2021
+   /// @throws  std::invalid_argument
+   ///    when the given pointer is NULL.
+   void setConstraintsContainer( ConstraintContainer* container)
+      noexcept( false);
 
    /// Assigns a value.<br>
    /// Checks if the argument is deprecated, or if a cardinality constraint is
@@ -600,13 +617,19 @@ public:
    /// Adds a constraint to this argument. The constraint is only evaluated when
    /// the argument is actually used.
    ///
-   /// @param[in]  iac
-   ///    Pointer to the contraint object to add to this argument.
+   /// @param[in]  fun
+   ///    Function to call to get the constraint object.
    /// @return
    ///    Pointer to this object.
-   /// @since
-   ///    0.2, 10.04.2016
-   virtual TypedArgBase* addConstraint( IArgConstraint* iac) noexcept( false);
+   /// @throws  std::invalid_argument
+   ///    when the given function is invalid, or the constraints container has
+   ///    not been set yet.
+   /// @since  1.47.0, 05.12.2021
+   ///    (parameter is now a function object)
+   /// @since  0.2, 10.04.2016
+   virtual TypedArgBase* addConstraint(
+      std::function< detail::IArgConstraint*( ConstraintContainer*)> fun)
+      noexcept( false);
 
    /// Returns if the argument has a constraint specified.
    /// @return
@@ -759,6 +782,10 @@ protected:
    std::unique_ptr< ICardinality>  mpCardinality;
    /// Stores the constraints defined for this argument.
    std::vector< IArgConstraint*>   mConstraints;
+   /// Pointer to the constraint container in the argument handler, Needed to
+   /// pass it to constraints that require access for checking constraints,
+   /// adding constraints etc.
+   ConstraintContainer*            mpConstraintsContainer = nullptr;
 
 private:
    /// Creates a list of the name of the formatters set for a specific index.

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::detail::TypedArgBase.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
@@ -64,6 +64,28 @@ void TypedArgBase::setKey( const ArgumentKey& key)
    mKey = key;
 
 } // TypedArgBase::setKey
+
+
+
+/// Stores the pointer to the constraint container to use for checking/adding
+/// constraints.
+///
+/// @param[in]  container
+///    Pointer to the constraints container to store.
+/// @since  1.47.0, 05.12.2021
+/// @throws  std::invalid_argument
+///    when the given pointer is NULL.
+void TypedArgBase::setConstraintsContainer( ConstraintContainer* container)
+   noexcept( false)
+{
+
+   if (container == nullptr)
+      throw std::invalid_argument( "Need to set a valid constraints container "
+         "object");
+
+   mpConstraintsContainer = container;
+
+} // TypedArgBase::setConstraintsContainer
 
 
 
@@ -399,19 +421,28 @@ string TypedArgBase::constraintStr() const
 /// Adds a constraint to this argument. The constraint is only evaluated when
 /// the argument is actually used.
 ///
-/// @param[in]  iac
-///    Pointer to the contraint object to add to this argument.
+/// @param[in]  fun
+///    Function to call to get the constraint object.
 /// @return
 ///    Pointer to this object.
-/// @since
-///    0.2, 10.04.2016
-TypedArgBase* TypedArgBase::addConstraint( IArgConstraint* iac)
+/// @throws  std::invalid_argument
+///    when the given function is invalid, or the constraints container has
+///    not been set yet.
+/// @since  1.47.0, 05.12.2021
+///    (parameter is now a function object)
+/// @since  0.2, 10.04.2016
+TypedArgBase* TypedArgBase::addConstraint(
+      std::function< detail::IArgConstraint*( ConstraintContainer*)> fun)
+      noexcept( false)
 {
 
-   if (iac == nullptr)
-      throw std::invalid_argument( "invalid NULL pointer added as constraint");
+   if (mpConstraintsContainer == nullptr)
+      throw std::invalid_argument( "constraints container has not been defined "
+         "yet");
+   if (!fun)
+      throw std::invalid_argument( "function is invalid");
 
-   mConstraints.push_back( iac);
+   mConstraints.push_back( fun( mpConstraintsContainer));
 
    return this;
 } // TypedArgBase::addConstraint
