@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -36,10 +36,15 @@ public:
    /// Constructor, stores the argument specification of the other, forbidden
    /// argument(s).
    ///
+   /// @param[in]  container
+   ///    Pointer to the container to which the argument will be added.
    /// @param[in]  reqArgSpec
    ///    The argument specification of the forbidden argument(s).
+   /// @since  1.47.0, 05.12.2021
+   ///    (parameter \a container added)
    /// @since  0.2, 10.04.2016
-   explicit ConstraintExcludes( const std::string& reqArgSpec);
+   ConstraintExcludes( ConstraintContainer* container,
+      const std::string& reqArgSpec);
 
    /// Empty, virtual destructor.
    ///
@@ -73,11 +78,17 @@ public:
 ///
 /// @param[in]  argSpec
 ///    The argument specification of the other, forbidden argument.
-/// @return  The newly created constraint object.
+/// @return
+///    Lambda that will create the constraints object with additional parameters.
+/// @since  1.47.0, 05.12.2021
+///    (now returns a lambda)
 /// @since  0.2, 10.04.2016
-[[nodiscard]] inline detail::IArgConstraint* excludes( const std::string& argSpec)
+[[nodiscard]] inline auto excludes( const std::string& argSpec)
 {
-   return new detail::ConstraintExcludes( argSpec);
+   return [=]( detail::ConstraintContainer* container)
+   {
+      return new detail::ConstraintExcludes( container, argSpec);
+   };
 } // excludes
 
 

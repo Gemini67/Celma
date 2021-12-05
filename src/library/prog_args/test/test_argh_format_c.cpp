@@ -263,7 +263,7 @@ BOOST_AUTO_TEST_CASE( format_anycase)
 
 /// Check formatting by a function.
 ///
-/// @since  x.y.z, 21.11.2021
+/// @since  1.47.0, 21.11.2021
 BOOST_AUTO_TEST_CASE( format_function)
 {
 
@@ -287,7 +287,6 @@ BOOST_AUTO_TEST_CASE( format_function)
       BOOST_REQUIRE_EQUAL( buffer_size, 900);
    } // end scope
 
-
    {
       Handler  ah( 0);
       int      buffer_size = -1;
@@ -299,7 +298,6 @@ BOOST_AUTO_TEST_CASE( format_function)
       evalArgumentString( ah, "-b 900k");
       BOOST_REQUIRE_EQUAL( buffer_size, 921'600);
    } // end scope
-
 
    {
       Handler  ah( 0);

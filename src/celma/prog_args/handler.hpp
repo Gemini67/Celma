@@ -937,8 +937,7 @@ private:
    /// @since  0.15.0, 13.07.2017  (take ArgumentKey instead of string)
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* internAddArgument( detail::TypedArgBase* ah_obj,
-                                            const detail::ArgumentKey& key,
-                                            const std::string& desc);
+      const detail::ArgumentKey& key, const std::string& desc);
 
    /// Checks each argument in the list if it is a valid/known argument.
    /// If the argument specification in the list does not match the original
@@ -1077,7 +1076,7 @@ private:
    /// influence the cardinality checks, i.e. it should be possible to overwrite
    /// a value from a file without triggering a 'too many values' exception.<br>
    /// Since arguments from the environment variable could trigger reading an
-   /// argument file, these two states must be managd separately.
+   /// argument file, these two states must be managed separately.
    uint8_t                        mReadMode = ReadMode::commandLine;
    /// Flag, set when this argument handler object was created by a Groups
    /// object.
@@ -1096,11 +1095,9 @@ private:
 
 inline detail::TypedArgBase*
    Handler::addArgument( const std::string& arg_spec,
-                         detail::TypedArgBase* dest,
-                         const std::string& desc)
+      detail::TypedArgBase* dest,const std::string& desc)
 {
    const detail::ArgumentKey  key( arg_spec);
-   dest->setKey( key);
    return internAddArgument( dest, key, desc);
 } // Handler::addArgument
 

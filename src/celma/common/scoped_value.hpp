@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,7 +20,7 @@
 #define CELMA_COMMON_SCOPED_VALUE_HPP
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Assigns a value within a certain scope, when the scope is left the previous
@@ -122,8 +122,7 @@ private:
 }; // ScopedFlag< S>
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
 #endif   // CELMA_COMMON_SCOPED_VALUE_HPP

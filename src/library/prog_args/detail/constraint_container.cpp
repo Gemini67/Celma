@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::ConstraintContainer.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/detail/constraint_container.hpp"
 
 
@@ -29,15 +29,7 @@
 #include "celma/format/to_string.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
-
-
-using std::string;
-
-
-// module definitions
-ConstraintContainer*  ConstraintContainer::mpCurrentConstraints = nullptr;
-
+namespace celma::prog_args::detail {
 
 
 /// Constructor.
@@ -56,8 +48,8 @@ ConstraintContainer::ConstraintContainer():
 /// @param[in]  created_by       The argument that set this constraint.
 /// @since  0.2, 10.04.2016
 void ConstraintContainer::addConstraint( Constraint constraint_type,
-                                         const string& arg_spec,
-                                         const string& created_by)
+                                         const std::string& arg_spec,
+                                         const std::string& created_by)
 {
 
    common::Tokenizer  tokenizer( arg_spec, ';');
@@ -122,7 +114,7 @@ void ConstraintContainer::checkRequired()
       {
          
          throw std::runtime_error(
-            string( "Argument '").
+            std::string( "Argument '").
                   append( format::toString( current_constraint.key())).
                   append( "' required by '").
                   append( current_constraint.data().mOrigin).
@@ -140,7 +132,7 @@ void ConstraintContainer::checkRequired()
 /// @param[in]  c         The type of the constraint.
 /// @param[in]  origin    The origin (== argument) of this constraint.
 /// @since  0.2, 10.04.2016
-ConstraintContainer::Data::Data( Constraint c, const string& origin):
+ConstraintContainer::Data::Data( Constraint c, const std::string& origin):
    mConstraint( c),
    mOrigin( origin)
 {
@@ -148,9 +140,7 @@ ConstraintContainer::Data::Data( Constraint c, const string& origin):
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF constraint_container.cpp  =====

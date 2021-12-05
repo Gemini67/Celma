@@ -29,7 +29,7 @@ namespace celma::prog_args { namespace detail {
 
 
 /// Checks a value using the provided check function.
-/// @since  x.y.z, 02.11.2021
+/// @since  1.47.0, 02.11.2021
 class CheckFunction final : public ICheck
 {
 public:
@@ -40,7 +40,7 @@ public:
    /// Constructor.
    /// @param[in]  fun   The function to call to check a value.
    /// @param[in]  desc  Description of the function.
-   /// @since  x.y.z, 02.11.2021
+   /// @since  1.47.0, 02.11.2021
    CheckFunction( check_func_t fun, const std::string& desc) noexcept;
 
    /// Default destructor is fine.
@@ -49,12 +49,12 @@ public:
    /// Calls the check function, throws if it returns \c false.
    /// @param[in]  val  The value to check in string format.
    /// @throws  std::range_error when the check function returns \c false.
-   /// @since  x.y.z, 02.11.2021
+   /// @since  1.47.0, 02.11.2021
    void checkValue( const std::string& val) const noexcept( false) override;
 
    /// Returns a text description of the check.
    /// @return  A string with the text description of the check.
-   /// @since  x.y.z, 02.11.2021
+   /// @since  1.47.0, 02.11.2021
    std::string toString() const noexcept override;
 
 private:
@@ -108,7 +108,7 @@ inline std::string CheckFunction::toString() const noexcept
 /// @param[in]  fun   Function object that will be called to check a value.
 /// @param[in]  desc  Description of the function for usage.
 /// @return  The newly created CheckFunction object.
-/// @since  x.y.z, 02.11.2021
+/// @since  1.47.0, 02.11.2021
 [[nodiscard]] inline detail::ICheck*
    check_function( detail::CheckFunction::check_func_t fun,
       const std::string& desc) noexcept

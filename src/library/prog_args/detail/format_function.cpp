@@ -27,7 +27,7 @@ namespace celma::prog_args::detail {
 ///
 /// @param[in]  fun   The function to call to format a value.
 /// @param[in]  desc  Description of the function.
-/// @since  x.y.z, 21.11.2021
+/// @since  1.47.0, 21.11.2021
 FormatFunction::FormatFunction( format_func_t fun, const std::string& desc)
    noexcept:
       IFormat( desc),
@@ -40,7 +40,7 @@ FormatFunction::FormatFunction( format_func_t fun, const std::string& desc)
 /// Calls the format function.
 ///
 /// @param[in,out]  val  The value string to format.
-/// @since  x.y.z, 21.11.2021
+/// @since  1.47.0, 21.11.2021
 void FormatFunction::formatValue( std::string& val) const
 {
 

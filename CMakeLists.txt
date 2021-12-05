@@ -12,8 +12,8 @@ cmake_minimum_required( VERSION 3.5 )
 project( Celma )
 
 set( MAJORVERSION    1 )
-set( MINORVERSION    46 )
-set( RELEASE_VERSION 2 )
+set( MINORVERSION    47 )
+set( RELEASE_VERSION 0 )
 set( PATCHLEVEL      0 )
 
 if ( CPP_VERSION STREQUAL "20" )

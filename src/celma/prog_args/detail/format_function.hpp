@@ -28,7 +28,7 @@ namespace celma::prog_args { namespace detail {
 
 /// Passes the value string to a function taht can apply any formatting.
 ///
-/// @since  x.y.z, 21.11.2021
+/// @since  1.47.0, 21.11.2021
 class FormatFunction final : public IFormat
 {
 public:
@@ -40,7 +40,7 @@ public:
    ///
    /// @param[in]  fun   The function to call to format a value.
    /// @param[in]  desc  Description of the function.
-   /// @since  x.y.z, 21.11.2021
+   /// @since  1.47.0, 21.11.2021
    FormatFunction( format_func_t fun, const std::string& desc) noexcept;
 
    /// Default destructor is fine.
@@ -49,7 +49,7 @@ public:
    /// Calls the format function.
    ///
    /// @param[in,out]  val  The value string to format.
-   /// @since  x.y.z, 21.11.2021
+   /// @since  1.47.0, 21.11.2021
    void formatValue( std::string& val) const override;
 
 private:
@@ -74,7 +74,7 @@ private:
 /// @param[in]  fun   Function object that will be called to format a value.
 /// @param[in]  desc  Description of the function for usage.
 /// @return  The newly created FormatFunction object.
-/// @since  x.y.z, 21.11.2021
+/// @since  1.47.0, 21.11.2021
 [[nodiscard]] inline detail::IFormat*
    formatFunction( detail::FormatFunction::format_func_t fun,
       const std::string& desc)

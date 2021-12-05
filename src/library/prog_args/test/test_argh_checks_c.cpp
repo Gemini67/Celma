@@ -2369,7 +2369,7 @@ BOOST_AUTO_TEST_CASE( control_check)
 
 /// Test checks using a lambda.
 ///
-/// @since  x.y.z, 02.11.2021
+/// @since  1.47.0, 02.11.2021
 BOOST_AUTO_TEST_CASE( check_by_function)
 {
 

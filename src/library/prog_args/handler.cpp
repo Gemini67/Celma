@@ -229,6 +229,7 @@ detail::TypedArgBase*
    auto  arg_hdl = new detail::TypedArgSubGroup( key, subGroup);
 
    arg_hdl->setKey( key);
+   arg_hdl->setConstraintsContainer( &mConstraints);
 
    mSubGroupArgs.addArgument( arg_hdl, key);
    mDescription.addArgument( desc, arg_hdl);
@@ -297,8 +298,6 @@ detail::TypedArgBase* Handler::addArgumentFile( const string& arg_spec)
       },
       "Handler::readArgumentFile");
 
-
-   arg_hdl->setKey( key);
 
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentFile
@@ -391,7 +390,6 @@ detail::TypedArgBase* Handler::addArgumentListArgVars( const string& arg_spec)
       [&]( bool) { this->listArgVars(); }, "Handler::listArgVars");
 
 
-   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
 
    return internAddArgument( arg_hdl, key, desc);
@@ -422,7 +420,7 @@ detail::TypedArgBase* Handler::addArgumentListArgGroups( const string& arg_spec)
    auto  arg_hdl = new detail::TypedArgCallable(
       [&]( bool) { this->listArgGroups(); }, desc);
 
-   arg_hdl->setKey( key);
+
    arg_hdl->setCardinality();
 
    return internAddArgument( arg_hdl, key, desc);
@@ -451,7 +449,6 @@ detail::TypedArgBase* Handler::addArgumentEndValues( const string& arg_spec)
       }, desc);
 
 
-   arg_hdl->setKey( key);
    arg_hdl->setCardinality();
 
    return internAddArgument( arg_hdl, key, desc);
@@ -488,7 +485,6 @@ detail::TypedArgBase* Handler::addArgumentHelpArgument( const string& arg_spec,
             this->helpArgument( help_arg_key, full);
          }, desc);
 
-   arg_hdl->setKey( key);
 
    return internAddArgument( arg_hdl, key, desc);
 } // Handler::addArgumentHelpArgument
@@ -863,14 +859,6 @@ Handler::ArgResult
    Handler::evalSingleArgument( detail::ArgListParser::const_iterator& ai,
                                 const detail::ArgListParser::const_iterator& end)
 {
-
-   // make me the current argument handler
-   // do it here so it works for single argument handlers as well as argument
-   // groups
-   const common::ScopedValue< detail::ConstraintContainer*>
-      makeMeCurrent( detail::ConstraintContainer::mpCurrentConstraints,
-                     &mConstraints);
-
 
    switch (ai->mElementType)
    {
@@ -1356,6 +1344,9 @@ detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
                                                   const detail::ArgumentKey& key,
                                                   const string& desc)
 {
+
+   ah_obj->setKey( key);
+   ah_obj->setConstraintsContainer( &mConstraints);
 
    mArguments.addArgument( ah_obj, key);
    mDescription.addArgument( desc, ah_obj);
