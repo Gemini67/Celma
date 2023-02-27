@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2023 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -13,6 +13,8 @@ add_subdirectory( appl )
 get_directory_property( appl_sources DIRECTORY ./appl
    DEFINITION appl_sources
 )
+
+add_subdirectory( chrono)
 
 add_subdirectory( common )
 get_directory_property( common_sources DIRECTORY ./common
