@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,13 @@
 /// See documentation of class celma::log::filter::detail::IFilter.
 
 
-#ifndef CELMA_LOG_FILTER_DETAIL_I_FILTER_HPP
-#define CELMA_LOG_FILTER_DETAIL_I_FILTER_HPP
+#pragma once
 
 
-namespace celma { namespace log {
+#include <cstdint>
+
+
+namespace celma::log {
 
 
 namespace detail {
@@ -27,7 +29,7 @@ class LogMsg;
 }
 
 
-namespace filter { namespace detail {
+namespace filter::detail {
 
 
 /// Interface definition of log filters.
@@ -37,7 +39,7 @@ class IFilter
 {
 public:
    /// List of filter types:
-   enum class FilterTypes
+   enum class FilterTypes : uint8_t
    {
       maxLevel,      //!< Filter by maximum log level.
       minLevel,      //!< Filter by minimum log level.
@@ -66,10 +68,10 @@ public:
    /// Returns the type of this filter.
    /// @return  The type of this filter.
    /// @since  0.3, 19.06.2016
-   FilterTypes filterType() const;
+   [[nodiscard]] FilterTypes filterType() const;
 
    /// Template method: This method is called to check if a message is accepted
-   /// by the filter and can be passed on.<br>
+   /// by the filter and can be passed on.
    /// Internally calls, pass().
    /// @param[in]  msg  The message to check.
    /// @return  \c true if the message is accepted.
@@ -81,7 +83,7 @@ protected:
    const FilterTypes  mFilterType;
 
 private:
-   /// Interface.<br>
+   /// Interface.
    /// Implementations should check the message.
    /// @param[in]  msg  The message to check.
    /// @return  \c true if the message is accepted by the filter.
@@ -120,13 +122,8 @@ inline bool IFilter::passFilter( const log::detail::LogMsg& msg) const
 } // IFilter::passFilter
 
 
-} // namespace detail
-} // namespace filter
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILTER_DETAIL_I_FILTER_HPP
+} // namespace filter::detail
+} // namespace celma::log
 
 
 // =====  END OF i_log_filter.hpp  =====

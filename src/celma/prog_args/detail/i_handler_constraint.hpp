@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::prog_args::detail::IHandlerConstraint.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_I_HANDLER_CONSTRAINT_HPP
-#define CELMA_PROG_ARGS_DETAIL_I_HANDLER_CONSTRAINT_HPP
+#pragma once
 
 
 #include <iosfwd>
 #include <string>
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 class ArgumentKey;
@@ -58,7 +57,7 @@ public:
    ///
    /// @return  The list arguments affected by the constraint.
    /// @since  0.2, 10.04.2016
-   std::string& argumentList();
+   [[nodiscard]] std::string& argumentList();
 
    /// Called after the argument list in a global constraint was validated.
    ///
@@ -91,7 +90,7 @@ public:
    ///
    /// @return  Always \c false here.
    /// @since  1.31.0, 23.10.2019
-   virtual bool isValueConstraint() const;
+   [[nodiscard]] virtual bool isValueConstraint() const;
 
 protected:
    /// Checks if the argument specified in \a arg_spec is one of the argument(s)
@@ -151,12 +150,7 @@ inline std::ostream& operator <<( std::ostream& os, IHandlerConstraint* pc)
 } // operator <<
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_I_HANDLER_CONSTRAINT_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF i_handler_constraint.hpp  =====

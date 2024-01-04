@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,8 +35,7 @@
 */
 
 
-#ifndef CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_HPP
-#define CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_HPP
+#pragma once
 
 
 #include "celma/indirect_access/detail/macros.hpp"
@@ -53,9 +52,6 @@
 
 // must NOT undefine the additional macros STRUCT_FIELD or CLASS_FIELD here
 // otherwise macro expansion does not work
-
-
-#endif   // CELMA_INDIRECT_ACCESS_INDIRECT_ACCESS_HPP
 
 
 // =====  END OF indirect_access.hpp  =====

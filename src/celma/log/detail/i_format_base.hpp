@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,10 @@
 /// See documentation of class celma::log::detail::IFormatBase.
 
 
-#ifndef CELMA_LOG_DETAIL_I_FORMAT_BASE_HPP
-#define CELMA_LOG_DETAIL_I_FORMAT_BASE_HPP
+#pragma once
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 /// Base class for all output formatters. Needed to define the interface.<br>
@@ -37,13 +36,8 @@ public:
 }; // IFormatBase
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
+} // namespace celma::log::detail
 
 
-#endif   // CELMA_LOG_DETAIL_I_FORMAT_BASE_HPP
-
-
-// ========================  END OF i_format_base.hpp  ========================
+// =====  END OF i_format_base.hpp  =====
 

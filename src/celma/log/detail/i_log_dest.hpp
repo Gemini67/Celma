@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::log::detail::ILogDest.
 
 
-#ifndef CELMA_LOG_DETAIL_I_LOG_DEST_HPP
-#define CELMA_LOG_DETAIL_I_LOG_DEST_HPP
+#pragma once
 
 
 #include "celma/log/filter/filters.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 class IFormatBase;
@@ -42,7 +41,7 @@ public:
 
    /// Call this function to pass a log message object to the message() method
    /// of the derived class.
-   /// @param[in]  msg  The message to handle.
+   /// @param[in]  msg  Message to handle.
    /// @since  1.0.0, 19.06.2016
    void handleMessage( const LogMsg& msg);
 
@@ -54,20 +53,15 @@ public:
    virtual void setFormatter( IFormatBase* formatter = nullptr);
 
 private:
-   /// Interface: Must be implemented by the derived class(es).
-   /// @param[in]  msg  The message to process.
+   /// Interface: Must be implemented by derived class(es).
+   /// @param[in]  msg  Message to process.
    /// @since  1.0.0, 19.06.2016
    virtual void message( const LogMsg& msg) = 0;
 
 }; // ILogDest
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_I_LOG_DEST_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF i_log_dest.hpp  =====

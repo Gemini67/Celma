@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,8 +19,7 @@
 /// For the same functions but with grouping, see grouped_int16toString() etc.
 
 
-#ifndef CELMA_FORMAT_DETAIL_INT16_TO_STRING_HPP
-#define CELMA_FORMAT_DETAIL_INT16_TO_STRING_HPP
+#pragma once
 
 
 #include <cstdint>
@@ -28,7 +27,7 @@
 #include <string>
 
 
-namespace celma { namespace format { namespace detail {
+namespace celma::format::detail {
 
 
 /// Fast method to convert an integer to string:
@@ -43,7 +42,7 @@ namespace celma { namespace format { namespace detail {
 ///                    format.
 /// @return  The value as string.
 /// @since  0.9, 29.11.2016
-std::string uint16toString( uint16_t value);
+[[nodiscard]] std::string uint16toString( uint16_t value);
 
 
 /// Fast method to convert a signed, negative integer to string:
@@ -58,14 +57,14 @@ std::string uint16toString( uint16_t value);
 ///                    format.
 /// @return  The value as string.
 /// @since  0.9, 29.11.2016
-std::string int16negToString( int16_t value);
+[[nodiscard]] std::string int16negToString( int16_t value);
 
 
 /// Converts an integer value, signed, positive or negative, into string format.
 /// @param[in]  value  The value to convert.
 /// @return  The string with the value.
 /// @since  0.9, 29.11.2016
-inline std::string int16toString( int16_t value)
+[[nodiscard]] inline std::string int16toString( int16_t value)
 {
    if (value < 0L)
       return int16negToString( value);
@@ -84,7 +83,7 @@ inline std::string int16toString( int16_t value)
 /// @param[in]  value   The value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 29.11.2016
-int uint16toString( char* buffer, uint16_t value);
+[[nodiscard]] int uint16toString( char* buffer, uint16_t value);
 
 
 /// Fast integer to string conversion into a caller-supplied destination
@@ -96,7 +95,7 @@ int uint16toString( char* buffer, uint16_t value);
 /// @param[in]  value   The value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 29.11.2016
-int int16negToString( char* buffer, int16_t value);
+[[nodiscard]] int int16negToString( char* buffer, int16_t value);
 
 
 /// Same conversion methods as above, but this time the functions take a
@@ -109,7 +108,7 @@ int int16negToString( char* buffer, int16_t value);
 /// @param[in]  value   The value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 29.11.2016
-inline int int16toString( char* buffer, int16_t value)
+[[nodiscard]] inline int int16toString( char* buffer, int16_t value)
 {
    if (value < 0L)
       return int16negToString( buffer, value);
@@ -124,13 +123,8 @@ inline int int16toString( char* buffer, int16_t value)
 } // end int16toString
 
 
-} // namespace detail
-} // namespace format
-} // namespace celma
+} // namespace celma::format::detail
 
 
-#endif   // CELMA_FORMAT_DETAIL_INT16_TO_STRING_HPP
-
-
-// =======================  END OF int16_to_string.hpp  =======================
+// =====  END OF int16_to_string.hpp  =====
 
