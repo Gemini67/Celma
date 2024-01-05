@@ -3,19 +3,19 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
-**    Test program for the template celma::common::lazy_ptr, using the
+**    Test program for the template celma::common::lazy_ptr<>, using the
 **    Boost.Test framework.
 **
 --*/
 
 
-// module to test, header file include
+// module to test, headerfile include
 #include "celma/common/lazy_ptr.hpp"
 
 
@@ -48,9 +48,9 @@ public:
 
    /// Constructor with a single integer parameter.
    ///
-   /// @param[in]  value  The value to store internally.
+   /// @param[in]  value  Value to store internally.
    /// @since  1.11.0, 07.09.2018
-   explicit TestClass( int value):
+   explicit TestClass( const int value):
       mValue( value)
    {
    } // TestClass::TestClass
@@ -58,7 +58,7 @@ public:
    /// Constructor with a single string parameter.<br>
    /// The value in string is converted to an integer and stored internally.
    ///
-   /// @param[in]  value  The string with the value to store internally.
+   /// @param[in]  value  String with the value to store internally.
    /// @since  1.11.0, 07.09.2018
    explicit TestClass( const std::string& value):
       mValue( ::atoi( value.c_str()))
@@ -71,9 +71,9 @@ public:
 
    /// Returns the internally stored value.
    ///
-   /// @return  The value currently stored internally.
+   /// @returns  Value currently stored internally.
    /// @since  1.11.0, 07.09.2018
-   int value() const
+   [[nodiscard]] int value() const
    {
       return mValue;
    } // TestClass::value
@@ -100,12 +100,12 @@ public:
    /// Constructor with two parameters.
    ///
    /// @param[in]  value
-   ///    The integer parameter.
+   ///    Integer parameter.
    /// @param[in]  name
-   ///    The string parameter.
+   ///    String parameter.
    /// @since
    ///    1.11.0, 07.09.2018
-   explicit TestClass2( int value, const std::string& name):
+   explicit TestClass2( const int value, const std::string& name):
       mValue( value),
       mName( name)
    {
@@ -118,18 +118,18 @@ public:
 
    /// Returns the internally stored integer value.
    ///
-   /// @return  The internally stored integer value.
+   /// @returns  Internally stored integer value.
    /// @since  1.11.0, 07.09.2018
-   int value() const
+   [[nodiscard]] int value() const
    {
       return mValue;
    } // TestClass2::value
 
    /// Returns the internally stored string value.
    ///
-   /// @return  The internally stored string value.
+   /// @returns  Internally stored string value.
    /// @since  1.11.0, 07.09.2018
-   const std::string& name() const
+   [[nodiscard]] const std::string& name() const
    {
       return mName;
    } // TestClass2::name
@@ -158,12 +158,12 @@ public:
    /// Constructor with two parameters.
    ///
    /// @param[in]  name
-   ///    The string parameter.
+   ///    String parameter.
    /// @param[in]  value
-   ///    The integer parameter.
+   ///    Integer parameter.
    /// @since
    ///    1.11.0, 07.09.2018
-   explicit TestClass2r( const std::string& name, int value):
+   explicit TestClass2r( const std::string& name, const int value):
       mName( name),
       mValue( value)
    {
@@ -176,18 +176,18 @@ public:
 
    /// Returns the internally stored integer value.
    ///
-   /// @return  The internally stored integer value.
+   /// @returns  Internally stored integer value.
    /// @since  1.11.0, 07.09.2018
-   int value() const
+   [[nodiscard]] int value() const
    {
       return mValue;
    } // TestClass2r::value
 
    /// Returns the internally stored string value.
    ///
-   /// @return  The internally stored string value.
+   /// @returns  Internally stored string value.
    /// @since  1.11.0, 07.09.2018
-   const std::string& name() const
+   [[nodiscard]] const std::string& name() const
    {
       return mName;
    } // TestClass2r::name
@@ -212,11 +212,12 @@ public:
    /// Verifies that the parameters were copied or moved.
    ///
    /// @param[in]  th1
-   ///    The first parameter to check.
+   ///    First parameter to check.
    /// @param[in]  th2
-   ///    The second parameter to check.
-   /// @throw
-   ///    runtime_error when at least one of the two parameters was not copied.
+   ///    Second parameter to check.
+   /// @throws
+   ///    std::runtime_error when at least one of the two parameters was not
+   ///    copied.
    /// @since
    ///    1.11.0, 07.09.2018
    TestClassCopy( const TestHandling& th1, const TestHandling& th2)
@@ -418,7 +419,7 @@ BOOST_AUTO_TEST_CASE( parameter_copy)
 
    // object is created now
    // check if parameters were copied happens inside the constructor
-   BOOST_REQUIRE_NO_THROW( lpCopy.get());
+   BOOST_REQUIRE_NO_THROW( std::ignore = lpCopy.get());
 
 } // parameter_copy
 
