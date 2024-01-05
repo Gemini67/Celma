@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,8 +19,7 @@
 /// For the same functions but with grouping, see grouped_int32toString() etc.
 
 
-#ifndef CELMA_FORMAT_DETAIL_INT32_TO_STRING_HPP
-#define CELMA_FORMAT_DETAIL_INT32_TO_STRING_HPP
+#pragma once
 
 
 #include <cstdint>
@@ -28,7 +27,7 @@
 #include <string>
 
 
-namespace celma { namespace format { namespace detail {
+namespace celma::format::detail {
 
 
 /// Fast method to convert an integer to string:
@@ -43,7 +42,7 @@ namespace celma { namespace format { namespace detail {
 ///                    format.
 /// @return  The value as string.
 /// @since  0.9, 28.11.2016
-std::string uint32toString( uint32_t value);
+[[nodiscard]] std::string uint32toString( uint32_t value);
 
 
 /// Fast method to convert a signed, negative integer to string:
@@ -58,21 +57,21 @@ std::string uint32toString( uint32_t value);
 ///                    format.
 /// @return  The value as string.
 /// @since  0.9, 28.11.2016
-std::string int32negToString( int32_t value);
+[[nodiscard]] std::string int32negToString( int32_t value);
 
 
 /// Converts an integer value, signed, positive or negative, into string format.
 /// @param[in]  value  The value to convert.
 /// @return  The string with the value.
 /// @since  0.9, 28.11.2016
-inline std::string int32toString( int32_t value)
+[[nodiscard]] inline std::string int32toString( const int32_t value)
 {
    if (value < 0L)
       return int32negToString( value);
    if (value == 0L)
       return std::string( "0");
    return uint32toString( value);
-} // end int32toString
+} // int32toString
 
 
 /// Fast unsigned integer to string conversion into a caller-supplied
@@ -109,7 +108,7 @@ int int32negToString( char* buffer, int32_t value);
 /// @param[in]  value   The value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 28.11.2016
-inline int int32toString( char* buffer, int32_t value)
+inline int int32toString( char* buffer, const int32_t value)
 {
    if (value < 0L)
       return int32negToString( buffer, value);
@@ -121,16 +120,11 @@ inline int int32toString( char* buffer, int32_t value)
    } // end if
 
    return uint32toString( buffer, value);
-} // end int32toString
+} // int32toString
 
 
-} // namespace detail
-} // namespace format
-} // namespace celma
+} // namespace celma::format::detail
 
 
-#endif   // CELMA_FORMAT_DETAIL_INT32_TO_STRING_HPP
-
-
-// =======================  END OF int32_to_string.hpp  =======================
+// =====  END OF int32_to_string.hpp  =====
 

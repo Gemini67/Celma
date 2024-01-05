@@ -42,10 +42,10 @@ namespace {
 /// but-last) digit.
 /// @param[out]  buffer      Pointer to the last character position in the
 ///                          buffer.
-/// @param[in]   value       The value to convert into the buffer.
+/// @param[in]   value       Value to convert into the buffer.
 /// @param[in]   result_len  Pre-determined length of the resulting string.
 /// @since  0.9, 04.12.2016
-inline void convert( char* buffer, uint8_t value, uint8_t result_len)
+inline void convert( char* buffer, uint8_t value, const uint8_t result_len)
 {
 
    // switch statement without breaks instead of a loop
@@ -64,6 +64,7 @@ inline void convert( char* buffer, uint8_t value, uint8_t result_len)
 } // namespace
 
 
+
 /// Fast method to convert an integer to string:
 /// - Determine the length of the resulting string.
 /// - Prepare a result string, store pointer to the *end* of this string.
@@ -72,11 +73,10 @@ inline void convert( char* buffer, uint8_t value, uint8_t result_len)
 ///   - Move pointer to the next position (previous character in string).
 ///   - Divide the original value by 10.
 ///
-/// @param[in]  value  The unsigned long integer value to convert into string
-///                    format.
+/// @param[in]  value  Unsigned long integer value to convert into string format.
 /// @return  The value as string.
 /// @since  0.9, 04.12.2016
-std::string uint8toString( uint8_t value)
+std::string uint8toString( const uint8_t value)
 {
 
    const auto   result_len = int8_str_length( value);
@@ -99,11 +99,10 @@ std::string uint8toString( uint8_t value)
 ///   - Move pointer to the next position (previous character in string).
 ///   - Divide the original value by 10.
 ///
-/// @param[in]  value  The signed long integer value to convert into string
-///                    format.
+/// @param[in]  value  Signed long integer value to convert into string format.
 /// @return  The value as string.
 /// @since  0.9, 04.12.2016
-std::string int8negToString( int8_t value)
+std::string int8negToString( const int8_t value)
 {
 
    // convert into a positive value
@@ -132,12 +131,12 @@ std::string int8negToString( int8_t value)
 /// destination buffer.
 /// For long integers, the destination buffer must be at least 10 characters
 /// long.
-/// @param[in]  buffer  Pointer to the destination buffer to store the string
-///                     form of the value in.
-/// @param[in]  value   The value to convert.
+/// @param[out]  buffer  Pointer to the destination buffer to store the string
+///                      form of the value in.
+/// @param[in]   value   Value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 04.12.2016
-int uint8toString( char* buffer, uint8_t value)
+int uint8toString( char* buffer, const uint8_t value)
 {
 
    const auto  result_len = int8_str_length( value);
@@ -157,12 +156,12 @@ int uint8toString( char* buffer, uint8_t value)
 /// buffer.
 /// For un/signed long integers, the destination buffer must be at least
 /// 11 characters long.
-/// @param[in]  buffer  Pointer to the destination buffer to store the string
-///                     form of the value in.
-/// @param[in]  value   The value to convert.
+/// @param[out]  buffer  Pointer to the destination buffer to store the string
+///                      form of the value in.
+/// @param[in]   value   Value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 04.12.2016
-int int8negToString( char* buffer, int8_t value)
+int int8negToString( char* buffer, const int8_t value)
 {
 
    // convert into a positive value

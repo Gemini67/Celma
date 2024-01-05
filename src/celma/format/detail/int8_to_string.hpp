@@ -19,8 +19,7 @@
 /// For the same functions but with grouping, see grouped_int8toString() etc.
 
 
-#ifndef CELMA_FORMAT_DETAIL_INT8_TO_STRING_HPP
-#define CELMA_FORMAT_DETAIL_INT8_TO_STRING_HPP
+#pragma once
 
 
 #include <cstdint>
@@ -28,7 +27,7 @@
 #include <string>
 
 
-namespace celma { namespace format { namespace detail {
+namespace celma::format::detail {
 
 
 /// Fast method to convert an integer to string:
@@ -39,11 +38,10 @@ namespace celma { namespace format { namespace detail {
 ///   - Move pointer to the next position (previous character in string).
 ///   - Divide the original value by 10.
 ///
-/// @param[in]  value  The unsigned long integer value to convert into string
-///                    format.
+/// @param[in]  value  Unsigned long integer value to convert into string format.
 /// @return  The value as string.
 /// @since  0.9, 04.12.2016
-std::string uint8toString( uint8_t value);
+[[nodiscard]] std::string uint8toString( uint8_t value);
 
 
 /// Fast method to convert a signed, negative integer to string:
@@ -54,18 +52,17 @@ std::string uint8toString( uint8_t value);
 ///   - Move pointer to the next position (previous character in string).
 ///   - Divide the original value by 10.
 ///
-/// @param[in]  value  The signed long integer value to convert into string
-///                    format.
+/// @param[in]  value  Signed long integer value to convert into string format.
 /// @return  The value as string.
 /// @since  0.9, 04.12.2016
-std::string int8negToString( int8_t value);
+[[nodiscard]] std::string int8negToString( int8_t value);
 
 
 /// Converts an integer value, signed, positive or negative, into string format.
-/// @param[in]  value  The value to convert.
+/// @param[in]  value  Value to convert.
 /// @return  The string with the value.
 /// @since  0.9, 04.12.2016
-inline std::string int8toString( int8_t value)
+[[nodiscard]] inline std::string int8toString( const int8_t value)
 {
    if (value < 0)
       return int8negToString( value);
@@ -79,9 +76,9 @@ inline std::string int8toString( int8_t value)
 /// destination buffer.
 /// For long integers, the destination buffer must be at least 10 characters
 /// long.
-/// @param[in]  buffer  Pointer to the destination buffer to store the string
-///                     form of the value in.
-/// @param[in]  value   The value to convert.
+/// @param[out]  buffer  Pointer to the destination buffer to store the string
+///                      form of the value in.
+/// @param[in]   value   Value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 04.12.2016
 int uint8toString( char* buffer, uint8_t value);
@@ -91,9 +88,9 @@ int uint8toString( char* buffer, uint8_t value);
 /// buffer.
 /// For un/signed long integers, the destination buffer must be at least
 /// 11 characters long.
-/// @param[in]  buffer  Pointer to the destination buffer to store the string
-///                     form of the value in.
-/// @param[in]  value   The value to convert.
+/// @param[out]  buffer  Pointer to the destination buffer to store the string
+///                      form of the value in.
+/// @param[in]   value   Value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 04.12.2016
 int int8negToString( char* buffer, int8_t value);
@@ -104,12 +101,12 @@ int int8negToString( char* buffer, int8_t value);
 /// string.<br>
 /// For un/signed long integers, the destination buffer must be at least
 /// 11 characters long.
-/// @param[in]  buffer  Pointer to the destination buffer to store the string
-///                     form of the value in.
-/// @param[in]  value   The value to convert.
+/// @param[out]  buffer  Pointer to the destination buffer to store the string
+///                      form of the value in.
+/// @param[in]   value   Value to convert.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 04.12.2016
-inline int int8toString( char* buffer, int8_t value)
+inline int int8toString( char* buffer, const int8_t value)
 {
    if (value < 0)
       return int8negToString( buffer, value);
@@ -124,13 +121,8 @@ inline int int8toString( char* buffer, int8_t value)
 } // end int8toString
 
 
-} // namespace detail
-} // namespace format
-} // namespace celma
+} // namespace celma::format::detail
 
 
-#endif   // CELMA_FORMAT_DETAIL_INT8_TO_STRING_HPP
-
-
-// ========================  END OF int8_to_string.hpp  ========================
+// =====  END OF int8_to_string.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,14 +14,13 @@
 /// See description of class celma::indirect_access::detail::IField.
 
 
-#ifndef CELMA_INDIRECT_ACCESS_DETAIL_I_FIELD_HPP
-#define CELMA_INDIRECT_ACCESS_DETAIL_I_FIELD_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace indirect_access { namespace detail {
+namespace celma::indirect_access::detail {
 
 
 /// Base class for accessing fields in a structure. Handles some shared
@@ -40,12 +39,12 @@ public:
    /// Returns the name of the field/variable.
    /// @return  The name as passed to the constructor.
    /// @since  0.4, 02.07.2016
-   const std::string& fieldName() const noexcept( true);
+   [[nodiscard]] const std::string& fieldName() const noexcept( true);
 
    /// Returns the type of the field as text.
    /// @return  The type of the variable.
    /// @since  0.4, 02.05.2016
-   const std::string& typeName() const noexcept( true);
+   [[nodiscard]] const std::string& typeName() const noexcept( true);
 
    /// In the derived classes, should return the value stored in the variable as
    /// string.
@@ -93,12 +92,7 @@ inline const std::string& IField::typeName() const noexcept( true)
 } // IField::typeName
 
 
-} // namespace detail
-} // namespace indirect_access
-} // namespace celma
-
-
-#endif   // CELMA_INDIRECT_ACCESS_DETAIL_I_FIELD_HPP
+} // namespace celma::indirect_access::detail
 
 
 // =====  END OF i_field.hpp  =====

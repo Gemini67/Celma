@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of function celma::format::detail::int32_str_length().
 
 
-#ifndef CELMA_FORMAT_DETAIL_INT32_STR_LENGTH_HPP
-#define CELMA_FORMAT_DETAIL_INT32_STR_LENGTH_HPP
+#pragma once
 
 
 #include <cstdint>
 
 
-namespace celma { namespace format { namespace detail {
+namespace celma::format::detail {
 
 
 /// Determines the number of characters that the string representation of an
@@ -30,7 +29,7 @@ namespace celma { namespace format { namespace detail {
 /// @param[in]  orig_value  The value to determine the string length of.
 /// @return  Length of the string format of the value.
 /// @since  0.9, 28.11.2016
-template< typename T> uint8_t int32_str_length( T orig_value)
+template< typename T> [[nodiscard]] uint8_t int32_str_length( const T orig_value)
 {
 
    const auto  value = static_cast< uint32_t>( orig_value);
@@ -80,16 +79,11 @@ template< typename T> uint8_t int32_str_length( T orig_value)
 
    // value < 100
    return (value >= 10) ? 2 : 1;
-} // end int32_str_length
+} // int32_str_length
 
 
-} // namespace detail
-} // namespace format
-} // namespace celma
+} // namespace celma::format::detail
 
 
-#endif   // CELMA_FORMAT_DETAIL_INT32_STR_LENGTH_HPP
-
-
-// =======================  END OF int32_str_length.hpp  =======================
+// =====  END OF int32_str_length.hpp  =====
 

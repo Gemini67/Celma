@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of template class celma::common::lazy_ptr.
 
 
-#ifndef CELMA_COMMON_LAZY_PTR_HPP
-#define CELMA_COMMON_LAZY_PTR_HPP
+#pragma once
 
 
 #include <functional>
@@ -24,7 +23,7 @@
 #include <utility>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Smart pointer that creates an object only when it is needed.<br>
@@ -127,7 +126,7 @@ public:
    ///
    /// @return  Pointer to the object, which was eventually just created now.
    /// @since  1.11.0, 07.09.2018
-   T* get()
+   [[nodiscard]] T* get()
    {
       if (mpObject == nullptr)
          mpObject.reset( mpCreator());
@@ -140,7 +139,7 @@ public:
    ///
    /// @return  Pointer to the object, which was eventually just created now.
    /// @since  1.11.0, 07.09.2018
-   T* operator ->()
+   [[nodiscard]] T* operator ->()
    {
       return mpObject.get();
    } // lazy_ptr< T>::operator ->
@@ -149,7 +148,7 @@ public:
    ///
    /// @return  \c true if a pointer to an existing object is stored internally.
    /// @since  1.11.0, 07.09.2018
-   operator bool() const
+   [[nodiscard]] operator bool() const
    {
       return static_cast< bool>( mpObject);
    } // lazy_ptr< T>::operator bool
@@ -186,11 +185,7 @@ private:
 }; // lazy_ptr< T>
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_LAZY_PTR_HPP
+} // namespace celma::common
 
 
 // =====  END OF lazy_ptr.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,8 +23,7 @@
 /// Using the functions is simple: Just call int2string().
 
 
-#ifndef CELMA_FORMAT_INT2STRING_HPP
-#define CELMA_FORMAT_INT2STRING_HPP
+#pragma once
 
 
 #include <string>
@@ -33,9 +32,6 @@
 #include "celma/format/detail/int16_to_string.hpp"
 #include "celma/format/detail/int32_to_string.hpp"
 #include "celma/format/detail/int64_to_string.hpp"
-
-
-namespace celma { namespace format {
 
 
 #define  TEMPLATE_ENABLE_IF( b, s, r) \
@@ -67,6 +63,9 @@ namespace celma { namespace format {
    BUFFER_FUNCTION_ENABLED( b, false, f)
 
 
+namespace celma::format {
+
+
 SIGNED_FUNCTIONS( 1, int8toString)
 UNSIGNED_FUNCTIONS( 1, uint8toString)
 SIGNED_FUNCTIONS( 2, int16toString)
@@ -77,17 +76,13 @@ SIGNED_FUNCTIONS( 8, int64toString)
 UNSIGNED_FUNCTIONS( 8, uint64toString)
 
 
+} // namespace celma::format
+
+
 #undef  SIGNED_FUNCTIONS
 #undef  UNSIGNED_FUNCTIONS
 #undef  TEMPLATE_ENABLE_IF
 
 
-} // namespace format
-} // namespace celma
-
-
-#endif   // CELMA_FORMAT_INT2STRING_HPP
-
-
-// ==========================  END OF int2string.hpp  ==========================
+// =====  END OF int2string.hpp  =====
 

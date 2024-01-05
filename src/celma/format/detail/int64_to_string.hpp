@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,8 +19,7 @@
 /// For the same functions but with grouping, see grouped_int64toString() etc.
 
 
-#ifndef CELMA_FORMAT_DETAIL_INT64_TO_STRING_HPP
-#define CELMA_FORMAT_DETAIL_INT64_TO_STRING_HPP
+#pragma once
 
 
 #include <cstdint>
@@ -28,7 +27,7 @@
 #include <string>
 
 
-namespace celma { namespace format { namespace detail {
+namespace celma::format::detail {
 
 
 /// Fast method to convert an integer to string:
@@ -44,7 +43,7 @@ namespace celma { namespace format { namespace detail {
 /// @return  The value as string.
 /// @since  0.9, 22.11.2016  (renamed from uint2str)
 /// @since  0.6, 05.11.2016
-std::string uint64toString( uint64_t value);
+[[nodiscard]] std::string uint64toString( uint64_t value);
 
 
 /// Fast method to convert a signed, negative integer to string:
@@ -60,7 +59,7 @@ std::string uint64toString( uint64_t value);
 /// @return  The value as string.
 /// @since  0.9, 22.11.2016  (renamed from int2str_neg)
 /// @since  0.6, 05.11.2016
-std::string int64negToString( int64_t value);
+[[nodiscard]] std::string int64negToString( int64_t value);
 
 
 /// Converts an integer value, signed, positive or negative, into string format.
@@ -68,14 +67,14 @@ std::string int64negToString( int64_t value);
 /// @return  The string with the value.
 /// @since  0.9, 22.11.2016  (renamed from int2str)
 /// @since  0.6, 05.11.2016
-inline std::string int64toString( int64_t value)
+[[nodiscard]] inline std::string int64toString( const int64_t value)
 {
    if (value < 0L)
       return int64negToString( value);
    if (value == 0L)
       return std::string( "0");
    return uint64toString( value);
-} // end int64toString
+} // int64toString
 
 
 /// Fast unsigned integer to string conversion into a caller-supplied
@@ -115,7 +114,7 @@ int int64negToString( char* buffer, int64_t value);
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 22.11.2016  (renamed from int2str)
 /// @since  0.6, 05.11.2016
-inline int int64toString( char* buffer, int64_t value)
+inline int int64toString( char* buffer, const int64_t value)
 {
    if (value < 0L)
       return int64negToString( buffer, value);
@@ -127,16 +126,11 @@ inline int int64toString( char* buffer, int64_t value)
    } // end if
 
    return uint64toString( buffer, value);
-} // end int64toString
+} // int64toString
 
 
-} // namespace detail
-} // namespace format
-} // namespace celma
+} // namespace celma::format::detail
 
 
-#endif   // CELMA_FORMAT_DETAIL_INT64_TO_STRING_HPP
-
-
-// =======================  END OF int64_to_string.hpp  =======================
+// =====  END OF int64_to_string.hpp  =====
 
