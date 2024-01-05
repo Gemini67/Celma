@@ -16,10 +16,10 @@ set( MINORVERSION    48 )
 set( RELEASE_VERSION 0 )
 set( PATCHLEVEL      0 )
 
-if ( CPP_VERSION STREQUAL "20" )
-   set( CMAKE_CXX_STANDARD 20 )
+if ( CPP_VERSION STREQUAL "23" )
+   set( CMAKE_CXX_STANDARD 23 )
 else()
-   set( CMAKE_CXX_STANDARD 17 )
+   set( CMAKE_CXX_STANDARD 20 )
 endif()
 
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
@@ -49,22 +49,8 @@ if (CMAKE_BUILD_TYPE MATCHES Coverage)
 endif (CMAKE_BUILD_TYPE MATCHES Coverage)
 
 
-# test that filesystem header actually is there and works
-try_compile( HAS_FS "${CMAKE_BINARY_DIR}/temp"
-   "${PROJECT_SOURCE_DIR}/cmake-macros/has_filesystem.cpp"
-   CMAKE_FLAGS -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
-   LINK_LIBRARIES stdc++fs)
-if (HAS_FS)
-   message( STATUS "std::filesystem is available")
-   set( LINK_LIBRARIES stdc++fs)
-else()
-   message( STATUS "std::filesystem is not available (yet)")
-endif()
-
-
 # Boost stuff ------------------------------------------------------------------
 find_package( Boost ${BOOST_VERSION} REQUIRED
-   filesystem
    thread
    system
    unit_test_framework
@@ -73,11 +59,7 @@ find_package( Boost ${BOOST_VERSION} REQUIRED
 message( STATUS "Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIRS}" )
 message( STATUS "Boost_LIBRARY_DIRS ${Boost_LIBRARY_DIRS}" )
 
-if (HAS_FS)
-   set( Boost_Link_Libs       boost_thread boost_system )
-else()
-   set( Boost_Link_Libs       boost_filesystem boost_thread boost_system )
-endif()
+set( Boost_Link_Libs       boost_thread boost_system )
 set( Boost_Test_Link_Libs  boost_unit_test_framework ${Boost_Link_Libs} )
 
 

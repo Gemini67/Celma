@@ -3,7 +3,7 @@ PATH := $(shell pwd)/scripts:$(PATH)
 CPUS := $(shell lscpu -p | fgrep -v '\#' | wc -l)
 
 
-all:	debug release release-dbg debug-20 release-20
+all:	debug release release-dbg debug-23 release-23
 
 debug:
 	+if [ ! -d build/debug ]; then \
@@ -31,32 +31,32 @@ release:
 	cd build/release; \
 	make -j${CPUS}
 
-debug-20:
-	+if [ ! -d build/debug-20 ]; then \
-	   mkdir -p build/debug-20; \
-	   cd build/debug-20; \
+debug-23:
+	+if [ ! -d build/debug-23 ]; then \
+	   mkdir -p build/debug-23; \
+	   cd build/debug-23; \
 	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
 	         -DBOOST_VERSION=${BOOST_VERSION} \
 	         -DCMAKE_BUILD_TYPE=Debug \
-	         -DCPP_VERSION=20 \
+	         -DCPP_VERSION=23 \
 	         ../..; \
 	   cd -; \
 	fi; \
-	cd build/debug-20; \
+	cd build/debug-23; \
 	make -j${CPUS}
 
-release-20:
-	@+if [ ! -d build/release-20 ]; then \
-	   mkdir -p build/release-20; \
-	   cd build/release-20; \
+release-23:
+	@+if [ ! -d build/release-23 ]; then \
+	   mkdir -p build/release-23; \
+	   cd build/release-23; \
 	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
 	         -DBOOST_VERSION=${BOOST_VERSION} \
 	         -DCMAKE_BUILD_TYPE=Release \
-	         -DCPP_VERSION=20 \
+	         -DCPP_VERSION=23 \
 	         ../..; \
 	   cd -; \
 	fi; \
-	cd build/release-20; \
+	cd build/release-23; \
 	make -j${CPUS}
 
 release-dbg:
@@ -91,7 +91,7 @@ analyze:
 cppcheck:
 	cppcheck --enable=all --quiet --inline-suppr --force --std=c++11 -I src src
 
-test:	test-release test-debug test-release-20 test-debug-20
+test:	test-release test-debug test-release-23 test-debug-23
 
 test-debug:
 	@if [ -d build/debug ]; then \
@@ -109,20 +109,20 @@ test-release:
 	   echo "*** Error: build/release does not exist!" >&2; \
 	fi
 
-test-debug-20:
-	@if [ -d build/debug-20 ]; then \
-	   cd build/debug-20; \
+test-debug-23:
+	@if [ -d build/debug-23 ]; then \
+	   cd build/debug-23; \
 	   make test ARGS=-j${CPUS}; \
 	else \
-	   echo "*** Error: build/debug-20 does not exist!" >&2; \
+	   echo "*** Error: build/debug-23 does not exist!" >&2; \
 	fi
 
-test-release-20:
-	@if [ -d build/release-20 ]; then \
-	   cd build/release-20; \
+test-release-23:
+	@if [ -d build/release-23 ]; then \
+	   cd build/release-23; \
 	   make test ARGS=-j${CPUS}; \
 	else \
-	   echo "*** Error: build/release-20 does not exist!" >&2; \
+	   echo "*** Error: build/release-23 does not exist!" >&2; \
 	fi
 
 
