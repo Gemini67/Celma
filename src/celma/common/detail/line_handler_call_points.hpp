@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,19 +12,21 @@
 
 
 /// @file
-/// See documentation of enum  celma::common::detail::LineHandlerCallPoints.
+/// See documentation of enum celma::common::detail::LineHandlerCallPoints.
 
 
-#ifndef CELMA_COMMON_DETAIL_LINE_HANDLER_CALL_POINTS_HPP
-#define CELMA_COMMON_DETAIL_LINE_HANDLER_CALL_POINTS_HPP
+#pragma once
 
 
-namespace celma { namespace common { namespace detail {
+#include <cstdint>
+
+
+namespace celma::common::detail {
 
 
 /// Symbolic names for the statistic call points used by the class TextFile.
 /// @since  1.3.0, 13.04.2016
-enum class LineHandlerCallPoints
+enum class LineHandlerCallPoints : uint8_t
 {
    lineRead,       //!< Line read from the file.
    lineFiltered,   //!< Line ignored due to the filter.
@@ -32,12 +34,7 @@ enum class LineHandlerCallPoints
 }; // LineHandlerCallPoints
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_LINE_HANDLER_CALL_POINTS_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF line_handler_call_points.hpp  =====

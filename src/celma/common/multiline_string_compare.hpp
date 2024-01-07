@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of function celma::common::multilineStringCompare()
 
 
-#ifndef CELMA_COMMON_MULTILINE_STRING_COMPARE_HPP
-#define CELMA_COMMON_MULTILINE_STRING_COMPARE_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Compares two strings that contain a multi-line text if their contents are
@@ -54,7 +53,7 @@ namespace celma { namespace common {
 ///    \c true if the contents of the two strings are identical.
 /// @since
 ///    1.8.0, 24.07.2018
-inline bool multilineStringCompare( std::string::size_type& idx,
+[[nodiscard]] inline bool multilineStringCompare( std::string::size_type& idx,
    std::string::size_type& line_nbr,
    std::string::size_type& col,
    const std::string& str1,
@@ -84,11 +83,7 @@ inline bool multilineStringCompare( std::string::size_type& idx,
 } // multilineStringCompare
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_MULTILINE_STRING_COMPARE_HPP
+} // namespace celma::common
 
 
 // =====  END OF multiline_string_compare.hpp  =====

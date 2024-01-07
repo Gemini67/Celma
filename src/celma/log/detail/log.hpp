@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::Log.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_HPP
-#define CELMA_LOG_DETAIL_LOG_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -26,7 +25,7 @@
 #include "celma/log/filter/filters.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 class ILogDest;
@@ -71,7 +70,7 @@ public:
    /// @throw
    ///    std::runtime_error if a log destination with this name was not found.
    /// @since  1.0.0, 19.06.2016
-   ILogDest* getDestination( const std::string& name) noexcept( false);
+   [[nodiscard]] ILogDest* getDestination( const std::string& name) noexcept( false);
 
    /// Removes a destination.
    ///
@@ -109,12 +108,7 @@ private:
 }; // Log
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF log.hpp  =====

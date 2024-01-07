@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// specialisations of a template type.
 
 
-#ifndef CELMA_PROVIDE_TEMPLATE_TYPE_NAME_HPP
-#define CELMA_PROVIDE_TEMPLATE_TYPE_NAME_HPP
+#pragma once
 
 
 /// Macro to create the specialisation of type<> for an STL container.
@@ -34,9 +33,6 @@
       static constexpr auto const  mName = \
          common::string_concat( # c, "<", type< T>::mName, ">"); \
    }
-
-
-#endif   // CELMA_PROVIDE_TEMPLATE_TYPE_NAME_HPP
 
 
 // =====  END OF provide_template_type_name.hpp  =====

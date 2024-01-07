@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,15 +16,14 @@
 /// celma::common::detail::parseFilterCombination()<>.
 
 
-#ifndef CELMA_COMMON_DETAIL_PARSE_FILTER_COMBINATION_HPP
-#define CELMA_COMMON_DETAIL_PARSE_FILTER_COMBINATION_HPP
+#pragma once
 
 
 // all other includes are in the top-level headerfile, except:
 #include <boost/lexical_cast.hpp>
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Parses the sub-string of a filter string which contains all conditions that
@@ -118,12 +117,7 @@ template< typename T>
 } // parseFilterCombination
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_PARSE_FILTER_COMBINATION_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF parse_filter_combination.hpp  =====

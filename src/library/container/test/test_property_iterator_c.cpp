@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// test module header file included first
+// test module headerfile included first
 #include "celma/container/properties.hpp"
 
 
@@ -51,12 +51,12 @@ BOOST_AUTO_TEST_CASE( no_properties)
    auto  dummy = myProperties.begin();
    BOOST_REQUIRE_NO_THROW( ++dummy);
    BOOST_REQUIRE_NO_THROW( dummy++);
-   BOOST_REQUIRE_NO_THROW( dummy.name());
+   BOOST_REQUIRE_NO_THROW( std::ignore = dummy.name());
    BOOST_REQUIRE_EQUAL( dummy.name(), "");
    BOOST_REQUIRE_NO_THROW( dummy.pathAndName());
    BOOST_REQUIRE_EQUAL( dummy.pathAndName(), "");
 
-   BOOST_REQUIRE_THROW( dummy.value< int>(), std::runtime_error);
+   BOOST_REQUIRE_THROW( std::ignoree = dummy.value< int>(), std::runtime_error);
 
 } // no_properties
 

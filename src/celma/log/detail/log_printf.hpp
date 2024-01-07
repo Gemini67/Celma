@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of functions celma::log::detail::printf().
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_PRINTF_HPP
-#define CELMA_LOG_DETAIL_LOG_PRINTF_HPP
+#pragma once
 
 
 #include <cstdarg>
@@ -26,11 +25,11 @@
 #include "celma/log/logging.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
-extern void log_vprintf( LogMsg& myMsg, LogLevel ll, LogClass lc,
-                         const char* format, va_list ap) noexcept( false);
+void log_vprintf( LogMsg& myMsg, LogLevel ll, LogClass lc,
+                  const char* format, va_list ap) noexcept( false);
 
 
 /// Template function to create a log message with a printf()-like syntax.<br>
@@ -55,8 +54,8 @@ extern void log_vprintf( LogMsg& myMsg, LogLevel ll, LogClass lc,
 /// @since  0.3, 19.06.2016
 template< typename T>
    void printf( const std::string& file_name, const char* const function_name,
-                int line_nbr, const T& log_spec, LogLevel ll, LogClass lc,
-                const char* format, ...) noexcept( false)
+                const int line_nbr, const T& log_spec, const LogLevel ll,
+                const LogClass lc, const char* format, ...) noexcept( false)
 {
 
    LogMsg  myMsg( file_name, function_name, line_nbr);
@@ -71,12 +70,7 @@ template< typename T>
 } // printf
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_PRINTF_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF log_printf.hpp  =====

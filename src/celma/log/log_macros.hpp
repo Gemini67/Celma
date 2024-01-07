@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,8 +17,7 @@
 /// LOG_ATTRIBUTE.
 
 
-#ifndef CELMA_LOG_MACROS_HPP
-#define CELMA_LOG_MACROS_HPP
+#pragma once
 
 
 #include "boost/preprocessor/cat.hpp"
@@ -221,9 +220,6 @@
 /// @param  v  The value to use for the attribute.
 #define  LOG_ATTRIBUTE( n, v) \
    celma::log::detail::ScopedAttribute  BOOST_PP_CAT( sa, __LINE__) ( n, v)
-
-
-#endif   // CELMA_LOG_MACROS_HPP
 
 
 // =====  END OF log_macros.hpp  =====

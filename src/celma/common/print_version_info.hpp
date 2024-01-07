@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,14 +16,13 @@
 /// celma::common:versionInfo().
 
 
-#ifndef CELMA_COMMON_PRINT_VERSION_INFO_HPP
-#define CELMA_COMMON_PRINT_VERSION_INFO_HPP
+#pragma once
 
 
 #include <iosfwd>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Prints the Celma Library version information to \c stdout.
@@ -31,7 +30,7 @@ namespace celma { namespace common {
 /// @since  1.33.1, 13.11.2019
 ///    (renamed from print_version_info)
 /// @since  0.2, 08.04.2016
-extern void printVersionInfo();
+void printVersionInfo();
 
 
 /// Writes the Celma Library version information to the specified stream.
@@ -41,14 +40,10 @@ extern void printVersionInfo();
 /// @since  1.33.1, 13.11.2019
 ///    (renamed from version_info)
 /// @since  0.2, 08.04.2016
-extern std::ostream& versionInfo( std::ostream& os);
+std::ostream& versionInfo( std::ostream& os);
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_PRINT_VERSION_INFO_HPP
+} // namespace celma::common
 
 
 // =====  END OF print_version_info.hpp  =====

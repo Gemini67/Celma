@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of function celma::format::grouped_double2string().
 
 
-// module header file include
+// module headerfile include
 #include "celma/format/grouped_double2string.hpp"
 
 
@@ -32,7 +32,7 @@
 #include "celma/format/grouped_int2string.hpp"
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 
@@ -49,7 +49,8 @@ namespace celma { namespace format {
 ///    The string with the formatted double.
 /// @since
 ///    1.13.0, 04.10.2018
-std::string grouped_double2string( double value, int precision, char group_char)
+std::string grouped_double2string( const double value, const int precision,
+   const char group_char)
 {
  
    const int64_t       integer_part = static_cast< int64_t>( value);
@@ -66,8 +67,7 @@ std::string grouped_double2string( double value, int precision, char group_char)
 
 
 
-} // namespace format
-} // namespace celma
+} // namespace celma::format
 
 
 // =====  END OF grouped_double_to_string.cpp  =====

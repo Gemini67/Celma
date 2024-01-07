@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::files::PolicyBaseStub.
 
 
-#ifndef CELMA_TEST_STUBS_POLICY_BASE_STUB_HPP
-#define CELMA_TEST_STUBS_POLICY_BASE_STUB_HPP
+#pragma once
 
 
 #include <string>
@@ -25,7 +24,7 @@
 #include "celma/log/filename/builder.hpp"
 
 
-namespace celma { namespace log { namespace files {
+namespace celma::log::files {
 
 
 /// Stub of the base class for log file handle policies. Provides the same
@@ -83,7 +82,7 @@ public:
    ///
    /// @return  The path and file name of the currently open log file.
    /// @since  1.11.0, 27.08.2018
-   const std::string& logFileName() const;
+   [[nodiscard]] const std::string& logFileName() const;
 
    // functions of the stub
 
@@ -92,21 +91,21 @@ public:
    ///
    /// @return  \c true when open() was called.
    /// @since  1.11.0, 29.08.2018
-   bool getResetOpenCalled();
+   [[nodiscard]] bool getResetOpenCalled();
 
    /// Returns the current value of the #mRollFilesCalled flag and resets it
    /// afterwards.
    ///
    /// @return  \c true when rollFiles() was called.
    /// @since  1.11.0, 29.08.2018
-   bool getResetRollFilesCalled();
+   [[nodiscard]] bool getResetRollFilesCalled();
 
    /// Returns the current value of the #mReOpenCalled flag and resets it
    /// afterwards.
    ///
    /// @return  \c true when reOpenFile() was called.
    /// @since  1.11.0, 29.08.2018
-   bool getResetReOpenCalled();
+   [[nodiscard]] bool getResetReOpenCalled();
 
    /// Returns the simulated size of the logfile.
    ///
@@ -114,7 +113,7 @@ public:
    ///    The simulated size of the logfile, computed by the cumulated lengths
    ///    of the log messages as specified in the log message text.
    /// @since  1.11.0, 29.08.2018
-   size_t logFileSize() const;
+   [[nodiscard]] size_t logFileSize() const;
 
 protected:
    /// Check if the currently opened log file is valid for writing into.
@@ -303,15 +302,10 @@ inline void PolicyBaseStub::reOpenFile()
 inline size_t PolicyBaseStub::fileSize() const
 {
    return mLogFileSize;
-}
+} // PolicyBaseStub::fileSize
 
 
-} // namespace files
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_TEST_STUBS_POLICY_BASE_STUB_HPP
+} // namespace celma::log::files
 
 
 // =====  END OF policy_base_stub.hpp  =====

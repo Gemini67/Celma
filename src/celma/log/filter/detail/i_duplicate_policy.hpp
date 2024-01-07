@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::log::filter::detail::IDuplicatePolicy.
 
 
-#ifndef CELMA_LOG_FILTER_DETAIL_I_DUPLICATE_POLICY_HPP
-#define CELMA_LOG_FILTER_DETAIL_I_DUPLICATE_POLICY_HPP
+#pragma once
 
 
 #include "celma/log/filter/detail/duplicate_policy.hpp"
 
 
-namespace celma { namespace log { namespace filter { namespace detail {
+namespace celma::log::filter::detail {
 
 
 /// Interface definition class for duplicate (filter) handling policies.
@@ -50,13 +49,7 @@ public:
 }; // IDuplicatePolicy
 
 
-} // namespace detail
-} // namespace filter
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILTER_DETAIL_I_DUPLICATE_POLICY_HPP
+} // namespace celma::log::filter::detail
 
 
 // =====  END OF i_duplicate_policy.hpp  =====

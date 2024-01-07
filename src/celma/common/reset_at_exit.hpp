@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,10 @@
 /// See documentation of template celma::common::ResetAtExit.
 
 
-#ifndef CELMA_COMMON_RESET_AT_EXIT_HPP
-#define CELMA_COMMON_RESET_AT_EXIT_HPP
+#pragma once
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Helper class that (re-) sets a variable to a specific value when this object
@@ -75,11 +74,7 @@ template< typename T> ResetAtExit< T>::~ResetAtExit()
 } // ResetAtExit< T>::~ResetAtExit
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_RESET_AT_EXIT_HPP
+} // namespace celma::common
 
 
 // =====  END OF reset_at_exit.hpp  =====

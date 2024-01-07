@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::log::detail::ScopedAttribute.
 
 
-#ifndef CELMA_LOG_DETAIL_SCOPED_ATTRIBUTE_HPP
-#define CELMA_LOG_DETAIL_SCOPED_ATTRIBUTE_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 /// Small helper class to manage a scoped log attribute:
@@ -64,12 +63,7 @@ private:
 }; // ScopedAttribute
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_SCOPED_ATTRIBUTE_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF log_scoped_attribute.hpp  =====

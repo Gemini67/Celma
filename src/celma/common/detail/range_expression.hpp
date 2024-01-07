@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::common::detail::RangeExpression.
 
 
-#ifndef CELMA_COMMON_DETAIL_RANGE_EXPRESSION_HPP
-#define CELMA_COMMON_DETAIL_RANGE_EXPRESSION_HPP
+#pragma once
 
 
 #include <cstdint>
 #include <string>
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Helper class to extract the different parts of a range expression.
@@ -75,49 +74,49 @@ public:
    ///
    /// @return  The string that was matched.
    /// @since  0.2, 07.04.2016
-   const std::string& matchedExpression() const;
+   [[nodiscard]] const std::string& matchedExpression() const;
 
    /// Returns the single/range start value.
    ///
    /// @return  The start value.
    /// @since  0.2, 07.04.2016
-   int64_t startValue() const;
+   [[nodiscard]] int64_t startValue() const;
 
    /// Returns if an end-value was found in the string.
    ///
    /// @return  \c true if an end-value was found in the string.
    /// @since  0.2, 07.04.2016
-   bool hasRangeEnd() const;
+   [[nodiscard]] bool hasRangeEnd() const;
 
    /// Returns the range end value, if one was set.
    ///
    /// @return  The range end value, may be empty.
    /// @since  0.2, 07.04.2016
-   int64_t endValue() const;
+   [[nodiscard]] int64_t endValue() const;
 
    /// Returns if an increment value was found in the string.
    ///
    /// @return  \c true if an increment value was found in the string.
    /// @since  0.2, 07.04.2016
-   bool hasIncrement() const;
+   [[nodiscard]] bool hasIncrement() const;
 
    /// Returns the range increment value, if one was set.
    ///
    /// @return  The range increment value, may be empty.
    /// @since  0.2, 07.04.2016
-   int64_t incrementValue() const;
+   [[nodiscard]] int64_t incrementValue() const;
 
    /// Returns if an exclude expression was found in the string.
    ///
    /// @return  \c true if an exclude expression was found in the string.
    /// @since  0.2, 07.04.2016
-   bool hasExcludeExpr() const;
+   [[nodiscard]] bool hasExcludeExpr() const;
 
    /// Returns the range exclude expression, if one was set.
    ///
    /// @return  The range exclude expression, may be empty.
    /// @since  0.2, 07.04.2016
-   const std::string& excludeExpression() const;
+   [[nodiscard]] const std::string& excludeExpression() const;
 
 private:
    /// Indices to the match object:
@@ -214,12 +213,7 @@ inline const std::string& RangeExpression::excludeExpression() const
 } // RangeExpression::excludeExpression
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_RANGE_EXPRESSION_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF range_expression.hpp  =====

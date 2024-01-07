@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,17 +15,16 @@
 /// See documentation of template function celma::test::measure.
 
 
-#ifndef CELMA_TEST_MEASURE_HPP
-#define CELMA_TEST_MEASURE_HPP
+#pragma once
 
 
 #include <sched.h>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include "celma/common/micro_timer.hpp"
 
 
-namespace celma { namespace test {
+namespace celma::test {
 
 
 /// Standard function for performance tests.
@@ -36,8 +35,8 @@ namespace celma { namespace test {
 /// @param[in]  fun        The function to execute.
 /// @return  The time measured for this function.
 /// @since  0.13.5, 28.02.2017
-template< typename F> uint64_t measure( uint64_t num_loops,
-                                        const char* func_name, F fun)
+template< typename F> [[nodiscard]]
+   uint64_t measure( const uint64_t num_loops, const char* func_name, F fun)
 {
 
    common::MicroTimer  mt;
@@ -61,11 +60,7 @@ template< typename F> uint64_t measure( uint64_t num_loops,
 } // measure
 
 
-} // namespace test
-} // namespace celma
-
-
-#endif   // CELMA_TEST_MEASURE_HPP
+} // namespace celma::test
 
 
 // =====  END OF measure.hpp  =====

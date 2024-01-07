@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::LogDestData.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_DEST_DATA_HPP
-#define CELMA_LOG_DETAIL_LOG_DEST_DATA_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -25,7 +24,7 @@
 #include "celma/log/detail/i_log_dest.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 /// Stores the properties of a log destination.
@@ -65,12 +64,7 @@ public:
 }; // LogDestData
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_DEST_DATA_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF log_dest_data.hpp  =====

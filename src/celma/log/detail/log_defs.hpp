@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,19 +16,19 @@
 /// celma::log::detail::LogLevel.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_DEFS_HPP
-#define CELMA_LOG_DETAIL_LOG_DEFS_HPP
+#pragma once
 
 
 // OS/C lib includes
-#include <unistd.h>
-#include <cstdlib>
+#include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
+#include <unistd.h>
 #include <ostream>
 
 
-namespace celma { namespace log {
+namespace celma::log {
 
 
 /// Type of log ids.
@@ -36,7 +36,7 @@ using id_t = unsigned int;
 
 
 /// List of classes to which a log message can belong:
-enum class LogClass
+enum class LogClass : uint8_t
 {
    undefined,       //!< Undefined.
    sysCall,         //!< Operating system call.
@@ -49,7 +49,7 @@ enum class LogClass
 
 
 /// List of possible log levels of a message:
-enum class LogLevel
+enum class LogLevel : uint8_t
 {
    undefined,   //!< Undefined.
    fatal,       //!< Fatal error.
@@ -68,7 +68,7 @@ namespace detail {
 /// @param[in]  lc  The log class to return the text for.
 /// @return  The display text for the specified log class.
 /// @since  1.0.0, 19.06.2016
-inline const char* logClass2text( LogClass lc)
+[[nodiscard]] inline const char* logClass2text( const LogClass lc)
 {
    switch (lc)
    {
@@ -88,7 +88,7 @@ inline const char* logClass2text( LogClass lc)
 /// @param[in]  ll  The log level to return the text for.
 /// @return  The display text for the specified log level.
 /// @since  1.0.0, 19.06.2016
-inline const char* logLevel2text( LogLevel ll)
+[[nodiscard]] inline const char* logLevel2text( const LogLevel ll)
 {
    switch (ll)
    {
@@ -108,7 +108,7 @@ inline const char* logLevel2text( LogLevel ll)
 /// @param[in]  lcText  The display text to return the class for.
 /// @return  The log class.
 /// @since  1.0.0, 19.06.2016
-inline LogClass text2logClass( const char* lcText)
+[[nodiscard]] inline LogClass text2logClass( const char* lcText)
 {
 
    for (int i = 0; i <= static_cast< int>( LogClass::operatorAction); i++)
@@ -125,7 +125,7 @@ inline LogClass text2logClass( const char* lcText)
 /// @param[in]  llText  The display text to return the level for.
 /// @return  The log level.
 /// @since  1.0.0, 19.06.2016
-inline LogLevel text2logLevel( const char* llText)
+[[nodiscard]] inline LogLevel text2logLevel( const char* llText)
 {
 
    for (int  i = 0; i <= static_cast< int>( LogLevel::fullDebug); i++)
@@ -165,11 +165,7 @@ inline std::ostream& operator <<( std::ostream& os, const LogClass lc)
 } // operator <<
 
 
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_DEFS_HPP
+} // namespace celma::log
 
 
 // =====  END OF log_defs.hpp  =====

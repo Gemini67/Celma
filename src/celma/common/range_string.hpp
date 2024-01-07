@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::common::RangeString.
 
 
-#ifndef CELMA_COMMON_RANGE_STRING_HPP
-#define CELMA_COMMON_RANGE_STRING_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/common/detail/range_string_iterator.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Use this class to have a range-string parsed and the generated values
@@ -60,22 +59,22 @@ public:
    /// Returns the iterator with the first value from the range.
    /// @return  The iterator with the first value.
    /// @since  0.2, 07.04.2016
-   const_iterator begin() const;
+   [[nodiscard]] const_iterator begin() const;
 
    /// Returns the end iterator.
    /// @return  The end iterator.
    /// @since  0.2, 07.04.2016
-   const_iterator end() const;
+   [[nodiscard]] const_iterator end() const;
 
    /// Returns the iterator with the first value from the range.
    /// @return  The iterator with the first value.
    /// @since  0.2, 09.04.2016
-   const_iterator cbegin() const;
+   [[nodiscard]] const_iterator cbegin() const;
 
    /// Returns the end iterator.
    /// @return  The end iterator.
    /// @since  0.2, 09.04.2016
-   const_iterator cend() const;
+   [[nodiscard]] const_iterator cend() const;
 
 private:
    friend class detail::RangeStringIterator< const RangeString, T>;
@@ -124,11 +123,7 @@ template< typename T>
 } // RangeString< T>::cend
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_RANGE_STRING_HPP
+} // namespace celma::common
 
 
 // =====  END OF range_string.hpp  =====

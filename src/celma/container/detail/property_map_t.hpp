@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of type celma::container::detail::property_map_t.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_MAP_T_HPP
-#define CELMA_CONTAINER_DETAIL_PROPERTY_MAP_T_HPP
+#pragma once
 
 
 #include <map>
@@ -33,9 +32,6 @@ using property_map_t = std::map< std::string, PropertyEntry*>;
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_MAP_T_HPP
 
 
 // =====  END OF property_map_t.hpp  =====

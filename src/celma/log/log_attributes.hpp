@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::log::LogAttributes.
 
 
-#ifndef CELMA_LOG_LOG_ATTRIBUTES_HPP
-#define CELMA_LOG_LOG_ATTRIBUTES_HPP
+#pragma once
 
 
 #include <string>
 #include "celma/log/detail/log_attributes_container.hpp"
 
 
-namespace celma { namespace log {
+namespace celma::log {
 
 
 /// Allows to store attributes and their values and to build a hierarchy of log
@@ -81,7 +80,7 @@ public:
    /// @return
    ///    The value of the requested attribute, an empty string when not found.
    /// @since  1.15.0, 16.10.2018
-   std::string getAttribute( const std::string& attr_name) const;
+   [[nodiscard]] std::string getAttribute( const std::string& attr_name) const;
 
 private:
    /// Pointer to the optional parent/master log attributes object.
@@ -90,11 +89,7 @@ private:
 }; // LogAttributes
 
 
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_LOG_ATTRIBUTES_HPP
+} // namespace celma::log
 
 
 // =====  END OF log_attributes.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of function celma::format::grouped_double2str().
 
 
-#ifndef CELMA_FORMAT_GROUPED_DOUBLE2STRING_HPP
-#define CELMA_FORMAT_GROUPED_DOUBLE2STRING_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// Converts a floating point number into string format, with grouping of the
@@ -38,15 +37,11 @@ namespace celma { namespace format {
 ///    The string with the formatted double.
 /// @since
 ///    1.13.0, 04.10.2018
-std::string grouped_double2string( double value, int precision,
+[[nodiscard]] std::string grouped_double2string( double value, int precision,
    char group_char = '\'');
 
 
-} // namespace format
-} // namespace celma
-
-
-#endif   // CELMA_FORMAT_GROUPED_DOUBLE2STRING_HPP
+} // namespace celma::format
 
 
 // =====  END OF grouped_double2string.hpp  =====

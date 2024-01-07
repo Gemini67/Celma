@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,8 +16,7 @@
 /// celma::common::detail::StatLineHandler.
 
 
-#ifndef CELMA_COMMON_DETAIL_LINE_HANDLER_POLICY_HPP
-#define CELMA_COMMON_DETAIL_LINE_HANDLER_POLICY_HPP
+#pragma once
 
 
 #include <cassert>
@@ -25,7 +24,7 @@
 #include "celma/common/detail/line_handler_call_points.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Default line handler policy: Does not do anything.
@@ -93,7 +92,7 @@ public:
    /// Returns the pointer to the internal statistic object.
    /// @return  The pointer to the internally used statistic object. May be NULL.
    /// @since  1.3.0, 15.02.2017
-   FileLineStat* stat() const
+   [[nodiscard]] FileLineStat* stat() const
    {
       return mpFileLineStat;
    } // StatLineHandler::stat
@@ -131,12 +130,7 @@ private:
 }; // StatLineHandler
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_LINE_HANDLER_POLICY_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF line_handler_policy.hpp  =====

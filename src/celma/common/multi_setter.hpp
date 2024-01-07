@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,15 +16,14 @@
 /// celma::common::MultiSetter3<>.
 
 
-#ifndef CELMA_COMMON_MULTI_SETTER_HPP
-#define CELMA_COMMON_MULTI_SETTER_HPP
+#pragma once
 
 
 #include <string>
 #include <boost/lexical_cast.hpp>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 namespace detail {
@@ -46,19 +45,17 @@ public:
       mVarName( vname),
       mValue( value)
    {
-   } // end DestVarHolder< T>::DestVarHolder
+   } // DestVarHolder< T>::DestVarHolder
 
-#if __cplusplus >= 201103L
    DestVarHolder( const DestVarHolder< T>&) = default;
    ~DestVarHolder() = default;
-#endif
 
    /// Assigns the value defined in the constructor to the variable.
    /// @since  0.2, 10.04.2016
    void assign()
    {
       mDestVar = boost::lexical_cast< T>( mValue);
-   } // end DestVarHolder< T>::assign
+   } // DestVarHolder< T>::assign
 
 private:
    /// Reference of the destination variable to store the value in.
@@ -98,7 +95,7 @@ public:
       mVarName1( vname1),
       mDestVar2( dest2, vname2, value2)
    {
-   } // end MultiSetter2< T1, T2>::MultiSetter2
+   } // MultiSetter2< T1, T2>::MultiSetter2
 
    MultiSetter2( const MultiSetter2< T1, T2>&) = default;
    ~MultiSetter2() = default;
@@ -116,7 +113,7 @@ public:
    {
       mDestVar1 = boost::lexical_cast< T1>( value1);
       mDestVar2.assign();
-   } // end MultiSetter2< T1, T2>::assign
+   } // MultiSetter2< T1, T2>::assign
 
 private:
    /// Reference of the destination variable to store the value in.
@@ -156,7 +153,7 @@ public:
       MultiSetter2< T1, T2>( dest1, vname1, dest2, vname2, value2),
       mDestVar3( dest3, vname3, value3)
    {
-   } // end MultiSetter3< T1, T2, T3>::MultiSetter3
+   } // MultiSetter3< T1, T2, T3>::MultiSetter3
 
    MultiSetter3( const MultiSetter3< T1, T2, T3>&) = default;
    ~MultiSetter3() = default;
@@ -174,7 +171,7 @@ public:
    {
       MultiSetter2< T1, T2>::assign( value1, false);
       mDestVar3.assign();
-   } // end MultiSetter3< T1, T2, T3>::assign
+   } // MultiSetter3< T1, T2, T3>::assign
 
 private:
    /// Reference of the third destination variable to store the value in.
@@ -183,16 +180,12 @@ private:
 }; // MultiSetter3< T1, T2, T3>
 
 
-} // namespace common
-} // namespace selma
+} // namespace celma::common
 
 
 #define DEST_MULTI_SETTER2( dv1, dv2, val2)  dv1, #dv1, dv2, #dv2, val2
 #define DEST_MULTI_SETTER3( dv1, dv2, val2, dv3, val3)  \
    dv1, #dv1, dv2, #dv2, val2, dv3, #dv3, val3
-
-
-#endif   // CELMA_COMMON_MULTI_SETTER_HPP
 
 
 // =====  END OF multi_setter.hpp  =====

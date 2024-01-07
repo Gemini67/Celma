@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::files::PolicyBase.
 
 
-#ifndef CELMA_LOG_FILES_POLICY_BASE_HPP
-#define CELMA_LOG_FILES_POLICY_BASE_HPP
+#pragma once
 
 
 #ifdef CELMA_LOG_POLICY_BASE_STUB
@@ -31,7 +30,7 @@
 #include "celma/log/filename/definition.hpp"
 
 
-namespace celma { namespace log { namespace files {
+namespace celma::log::files {
 
 
 /// Base class for log file handle policies. Contains the part common to all
@@ -106,7 +105,7 @@ public:
    ///
    /// @return  The path and file name of the currently open log file.
    /// @since  1.0.0, 22.12.2017
-   const std::string& logFileName() const;
+   [[nodiscard]] const std::string& logFileName() const;
 
 protected:
    /// Check if the currently opened log file is valid for writing into.
@@ -187,13 +186,10 @@ inline const std::string& PolicyBase::logFileName() const
 } // PolicyBase::logFileName
 
 
-} // namespace files
-} // namespace log
-} // namespace celma
+} // namespace celma::log::files
 
 
 #endif   // CELMA_LOG_POLICY_BASE_STUB
-#endif   // CELMA_LOG_FILES_POLICY_BASE_HPP
 
 
 // =====  END OF policy_base.hpp  =====

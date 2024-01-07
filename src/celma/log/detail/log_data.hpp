@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::LogData.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_DATA_HPP
-#define CELMA_LOG_DETAIL_LOG_DATA_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -24,7 +23,7 @@
 #include "log_defs.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 class Log;
@@ -45,7 +44,7 @@ public:
    /// @param[in]  log_obj
    ///    The Log object.
    /// @since  0.3, 19.06.2016
-   LogData( id_t log_id, const std::string& name, Log* log_obj):
+   LogData( const id_t log_id, const std::string& name, Log* log_obj):
       mLogId( log_id),
       mName( name),
       mpLog( log_obj)
@@ -72,12 +71,7 @@ public:
 }; // LogData
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_DATA_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF log_data.hpp  =====

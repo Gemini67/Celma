@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,8 +19,7 @@
 /// include this file.
 
 
-#ifndef CELMA_TEST_MULTILINE_STRING_COMPARE_HPP
-#define CELMA_TEST_MULTILINE_STRING_COMPARE_HPP
+#pragma once
 
 
 #include <sstream>
@@ -28,7 +27,7 @@
 #include "celma/common/multiline_string_compare.hpp"
 
 
-namespace celma { namespace test {
+namespace celma::test {
 
 
 /// Helper function for test programs: Compare two strings and report, where the
@@ -42,7 +41,7 @@ namespace celma { namespace test {
 ///    \c true if both strings are equal.
 /// @since
 ///    1.8.0, 25.07.2018
-inline bool multilineStringCompare( const std::string& result,
+[[nodiscard]] inline bool multilineStringCompare( const std::string& result,
    const std::string& expect)
 {
 
@@ -77,18 +76,14 @@ inline bool multilineStringCompare( const std::string& result,
 ///    \c true if both strings are equal.
 /// @since
 ///    1.27.0, 27.05.2019
-inline bool multilineStringCompare( const std::ostringstream& result,
+[[nodiscard]] inline bool multilineStringCompare( const std::ostringstream& result,
    const std::string& expect)
 {
    return multilineStringCompare( result.str(), expect);
 } // multilineStringCompare
 
 
-} // namespace test
-} // namespace celma
-
-
-#endif   // CELMA_TEST_MULTILINE_STRING_COMPARE_HPP
+} // namespace celma::test
 
 
 // =====  END OF multiline_string_compare.hpp  =====

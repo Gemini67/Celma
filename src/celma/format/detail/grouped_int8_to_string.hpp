@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,9 +23,7 @@
 /// For the same functions but without grouping, see int2str() etc.
 
 
-
-#ifndef CELMA_FORMAT_DETAIL_GROUPED_INT8_TO_STRING_HPP
-#define CELMA_FORMAT_DETAIL_GROUPED_INT8_TO_STRING_HPP
+#pragma once
 
 
 #include <cstdint>
@@ -33,7 +31,7 @@
 #include <string>
 
 
-namespace celma { namespace format { namespace detail {
+namespace celma::format::detail {
 
 
 /// Fast method to convert an integer to string format with grouping:
@@ -49,7 +47,8 @@ namespace celma { namespace format { namespace detail {
 /// @param[in]  group_char  Unused here.
 /// @return  The value as string.
 /// @since  0.9, 04.12.2016
-std::string groupedUint8toString( uint8_t value, char group_char = '\'');
+[[nodiscard]] std::string groupedUint8toString( uint8_t value,
+   char group_char = '\'');
 
 
 /// Fast method to convert a signed, negative integer to string format with
@@ -66,7 +65,8 @@ std::string groupedUint8toString( uint8_t value, char group_char = '\'');
 /// @param[in]  group_char  Unused here.
 /// @return  The value as string.
 /// @since  0.9, 04.12.2016
-std::string groupedInt8negToString( int8_t value, char group_char = '\'');
+[[nodiscard]] std::string groupedInt8negToString( int8_t value,
+   char group_char = '\'');
 
 
 /// Converts an integer value, signed, positive or negative, into string format
@@ -75,7 +75,8 @@ std::string groupedInt8negToString( int8_t value, char group_char = '\'');
 /// @param[in]  group_char  Unused here.
 /// @return  The string with the value.
 /// @since  0.9, 04.12.2016
-inline std::string groupedInt8toString( int8_t value, char group_char = '\'')
+[[nodiscard]] inline std::string groupedInt8toString( const int8_t value,
+   const char group_char = '\'')
 {
    if (value < 0)
       return groupedInt8negToString( value, group_char);
@@ -122,7 +123,8 @@ int groupedInt8negToString( char* buffer, int8_t value, char group_char = '\'');
 /// @param[in]   group_char  Unused here.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 04.12.2016
-inline int groupedInt8toString( char* buffer, int8_t value, char group_char = '\'')
+inline int groupedInt8toString( char* buffer, const int8_t value,
+   const char group_char = '\'')
 {
    if (value < 0)
       return groupedInt8negToString( buffer, value, group_char);
@@ -137,12 +139,8 @@ inline int groupedInt8toString( char* buffer, int8_t value, char group_char = '\
 } // groupedInt8toString
 
 
-} // namespace detail
-} // namespace format
-} // namespace celma
+} // namespace celma::format::detail
 
 
-#endif   // CELMA_FORMAT_DETAIL_GROUPED_INT8_TO_STRING_HPP
+// =====  END OF grouped_int8_to_string.hpp  =====
 
-
-// ====================  END OF grouped_int8_to_string.hpp  ====================

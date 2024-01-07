@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,8 +14,7 @@
 /// Internal macro definitions for generating indirect field access.
 
 
-#ifndef CELMA_INDIRECT_ACCESS_DETAIL_MACROS_HPP
-#define CELMA_INDIRECT_ACCESS_DETAIL_MACROS_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -101,9 +100,6 @@
    private: \
       n&  mDestination; \
    }
-
-
-#endif   // CELMA_INDIRECT_ACCESS_DETAIL_MACROS_HPP
 
 
 // =====  END OF macros.hpp  =====

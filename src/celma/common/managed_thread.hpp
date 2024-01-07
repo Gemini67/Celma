@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::common::ManagedThread.
 
 
-#ifndef CELMA_COMMON_MANAGED_THREAD_HPP
-#define CELMA_COMMON_MANAGED_THREAD_HPP
+#pragma once
 
 
 #include <atomic>
@@ -24,7 +23,7 @@
 #include <utility>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Small helper class that provides the information if the thread is still
@@ -59,7 +58,7 @@ public:
    /// Returns if the thread function is still active.
    /// @return  \c true if the thread function is still active.
    /// @since  012, 19.01.2017
-   bool isActive() const noexcept;
+   [[nodiscard]] bool isActive() const noexcept;
 
    // copy-assignment is not allowed
    ManagedThread& operator =( const ManagedThread&) = delete;
@@ -107,11 +106,7 @@ inline bool ManagedThread::isActive() const noexcept
 } // ManagedThread::isActive
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_MANAGED_THREAD_HPP
+} // namespace celma::common
 
 
 // =====  END OF managed_thread.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -21,9 +21,7 @@
 /// For the same functions but without grouping, see int2str() etc.
 
 
-
-#ifndef CELMA_FORMAT_DETAIL_GROUPED_INT16_TO_STRING_HPP
-#define CELMA_FORMAT_DETAIL_GROUPED_INT16_TO_STRING_HPP
+#pragma once
 
 
 #include <cstdint>
@@ -31,7 +29,7 @@
 #include <string>
 
 
-namespace celma { namespace format { namespace detail {
+namespace celma::format::detail {
 
 
 /// Fast method to convert an integer to string format with grouping:
@@ -47,7 +45,8 @@ namespace celma { namespace format { namespace detail {
 /// @param[in]  group_char  The character to use to separate a group of digits.
 /// @return  The value as string.
 /// @since  0.9, 04.12.2016
-std::string groupedUint16toString( uint16_t value, char group_char = '\'');
+[[nodiscard]] std::string groupedUint16toString( uint16_t value,
+   char group_char = '\'');
 
 
 /// Fast method to convert a signed, negative integer to string format with
@@ -64,7 +63,8 @@ std::string groupedUint16toString( uint16_t value, char group_char = '\'');
 /// @param[in]  group_char  The character to use to separate a group of digits.
 /// @return  The value as string.
 /// @since  0.9, 04.12.2016
-std::string groupedInt16negToString( int16_t value, char group_char = '\'');
+[[nodiscard]] std::string groupedInt16negToString( int16_t value,
+   char group_char = '\'');
 
 
 /// Converts an integer value, signed, positive or negative, into string format
@@ -73,7 +73,8 @@ std::string groupedInt16negToString( int16_t value, char group_char = '\'');
 /// @param[in]  group_char  The character to use to separate a group of digits.
 /// @return  The string with the value.
 /// @since  0.9, 04.12.2016
-inline std::string groupedInt16toString( int16_t value, char group_char = '\'')
+[[nodiscard]] inline std::string groupedInt16toString( const int16_t value,
+   const char group_char = '\'')
 {
    if (value < 0)
       return groupedInt16negToString( value, group_char);
@@ -120,7 +121,8 @@ int groupedInt16negToString( char* buffer, int16_t value, char group_char = '\''
 /// @param[in]   group_char  The character to use to separate a group of digits.
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 04.12.2016
-inline int groupedInt16toString( char* buffer, int16_t value, char group_char = '\'')
+inline int groupedInt16toString( char* buffer, const int16_t value,
+   const char group_char = '\'')
 {
    if (value < 0)
       return groupedInt16negToString( buffer, value, group_char);
@@ -135,13 +137,8 @@ inline int groupedInt16toString( char* buffer, int16_t value, char group_char = 
 } // groupedInt16toString
 
 
-} // namespace detail
-} // namespace format
-} // namespace celma
+} // namespace celma::format::detail
 
 
-#endif   // CELMA_FORMAT_DETAIL_GROUPED_INT16_TO_STRING_HPP
-
-
-// ===================  END OF grouped_int16_to_string.hpp  ===================
+// =====  END OF grouped_int16_to_string.hpp  =====
 

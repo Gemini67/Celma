@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -69,7 +69,7 @@ namespace celma::format::detail {
    if (value == 0)
       return std::string( "0");
    return uint8toString( value);
-} // end int8toString
+} // int8toString
 
 
 /// Fast unsigned integer to string conversion into a caller-supplied
@@ -118,7 +118,7 @@ inline int int8toString( char* buffer, const int8_t value)
    } // end if
 
    return uint8toString( buffer, value);
-} // end int8toString
+} // int8toString
 
 
 } // namespace celma::format::detail

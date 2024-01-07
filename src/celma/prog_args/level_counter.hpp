@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::prog_args::LevelCounter.
 
 
-#ifndef CELMA_PROG_ARGS_LEVEL_COUNTER_HPP
-#define CELMA_PROG_ARGS_LEVEL_COUNTER_HPP
+#pragma once
 
 
 #include "celma/common/pre_postfix.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 /// Helper class for handling a "level counter", i.e. a command line argument
@@ -49,7 +48,7 @@ public:
    ///
    /// @return  The current value.
    /// @since  1.10.0, 11.08.2018
-   int value() const
+   [[nodiscard]] int value() const
    {
       return mLevel;
    } // LevelCounter::value
@@ -91,7 +90,7 @@ public:
    /// @param[in]  other  The other object to compare against.
    /// @return  \c true if this object/level is less than the other.
    /// @since  1.10.0, 11.08.2018
-   bool operator <( int other) const
+   [[nodiscard]] bool operator <( int other) const
    {
       return mLevel < other;
    } // LevelCounter::operator <
@@ -103,11 +102,7 @@ private:
 }; // LevelCounter
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_LEVEL_COUNTER_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF level_counter.hpp  =====

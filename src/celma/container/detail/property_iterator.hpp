@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::container::detail::PropertyIterator.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_ITERATOR_HPP
-#define CELMA_CONTAINER_DETAIL_PROPERTY_ITERATOR_HPP
+#pragma once
 
 
 #include <cassert>
@@ -111,14 +110,14 @@ public:
    ///    The path of the current entry, may be an empty string for top-level
    ///    properties.
    /// @since  1.22.0, 12.03.2019
-   const std::string& path() const;
+   [[nodiscard]] const std::string& path() const;
 
    /// Returns the name of the current entry (without the path to the entry).
    ///
    /// @return
    ///    The name of the current entry.
    /// @since  1.22.0, 12.03.2019
-   const std::string& name() const;
+   [[nodiscard]] const std::string& name() const;
 
    /// Returns the complete path and name of the current entry.
    ///
@@ -131,7 +130,7 @@ public:
    /// @return
    ///    The value of the current entry.
    /// @since  1.22.0, 12.03.2019
-   template< typename T> const T& value() const noexcept( false);
+   template< typename T> [[nodiscard]] const T& value() const noexcept( false);
 
 private:
    /// Helper class to manage the entries needed to store the current position
@@ -148,8 +147,7 @@ private:
       /// 
       /// @param[in]  properties  The property map to start iterating over.
       /// @since  1.22.0, 12.03.2019
-      CurrentEntry( property_map_t& properties):
-         mPathPrefix(),
+      explicit CurrentEntry( property_map_t& properties):
          mpProperties( &properties),
          mEntryIter( properties.begin())
       {
@@ -182,7 +180,7 @@ private:
       /// @param[in]  path_sep
       ///    Separator character to use.
       /// @since  1.22.0, 13.03.2019
-      void append( const std::string& path, char path_sep)
+      void append( const std::string& path, const char path_sep)
       {
          if (!mPathPrefix.empty())
          {
@@ -196,7 +194,7 @@ private:
       ///
       /// @return  \c true if the internal iterator equals end().
       /// @since  1.22.0, 15.03.2019
-      bool atEnd() const
+      [[nodiscard]] bool atEnd() const
       {
          return (mpProperties == nullptr) || (mEntryIter == mpProperties->end());
       } // PropertyIterator::CurrentEntry::atEnd
@@ -208,7 +206,7 @@ private:
       ///    The type of the property entry to which the stored iterator
       ///    currently points.
       /// @since  1.22.0, 15.03.2019
-      PropertyEntry::Types entryType() const
+      [[nodiscard]] PropertyEntry::Types entryType() const
       {
          return mEntryIter->second->entryType();
       } // PropertyIterator::CurrentEntry::entryType
@@ -217,7 +215,7 @@ private:
       ///
       /// @return  Pointer to the linked entry.
       /// @since  1.22.0, 25.03.2019
-      PropertyEntry* linkDest() const
+      [[nodiscard]] PropertyEntry* linkDest() const
       {
          assert( entryType() == PropertyEntry::Types::link);
          auto  link_entry = static_cast< PropertyLink*>( mEntryIter->second);
@@ -349,9 +347,6 @@ template< typename T> inline const T& PropertyIterator::value() const
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_ITERATOR_HPP
 
 
 // =====  END OF property_iterator.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of template celma::common::detail::RangeGenerator.
 
 
-#ifndef CELMA_COMMON_DETAIL_RANGE_GENERATOR_HPP
-#define CELMA_COMMON_DETAIL_RANGE_GENERATOR_HPP
+#pragma once
 
 
 #include <set>
@@ -24,7 +23,7 @@
 #include "celma/common/pre_postfix.hpp"
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Generates all numbers in a range.<br>
@@ -43,7 +42,7 @@ public:
    /// Constructor.
    /// @param[in]  single_value  Single value to handle.
    /// @since  0.2, 07.04.2016
-   explicit RangeGenerator( T single_value):
+   explicit RangeGenerator( const T single_value):
       mStartValue( single_value),
       mEndValue(),
       mIncrement(),
@@ -58,7 +57,7 @@ public:
    /// @param[in]  end_value    The last value in the range.
    /// @param[in]  increment    Increment to use.
    /// @since  0.2, 07.04.2016
-   RangeGenerator( T start_value, T end_value, T increment = 1):
+   RangeGenerator( const T start_value, const T end_value, const T increment = 1):
       mStartValue( start_value),
       mEndValue( end_value),
       mIncrement( increment),
@@ -78,7 +77,7 @@ public:
    /// @throw  Exception when called for a single value or when the value is not
    ///         with the range.
    /// @since  0.2, 07.04.2016
-   void excludeValue( T value)
+   void excludeValue( const T value)
    {
       if (mSingleValue)
          throw std::logic_error( "exclude values cannot be set on single-value ranges");
@@ -105,7 +104,7 @@ public:
    /// @return  The end-of-iteration value, used to check if the end of the
    ///          range is reached.
    /// @since  0.2, 07.04.2016
-   T end() const
+   [[nodiscard]] T end() const
    {
       return iterEndValue;
    } // RangeGenerator< T, iterEndValue>::end
@@ -176,12 +175,7 @@ private:
 }; // RangeGenerator< T, iterEndValue>
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_RANGE_GENERATOR_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF range_generator.hpp  =====

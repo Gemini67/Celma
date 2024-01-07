@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::LogAttributesContainer.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_ATTRIBUTES_CONTAINER_HPP
-#define CELMA_LOG_DETAIL_LOG_ATTRIBUTES_CONTAINER_HPP
+#pragma once
 
 
 #include <string>
@@ -24,7 +23,7 @@
 #include <boost/lexical_cast.hpp>
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 /// Used to store attributes (named values) that may be inserted into log
@@ -86,7 +85,7 @@ public:
    /// @return
    //     The value of the requested attribute, an empty string when not found.
    /// @since  1.15.0, 16.03.2018
-   std::string getAttribute( const std::string& attr_name) const;
+   [[nodiscard]] std::string getAttribute( const std::string& attr_name) const;
 
    /// Removes the atribute that was added last.
    ///
@@ -122,12 +121,7 @@ template< typename T>
 } // LogAttributesContainer::addAttribute
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_ATTRIBUTES_CONTAINER_HPP
+} // namespace celma::log::detail
 
 
 // =====  END OF log_attributes_container.hpp  =====

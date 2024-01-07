@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of template function celma::common::parseFilterString()<>.
 
 
-#ifndef CELMA_COMMON_PARSE_FILTER_STRING_HPP
-#define CELMA_COMMON_PARSE_FILTER_STRING_HPP
+#pragma once
 
 
 #include <stdexcept>
@@ -27,7 +26,7 @@
 #include "celma/common/detail/parse_filter_combination.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Parses a value filter definition string.
@@ -54,7 +53,7 @@ namespace celma { namespace common {
 /// @throw
 ///    std::invalid_argument if the contents of the filter string are invalid.
 /// @since  1.31.0, 09.10.2019
-template< typename T>
+template< typename T> [[nodiscard]]
    ValueFilter< T> parseFilterString( const std::string& str) noexcept( false)
 {
 
@@ -74,11 +73,7 @@ template< typename T>
 } // parseFilterString
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_PARSE_FILTER_STRING_HPP
+} // namespace celma::common
 
 
 // =====  END OF parse_filter_string.hpp  =====

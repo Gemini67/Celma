@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,10 @@
 /// See documentation of class celma::common::NoLock.
 
 
-#ifndef CELMA_COMMON_NO_LOCK_HPP
-#define CELMA_COMMON_NO_LOCK_HPP
+#pragma once
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Provides a 'no lock' behaviour for places where a lock object is required
@@ -51,12 +50,8 @@ public:
 }; // NoLock
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_NO_LOCK_HPP
-
-
-// ===========================  END OF no_lock.hpp  ===========================
+// =====  END OF no_lock.hpp  =====
 

@@ -71,7 +71,7 @@ namespace celma::format::detail {
    if (value == 0L)
       return std::string( "0");
    return uint16toString( value);
-} // end int16toString
+} // int16toString
 
 
 /// Fast unsigned integer to string conversion into a caller-supplied
@@ -120,7 +120,7 @@ namespace celma::format::detail {
    } // end if
 
    return uint16toString( buffer, value);
-} // end int16toString
+} // int16toString
 
 
 } // namespace celma::format::detail

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of templates celma::common::RangeDest.
 
 
-#ifndef CELMA_COMMON_RANGE_DEST_HPP
-#define CELMA_COMMON_RANGE_DEST_HPP
+#pragma once
 
 
 #include <bitset>
@@ -58,7 +57,7 @@ public:
    /// Returns if the destination container is empty (no value set/stored).
    /// @return  \c true if the destination container is empty.
    /// @since  0.2, 07.04.2016
-   bool empty() const
+   [[nodiscard]] bool empty() const
    {
       return mDestination.empty();
    } // RangeDest< T, C>::empty
@@ -68,7 +67,7 @@ public:
    ///
    /// @return  String with the contents of the destinaion variable.
    /// @since  1.8.0, 09.07.2018
-   std::string toString() const
+   [[nodiscard]] std::string toString() const
    {
       return format::toString( mDestination.begin(), mDestination.end());
    } // RangeDest< T, C>::toString
@@ -109,7 +108,7 @@ public:
    /// Returns if destination bitset is empty (no value set).
    /// @return  \c true if no value is set in the destination bitset.
    /// @since  0.2, 07.04.2016
-   bool empty() const
+   [[nodiscard]] bool empty() const
    {
       return mDestination.none();
    } // RangeDest< T, C>::empty
@@ -119,7 +118,7 @@ public:
    ///
    /// @return  String with the contents of the destinaion variable.
    /// @since  1.8.0, 09.07.2018
-   std::string toString() const
+   [[nodiscard]] std::string toString() const
    {
       return format::toString( mDestination);
    } // RangeDest< T, C>::toString
@@ -159,7 +158,7 @@ public:
    /// Returns if the destination set is empty (no value stored).
    /// @return  \c true if the destination set is empty.
    /// @since  0.2, 07.04.2016
-   bool empty() const
+   [[nodiscard]] bool empty() const
    {
       return mDestination.empty();
    } // RangeDest< T, C>::empty
@@ -169,7 +168,7 @@ public:
    ///
    /// @return  String with the contents of the destinaion variable.
    /// @since  1.8.0, 09.07.2018
-   std::string toString() const
+   [[nodiscard]] std::string toString() const
    {
       return format::toString( mDestination.begin(), mDestination.end());
    } // RangeDest< T, C>::toString
@@ -199,7 +198,7 @@ namespace format {
 ///    String with the values stored in the container.
 /// @since
 ///    1.8.0, 09.07.2018
-template< typename T, typename C>
+template< typename T, typename C> [[nodiscard]]
    std::string toString( const common::RangeDest< T, C>& rd)
 {
    return rd.toString();
@@ -207,12 +206,7 @@ template< typename T, typename C>
 
 
 } // namespace format
-
-
 } // namespace celma
-
-
-#endif   // CELMA_COMMON_RANGE_DEST_HPP
 
 
 // =====  END OF range_dest.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of template celma::common::ObjectCounter.
 
 
-#ifndef CELMA_COMMON_OBJECT_COUNTER_HPP
-#define CELMA_COMMON_OBJECT_COUNTER_HPP
+#pragma once
 
 
 #include <cstdint>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Helper class to count the current number of objects of a class.<br>
@@ -41,7 +40,7 @@ public:
    ///
    /// @return  Current number of objects of the super class.
    /// @since  0.2, 10.04.2016
-   static C numObjects()
+   [[nodiscard]] static C numObjects()
    {
       return mNumObjects;
    } // ObjectCounter< T, C>::numObjects
@@ -91,11 +90,7 @@ private:
 template< typename T, typename C> C ObjectCounter< T, C>::mNumObjects = 0;
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_OBJECT_COUNTER_HPP
+} // namespace celma::common
 
 
 // =====  END OF object_counter.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -21,9 +21,7 @@
 /// For the same functions but without grouping, see int2str() etc.
 
 
-
-#ifndef CELMA_FORMAT_DETAIL_GROUPED_INT2STR_HPP
-#define CELMA_FORMAT_DETAIL_GROUPED_INT2STR_HPP
+#pragma once
 
 
 #include <cstdint>
@@ -31,7 +29,7 @@
 #include <string>
 
 
-namespace celma { namespace format { namespace detail {
+namespace celma::format::detail {
 
 
 /// Fast method to convert an integer to string format with grouping:
@@ -48,7 +46,8 @@ namespace celma { namespace format { namespace detail {
 /// @return  The value as string.
 /// @since  0.9, 23.11.2016  (renamed from grouped_uint2str)
 /// @since  0.6, 05.11.2016
-std::string groupedUint64toString( uint64_t value, char group_char = '\'');
+[[nodiscard]] std::string groupedUint64toString( uint64_t value,
+   char group_char = '\'');
 
 
 /// Fast method to convert a signed, negative integer to string format with
@@ -66,7 +65,8 @@ std::string groupedUint64toString( uint64_t value, char group_char = '\'');
 /// @return  The value as string.
 /// @since  0.9, 23.11.2016  (renamed from grouped_int2str_neg)
 /// @since  0.6, 05.11.2016
-std::string groupedInt64negToString( int64_t value, char group_char = '\'');
+[[nodiscard]] std::string groupedInt64negToString( int64_t value,
+   char group_char = '\'');
 
 
 /// Converts an integer value, signed, positive or negative, into string format
@@ -76,7 +76,8 @@ std::string groupedInt64negToString( int64_t value, char group_char = '\'');
 /// @return  The string with the value.
 /// @since  0.9, 23.11.2016  (renamed from grouped_int2str)
 /// @since  0.6, 05.11.2016
-inline std::string groupedInt64toString( int64_t value, char group_char = '\'')
+[[nodiscard]] inline std::string groupedInt64toString( const int64_t value,
+   const char group_char = '\'')
 {
    if (value < 0L)
       return groupedInt64negToString( value, group_char);
@@ -126,7 +127,8 @@ int groupedInt64negToString( char* buffer, int64_t value, char group_char = '\''
 /// @return  Number of characters written into the destination buffer.
 /// @since  0.9, 23.11.2016  (renamed from grouped_int2str)
 /// @since  0.6, 05.11.2016
-inline int groupedInt64toString( char* buffer, int64_t value, char group_char = '\'')
+inline int groupedInt64toString( char* buffer, const int64_t value,
+   const char group_char = '\'')
 {
    if (value < 0L)
       return groupedInt64negToString( buffer, value, group_char);
@@ -141,13 +143,8 @@ inline int groupedInt64toString( char* buffer, int64_t value, char group_char = 
 } // groupedInt64toString
 
 
-} // namespace detail
-} // namespace format
-} // namespace celma
+} // namespace celma::format::detail
 
 
-#endif   // CELMA_FORMAT_DETAIL_GROUPED_INT2STR_HPP
-
-
-// ===================  END OF grouped_int64_to_string.hpp  ===================
+// =====  END OF grouped_int64_to_string.hpp  =====
 

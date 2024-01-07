@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// specialisations of a simple type.
 
 
-#ifndef CELMA_PROVIDE_SIMPLE_TYPE_NAME_HPP
-#define CELMA_PROVIDE_SIMPLE_TYPE_NAME_HPP
+#pragma once
 
 
 /// Macro to create the template specialisation for a simple type.
@@ -34,9 +33,6 @@
       } \
       static constexpr auto const  mName = common::string_concat( # t); \
    }
-
-
-#endif   // CELMA_PROVIDE_SIMPLE_TYPE_NAME_HPP
 
 
 // =====  END OF provide_simple_type_name.hpp  =====

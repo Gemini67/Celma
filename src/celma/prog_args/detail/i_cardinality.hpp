@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::prog_args::detail::ICardinality.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_I_CARDINALITY_HPP
-#define CELMA_PROG_ARGS_DETAIL_I_CARDINALITY_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Base class for implementation of cardinality checks.<br>
@@ -68,12 +67,7 @@ protected:
 }; // ICardinality
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_I_CARDINALITY_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF i_cardinality.hpp  =====

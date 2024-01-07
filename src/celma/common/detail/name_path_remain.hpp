@@ -4,7 +4,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,14 +16,13 @@
 /// See documentation of class celma::common::detail::NamePathRemain.
 
 
-#ifndef CELMA_COMMON_DETAIL_NAME_PATH_REMAIN_HPP
-#define CELMA_COMMON_DETAIL_NAME_PATH_REMAIN_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Helper class used to split a property path into the first name and the
@@ -41,7 +40,8 @@ public:
    ///    The separator character to check for.
    /// @return  \c true if \a name contains the \a separator.
    /// @since  1.22.0, 19.10.2016
-   static bool nameHasSeparator( const std::string& name, char separator);
+   [[nodiscard]] static bool nameHasSeparator( const std::string& name,
+      char separator);
 
    /// Constructor.<br>
    /// Tries to split the \a name into the first name and the remaining path.
@@ -64,13 +64,13 @@ public:
    ///
    /// @return  The first name.
    /// @since  1.2, 19.10.2016
-   const std::string& firstName() const;
+   [[nodiscard]] const std::string& firstName() const;
 
    /// Returns the remaining path as extracted in the constructor.
    ///
    /// @return  The remaining path.
    /// @since  1.2, 19.10.2016
-   const std::string& remain() const;
+   [[nodiscard]] const std::string& remain() const;
 
 private:
    /// The first name found in the path.
@@ -104,12 +104,7 @@ inline const std::string& NamePathRemain::remain() const
 } // NamePathRemain::remain
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_NAME_PATH_REMAIN_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF name_path_remain.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,15 +16,14 @@
 /// celma::common::AverageMicroTimer.
 
 
-#ifndef CELMA_COMMON_MICRO_TIMER_HPP
-#define CELMA_COMMON_MICRO_TIMER_HPP
+#pragma once
 
 
-#include <stdint.h>
+#include <cstdint>
 #include <sys/time.h>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 // Class MicroTimer
@@ -41,7 +40,7 @@ public:
    /// @param[in]  to    The second, later timestamp.
    /// @return  The difference between these two timestamps in microseconds.
    /// @since  0.13.5, 28.02.2017
-   static uint64_t diff( const timeval& from, const timeval& to);
+   [[nodiscard]] static uint64_t diff( const timeval& from, const timeval& to);
 
    /// Calculates the time difference between the two timestamps (to - from).
    /// @param[out]  diffTime  The time difference between these two timestamps
@@ -70,7 +69,7 @@ public:
    /// @return  The time for which the timer was running in microseconds.
    /// @see diff().
    /// @since  0.13.5, 28.02.2017
-   uint64_t timed() const;
+   [[nodiscard]] uint64_t timed() const;
 
    /// Returns the time measured between the start() and stop() calls in
    /// microseconds.<br>
@@ -87,22 +86,22 @@ public:
    /// @return  \c true if the timer was started and is measuring time.
    /// @since  05.09.2006
    /// @since  0.13.5, 28.02.2017
-   bool started() const;
+   [[nodiscard]] bool started() const;
 
    /// Returns if the timer was stopped and can provide a measured time.
    /// @return  \c true if the timer was stopped and has measured a time.
    /// @since  0.13.5, 28.02.2017
-   bool stopped() const;
+   [[nodiscard]] bool stopped() const;
 
    /// Returns the timestamp when the timer was started.
    /// @return  The timestamp when the timer was started.
    /// @since  0.13.5, 28.02.2017
-   const struct timeval& startTime() const;
+   [[nodiscard]] const struct timeval& startTime() const;
 
    /// Returns the timestamp when the timer was stopped.
    /// @return  The timestamp when the timer was stopped.
    /// @since  0.13.5, 28.02.2017
-   const struct timeval& stopTime() const;
+   [[nodiscard]] const struct timeval& stopTime() const;
 
 private:
    /// The time when the timer was started.
@@ -227,19 +226,19 @@ public:
    /// Returns the time period measured by the last timer.
    /// @return  The time measured by the last timer call in microseconds.
    /// @since  0.13.5, 28.02.2017
-   uint64_t timed() const;
+   [[nodiscard]] uint64_t timed() const;
 
    /// Returns the number of timer events measured.
    /// @since  0.13.5, 28.02.2017
-   unsigned int numTimers() const;
+   [[nodiscard]] unsigned int numTimers() const;
 
    /// Returns the sum of all time periods measured.
    /// @since  0.13.5, 28.02.2017
-   uint64_t sumTime() const;
+   [[nodiscard]] uint64_t sumTime() const;
 
    /// Returns the average time per event (timer) in microseconds.
    /// @since  0.13.5, 28.02.2017
-   uint64_t averageTime() const;
+   [[nodiscard]] uint64_t averageTime() const;
 
 private:
    /// The timer object to measure the time.
@@ -317,7 +316,7 @@ inline uint64_t AverageMicroTimer::averageTime() const
 /// @param[in]  mt      The timer used to stop the time.
 /// @return  The average number of units per second.
 /// @since  0.13.5, 28.02.2017
-inline double avgPerSecond( int64_t number, const MicroTimer& mt)
+inline double avgPerSecond( const int64_t number, const MicroTimer& mt)
 {
 
    // number * 1'000'000 [ms] / time [ms] = avg/s
@@ -326,12 +325,8 @@ inline double avgPerSecond( int64_t number, const MicroTimer& mt)
 } // avgPerSecond
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_MICRO_TIMER_HPP
-
-
-// =========================  END OF micro_timer.hpp  =========================
+// =====  END OF micro_timer.hpp  =====
 

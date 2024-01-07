@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,8 +23,7 @@
 /// Using the functions is simply: Just call grouped_int2string().
 
 
-#ifndef CELMA_FORMAT_GROUPED_INT2STRING_HPP
-#define CELMA_FORMAT_GROUPED_INT2STRING_HPP
+#pragma once
 
 
 #include <iostream>
@@ -34,9 +33,6 @@
 #include "celma/format/detail/grouped_int16_to_string.hpp"
 #include "celma/format/detail/grouped_int32_to_string.hpp"
 #include "celma/format/detail/grouped_int64_to_string.hpp"
-
-
-namespace celma { namespace format {
 
 
 #define  TEMPLATE_ENABLE_IF( b, s, r) \
@@ -68,6 +64,9 @@ namespace celma { namespace format {
    BUFFER_FUNCTION_ENABLED( b, false, f)
 
 
+namespace celma::format {
+
+
 SIGNED_FUNCTIONS( 1, groupedInt8toString)
 UNSIGNED_FUNCTIONS( 1, groupedUint8toString)
 SIGNED_FUNCTIONS( 2, groupedInt16toString)
@@ -76,13 +75,6 @@ SIGNED_FUNCTIONS( 4, groupedInt32toString)
 UNSIGNED_FUNCTIONS( 4, groupedUint32toString)
 SIGNED_FUNCTIONS( 8, groupedInt64toString)
 UNSIGNED_FUNCTIONS( 8, groupedUint64toString)
-
-
-#undef  UNSIGNED_FUNCTIONS
-#undef  SIGNED_FUNCTIONS
-#undef  BUFFER_FUNCTION_ENABLED
-#undef  FUNCTION_ENABLED
-#undef  TEMPLATE_ENABLE_IF
 
 
 /// Helper class that makes sure that an integer value is printed as grouped
@@ -98,7 +90,7 @@ public:
    ///
    /// @param[in]  init_val  The initial value to store.
    /// @since  1.17.0, 22.11.2018
-   explicit GroupedInt( T init_val = 0):
+   explicit GroupedInt( const T init_val = 0):
       mValue( init_val)
    {
    } // GroupedInt< T, S>::GroupedInt
@@ -113,7 +105,7 @@ public:
    /// @param[in]  value  The new value sto store.
    /// @return  This object.
    /// @since  1.17.0, 22.11.2018
-   GroupedInt& operator =( T value)
+   GroupedInt& operator =( const T value)
    {
       mValue = value;
       return *this;
@@ -166,17 +158,20 @@ private:
 /// @param[in]  value  The value to print.
 /// @return  Grouped int object that holds the integer value.
 /// @since  1.17.0, 24.11.2018
-template< typename T> GroupedInt< T> groupedInt( T value)
+template< typename T> [[nodiscard]] GroupedInt< T> groupedInt( T value)
 {
   return GroupedInt< T>( value);
 } // groupedInt
 
 
-} // namespace format
-} // namespace celma
+} // namespace celma::format
 
 
-#endif   // CELMA_FORMAT_GROUPED_INT2STRING_HPP
+#undef  UNSIGNED_FUNCTIONS
+#undef  SIGNED_FUNCTIONS
+#undef  BUFFER_FUNCTION_ENABLED
+#undef  FUNCTION_ENABLED
+#undef  TEMPLATE_ENABLE_IF
 
 
 // =====  END OF grouped_int2string.hpp  =====

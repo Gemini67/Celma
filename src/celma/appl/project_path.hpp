@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::appl::ProjectPath.
 
 
-#ifndef CELMA_APPL_PROJECT_PATH_HPP
-#define CELMA_APPL_PROJECT_PATH_HPP
+#pragma once
 
 
 #include <iosfwd>
 #include <string>
 
 
-namespace celma { namespace appl {
+namespace celma::appl {
 
 
 /// Helper class to create a file path for a project specific file.<br>
@@ -60,7 +59,7 @@ public:
    /// Returns the absolute path and file name.
    /// @return  The complete, absolute path and file name.
    /// @since  1.0.0, 11.01.2017
-   const std::string& str() const;
+   [[nodiscard]] const std::string& str() const;
 
    /// Returns the absolute path and file name.
    /// @return  The complete, absolute path and file name.
@@ -70,7 +69,7 @@ public:
    /// Returns the absolute path and file name as a C string.
    /// @return  The complete, absolute path and file name as a C string.
    /// @since  1.0.0, 11.01.2017
-   const char* c_str() const;
+   [[nodiscard]] const char* c_str() const;
 
    /// Returns the absolute path and file name as a C string.
    /// @return  The complete, absolute path and file name as a C string.
@@ -127,12 +126,8 @@ inline ProjectPath::operator const char*() const
 } // ProjectPath::operator const char*
 
 
-} // namespace appl
-} // namespace celma
+} // namespace celma::appl
 
 
-#endif   // CELMA_APPL_PROJECT_PATH_HPP
-
-
-// =========================  END OF project_path.hpp  =========================
+// =====  END OF project_path.hpp  =====
 

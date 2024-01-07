@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,10 @@
 /// See documentation of template class celma::common::Manipulator.
 
 
-#ifndef CELMA_COMMON_MANIPULATOR_HPP
-#define CELMA_COMMON_MANIPULATOR_HPP
+#pragma once
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Generic stream manipulator class. Stores the given value until the
@@ -50,7 +49,7 @@ public:
    /// Returns the stored value.
    /// @return  The value passed to the constructor.
    /// @since  1.0.0, 27.09.2017
-   const T& value() const;
+   [[nodiscard]] const T& value() const;
 
 private:
    /// The value to store.
@@ -75,12 +74,8 @@ template< typename T, int TAG> const T& Manipulator< T, TAG>::value() const
 } // Manipulator< T, TAG>::value
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_MANIPULATOR_HPP
-
-
-// =========================  END OF manipulator.hpp  =========================
+// =====  END OF manipulator.hpp  =====
 

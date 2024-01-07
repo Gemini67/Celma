@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::container::Properties.
 
 
-#ifndef CELMA_CONTAINER_PROPERTIES_HPP
-#define CELMA_CONTAINER_PROPERTIES_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -130,13 +129,13 @@ public:
    ///
    /// @return  Iterator pointing to the first property value.
    /// @since  1.22.0, 12.03.2019
-   iterator begin();
+   [[nodiscard]] iterator begin();
 
    /// Returns an iterator pointing behind the last property entry.
    ///
    /// @return  Iterator pointing behind the last property entry.
    /// @since  1.22.0, 12.03.2019
-   iterator end();
+   [[nodiscard]] iterator end();
 
    /// Insertion operator for a Properties object.<br>
    /// Prints all property values, one per line as "name = value", displaying
@@ -205,9 +204,6 @@ inline typename Properties::iterator Properties::end()
 
 
 } // namespace celma::container
-
-
-#endif   // CELMA_CONTAINER_PROPERTIES_HPP
 
 
 // =====  END OF properties.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,10 +15,10 @@
 /// See documentation of class celma::container::detail::PropertyEntry.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_PROPERTY_ENTRY_HPP
-#define CELMA_CONTAINER_DETAIL_PROPERTY_ENTRY_HPP
+#pragma once
 
 
+#include <cstdint>
 #include <iosfwd>
 #include <string>
 
@@ -34,7 +34,7 @@ class PropertyEntry
 {
 public:
    /// List of types of the entries in the property map:
-   enum class Types
+   enum class Types : uint8_t
    {
       map,     //!< A map of values.
       value,   //!< A value.
@@ -62,13 +62,13 @@ public:
    ///
    /// @return  The name of the entry.
    /// @since  1.22.0, 19.10.2016
-   const std::string& getName() const;
+   [[nodiscard]] const std::string& getName() const;
 
    /// Returns the type of the entry.
    ///
    /// @return  The type of the entry.
    /// @since  1.22.0, 19.10.2016
-   Types entryType() const;
+   [[nodiscard]] Types entryType() const;
 
    /// Interface to dump the contents of an entry.
    ///
@@ -105,9 +105,6 @@ inline PropertyEntry::Types PropertyEntry::entryType() const
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_PROPERTY_ENTRY_HPP
 
 
 // =====  END OF property_entry.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of functions celma::format::rangeValueString().
 
 
-#ifndef CELMA_FORMAT_RANGE_VALUE_STRING_HPP
-#define CELMA_FORMAT_RANGE_VALUE_STRING_HPP
+#pragma once
 
 
 #include <sstream>
 #include <string>
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// Creates a string with the values from the sequence, where subsequent values
@@ -42,7 +41,7 @@ namespace celma { namespace format {
 /// @return
 ///    String with the values from the sequence with ranges where possible.
 /// @since  1.21.0, 27.03.2019
-template< typename I, typename T = int>
+template< typename I, typename T = int> [[nodiscard]]
    std::string rangeValueString( I iter, const I& end,
       const std::string& sep = ", ")
 {
@@ -109,7 +108,7 @@ template< typename I, typename T = int>
 /// @return
 ///    String with the values from the container with ranges where possible.
 /// @since  1.11.0, 27.03.2019
-template< typename C>
+template< typename C> [[nodiscard]]
    std::string rangeValueString( const C& cont, const std::string& sep = ", ")
 {
    return rangeValueString< typename C::const_iterator, typename C::value_type>(
@@ -117,11 +116,7 @@ template< typename C>
 } // rangeValueString
 
 
-} // namespace format
-} // namespace celma
-
-
-#endif   // CELMA_FORMAT_RANGE_VALUE_STRING_HPP
+} // namespace celma::format
 
 
 // =====  END OF range_value_string.hpp  =====

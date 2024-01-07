@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::common::ObjectEnumerator.
 
 
-#ifndef CELMA_COMMON_OBJECT_ENUMERATOR_HPP
-#define CELMA_COMMON_OBJECT_ENUMERATOR_HPP
+#pragma once
 
 
 #include <cstdint>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Helper class to enumerate all objects of a class.
@@ -44,7 +43,7 @@ public:
    ///
    /// @return  The number of this (super) object.
    /// @since  0.2, 10.04.2016
-   C objectNbr() const
+   [[nodiscard]] C objectNbr() const
    {
       return mObjectNbr;
    } // ObjectEnumerator< T, C>::objectNbr
@@ -90,11 +89,7 @@ private:
 template< typename T, typename C> C ObjectEnumerator< T, C>::mObjectCounter = 0;
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_OBJECT_ENUMERATOR_HPP
+} // namespace celma::common
 
 
 // =====  END OF object_enumerator.hpp  =====

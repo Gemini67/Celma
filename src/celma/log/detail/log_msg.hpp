@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::LogMsg.
 
 
-#ifndef CELMA_LOG_DETAIL_LOG_MSG_HPP
-#define CELMA_LOG_DETAIL_LOG_MSG_HPP
+#pragma once
 
 
 #include <pthread.h>
@@ -27,7 +26,7 @@
 #include "celma/log/log_attributes.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 /// Class to store all the data of a log message.
@@ -106,74 +105,74 @@ public:
    ///
    /// @return  The timestamp for the log message.
    /// @since  1.0.0, 11.12.2016
-   time_t getTimestamp() const;
+   [[nodiscard]] time_t getTimestamp() const;
 
    /// Returns the microseconds part of the timestamp.
    ///
    /// @return  Number of microseconds in the timestamp.
    /// @since  1.26.0, 07.03.2018
-   uint32_t getTimeMicroSecs() const;
+   [[nodiscard]] uint32_t getTimeMicroSecs() const;
 
    /// Returns the milliseconds part of the timestamp.
    ///
    /// @return  Number of milliseconds in the timestamp.
    /// @since  1.26.0, 07.03.2018
-   uint32_t getTimeMilliSecs() const;
+   [[nodiscard]] uint32_t getTimeMilliSecs() const;
 
    /// Returns the process id.
    ///
    /// @return  The id of the process by which the log message was created.
    /// @since  1.0.0, 19.06.2016
-   pid_t getProcessId() const;
+   [[nodiscard]] pid_t getProcessId() const;
 
    /// Returns the thread id.
    ///
    /// @return  The id of the thread by which the log message was created.
    /// @since  1.0.0, 04.10.2017
-   pthread_t getThreadId() const;
+   [[nodiscard]] pthread_t getThreadId() const;
 
    /// Returns the source file name.
    ///
    /// @return  The name of the source file where the log message was created.
    /// @since  1.0.0, 19.06.2016
-   const std::string& getFileName() const;
+   [[nodiscard]] const std::string& getFileName() const;
 
    /// The name of the function.
    ///
    /// @return  The name of the function where the log message was created.
    /// @since  1.0.0, 19.06.2016
-   const std::string& getFunctionName() const;
+   [[nodiscard]] const std::string& getFunctionName() const;
 
    /// The line number.
    ///
    /// @return  Returns the number of the line in the source file where the log
    /// message was created.
    /// @since  1.0.0, 19.06.2016
-   int getLineNbr() const;
+   [[nodiscard]] int getLineNbr() const;
 
    /// The log class.
    ///
    /// @return  The log class of the message.
    /// @since  1.0.0, 19.06.2016
-   LogClass getClass() const;
+   [[nodiscard]] LogClass getClass() const;
 
    /// The log level.
    ///
    /// @return  The log level.
    /// @since  1.0.0, 19.06.2016
-   LogLevel getLevel() const;
+   [[nodiscard]] LogLevel getLevel() const;
 
    /// Returns the error number.
    ///
    /// @return  The error number set for the log message.
    /// @since  1.0.0, 19.06.2016
-   int getErrorNbr() const;
+   [[nodiscard]] int getErrorNbr() const;
 
    /// Returns the log message text.
    ///
    /// @return  The text of the log message.
    /// @since  1.0.0, 19.06.2016
-   const std::string& getText() const;
+   [[nodiscard]] const std::string& getText() const;
 
    /// Adds (a pointer to) an attribute container.
    ///
@@ -188,7 +187,7 @@ public:
    ///    The value of the attribute or an empty string when not found.
    /// @since
    ///    1.15.0, 17.10.2018
-   std::string getAttributeValue( const std::string& attr_name) const;
+   [[nodiscard]] std::string getAttributeValue( const std::string& attr_name) const;
 
 private:
    /// Time stamp when the log message (i.e., this object) was created.
@@ -346,6 +345,9 @@ inline std::string LogMsg::getAttributeValue( const std::string& attr_name) cons
 } // LogMsg::getAttributeValue
 
 
+} // namespace celma::log::detail
+
+
 // macros
 // ======
 
@@ -356,14 +358,6 @@ inline std::string LogMsg::getAttributeValue( const std::string& attr_name) cons
 #define LOG_MSG_OBJECT_INIT  __FILE__, \
                              __PRETTY_FUNCTION__, \
                              __LINE__
-
-
-} // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_DETAIL_LOG_MSG_HPP
 
 
 // =====  END OF log_msg.hpp  =====

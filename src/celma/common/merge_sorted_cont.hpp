@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::common::MergeSortedCont.
 
 
-#ifndef CELMA_COMMON_MERGE_SORTED_CONT_HPP
-#define CELMA_COMMON_MERGE_SORTED_CONT_HPP
+#pragma once
 
 
 #include <iterator>
 #include <queue>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 namespace detail {
@@ -80,7 +79,7 @@ public:
    /// them in order in a new container.
    /// @return  The new container with all the merged values.
    /// @since  0.10, 14.12.2016
-   R merge();
+   [[nodiscard]] R merge();
 
    /// Don't want to allow assignments.
    MergeSortedCont& operator =( const MergeSortedCont&) = delete;
@@ -160,11 +159,7 @@ template< typename T, typename R, typename I>
 } // MergeSortedCont< T, R, I>::merge
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_MERGE_SORTED_CONT_HPP
+} // namespace celma::common
 
 
 // =====  END OF merge_sorted_cont.hpp  =====
