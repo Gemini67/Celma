@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE( no_properties)
    BOOST_REQUIRE_NO_THROW( dummy.pathAndName());
    BOOST_REQUIRE_EQUAL( dummy.pathAndName(), "");
 
-   BOOST_REQUIRE_THROW( std::ignoree = dummy.value< int>(), std::runtime_error);
+   BOOST_REQUIRE_THROW( std::ignore = dummy.value< int>(), std::runtime_error);
 
 } // no_properties
 
