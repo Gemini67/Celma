@@ -3,13 +3,14 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
-**    Performance measurement program for int2string() and similar conversions.
+**    Performance measurement program for "integer to tring" and similar
+**    conversions.
 **
 --*/
 
@@ -34,7 +35,6 @@
 namespace {
 
 
-
 /// Measure using the function celma::format::int2string().
 /// @since  0.13.5, 28.02.2017
 void measure_int2str()
@@ -51,7 +51,6 @@ void measure_int2str()
 } // measure_int2str
 
 
-
 /// Measure conversion using boost::lexical_cast<>.
 /// @since  0.13.5, 28.02.2017
 void measure_boost_lexical_cast()
@@ -66,7 +65,6 @@ void measure_boost_lexical_cast()
    } // end if
       
 } // measure_boost_lexical_cast
-
 
 
 /// Measure conversion using std::ostringstream.
@@ -89,7 +87,6 @@ void measure_ostringstream()
 } // measure_ostringstream
 
 
-
 /// Measure the function sprintf().
 /// @since  0.13.5, 28.02.2017
 void measure_sprintf()
@@ -110,7 +107,6 @@ void measure_sprintf()
 } // measure_sprintf
 
 
-
 /// Measure the function std::to_string().
 /// @since  0.13.5, 28.02.2017
 void measure_to_string()
@@ -128,8 +124,8 @@ void measure_to_string()
 } // measure_to_string
 
 
-
 } // namespace
+
 
 
 /// The main function.
@@ -138,21 +134,22 @@ int main()
 {
 
    ::srand( 102030405);
-   celma::test::measure( 1000000, "int2str", measure_int2str);
+   std::ignore = celma::test::measure( 1000000, "int2str", measure_int2str);
    
    ::srand( 102030405);
-   celma::test::measure( 1000000, "boost::lexical_cast", measure_boost_lexical_cast);
+   std::ignore = celma::test::measure( 1000000, "boost::lexical_cast", measure_boost_lexical_cast);
 
    ::srand( 102030405);
-   celma::test::measure( 1000000, "std::ostringstream", measure_ostringstream);
+   std::ignore = celma::test::measure( 1000000, "std::ostringstream", measure_ostringstream);
 
    ::srand( 102030405);
-   celma::test::measure( 1000000, "sprintf", measure_sprintf);
+   std::ignore = celma::test::measure( 1000000, "sprintf", measure_sprintf);
 
    ::srand( 102030405);
-   celma::test::measure( 1000000, "std::to_string", measure_to_string);
+   std::ignore = celma::test::measure( 1000000, "std::to_string", measure_to_string);
 
 } // main
+
 
 
 // =====  END OF test_int2str_perf.cpp  =====
