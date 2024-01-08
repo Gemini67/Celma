@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,8 +18,7 @@
 /// - celma::format::formatSize()
 
 
-#ifndef CELMA_FORMAT_SIZE_HANDLING_HPP
-#define CELMA_FORMAT_SIZE_HANDLING_HPP
+#pragma once
 
 
 #include <cstdio>
@@ -27,7 +26,7 @@
 #include <iostream>
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// Divides the given value by 1024 (1 kibibyte) until it is less than 1024, and
@@ -58,7 +57,7 @@ template< typename T> int div2unit( T& value)
 /// @param[in]  num_divs  Number of divisions that were required.
 /// @return  Pointer to the char string with the name of the unit.
 /// @since  1.24.0, 17.04.2019
-inline const char* numDivs2Name( int num_divs)
+[[nodiscard]] inline const char* numDivs2Name( const int num_divs)
 {
 
    switch (num_divs)
@@ -77,11 +76,11 @@ inline const char* numDivs2Name( int num_divs)
 
 /// Completely formats the given size as "nnnn.n <units>".
 ///
-/// @tparam  T  The type of the value to format.
-/// @param[in]  os
-///    The stream to write the formatted value to.
+/// @tparam  T  Type of the value to format.
+/// @param[out]  os
+///    Stream to write the formatted value to.
 /// @param[in]  value
-///    The value to format.
+///    Value to format.
 /// @since  1.24.0, 17.04.2019
 template< typename T> void formatSize( std::ostream& os, const T& value)
 {
@@ -96,19 +95,20 @@ template< typename T> void formatSize( std::ostream& os, const T& value)
 
 
 /// Completely formats the given value as defined by the given format string
-/// (using sprintf).<br>
+/// (using sprintf).
 /// The format string must contain the format definition for a floating point
 /// value and a string, in that order.
 ///
-/// @tparam  T  The type of the value to format.
-/// @param[in]  buff
+/// @tparam  T  Type of the value to format.
+/// @param[out]  buff
 ///    Pointer to the buffer to write into.
-/// @param[in]  format
-///    The format string to use.
-/// @param[in]  value
-///    The value to format.
+/// @param[in]   format
+///    Format string to use.
+/// @param[in]   value
+///    Value to format.
 /// @since  1.24.0, 17.04.2019
-template< typename T> void formatSize( char* buff, const char* format, T value)
+template< typename T> void formatSize( char* buff, const char* format,
+   const T value)
 {
 
    double     d_value = static_cast< double>( value);
@@ -128,7 +128,7 @@ template< typename T> void formatSize( char* buff, const char* format, T value)
 /// @param[in]  value
 ///    The value to format.
 /// @since  1.24.0, 17.04.2019
-template< typename T> void formatSize( char* buff, T value)
+template< typename T> void formatSize( char* buff, const T value)
 {
 
    formatSize( buff, "%6.1f %s", value);
@@ -136,11 +136,7 @@ template< typename T> void formatSize( char* buff, T value)
 } // formatSize
 
 
-} // namespace format
-} // namespace celma
-
-
-#endif   // CELMA_FORMAT_SIZE_HANDLING_HPP
+} // namespace celma::format
 
 
 // =====  END OF size_handling.hpp  =====

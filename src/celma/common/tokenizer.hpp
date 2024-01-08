@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::common::Tokenizer.
 
 
-#ifndef CELMA_COMMON_TOKENIZER_HPP
-#define CELMA_COMMON_TOKENIZER_HPP
+#pragma once
 
 
 #include <string>
@@ -63,7 +62,7 @@ private:
 // ===============
 
 
-inline const char* Tokenizer::convChar2String( char c)
+inline const char* Tokenizer::convChar2String( const char c)
 {
    static char  s[ 2] = { 0, 0 };
    s[ 0] = c;
@@ -71,13 +70,13 @@ inline const char* Tokenizer::convChar2String( char c)
 } // Tokenizer::convChar2String
 
 
-inline Tokenizer::Tokenizer( const std::string& s, char separator):
+inline Tokenizer::Tokenizer( const std::string& s, const char separator):
    TokenizerBase< boost::char_separator< char>>( s, boost::char_separator< char>( convChar2String( separator)))
 {
 } // Tokenizer::Tokenizer
 
 
-inline Tokenizer::Tokenizer( const std::string& s, char separator,
+inline Tokenizer::Tokenizer( const std::string& s, const char separator,
                              bool /* keepEmpty */):
    TokenizerBase< boost::char_separator< char>>( s, boost::char_separator< char>( convChar2String( separator), "", boost::keep_empty_tokens))
 {
@@ -85,9 +84,6 @@ inline Tokenizer::Tokenizer( const std::string& s, char separator,
 
 
 } // namespace celma::common
-
-
-#endif   // CELMA_COMMON_TOKENIZER_HPP
 
 
 // =====  END OF tokenizer.hpp  =====

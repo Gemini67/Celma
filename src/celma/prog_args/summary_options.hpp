@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,18 +15,18 @@
 /// See documentation of enum class celma::prog_args::SummaryOptions;
 
 
-#ifndef CELMA_PROG_ARGS_SUMMARY_OPTIONS_HPP
-#define CELMA_PROG_ARGS_SUMMARY_OPTIONS_HPP
+#pragma once
 
 
+#include <cstdint>
 #include "celma/common/enum_flags.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 /// List of additional contents that can be activated in the summary output:
-enum class SummaryOptions
+enum class SummaryOptions : uint8_t
 {
    with_type,   //!< Also prints the type of the destination variable.
    with_key     //!< Also prints the key of the argument that was used.
@@ -38,11 +38,7 @@ enum class SummaryOptions
 using sumoptset_t = common::EnumFlags< SummaryOptions>;
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_SUMMARY_OPTIONS_HPP
+} // namespace celma::prog_ags
 
 
 // =====  END OF summary_options.hpp  =====

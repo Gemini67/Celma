@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of template celma::common::TestObjectExisted.
 
 
-#ifndef CELMA_COMMON_TEST_OBJECT_EXISTED_HPP
-#define CELMA_COMMON_TEST_OBJECT_EXISTED_HPP
+#pragma once
 
 
 #include <cassert>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Checks if at least one instance of a specific class was created.
@@ -40,17 +39,13 @@ public:
    {
       assert( T::mNumObjectsCreated > 0);
       assert( T::mRestartProcess);
-   } // end TestObjectExisted::~TestObjectExisted
+   } // TestObjectExisted::~TestObjectExisted
 
 }; // TestObjectExisted
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_TEST_OBJECT_EXISTED_HPP
-
-
-// =========================  END OF test_object_existed.hpp  =========================
+// =====  END OF test_object_existed.hpp  =====
 

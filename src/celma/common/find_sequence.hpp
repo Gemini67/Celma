@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,14 +16,13 @@
 /// and find_sequence_start().
 
 
-#ifndef CELMA_COMMON_FIND_SEQUENCE_HPP
-#define CELMA_COMMON_FIND_SEQUENCE_HPP
+#pragma once
 
 
 #include <cstddef>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Finds the end of a sequence that starts at \a first. The sequence may
@@ -98,12 +97,8 @@ template< typename T, typename I>
 } // find_sequence_start
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_FIND_SEQUENCE_HPP
-
-
-// ========================  END OF find_sequence.hpp  ========================
+// =====  END OF find_sequence.hpp  =====
 

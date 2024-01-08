@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::format::TextBlock.
 
 
-#ifndef CELMA_FORMAT_TEXT_BLOCK_HPP
-#define CELMA_FORMAT_TEXT_BLOCK_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -24,7 +23,7 @@
 #include "celma/format/text_block_fwd.hpp"
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// Helper class to format a text (string) into a block.<br>
@@ -39,7 +38,7 @@ namespace celma { namespace format {
 ///   lines, the second, third etc. line is indented to form a list like this
 ///   one.
 /// - Forced line-break in list:
-///   To force a line break in list (like thise line here), use the token ' nn '
+///   To force a line break in a list (like this line here), use the token ' nn '
 ///   in the text.
 ///
 /// @since  0.2, 04.04.2016
@@ -56,6 +55,10 @@ public:
    /// @since  0.2, 04.04.2016
    TextBlock( int indent, int length, bool indentFirst);
 
+   /// Do not copy.
+   /// @since  0.2, 05.04.2016
+   TextBlock( const TextBlock&) = delete;
+
    /// Formats the text (string) as specified in the constructor.
    ///
    /// @param[out]  os   The stream to write to.
@@ -63,15 +66,11 @@ public:
    /// @since  0.2, 04.04.2016
    void format( std::ostream& os, const std::string& txt);
 
-private:
-   /// Do not copy.
-   /// @since  0.2, 05.04.2016
-   TextBlock( const TextBlock&) = delete;
-
    /// Do not assign.
    /// @since  0.2, 05.04.2016
    TextBlock& operator =( const TextBlock&) = delete;
 
+private:
    /// Formats a single line of output.<br>
    /// Writes words until the specified line length would be exceeded, then
    /// starts a new line with indention.<br>
@@ -95,11 +94,7 @@ private:
 }; // TextBlock
 
 
-} // namespace format
-} // namespace celma
-
-
-#endif   // CELMA_FORMAT_TEXT_BLOCK_HPP
+} // namespace celma::format
 
 
 // =====  END OF text_block.hpp  =====

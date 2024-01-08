@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::common::FirstPass.
 
 
-#ifndef CELMA_COMMON_FIRST_PASS_HPP
-#define CELMA_COMMON_FIRST_PASS_HPP
+#pragma once
 
 
 #include <iomanip>
 #include <iostream>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Very simple and small class which implements a 'first pass' detector.<br>
@@ -75,7 +74,7 @@ private:
 inline FirstPass::FirstPass():
    mFirstPass( true)
 {
-} // end FirstPass::FirstPass
+} // FirstPass::FirstPass
 
 
 inline FirstPass::operator bool()
@@ -83,7 +82,7 @@ inline FirstPass::operator bool()
    const bool  oldVal = mFirstPass;
    mFirstPass = false;
    return oldVal;
-} // end FirstPass::operator bool
+} // FirstPass::operator bool
 
 
 inline bool FirstPass::operator !()
@@ -91,27 +90,23 @@ inline bool FirstPass::operator !()
    const bool  oldVal = !mFirstPass;
    mFirstPass = false;
    return oldVal;
-} // end FirstPass::operator !
+} // FirstPass::operator !
 
 
 inline void FirstPass::reset()
 {
    mFirstPass = true;
-} // end FirstPass::reset
+} // FirstPass::reset
 
 
 inline std::ostream& operator <<( std::ostream& os, const FirstPass& fp)
 {
    return os << std::boolalpha << fp.mFirstPass;
-} // end FirstPass::operator <<
+} // FirstPass::operator <<
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_FIRST_PASS_HPP
-
-
-// =========================  END OF first_pass.hpp  =========================
+// =====  END OF first_pass.hpp  =====
 

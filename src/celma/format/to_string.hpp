@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2021 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,8 +16,7 @@
 /// to convert the contents of any STL container into a string/list.
 
 
-#ifndef CELMA_FORMAT_TO_STRING_HPP
-#define CELMA_FORMAT_TO_STRING_HPP
+#pragma once
 
 
 #include <bitset>
@@ -48,7 +47,7 @@ namespace celma::format {
 ///    The string with the data.
 /// @since
 ///    0.14.3, 20.06.2017
-template< typename T> std::string toString( const T& data)
+template< typename T> [[nodiscard]] std::string toString( const T& data)
 {
 
    std::ostringstream  oss;
@@ -65,7 +64,7 @@ template< typename T> std::string toString( const T& data)
 /// @param[in]  flag  The boolean value to write.
 /// @return  String with the value of the boolean flag.
 /// @since  1.8.0, 20.07.2018
-inline std::string toString( const bool flag)
+[[nodiscard]] inline std::string toString( const bool flag)
 {
 
    std::ostringstream  oss;
@@ -82,7 +81,7 @@ inline std::string toString( const bool flag)
 /// @param[in]  val  The double value to write.
 /// @return  String with the double value in fixed format.
 /// @since  1.8.0, 20.07.2018
-inline std::string toString( const double val)
+[[nodiscard]] inline std::string toString( const double val)
 {
 
    std::ostringstream  oss;
@@ -103,7 +102,7 @@ inline std::string toString( const double val)
 ///    String with the quoted input string.
 /// @since
 ///    0.14.3, 20.06.2017
-inline std::string toString( const std::string& data)
+[[nodiscard]] inline std::string toString( const std::string& data)
 {
 
    std::ostringstream  oss;
@@ -124,7 +123,8 @@ inline std::string toString( const std::string& data)
 ///    String with the quoted input string.
 /// @since
 ///    1.46.0, 08.02.2021
-template< size_t L> std::string toString( const common::FixedString< L>& data)
+template< size_t L> [[nodiscard]]
+   std::string toString( const common::FixedString< L>& data)
 {
 
    std::ostringstream  oss;
@@ -141,7 +141,7 @@ template< size_t L> std::string toString( const common::FixedString< L>& data)
 /// @param[in]  vb  The vector of boolean values to convert the contents of.
 /// @return  String with the contents of the vector as binary number.
 /// @since  1.37.0, 17.06.2020
-inline std::string toString( const std::vector< bool>& vb)
+[[nodiscard]] inline std::string toString( const std::vector< bool>& vb)
 {
    if (vb.size() == 0)
       return "0";
@@ -162,7 +162,7 @@ inline std::string toString( const std::vector< bool>& vb)
 /// @param[in]  dbs  The dynamic bitset to convert the contents of.
 /// @return  String with the contents of the dynamic bitset as binary number.
 /// @since  1.37.0, 10.06.2020
-inline std::string toString( const container::DynamicBitset& dbs)
+[[nodiscard]] inline std::string toString( const container::DynamicBitset& dbs)
 {
    return dbs.to_string();
 } // toString
@@ -184,7 +184,7 @@ inline std::string toString( const container::DynamicBitset& dbs)
 /// @since
 ///    0.14.3, 20.06.2017
 template< typename F, typename S>
-   std::string toString( const std::pair< F, S>& data_pair)
+   [[nodiscard]] std::string toString( const std::pair< F, S>& data_pair)
 {
 
    std::ostringstream  oss;
@@ -209,7 +209,7 @@ template< typename F, typename S>
 ///    The string with the values from the container.
 /// @since
 ///    0.14.3, 20.06.2017
-template< typename I> std::string toString( I from, const I& to)
+template< typename I> [[nodiscard]] std::string toString( I from, const I& to)
 {
 
    std::ostringstream  oss;
@@ -236,7 +236,8 @@ template< typename I> std::string toString( I from, const I& to)
 ///    The string with the values from the bitset.
 /// @since
 ///    1.8.0, 05.07.2018
-template< size_t N> std::string toString( const std::bitset< N>& bs)
+template< size_t N> [[nodiscard]]
+   std::string toString( const std::bitset< N>& bs)
 {
    return bs.to_string();
 } // toString
@@ -252,7 +253,8 @@ template< size_t N> std::string toString( const std::bitset< N>& bs)
 ///    The string with the list of the values.
 /// @since
 ///    1.8.0, 05.07.2018
-template< typename... T> std::string toString( const std::tuple< T...>& tpl)
+template< typename... T> [[nodiscard]]
+   std::string toString( const std::tuple< T...>& tpl)
 {
    const auto          tpl_length = common::tuple_length( tpl);
    std::ostringstream  oss;
@@ -281,7 +283,8 @@ template< typename... T> std::string toString( const std::tuple< T...>& tpl)
 ///    we can access the values.
 /// @return  The string with the values from the priority queue.
 /// @since  1.34.0, 25.12.2019
-template< typename T> std::string toString( std::priority_queue< T> pq)
+template< typename T> [[nodiscard]]
+   std::string toString( std::priority_queue< T> pq)
 {
    std::ostringstream  oss;
 
@@ -308,7 +311,7 @@ template< typename T> std::string toString( std::priority_queue< T> pq)
 ///    access the values.
 /// @return  The string with the values from the queue.
 /// @since  1.34.0, 29.12.2019
-template< typename T> std::string toString( std::queue< T> q)
+template< typename T> [[nodiscard]] std::string toString( std::queue< T> q)
 {
    std::ostringstream  oss;
 
@@ -335,7 +338,7 @@ template< typename T> std::string toString( std::queue< T> q)
 ///    access the values.
 /// @return  The string with the values from the stack.
 /// @since  1.34.0, 21.11.2019
-template< typename T> std::string toString( std::stack< T> stck)
+template< typename T> [[nodiscard]] std::string toString( std::stack< T> stck)
 {
    std::ostringstream  oss;
 
@@ -352,9 +355,6 @@ template< typename T> std::string toString( std::stack< T> stck)
 
 
 } // namespace celma::format
-
-
-#endif   // CELMA_FORMAT_TO_STRING_HPP
 
 
 // =====  END OF to_string.hpp  =====

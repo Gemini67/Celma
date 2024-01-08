@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,10 @@
 /// See documentation of class celma::prog_args::helpers::TripleLogic.
 
 
-#ifndef CELMA_PROG_ARGS_HELPERS_TRIPLE_LOGIC_HPP
-#define CELMA_PROG_ARGS_HELPERS_TRIPLE_LOGIC_HPP
+#pragma once
 
 
-namespace celma { namespace prog_args { namespace helpers {
+namespace celma::prog_args::helpers {
 
 
 /// Use for handling arguments that support triple value logic:
@@ -55,7 +54,8 @@ public:
    /// @since  1.27.0, 27.05.2019
    ///    (added ignored parameter inverted)
    /// @since  0.13.2, 17.02.2017
-   void assign( const std::string& new_value, bool /* inverted */)
+   void assign( const std::string& new_value,
+      [[maybe_unused]] const bool inverted)
    {
       if (new_value.empty())
          mDestVar = mNoValue;
@@ -72,12 +72,7 @@ private:
 }; // TripleLogic< T>
 
 
-} // namespace helpers
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_HELPERS_TRIPLE_LOGIC_HPP
+} // namespace celma::prog_args::helpers
 
 
 // =====  END OF triple_logic.hpp  =====

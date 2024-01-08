@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,11 +15,10 @@
 /// See documentation of class celma::test::TestProgArguments.
 
 
-#ifndef CELMA_TEST_TEST_PROG_ARGUMENTS_HPP
-#define CELMA_TEST_TEST_PROG_ARGUMENTS_HPP
+#pragma once
 
 
-namespace celma { namespace test {
+namespace celma::test {
 
 
 /// Helper class to get access to the test program arguments.
@@ -42,7 +41,7 @@ public:
    ///
    /// @return  Number of arguments passed to the test program.
    /// @since  1.22.0, 02.04.2019
-   int argC() const
+   [[nodiscard]] int argC() const
    {
       return mArgC;
    } // TestProgArguments::argC
@@ -51,7 +50,7 @@ public:
    ///
    /// @return  Pointer to the list of argument strings.
    /// @since  1.22.0, 02.04.2019
-   char** argV() const
+   [[nodiscard]] char** argV() const
    {
       return mpArgV;
    } // TestProgArguments::argV
@@ -65,11 +64,7 @@ private:
 }; // TestProgArguments
 
 
-} // namespace test
-} // namespace celma
-
-
-#endif   // CELMA_TEST_TEST_PROG_ARGUMENTS_HPP
+} // namespace celma::test
 
 
 // =====  END OF test_prog_arguments.hpp  =====

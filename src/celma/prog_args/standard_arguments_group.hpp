@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,26 +12,21 @@
 
 
 /// @file
-/// See documentation of class celma::prog_args::@@@.
+/// See documentation of constant celma::prog_args::StandardArgsGroup.
 
 
-#ifndef CELMA_PROG_ARGS_STANDARD_ARGUMENTS_GROUP_HPP
-#define CELMA_PROG_ARGS_STANDARD_ARGUMENTS_GROUP_HPP
+#pragma once
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 /// The name of the standard arguments group.
 const char* const  StandardArgsGroup = "Standard Arguments:";
 
 
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args
 
 
-#endif   // CELMA_PROG_ARGS_STANDARD_ARGUMENTS_GROUP_HPP
-
-
-// ===================  END OF standard_arguments_group.hpp  ===================
+// =====  END OF standard_arguments_group.hpp  =====
 

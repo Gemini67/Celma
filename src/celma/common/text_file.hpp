@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of template celma::common::TextFile.
 
 
-#ifndef CELMA_COMMON_TEXT_FILE_HPP
-#define CELMA_COMMON_TEXT_FILE_HPP
+#pragma once
 
 
 #include <functional>
@@ -29,7 +28,7 @@
 #include "celma/common/reset_at_exit.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 using detail::EmptyLineFilter;
@@ -91,22 +90,22 @@ public:
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
    /// @since  1.3.0, 13.04.2016
-   const_iterator begin() const noexcept( false);
+   [[nodiscard]] const_iterator begin() const noexcept( false);
 
    /// Returns the iterator pointing to the beginning of the file.
    /// @return  Iterator set on the beginning of the file.
    /// @since  1.3.0, 16.05.2017
-   const_iterator cbegin() const noexcept( false);
+   [[nodiscard]] const_iterator cbegin() const noexcept( false);
 
    /// Returns the iterator pointing to the end of the file.
    /// @return  Iterator set on the end of the file.
    /// @since  1.3.0, 13.04.2016
-   const_iterator end() const noexcept( false);
+   [[nodiscard]] const_iterator end() const noexcept( false);
 
    /// Returns the iterator pointing to the end of the file.
    /// @return  Iterator set on the end of the file.
    /// @since  1.3.0, 16.05.2017
-   const_iterator cend() const noexcept( false);
+   [[nodiscard]] const_iterator cend() const noexcept( false);
 
 private:
    /// Internal method that actually creates a new iterator object.<br>
@@ -228,11 +227,7 @@ template< typename F, typename H, typename S>
 } // TextFile< F, H, S>::cend
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_TEXT_FILE_HPP
+} // namespace celma::common
 
 
 // =====  END OF text_file.hpp  =====

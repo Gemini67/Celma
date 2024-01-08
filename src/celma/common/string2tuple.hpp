@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,11 +12,10 @@
 
 
 /// @file
-/// See documentation of template function celma::common::tuple_at_index.
+/// See documentation of template function celma::common::string2tuple<>()
 
 
-#ifndef CELMA_COMMON_TUPLE_AT_INDEX_HPP
-#define CELMA_COMMON_TUPLE_AT_INDEX_HPP
+#pragma once
 
 
 #include <cassert>
@@ -28,28 +27,55 @@
 #include "celma/common/tuple_length.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
+namespace detail {
+
+
+/// Helper class that stores a value in string format and then provides the
+/// converted value upon request.
+///
+/// @since  x.y.z, 19.12.2016
 class TupleValueAssign
 {
 public:
-   TupleValueAssign( const std::string& value):
+   /// Constructor, stores the value to convert later.
+   /// @param[in]  value  String with the value to convert.
+   /// @since  x.y.z, 19.12.2016
+   explicit TupleValueAssign( const std::string& value):
       mValue( value)
    {
-   }
+   } // TupleValueAssign::TupleValueAssign
 
+   /// Converts the value to the requested type and assigns it to the given tuple
+   /// element.
+   ///
+   /// @tparam  T  Type to convert the value to.
+   /// @param[out]  tuple_value  Tuple element to assign the converted value to.
+   /// @since  x.y.z, 19.12.2016
    template< typename T> void operator()( T& tuple_value) const
    {
       tuple_value = boost::lexical_cast< T>( mValue);
-   }
+   } // TupleValueAssign:operator ()
 
 private:
+   /// Stores the string with the value to convert.
    const std::string  mValue;
 
-};
+}; // TupleValueAssign
 
 
+} // namespace detail
+
+
+/// Converts multiple values from a comma-separated list in a string, and assigns
+/// the values to a tuple.
+///
+/// @tparam  T  Type of the tuple.
+/// @param[out]  dest_tuple  Tuple to assign the values from the string to.
+/// @param[in]   str         String with the list of values to convert.
+/// @since  x.y.z, 19.12.2016
 template< typename T> void string2tuple( T& dest_tuple, const std::string& str)
 {
 
@@ -59,8 +85,8 @@ template< typename T> void string2tuple( T& dest_tuple, const std::string& str)
 
    while ((comma_pos = str.find( ',', last_pos)) != std::string::npos)
    {
-      const std::string       curr_value( str, last_pos, comma_pos - last_pos);
-      const TupleValueAssign  tva( curr_value);
+      const std::string               curr_value( str, last_pos, comma_pos - last_pos);
+      const detail::TupleValueAssign  tva( curr_value);
 
       tuple_at_index( idx, dest_tuple, tva);
 
@@ -69,8 +95,8 @@ template< typename T> void string2tuple( T& dest_tuple, const std::string& str)
    } // end while
 
    // still have to handle the last part of the string
-   const std::string       curr_value( str, last_pos);
-   const TupleValueAssign  tva( curr_value);
+   const std::string               curr_value( str, last_pos);
+   const detail::TupleValueAssign  tva( curr_value);
 
    tuple_at_index( idx, dest_tuple, tva);
 
@@ -85,15 +111,11 @@ template< typename T> void string2tuple( T& dest_tuple, const std::string& str)
       });
 */
 
-}
+} // string2tuple
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_TUPLE_AT_INDEX_HPP
-
-
-// =========================  END OF string2tuple.hpp  =========================
+// =====  END OF string2tuple.hpp  =====
 

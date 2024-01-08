@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -14,8 +14,7 @@
 /// Defines the base template for getting the name of a type.
 
 
-#ifndef CELMA_TYPE_NAME_HPP
-#define CELMA_TYPE_NAME_HPP
+#pragma once
 
 
 namespace celma {
@@ -42,9 +41,6 @@ public:
 
 
 } // namespace celma
-
-
-#endif   // CELMA_TYPE_NAME_HPP
 
 
 // =====  END OF type_name.hpp  =====

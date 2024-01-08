@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of template function celma::common::tuple_at_index.
 
 
-#ifndef CELMA_COMMON_TUPLE_AT_INDEX_HPP
-#define CELMA_COMMON_TUPLE_AT_INDEX_HPP
+#pragma once
 
 
 #include <functional>
@@ -24,7 +23,7 @@
 #include <tuple>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// kudos to Victor Laskin
@@ -85,20 +84,20 @@ template< std::size_t I = 0, typename FuncT, typename... Tp>
 /// Same as before, but with a const reference of the tuple.
 ///
 /// @tparam  I
-///   The current element number of the tuple to investigate.
+///    Current element number of the tuple to investigate.
 /// @tparam  FuncT
-///    The type of the functor to call when the requested element is found.
+///    Type of the functor to call when the requested element is found.
 /// @tparam  Tp
-///    The template parameter pack, i.e. the tuple.
+///    Template parameter pack, i.e. the tuple.
 /// @param[in]  index
-///    The number of the element in the tuple to search for.<br>
+///    Number of the element in the tuple to search for.<br>
 ///    The first element has number 0.
 /// @param[in]  t
 ///    The tuple.
 /// @param[in]  f
-///    The functor to call.
+///    Functor to call.
 /// @return
-///    The (reference of) the element at the specified position, when found.
+///    (Reference of) The element at the specified position, when found.
 /// @since
 ///    1.8.0, 05.07.2018
 template< std::size_t I = 0, typename FuncT, typename... Tp>
@@ -111,11 +110,7 @@ template< std::size_t I = 0, typename FuncT, typename... Tp>
 } // tuple_at_index
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_TUPLE_AT_INDEX_HPP
+} // namespace celma::common
 
 
 // =====  END OF tuple_at_index.hpp  =====

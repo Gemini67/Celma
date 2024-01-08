@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::StreamLog.
 
 
-#ifndef CELMA_LOG_DETAIL_STREAM_LOG_HPP
-#define CELMA_LOG_DETAIL_STREAM_LOG_HPP
+#pragma once
 
 
 #include <libgen.h>
@@ -29,7 +28,7 @@
 #include "celma/log/log_attributes.hpp"
 
 
-namespace celma { namespace log {
+namespace celma::log {
 
 
 using attributeValue = common::Manipulator< std::string, 20>;
@@ -87,7 +86,7 @@ public:
    ///
    /// @return  This object.
    /// @since  1.0.0, 19.06.2016
-   StreamLog& self()
+   [[nodiscard]] StreamLog& self()
    {
       return *this;
    } // StreamLog::self
@@ -100,7 +99,7 @@ public:
    ///    The log class to set.
    /// @return  The object passed in \a so.
    /// @since  1.0.0, 19.06.2016
-   friend StreamLog& operator <<( StreamLog& so, LogClass lc)
+   friend StreamLog& operator <<( StreamLog& so, const LogClass lc)
    {
       // range check
       if ((lc < LogClass::undefined) || (lc > LogClass::operatorAction))
@@ -119,7 +118,7 @@ public:
    ///    The log level to set.
    /// @return  The object passed in \a so.
    /// @since  1.0.0, 19.06.2016
-   friend StreamLog& operator <<( StreamLog& so, LogLevel ll)
+   friend StreamLog& operator <<( StreamLog& so, const LogLevel ll)
    {
       if (so.mLogMsg.getLevel() == LogLevel::undefined)
       {
@@ -379,8 +378,7 @@ inline StreamLog& errnbr( StreamLog& in)
 
 
 } // namespace detail
-} // namespace log
-} // namespace celma
+} // namespace celma::log
 
 
 /// @example
@@ -389,9 +387,6 @@ inline StreamLog& errnbr( StreamLog& in)
 /// <pre>
 /// LOG( log_id) << errnbr << errno << "Call to sysop() failed";
 /// </pre>
-
-
-#endif   // CELMA_LOG_DETAIL_STREAM_LOG_HPP
 
 
 // =====  END OF stream_log.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of template function celma::common::tuple_length.
 
 
-#ifndef CELMA_COMMON_TUPLE_LENGTH_HPP
-#define CELMA_COMMON_TUPLE_LENGTH_HPP
+#pragma once
 
 
 #include <functional>
 #include <tuple>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// When this function is called, we know the number of elements in the tuple
@@ -68,11 +67,7 @@ template< std::size_t I = 0, typename... Tp>
 } // tuple_length
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_TUPLE_LENGTH_HPP
+} // namespace celma::common
 
 
 // =====  END OF tuple_length.hpp  =====

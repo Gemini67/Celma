@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of the template function celma::format::stringTo<>().
 
 
-#ifndef CELMA_FORMAT_STRING_TO_HPP
-#define CELMA_FORMAT_STRING_TO_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// The standard library does not provide a single function to convert a value
@@ -30,15 +29,15 @@ namespace celma { namespace format {
 /// That's what this template does. Call it with the desired destination type,
 /// internally the correct conversion function is chosen.
 ///
-/// @tparam  T  The destination type to convert the value into.
-/// @param[in]  str  The string with the value to convert.
-/// @return  The converted value from the string.
+/// @tparam  T  Destination type to convert the value into.
+/// @param[in]  str  String with the value to convert.
+/// @return  Converted value from the string.
 /// @since  1.17.0, 24.11.2018
 template< typename T> T stringTo( const std::string& std);
 
 
 #define  S2( t, c) \
-   template<> t stringTo< t>( const std::string& str) \
+   template<> [[nodiscard]] t stringTo< t>( const std::string& str) \
    { \
       return std::c( str); \
    }
@@ -61,11 +60,7 @@ S2( long double, stold)
 #undef  S2
 
 
-} // namespace format
-} // namespace celma
-
-
-#endif   // CELMA_FORMAT_STRING_TO_HPP
+} // namespace celma::format
 
 
 // =====  END OF string_to.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::container::detail::ForwardBitsetIterator.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_FORWARD_BITSET_ITERATOR_HPP
-#define CELMA_CONTAINER_DETAIL_FORWARD_BITSET_ITERATOR_HPP
+#pragma once
 
 
 #include "celma/container/detail/bitset_iterator_base.hpp"
@@ -161,9 +160,6 @@ template< size_t N>
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_FORWARD_BITSET_ITERATOR_HPP
 
 
 // =====  END OF forward_bitset_iterator.hpp  =====
