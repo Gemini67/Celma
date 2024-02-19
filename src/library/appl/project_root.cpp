@@ -138,7 +138,7 @@ bool ProjectRoot::isOnProject( const std::string& path_file_name)
 
    // have to specify the sub-string of the longer string (path_file_name) to
    // compare against the shorter (project root) string
-   return common::startsWith( path_file_name, mProjectRoot, false);
+   return path_file_name.starts_with( mProjectRoot);
 } // ProjectRoot::isOnProject
 
 

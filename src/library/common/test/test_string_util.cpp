@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -186,52 +186,6 @@ BOOST_AUTO_TEST_CASE( check_remove_to_if_shortcuts)
    } // end scope
 
 } // check_remove_to_if_shortcuts
-
-
-
-/// Check the results returned by celma::common::startsWith().
-///
-/// @since  1.32.0, 03.09.2019
-BOOST_AUTO_TEST_CASE( check_starts_with)
-{
-
-   using celma::common::startsWith;
-
-
-   BOOST_REQUIRE( startsWith( "", ""));
-   BOOST_REQUIRE( !startsWith( "", "", false));
-   BOOST_REQUIRE( !startsWith( "hello", ""));
-   BOOST_REQUIRE( !startsWith( "", "world"));
-   BOOST_REQUIRE( startsWith( "hello world", "hello world"));
-   BOOST_REQUIRE( startsWith( "hello world", "hello worl"));
-   BOOST_REQUIRE( startsWith( "hello world", "hello "));
-   BOOST_REQUIRE( !startsWith( "hello", "hello "));
-   BOOST_REQUIRE( startsWith( "hello world", "h"));
-
-} // check_starts_with
-
-
-
-/// Check the results returned by celma::common::endsWith().
-///
-/// @since  1.38.0, 06.07.2020
-BOOST_AUTO_TEST_CASE( check_ends_with)
-{
-
-   using celma::common::endsWith;
-
-
-   BOOST_REQUIRE( endsWith( "haus", "haus"));
-   BOOST_REQUIRE( endsWith( "haus", "aus"));
-   BOOST_REQUIRE( endsWith( "haus", "us"));
-   BOOST_REQUIRE( endsWith( "haus", "s"));
-
-   BOOST_REQUIRE( endsWith( "hausdach", "dach"));
-
-   BOOST_REQUIRE( !endsWith( "haus", "klaus"));
-   BOOST_REQUIRE( !endsWith( "haus", "auf"));
-
-} // check_ends_with
 
 
 

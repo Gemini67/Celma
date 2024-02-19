@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,8 +19,6 @@
 /// - celma::common::remove_to_if_first_excl()
 /// - celma::common::remove_to_if_last_incl()
 /// - celma::common::remove_to_if_last_excl()
-/// - celma::common::startsWith()
-/// - celma::common::endsWith()
 
 
 #pragma once
@@ -133,46 +131,6 @@ inline void remove_to_if_last_excl( std::string& str, char pred)
 {
    remove_to_if( str, pred);
 } // remove_to_if_last_excl
-
-
-/// Returns if the string in \a str starts with the string in \a starts.
-///
-/// @param[in]  str
-///    The string to check the text at the beginning of.
-/// @param[in]  starts
-///    The expected text at the beginning of \a str.
-/// @param[in]  allow_empty
-///    By default, the function also returns true for two empty strings. If it
-///    required that the strings are non-empty, set this parameter to \c false.
-/// @return
-///    \c true if \a str starts with \a starts or when both strings are empty
-///    and \a allow_empty is set.
-/// @since
-///    1.32.0, 03.09.2019
-inline bool startsWith( const std::string& str, const std::string& starts,
-   bool allow_empty = true)
-{
-   return (allow_empty && str.empty() && starts.empty())
-          || (!str.empty() && !starts.empty()
-              && (str.compare( 0, starts.length(), starts) == 0));
-} // startsWith
-
-
-/// Returns if the given string ends with the specified text.
-///
-/// @param[in]  str
-///    The string to check the end of.
-/// @param[in]  end
-///    The expected end of the string.
-/// @return
-///    \c true if the strings ends with \c end.
-/// @since  1.38.0, 06.07.2020
-inline bool endsWith( const std::string& str, const std::string& end)
-{
-   if (str.length() < end.length())
-      return false;
-   return str.compare( str.length() - end.length(), end.length(), end) == 0;
-} // endsWith
 
 
 /// Splits a string in two parts.

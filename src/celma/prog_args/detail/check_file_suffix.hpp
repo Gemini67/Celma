@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2020-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -35,7 +35,7 @@ public:
    /// Constructor, stores the suffix to check and sets the symbolic name in the
    /// base class.
    ///
-   /// @param[in]  suffix  The suffix to check the file name(s) for.
+   /// @param[in]  suffix  Suffix to check the file name(s) for.
    /// @throw  std::invalid_argument if the suffix string is empty.
    /// @since  1.38.0, 06.07.2020
    CheckFileSuffix( const std::string& suffix) noexcept( false);
@@ -46,8 +46,8 @@ public:
    /// Checks if the value in \a val contains the (path and) name of an existing
    /// file.
    ///
-   /// @param[in]  val  The value to check in string format.
-   /// @throw
+   /// @param[in]  val  Value to check in string format.
+   /// @throws
    ///    std::runtime_error if the given values does not contain the suffix.
    /// @since  1.38.0, 06.07.2020
    void checkValue( const std::string& val) const noexcept( false) override;
@@ -56,7 +56,7 @@ public:
    ///
    /// @return  A string with the text description of the check.
    /// @since  1.38.0, 06.07.2020
-   std::string toString() const override;
+   [[nodiscard]] std::string toString() const override;
 
 private:
    /// The suffix to check.
@@ -88,7 +88,7 @@ inline CheckFileSuffix::CheckFileSuffix( const std::string& suffix):
 
 inline void CheckFileSuffix::checkValue( const std::string& val) const
 {
-   if (!common::endsWith( val, mSuffix))
+   if (!val.ends_with( mSuffix))
       throw std::invalid_argument( "value '" + val + "' does not end with '"
          + mSuffix + "'");
 } // CheckFileSuffix::checkValue
@@ -110,7 +110,7 @@ inline std::string CheckFileSuffix::toString() const
 /// Helper function to create a file-suffix check more easily.
 /// Usage:  addArgument( ...)->addCheck( fileSuffix( "txt"));
 ///
-/// @return  The newly created CheckFileSuffix object.
+/// @return  Newly created CheckFileSuffix object.
 /// @since  1.38.0, 06.07.2020
 [[nodiscard]] inline detail::ICheck* fileSuffix( const std::string& suffix)
 {

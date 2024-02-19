@@ -92,7 +92,7 @@ public:
    size_t getExecutions( std::string file_name,
       const std::string& func_name, int line_nbr)
    {
-      if (startsWith( file_name, mPrefix, false))
+      if (file_name.starts_with( mPrefix))
       {
          file_name.erase( 0, mPrefix.length());
       } // end if
@@ -184,7 +184,7 @@ private:
    map_t::iterator callpoint( std::string file_name,
       const std::string& func_name, int line_nbr)
    {
-      if (startsWith( file_name, mPrefix, false))
+      if (file_name.starts_with( mPrefix))
       {
          file_name.erase( 0, mPrefix.length());
       } // end if
