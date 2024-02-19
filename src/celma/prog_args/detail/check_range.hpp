@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -75,21 +75,21 @@ template< typename T> CheckRange< T>::CheckRange( T lower, T upper):
    mUpper( upper)
 {
    if (mUpper <= mLower)
-      throw std::invalid_argument( "Range " + boost::lexical_cast< std::string>( mLower) +
-                                   ".." + boost::lexical_cast< std::string>( mUpper) +
+      throw std::invalid_argument( "Range " + std::to_string( mLower) +
+                                   ".." + std::to_string( mUpper) +
                                    " is invalid");
 } // CheckRange< T>::CheckRange
 
 
 template< typename T> void CheckRange< T>::checkValue( const std::string& val) const
 {
-   T  native = boost::lexical_cast< T>( val);
+   auto const  native = boost::lexical_cast< T>( val);
    if (native < mLower)
       throw std::out_of_range( "Value " + val + " is below limit " +
-                              boost::lexical_cast< std::string>( mLower));
+                               std::to_string( mLower));
    if (native >= mUpper)
       throw std::out_of_range( "Value " + val + " is above or equal to limit " +
-                              boost::lexical_cast< std::string>( mUpper));
+                               std::to_string( mUpper));
 } // CheckRange< T>::checkValue
 
 

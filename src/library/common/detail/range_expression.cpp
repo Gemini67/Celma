@@ -23,10 +23,6 @@
 #include <cctype>
 
 
-// Boost includes
-#include <boost/lexical_cast.hpp>
-
-
 // project includes
 #include "celma/common/celma_exception.hpp"
 
@@ -60,7 +56,7 @@ void RangeExpression::parseString( const string& s) noexcept( false)
 
    if (!parse())
       throw CELMA_RuntimeError( string( "invalid/unexpected character at "
-         "position ").append( boost::lexical_cast< string>( mNextPos)));
+         "position ").append( std::to_string( mNextPos)));
 
    mMatchedExpression.assign( mRangeString, 0, mNextPos);
 

@@ -72,10 +72,10 @@ template< typename T> CheckUpper< T>::CheckUpper( T value):
 
 template< typename T> void CheckUpper< T>::checkValue( const std::string& val) const
 {
-   T  native = boost::lexical_cast< T>( val);
+   auto const  native = boost::lexical_cast< T>( val);
    if (native >= mCheckValue)
       throw std::overflow_error( "Value " + val + " is above or equal to limit " +
-                                 boost::lexical_cast< std::string>( mCheckValue));
+                                 std::to_string( mCheckValue));
 } // CheckUpper< T>::checkValue
 
 
