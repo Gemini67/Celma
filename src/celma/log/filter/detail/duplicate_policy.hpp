@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,18 +15,20 @@
 /// See documentation of enum celma::log::filter::detail::DuplicatePolicy.
 
 
-#ifndef CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_HPP
-#define CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_HPP
+#pragma once
 
 
-namespace celma { namespace log { namespace filter { namespace detail {
+#include <cstdint>
+
+
+namespace celma::log::filter::detail {
 
 
 /// List of ways how duplicate filter entries should be handled.<br>
 /// This could also be implemented using a policy, but then this class would
 /// become a template, and the classes derived from it would become templates
 /// too, so we stick to the enum.
-enum class DuplicatePolicy
+enum class DuplicatePolicy : uint8_t
 {
    ignore,      //!< Ignore new filter settings when such a filter already exists.
    exception,   //!< Throw an exception if such a filter already exists.
@@ -34,13 +36,7 @@ enum class DuplicatePolicy
 };
 
 
-} // namespace detail
-} // namespace filter
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILTER_DETAIL_DUPLICATE_POLICY_HPP
+} // namespace celma::log::filter::detail
 
 
 // =====  END OF duplicate_policy.hpp  =====

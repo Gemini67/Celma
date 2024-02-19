@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::common::ExceptionBase.
 
 
-#ifndef CELMA_COMMON_EXCEPTION_BASE_HPP
-#define CELMA_COMMON_EXCEPTION_BASE_HPP
+#pragma once
 
 
 #include <string>
 #include <stdexcept>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Contains some processing shared by all exception classes.<br>
@@ -38,10 +37,10 @@ class ExceptionBase
 public:
    /// Constructor.
    ///
-   /// @param[in]  filename  The path and file name of the source file.
-   /// @param[in]  funcName  The function prototype string.
-   /// @param[in]  line_nbr  The line number in the source file.
-   /// @param[in]  etext     The text provided for the exception.
+   /// @param[in]  filename  Path and file name of the source file.
+   /// @param[in]  funcName  Function prototype string.
+   /// @param[in]  line_nbr  Line number in the source file.
+   /// @param[in]  etext     Text provided for the exception.
    /// @since  0.2, 07.04.2016
    ExceptionBase( const char* filename, const char* funcName, int line_nbr,
                   const std::string& etext);
@@ -53,45 +52,45 @@ public:
 
    /// Returns the absolute path and file name as it was passed to the constructor.
    ///
-   /// @return  The file path and name as passed from the __FILE__ macro.
+   /// @returns  File path and name as passed from the __FILE__ macro.
    /// @since  0.2, 07.04.2016
-   const std::string& sourceFile() const;
+   [[nodiscard]] const std::string& sourceFile() const;
 
    /// Returns only the name of the file.
    ///
-   /// @return  The name of the source file (without path).
+   /// @returns  Name of the source file (without path).
    /// @since  0.2, 07.04.2016
-   const std::string sourceFilename() const;
+   [[nodiscard]] const std::string sourceFilename() const;
 
    /// Returns the complete function prototype in string form.
    ///
-   /// @return  The function prototype.
+   /// @returns  Function prototype.
    /// @since  0.2, 07.04.2016
-   const std::string& function() const;
+   [[nodiscard]] const std::string& function() const;
 
    /// Returns only the function name.
    ///
-   /// @return  The pure function name.
+   /// @returns  Pure function name.
    /// @since  0.2, 07.04.2016
-   const std::string functionName() const;
+   [[nodiscard]] const std::string functionName() const;
 
    /// Returns the exception message text.
    ///
-   /// @return  The exception text.
+   /// @returns  Exception text.
    /// @since  0.2, 07.04.2016
-   const std::string& text() const;
+   [[nodiscard]] const std::string& text() const;
 
    /// The complete message build for this exception.
    ///
-   /// @return  The complete exception message.
+   /// @returns  Complete exception message.
    /// @since  0.2, 07.04.2016
-   const std::string& message() const;
+   [[nodiscard]] const std::string& message() const;
 
    /// The line number where the exception was thrown.
    ///
-   /// @return  The exception line number.
+   /// @returns  Exception line number.
    /// @since  0.2, 07.04.2016
-   int lineNbr() const;
+   [[nodiscard]] int lineNbr() const;
 
 protected:
    /// Called by the constructors to build the exception message.
@@ -148,11 +147,7 @@ inline int ExceptionBase::lineNbr() const
 } // ExceptionBase::lineNbr
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_EXCEPTION_BASE_HPP
+} // namespace celma::common
 
 
 // =====  END OF exception_base.hpp  =====
