@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -21,10 +21,6 @@
 
 // C++ Standard Library includes
 #include <iostream>
-
-
-// Boost includes
-#include <boost/lexical_cast.hpp>
 
 
 // project includes
@@ -821,9 +817,9 @@ ostream& operator <<( ostream& os, const TypedArgBase& tab)
       << (tab.mPrintDefault ? "" : "don't ") << "print dflt, "
       << (tab.mIsHidden ? "hidden, " : "")
       << deprecated_str
-      << (tab.mChecks.empty() ? "no" : boost::lexical_cast< string>( tab.mChecks.size()))
+      << (tab.mChecks.empty() ? "no" : std::to_string( tab.mChecks.size()))
       << " checks, "
-      << (tab.mFormats.empty() ? "no" : boost::lexical_cast< string>( tab.numFormats()))
+      << (tab.mFormats.empty() ? "no" : std::to_string( tab.numFormats()))
       << " formats.";
 
    return os;
