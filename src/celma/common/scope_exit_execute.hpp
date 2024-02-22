@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::common::ScopeExitExecute.
 
 
-#ifndef CELMA_COMMON_SCOPE_EXIT_EXECUTE_HPP
-#define CELMA_COMMON_SCOPE_EXIT_EXECUTE_HPP
+#pragma once
 
 
 #include <functional>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Helper class to execute some code when the scope is left.
@@ -38,7 +37,7 @@ public:
    /// Constructor, stores the function/lambda to execute.
    ///
    /// @param[in]  func
-   ///    The function/lambda to execute when the object goes out of scope.
+   ///    Function/lambda to execute when the object goes out of scope.
    /// @since  1.28.0, 18.06.2019
    ScopeExitExecute( executor func);
 
@@ -86,11 +85,7 @@ inline ScopeExitExecute::~ScopeExitExecute()
 } // ScopeExitExecute::~ScopeExitExecute
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_SCOPE_EXIT_EXECUTE_HPP
+} // namespace celma::common
 
 
 // =====  END OF scope_exit_execute.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::container::detail::ReverseBitsetIterator.
 
 
-#ifndef CELMA_CONTAINER_DETAIL_REVERSE_BITSET_ITERATOR_HPP
-#define CELMA_CONTAINER_DETAIL_REVERSE_BITSET_ITERATOR_HPP
+#pragma once
 
 
 #include "celma/container/detail/bitset_iterator_base.hpp"
@@ -27,7 +26,7 @@ namespace celma::container::detail {
 
 /// Forward iterator for std::bitset's.
 ///
-/// @tparam  N  The size of the bitset that the iterator is used for.
+/// @tparam  N  Size of the bitset that the iterator is used for.
 /// @since  1.7.0, 17.07.2018
 template< size_t N> class ReverseBitsetIterator: public BitsetIteratorBase< N>
 {
@@ -41,7 +40,7 @@ public:
    /// Constructor with meaningful data.
    ///
    /// @param[in]  bs
-   ///    The bitset to iterate over.
+   ///    Bitset to iterate over.
    /// @param[in]  at_end
    ///    Set this flag to true to initialise an 'end' iterator.
    /// @since
@@ -52,7 +51,7 @@ public:
    /// Prefix increment operator. Searches and returns the previous bit that is
    /// set in the bitset.
    ///
-   /// @return
+   /// @returns
    ///    This object, pointing to the previous bit that is set in the bitset,
    ///    or set to end.
    /// @since
@@ -64,7 +63,7 @@ public:
    /// current position.
    ///
    /// @param  Ignored, only used to distinguish pre- and postfix operator.
-   /// @return
+   /// @returns
    ///    New iterator pointing to the previously current position.
    /// @since
    ///    1.7.0, 17.07.2018
@@ -73,7 +72,7 @@ public:
    /// Prefix decrement operator. Searches and returns the next bit that is set
    /// in the bitset.
    ///
-   /// @return
+   /// @returns
    ///    This object, pointing to the next bit that is set in the bitset,
    ///    or set to end.
    /// @since
@@ -85,7 +84,7 @@ public:
    /// current position.
    ///
    /// @param  Ignored, only used to distinguish pre- and postfix operator.
-   /// @return
+   /// @returns
    ///    New iterator pointing to the previously current position.
    /// @since
    ///    1.7.0, 17.07.2018
@@ -165,9 +164,6 @@ template< size_t N>
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_DETAIL_REVERSE_BITSET_ITERATOR_HPP
 
 
 // =====  END OF reverse_bitset_iterator.hpp  =====

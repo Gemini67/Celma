@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,8 +17,7 @@
 /// GET_EXECUTIONS.
 
 
-#ifndef CELMA_COMMON_EXECUTE_STATISTIC_HPP
-#define CELMA_COMMON_EXECUTE_STATISTIC_HPP
+#pragma once
 
 
 #include <iostream>
@@ -31,7 +30,7 @@
 #include "celma/common/string_util.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 class ExecuteCounter;
@@ -69,7 +68,7 @@ public:
    /// here.
    ///
    /// @param[in]  prefix
-   ///    The part of the path to remove from the call point filenames.
+   ///    Part of the path to remove from the call point filenames.
    /// @since
    ///    1.30.0, 15.08.2019
    void erasePathPrefix( const std::string& prefix)
@@ -80,11 +79,11 @@ public:
    /// Returns the current execute counter for the given call point.
    ///
    /// @param[in]  file_name
-   ///    The name of the file.
+   ///    Name of the file.
    /// @param[in]  func_name
-   ///    The name of the function or method.
+   ///    Name of the function or method.
    /// @param[in]  line_nbr
-   ///    The line number in the source file where the call point is defined.
+   ///    Line number in the source file where the call point is defined.
    /// @return
    ///    Current number of executions of the call point, 0 if the call point
    ///    was never passed yet.
@@ -115,7 +114,7 @@ public:
 
    /// Returns an iterator pointing to the first counter in the map.
    ///
-   /// @return  Iterator pointing to the first element in the map.
+   /// @returns  Iterator pointing to the first element in the map.
    /// @since  1.30.0, 23.06.2019
    typename map_t::const_iterator begin() const
    {
@@ -124,7 +123,7 @@ public:
 
    /// Returns an iterator pointing behind the last counter in the map.
    ///
-   /// @return  Iterator pointing behind the last element in the map.
+   /// @returns  Iterator pointing behind the last element in the map.
    /// @since  1.30.0, 23.06.2019
    typename map_t::const_iterator end() const
    {
@@ -134,7 +133,7 @@ public:
    /// Returns the size of the execute counter map, i.e. the number of counters/
    /// call points that were passed at least once.
    ///
-   /// @return  Current number of counters in the map.
+   /// @returns  Current number of counters in the map.
    /// @since  1.30.0, 23.06.2019
    std::size_t size() const
    {
@@ -145,10 +144,10 @@ public:
    /// call points and their counters.
    ///
    /// @param[in]  os
-   ///    The stream to write into.
+   ///    Stream to write into.
    /// @param[in]  es
-   ///    The object to print the statistic of.
-   /// @return  The stream as passed in.
+   ///    Object to print the statistic of.
+   /// @returns  Stream as passed in.
    /// @since  1.30.0, 23.06.2019
    friend std::ostream& operator <<( std::ostream& os,
       const ExecuteStatistic& es)
@@ -173,11 +172,11 @@ private:
    /// point.
    ///
    /// @param[in]  file_name
-   ///    The name of the file.
+   ///    Name of the file.
    /// @param[in]  func_name
-   ///    The name of the function or method.
+   ///    Name of the function or method.
    /// @param[in]  line_nbr
-   ///    The line number in the source file where the call point is defined.
+   ///    Line number in the source file where the call point is defined.
    /// @return
    ///    Iterator pointing to the entry in the map for this call point.
    /// @since  1.30.0, 23.06.2019
@@ -215,11 +214,11 @@ public:
    /// container.
    ///
    /// @param[in]  file_name
-   ///    The name of the file.
+   ///    Name of the file.
    /// @param[in]  func_name
-   ///    The name of the function or method.
+   ///    Name of the function or method.
    /// @param[in]  line_nbr
-   ///    The line number in the source file where the call point is defined.
+   ///    Line number in the source file where the call point is defined.
    /// @since  1.30.0, 23.06.2019
    ExecuteCounter( const char* const file_name, const char* const func_name,
       int line_nbr)
@@ -245,8 +244,7 @@ private:
 }; // ExecuteCounter
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
 /// Helper macro to
@@ -270,15 +268,12 @@ private:
 /// This means that e.g. scope blocks are not taken into account.
 ///
 /// @return
-///    The number of times that the previous call point in the same file and
+///    Number of times that the previous call point in the same file and
 ///    function was called.
 /// @since  1.30.0, 23.06.2019
 #define GET_EXECUTIONS() \
    celma::common::ExecuteStatistic::instance().getExecutions( __FILE__, \
       __PRETTY_FUNCTION__, __LINE__)
-
-
-#endif   // CELMA_COMMON_EXECUTE_STATISTIC_HPP
 
 
 // =====  END OF execute_statistic.hpp  =====

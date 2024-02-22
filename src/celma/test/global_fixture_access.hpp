@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,17 +12,16 @@
 
 
 /// @file
-/// See documentation of class celma::test::@@@.
+/// See documentation of class celma::test::GlobalFixtureAccess.
 
 
-#ifndef CELMA_TEST_GLOBAL_FIXTURE_ACCESS_HPP
-#define CELMA_TEST_GLOBAL_FIXTURE_ACCESS_HPP
+#pragma once
 
 
 #include <stdexcept>
 
 
-namespace celma { namespace test {
+namespace celma::test {
 
 
 /// Helper class to get a access to a global fixture object used in a test
@@ -42,6 +41,7 @@ template< typename T> class GlobalFixtureAccess
 public:
    /// Returns the global fixture object.
    ///
+   /// @returns  Global fixture object.
    /// @since  1.11.0, 31.08.2018
    static T& object()
    {
@@ -80,11 +80,7 @@ private:
 template< typename T> T* GlobalFixtureAccess< T>::mpMe = nullptr;
 
 
-} // namespace test
-} // namespace celma
-
-
-#endif   // CELMA_TEST_GLOBAL_FIXTURE_ACCESS_HPP
+} // namespace celma::test
 
 
 // =====  END OF global_fixture_access.hpp  =====

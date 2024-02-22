@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,14 +16,13 @@
 /// celma::common::detail::EmptyLineFilter.
 
 
-#ifndef CELMA_COMMON_DETAIL_FILTER_POLICY_HPP
-#define CELMA_COMMON_DETAIL_FILTER_POLICY_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Default filter policy: Does not filter anything.
@@ -32,9 +31,9 @@ class NoFilter
 {
 protected:
    /// Policy method, does not do anything.
-   /// @return  Always \c false.
+   /// @returns  Always \c false.
    /// @since  1.3.0, 13.04.2016
-   bool filter( const std::string&) const
+   [[nodiscard]] bool filter( const std::string&) const
    {
       return false;
    } // NoFilter::filter
@@ -48,10 +47,10 @@ class EmptyLineFilter
 {
 protected:
    /// Policy method. Filters out empty lines.
-   /// @param[in]  line  The line to check.
-   /// @return  \c true if the line is empty.
+   /// @param[in]  line  Line to check.
+   /// @returns  \c true if the line is empty.
    /// @since  1.3.0, 13.04.2016
-   bool filter( const std::string& line) const
+   [[nodiscard]] bool filter( const std::string& line) const
    {
       return line.empty();
    } // EmptyLineFilter::filter
@@ -59,12 +58,7 @@ protected:
 }; // EmptyLineFilter
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_FILTER_POLICY_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF filter_policy.hpp  =====

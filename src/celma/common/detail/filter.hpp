@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::common::detail::Filter.
 
 
-#ifndef CELMA_COMMON_DETAIL_FILTER_HPP
-#define CELMA_COMMON_DETAIL_FILTER_HPP
+#pragma once
 
 
 #include <sstream>
@@ -33,7 +32,7 @@ namespace celma::common::detail {
 /// Handles multiple filters on the same level.
 /// A value must match all these filters, i.e. like an "and" condition.
 ///
-/// @tparam  T  The type of the value to store the filters for.
+/// @tparam  T  Type of the value to store the filters for.
 /// @since  1.31.0, 31.10.2017
 template< typename T> class Filter
 {
@@ -56,7 +55,7 @@ public:
    /// Adds a single value filter.
    ///
    /// @param[in]  value
-   ///    The value to compare against in the filter.
+   ///    Value to compare against in the filter.
    /// @param[in]  inverted
    ///    Set when the logic should be inverted, i.e. check for values not equal
    ///    to \a value.
@@ -66,9 +65,9 @@ public:
    /// Adds a range filter.
    ///
    /// @param[in]  min_value
-   ///    The lower bound of the range.
+   ///    Lower bound of the range.
    /// @param[in]  max_value
-   ///    The upper bound of the range.
+   ///    Upper bound of the range.
    /// @param[in]  inverted
    ///    Set when the logic should be inverted, i.e. check for values outside
    ///    of the range.
@@ -78,29 +77,29 @@ public:
 
    /// Adds a minimum value filter.
    ///
-   /// @param[in]  min_val  The minimum value to compare against.
+   /// @param[in]  min_val  Minimum value to compare against.
    /// @since  1.31.0, 02.11.2017
    void addMinimumFilter( const T& min_val);
 
    /// Adds a maximum value filter.
    ///
-   /// @param[in]  max_val  The maximum value to compare against.
+   /// @param[in]  max_val  Maximum value to compare against.
    /// @since  1.31.0, 02.11.2017
    void addMaximumFilter( const T& max_val);
 
    /// Checks if the given value matches all filters.
    ///
-   /// @param[in]  value  The value to check against all filters.
-   /// @return  \c true if the given value matched all filters.
+   /// @param[in]  value  Value to check against all filters.
+   /// @returns  \c true if the given value matched all filters.
    /// @throw  \c runtime_error if no filter is defined.
    /// @since  1.31.0, 31.10.2017
-   bool matches( const T& value) const noexcept( false);
+   [[nodiscard]] bool matches( const T& value) const noexcept( false);
 
    /// Returns the string representation of the filter.
    /// 
-   /// @return  A string with the list of filters.
+   /// @returns  A string with the list of filters.
    /// @since  1.31.0, 18.10.2019
-   std::string str() const;
+   [[nodiscard]] std::string str() const;
 
 private:
    /// The type used to store the filter objects: Base class pointer.
@@ -125,7 +124,7 @@ template< typename T> Filter< T>::~Filter()
 
 
 template< typename T>
-   void Filter< T>::addSingleValueFilter( const T& value, bool inverted)
+   void Filter< T>::addSingleValueFilter( const T& value, const bool inverted)
 {
    mFilters.push_back( new SingleValue< T>( value, inverted));
 } // Filter< T>::addSingleValueFilter
@@ -133,7 +132,7 @@ template< typename T>
 
 template< typename T>
    void Filter< T>::addRangeFilter( const T& min_value, const T& max_value,
-                                    bool inverted)
+                                    const bool inverted)
 {
    mFilters.push_back( new ValueRange< T>( min_value, max_value, inverted));
 } // Filter< T>::addRangeFilter
@@ -179,9 +178,6 @@ template< typename T> std::string Filter< T>::str() const
 
 
 } // namespace celma::common::detail
-
-
-#endif   // CELMA_COMMON_DETAIL_FILTER_HPP
 
 
 // =====  END OF filter.hpp  =====

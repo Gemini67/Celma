@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::detail::Filters.
 
 
-#ifndef CELMA_LOG_FILTER_FILTERS_HPP
-#define CELMA_LOG_FILTER_FILTERS_HPP
+#pragma once
 
 
 #include <string>
@@ -28,7 +27,7 @@
 #include "celma/log/filter/detail/i_filter.hpp"
 
 
-namespace celma { namespace log {
+namespace celma::log {
 
 
 namespace detail {
@@ -50,7 +49,7 @@ public:
    /// filter as is.<br>
    /// This setting applies to all filter objects of all logs.
    ///
-   /// @param[in]  policy  The policy how filter duplicates should be handled.
+   /// @param[in]  policy  Policy how filter duplicates should be handled.
    /// @since  0.3, 19.06.2016
    static void setDuplicatePolicy( detail::DuplicatePolicy policy);
 
@@ -72,19 +71,19 @@ public:
 
    /// Specifies a maximum log level to accept.
    ///
-   /// @param[in]  max_log_level  The maximum log level to accept.
+   /// @param[in]  max_log_level  Maximum log level to accept.
    /// @since  0.3, 19.06.2016
    void maxLevel( LogLevel max_log_level);
 
    /// Specifies a minimum log level to accept.
    ///
-   /// @param[in]  min_log_level  The minimum log level to accept.
+   /// @param[in]  min_log_level  Minimum log level to accept.
    /// @since  0.3, 19.06.2016
    void minLevel( LogLevel min_log_level);
 
    /// Specifies the single log level to accept.
    ///
-   /// @param[in]  selected_log_level  The single log level to accept.
+   /// @param[in]  selected_log_level  Single log level to accept.
    /// @since  0.3, 19.06.2016
    void level( LogLevel selected_log_level);
 
@@ -97,18 +96,18 @@ public:
    /// Returns if this message may be passed on.<br>
    /// Internally checks all filters if the message passed all of them.
    ///
-   /// @param[in]  msg  The message to check.
-   /// @return  \c true if the message passed all checks, i.e. may be passed on.
+   /// @param[in]  msg  Message to check.
+   /// @returns  \c true if the message passed all checks, i.e. may be passed on.
    /// @since  0.3, 19.06.2016
-   bool pass( const log::detail::LogMsg& msg) const;
+   [[nodiscard]] bool pass( const log::detail::LogMsg& msg) const;
 
    /// Fast check method, if a message with a specific log level would be passed
    /// on to this log or not.
    ///
-   /// @param[in]  l  The log level to check.
-   /// @return  \c true if messages with this log level are processed.
+   /// @param[in]  l  Log level to check.
+   /// @returns  \c true if messages with this log level are processed.
    /// @since  0.3, 19.06.2016
-   bool processLevel( LogLevel l) const;
+   [[nodiscard]] bool processLevel( LogLevel l) const;
 
    // copy-assignment is not allowed
    Filters& operator =( const Filters&) = delete;
@@ -126,9 +125,9 @@ private:
    /// Template method to check and set a new filter.
    ///
    /// @tparam  F
-   ///    The type of the filter to set (class name).
+   ///    Type of the filter to set (class name).
    /// @tparam  FP
-   ///    The type of the filter parameter to pass to the new filter object.
+   ///    Type of the filter parameter to pass to the new filter object.
    /// @param[in]  filter_type
    ///    Filter type enum value, used to check if a filter of this type already
    ///    exists.
@@ -148,11 +147,7 @@ private:
 
 
 } // namespace detail
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILTER_FILTERS_HPP
+} // namespace celma::log
 
 
 // =====  END OF filters.hpp  =====
