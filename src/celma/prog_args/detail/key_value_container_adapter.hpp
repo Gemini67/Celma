@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2020-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -26,7 +26,6 @@
 #include <algorithm>
 #include <map>
 #include <unordered_map>
-#include "celma/common/contains.hpp"
 #include "celma/format/to_string.hpp"
 #include "celma/prog_args/detail/container_adapter.hpp"
 
@@ -134,7 +133,7 @@ public:
    /// @since  1.41.0, 07.01.2020
    bool contains( const K& key) const
    {
-      return common::contains( mDestCont, key);
+      return mDestCont.contains( key);
    } // KeyValueContainerAdapter< std::map< K, V>>::contains
 
    /// Returns if the data in this and the other container intersect.
@@ -258,7 +257,7 @@ public:
    /// @since  1.41.0, 15.03.2020
    bool contains( const K& key) const
    {
-      return common::contains( mDestCont, key);
+      return mDestCont.contains( key);
    } // KeyValueContainerAdapter< std::multimap< K, V>>::contains
 
    /// Returns if the data in this and the other container intersect.
@@ -382,7 +381,7 @@ public:
    /// @since  1.41.0, 15.03.2020
    bool contains( const K& key) const
    {
-      return common::contains( mDestCont, key);
+      return mDestCont.contains( key);
    } // KeyValueContainerAdapter< std::unordered_map< K, V>>::contains
 
    /// Returns if the data in this and the other container intersect.
@@ -506,7 +505,7 @@ public:
    /// @since  1.41.0, 15.03.2020
    bool contains( const K& key) const
    {
-      return common::contains( mDestCont, key);
+      return mDestCont.contains( key);
    } // KeyValueContainerAdapter< std::unordered_multimap< K, V>>::contains
 
    /// Returns if the data in this and the other container intersect.
