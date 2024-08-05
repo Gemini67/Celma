@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::format::AutoSprintf.
 
 
-#ifndef CELMA_FORMAT_AUTO_SPRINTF_HPP
-#define CELMA_FORMAT_AUTO_SPRINTF_HPP
+#pragma once
 
 
 #include <cstdarg>
 #include <string>
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// Helper class for using vasprintf() and make sure that the buffer is always
@@ -94,13 +93,13 @@ public:
    ///
    /// @return  The length of the string.
    /// @since  0.2, 08.04.2016
-   int length() const;
+   [[nodiscard]] int length() const;
 
 private:
    /// Pointer to the dynamically allocated string buffer.
-   char*  mpString;
+   char*  mpString = nullptr;
    /// The length of the string in the buffer.
-   int    mLength;
+   int    mLength = 0;
 
 }; // AutoSprintf
 
@@ -133,11 +132,7 @@ inline int AutoSprintf::length() const
 } // AutoSprintf::length
 
 
-} // namespace format
-} // namespace celma
-
-
-#endif   // CELMA_FORMAT_AUTO_SPRINTF_HPP
+} // namespace celma::format
 
 
 // =====  END OF auto_sprintf.hpp  =====

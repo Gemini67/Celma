@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of class celma::format::AutoSprintf.
 
 
-// module header file include
+// module headerfile include
 #include "celma/format/auto_sprintf.hpp"
 
 
@@ -29,7 +29,7 @@
 #include "celma/common/celma_exception.hpp"
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 
@@ -39,9 +39,7 @@ namespace celma { namespace format {
 /// @param[in]  ...     Additional parameters for the string formatting.
 /// @throw  CelmaRuntimeError when the string formatting failed.
 /// @since  0.2, 08.04.2016
-AutoSprintf::AutoSprintf( const char* format, ...):
-   mpString( nullptr),
-   mLength( 0)
+AutoSprintf::AutoSprintf( const char* format, ...)
 {
 
    va_list  ap;
@@ -70,9 +68,7 @@ AutoSprintf::AutoSprintf( const char* format, ...):
 /// @param[in]  ap      Additional parameters for the string formatting.
 /// @throw  SixRuntimeError when the string formatting failed.
 /// @since  0.7, 08.11.2016
-AutoSprintf::AutoSprintf( const std::string& format, va_list ap):
-   mpString( nullptr),
-   mLength( 0)
+AutoSprintf::AutoSprintf( const std::string& format, va_list ap)
 {
 
    if ((mLength = ::vasprintf( &mpString, format.c_str(), ap)) == -1)
@@ -91,14 +87,13 @@ AutoSprintf::AutoSprintf( const std::string& format, va_list ap):
 AutoSprintf::~AutoSprintf()
 {
 
-   ::free( mpString);
+   std::free( mpString);
 
 } // AutoSprintf::~AutoSprintf
 
 
 
-} // namespace format
-} // namespace celma
+} // namespace celma::format
 
 
 // =====  END OF auto_sprintf.cpp  =====

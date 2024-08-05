@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -30,10 +30,7 @@
 #include "celma/format/auto_sprintf.hpp"
 
 
-namespace celma { namespace format {
-
-
-using std::string;
+namespace celma::format {
 
 
 char AsciiTable::mDashChar = '-';
@@ -52,11 +49,7 @@ public:
    /// @param[in,out]  pnext  Pointer to the starting position of the next
    ///                        column specification.
    /// @since  0.7, 07.11.2016
-   explicit EvalColumn( const char*& pnext):
-      mTitle(),
-      mSeparator(),
-      mLength(),
-      mFormatString( "%")
+   explicit EvalColumn( const char*& pnext)
    {
 
       if ((pnext == nullptr) || (*pnext == '\0'))
@@ -73,10 +66,10 @@ public:
       if (*pnext != '[')
          return;
 
-      string  length_string;
-      string  format_type( "s");
-      bool    length_dashes_only = false;
-      bool    absolute_format = false;
+      std::string  length_string;
+      std::string  format_type( "s");
+      bool         length_dashes_only = false;
+      bool         absolute_format = false;
 
       ++pnext;
       if (*pnext != ']')
@@ -117,7 +110,7 @@ public:
    /// Returns the title of this column.
    /// @return  The formatted title.
    /// @since  0.7, 07.11.2016
-   const string& title() const
+   [[nodiscard]] const std::string& title() const
    {
       return mTitle;
    } // EvalColumn::title
@@ -126,7 +119,7 @@ public:
    /// Returns the separator string between this and the next column.
    /// @return  The separator string to append.
    /// @since  0.7, 07.11.2016
-   const string& separator() const
+   [[nodiscard]] const std::string& separator() const
    {
       return mSeparator;
    } // EvalColumn::separator
@@ -135,7 +128,7 @@ public:
    /// Returns the width of the column.
    /// @return  The column width.
    /// @since  0.7, 07.11.2016
-   int width() const
+   [[nodiscard]] int width() const
    {
       return mLength;
    } // EvalColumn::width
@@ -144,7 +137,7 @@ public:
    /// Returns the format string for this column.
    /// @return  The complete format string for this column.
    /// @since  0.7, 07.11.2016
-   const string& formatString() const
+   [[nodiscard]] const std::string& formatString() const
    {
       return mFormatString;
    } // EvalColumn::formatString
@@ -238,7 +231,7 @@ private:
    /// length string from #mLength.
    /// @param[out]  length_string  Returns the length string.
    /// @since  0.7, 07.11.2016
-   void setLengthString( string& length_string) const
+   void setLengthString( std::string& length_string) const
    {
 
       char  format_len[ 64];
@@ -271,7 +264,7 @@ private:
    /// @param[in]  title_align_left  Specifies if the title should be
    ///                               left-aligned.
    /// @since  0.7, 07.11.2016
-   void formatTitle( bool title_align_left)
+   void formatTitle( const bool title_align_left)
    {
 
       char  title_format[ 32];
@@ -296,13 +289,13 @@ private:
 
 
    /// The formatted title of the column.
-   string  mTitle;
+   std::string  mTitle;
    /// The separator string to append.
-   string  mSeparator;
+   std::string  mSeparator;
    /// The length/width of the column.
-   int     mLength;
+   int          mLength  = 0;
    /// The format string for values in this column.
-   string  mFormatString;
+   std::string  mFormatString = { "%" }; 
 
 }; // EvalColumn
 
@@ -313,7 +306,7 @@ private:
 /// Sets the character to use to create the dash line. Default is '-'.
 /// @param[in]  dash_char  The dash character to use from now on.
 /// @since  0.7, 07.11.2016
-void AsciiTable::setDashChar( char dash_char)
+void AsciiTable::setDashChar( const char dash_char)
 {
 
    mDashChar = dash_char;
@@ -327,11 +320,8 @@ void AsciiTable::setDashChar( char dash_char)
 ///                         formats etc. as described in the class header.
 /// @param[in]  dash_char   The character to use to create the dash line.
 /// @since  0.7, 07.11.2016
-AsciiTable::AsciiTable( const string& table_spec, char dash_char):
-   mCurrentDashChar( mDashChar),
-   mTitleLine(),
-   mDashesLine(),
-   mFormatString()
+AsciiTable::AsciiTable( const std::string& table_spec, const char dash_char):
+   mCurrentDashChar( mDashChar)
 {
 
 
@@ -360,11 +350,8 @@ AsciiTable::AsciiTable( const string& table_spec, char dash_char):
 /// @param[in]  ...
 ///    Additional parameters to create the table specification string.
 /// @since  0.7, 07.11.2016
-AsciiTable::AsciiTable( char dash_char, const char* table_spec_format, ...):
-   mCurrentDashChar( mDashChar),
-   mTitleLine(),
-   mDashesLine(),
-   mFormatString()
+AsciiTable::AsciiTable( const char dash_char, const char* table_spec_format, ...):
+   mCurrentDashChar( mDashChar)
 {
 
    if (dash_char != '\0')
@@ -374,9 +361,9 @@ AsciiTable::AsciiTable( char dash_char, const char* table_spec_format, ...):
    {
       va_list  args;
 
-      va_start( args, table_spec_format);
+      ::va_start( args, table_spec_format);
 
-      const AutoSprintf  table_spec( string( table_spec_format), args);
+      const AutoSprintf  table_spec( std::string( table_spec_format), args);
 
       va_end( args);
 
@@ -397,7 +384,7 @@ AsciiTable::AsciiTable( char dash_char, const char* table_spec_format, ...):
 ///                         widths, formats etc. as described in the class
 ///                         header.
 /// @since  0.7, 07.11.2016
-void AsciiTable::append( const string& table_spec)
+void AsciiTable::append( const std::string& table_spec)
 {
 
    // special handling used to e.g. append a newline character
@@ -409,7 +396,7 @@ void AsciiTable::append( const string& table_spec)
       return;
    } // end if
 
-   string       separator;
+   std::string  separator;
    const char*  pnext = table_spec.c_str();
 
    while (*pnext == ' ')
@@ -444,8 +431,8 @@ void AsciiTable::processSpec( const char* pnext)
       const EvalColumn  next_col( pnext);
 
       mTitleLine.append( next_col.title()).append( next_col.separator());
-      mDashesLine.append( string( next_col.width(), mCurrentDashChar)).
-                  append( next_col.separator());
+      mDashesLine.append( std::string( next_col.width(), mCurrentDashChar))
+                 .append( next_col.separator());
       mFormatString.append( next_col.formatString()).append( next_col.separator());
    } // end while
 
@@ -453,8 +440,7 @@ void AsciiTable::processSpec( const char* pnext)
 
 
 
-} // namespace format
-} // namespace celma
+} // namespace celma::fomat
 
 
 // =====  END OF ascii_table.cpp  =====

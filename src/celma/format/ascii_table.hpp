@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of class celma::format::AsciiTable.
 
 
-#ifndef CELMA_FORMAT_ASCIITABLE_HPP
-#define CELMA_FORMAT_ASCIITABLE_HPP
+#pragma once
 
 
 #include <string>
 
 
-namespace celma { namespace format {
+namespace celma::format {
 
 
 /// Helper class to generate the title line, the line with the dashes and finally
@@ -117,23 +116,23 @@ public:
    /// Returns the line with the titles.
    /// @return  The complete title line.
    /// @since  0.7, 07.11.2016
-   const std::string& titleLine() const;
+   [[nodiscard]] const std::string& titleLine() const;
 
    /// Returns the line with the dashes.
    /// @return  The complete line with the dashes.
    /// @since  0.7, 07.11.2016
-   const std::string& dashesLine() const;
+   [[nodiscard]] const std::string& dashesLine() const;
 
    /// Returns the format string that can be used to print the values.
    /// @return  The complete format string.
    /// @since  0.7, 07.11.2016
-   const std::string& formatString() const;
+   [[nodiscard]] const std::string& formatString() const;
 
    /// Returns the format string as char* that can be used directly in a
    /// printf() call to print the values.
    /// @return  The complete format string.
    /// @since  0.10, 22.12.2016
-   const char* format() const;
+   [[nodiscard]] const char* format() const;
 
 private:
    /// Default dash character to use.
@@ -186,12 +185,8 @@ inline const char* AsciiTable::format() const
 } // AsciiTable::format
 
 
-} // namespace format
-} // namespace celma
+} // namespace celma::format
 
 
-#endif   // CELMA_FORMAT_ASCIITABLE_HPP
-
-
-// =========================  END OF ascii_table.hpp  =========================
+// =====  END OF ascii_table.hpp  =====
 
