@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,21 +18,20 @@
 /// answer from user tclamb. Thank you very much!
 
 
-#ifndef CELMA_COMMON_DETAIL_CONSTEXPR_STRING_FROM_HPP
-#define CELMA_COMMON_DETAIL_CONSTEXPR_STRING_FROM_HPP
+#pragma once
 
 
 #include <cstdint>
 
 
-namespace celma { namespace common { namespace detail {
+namespace celma::common::detail {
 
 
 /// Here we actually create the string representation of the digits of the
-/// original number.<br>
+/// original number.
 /// Specialisation for a positive value.
 ///
-/// @tparam  digits  The single digits of the original number.
+/// @tparam  digits  Single digits of the original number.
 /// @since  1.36.0, 12.04.2020
 ///    (set the size explicitly to avoid warnings when accessing the value)
 /// @since  0.10, 31.12.2016
@@ -48,10 +47,10 @@ template< uint8_t... digits>
 
 
 /// Here we actually create the string representation of the digits of the
-/// original number.<br>
+/// original number.
 /// Specialisation for a negative value.
 ///
-/// @tparam  digits  The single digits of the original number.
+/// @tparam  digits  Single digits of the original number.
 /// @since  1.36.0, 12.04.2020
 ///    (set the size explicitly to avoid warnings when accessing the value)
 /// @since  0.10, 31.12.2016
@@ -93,8 +92,8 @@ template< uint8_t... digits>
 /// remaining value.
 ///
 /// @tparam  neg     \c true if the value is negative.
-/// @tparam  rem     The remaining value to convert.
-/// @tparam  digits  The single digits of the value.
+/// @tparam  rem     Remaining value to convert.
+/// @tparam  digits  Single digits of the value.
 /// @since  0.10, 31.12.2016
 template< bool neg, uintmax_t rem, uint8_t... digits>
    struct explode: explode< neg, rem / 10, rem % 10, digits...>
@@ -105,7 +104,7 @@ template< bool neg, uintmax_t rem, uint8_t... digits>
 /// Handles the final value < 10.
 ///
 /// @tparam  neg     \c true if the value is negative.
-/// @tparam  digits  The single digits of the value.
+/// @tparam  digits  Single digits of the value.
 /// @since  0.10, 31.12.2016
 template< bool neg, uint8_t... digits>
    struct explode< neg, 0, digits...>: to_chars< neg, digits...>
@@ -115,22 +114,17 @@ template< bool neg, uint8_t... digits>
 
 /// Absolute value.
 ///
-/// @tparam  T  The type of the value.
-/// @param[in]  num  The value to return the absolute value of.
-/// @return  The absolute value of \a num.
+/// @tparam  T  Type of the value.
+/// @param[in]  num  Value to return the absolute value of.
+/// @returns  Absolute value of \a num.
 /// @since  0.10, 31.12.2016
-template< typename T> constexpr uintmax_t cabs( T num)
+template< typename T> [[nodiscard]] constexpr uintmax_t cabs( const T num)
 {
    return (num < 0) ? -num : num;
 } // cabs
 
 
-} // namespace detail
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_DETAIL_CONSTEXPR_STRING_FROM_HPP
+} // namespace celma::common::detail
 
 
 // =====  END OF constexpr_string_from.hpp  =====

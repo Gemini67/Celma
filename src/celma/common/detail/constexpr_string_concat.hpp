@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -34,8 +34,8 @@ template< unsigned...> struct seq { using type = seq; };
 
 
 /// Helper template to separate the elements of a sequence.
-/// @tparam  N   The remaining number of elements in the sequence.
-/// @tparam  Is  The remaining elements of the sequence.
+/// @tparam  N   Remaining number of elements in the sequence.
+/// @tparam  Is  Remaining elements of the sequence.
 /// @since  0.10, 02.01.2017
 template< unsigned N, unsigned... Is>
    struct gen_seq_x: gen_seq_x< N - 1, N - 1, Is...>
@@ -44,7 +44,7 @@ template< unsigned N, unsigned... Is>
 
 
 /// Helper template to separate the elements of a sequence.
-/// @tparam  Is  The remaining elements of the sequence.
+/// @tparam  Is  Remaining elements of the sequence.
 /// @since  0.10, 02.01.2017
 template< unsigned... Is> struct gen_seq_x< 0, Is...>: seq< Is...>
 {
@@ -62,13 +62,14 @@ template< size_t S> using size = std::integral_constant< size_t, S>;
 /// Returns the length of a C array.
 ///
 /// @tparam  T
-///    The type of the elements in the array.
+///    Type of the elements in the array.
 /// @tparam  N
-///    The size of the array.
+///    Size of the array.
 /// @param[in]  Unnamed array.
-/// @return  The length of the array.
+/// @returns  Length of the array.
 /// @since  0.10, 02.01.2017
-template< class T, size_t N> constexpr size< N> length( const T (&)[N])
+template< class T, size_t N>
+   [[nodiscard]] constexpr size< N> length( const T (&)[N])
 {
    return {};
 } // length
@@ -77,14 +78,14 @@ template< class T, size_t N> constexpr size< N> length( const T (&)[N])
 /// Returns the length of an std::array.
 ///
 /// @tparam  T
-///    The type of the elements in the array.
+///    Type of the elements in the array.
 /// @tparam  N
-///    The size of the array.
+///    Size of the array.
 /// @param[in]  Unnamed array.
-/// @return  The length of the array.
+/// @return  Length of the array.
 /// @since  0.10, 02.01.2017
 template< class T, size_t N>
-   constexpr size< N> length( std::array< T, N> const&)
+   [[nodiscard]] constexpr size< N> length( std::array< T, N> const&)
 {
    return {};
 } // length
@@ -96,9 +97,9 @@ template< class T> using length_t = decltype( length( std::declval< T>()));
 
 /// Returns the size of an empty string.
 ///
-/// @return  Always 0.
+/// @returns  Always 0.
 /// @since  0.10, 02.01.2017
-constexpr size_t string_size()
+[[nodiscard]] inline constexpr size_t string_size()
 {
    return 0;
 } // string_size
@@ -108,14 +109,14 @@ constexpr size_t string_size()
 /// parameter pack.
 ///
 /// @tparam  Ts
-///    The type of the parameter pack.
+///    Type of the parameter pack.
 /// @param[in]  i
 ///    Current index.
 /// @param[in]  ts
-///    The remaining string to determine the length of.
-/// @return  The length of the string.
+///    Remaining string to determine the length of.
+/// @returns  Length of the string.
 /// @since  0.10, 02.01.2017
-template< class... Ts> constexpr size_t string_size( size_t i, Ts... ts)
+template< class... Ts> [[nodiscard]] constexpr size_t string_size( size_t i, Ts... ts)
 {
    return (i > 0 ? i - 1 : 0) + string_size( ts...);
 } // string_size
@@ -134,25 +135,25 @@ template< class... Ts>
 /// This one actually concats the strings.
 ///
 /// @tparam  Lhs
-///    The type of the first string.
+///    Type of the first string.
 /// @tparam  Rhs
-///    The type of the second string.
+///    Type of the second string.
 /// @tparam  I1
-///    The first sequence.
+///    First sequence.
 /// @tparam  I2
-///    The second sequence.
+///    Second sequence.
 /// @param[in]  lhs
-///    The first string.
+///    First string.
 /// @param[in]  rhs
-///    The second string.
+///    Second string.
 /// @param[in]
 ///    First unnamed sequence.
 /// @param[in]
 ///    Second unnamed sequence.
-/// @return  All the strings concatenated to one string.
+/// @returns  All the strings concatenated to one string.
 /// @since  0.10, 02.01.2017
 template< class Lhs, class Rhs, unsigned... I1, unsigned... I2>
-   constexpr const combined_string< Lhs, Rhs>
+   [[nodiscard]]constexpr const combined_string< Lhs, Rhs>
       concat_impl( const Lhs& lhs, const Rhs& rhs, seq< I1...>, seq< I2...>)
 {
    // the '\0' adds to symmetry:

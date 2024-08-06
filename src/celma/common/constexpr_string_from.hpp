@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,14 +18,13 @@
 /// answer from user tclamb. Thank you very much!
 
 
-#ifndef CELMA_COMMON_CONSTEXPR_STRING_FROM_HPP
-#define CELMA_COMMON_CONSTEXPR_STRING_FROM_HPP
+#pragma once
 
 
 #include "celma/common/detail/constexpr_string_from.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Finally, the template to use to get a constexpr string conversion of the
@@ -39,11 +38,7 @@ template< typename Integer, Integer num>
 }; // string_from
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_CONSTEXPR_STRING_FROM_HPP
+} // namespace celma::common
 
 
 // =====  END OF constexpr_string_from.hpp  =====

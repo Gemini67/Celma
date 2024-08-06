@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -18,25 +18,24 @@
 /// answer from user Yakk. Thank you very much!
 
 
-#ifndef CELMA_COMMON_CONSTEXPR_STRING_CONCAT_HPP
-#define CELMA_COMMON_CONSTEXPR_STRING_CONCAT_HPP
+#pragma once
 
 
 #include "celma/common/detail/constexpr_string_concat.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Concats 2 strings.
-/// @tparam  Lhs  The type of the first string.
-/// @tparam  Rhs  The type of the second string.
-/// @param[in]  lhs  The first string.
-/// @param[in]  rhs  The second string.
-/// @return  The two strings concatenated to one string.
+/// @tparam  Lhs  Type of the first string.
+/// @tparam  Rhs  Type of the second string.
+/// @param[in]  lhs  First string.
+/// @param[in]  rhs  Second string.
+/// @returns  The two strings concatenated to one string.
 /// @since  0.10, 02.01.2017
 template< class Lhs, class Rhs>
-   constexpr const detail::combined_string< Lhs, Rhs>
+   [[nodiscard]] constexpr const detail::combined_string< Lhs, Rhs>
       string_concat( const Lhs& lhs, const Rhs& rhs)
 {
    return detail::concat_impl( lhs, rhs,
@@ -46,13 +45,13 @@ template< class Lhs, class Rhs>
 
 
 /// Concats 3 or more strings.
-/// @tparam  T0  The type of the first string.
-/// @tparam  T1  The type of the second string.
-/// @tparam  Ts  The types of the remaining strings.
-/// @param[in]  t0  The first string.
-/// @param[in]  t1  The second string.
-/// @param[in]  ts  The remaining strings.
-/// @return  All the strings concatenated to one string.
+/// @tparam  T0  Type of the first string.
+/// @tparam  T1  Type of the second string.
+/// @tparam  Ts  Types of the remaining strings.
+/// @param[in]  t0  First string.
+/// @param[in]  t1  Second string.
+/// @param[in]  ts  Remaining strings.
+/// @returns  All the strings concatenated to one string.
 /// @since  0.10, 02.01.2017
 template< class T0, class T1, class... Ts>
    constexpr const detail::combined_string< T0, T1, Ts...>
@@ -63,32 +62,28 @@ template< class T0, class T1, class... Ts>
 
 
 /// Concat one string.
-/// @tparam  T  The type of the string.
-/// @param[in]  t  The string.
-/// @return  String as passed in.
+/// @tparam  T  Type of the string.
+/// @param[in]  t  String.
+/// @returns  String as passed in.
 /// @since  0.10, 02.01.2017
-template< class T>
-   constexpr const detail::combined_string< T> string_concat( const T& t)
+template< class T> [[nodiscard]] constexpr
+   const detail::combined_string< T> string_concat( const T& t)
 {
    return string_concat( t, "");
 } // string_concat
 
 
 /// Concat nothing ;-)
-/// @return  Empty string.
+/// @returns  Empty string.
 /// @since  0.10, 02.01.2017
-constexpr const detail::combined_string<> string_concat()
+[[nodiscard]] constexpr const detail::combined_string<> string_concat()
 {
    return string_concat( "");
 } // string_concat
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_CONSTEXPR_STRING_CONCAT_HPP
-
-
-// ===================  END OF constexpr_string_concat.hpp  ===================
+// =====  END OF constexpr_string_concat.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2020-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,13 +12,12 @@
 
 
 /// @file
-/// See documentation of the operator functions.<br>
+/// See documentation of the unit literals operator functions.<br>
 /// The names like KiB == kibibyte etc. were chosen to make clear that the unit
 /// factor will be 1024, not just 1000 (like kilobytes could be).
 
 
-#ifndef CELMA_UNIT_PREFIXES_HPP
-#define CELMA_UNIT_PREFIXES_HPP
+#pragma once
 
 
 #include <cstddef>
@@ -26,8 +25,8 @@
 
 /// Unit for kibibytes, 1024 bytes.
 ///
-/// @param[in]  v  The kibibyte value to return as bytes.
-/// @return  \c v kibibytes in bytes (multiplied by 1024).
+/// @param[in]  v  Kibibyte value to return as bytes.
+/// @returns  \c v kibibytes in bytes (multiplied by 1024).
 /// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_KiB( unsigned long long v)
 {
@@ -37,8 +36,8 @@ constexpr std::size_t operator ""_KiB( unsigned long long v)
 
 /// Unit for mebibytes, 1024 * 1024 bytes.
 ///
-/// @param[in]  v  The mebibyte value to return as bytes.
-/// @return  \c v mebibytes in bytes (multiplied by 1024^2).
+/// @param[in]  v  Mebibyte value to return as bytes.
+/// @returns  \c v mebibytes in bytes (multiplied by 1024^2).
 /// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_MiB( unsigned long long v)
 {
@@ -48,8 +47,8 @@ constexpr std::size_t operator ""_MiB( unsigned long long v)
 
 /// Unit for gibibytes, 1024^3 bytes.
 ///
-/// @param[in]  v  The gibibyte value to return as bytes.
-/// @return  \c v gibibytes in bytes (multiplied by 1024^3).
+/// @param[in]  v  Gibibyte value to return as bytes.
+/// @returns  \c v gibibytes in bytes (multiplied by 1024^3).
 /// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_GiB( unsigned long long v)
 {
@@ -59,8 +58,8 @@ constexpr std::size_t operator ""_GiB( unsigned long long v)
 
 /// Unit for tebibytes, 1024^4 bytes.
 ///
-/// @param[in]  v  The tebibyte value to return as bytes.
-/// @return  \c v tebibytes in bytes (multiplied by 1024^4).
+/// @param[in]  v  Tebibyte value to return as bytes.
+/// @returns  \c v tebibytes in bytes (multiplied by 1024^4).
 /// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_TiB( unsigned long long v)
 {
@@ -70,8 +69,8 @@ constexpr std::size_t operator ""_TiB( unsigned long long v)
 
 /// Unit for pebibytes, 1024^5 bytes.
 ///
-/// @param[in]  v  The pebibyte value to return as bytes.
-/// @return  \c v pebibytes in bytes (multiplied by 1024^5).
+/// @param[in]  v  Pebibyte value to return as bytes.
+/// @returns  \c v pebibytes in bytes (multiplied by 1024^5).
 /// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_PiB( unsigned long long v)
 {
@@ -81,8 +80,8 @@ constexpr std::size_t operator ""_PiB( unsigned long long v)
 
 /// Unit for exbibytes, 1024^6 bytes.
 ///
-/// @param[in]  v  The exbibyte value to return as bytes.
-/// @return  \c v exbibytes in bytes (multiplied by 1024^6).
+/// @param[in]  v  Exbibyte value to return as bytes.
+/// @returns  \c v exbibytes in bytes (multiplied by 1024^6).
 /// @since  1.39.0, 07.07.2020
 constexpr std::size_t operator ""_EiB( unsigned long long v)
 {
@@ -90,8 +89,5 @@ constexpr std::size_t operator ""_EiB( unsigned long long v)
 } // operator ""_EiB
 
 
-#endif   // CELMA_UNIT_PREFIXES_HPP
-
-
-// =====  END OF unit_prefixes.hpp  =====
+// =====  END OF unit_literals.hpp  =====
 

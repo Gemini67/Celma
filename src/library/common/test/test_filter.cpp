@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -37,7 +37,8 @@ BOOST_AUTO_TEST_CASE( errors)
    {
       Filter< int>  my_filter;
 
-      BOOST_REQUIRE_THROW( my_filter.matches( 41), std::runtime_error);
+      BOOST_REQUIRE_THROW( std::ignore = my_filter.matches( 41),
+         std::runtime_error);
    } // end scope
 
 } // errors

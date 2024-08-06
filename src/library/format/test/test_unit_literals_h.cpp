@@ -3,20 +3,20 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2020-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
-**    Test program for the module "unit prefixes", using the Boost.Test
+**    Test program for the module "unit literals", using the Boost.Test
 **    framework.
 **
 --*/
 
 
 // headerfile include of the module to test
-#include "celma/format/unit_prefixes.hpp"
+#include "celma/format/unit_literals.hpp"
 
 
 // C++ Standard Library includes
@@ -25,15 +25,15 @@
 
 
 // Boost includes
-#define BOOST_TEST_MODULE UnitPrefixesTest
+#define BOOST_TEST_MODULE UnitLiteralsTest
 #include <boost/test/unit_test.hpp>
 
 
 
-/// Verify that the format prefixes are correctly applied.
+/// Verify that the format literals are correctly applied.
 ///
 /// @since  1.39.0, 09.07.2020
-BOOST_AUTO_TEST_CASE( apply_prefixes)
+BOOST_AUTO_TEST_CASE( apply_literals)
 {
 
    BOOST_REQUIRE_EQUAL( 1_KiB, 1024);
@@ -49,9 +49,9 @@ BOOST_AUTO_TEST_CASE( apply_prefixes)
 
    BOOST_REQUIRE( 1_EiB < std::numeric_limits< uint64_t>::max());
 
-} // apply_prefixes
+} // apply_literals
 
 
 
-// =====  END OF test_unit_prefixes_h.cpp  =====
+// =====  END OF test_unit_literals_h.cpp  =====
 
