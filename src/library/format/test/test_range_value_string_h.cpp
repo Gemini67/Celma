@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -200,6 +200,7 @@ BOOST_AUTO_TEST_CASE( separator)
 
 
 /// Test with another container: set.
+///
 /// @since  1.21.0, 27.03.2019
 BOOST_AUTO_TEST_CASE( set_container)
 {
@@ -250,6 +251,64 @@ BOOST_AUTO_TEST_CASE( set_container)
    BOOST_REQUIRE_EQUAL( rangeValueString( data_set), "25, 26, 28-32, 50-52");
 
 } // set_container
+
+
+
+/// Test with bitsets.
+///
+/// @since  x.y.z, 07.01.2020
+BOOST_AUTO_TEST_CASE( bitsets)
+{
+
+   {
+      std::bitset< 10>  bs;
+
+      bs.set( 5);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "5");
+
+      bs.set( 6);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "5, 6");
+
+      bs.set( 7);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "5-7");
+
+      bs.set( 3);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "3, 5-7");
+
+      bs.set( 9);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "3, 5-7, 9");
+   } // end scope
+
+   {
+      std::bitset< 10>  bs;
+
+      bs.set( 0);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "0");
+   } // end scope
+
+   {
+      std::bitset< 10>  bs;
+
+      bs.set( 2);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "2");
+
+      bs.set( 1);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "1, 2");
+
+      bs.set( 0);
+
+      BOOST_REQUIRE_EQUAL( rangeValueString( bs), "0-2");
+   } // end scope
+
+} // bitsets
 
 
 
