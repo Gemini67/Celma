@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -601,15 +601,9 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
    // the final checks
    if (!mUsagePrinted)
    {
-      // phew, we're done. check for missing mandatory arguments
-      mArguments.checkMandatoryCardinality();
-      mSubGroupArgs.checkMandatoryCardinality();
-
-      // check for missing required arguments through constraints
-      mConstraints.checkRequired();
-
-      // and check for global constraints not met
-      checkGlobalConstraints();
+      // phew, we're done. check for missing mandatory arguments and check the
+      // constraints
+      finalChecks();
    } // end if
 
 } // Handler::evalArguments
@@ -926,17 +920,32 @@ Handler::ArgResult
 
 
 
+/// To be called after all arguments were evaluated, performs checks that are
+/// possible only then.
 /// Checks if all mandatory arguments were set, and the cardinality
-/// requirements were met.
+/// requirements were met, if constraints "required" and global constraints
+/// are met.<br>
+/// Since these checks must also be executable from an argument group object,
+/// they were combined in this function and used in both mnodules.
 ///
+/// @since  x.y.z, 19.08.2021
+///    (renamed from \c checkMissingMandatoryCardinality(), constraint checks
+///     added)
 /// @since  0.2, 10.04.2016
-void Handler::checkMissingMandatoryCardinality() const
+void Handler::finalChecks()
 {
 
    mArguments.checkMandatoryCardinality();
    mSubGroupArgs.checkMandatoryCardinality();
 
-} // Handler::checkMissingMandatoryCardinality
+
+   // check for missing required arguments through constraints
+   mConstraints.checkRequired();
+
+   // and check for global constraints not met
+   checkGlobalConstraints();
+
+} // Handler::finalChecks
 
 
 

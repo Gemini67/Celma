@@ -221,9 +221,9 @@ void Groups::evalArguments( int argc, char* argv[]) noexcept( false)
 
    if (!mContinueAfterUsage || !usage_printed)
    {
-      for (auto const& stored_group : mArgGroups)
+      for (auto & stored_group : mArgGroups)
       {
-         stored_group.mpArgHandler->checkMissingMandatoryCardinality();
+         stored_group.mpArgHandler->finalChecks();
       } // end for
    } // end if
 
