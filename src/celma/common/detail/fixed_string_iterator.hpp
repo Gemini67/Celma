@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2021 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2021-2024 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,6 +19,7 @@
 #pragma once
 
 
+#include <cstdint>
 #include <iterator>
 #include <limits>
 #include "celma/common/pre_postfix.hpp"
