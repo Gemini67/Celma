@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -44,7 +44,7 @@ class IHandlerValueConstraint;
 } // namespace
 
 
-/// Class to store all command line argument, their descriptions as well as the
+/// Class to store all command line arguments, their descriptions as well as the
 /// destination variables to store the values in.
 /// To set up an argument handler, simply follow these steps:
 /// - Create object, specify the HandleFlags to get the desired behaviour.
@@ -287,10 +287,17 @@ public:
       /// before parsing the command line arguments.<br>
       /// File: $HOME/.progargs/\<progfilename\>.pa
       hfReadProgArg     = hfHelpArgFull  << 1,
+      /// Activates the feature "PId file" where the pid of the calling process
+      /// is stored in a file. If the program is started and the file exists and
+      /// contains the pid of a running process, the new process is stopped
+      /// again.<br>
+      /// The feature can also be activated via command line argument, where it
+      /// is also possible to specify the name of the file to use.
+      hfPidfile         = hfReadProgArg << 1,
       /// Set this when additional program arguments should be read from an
       /// environment variable. Default name of the environment variable is the
       /// name of the program file in uppercase letters.
-      hfEnvVarArgs      = hfReadProgArg << 1,
+      hfEnvVarArgs      = hfPidfile << 1,
       /// Produces verbose output when a value is assigned to a variable.
       hfVerboseArgs     = hfEnvVarArgs << 1,
       /// Disables abbreviations for long arguments completely.
@@ -1054,6 +1061,9 @@ private:
    /// program arguments. By default, the name of the program file is used, all
    /// in uppercase letters.
    std::string                    mEnvVarName;
+   /// If the feature "check PId file" is activated, this variable contains the
+   /// full path and name of the PId file to check.
+   std::string                    mPidFile;
 
    /// Pointer to the last argument handler that was used. Needed for
    /// processing multiple, separate values.

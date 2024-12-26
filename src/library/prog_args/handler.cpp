@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -20,6 +20,7 @@
 
 
 // OS/C lib includes
+#include <csignal>
 #include <cstdlib>
 #include <cstring>
 #include <libgen.h>
@@ -119,6 +120,7 @@ Handler::Handler( std::ostream& os, std::ostream& error_os,
    mGlobalConstraints(),
    mCheckEnvVar( (flag_set & hfEnvVarArgs) != 0),
    mEnvVarName(),
+   mPidFile(),
    mUsedByGroup( (flag_set & hfInGroup) != 0)
 {
 
@@ -588,6 +590,12 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
       checkReadEnvVarArgs( argv[ 0]);
    } // end if
 
+   // complete the default path and filename now for the pid file
+   if (!mPidFile.empty())
+   {
+      mPidFile.append( ".").append( argv[ 0]).append( ".pid");
+   } // end if
+
    // make sure that mpLastArg is reset at the end, in case the same object is
    // used multiple times
    const common::ResetAtExit< detail::TypedArgBase*>  rae( mpLastArg, nullptr);
@@ -610,6 +618,29 @@ void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
 
       // and check for global constraints not met
       checkGlobalConstraints();
+   } // end if
+
+   // now we check the pidfile if a pid file is specified
+   // don't do it earlier since the pidfile argument may overwrite the default
+   // path/filename
+   if (!mPidFile.empty())
+   {
+      std::ifstream  ifs( mPidFile);
+      if (ifs && ifs.is_open())
+      {
+         pid_t  check_pid = 0;
+         ifs >> check_pid;
+
+         if ((check_pid > 0) && (::kill( check_pid, 0) == 0))
+         {
+            // other instance of the same program is running
+            throw std::runtime_error( "other process instance is active");
+         } // end if
+      } // end if
+
+      // either no file, or the process is not active anymore
+      std::ofstream  ofs( mPidFile, std::ios_base::out | std::ios_base::trunc);
+      ofs << ::getpid() << std::endl;
    } // end if
 
 } // Handler::evalArguments
@@ -1297,6 +1328,15 @@ void Handler::handleStartFlags( int flag_set, IUsageText* txt1,
 
    if (flag_set & hfEndValues)
       addArgumentEndValues( "endvalues");
+
+   if (flag_set & hfPidfile)
+   {
+      const char*  home = ::getenv( "HOME");
+      if (home != nullptr)
+      {
+         mPidFile.assign( home).append( "/");
+      } // end if
+   } // end if
 
 } // Handler::handleStartFlags
 
