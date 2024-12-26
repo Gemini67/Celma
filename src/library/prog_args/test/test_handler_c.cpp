@@ -3,14 +3,14 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2023 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
 **    Test program for the module prog_args::Handler using the Boost.Test
-**    module.
+**    framework.
 **
 --*/
 
@@ -26,7 +26,6 @@
 // Boost includes
 #define BOOST_TEST_MODULE ArgumentHandlerTest
 #include <boost/test/unit_test.hpp>
-#include <boost/lexical_cast.hpp>
 
 
 // project includes
@@ -49,7 +48,7 @@ BOOST_AUTO_TEST_CASE( wrong_usage)
    Handler  ah( 0);
 
 
-   BOOST_REQUIRE_THROW( ah.getValueHandlerObj(), std::runtime_error);
+   BOOST_REQUIRE_THROW( ah.getValueHandlerObj(), std::domain_error);
    BOOST_REQUIRE_THROW( ah.addArgumentListArgGroups( "L"), std::invalid_argument);
 
 } // wrong_usage

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2023 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -330,7 +330,7 @@ public:
    }; // HandleFlags
 
    /// List of possible positions for the additional output.
-   enum class UsagePos
+   enum class UsagePos : uint8_t
    {
       unused,       //!< Initialization value.
       beforeArgs,   //!< Position before the list of arguments.
@@ -338,7 +338,7 @@ public:
    }; // UsagePos
 
    /// List of possible settings for printing the usage:
-   enum class UsageContents
+   enum class UsageContents : uint8_t
    {
       all,         //!< Default: Display all arguments with their short and/or
                    //!< long argument keys.
@@ -363,7 +363,7 @@ public:
    /// (Default) Constructor.
    ///
    /// @param[in]  flagSet
-   ///    The set of flags. See enum HandleFlags for a list of possible values.
+   ///    Set of flags. See enum HandleFlags for a list of possible values.
    /// @param[in]  txt1
    ///    Optional pointer to the object that provides additional text for the
    ///    usage.
@@ -380,11 +380,11 @@ public:
    /// Constructor that allows to specify the output streams to write to.
    ///
    /// @param[in]  os
-   ///    The stream to write normal output to.
+   ///    Stream to write normal output to.
    /// @param[in]  error_os
-   ///    The stream to write error output to.
+   ///    Stream to write error output to.
    /// @param[in]  flag_set
-   ///    The set of flags. See enum HandleFlags for a list of possible values.
+   ///    Set of flags. See enum HandleFlags for a list of possible values.
    /// @param[in]  txt1
    ///    Optional pointer to the object that provides additional text for the
    ///    usage.
@@ -444,29 +444,35 @@ public:
    /// For positional arguments, i.e. arguments not preceeded by a an argument
    /// character/name, specify "-" as \a arg_spec.
    ///
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The object that handles the type-specific stuff.<br>
-   ///                       Use the celma::prog_args::destination() template
-   ///                       functions to obtain the correct object.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// @param[in]  arg_spec
+   ///    Arguments on the command line for this argument.
+   /// @param[in]  des
+   ///    Object that handles the type-specific stuff.<br>
+   ///    Use the celma::prog_args::destination() template functions to obtain
+   ///    the correct object.
+   /// @param[in]  desc
+   ///    Description of this argument.
+   /// @param[in]  env_var_name
+   ///    Name of the environment variable to retrieve the value from.
+   /// @return
+   ///    Object managing this argument, may be used to apply further settings.
+   /// @since  x.y.z, 08.02.2023  (added parameter \a env_var_name)
    /// @since  0.16.0, 09.11.2017
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
                                       detail::TypedArgBase* dest,
-                                      const std::string& desc);
+                                      const std::string& desc,
+                                      const char* const env_var_name = nullptr);
 
    /// Adds a sub-group.
    ///
    /// @param[in]  arg_spec
-   ///    The arguments on the command line to enter/start the sub-group.
+   ///    Arguments on the command line to enter/start the sub-group.
    /// @param[in]  subGroup
-   ///    The object to handle the sub-group arguments.
+   ///    Object to handle the sub-group arguments.
    /// @param[in]  desc
-   ///    The description of this sub-group argument.
+   ///    Description of this sub-group argument.
    /// @return
-   ///    The object managing this argument, may be used to apply further
-   ///    settings.
+   ///    Object managing this argument, may be used to apply further settings.
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
                                       Handler& subGroup,
@@ -645,7 +651,7 @@ public:
    /// @param[in]  ihc
    ///    Pointer to the object that handles the constraint. Is deleted when an
    ///    error occurs.
-   /// @throw
+   /// @throws
    ///    std::invalid_argument if a NULL pointer is passed, or the argument
    ///    list contains invalid arguments.
    /// @since  0.2, 10.04.2016
@@ -715,8 +721,8 @@ public:
    /// @param[in]  arg_spec  The short and/or long arguments keys.
    /// @return  Pointer to the object handling the specified argument.
    /// @since  0.14.0, 16.03.2017
-   detail::TypedArgBase* getArgHandler( const std::string& arg_spec)
-      noexcept( false);
+   [[nodiscard]] detail::TypedArgBase*
+      getArgHandler( const std::string& arg_spec) noexcept( false);
 
 protected:
 	/// Classes need access to internals.
@@ -724,7 +730,7 @@ protected:
    friend class Groups;
 
    /// Function call result for evalSingleArgument():
-   enum class ArgResult
+   enum class ArgResult : uint8_t
    {
       unknown,    //!< Unknown argument for this instance (try with next).
       consumed,   //!< Argument handled by this instance, proceed with next
@@ -881,7 +887,7 @@ private:
 
    /// If no environment variable name is given, the name of the program file is
    /// used. Then check if an environment variable with this name exists and is
-   /// not empty. If so the evaluate the program arguments from the variable.
+   /// not empty. If so then evaluate the program arguments from the variable.
    ///
    /// @param[in]  arg0  The (path and) name of the program file.
    /// @since  1.22.0, 01.04.2019
@@ -930,14 +936,23 @@ private:
    void iterateArguments( detail::ArgListParser& alp) noexcept( false);
 
    /// Standard procedure for adding an argument handling object.
-   /// @param[in]  ah_obj  Pointer to the object that handles the argument.
-   /// @param[in]  key     The argument key: short and/or long argument.
-   /// @param[in]  desc    The description of the argument.
-   /// @return  Pointer to the passed argument handling object.
+   ///
+   /// @param[in]  ah_obj
+   ///    Pointer to the object that handles the argument.
+   /// @param[in]  key
+   ///    Argument key: short and/or long argument.
+   /// @param[in]  desc
+   ///    Description of the argument.
+   /// @param[in]  env_var_name
+   ///    Name of the environment variable to retrieve the value from.
+   /// @return
+   ///    Pointer to the passed argument handling object.
+   /// @since  x.y.z, 08.02.2023  (added parameter \a env_var_name)
    /// @since  0.15.0, 13.07.2017  (take ArgumentKey instead of string)
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* internAddArgument( detail::TypedArgBase* ah_obj,
-      const detail::ArgumentKey& key, const std::string& desc);
+      const detail::ArgumentKey& key, const std::string& desc,
+      const char* const env_var_name = nullptr);
 
    /// Checks each argument in the list if it is a valid/known argument.
    /// If the argument specification in the list does not match the original
@@ -1095,10 +1110,11 @@ private:
 
 inline detail::TypedArgBase*
    Handler::addArgument( const std::string& arg_spec,
-      detail::TypedArgBase* dest,const std::string& desc)
+      detail::TypedArgBase* dest, const std::string& desc,
+      const char* const env_var_name)
 {
    const detail::ArgumentKey  key( arg_spec);
-   return internAddArgument( dest, key, desc);
+   return internAddArgument( dest, key, desc, env_var_name);
 } // Handler::addArgument
 
 

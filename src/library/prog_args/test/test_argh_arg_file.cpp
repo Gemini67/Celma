@@ -3,14 +3,14 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019-2021 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2023 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
 **    Test program for reading arguments from an argument file, using the
-**    Boost.Test module.
+**    Boost.Test framework.
 **
 --*/
 
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE( invalid_file)
    ah.addArgumentFile( "arg-file");
 
    BOOST_REQUIRE_THROW( evalArgumentString( ah, "--arg-file xyz"),
-      std::runtime_error);
+      std::invalid_argument);
 
 } // invalid_file
 
