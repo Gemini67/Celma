@@ -78,7 +78,7 @@ if (HAS_FS)
 else()
    set( Boost_Link_Libs       boost_filesystem boost_thread boost_system )
 endif()
-set( Boost_Test_Link_Libs  boost_unit_test_framework ${Boost_Link_Libs} )
+set( Boost_Test_Link_Libs  boost_unit_test_framework ${Boost_Link_Libs} rt )
 
 
 # include directories ----------------------------------------------------------
