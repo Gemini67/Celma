@@ -26,7 +26,7 @@ using celma::appl::make_arg_array;
 
 
 /// Test argument strings without an argument.
-/// @since  0.2, 05.0.4.2016
+/// @since  0.2, 05.04.2016
 BOOST_AUTO_TEST_CASE( no_arguments)
 {
 
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE( single_argument_value)
 
 
 /// Test handling of an argument with multiple words (quoted).
-/// @since  0.2, 05.0.4.2016
+/// @since  0.2, 05.04.2016
 BOOST_AUTO_TEST_CASE( multi_word_value)
 {
 
@@ -407,7 +407,7 @@ BOOST_AUTO_TEST_CASE( multi_word_value)
 
 
 /// Test handling of an argument with mixed quotes.
-/// @since  0.2, 05.0.4.2016
+/// @since  0.2, 05.04.2016
 BOOST_AUTO_TEST_CASE( mixed_quotes)
 {
 
@@ -478,7 +478,7 @@ BOOST_AUTO_TEST_CASE( mixed_quotes)
 
 
 /// Test handling of multiple arguments with multiple words (quoted).
-/// @since  0.2, 05.0.4.2016
+/// @since  0.2, 05.04.2016
 BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
 {
 
@@ -643,7 +643,7 @@ BOOST_AUTO_TEST_CASE( multiple_multi_word_value)
 
 
 /// Test argument strings with one free argument.
-/// @since  0.2, 05.0.4.2016
+/// @since  0.2, 05.04.2016
 BOOST_AUTO_TEST_CASE( one_free)
 {
 
@@ -679,7 +679,7 @@ BOOST_AUTO_TEST_CASE( one_free)
 
 
 /// Test argument strings with a multiple arguments.
-/// @since  0.2, 05.0.4.2016
+/// @since  0.2, 05.04.2016
 BOOST_AUTO_TEST_CASE( multiple_arguments)
 {
 
