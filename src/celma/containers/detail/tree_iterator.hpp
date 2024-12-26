@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -12,7 +12,12 @@
 
 
 /// @file
-/// See documentation of class celma::containers::detail::@@@.
+/// See documentation of template classes
+/// - celma::containers::detail::TreeIterator<>
+/// - celma::containers::detail::ConstTreeIterator<>
+/// - celma::containers::detail::ReverseTreeIterator<>
+/// - celma::containers::detail::ConstReverseTreeIterator<>
+
 
 
 #ifndef CELMA_CONTAINERS_DETAIL_TREE_ITERATOR_HPP
@@ -322,5 +327,5 @@ private:
 #endif   // CELMA_CONTAINERS_DETAIL_TREE_ITERATOR_HPP
 
 
-// ========================  END OF tree_iterator.hpp  ========================
+// =====  END OF tree_iterator.hpp  =====
 

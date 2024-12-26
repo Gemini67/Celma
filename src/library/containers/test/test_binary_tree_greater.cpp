@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -41,8 +41,8 @@ namespace {
 /// 13, 42 and 4711 in ascending order.
 /// @param[in]  int_tree  The tree object to tet the contents of.
 /// @return  \c true if all tests succeeded.
-/// @since  x.y.z, 27.03.2018
-bool checkTree3( BinaryTree< int>& int_tree)
+/// @since  x.y.z, 29.03.2018
+template< typename C> bool checkTree3( C& int_tree)
 {
 
    CHECK_RETURN( !int_tree.empty());
@@ -62,43 +62,44 @@ bool checkTree3( BinaryTree< int>& int_tree)
    CHECK_RETURN( int_tree.find( 90125) == int_tree.end());
 
    // test lower bounds for all positions
-   CHECK_RETURN( int_tree.lower_bound( 7) != int_tree.end());
-   CHECK_EQUAL_RETURN( *int_tree.lower_bound( 7), 13);
+   CHECK_RETURN( int_tree.lower_bound( 7) == int_tree.end());
 
    CHECK_RETURN( int_tree.lower_bound( 13) != int_tree.end());
    CHECK_EQUAL_RETURN( *int_tree.lower_bound( 13), 13);
 
    CHECK_RETURN( int_tree.lower_bound( 40) != int_tree.end());
-   CHECK_EQUAL_RETURN( *int_tree.lower_bound( 40), 42);
+   CHECK_EQUAL_RETURN( *int_tree.lower_bound( 40), 13);
 
    CHECK_RETURN( int_tree.lower_bound( 42) != int_tree.end());
    CHECK_EQUAL_RETURN( *int_tree.lower_bound( 42), 42);
 
    CHECK_RETURN( int_tree.lower_bound( 4000) != int_tree.end());
-   CHECK_EQUAL_RETURN( *int_tree.lower_bound( 4000), 4711);
+   CHECK_EQUAL_RETURN( *int_tree.lower_bound( 4000), 42);
 
    CHECK_RETURN( int_tree.lower_bound( 4711) != int_tree.end());
    CHECK_EQUAL_RETURN( *int_tree.lower_bound( 4711), 4711);
 
-   CHECK_RETURN( int_tree.lower_bound( 4712) == int_tree.end());
+   CHECK_RETURN( int_tree.lower_bound( 4712) != int_tree.end());
+   CHECK_EQUAL_RETURN( *int_tree.lower_bound( 4712), 4711);
 
    // test upper bound for all positions
-   CHECK_RETURN( int_tree.upper_bound( 7) != int_tree.end());
-   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 7), 13);
+   CHECK_RETURN( int_tree.upper_bound( 7) == int_tree.end());
+   CHECK_RETURN( int_tree.upper_bound( 13) == int_tree.end());
 
-   CHECK_RETURN( int_tree.upper_bound( 13) != int_tree.end());
-   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 13), 42);
-
-   CHECK_RETURN( int_tree.upper_bound( 40) != int_tree.end());
-   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 40), 42);
+   CHECK_RETURN( int_tree.upper_bound( 14) != int_tree.end());
+   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 14), 13);
 
    CHECK_RETURN( int_tree.upper_bound( 42) != int_tree.end());
-   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 42), 4711);
+   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 42), 13);
 
    CHECK_RETURN( int_tree.upper_bound( 4000) != int_tree.end());
-   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 4000), 4711);
+   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 4000), 42);
 
-   CHECK_RETURN( int_tree.upper_bound( 4711) == int_tree.end());
+   CHECK_RETURN( int_tree.upper_bound( 4711) != int_tree.end());
+   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 4711), 42);
+
+   CHECK_RETURN( int_tree.upper_bound( 4712) != int_tree.end());
+   CHECK_EQUAL_RETURN( *int_tree.upper_bound( 4712), 4711);
 
    // test iteration over the tree in all directions
 
@@ -106,7 +107,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
       auto  tree_iter = int_tree.begin();
 
       CHECK_RETURN( tree_iter != int_tree.end());
-      CHECK_EQUAL_RETURN( *tree_iter, 13);
+      CHECK_EQUAL_RETURN( *tree_iter, 4711);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != int_tree.end());
@@ -114,7 +115,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != int_tree.end());
-      CHECK_EQUAL_RETURN( *tree_iter, 4711);
+      CHECK_EQUAL_RETURN( *tree_iter, 13);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter == int_tree.end());
@@ -124,7 +125,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
       auto  tree_iter = int_tree.cbegin();
 
       CHECK_RETURN( tree_iter != int_tree.cend());
-      CHECK_EQUAL_RETURN( *tree_iter, 13);
+      CHECK_EQUAL_RETURN( *tree_iter, 4711);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != int_tree.cend());
@@ -132,7 +133,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != int_tree.cend());
-      CHECK_EQUAL_RETURN( *tree_iter, 4711);
+      CHECK_EQUAL_RETURN( *tree_iter, 13);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter == int_tree.cend());
@@ -142,7 +143,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
       auto  tree_iter = int_tree.rbegin();
 
       CHECK_RETURN( tree_iter != int_tree.rend());
-      CHECK_EQUAL_RETURN( *tree_iter, 4711);
+      CHECK_EQUAL_RETURN( *tree_iter, 13);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != int_tree.rend());
@@ -150,7 +151,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != int_tree.rend());
-      CHECK_EQUAL_RETURN( *tree_iter, 13);
+      CHECK_EQUAL_RETURN( *tree_iter, 4711);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter == int_tree.rend());
@@ -160,7 +161,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
       auto  tree_iter = int_tree.crbegin();
 
       CHECK_RETURN( tree_iter != int_tree.crend());
-      CHECK_EQUAL_RETURN( *tree_iter, 4711);
+      CHECK_EQUAL_RETURN( *tree_iter, 13);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != int_tree.crend());
@@ -168,7 +169,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != int_tree.crend());
-      CHECK_EQUAL_RETURN( *tree_iter, 13);
+      CHECK_EQUAL_RETURN( *tree_iter, 4711);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter == int_tree.crend());
@@ -184,7 +185,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
       auto  tree_iter = copy.begin();
 
       CHECK_RETURN( tree_iter != copy.end());
-      CHECK_EQUAL_RETURN( *tree_iter, 13);
+      CHECK_EQUAL_RETURN( *tree_iter, 4711);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != copy.end());
@@ -192,7 +193,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
 
       ++tree_iter;
       CHECK_RETURN( tree_iter != copy.end());
-      CHECK_EQUAL_RETURN( *tree_iter, 4711);
+      CHECK_EQUAL_RETURN( *tree_iter, 13);
 
       ++tree_iter;
       CHECK_RETURN( tree_iter == copy.end());
@@ -207,12 +208,12 @@ bool checkTree3( BinaryTree< int>& int_tree)
 
 
 
-/// Test that operations on an empty tree return the correct values.
-/// @since  x.y.z, 02.04.2017
+/// 
+/// @since  x.y.z, 27.03.2018
 BOOST_AUTO_TEST_CASE( empty_tree_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    BOOST_REQUIRE( int_tree.empty());
@@ -239,12 +240,12 @@ BOOST_AUTO_TEST_CASE( empty_tree_tests)
 
 
 
-/// Test with a single value in the tree.
-/// @since  x.y.z, 24.03.2017
+/// 
+/// @since  x.y.z, 27.03.2018
 BOOST_AUTO_TEST_CASE( single_entry_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    int_tree.insert( 42);
@@ -256,11 +257,11 @@ BOOST_AUTO_TEST_CASE( single_entry_tests)
    BOOST_REQUIRE( int_tree.find( 42) != int_tree.end());
    BOOST_REQUIRE( int_tree.find( 4711) == int_tree.end());
 
-   BOOST_REQUIRE( int_tree.lower_bound( 13) != int_tree.end());
-   BOOST_REQUIRE( *int_tree.lower_bound( 13) == 42);
+   BOOST_REQUIRE( int_tree.lower_bound( 13) == int_tree.end());
    BOOST_REQUIRE( int_tree.lower_bound( 42) != int_tree.end());
    BOOST_REQUIRE( *int_tree.lower_bound( 42) == 42);
-   BOOST_REQUIRE( int_tree.lower_bound( 43) == int_tree.end());
+   BOOST_REQUIRE( int_tree.lower_bound( 43) != int_tree.end());
+   BOOST_REQUIRE( *int_tree.lower_bound( 43) == 42);
 
    {
       auto  tree_iter = int_tree.begin();
@@ -324,12 +325,12 @@ BOOST_AUTO_TEST_CASE( single_entry_tests)
 
 
 
-/// Test a tree with two values, inserted in reverse order.
-/// @since  x.y.z, 25.03.2017
+/// 
+/// @since  x.y.z, 27.03.2018
 BOOST_AUTO_TEST_CASE( two_left_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    int_tree.insert( 42);
@@ -344,25 +345,25 @@ BOOST_AUTO_TEST_CASE( two_left_tests)
    BOOST_REQUIRE( int_tree.find( 42) != int_tree.end());
    BOOST_REQUIRE( int_tree.find( 4711) == int_tree.end());
 
-   BOOST_REQUIRE( int_tree.lower_bound( 7) != int_tree.end());
-   BOOST_REQUIRE( *int_tree.lower_bound( 7) == 13);
+   BOOST_REQUIRE( int_tree.lower_bound( 7) == int_tree.end());
    BOOST_REQUIRE( int_tree.lower_bound( 13) != int_tree.end());
    BOOST_REQUIRE( *int_tree.lower_bound( 13) == 13);
    BOOST_REQUIRE( int_tree.lower_bound( 21) != int_tree.end());
-   BOOST_REQUIRE( *int_tree.lower_bound( 21) == 42);
+   BOOST_REQUIRE( *int_tree.lower_bound( 21) == 13);
    BOOST_REQUIRE( int_tree.lower_bound( 42) != int_tree.end());
    BOOST_REQUIRE( *int_tree.lower_bound( 42) == 42);
-   BOOST_REQUIRE( int_tree.lower_bound( 43) == int_tree.end());
+   BOOST_REQUIRE( int_tree.lower_bound( 43) != int_tree.end());
+   BOOST_REQUIRE( *int_tree.lower_bound( 43) != 13);
 
    {
       auto  tree_iter = int_tree.begin();
 
       BOOST_REQUIRE( tree_iter != int_tree.end());
-      BOOST_REQUIRE( *tree_iter == 13);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != int_tree.end());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 13);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == int_tree.end());
@@ -372,11 +373,11 @@ BOOST_AUTO_TEST_CASE( two_left_tests)
       auto  tree_iter = int_tree.cbegin();
 
       BOOST_REQUIRE( tree_iter != int_tree.cend());
-      BOOST_REQUIRE( *tree_iter == 13);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != int_tree.cend());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 13);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == int_tree.cend());
@@ -386,11 +387,11 @@ BOOST_AUTO_TEST_CASE( two_left_tests)
       auto  tree_iter = int_tree.rbegin();
 
       BOOST_REQUIRE( tree_iter != int_tree.rend());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 13);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != int_tree.rend());
-      BOOST_REQUIRE( *tree_iter == 13);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == int_tree.rend());
@@ -400,11 +401,11 @@ BOOST_AUTO_TEST_CASE( two_left_tests)
       auto  tree_iter = int_tree.crbegin();
 
       BOOST_REQUIRE( tree_iter != int_tree.crend());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 13);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != int_tree.crend());
-      BOOST_REQUIRE( *tree_iter == 13);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == int_tree.crend());
@@ -420,11 +421,11 @@ BOOST_AUTO_TEST_CASE( two_left_tests)
       auto  tree_iter = copy.begin();
 
       BOOST_REQUIRE( tree_iter != copy.end());
-      BOOST_REQUIRE( *tree_iter == 13);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != copy.end());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 13);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == copy.end());
@@ -434,12 +435,12 @@ BOOST_AUTO_TEST_CASE( two_left_tests)
 
 
 
-/// Test a tree with two values, inserted in ascending order.
-/// @since  x.y.z, 25.03.2017
+/// 
+/// @since  x.y.z, 27.03.2018
 BOOST_AUTO_TEST_CASE( two_right_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    int_tree.insert( 42);
@@ -458,11 +459,11 @@ BOOST_AUTO_TEST_CASE( two_right_tests)
       auto  tree_iter = int_tree.begin();
 
       BOOST_REQUIRE( tree_iter != int_tree.end());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 4711);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != int_tree.end());
-      BOOST_REQUIRE( *tree_iter == 4711);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == int_tree.end());
@@ -472,11 +473,11 @@ BOOST_AUTO_TEST_CASE( two_right_tests)
       auto  tree_iter = int_tree.cbegin();
 
       BOOST_REQUIRE( tree_iter != int_tree.cend());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 4711);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != int_tree.cend());
-      BOOST_REQUIRE( *tree_iter == 4711);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == int_tree.cend());
@@ -486,11 +487,11 @@ BOOST_AUTO_TEST_CASE( two_right_tests)
       auto  tree_iter = int_tree.rbegin();
 
       BOOST_REQUIRE( tree_iter != int_tree.rend());
-      BOOST_REQUIRE( *tree_iter == 4711);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != int_tree.rend());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 4711);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == int_tree.rend());
@@ -500,11 +501,11 @@ BOOST_AUTO_TEST_CASE( two_right_tests)
       auto  tree_iter = int_tree.crbegin();
 
       BOOST_REQUIRE( tree_iter != int_tree.crend());
-      BOOST_REQUIRE( *tree_iter == 4711);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != int_tree.crend());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 4711);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == int_tree.crend());
@@ -520,11 +521,11 @@ BOOST_AUTO_TEST_CASE( two_right_tests)
       auto  tree_iter = copy.begin();
 
       BOOST_REQUIRE( tree_iter != copy.end());
-      BOOST_REQUIRE( *tree_iter == 42);
+      BOOST_REQUIRE( *tree_iter == 4711);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter != copy.end());
-      BOOST_REQUIRE( *tree_iter == 4711);
+      BOOST_REQUIRE( *tree_iter == 42);
 
       ++tree_iter;
       BOOST_REQUIRE( tree_iter == copy.end());
@@ -534,13 +535,12 @@ BOOST_AUTO_TEST_CASE( two_right_tests)
 
 
 
-/// Test with a tree with 3 values, inserted in a way resulting in a balanced
-/// binary tree.
-/// @since  x.y.z, 25.03.2017
+/// 
+/// @since  x.y.z, 27.03.2018
 BOOST_AUTO_TEST_CASE( three_balanced_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    int_tree.insert( 42);
@@ -553,13 +553,12 @@ BOOST_AUTO_TEST_CASE( three_balanced_tests)
 
 
 
-/// Test with a tree with 3 values, inserted in a way that results in a list
-/// down the left side of the tree.
-/// @since  x.y.z, 25.03.2017
+/// 
+/// @since  x.y.z, 27.03.2018
 BOOST_AUTO_TEST_CASE( three_left_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    int_tree.insert( 4711);
@@ -572,13 +571,12 @@ BOOST_AUTO_TEST_CASE( three_left_tests)
 
 
 
-/// Test with a tree with 3 values, inserted in a way that results in a list
-/// down the right side of the tree.
-/// @since  x.y.z, 25.03.2017
+/// 
+/// @since  x.y.z, 27.03.2018
 BOOST_AUTO_TEST_CASE( three_right_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    int_tree.insert( 13);
@@ -594,11 +592,11 @@ BOOST_AUTO_TEST_CASE( three_right_tests)
 /// Test with a tree with 3 values, inserted in a way that results in a tree
 /// with one element down the left side, and there another element on the right
 /// side.
-/// @since  x.y.z, 28.03.2018
+/// @since  x.y.z, 29.03.2018
 BOOST_AUTO_TEST_CASE( three_left_right_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    int_tree.insert( 4711);
@@ -614,11 +612,11 @@ BOOST_AUTO_TEST_CASE( three_left_right_tests)
 /// Test with a tree with 3 values, inserted in a way that results in a tree
 /// with one element down the right side, and there another element on the left
 /// side.
-/// @since  x.y.z, 28.03.2018
+/// @since  x.y.z, 29.03.2018
 BOOST_AUTO_TEST_CASE( three_right_left_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BinaryTree< int, std::greater< int>>  int_tree;
 
 
    int_tree.insert( 13);
@@ -631,196 +629,5 @@ BOOST_AUTO_TEST_CASE( three_right_left_tests)
 
 
 
-/// Test that erase() deletes the correct entry, by deleting the last entry of
-/// an unbalanced tree.
-///
-/// @since  x.y.z, 05.02.2019
-BOOST_AUTO_TEST_CASE( erase_decreasing)
-{
-
-   BinaryTree< int>  int_tree;
-
-
-   for (int i = 0; i < 10; ++i)
-      int_tree.insert( i);
-
-   BOOST_REQUIRE( int_tree.check());
-
-   for (int to_del = 0; to_del < 10; ++to_del)
-   {
-      BOOST_REQUIRE_EQUAL( int_tree.size(), 10 - to_del);
-
-      for (int i = 0; i < 10 - to_del; ++i)
-         BOOST_REQUIRE( int_tree.find( i) != int_tree.end());
-
-      int_tree.erase( int_tree.find( 9 - to_del));
-      BOOST_REQUIRE( int_tree.check());
-   } // end for
-
-} // erase_decreasing
-
-
-
-/// Test that erase() deletes the correct entry, by deleting the first (root)
-/// entry of an unbalanced tree.
-///
-/// @since  x.y.z, 05.02.2019
-BOOST_AUTO_TEST_CASE( erase_increasing)
-{
-
-   BinaryTree< int>  int_tree;
-
-
-   for (int i = 0; i < 10; ++i)
-      int_tree.insert( i);
-
-   BOOST_REQUIRE( int_tree.check());
-
-   for (int to_del = 0; to_del < 10; ++to_del)
-   {
-      BOOST_REQUIRE_EQUAL( int_tree.size(), 10 - to_del);
-
-      for (int i = to_del; i < 10; ++i)
-         BOOST_REQUIRE( int_tree.find( i) != int_tree.end());
-
-      int_tree.erase( int_tree.find( to_del));
-      BOOST_REQUIRE( int_tree.check());
-   } // end for
-
-} // erase_increasing
-
-
-
-/// Test that erase() deletes the correct entry, by deleting the entries with
-/// both left and right subtrees.
-///
-/// @since  x.y.z, 05.02.2019
-BOOST_AUTO_TEST_CASE( erase_middle)
-{
-
-   BinaryTree< int>  int_tree;
-
-
-   int_tree.insert( 3);
-
-   int_tree.insert( 1);
-   int_tree.insert( 0);
-   int_tree.insert( 2);
-
-   int_tree.insert( 5);
-   int_tree.insert( 4);
-   int_tree.insert( 6);
-
-   // internally should be
-   //       3
-   //   1       5
-   // 0   2   4   6
-
-   for (int i = 0; i < 7; ++i)
-      BOOST_REQUIRE( int_tree.find( i) != int_tree.end());
-
-   BOOST_REQUIRE( int_tree.check());
-
-   BOOST_REQUIRE( int_tree.erase( int_tree.find( 1)) != int_tree.end());
-
-   BOOST_REQUIRE( int_tree.check());
-
-   BOOST_REQUIRE( int_tree.find( 0) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 1) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 2) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 3) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 4) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 5) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 6) != int_tree.end());
-
-   {
-      auto  tree_iter = int_tree.cbegin();
-
-      for (int i = 0; i < 7; ++i)
-      {
-         if (i == 1)
-            continue;
-
-         BOOST_REQUIRE( tree_iter != int_tree.cend());
-         BOOST_REQUIRE( *tree_iter == i);
-         ++tree_iter;
-      } // end for
-   } // end scope
-
-   BOOST_REQUIRE( int_tree.erase( int_tree.find( 5)) != int_tree.end());
-
-   BOOST_REQUIRE( int_tree.check());
-
-   BOOST_REQUIRE( int_tree.find( 0) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 1) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 2) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 3) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 4) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 5) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 6) != int_tree.end());
-
-   // now should be
-   //       3
-   //   2       6
-   // 0       4
-   BOOST_REQUIRE( int_tree.erase( int_tree.find( 3)) != int_tree.end());
-
-   BOOST_REQUIRE( int_tree.check());
-
-   BOOST_REQUIRE( int_tree.find( 0) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 1) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 2) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 3) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 4) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 5) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 6) != int_tree.end());
-
-   BOOST_REQUIRE( int_tree.erase( int_tree.find( 4)) != int_tree.end());
-
-   BOOST_REQUIRE( int_tree.check());
-
-   BOOST_REQUIRE( int_tree.find( 0) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 1) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 2) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 3) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 4) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 5) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 6) != int_tree.end());
-
-   // erasing the greatest value, must return end() iterator
-   BOOST_REQUIRE( int_tree.erase( int_tree.find( 6)) == int_tree.end());
-
-   BOOST_REQUIRE( int_tree.check());
-
-   BOOST_REQUIRE( int_tree.find( 0) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 1) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 2) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 3) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 4) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 5) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 6) == int_tree.end());
-
-   // erasing the greatest value, must return end() iterator
-   BOOST_REQUIRE( int_tree.erase( int_tree.find( 2)) == int_tree.end());
-
-   BOOST_REQUIRE( int_tree.check());
-
-   BOOST_REQUIRE( int_tree.find( 0) != int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 1) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 2) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 3) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 4) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 5) == int_tree.end());
-   BOOST_REQUIRE( int_tree.find( 6) == int_tree.end());
-
-   BOOST_REQUIRE( int_tree.erase( int_tree.find( 0)) == int_tree.end());
-
-   BOOST_REQUIRE( int_tree.check());
-   BOOST_REQUIRE( int_tree.empty());
-
-} // erase_middle
-
-
-
-// =====  END OF test_binary_tree.cpp  =====
+// =====  END OF test_binary_tree_greater.cpp  =====
 

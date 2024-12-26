@@ -145,8 +145,8 @@ public:
    /// @param[in]  value  The value to determine the upper bound for.
    /// @return
    ///    Iterator pointing to the first element in the tree whose value is
-   ///    greater than the given value. Points to end() if \a value is
-   ///    greater than the greatest value stored in the tree.
+   ///    greater than the given value. Points to end() if \a value is greater
+   ///    than the greatest value stored in the tree.
    /// @since  x.y.z, 23.04.2017
    iterator upper_bound( const T& value);
 
@@ -268,26 +268,6 @@ private:
    ///    boolean value that indicates if the insert operation was successful.
    /// @since  x.y.z, 28.03.2018
    auto recursiveInsert( node_t* parent_node, const T& new_value);
-
-   /// Helper function that returns a pointer to the first element/value in the
-   /// binary tree.<br>
-   /// This function must not be called for empty trees.
-   ///
-   /// @return
-   ///    Pointer to the first element in the tree, i.e. the element with the
-   ///    lowest value (left-most).
-   /// @since  x.y.z, 28.03.2018
-   node_t* first() const;
-
-   /// Helper function that returns a pointer to the last element/value in the
-   /// binary tree.<br>
-   /// This function must not be called for empty trees.
-   ///
-   /// @return
-   ///    Pointer to the last element in the tree, i.e. the element with the
-   ///    greatest value (right-most).
-   /// @since  x.y.z, 28.03.2018
-   node_t* last() const;
 
    /// Helper function to recursively copy the contents of one binary tree into
    /// this on.
@@ -494,32 +474,41 @@ template< typename T, typename C> bool BinaryTree< T, C>::check() const
 {
    if (!mpRoot)
       return true;
-   bool is_valid = (mpRoot->mpParent == nullptr);
-   recursiveVisit( mpRoot.get(), [&is_valid]( auto const& current_node)
+   bool    is_valid = (mpRoot->mpParent == nullptr);
+   size_t  num_nodes = 0;
+   recursiveVisit( mpRoot.get(), [&]( auto const& current_node)
       {
-         if (current_node->mpParent != nullptr)
+         ++num_nodes;
+         if (current_node->mpLeft)
          {
-            if ((current_node->mpParent->mpLeft.get() != current_node)
-                && (current_node->mpParent->mpRight.get() != current_node))
+            if (!mCompareLess( current_node->mpLeft->mValue, current_node->mValue))
             {
                is_valid = false;
             } // end if
          } // end if
+         if (current_node->mpRight)
+         {
+            if (!mCompareLess( current_node->mValue, current_node->mpRight->mValue))
+            {
+               is_valid = false;
+            } // end if
+         } // end if
+         is_valid = is_valid && current_node->check();
       }
    );
-   return is_valid;
+   return is_valid && (mCount == num_nodes);
 } // BinaryTree< T, C>::check
 
 template< typename T, typename C> typename BinaryTree< T, C>::iterator BinaryTree< T, C>::begin()
 {
-   return mpRoot ? iterator( first()) : iterator();
+   return mpRoot ? iterator( mpRoot->first()) : iterator();
 } // BinaryTree< T, C>::begin
 
 
 template< typename T, typename C>
    typename BinaryTree< T, C>::const_iterator BinaryTree< T, C>::cbegin() const
 {
-   return mpRoot ? const_iterator( first()) : const_iterator();
+   return mpRoot ? const_iterator( mpRoot->first()) : const_iterator();
 } // BinaryTree< T, C>::cbegin
 
 
@@ -539,14 +528,14 @@ template< typename T, typename C>
 template< typename T, typename C>
    typename BinaryTree< T, C>::reverse_iterator BinaryTree< T, C>::rbegin()
 {
-   return mpRoot ? reverse_iterator( last()) : reverse_iterator();
+   return mpRoot ? reverse_iterator( mpRoot->last()) : reverse_iterator();
 } // BinaryTree< T, C>::rbegin
 
 
 template< typename T, typename C>
    typename BinaryTree< T, C>::const_reverse_iterator BinaryTree< T, C>::crbegin() const
 {
-   return mpRoot ? const_reverse_iterator( last()) : const_reverse_iterator();
+   return mpRoot ? const_reverse_iterator( mpRoot->last()) : const_reverse_iterator();
 } // BinaryTree< T, C>::crbegin
 
 
@@ -600,28 +589,6 @@ template< typename T, typename C> auto BinaryTree< T, C>::recursiveInsert( node_
    // values are equal, something we don't support:
    return std::pair< iterator, bool>( iterator( parent_node), false);
 } // BinaryTree< T, C>::recursiveInsert
-
-
-template< typename T, typename C>
-   typename BinaryTree< T, C>::node_t* BinaryTree< T, C>::first() const
-{
-   assert( mpRoot);
-   auto  p_first = mpRoot.get();
-   while (p_first->mpLeft)
-      p_first = p_first->mpLeft.get();
-   return p_first;
-} // BinaryTree< T, C>::first
-
-
-template< typename T, typename C>
-   typename BinaryTree< T, C>::node_t* BinaryTree< T, C>::last() const
-{
-   assert( mpRoot);
-   auto  p_last = mpRoot.get();
-   while (p_last->mpRight)
-      p_last = p_last->mpRight.get();
-   return p_last;
-} // BinaryTree< T, C>::last
 
 
 template< typename T, typename C>

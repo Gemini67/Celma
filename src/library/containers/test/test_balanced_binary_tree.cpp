@@ -3,24 +3,24 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
 **
 **  Description:
-**    Test program for the template celma::containers::BinaryTree, using the
-**    Boost.Test framework.
+**    Test program for the template celma::containers::BalancedBinaryTree, using
+**    the Boost.Test framework.
 **
 --*/
 
 
 // module to test header file include
-#include "celma/containers/binary_tree.hpp"
+#include "celma/containers/balanced_binary_tree.hpp"
 
 
 // Boost includes
-#define BOOST_TEST_MODULE BinaryTreeTest
+#define BOOST_TEST_MODULE BalancedBinaryTreeTest
 #include <boost/test/unit_test.hpp>
 
 
@@ -28,12 +28,10 @@
 #include "celma/test/check_return.hpp"
 
 
-using celma::containers::BinaryTree;
-
+using celma::containers::BalancedBinaryTree;
 
 
 namespace {
-
 
 
 /// Checks that the contents of a tree are as expected.<br>
@@ -42,11 +40,12 @@ namespace {
 /// @param[in]  int_tree  The tree object to tet the contents of.
 /// @return  \c true if all tests succeeded.
 /// @since  x.y.z, 27.03.2018
-bool checkTree3( BinaryTree< int>& int_tree)
+bool checkTree3( BalancedBinaryTree< int>& int_tree)
 {
 
    CHECK_RETURN( !int_tree.empty());
    CHECK_RETURN( int_tree.size() == 3);
+   CHECK_RETURN( int_tree.check());
 
    // test find for existing and non-existing values
 
@@ -178,6 +177,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
 
    CHECK_RETURN( !copy.empty());
    CHECK_RETURN( copy.size() == 3);
+   CHECK_RETURN( copy.check());
 
    // also make one iteration test with the copy
    {
@@ -196,11 +196,46 @@ bool checkTree3( BinaryTree< int>& int_tree)
 
       ++tree_iter;
       CHECK_RETURN( tree_iter == copy.end());
+
+      // erase value 42
+      CHECK_RETURN( copy.erase( 42) != copy.end());
+      CHECK_RETURN( copy.find( 13) != copy.end());
+      CHECK_RETURN( copy.find( 42) == copy.end());
+      CHECK_RETURN( copy.find( 4711) == copy.end());
+
+      tree_iter = copy.begin();
+
+      CHECK_RETURN( tree_iter != copy.end());
+      CHECK_EQUAL_RETURN( *tree_iter, 13);
+
+      ++tree_iter;
+      CHECK_RETURN( tree_iter != copy.end());
+      CHECK_EQUAL_RETURN( *tree_iter, 4711);
+
+      ++tree_iter;
+      CHECK_RETURN( tree_iter == copy.end());
+
+      // erase value 4711
+      CHECK_RETURN( copy.erase( 4711) != copy.end());
+      CHECK_RETURN( copy.find( 13) != copy.end());
+      CHECK_RETURN( copy.find( 42) == copy.end());
+      CHECK_RETURN( copy.find( 4711) != copy.end());
+
+      tree_iter = copy.begin();
+
+      CHECK_RETURN( tree_iter != copy.end());
+      CHECK_EQUAL_RETURN( *tree_iter, 13);
+
+      ++tree_iter;
+      CHECK_RETURN( tree_iter == copy.end());
+
+      // erase last value 13
+      CHECK_RETURN( copy.erase( 13) != copy.end());
+      CHECK_RETURN( copy.empty());
    } // end scope
 
    return true;
 } // checkTree3
-
 
 
 } // namespace
@@ -212,7 +247,7 @@ bool checkTree3( BinaryTree< int>& int_tree)
 BOOST_AUTO_TEST_CASE( empty_tree_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    BOOST_REQUIRE( int_tree.empty());
@@ -223,6 +258,7 @@ BOOST_AUTO_TEST_CASE( empty_tree_tests)
    BOOST_REQUIRE( int_tree.crbegin() == int_tree.crend());
    BOOST_REQUIRE( int_tree.find( 13) == int_tree.end());
    BOOST_REQUIRE( int_tree.lower_bound( 13) == int_tree.end());
+   BOOST_REQUIRE( int_tree.check());
 
    auto  copy( int_tree);
 
@@ -234,6 +270,7 @@ BOOST_AUTO_TEST_CASE( empty_tree_tests)
    BOOST_REQUIRE( copy.crbegin() == copy.crend());
    BOOST_REQUIRE( copy.find( 13) == copy.end());
    BOOST_REQUIRE( copy.lower_bound( 13) == copy.end());
+   BOOST_REQUIRE( copy.check());
 
 } // empty_tree_tests
 
@@ -244,7 +281,8 @@ BOOST_AUTO_TEST_CASE( empty_tree_tests)
 BOOST_AUTO_TEST_CASE( single_entry_tests)
 {
 
-   BinaryTree< int>  int_tree;
+std::cout << "\nsingle_entry_tests ..." << std::endl;
+   BalancedBinaryTree< int>  int_tree;
 
 
    int_tree.insert( 42);
@@ -320,6 +358,7 @@ BOOST_AUTO_TEST_CASE( single_entry_tests)
 
    copy.erase( copy.begin());
 
+std::cout << "\nsingle_entry_tests finished" << std::endl;
 } // single_entry_tests
 
 
@@ -329,14 +368,23 @@ BOOST_AUTO_TEST_CASE( single_entry_tests)
 BOOST_AUTO_TEST_CASE( two_left_tests)
 {
 
-   BinaryTree< int>  int_tree;
+std::cout << "\ntwo_left_tests ..." << std::endl;
+   BalancedBinaryTree< int>  int_tree;
 
 
-   int_tree.insert( 42);
-   int_tree.insert( 13);
+   auto insert_result = int_tree.insert( 42);
+   BOOST_REQUIRE( insert_result.second);
+   BOOST_REQUIRE( insert_result.first != int_tree.end());
+   BOOST_REQUIRE_EQUAL( *insert_result.first, 42);
+
+   insert_result = int_tree.insert( 13);
+   BOOST_REQUIRE( insert_result.second);
+   BOOST_REQUIRE( insert_result.first != int_tree.end());
+   BOOST_REQUIRE_EQUAL( *insert_result.first, 13);
 
    BOOST_REQUIRE( !int_tree.empty());
    BOOST_REQUIRE( int_tree.size() == 2);
+   BOOST_REQUIRE( int_tree.check());
 
    BOOST_REQUIRE( int_tree.find( 9) == int_tree.end());
    BOOST_REQUIRE( int_tree.find( 13) != int_tree.end());
@@ -410,10 +458,12 @@ BOOST_AUTO_TEST_CASE( two_left_tests)
       BOOST_REQUIRE( tree_iter == int_tree.crend());
    } // end scope
 
+std::cout << "\nstart coyping ..." << std::endl;
    auto  copy( int_tree);
 
    BOOST_REQUIRE( !copy.empty());
    BOOST_REQUIRE( copy.size() == 2);
+   BOOST_REQUIRE( copy.check());
 
    // also make one iteration test with the copy
    {
@@ -439,7 +489,7 @@ BOOST_AUTO_TEST_CASE( two_left_tests)
 BOOST_AUTO_TEST_CASE( two_right_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    int_tree.insert( 42);
@@ -540,7 +590,7 @@ BOOST_AUTO_TEST_CASE( two_right_tests)
 BOOST_AUTO_TEST_CASE( three_balanced_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    int_tree.insert( 42);
@@ -559,7 +609,7 @@ BOOST_AUTO_TEST_CASE( three_balanced_tests)
 BOOST_AUTO_TEST_CASE( three_left_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    int_tree.insert( 4711);
@@ -578,7 +628,7 @@ BOOST_AUTO_TEST_CASE( three_left_tests)
 BOOST_AUTO_TEST_CASE( three_right_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    int_tree.insert( 13);
@@ -598,7 +648,7 @@ BOOST_AUTO_TEST_CASE( three_right_tests)
 BOOST_AUTO_TEST_CASE( three_left_right_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    int_tree.insert( 4711);
@@ -618,7 +668,7 @@ BOOST_AUTO_TEST_CASE( three_left_right_tests)
 BOOST_AUTO_TEST_CASE( three_right_left_tests)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    int_tree.insert( 13);
@@ -638,7 +688,7 @@ BOOST_AUTO_TEST_CASE( three_right_left_tests)
 BOOST_AUTO_TEST_CASE( erase_decreasing)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    for (int i = 0; i < 10; ++i)
@@ -668,7 +718,7 @@ BOOST_AUTO_TEST_CASE( erase_decreasing)
 BOOST_AUTO_TEST_CASE( erase_increasing)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    for (int i = 0; i < 10; ++i)
@@ -698,7 +748,7 @@ BOOST_AUTO_TEST_CASE( erase_increasing)
 BOOST_AUTO_TEST_CASE( erase_middle)
 {
 
-   BinaryTree< int>  int_tree;
+   BalancedBinaryTree< int>  int_tree;
 
 
    int_tree.insert( 3);
@@ -822,5 +872,5 @@ BOOST_AUTO_TEST_CASE( erase_middle)
 
 
 
-// =====  END OF test_binary_tree.cpp  =====
+// =====  END OF test_balanced_binary_tree.cpp  =====
 
