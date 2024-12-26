@@ -577,15 +577,21 @@ void Handler::addConstraint( detail::IHandlerConstraint* ihc)
 void Handler::evalArguments( int argc, char* argv[]) noexcept( false)
 {
 
+   char  buffer[ PATH_MAX];
+
+
+   ::strcpy( buffer, argv[ 0]);
+   mProgramName = ::basename( buffer);
+
    // first (try to) read the arguments from the file
    if (mReadProgramArguments)
    {
-      readEvalFileArguments( argv[ 0]);
+      readEvalFileArguments();
    } // end if
 
    if (mCheckEnvVar)
    {
-      checkReadEnvVarArgs( argv[ 0]);
+      checkReadEnvVarArgs();
    } // end if
 
    // make sure that mpLastArg is reset at the end, in case the same object is
@@ -967,19 +973,12 @@ bool Handler::argumentExists( const string& argString) const
 /// Tries to open the file with the program's name and read the arguments
 /// from this file.
 ///
-/// @param[in]  arg0  The (path and) name of the program file.
 /// @since  0.2, 10.04.2016
-void Handler::readEvalFileArguments( const char* arg0)
+void Handler::readEvalFileArguments()
 {
 
    assert( (mReadMode & ReadMode::file) == 0);
 
-   // have to copy the path since basename() may want to modify it
-   std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
-
-   ::strcpy( copy.get(), arg0);
-
-   const char*  progNameOnly = ::basename( copy.get());
    const char*  homeDir = ::getenv( "HOME");
 
    if (homeDir == nullptr)
@@ -987,7 +986,7 @@ void Handler::readEvalFileArguments( const char* arg0)
 
    // try to open the file as $HOME/.progargs/<progname>.pa
    string  absPath( homeDir);
-   absPath.append( "/.progargs/").append( progNameOnly).append( ".pa");
+   absPath.append( "/.progargs/").append( mProgramName).append( ".pa");
 
    readArgumentFile( absPath, false);
 
@@ -999,19 +998,15 @@ void Handler::readEvalFileArguments( const char* arg0)
 /// used. Then check if an environment variable with this name exists and is
 /// not empty. If so the evaluate the program arguments from the variable.
 ///
-/// @param[in]  arg0  The (path and) name of the program file.
 /// @since  1.22.0, 01.04.2019
-void Handler::checkReadEnvVarArgs( const char* arg0)
+void Handler::checkReadEnvVarArgs()
 {
 
    assert( (mReadMode & ReadMode::envVar) == 0);
 
    if (mEnvVarName.empty())
    {
-      std::unique_ptr< char>  copy( new char[ ::strlen( arg0)]);
-
-      ::strcpy( copy.get(), arg0);
-      mEnvVarName = ::basename( copy.get());
+      mEnvVarName = mProgramName;
       boost::to_upper( mEnvVarName);
    } // end if
 
@@ -1020,10 +1015,9 @@ void Handler::checkReadEnvVarArgs( const char* arg0)
    if ((arg_env == nullptr) || (arg_env[ 0] == '\0'))
       return;
 
-   const common::ScopedFlag< uint8_t>  sf( mReadMode, ReadMode::envVar);
-   auto const                          as2a = appl::make_arg_array( arg_env,
-      nullptr);
-   detail::ArgListParser               alp( as2a.mArgC, as2a.mpArgV);
+   const common::ScopedFlag  sf( mReadMode, ReadMode::envVar);
+   auto const                as2a = appl::make_arg_array( arg_env, nullptr);
+   detail::ArgListParser     alp( as2a.mArgC, as2a.mpArgV);
 
    iterateArguments( alp);
 
@@ -1050,7 +1044,7 @@ void Handler::readArgumentFile( const string& pathFilename, bool reportMissing)
       return;
    } // end if
 
-   const common::ScopedFlag< uint8_t>  sf( mReadMode, ReadMode::file);
+   const common::ScopedFlag  sf( mReadMode, ReadMode::file);
 
    // now read the lines with arguments and process them
    string  line;
@@ -1327,6 +1321,15 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
    mOutput << "Usage:" << endl
            << mDescription << endl;
 
+   if (mReadProgramArguments)
+      mOutput << "Read program arguments from file '$HOME/.progargs/"
+         << mProgramName << ".pa" << endl;
+
+/**
+print handler constraints
+print if arguments are read from file
+print ... ?
+*/
    if ((txt1 != nullptr) && (txt1->usagePos() == UsagePos::afterArgs))
       mOutput << txt1 << endl << endl;
    else if ((txt2 != nullptr) && (txt2->usagePos() == UsagePos::afterArgs))

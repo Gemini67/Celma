@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::Handler.
 
 
-#ifndef CELMA_PROG_ARGS_HANDLER_HPP
-#define CELMA_PROG_ARGS_HANDLER_HPP
+#pragma once
 
 
 #include <functional>
@@ -33,7 +32,7 @@
 #include "celma/prog_args/summary_options.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 class IUsageText;
@@ -872,17 +871,15 @@ private:
    /// Tries to open the file with the program's name and read the arguments
    /// from this file.
    ///
-   /// @param[in]  arg0  The (path and) name of the program file.
    /// @since  0.2, 10.04.2016
-   void readEvalFileArguments( const char* arg0);
+   void readEvalFileArguments();
 
    /// If no environment variable name is given, the name of the program file is
    /// used. Then check if an environment variable with this name exists and is
    /// not empty. If so the evaluate the program arguments from the variable.
    ///
-   /// @param[in]  arg0  The (path and) name of the program file.
    /// @since  1.22.0, 01.04.2019
-   void checkReadEnvVarArgs( const char* arg0);
+   void checkReadEnvVarArgs();
 
    /// Function to read arguments from a file.
    ///
@@ -1061,7 +1058,7 @@ private:
    /// List of values/flags for the different read mode.<br>
    /// The flags for "reading from file" and "processing environment variable"
    /// may be set in parallel.
-   enum ReadMode
+   enum ReadMode : uint8_t
    {
       commandLine,   //!< Normal evaluation of command line arguments.
       file,          //!< Flag/Bit set when evaluating an argument file.
@@ -1072,8 +1069,8 @@ private:
    /// influence the cardinality checks, i.e. it should be possible to overwrite
    /// a value from a file without triggering a 'too many values' exception.<br>
    /// Since arguments from the environment variable could trigger reading an
-   /// argument file, these two states must be managd separately.
-   uint8_t                        mReadMode = ReadMode::commandLine;
+   /// argument file, these two states must be managed separately.
+   ReadMode                       mReadMode = ReadMode::commandLine;
    /// Flag, set when this argument handler object was created by a Groups
    /// object.
    bool                           mUsedByGroup;
@@ -1081,6 +1078,9 @@ private:
    /// This inverts the meaning of the following argument. Afterwards the flag
    /// is reset again.
    bool                           mInverted = false;
+   /// The name of the program file retrieved from argv[ 0] when evalArguments()
+   /// is called.
+   std::string                    mProgramName;
 
 }; // Handler
 
@@ -1137,11 +1137,7 @@ inline void Handler::printSummary( std::ostream& os)
 } // Handler::printSummary
 
 
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_HANDLER_HPP
+} // namespace celma::prog_args
 
 
 // =====  END OF handler.hpp  =====

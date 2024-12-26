@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,11 +16,10 @@
 /// celma::common::ScopedFlag<>.
 
 
-#ifndef CELMA_COMMON_SCOPED_VALUE_HPP
-#define CELMA_COMMON_SCOPED_VALUE_HPP
+#pragma once
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Assigns a value within a certain scope, when the scope is left the previous
@@ -84,9 +83,9 @@ public:
    ScopedFlag( S& dest_var, int value):
       mDestVar( dest_var),
       mFlagBit( value),
-      mOldValue( dest_var & value)
+      mOldValue( static_cast< S>( dest_var & value))
    {
-      mDestVar |= value;
+      mDestVar = static_cast< S>( mDestVar | value);
    } // ScopedFlag< S>::ScopedFlag
 
    // copying is not allowed
@@ -100,10 +99,10 @@ public:
    {
       if ((mOldValue != 0) && ((mDestVar & mFlagBit) == 0))
       {
-         mDestVar |= mFlagBit;
+         mDestVar = static_cast< S>( mDestVar | mFlagBit);
       } else if ((mOldValue == 0) && ((mDestVar & mFlagBit) != 0))
       {
-         mDestVar -= mFlagBit;
+         mDestVar = static_cast< S>( mDestVar - mFlagBit);
       } // end if
    } // ScopedFlag< S>::~ScopedFlag
 
@@ -122,11 +121,7 @@ private:
 }; // ScopedFlag< S>
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_SCOPED_VALUE_HPP
+} // namespace celma::common
 
 
 // =====  END OF scoped_value.hpp  =====
