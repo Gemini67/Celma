@@ -147,11 +147,12 @@ public:
    /// @since  1.41.0, 16.02.2020
    bool hasIntersection( const KeyValueContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, true);
    } // KeyValueContainerAdapter< std::map< K, V>>::hasIntersection
 
    /// Sorts the values in the container.
    ///
+   /// @throw  std::logic_error since maps don't need to be sorted.
    /// @since  1.41.0, 07.01.2020
    void sort() noexcept( false)
    {
@@ -271,11 +272,12 @@ public:
    /// @since  1.41.0, 15.03.2020
    bool hasIntersection( const KeyValueContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, true);
    } // KeyValueContainerAdapter< std::multimap< K, V>>::hasIntersection
 
    /// Sorts the values in the container.
    ///
+   /// @throw  std::logic_error since multi-maps don't need to be sorted.
    /// @since  1.41.0, 15.03.2020
    void sort() noexcept( false)
    {
@@ -395,11 +397,12 @@ public:
    /// @since  1.41.0, 15.03.2020
    bool hasIntersection( const KeyValueContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, false);
    } // KeyValueContainerAdapter< std::unordered_map< K, V>>::hasIntersection
 
    /// Sorts the values in the container.
    ///
+   /// @throw  std::logic_error since unordered maps cannot be sorted.
    /// @since  1.41.0, 15.03.2020
    void sort() noexcept( false)
    {
@@ -519,11 +522,12 @@ public:
    /// @since  1.41.0, 15.03.2020
    bool hasIntersection( const KeyValueContainerAdapter& other) const
    {
-      return common::hasIntersection( mDestCont, other.mDestCont);
+      return common::hasIntersection( mDestCont, other.mDestCont, false);
    } // KeyValueContainerAdapter< std::unordered_multimap< K, V>>::hasIntersection
 
    /// Sorts the values in the container.
    ///
+   /// @throw  std::logic_error since unordered multi-maps cannot be sorted.
    /// @since  1.41.0, 15.03.2020
    void sort() noexcept( false)
    {

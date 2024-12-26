@@ -15,8 +15,7 @@
 /// See documentation of class celma::containers::btree.
 
 
-#ifndef CELMA_CONTAINER_BTREE_HPP
-#define CELMA_CONTAINER_BTREE_HPP
+#pragma once
 
 
 #include <cassert>
@@ -3812,9 +3811,6 @@ private:
 
 
 } // namespace celma::container
-
-
-#endif   // CELMA_CONTAINERS_BTREE_HPP
 
 
 // =====  END OF btree.hpp  =====

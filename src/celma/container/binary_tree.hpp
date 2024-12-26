@@ -15,8 +15,7 @@
 /// See documentation of template class celma::container::BinaryTree<>.
 
 
-#ifndef CELMA_CONTAINER_BINARY_TREE_HPP
-#define CELMA_CONTAINER_BINARY_TREE_HPP
+#pragma once
 
 
 #include <cassert>
@@ -831,9 +830,6 @@ public:
 
 
 } // namespace celma
-
-
-#endif   // CELMA_CONTAINER_BINARY_TREE_HPP
 
 
 // =====  END OF binary_tree.hpp  =====
