@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ArgumentDesc.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_ARGUMENT_DESC_HPP
-#define CELMA_PROG_ARGS_DETAIL_ARGUMENT_DESC_HPP
+#pragma once
 
 
 #include <iosfwd>
@@ -27,13 +26,13 @@
 #include "celma/prog_args/detail/usage_params.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 class TypedArgBase;
 
 
-/// Provides storage for all arguments (specifyer plus description).<br>
+/// Provides storage for all arguments (specifyer plus description).
 /// This is used to print the usage.
 ///
 /// @since  1.1.0, 04.12.2017
@@ -48,11 +47,11 @@ public:
    /// specification (short and/or long parameter) to print on one line with
    /// the argument description, if longer then the specification and
    /// description are written on separate lines.
-   static const unsigned int  MaxNameLength = 40;
+   static constexpr unsigned int  MaxNameLength = 40;
    /// Default line length for printing the usage.
-   static const unsigned int  DefaultLineLength = 80;
+   static constexpr unsigned int  DefaultLineLength = 80;
    /// Number of spaces to use for indention on the usage.
-   static const unsigned int  IndentLength = 3;
+   static constexpr unsigned int  IndentLength = 3;
 
    /// Constructor.
    /// @param[in]  usage_params  The object that contains the parameters for
@@ -61,16 +60,21 @@ public:
    /// @since  0.2, 10.04.2016
    explicit ArgumentDesc( shared_usage_params_t& usage_params);
 
-   /// Adds an argument.
-   /// @param[in]  arg_desc  The string with the description.
-   /// @param[in]  arg_obj   Pointer to the object that handles this argument.
-   /// @since  1.1.0, 17.11.2017  (removed key parameter, object may not be NULL
-   ///         anymore)
+   /// Adds an argument and its description.
+   ///
+   /// @param[in]  arg_desc
+   ///    The string with the description.
+   /// @param[in]  arg_obj
+   ///    Pointer to the object that handles this argument.
+   /// @since  x.y.z, 20.10.2020
+   ///    (renamed from 'addArgument' to make name more unique)
+   /// @since  1.1.0, 17.11.2017
+   ///    (removed key parameter, object may not be NULL anymore)
    /// @since  0.2, 10.04.2016
-   void addArgument( const std::string& argDesc, TypedArgBase* argObj);
+   void store( const std::string& argDesc, TypedArgBase* argObj);
 
    /// Can be used to modify the captions (titel) written before the
-   /// mandatory and/or optional arguments.<br>
+   /// mandatory and/or optional arguments.
    /// If any of those points is NULL, the corresponding value is not changed.
    /// @param[in]  mandatory  Sets the caption for the mandatory arguments.<br>
    ///                        Default value: 'Mandatory arguments:'.
@@ -94,6 +98,33 @@ public:
    /// @since
    ///    1.14.0, 01.10.2018
    const std::string getArgDesc( const ArgumentKey& arg_key) const;
+
+   /// 
+   /// @param[in]  arg_key
+   ///    .
+   /// @param[in]  ext_desc
+   ///    .
+   /// @since
+   ///    x.y.z, 20.10.2020
+   void addExtUsage( const ArgumentKey& arg_key, const std::string& ext_desc);
+
+   /// 
+   /// @param[in]  arg_key
+   ///    The short and/or long argument to return the description for.
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 20.10.2020
+   bool hasExtUsage( const ArgumentKey& arg_key) const;
+
+   /// 
+   /// @param[in]  arg_key
+   ///    The short and/or long argument to return the description for.
+   /// @return
+   ///    .
+   /// @since
+   ///    x.y.z, 20.10.2020
+   const std::string getExtUsage( const ArgumentKey& arg_key) const;
 
    /// Prints the contents of the storage to the specified stream.
    /// @param[out]  os  the stream to write to.
@@ -149,6 +180,9 @@ private:
       std::string    mDescription;
       /// Pointer to the object that handles this argument.
       TypedArgBase*  mpArgObj;
+      /// Contains the extended description that is printed with the argument
+      /// help.
+      std::string    mExtDesc;
 
    }; // ArgumentDesc::ArgDesc
 
@@ -161,19 +195,22 @@ private:
    void print( std::ostream& os) const;
 
    /// Finally prints the arguments.
-   /// @param[out]  os                The stream to write to.
-   /// @param[in]   tb                The object used to format the description
-   ///                                of the parameters.
-   /// @param[in]   printIsMandatory  Specifies if the mandatory (\c true) or
-   ///                                non-mandatory (\c false) parameters should
-   ///                                be printed now.
-   /// @param[in]   printed           Pointer to the array with the counters for
-   ///                                the number of parameters printed.
-   /// @param[in]   sameLine          \c true if the parameter name and its
-   ///                                description should be printed on the same
-   ///                                line, \c false otherwise (printed on two
-   ///                                lines).
-   /// @param[in]   max_length        The maximum length of all arguments.
+   ///
+   /// @param[out]  os
+   ///    The stream to write to.
+   /// @param[in]   tb
+   ///    The object used to format the description of the parameters.
+   /// @param[in]   printIsMandatory
+   ///    Specifies if the mandatory (\c true) or non-mandatory (\c false)
+   ///    parameters should be printed now.
+   /// @param[in]   printed
+   ///    Pointer to the array with the counters for the number of parameters 
+   ///    printed.
+   /// @param[in]   sameLine
+   ///    \c true if the parameter name and its description should be printed on
+   ///    the same line, \c false otherwise (printed on two lines).
+   /// @param[in]   max_length
+   ///    The maximum length of all arguments.
    /// @since  0.2, 10.04.2016
    void printArguments( std::ostream& os, format::TextBlock& tb,
       bool printIsMandatory, int* printed, bool sameLine, int max_length) const;
@@ -194,12 +231,7 @@ private:
 }; // ArgumentDesc
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_ARGUMENT_DESC_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF argument_desc.hpp  =====

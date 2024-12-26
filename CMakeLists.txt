@@ -83,11 +83,13 @@ set( CELMA_INCLUDE_DIRS
 
 include_directories(
    ${CELMA_INCLUDE_DIRS}
-   SYSTEM ${Boost_INCLUDE_DIRS}
+   ${Boost_INCLUDE_DIRS}
 )
 
-# suppress warnings for external libraries
-add_definitions( -isystem ${Boost_INCLUDE_DIR} )
+if (NOT ${Boost_INCLUDE_DIR} STREQUAL "/usr/include")
+   # suppress warnings for external libraries
+   add_definitions( -isystem ${Boost_INCLUDE_DIR} )
+endif()
 
 link_directories( ${Boost_LIBRARY_DIRS} )
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 --*/
 
 
-// module to test header file include
+// module to test headerfile include
 #include "celma/prog_args.hpp"
 
 
@@ -148,29 +148,116 @@ BOOST_AUTO_TEST_CASE( flag_full)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
-                        "Argument '-f', usage:\n"
-                        "   A boolean flag with a very long, but meaningless description, just used to\n"
-                        "   check text formatting in this context.\n"
-                        "   Not that it is already tested thoroughly through the usage formatting.\n"
-                        "Properties:\n"
-                        "   destination variable name:  bool_arg\n"
-                        "   destination variable type:  bool\n"
-                        "   is mandatory:               false\n"
-                        "   value mode:                 'none' (0)\n"
-                        "   cardinality:                at most 1\n"
-                        "   checks:                     -\n"
-                        "   check original value:       false\n"
-                        "   formats:                    -\n"
-                        "   constraints:                -\n"
-                        "   is hidden:                  false\n"
-                        "   takes multiple values:      false\n"
-                        "   allows inverting:           false\n"
-                        "   is deprecated:              false\n"
-                        "   is replaced:                false\n"
-                        "\n"));
+      "Argument '-f', usage:\n"
+      "   A boolean flag with a very long, but meaningless description, just used to\n"
+      "   check text formatting in this context.\n"
+      "   Not that it is already tested thoroughly through the usage formatting.\n"
+      "Properties:\n"
+      "   destination variable name:  bool_arg\n"
+      "   destination variable type:  bool\n"
+      "   is mandatory:               false\n"
+      "   value mode:                 'none' (0)\n"
+      "   cardinality:                at most 1\n"
+      "   checks:                     -\n"
+      "   check original value:       false\n"
+      "   formats:                    -\n"
+      "   constraints:                -\n"
+      "   is hidden:                  false\n"
+      "   takes multiple values:      false\n"
+      "   allows inverting:           false\n"
+      "   is deprecated:              false\n"
+      "   is replaced:                false\n"
+      "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // flag_full
+
+
+
+/// Check that the extended help text is not printed in the normal usage.
+///
+/// @since  x.y.z, 21.10.2020
+BOOST_AUTO_TEST_CASE( flag_extended_usage)
+{
+
+   ostringstream   std_out;
+   ostringstream   err_out;
+   Handler         ah( std_out, err_out, Handler::AllHelp | Handler::hfUsageCont);
+   bool            bool_arg;
+
+
+   ah.addArgument( "f", DEST_VAR( bool_arg), "A boolean flag with a very long, "
+      "but meaningless description, just used to check text formatting in this "
+      "context.",
+      "Not that it is already tested thoroughly through the usage formatting.");
+
+   auto const  as2a = make_arg_array( "-h", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   // std::cerr << "\n" << std_out.str() << std::endl;
+   BOOST_REQUIRE( multilineStringCompare( std_out,
+      "Usage:\n"
+      "Optional arguments:\n"
+      "   -h,--help    Prints the program usage.\n"
+      "   --help-arg   Prints the usage for the given argument.\n"
+      "   -f           A boolean flag with a very long, but meaningless description,\n"
+      "                just used to check text formatting in this context.\n"
+      "\n"));
+   BOOST_REQUIRE( err_out.str().empty());
+
+} // flag_extended_usage
+
+
+
+/// Extended help for a boolean argument.
+///
+/// @since  x.y.z, 21.10.2020
+BOOST_AUTO_TEST_CASE( flag_extended)
+{
+
+   ostringstream   std_out;
+   ostringstream   err_out;
+   Handler         ah( std_out, err_out, Handler::hfHelpArgFull | Handler::hfUsageCont);
+   bool            bool_arg;
+
+
+   ah.addArgument( "f", DEST_VAR( bool_arg), "A boolean flag with a very long, "
+      "but meaningless description, just used to check text formatting in this "
+      "context.",
+      "Not that it is already tested thoroughly through the normal usage "
+      "formatting, which of course also includes long lines that need to be "
+      "split upon multiple lines.");
+
+   auto const  as2a = make_arg_array( "--help-arg f", nullptr);
+
+   BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
+   // std::cerr << "\n" << std_out.str() << std::endl;
+   BOOST_REQUIRE( multilineStringCompare( std_out,
+      "Argument '-f', usage:\n"
+      "   A boolean flag with a very long, but meaningless description, just used to\n"
+      "   check text formatting in this context.\n"
+      "   Not that it is already tested thoroughly through the normal usage formatting,\n"
+      "   which of course also includes long lines that need to be split upon multiple\n"
+      "   lines.\n"
+      "Properties:\n"
+      "   destination variable name:  bool_arg\n"
+      "   destination variable type:  bool\n"
+      "   is mandatory:               false\n"
+      "   value mode:                 'none' (0)\n"
+      "   cardinality:                at most 1\n"
+      "   checks:                     -\n"
+      "   check original value:       false\n"
+      "   formats:                    -\n"
+      "   constraints:                -\n"
+      "   is hidden:                  false\n"
+      "   takes multiple values:      false\n"
+      "   allows inverting:           false\n"
+      "   is deprecated:              false\n"
+      "   is replaced:                false\n"
+      "\n"));
+   BOOST_REQUIRE( err_out.str().empty());
+
+} // flag_extended
 
 
 
@@ -222,24 +309,24 @@ BOOST_AUTO_TEST_CASE( mandatory_full)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
-                        "Argument '-s', usage:\n"
-                        "   Some funny string argument.\n"
-                        "Properties:\n"
-                        "   destination variable name:  string_arg\n"
-                        "   destination variable type:  std::string\n"
-                        "   is mandatory:               true\n"
-                        "   value mode:                 'required' (2)\n"
-                        "   cardinality:                at most 1\n"
-                        "   checks:                     -\n"
-                        "   check original value:       false\n"
-                        "   formats:                    -\n"
-                        "   constraints:                -\n"
-                        "   is hidden:                  false\n"
-                        "   takes multiple values:      false\n"
-                        "   allows inverting:           false\n"
-                        "   is deprecated:              false\n"
-                        "   is replaced:                false\n"
-                        "\n"));
+      "Argument '-s', usage:\n"
+      "   Some funny string argument.\n"
+      "Properties:\n"
+      "   destination variable name:  string_arg\n"
+      "   destination variable type:  std::string\n"
+      "   is mandatory:               true\n"
+      "   value mode:                 'required' (2)\n"
+      "   cardinality:                at most 1\n"
+      "   checks:                     -\n"
+      "   check original value:       false\n"
+      "   formats:                    -\n"
+      "   constraints:                -\n"
+      "   is hidden:                  false\n"
+      "   takes multiple values:      false\n"
+      "   allows inverting:           false\n"
+      "   is deprecated:              false\n"
+      "   is replaced:                false\n"
+      "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // mandatory_full
@@ -267,24 +354,24 @@ BOOST_AUTO_TEST_CASE( pair_full)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
-                        "Argument '--pair', usage:\n"
-                        "   A pair of a string and an integer argument.\n"
-                        "Properties:\n"
-                        "   destination variable name:  string_arg\n"
-                        "   destination variable type:  std::string\n"
-                        "   is mandatory:               false\n"
-                        "   value mode:                 'required' (2)\n"
-                        "   cardinality:                at most 1\n"
-                        "   checks:                     -\n"
-                        "   check original value:       false\n"
-                        "   formats:                    -\n"
-                        "   constraints:                -\n"
-                        "   is hidden:                  false\n"
-                        "   takes multiple values:      false\n"
-                        "   allows inverting:           false\n"
-                        "   is deprecated:              false\n"
-                        "   is replaced:                false\n"
-                        "\n"));
+      "Argument '--pair', usage:\n"
+      "   A pair of a string and an integer argument.\n"
+      "Properties:\n"
+      "   destination variable name:  string_arg\n"
+      "   destination variable type:  std::string\n"
+      "   is mandatory:               false\n"
+      "   value mode:                 'required' (2)\n"
+      "   cardinality:                at most 1\n"
+      "   checks:                     -\n"
+      "   check original value:       false\n"
+      "   formats:                    -\n"
+      "   constraints:                -\n"
+      "   is hidden:                  false\n"
+      "   takes multiple values:      false\n"
+      "   allows inverting:           false\n"
+      "   is deprecated:              false\n"
+      "   is replaced:                false\n"
+      "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // pair_full
@@ -326,24 +413,24 @@ BOOST_AUTO_TEST_CASE( subgroup_full)
    BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
-                        "Argument '-o', usage:\n"
-                        "   output arguments\n"
-                        "Properties:\n"
-                        "   destination variable name:  sub-group\n"
-                        "   destination variable type:  subgroup\n"
-                        "   is mandatory:               false\n"
-                        "   value mode:                 'none' (0)\n"
-                        "   cardinality:                none\n"
-                        "   checks:                     -\n"
-                        "   check original value:       false\n"
-                        "   formats:                    -\n"
-                        "   constraints:                -\n"
-                        "   is hidden:                  false\n"
-                        "   takes multiple values:      false\n"
-                        "   allows inverting:           false\n"
-                        "   is deprecated:              false\n"
-                        "   is replaced:                false\n"
-                        "\n"));
+      "Argument '-o', usage:\n"
+      "   output arguments\n"
+      "Properties:\n"
+      "   destination variable name:  sub-group\n"
+      "   destination variable type:  subgroup\n"
+      "   is mandatory:               false\n"
+      "   value mode:                 'none' (0)\n"
+      "   cardinality:                none\n"
+      "   checks:                     -\n"
+      "   check original value:       false\n"
+      "   formats:                    -\n"
+      "   constraints:                -\n"
+      "   is hidden:                  false\n"
+      "   takes multiple values:      false\n"
+      "   allows inverting:           false\n"
+      "   is deprecated:              false\n"
+      "   is replaced:                false\n"
+      "\n"));
    // std::cerr << "\n" << err_out.str() << std::endl;
    BOOST_REQUIRE( err_out.str().empty());
 
@@ -386,24 +473,24 @@ BOOST_AUTO_TEST_CASE( subgroup_arg_full)
    BOOST_REQUIRE_NO_THROW( masterAH.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
-                        "Argument '-f', usage:\n"
-                        "   file name\n"
-                        "Properties:\n"
-                        "   destination variable name:  inputName\n"
-                        "   destination variable type:  std::string\n"
-                        "   is mandatory:               false\n"
-                        "   value mode:                 'required' (2)\n"
-                        "   cardinality:                at most 1\n"
-                        "   checks:                     -\n"
-                        "   check original value:       false\n"
-                        "   formats:                    -\n"
-                        "   constraints:                -\n"
-                        "   is hidden:                  false\n"
-                        "   takes multiple values:      false\n"
-                        "   allows inverting:           false\n"
-                        "   is deprecated:              false\n"
-                        "   is replaced:                false\n"
-                        "\n"));
+      "Argument '-f', usage:\n"
+      "   file name\n"
+      "Properties:\n"
+      "   destination variable name:  inputName\n"
+      "   destination variable type:  std::string\n"
+      "   is mandatory:               false\n"
+      "   value mode:                 'required' (2)\n"
+      "   cardinality:                at most 1\n"
+      "   checks:                     -\n"
+      "   check original value:       false\n"
+      "   formats:                    -\n"
+      "   constraints:                -\n"
+      "   is hidden:                  false\n"
+      "   takes multiple values:      false\n"
+      "   allows inverting:           false\n"
+      "   is deprecated:              false\n"
+      "   is replaced:                false\n"
+      "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // subgroup_arg_full
@@ -464,24 +551,24 @@ BOOST_AUTO_TEST_CASE( vector_max_values_full)
    BOOST_REQUIRE_NO_THROW( ah.evalArguments( as2a.mArgC, as2a.mpArgV));
    // std::cerr << "\n" << std_out.str() << std::endl;
    BOOST_REQUIRE( multilineStringCompare( std_out,
-                        "Argument '--values', usage:\n"
-                        "   3 values in the range 1..10.\n"
-                        "Properties:\n"
-                        "   destination variable name:  int_vec\n"
-                        "   destination variable type:  std::vector<int>\n"
-                        "   is mandatory:               false\n"
-                        "   value mode:                 'required' (2)\n"
-                        "   cardinality:                exactly 3\n"
-                        "   checks:                     1 <= value < 100\n"
-                        "   check original value:       false\n"
-                        "   formats:                    -\n"
-                        "   constraints:                excludes (names)\n"
-                        "   is hidden:                  false\n"
-                        "   takes multiple values:      true\n"
-                        "   allows inverting:           false\n"
-                        "   is deprecated:              false\n"
-                        "   is replaced:                false\n"
-                        "\n"));
+      "Argument '--values', usage:\n"
+      "   3 values in the range 1..10.\n"
+      "Properties:\n"
+      "   destination variable name:  int_vec\n"
+      "   destination variable type:  std::vector<int>\n"
+      "   is mandatory:               false\n"
+      "   value mode:                 'required' (2)\n"
+      "   cardinality:                exactly 3\n"
+      "   checks:                     1 <= value < 100\n"
+      "   check original value:       false\n"
+      "   formats:                    -\n"
+      "   constraints:                excludes (names)\n"
+      "   is hidden:                  false\n"
+      "   takes multiple values:      true\n"
+      "   allows inverting:           false\n"
+      "   is deprecated:              false\n"
+      "   is replaced:                false\n"
+      "\n"));
    BOOST_REQUIRE( err_out.str().empty());
 
 } // vector_max_values_full

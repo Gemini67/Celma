@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::detail::ArgumentContainer.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/detail/argument_container.hpp"
 
 
@@ -35,7 +35,7 @@ using std::runtime_error;
 using std::string;
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Constructor.
@@ -56,11 +56,15 @@ ArgumentContainer::ArgumentContainer( bool stores_sub_args):
 
 
 /// Adds a new argument.
-/// @param[in]  arg_handler  The object used to handle this argument.
-/// @param[in]  key          The argument character, string or both.
+///
+/// @param[in]  argHandler
+///    The object used to handle this argument.
+/// @param[in]  key
+///    The argument character, string or both.
+/// @since  x.y.z, 20.10.2020
+///    (renamed from addArgument)
 /// @since  0.2, 10.04.2016
-void ArgumentContainer::addArgument( TypedArgBase* arg_handler,
-                                     const ArgumentKey& key)
+void ArgumentContainer::add( TypedArgBase* arg_handler, const ArgumentKey& key)
 {
 
    shared_handler_t  sa( arg_handler);
@@ -68,7 +72,7 @@ void ArgumentContainer::addArgument( TypedArgBase* arg_handler,
 
    mArguments.addArgument( sa, key);
 
-} // ArgumentContainer::addArgument
+} // ArgumentContainer::add
 
 
 
@@ -236,9 +240,7 @@ std::ostream& operator <<( std::ostream& os, const ArgumentContainer& ac)
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF argument_container.cpp  =====

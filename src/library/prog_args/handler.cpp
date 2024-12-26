@@ -15,7 +15,7 @@
 /// See documentation of class celma::prog_args::Handler.
 
 
-// module header file include
+// module headerfile include
 #include "celma/prog_args/handler.hpp"
 
 
@@ -230,8 +230,8 @@ detail::TypedArgBase*
 
    arg_hdl->setKey( key);
 
-   mSubGroupArgs.addArgument( arg_hdl, key);
-   mDescription.addArgument( desc, arg_hdl);
+   mSubGroupArgs.add( arg_hdl, key);
+   mDescription.store( desc, arg_hdl);
 
    return arg_hdl;
 } // Handler::addArgument
@@ -243,20 +243,24 @@ detail::TypedArgBase*
 /// The standard help arguments may still be set in the constructor, then
 /// both arguments can be used to get the usage displayed.
 ///
-/// @param[in]  arg_spec  The arguments on the command line for the help
-///                       feature.
-/// @param[in]  desc      The description of this argument.
-/// @param[in]  txt1      Optional pointer to the object to provide
-///                       additional text for the usage.
-/// @param[in]  txt2      Optional pointer to the object to provide
-///                       additional text for the usage.
-/// @return  The object managing the argument, may be used to apply further
-///          settings (normally not necessary).
+/// @param[in]  arg_spec
+///    The arguments on the command line for the help feature.
+/// @param[in]  desc
+///    The description of this argument.
+/// @param[in]  txt1
+///    Optional pointer to the object that provides additional text for the
+///    usage.
+/// @param[in]  txt2
+///    Optional pointer to the object that provides additional text for the
+///    usage.
+/// @return
+///    The object managing the argument, may be used to apply further
+///    settings (normally not necessary).
 /// @since  0.10, 22.12.2016
 detail::TypedArgBase* Handler::addHelpArgument( const string& arg_spec,
-                                                const string& desc,
-                                                IUsageText* txt1,
-                                                IUsageText* txt2)
+   const string& desc,
+   IUsageText* txt1,
+   IUsageText* txt2)
 {
 
    return addArgument( arg_spec,
@@ -1126,6 +1130,7 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
 
    auto const  slash_pos = help_arg_key.find( "/");
 
+
    if (slash_pos != string::npos)
    {
       const detail::ArgumentKey  key( help_arg_key.substr( 0, slash_pos));
@@ -1160,7 +1165,14 @@ void Handler::helpArgument( const string& help_arg_key, bool full)
    {
       mOutput << "Argument '" << key << "', usage:" << std::endl;
 
-      auto const  desc = mDescription.getArgDesc( key);
+      auto  desc = mDescription.getArgDesc( key);
+
+      // check if we have to append an extended usage text
+      if (mDescription.hasExtUsage( key))
+      {
+         desc.append( "\n").append( mDescription.getExtUsage( key));
+      } // end if
+
       format::TextBlock  tb( 3, 80, true);
       tb.format(  mOutput, desc);
 
@@ -1343,19 +1355,30 @@ void Handler::usage( IUsageText* txt1, IUsageText* txt2)
 
 /// Standard procedure for adding an argument handling object.
 ///
-/// @param[in]  ah_obj  Pointer to the object that handles the argument.
-/// @param[in]  key     The argument key: short and/or long argument.
-/// @param[in]  desc    The description of the argument.
+/// @param[in]  ah_obj
+///    Pointer to the object that handles the argument.
+/// @param[in]  key
+///    The argument key: short and/or long argument.
+/// @param[in]  desc
+///    The description of the argument.
+/// @param[in]  desc_ext
+///    Optional extended argument description that is printed with the
+///    "argument help".
 /// @return  Pointer to the passed argument handling object.
-/// @since  0.15.0, 13.07.2017  (take ArgumentKey instead of string)
+/// @since  x.y.z, 20.10.2020
+///    ()added parameter \a desc_ext)
+/// @since  0.15.0, 13.07.2017
+///    (take ArgumentKey instead of string)
 /// @since  0.2, 10.04.2016
 detail::TypedArgBase* Handler::internAddArgument( detail::TypedArgBase* ah_obj,
-                                                  const detail::ArgumentKey& key,
-                                                  const string& desc)
+   const detail::ArgumentKey& key, const string& desc, const char* desc_ext)
 {
 
-   mArguments.addArgument( ah_obj, key);
-   mDescription.addArgument( desc, ah_obj);
+   mArguments.add( ah_obj, key);
+   mDescription.store( desc, ah_obj);
+
+   if (desc_ext != nullptr)
+      mDescription.addExtUsage( key, desc_ext);
 
    if (mUsedByGroup)
       Groups::instance().crossCheckArguments( this);

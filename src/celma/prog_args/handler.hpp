@@ -443,17 +443,26 @@ public:
    /// For positional arguments, i.e. arguments not preceeded by a an argument
    /// character/name, specify "-" as \a arg_spec.
    ///
-   /// @param[in]  arg_spec  The arguments on the command line for this argument.
-   /// @param[in]  dest      The object that handles the type-specific stuff.<br>
-   ///                       Use the celma::prog_args::destination() template
-   ///                       functions to obtain the correct object.
-   /// @param[in]  desc      The description of this argument.
-   /// @return  The object managing this argument, may be used to apply further
-   ///          settings.
+   /// @param[in]  arg_spec
+   ///    The arguments on the command line for this argument.
+   /// @param[in]  dest
+   ///    The object that handles the type-specific stuff.<br>
+   ///    Use the celma::prog_args::destination() template functions to obtain
+   ///    the correct object.
+   /// @param[in]  desc 
+   ///    The description of this argument.
+   /// @param[in]  desc_ext
+   ///    Optional extended description for the argument that is printed with
+   ///    the argument help, after the normal description.
+   /// @return
+   ///    The object managing this argument, may be used to apply further
+   ///    settings.
+   /// @since  x.y.z, 20.10.2020
+   ///    (added parameter \a desc_ext)
    /// @since  0.16.0, 09.11.2017
    detail::TypedArgBase* addArgument( const std::string& arg_spec,
-                                      detail::TypedArgBase* dest,
-                                      const std::string& desc);
+      detail::TypedArgBase* dest, const std::string& desc,
+      const char* desc_ext = nullptr);
 
    /// Adds a sub-group.
    ///
@@ -491,9 +500,9 @@ public:
    ///    settings (normally not necessary).
    /// @since  0.10, 22.12.2016
    detail::TypedArgBase* addHelpArgument( const std::string& arg_spec,
-                                          const std::string& desc,
-                                          IUsageText* txt1 = nullptr,
-                                          IUsageText* txt2 = nullptr);
+      const std::string& desc,
+      IUsageText* txt1 = nullptr,
+      IUsageText* txt2 = nullptr);
 
    /// Adds an argument that takes the path/filename of an argument file as
    /// parameter.
@@ -926,15 +935,25 @@ private:
    void iterateArguments( detail::ArgListParser& alp) noexcept( false);
 
    /// Standard procedure for adding an argument handling object.
-   /// @param[in]  ah_obj  Pointer to the object that handles the argument.
-   /// @param[in]  key     The argument key: short and/or long argument.
-   /// @param[in]  desc    The description of the argument.
+   ///
+   /// @param[in]  ah_obj
+   ///    Pointer to the object that handles the argument.
+   /// @param[in]  key
+   ///    The argument key: short and/or long argument.
+   /// @param[in]  desc
+   ///    The description of the argument.
+   /// @param[in]  desc_ext
+   ///    Optional extended argument description that is printed with the
+   ///    "argument help".
    /// @return  Pointer to the passed argument handling object.
-   /// @since  0.15.0, 13.07.2017  (take ArgumentKey instead of string)
+   /// @since  x.y.z, 20.10.2020
+   ///    ()added parameter \a desc_ext)
+   /// @since  0.15.0, 13.07.2017
+   ///    (take ArgumentKey instead of string)
    /// @since  0.2, 10.04.2016
    detail::TypedArgBase* internAddArgument( detail::TypedArgBase* ah_obj,
-                                            const detail::ArgumentKey& key,
-                                            const std::string& desc);
+      const detail::ArgumentKey& key, const std::string& desc,
+      const char* desc_ext = nullptr);
 
    /// Checks each argument in the list if it is a valid/known argument.
    /// If the argument specification in the list does not match the original
@@ -1091,12 +1110,11 @@ private:
 
 inline detail::TypedArgBase*
    Handler::addArgument( const std::string& arg_spec,
-                         detail::TypedArgBase* dest,
-                         const std::string& desc)
+      detail::TypedArgBase* dest, const std::string& desc, const char* desc_ext)
 {
    const detail::ArgumentKey  key( arg_spec);
    dest->setKey( key);
-   return internAddArgument( dest, key, desc);
+   return internAddArgument( dest, key, desc, desc_ext);
 } // Handler::addArgument
 
 
