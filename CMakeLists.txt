@@ -2,7 +2,7 @@
 ##
 ##    ####   ######  #       #    #   ####
 ##   #    #  #       #       ##  ##  #    #
-##   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
+##   #       ###     #       # ## #  ######    (C) 2016-2023 Rene Eng
 ##   #    #  #       #       #    #  #    #        LGPL
 ##    ####   ######  ######  #    #  #    #
 ##
@@ -16,7 +16,9 @@ set( MINORVERSION    47 )
 set( RELEASE_VERSION 0 )
 set( PATCHLEVEL      0 )
 
-if ( CPP_VERSION STREQUAL "20" )
+if ( CPP_VERSION STREQUAL "23" )
+   set( CMAKE_CXX_STANDARD 23 )
+elseif ( CPP_VERSION STREQUAL "20" )
    set( CMAKE_CXX_STANDARD 20 )
 else()
    set( CMAKE_CXX_STANDARD 17 )

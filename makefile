@@ -3,7 +3,7 @@ PATH := $(shell pwd)/scripts:$(PATH)
 CPUS := $(shell lscpu -p | fgrep -v '\#' | wc -l)
 
 
-all:	debug release release-dbg debug-20 release-20
+all:	debug release release-dbg debug-20 release-20 debug-23
 
 debug:
 	+if [ ! -d build/debug ]; then \
@@ -70,6 +70,20 @@ release-dbg:
 	   cd -; \
 	fi; \
 	cd build/release-dbg; \
+	make -j${CPUS}
+
+debug-23:
+	+if [ ! -d build/debug-23 ]; then \
+	   mkdir -p build/debug-23; \
+	   cd build/debug-23; \
+	   cmake -DCMAKE_INSTALL_PREFIX=${PWD} \
+	         -DBOOST_VERSION=${BOOST_VERSION} \
+	         -DCMAKE_BUILD_TYPE=Debug \
+	         -DCPP_VERSION=23 \
+	         ../..; \
+	   cd -; \
+	fi; \
+	cd build/debug-23; \
 	make -j${CPUS}
 
 analyze:

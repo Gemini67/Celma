@@ -46,6 +46,8 @@ get_directory_property( indirect_access_sources DIRECTORY ./indirect_access
    DEFINITION indirect_access_sources
 )
 
+add_subdirectory( interface )
+
 set( celma_lib_sources
    ${appl_sources}
    ${common_sources}
