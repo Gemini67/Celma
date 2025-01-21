@@ -101,7 +101,7 @@ class TypedArgBase
 {
 public:
    /// List of possible settings if a value is needed for an argument:
-   enum class ValueMode
+   enum class ValueMode : uint8_t
    {
       none,       //!< The argument does not accept a value.<br>
                   //!< This is the default for boolean arguments.

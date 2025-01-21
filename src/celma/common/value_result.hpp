@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of template class celma::common::ValueResult.
 
 
-#ifndef CELMA_COMMON_VALUE_RESULT_HPP
-#define CELMA_COMMON_VALUE_RESULT_HPP
+#pragma once
 
 
 #include <string>
 #include <system_error>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Use this template to solve the following dilemma:
@@ -42,20 +41,20 @@ namespace celma { namespace common {
 /// The object can be checked in boolean expressions to determine if an error
 /// was returned or a value, afterwards the error information or the value can
 /// be retrieved from the object.
-/// @tparam  T  The type of the value that is returned when the function was
+/// @tparam  T  Type of the value that is returned when the function was
 ///             successful.
 /// @since 0.10, 01.12.2016
 template< typename T> class ValueResult
 {
 public:
    /// Constructor for the success case. Stores the value to return.
-   /// @param[in]  success_result  The value to return.
+   /// @param[in]  success_result  Value to return.
    /// @since 0.10, 01.12.2016
    explicit ValueResult( const T& success_result);
 
    /// Constructor for the error/failure case. Stores the error information to
    /// return.
-   /// @param[in]  error  The error information to return.
+   /// @param[in]  error  Error information to return.
    /// @since 0.10, 01.12.2016
    explicit ValueResult( const std::error_code& error);
 
@@ -78,18 +77,18 @@ public:
    /// If the function failed, i.e. this object actually contains the error 
    /// information, the value returned here will be a default-initialised object
    /// of type \c T.
-   /// @return  The success value as provided when the object was created.
+   /// @return  Success value as provided when the object was created.
    /// @since 0.10, 01.12.2016
-   const T& value() const;
+   [[nodiscard]] const T& value() const;
 
    /// Returns the error information as set by a failed function call.<br>
    /// If the function was successful, i.e. this object actually contains the
    /// success value, the value returned here will a default-initialised error
    /// object.
-   /// @return  The error information as provided by the failed function call
-   ///          when the object was created.
+   /// @return  Error information as provided by the failed function call when
+   ///          the object was created.
    /// @since 0.10, 01.12.2016
-   const std::error_code& getError() const;
+   [[nodiscard]] const std::error_code& getError() const;
 
 private:
    // Theoretically, these two values could be handled in a union, but the
@@ -141,12 +140,8 @@ template< typename T> const std::error_code& ValueResult< T>::getError() const
 } // ValueResult< T>::getError
 
 
-} // namespace common
-} // namespace celma
+} // namespace celma::common
 
 
-#endif   // CELMA_COMMON_VALUE_RESULT_HPP
-
-
-// =========================  END OF value_result.hpp  =========================
+// =====  END OF value_result.hpp  =====
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,11 +16,10 @@
 /// celma::common::RelOpsFromCompare<>.
 
 
-#ifndef CELMA_COMMON_COMPARABLE_HPP
-#define CELMA_COMMON_COMPARABLE_HPP
+#pragma once
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Helper class that provides all relational comparison operators for a class
@@ -30,7 +29,7 @@ namespace celma { namespace common {
 /// If your class provides a compare method instead of a less-than operator, use
 /// celma::common::RelOpsFromCompare<> instead.
 ///
-/// @tparam  T  The type of the class to provide the relational operators for.
+/// @tparam  T  Type of the class to provide the relational operators for.
 /// @since  1.31.0, 14.10.201
 ///    (moved here)
 /// @since  1.11.0, 24.08.2018
@@ -39,7 +38,7 @@ template< typename T> class RelOpsFromLess
 public:
    /// Less-equal comparison operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is less than or equal to \a other.
    /// @since  1.11.0, 24.08.2018
    bool operator <=( const T& other) const
@@ -50,7 +49,7 @@ public:
 
    /// Equality comparison operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is equal to \a other.
    /// @since  1.11.0, 24.08.2018
    bool operator ==( const T& other) const
@@ -61,7 +60,7 @@ public:
 
    /// Not-equal comparison operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is not equal to \a other.
    /// @since  1.11.0, 24.08.2018
    bool operator !=( const T& other) const
@@ -72,7 +71,7 @@ public:
 
    /// Greater-equal comparison operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is greater than or equal to \a other.
    /// @since  1.11.0, 24.08.2018
    bool operator >=( const T& other) const
@@ -83,7 +82,7 @@ public:
 
    /// Greater-than comparison operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is greater than the \a other object.
    /// @since  1.11.0, 24.08.2018
    bool operator >( const T& other) const
@@ -103,7 +102,7 @@ public:
 /// If your class provides a less-than operator instead of a compare method, use
 /// celma::common::RelOpsFromLess<> instead.
 ///
-/// @tparam  T  The type of the class to provide relational operator for.
+/// @tparam  T  Type of the class to provide relational operator for.
 /// @since  1.31.0, 14.10.201
 ///    (moved here)
 /// @since  1.22.0, 27.03.2019
@@ -112,7 +111,7 @@ template< typename T> class RelOpsFromCompare
 public:
    /// Less-than operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is less-than \a other.
    /// @since  1.22.0, 27.03.2019
    bool operator <( const T& other) const
@@ -123,7 +122,7 @@ public:
  
    /// Less-equal operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is less-than or equal to \a other.
    /// @since  1.22.0, 27.03.2019
    bool operator <=( const T& other) const
@@ -134,7 +133,7 @@ public:
  
    /// Equality operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is equal to \a other.
    /// @since  1.22.0, 27.03.2019
    bool operator ==( const T& other) const
@@ -145,7 +144,7 @@ public:
  
    /// Greater-equal operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is greater-than or equal to \a other.
    /// @since  1.22.0, 27.03.2019
    bool operator >=( const T& other) const
@@ -156,7 +155,7 @@ public:
  
    /// Greater operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is greater than \a other.
    /// @since  1.22.0, 27.03.2019
    bool operator >( const T& other) const
@@ -167,7 +166,7 @@ public:
  
    /// Not-equal operator.
    ///
-   /// @param[in]  other  The other object to compare against.
+   /// @param[in]  other  Other object to compare against.
    /// @return  \c true if this is different from \a other.
    /// @since  1.22.0, 27.03.2019
    bool operator !=( const T& other) const
@@ -179,11 +178,7 @@ public:
 }; // RelOpsFromCompare< T>
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_COMPARABLE_HPP
+} // namespace celma::common
 
 
 // =====  END OF comparable.hpp  =====

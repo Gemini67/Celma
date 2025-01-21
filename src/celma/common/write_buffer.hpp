@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of template class celma::common::WriteBuffer<>.
 
 
-#ifndef CELMA_COMMON_WRITE_BUFFER_HPP
-#define CELMA_COMMON_WRITE_BUFFER_HPP
+#pragma once
 
 
 #include <cstddef>
@@ -25,7 +24,7 @@
 #include <stdexcept>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 // Class EmptyWritePolicy
@@ -58,7 +57,7 @@ public:
    ///
    /// @return  0.
    /// @since  1.20.0, 25.01.2019
-   size_t numAppendCalled() const
+   [[nodiscard]] size_t numAppendCalled() const
    {
       return 0;
    } // EmptyWritePolicy::numAppendCalled
@@ -67,7 +66,7 @@ public:
    ///
    /// @return  0.
    /// @since  1.20.0, 25.01.2019
-   size_t bytesAppended() const
+   [[nodiscard]] size_t bytesAppended() const
    {
       return 0;
    } // EmptyWritePolicy::bytesAppended
@@ -76,7 +75,7 @@ public:
    ///
    /// @return  0.
    /// @since  1.20.0, 25.01.2019
-   size_t numFlushCalled() const
+   [[nodiscard]] size_t numFlushCalled() const
    {
       return 0;
    } // EmptyWritePolicy::numFlushCalled
@@ -85,7 +84,7 @@ public:
    ///
    /// @return  0.
    /// @since  1.20.0, 25.01.2019
-   size_t bytesFlushed() const
+   [[nodiscard]] size_t bytesFlushed() const
    {
       return 0;
    } // EmptyWritePolicy::bytesFlushed
@@ -133,7 +132,7 @@ public:
    ///    Number of times that the append method was called in the class
    ///    WriteBuffer.
    /// @since  1.20.0, 04.01.2019
-   size_t numAppendCalled() const
+   [[nodiscard]] size_t numAppendCalled() const
    {
       return mNumAppendCalled;
    } // WriteCountPolicy::numAppendCalled
@@ -147,7 +146,7 @@ public:
    /// @return
    ///    Number of bytes passed to WriteBuffer::append().
    /// @since  1.20.0, 04.01.2019
-   size_t bytesAppended() const
+   [[nodiscard]] size_t bytesAppended() const
    {
       return mBytesAppended;
    } // WriteCountPolicy::bytesAppended
@@ -161,7 +160,7 @@ public:
    ///    Number of times that data was flushed, either from the internal
    ///    buffer or directly.
    /// @since  1.20.0, 04.01.2019
-   size_t numFlushCalled() const
+   [[nodiscard]] size_t numFlushCalled() const
    {
       return mNumFlushCalled;
    } // WriteCountPolicy::numFlushCalled
@@ -172,7 +171,7 @@ public:
    ///    Number of bytes written to the destination so far, either from the
    ///    internal buffer or directly.
    /// @since  1.20.0, 04.01.2019
-   size_t bytesFlushed() const
+   [[nodiscard]] size_t bytesFlushed() const
    {
       return mBytesFlushed;
    } // WriteCountPolicy::bytesFlushed
@@ -204,9 +203,9 @@ private:
 /// deleted, call flush() from the destructor of the derived class.
 ///
 /// @tparam  N
-///    The size of the buffer to use.
+///    Size of the buffer to use.
 /// @tparam  P
-///    The statistics policy to use by this class.<br>
+///    Statistics policy to use by this class.<br>
 ///    Default = EmptyWritePolicy, a policy that counts nothing.
 /// @since  1.20.0, 01.01.2019
 template< size_t N, typename P = EmptyWritePolicy> class WriteBuffer: public P
@@ -240,11 +239,11 @@ public:
    /// Does nothing when a length of 0 is passed.
    ///
    /// @tparam  T
-   ///    The type of the pointer to the data.
+   ///    Type of the pointer to the data.
    /// @param[in]  data
    ///    Pointer to the data to append to the buffer.
    /// @param[in]  len
-   ///    The length of the data block.
+   ///    Length of the data block.
    /// @since  1.20.0, 01.01.2019
    template< typename T> void append( const T* const data, size_t len) noexcept( false);
 
@@ -258,7 +257,7 @@ public:
    ///
    /// @return  Amount of data currently stored in the buffer.
    /// @since  1.20.0, 01.01.2019
-   size_t buffered() const;
+   [[nodiscard]] size_t buffered() const;
 
 protected:
    /// Called to actually write data to the destination.<br>
@@ -341,11 +340,7 @@ template< size_t N, typename P> size_t WriteBuffer< N, P>::buffered() const
 } // WriteBuffer< N, P>::buffered
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_WRITE_BUFFER_HPP
+} // namespace celma::common
 
 
 // =====  END OF write_buffer.hpp  =====

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -29,8 +29,7 @@
 /// - std::crend()
 
 
-#ifndef CELMA_CONTAINER_BITSET_ITERATOR_HPP
-#define CELMA_CONTAINER_BITSET_ITERATOR_HPP
+#pragma once
 
 
 #include "celma/container/detail/forward_bitset_iterator.hpp"
@@ -142,9 +141,6 @@ template< size_t N> celma::container::detail::ReverseBitsetIterator< N>
 
 
 } // namespace std
-
-
-#endif   // CELMA_CONTAINER_BITSET_ITERATOR_HPP
 
 
 // =====  END OF bitset_iterator.hpp  =====

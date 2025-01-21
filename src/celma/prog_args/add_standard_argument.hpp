@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2017 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of function celma::prog_args::addStandardArgument.
 
 
-#ifndef CELMA_PROG_ARGS_ADD_STANDARD_ARGUMENT_HPP
-#define CELMA_PROG_ARGS_ADD_STANDARD_ARGUMENT_HPP
+#pragma once
 
 
 #include "celma/prog_args/groups.hpp"
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
-namespace celma { namespace prog_args {
+namespace celma::prog_args {
 
 
 /// Adds a standard argument to the standard argument handler.
@@ -49,12 +48,8 @@ inline void addStandardArgument( const std::string& argString,
 } // addStandardArgument
 
 
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args
 
 
-#endif   // CELMA_PROG_ARGS_ADD_STANDARD_ARGUMENT_HPP
-
-
-// ====================  END OF add_standard_argument.hpp  ====================
+// =====  END OF add_standard_argument.hpp  =====
 

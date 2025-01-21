@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::filename::Creator.
 
 
-#ifndef CELMA_LOG_FILENAME_CREATOR_HPP
-#define CELMA_LOG_FILENAME_CREATOR_HPP
+#pragma once
 
 
 #include <string>
@@ -24,7 +23,7 @@
 #include "celma/log/filename/definition.hpp"
 
 
-namespace celma { namespace log { namespace filename {
+namespace celma::log::filename {
 
 
 // bring helper classes into the same namespace
@@ -279,12 +278,7 @@ inline Creator& pid( Creator& in)
 } // pid
 
 
-} // namespace filename
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILENAME_CREATOR_HPP
+} // namespace celma::log::filename
 
 
 // =====  END OF creator.hpp  =====

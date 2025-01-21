@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2018 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::formatting::Creator.
 
 
-#ifndef CELMA_LOG_FORMATTING_CREATOR_HPP
-#define CELMA_LOG_FORMATTING_CREATOR_HPP
+#pragma once
 
 
 #include <string>
@@ -24,7 +23,7 @@
 #include "celma/log/formatting/definition.hpp"
 
 
-namespace celma { namespace log { namespace formatting {
+namespace celma::log::formatting {
 
 
 // bring helper classes into the same namespace
@@ -377,12 +376,7 @@ inline Creator& time_us( Creator& in)
 } // time_us
 
 
-} // namespace formatting
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FORMATTING_CREATOR_HPP
+} // namespace celma::log::formatting
 
 
 // =====  END OF creator.hpp  =====

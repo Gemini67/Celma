@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,14 @@
 /// See documentation of class celma::log::formatting::Definition.
 
 
-#ifndef CELMA_LOG_FORMATTING_DEFINITION_HPP
-#define CELMA_LOG_FORMATTING_DEFINITION_HPP
+#pragma once
 
 
 #include <string>
 #include <vector>
 
 
-namespace celma { namespace log { namespace formatting {
+namespace celma::log::formatting {
 
 
 /// Use this class to create a log message format definition using stream
@@ -93,12 +92,7 @@ protected:
 }; // Definition
 
 
-} // namespace formatting
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FORMATTING_DEFINITION_HPP
+} // namespace celma::log::formatting
 
 
 // =====  END OF definition.hpp  =====

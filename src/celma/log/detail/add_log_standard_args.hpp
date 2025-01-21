@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,14 +15,13 @@
 /// See documentation of function celma::log::detail::addLogStandardArgs().
 
 
-#ifndef CELMA_LOG_DETAIL_ADD_LOG_STANDARD_ARGS_HPP
-#define CELMA_LOG_DETAIL_ADD_LOG_STANDARD_ARGS_HPP
+#pragma once
 
 
 #include "celma/prog_args/standard_arguments_group.hpp"
 
 
-namespace celma { namespace log { namespace detail {
+namespace celma::log::detail {
 
 
 /// Adds (standard) log arguments:
@@ -34,13 +33,8 @@ namespace celma { namespace log { namespace detail {
 void addLogStandardArgs( const char* std_grp_name = prog_args::StandardArgsGroup);
 
 
-} // namespace detail
-} // namespace log
-} // namespace celma
+} // namespace celma::log::detail
 
 
-#endif   // CELMA_LOG_DETAIL_ADD_LOG_STANDARD_ARGS_HPP
-
-
-// ====================  END OF add_log_standard_args.hpp  ====================
+// =====  END OF add_log_standard_args.hpp  =====
 

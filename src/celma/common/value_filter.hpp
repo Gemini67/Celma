@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of template class celma::common::ValueFilter<>.
 
 
-#ifndef CELMA_COMMON_VALUE_FILTER_HPP
-#define CELMA_COMMON_VALUE_FILTER_HPP
+#pragma once
 
 
 #include <iostream>
@@ -26,7 +25,7 @@
 #include "celma/common/type_name.hpp"
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Stores multiple filters and checks values against those filters.
@@ -46,7 +45,7 @@ namespace celma { namespace common {
 /// - two single value filters on the same level: always \c false
 /// - two inverted single value filters at top level: always \c true.
 ///
-/// @tparam  T  The type of the values to store the filters for.
+/// @tparam  T  Type of the values to store the filters for.
 /// @since  1.31.0, 07.10.2019
 template< typename T> class ValueFilter
 {
@@ -63,7 +62,7 @@ public:
    /// Adds a single value filter as top-level filter.
    ///
    /// @param[in]  value
-   ///    The value to check for.
+   ///    Value to check for.
    /// @param[in]  inverted
    ///    If set, the filter matches all values not equal to \a value.
    /// @since  1.31.0, 07.10.2019
@@ -72,7 +71,7 @@ public:
    /// Appends a single value filter to the last top-level filter.
    ///
    /// @param[in]  value
-   ///    The value to check for.
+   ///    Value to check for.
    /// @param[in]  inverted
    ///    If set, the filter matches all values not equal to \a value.
    /// @throw  std::runtime_error if no top-level filter was added before.
@@ -83,9 +82,9 @@ public:
    /// Adds a range filter as top-level filter.
    ///
    /// @param[in]  min_value
-   ///    The lower bound of the range to check for.
+   ///    Lower bound of the range to check for.
    /// @param[in]  max_value
-   ///    The upper bound of the range to check for.
+   ///    Upper bound of the range to check for.
    /// @param[in]  inverted
    ///    If set, the filter matches all values not within the range.
    /// @since  1.31.0, 07.10.2019
@@ -95,9 +94,9 @@ public:
    /// Appends a range filter to the last top-level filter.
    ///
    /// @param[in]  min_value
-   ///    The lower bound of the range to check for.
+   ///    Lower bound of the range to check for.
    /// @param[in]  max_value
-   ///    The upper bound of the range to check for.
+   ///    Upper bound of the range to check for.
    /// @param[in]  inverted
    ///    If set, the filter matches all values not within the range.
    /// @throw  \c runtime_error if no top-level filter was added before.
@@ -108,16 +107,16 @@ public:
    /// Adds a minimum filter as top-level filter.
    ///
    /// @param[in]  min_val
-   ///    The minimum value to check against, i.e. a value x must be greater
-   ///    than or equal to \a min_val.
+   ///    Minimum value to check against, i.e. a value x must be greater than or
+   ///    equal to \a min_val.
    /// @since  1.31.0, 07.10.2019
    void addMinimumFilter( const T& min_val);
 
    /// Appends a minimum filter to the last top-level filter.
    ///
    /// @param[in]  min_val
-   ///    The minimum value to check against, i.e. a value x must be greater
-   ///    than or equal to \a min_val.
+   ///    Minimum value to check against, i.e. a value x must be greater than or
+   ///    equal to \a min_val.
    /// @throw  std::runtime_error if no top-level filter was added before.
    /// @since  1.31.0, 07.10.2019
    void appendMinimumFilter( const T& min_val) noexcept( false);
@@ -125,7 +124,7 @@ public:
    /// Adds a maximum filter as top-level filter.
    ///
    /// @param[in]  max_val
-   ///    The maximum value to check against, i.e. a value x must be less than
+   ///    Maximum value to check against, i.e. a value x must be less than
    ///    \a max_val.
    /// @since  1.31.0, 07.10.2019
    void addMaximumFilter( const T& max_val);
@@ -133,7 +132,7 @@ public:
    /// Appends a maximum filter to the last top-level filter.
    ///
    /// @param[in]  max_val
-   ///    The maximum value to check against, i.e. a value x must be less than
+   ///    Maximum value to check against, i.e. a value x must be less than
    ///    \a max_val.
    /// @throw  std::runtime_error if no top-level filter was added before.
    /// @since  1.31.0, 07.10.2019
@@ -144,7 +143,7 @@ public:
    /// - If a top-level filter contains multiple filters, each of them must
    ///   match (and condition).
    ///
-   /// @param[in]  value  The value to check against the filters.
+   /// @param[in]  value  Value to check against the filters.
    /// @return  \c true if the value matched the filters as described above.
    /// @throw  std::runtime_error if filters are defined.
    /// @since  1.31.0, 07.10.2019
@@ -165,19 +164,19 @@ public:
    ///
    /// @return  \c true if the filter container is empty.
    /// @since  1.31.0, 18.10.2019
-   bool empty() const;
+   [[nodiscard]] bool empty() const;
 
    /// Returns the number of top-level filters stored internally.
    ///
    /// @return   Number of top-level filters stored internally.
    /// @since  1.31.0, 18.10.2019
-   size_t size() const;
+   [[nodiscard]] size_t size() const;
 
    /// Returns a string with the list of filters.
    ///
    /// @return  String with the list of filters.
    /// @since  1.31.0, 18.10.2019
-   std::string str() const;
+   [[nodiscard]] std::string str() const;
 
 private:
    /// The type of the top-level filter container.
@@ -316,13 +315,13 @@ template< typename T> std::string ValueFilter< T>::str() const
 
 /// Insertion operator for value filter objects.
 ///
-/// @tparam  T  The type of the values for which the filters are defined.
+/// @tparam  T  Type of the values for which the filters are defined.
 /// @param[in]  os
-///    The stream to write into.
+///    Stream to write into.
 /// @param[in]  vf
-///    The object to print the value filters of.
+///    Object to print the value filters of.
 /// @return
-///    The stream as passed in.
+///    Stream as passed in.
 /// @since  1.31.0, 18.10.2019
 template< typename T>
    std::ostream& operator <<( std::ostream& os, const ValueFilter< T>& vf)
@@ -331,12 +330,15 @@ template< typename T>
 } // operator <<
 
 
-} // namespace common
+} // namespace celma::common
+
+
+namespace celma {
 
 
 /// Specialisation of type<> for type 'celma::common::ValueFilter<>'.
 ///
-/// @tparam  T  The type of the values for which filters may be stored.
+/// @tparam  T  Type of the values for which filters may be stored.
 /// @since  1.31.0, 17.10.2019
 template< typename T> class type< common::ValueFilter< T>>
 {
@@ -359,9 +361,6 @@ public:
 
 
 } // namespace celma
-
-
-#endif   // CELMA_COMMON_VALUE_FILTER_HPP
 
 
 // =====  END OF value_filter.hpp  =====

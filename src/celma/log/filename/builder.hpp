@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::filename::Builder.
 
 
-#ifndef CELMA_LOG_FILENAME_BUILDER_HPP
-#define CELMA_LOG_FILENAME_BUILDER_HPP
+#pragma once
 
 
 #include <ctime>
@@ -26,7 +25,7 @@
 #include "celma/log/detail/i_format_stream.hpp"
 
 
-namespace celma { namespace log {
+namespace celma::log {
 
 namespace detail {
 class LogMsg;
@@ -112,11 +111,7 @@ private:
 
 
 } // namespace filename
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILENAME_BUILDER_HPP
+} // namespace celma::log
 
 
 // =====  END OF builder.hpp  =====
