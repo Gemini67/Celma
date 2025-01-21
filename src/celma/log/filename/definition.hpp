@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2017-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2017-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::log::filename::Definition.
 
 
-#ifndef CELMA_LOG_FILENAME_DEFINITION_HPP
-#define CELMA_LOG_FILENAME_DEFINITION_HPP
+#pragma once
 
 
 #include <algorithm>
@@ -24,7 +23,7 @@
 #include <vector>
 
 
-namespace celma { namespace log { namespace filename {
+namespace celma::log::filename {
 
 
 /// Stores the definition of the format of a log filename.
@@ -57,20 +56,20 @@ public:
    ///
    /// @return  \c true if the definition includes a (generation) number.
    /// @since  1.0.0, 20.12.2017
-   bool hasGenerationNbr() const;
+   [[nodiscard]] bool hasGenerationNbr() const;
 
    /// Returns if this file name definition includes a date field.
    ///
    /// @return  \c true if the definition includes a date field.
    /// @since  1.0.0, 21.12.2017
-   bool hasDateField() const;
+   [[nodiscard]] bool hasDateField() const;
 
    /// Returns if the current filename definition is empty, i.e. contains no
    /// parts yet.
    ///
    /// @return  \c true if the current definition is (still) empty.
    /// @since  1.25.0, 03.05.2019
-   bool empty() const;
+   [[nodiscard]] bool empty() const;
 
 protected:
    friend class Creator;
@@ -127,12 +126,7 @@ inline bool Definition::empty() const
 } // Definition::empty
 
 
-} // namespace filename
-} // namespace log
-} // namespace celma
-
-
-#endif   // CELMA_LOG_FILENAME_DEFINITION_HPP
+} // namespace celma::log::filename
 
 
 // =====  END OF definition.hpp  =====

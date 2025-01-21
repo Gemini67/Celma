@@ -121,3 +121,12 @@ Fragen:
 - Oder reicht einer, und es wird eine andere Moeglichkeit geboten, mehrere
   Format-Handler zu kombinieren?
 
+
+
+Handler:
+Constraints mit dem Lambda-Trick erweitern: Pointer zu Contraint-Container
+mitgeben.
+
+
+Constraint:
+Value(s) muessen in Wortliste vorhanden sein.

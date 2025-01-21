@@ -143,6 +143,11 @@ public:
    /// @since  1.34.1, 14.01.2020
    int compareValue( const TypedArgBase* arg) const override;
 
+   void setHasValue()
+   {
+      mHasValueSet = true;
+   }
+
 protected:
    /// Used for printing an argument and its destination variable.
    ///

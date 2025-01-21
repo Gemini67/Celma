@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2019-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,23 +17,22 @@
 /// celma::common::bounds_range()<>.
 
 
-#ifndef CELMA_COMMON_BOUND_RANGE_HPP
-#define CELMA_COMMON_BOUND_RANGE_HPP
+#pragma once
 
 
 #include <utility>
 
 
-namespace celma { namespace common {
+namespace celma::common {
 
 
 /// Helper class to use a range-based for loop with the results of an
 /// equal_range() search on the container.
 ///
 /// @tparam  C
-///    The type of the container to search in.
+///    Type of the container to search in.
 /// @tparam  T
-///    The type of the (key) values in the container.
+///    Type of the (key) values in the container.
 ///
 /// @since  1.29.0, 22.06.2019
 template< typename C, typename T> class BoundsRangeOne
@@ -43,9 +42,9 @@ public:
    /// after-end of the equal range for the given value.
    ///
    /// @param[in]  container
-   ///    The container to search in.
+   ///    Container to search in.
    /// @param[in]  value
-   ///    The value to search for.
+   ///    Value to search for.
    /// @since  1.29.0, 22.06.2019
    BoundsRangeOne( const C& container, const T& value):
       mEqualRange( container.equal_range( value))
@@ -83,9 +82,9 @@ private:
 /// a lower and upper bound in the container.
 ///
 /// @tparam  C
-///    The type of the container to search in.
+///    Type of the container to search in.
 /// @tparam  T
-///    The type of the (key) values in the container.
+///    Type of the (key) values in the container.
 ///
 /// @since  1.29.0, 22.06.2019
 template< typename C, typename T> class BoundsRangeTwo
@@ -98,11 +97,11 @@ public:
    /// constructor are both included in the resulting range.
    ///
    /// @param[in]  container
-   ///    The container to search in.
+   ///    Container to search in.
    /// @param[in]  lower
-   ///    The lower bound of the range to search.
+   ///    Lower bound of the range to search.
    /// @param[in]  upper
-   ///    The upper bound of the range to search.
+   ///    Upper bound of the range to search.
    /// @since  1.29.0, 23.06.2019
    BoundsRangeTwo( const C& container, const T& lower, const T& upper):
       mLower( container.lower_bound( lower)),
@@ -148,13 +147,13 @@ private:
 ///    <pre>for (auto it : bounds_range( my_container, "New York"))</pre>
 ///
 /// @tparam  C
-///    The type of the container to search in.
+///    Type of the container to search in.
 /// @tparam  T
-///    The type of the (key) values in the container.
+///    Type of the (key) values in the container.
 /// @param[in]  container
-///    The container to search in.
+///    Container to search in.
 /// @param[in]  value
-///    The (key) value to search for.
+///    (Key) Value to search for.
 /// @return
 ///    Object that provides the begin() and end() methods needed for the range
 ///    based for loop.
@@ -170,15 +169,15 @@ template< typename C, typename T>
 ///    <pre>for (auto it : bounds_range( my_container, "Boston", "New York"))</pre>
 /// 
 /// @tparam  C
-///    The type of the container to search in.
+///    Type of the container to search in.
 /// @tparam  T
-///    The type of the (key) values in the container.
+///    Type of the (key) values in the container.
 /// @param[in]  container
-///    The container to search in.
+///    Container to search in.
 /// @param[in]  lower
-///    The lower bound value to search for.
+///    Lower bound value to search for.
 /// @param[in]  upper
-///    The upper bound value to search for.
+///    Upper bound value to search for.
 /// @return
 ///    Object that provides the begin() and end() methods needed for the range
 ///    based for loop.
@@ -191,11 +190,7 @@ template< typename C, typename T>
 } // bounds_range
 
 
-} // namespace common
-} // namespace celma
-
-
-#endif   // CELMA_COMMON_BOUND_RANGE_HPP
+} // namespace celma::common
 
 
 // =====  END OF bounds_range.hpp  =====

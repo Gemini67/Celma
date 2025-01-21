@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2018-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2018-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,8 +15,7 @@
 /// See documentation of class celma::container::detail::BitsetIteratorBase.
 
 
-#ifndef CELMA_CONTAINER_BITSET_DETAIL_ITERATOR_BASE_HPP
-#define CELMA_CONTAINER_BITSET_DETAIL_ITERATOR_BASE_HPP
+#pragma once
 
 
 #include <bitset>
@@ -29,7 +28,7 @@ namespace celma::container::detail {
 
 /// Base class for bitset iterator classes.
 ///
-/// @tparam  N  The size of the bitset.
+/// @tparam  N  Size of the bitset.
 /// @since  1.7.0, 17.07.2018
 template< size_t N> class BitsetIteratorBase
 {
@@ -42,7 +41,7 @@ public:
    /// Equality comparison operator.
    ///
    /// @param[in]  other
-   ///    The other object to compare against.
+   ///    Other object to compare against.
    /// @return
    ///    \c true if this and the other object refer to the same bitset and to
    ///    the same position in the bitset.
@@ -53,7 +52,7 @@ public:
    /// Difference comparison operator.
    ///
    /// @param[in]  other
-   ///    The other object to compare against.
+   ///    Other object to compare against.
    /// @return
    ///    \c true if this and the other object refer to different bitsets or to
    ///    different positions in the same bitset.
@@ -67,7 +66,7 @@ public:
    /// Dereference operator. Returns the current index of a bit that is set in
    /// the bitset.
    ///
-   /// @return  The index of the current bit that is set.
+   /// @return  Index of the current bit that is set.
    /// @since  1.7.0, 18.07.2018
    size_t operator *() const;
 
@@ -75,7 +74,7 @@ protected:
    /// Constructor with meaningful data.
    ///
    /// @param[in]  bs
-   ///    The bitset to iterate over.
+   ///    Bitset to iterate over.
    /// @param[in]  at_end
    ///    Set this flag to true to initialise an 'end' iterator.
    /// @since
@@ -173,9 +172,6 @@ template< size_t N> void BitsetIteratorBase< N>::findPrev()
 
 
 } // namespace celma::container::detail
-
-
-#endif   // CELMA_CONTAINER_BITSET_DETAIL_ITERATOR_BASE_HPP
 
 
 // =====  END OF bitset_iterator_base.hpp  =====

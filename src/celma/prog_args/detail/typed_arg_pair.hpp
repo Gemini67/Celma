@@ -39,7 +39,8 @@ namespace celma::prog_args::detail {
 ///    1.5.0, 20.06.2018  (derived from TypedArg<> instead of TypedArgBase).
 /// @since
 ///    0.2, 10.04.2016
-template< typename T1, typename T2> class TypedArgPair final : public TypedArg< T1>
+template< typename T1, typename T2> class TypedArgPair final :
+   public TypedArg< T1>
 {
 public:
    /// Constructor.
@@ -151,7 +152,14 @@ template< typename T1, typename T2>
 template< typename T1, typename T2>
    void TypedArgPair< T1, T2>::assign( const std::string& value, bool inverted)
 {
-   TypedArg< T1>::assign( value, inverted);
+   if (value.empty()
+       && (TypedArg< T1>::valueMode() == TypedArgBase::ValueMode::optional))
+   {
+//      this->setHasValue();
+   } else
+   {
+      TypedArg< T1>::assign( value, inverted);
+   } // end if
    mDestVar2 = mValue2;
 } // TypedArgPair< T1, T2>::assign
 

@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2021 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -16,8 +16,7 @@
 /// celma::common::ScopedFlag<>.
 
 
-#ifndef CELMA_COMMON_SCOPED_VALUE_HPP
-#define CELMA_COMMON_SCOPED_VALUE_HPP
+#pragma once
 
 
 namespace celma::common {
@@ -123,9 +122,6 @@ private:
 
 
 } // namespace celma::common
-
-
-#endif   // CELMA_COMMON_SCOPED_VALUE_HPP
 
 
 // =====  END OF scoped_value.hpp  =====
