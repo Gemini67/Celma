@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2023-2024 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2023-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -74,6 +74,90 @@ BOOST_AUTO_TEST_CASE( basics)
    std::cout << "value[ 2]  = " << my_number.element( 2) << std::endl;
 
 } // basics
+
+
+
+/// 
+/// @since
+///    x.y.z, 21.01.2025
+BOOST_AUTO_TEST_CASE( comparison)
+{
+
+   BOOST_REQUIRE( BigInt( 1U) == BigInt( 1U));
+   BOOST_REQUIRE( BigInt( std::numeric_limits< uint64_t>::max())
+      == BigInt( std::numeric_limits< uint64_t>::max()));
+
+   BOOST_REQUIRE( BigInt( 2U) > BigInt( 1U));
+   BOOST_REQUIRE( BigInt( 1U) < BigInt( 2U));
+
+   BigInt  lhs( "12345678901234567890");
+   BigInt  rhs( lhs);
+
+   BOOST_REQUIRE( lhs == rhs);
+
+   ++lhs;
+   BOOST_REQUIRE( !(lhs == rhs));
+   BOOST_REQUIRE( lhs > rhs);
+   BOOST_REQUIRE( lhs >= rhs);
+
+} // comparison
+
+
+
+/// 
+/// @since
+///    x.y.z, 29.12.2024
+BOOST_AUTO_TEST_CASE( addition)
+{
+
+   BigInt  bi( 2'000'000'000UL);
+   BigInt  value( bi);
+
+   value += bi;
+   BOOST_REQUIRE_EQUAL( value, 4'000'000'000UL);
+
+   value += bi;
+   BOOST_REQUIRE_EQUAL( value, 6'000'000'000UL);
+
+   value = std::numeric_limits< uint64_t>::max();
+   BOOST_REQUIRE_EQUAL( value, 18'446'744'073'709'551'615UL);
+
+   ++value;
+
+   BOOST_REQUIRE_EQUAL( value.toString( true), "18'446'744'073'709'551'616");
+
+} // addition
+
+
+
+/// 
+/// @since
+///    x.y.z, 29.12.2024
+BOOST_AUTO_TEST_CASE( subtraction)
+{
+
+   {
+      BigInt  value( std::numeric_limits< uint64_t>::max());
+
+      ++value;
+
+      BOOST_REQUIRE_EQUAL( value.toString( true), "18'446'744'073'709'551'616");
+
+      --value;
+
+      BOOST_REQUIRE_EQUAL( value, 18'446'744'073'709'551'615UL);
+   } // end scope
+
+   {
+      BigInt  v1( "26'430'668'800'000'000'000");
+      BigInt  v2( "16'106'127'360'000'000'000");
+
+      v1 -= v2;
+
+      BOOST_REQUIRE_EQUAL( v1.toString( true), "10'324'541'440'000'000'000");
+   } // end scope
+
+} // subtraction
 
 
 
@@ -169,6 +253,42 @@ BOOST_AUTO_TEST_CASE( multiplication)
 
 
 
+BOOST_AUTO_TEST_CASE( factorial)
+{
+
+   {
+      BigInt  big80( celma::common::factorial( 80));
+
+      BOOST_REQUIRE_EQUAL( big80.toString( true),
+         "71'569'457'046'263'802'294'811'533'723'186'532'165'584'657'342'365'"
+         "752'577'109'445'058'227'039'255'480'148'842'668'944'867'280'814'080'"
+         "000'000'000'000'000'000");
+   } // end scope
+
+   {
+      BigInt  big100( celma::common::factorial( 100));
+
+      BOOST_REQUIRE_EQUAL( big100.toString( true),
+         "93'326'215'443'944'152'681'699'238'856'266'700'490'715'968'264'381'"
+         "621'468'592'963'895'217'599'993'229'915'608'941'463'976'156'518'286'"
+         "253'697'920'827'223'758'251'185'210'916'864'000'000'000'000'000'000'"
+         "000'000");
+   } // end scope
+
+   {
+      BigInt  big101( celma::common::factorial( 101));
+
+      BOOST_REQUIRE_EQUAL( big101.toString( true),
+         "9'425'947'759'838'359'420'851'623'124'482'936'749'562'312'794'702'"
+         "543'768'327'889'353'416'977'599'316'221'476'503'087'861'591'808'346'"
+         "911'623'490'003'549'599'583'369'706'302'603'264'000'000'000'000'000'"
+         "000'000'000");
+   } // end scope
+
+} // factorial
+
+
+
 /// 
 /// @since  x.y.z, 18.08.2024
 BOOST_AUTO_TEST_CASE( big_multiplication)
@@ -223,6 +343,58 @@ BOOST_AUTO_TEST_CASE( division_32bit)
    } // end scope
 
 } // division_32bit
+
+
+
+/// 
+/// @since  x.y.z, 21.01.2025
+BOOST_AUTO_TEST_CASE( big_division)
+{
+
+   {
+      BigInt  big1( std::numeric_limits< uint64_t>::max());
+
+      BigInt  big2( big1);
+      big2 *= 12'345;
+      big2 /= big1;
+
+      BOOST_REQUIRE_EQUAL( static_cast< uint64_t>( big2), 12'345);
+   } // end scope
+
+   {
+      BigInt  big1( std::numeric_limits< uint64_t>::max());
+
+      BigInt  big2( big1);
+      big2 *= 123'456;
+
+      BigInt  remainder;
+      big2.divide( big1, &remainder);
+
+      BOOST_REQUIRE_EQUAL( static_cast< uint64_t>( big2), 123'456);
+      BOOST_REQUIRE_EQUAL( static_cast< uint64_t>( remainder), 0);
+   } // end scope
+
+   {
+      BigInt  big1( "1'000'000'000'000'000'000'000'000'000");
+      BigInt  big2( 30'000'000'000UL);
+      BigInt  remainder;
+
+      big1.divide( big2, &remainder);
+
+      BOOST_REQUIRE_EQUAL( big1.toString( true),
+         "33'333'333'333'333'333");
+      BOOST_REQUIRE_EQUAL( static_cast< uint64_t>( remainder), 10'000'000'000UL);
+   } // end scope
+
+   {
+      BigInt  big100( celma::common::factorial( 100));
+      BigInt  big101( celma::common::factorial( 101));
+
+      BigInt  big_div = big101 / big100;
+      BOOST_REQUIRE_EQUAL( static_cast< uint64_t>( big_div), 101);
+   } // end scope
+
+} // big_division
 
 
 
@@ -434,7 +606,7 @@ BOOST_AUTO_TEST_CASE( to_hex_string)
 
 
 
-/// 
+/// Convert numbers into hexadecimal format.
 /// @since  x.y.z, 18.08.2024
 BOOST_AUTO_TEST_CASE( to_hex_string_grouped)
 {
@@ -467,9 +639,8 @@ BOOST_AUTO_TEST_CASE( to_hex_string_grouped)
 
 
 
-/// 
-/// @since
-///    x.y.z, 12.08.2024
+/// Verify the calculation of soome factorials.
+/// @since  x.y.z, 12.08.2024
 BOOST_AUTO_TEST_CASE( factorial_square)
 {
 
@@ -522,20 +693,89 @@ BOOST_AUTO_TEST_CASE( factorial_square)
 
 
 
-/// 
+/// Check the power calculation.
 /// @since  x.y.z, 25.10.2024
 BOOST_AUTO_TEST_CASE( calc_power)
 {
 
-   BigInt       my_number( 2UL);
-   auto const   result = power( my_number, 1014);
-   std::string  result_string = result.toString( true);
+   {
+      BigInt      my_number( 2UL);
+      auto const  result = power( my_number, 1024);
 
+      BOOST_REQUIRE_EQUAL( result.toString( true),
+         "179'769'313'486'231'590'772'930'519'078'902'473'361'797'697'894'230'"
+         "657'273'430'081'157'732'675'805'500'963'132'708'477'322'407'536'021'"
+         "120'113'879'871'393'357'658'789'768'814'416'622'492'847'430'639'474'"
+         "124'377'767'893'424'865'485'276'302'219'601'246'094'119'453'082'952'"
+         "085'005'768'838'150'682'342'462'881'473'913'110'540'827'237'163'350'"
+         "510'684'586'298'239'947'245'938'479'716'304'835'356'329'624'224'137'"
+         "216");
+   } // end scope
 
-   std::cout << "power( 2, 1024) = " << result_string << std::endl;
+   {
+      BigInt       my_number( 317U);
+      auto const   result = power( my_number, 295);
 
+      BOOST_REQUIRE_EQUAL( result.toString( true),
+         "649'355'247'170'566'107'917'986'971'663'470'655'140'988'140'153'898'"
+         "034'879'413'178'966'633'911'142'623'399'569'152'547'665'149'428'500'"
+         "624'559'247'703'219'976'478'756'147'008'688'356'428'918'296'988'311'"
+         "723'204'260'487'988'618'895'094'124'727'648'816'535'470'032'699'613'"
+         "130'753'746'482'959'235'144'056'113'456'971'360'695'121'717'355'784'"
+         "978'405'468'062'599'283'144'851'612'044'333'242'867'358'235'087'173'"
+         "975'209'850'142'958'927'402'162'599'200'412'108'055'103'229'930'544'"
+         "235'866'476'840'118'591'382'745'513'772'118'247'407'093'086'297'272'"
+         "716'246'621'030'453'875'653'126'259'746'425'303'653'384'850'776'848'"
+         "964'876'557'681'037'875'537'150'272'363'641'849'452'377'673'025'519'"
+         "267'176'852'149'931'198'061'091'026'552'627'194'208'649'927'449'999'"
+         "745'781'382'668'900'428'301'053'339'702'792'921'890'674'908'719'008'"
+         "874'906'193'035'371'750'137'921'241'369'647'529'615'802'229'962'372'"
+         "737'796'958'002'264'822'229'244'964'096'954'878'927'485'782'504'059'"
+         "726'065'684'645'486'414'925'493");
+   } // end scope
 
 } // calc_power
+
+
+
+/// Test if the square root is calculated correctly.
+/// @since  x.y.z, 23.01.2025
+BOOST_AUTO_TEST_CASE( square_root)
+{
+
+   {
+      BigInt          big1( std::numeric_limits< uint64_t>::max());
+      const uint64_t  result
+         = static_cast< uint64_t>( std::numeric_limits< uint32_t>::max()) + 1;
+
+      ++big1;
+      BigInt  root( celma::common::sqrt( big1));
+      BOOST_REQUIRE_EQUAL( static_cast< uint64_t>( root), result);
+
+      // test if the result is still correct, even if the number is not a square
+      ++big1;
+      root = celma::common::sqrt( big1);
+      BOOST_REQUIRE_EQUAL( static_cast< uint64_t>( root), result);
+
+      ++big1;
+      root = celma::common::sqrt( big1);
+      BOOST_REQUIRE_EQUAL( static_cast< uint64_t>( root), result);
+   } // end scope
+
+   // square root of a really big number
+   {
+      BigInt  big1( celma::common::factorial( 101U));
+      BigInt  big_square( big1);
+
+
+      big_square *= big1;
+
+      BigInt  big_sqrt( celma::common::sqrt( big_square));
+
+      BOOST_REQUIRE( big1.compare( big_sqrt) == 0);
+   } // end scope
+
+} // square_root
 
 
 
