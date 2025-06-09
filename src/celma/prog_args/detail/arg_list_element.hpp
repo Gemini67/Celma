@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -15,15 +15,15 @@
 /// See documentation of class celma::prog_args::detail::ArgListElement.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_ARG_LIST_ELEMENT_HPP
-#define CELMA_PROG_ARGS_DETAIL_ARG_LIST_ELEMENT_HPP
+#pragma once
 
 
+#include <cstdint>
 #include <iosfwd>
 #include <string>
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Stores the properties of the next argument from the list:
@@ -43,7 +43,7 @@ class ArgListElement
 {
 public:
    /// Element types to be found/identified in an argument list:
-   enum class Type
+   enum class Type : uint8_t
    {
      singleCharArg,   //!< Single character argument.
      stringArg,       //!< String/long argument.
@@ -54,8 +54,8 @@ public:
 
    /// Returns the name/description of the given element type.
    ///
-   /// @param[in]  et  The type of the element to return the name of.
-   /// @return  The name of the element.
+   /// @param[in]  et  Type of the element to return the name of.
+   /// @returns  Name of the element.
    /// @since  1.23.1, 16.04.2019
    static const char* typeName( Type et);
 
@@ -76,57 +76,53 @@ public:
 
    /// Stores the data of a single argument character.
    ///
-   /// @param[in]  argi     The argument string index.
-   /// @param[in]  argp     The position of the argument character in the string.
-   /// @param[in]  argChar  The argument character.
+   /// @param[in]  argi     Argument string index.
+   /// @param[in]  argp     Position of the argument character in the string.
+   /// @param[in]  argChar  Argument character.
    /// @since  0.2, 09.04.2016
    void setArgChar( int argi, int argp, char argChar);
 
    /// Stores the data of a long argument.
    ///
-   /// @param[in]  argi     The argument string index.
-   /// @param[in]  argName  The long argument.
+   /// @param[in]  argi     Argument string index.
+   /// @param[in]  argName  Long argument.
    /// @since  0.2, 09.04.2016
    void setArgString( int argi, const std::string& argName);
 
    /// Stores a value.
    ///
-   /// @param[in]  argi   The argument string index.
-   /// @param[in]  value  The value (== the argument string).
+   /// @param[in]  argi   Argument string index.
+   /// @param[in]  value  Value (== the argument string).
    /// @since  0.2, 09.04.2016
    void setValue( int argi, const std::string& value);
 
    /// Stores the data of a control character.
    ///
-   /// @param[in]  argi      The argument string index.
-   /// @param[in]  argp      The position of the control character in the string.
-   /// @param[in]  ctrlChar  The control character.
+   /// @param[in]  argi      Argument string index.
+   /// @param[in]  argp      Position of the control character in the string.
+   /// @param[in]  ctrlChar  Control character.
    /// @since  0.2, 09.04.2016
    void setControl( int argi, int argp, char ctrlChar);
 
    /// Prints the name and value of the given element type.
    ///
-   /// @param[in]  os
-   ///    The stream to print to.
-   /// @param[in]  et
-   ///    The element type to print.
-   /// @return
-   ///    The stream as passed in.
-   /// @since
-   ///    1.23.1, 16.04.2019
+   /// @param[out]  os  Stream to print to.
+   /// @param[in]   et  Element type to print.
+   /// @returns  Stream as passed in.
+   /// @since  1.23.1, 16.04.2019
    friend std::ostream& operator <<( std::ostream& os, ArgListElement::Type et);
 
    /// Prints the contents of an argument list element.
    ///
-   /// @param[out]  os   The stream to write to.
-   /// @param[in]   ale  The object to dump the data of.
-   /// @return  The stream.
+   /// @param[out]  os   Stream to write to.
+   /// @param[in]   ale  Object to dump the data of.
+   /// @returns  Stream as passed in.
    /// @since  0.2, 09.04.2016
    friend std::ostream& operator <<( std::ostream& os,
       const ArgListElement& ale);
 
-   /// The index of the argument string in the list in which the current
-   /// argument was found.
+   /// Index of the argument string in the list in which the current argument
+   /// was found.
    int          mArgIndex = -1;
    /// For single argument characters: The position of the character.
    int          mArgCharPos = -1;
@@ -142,16 +138,7 @@ public:
 }; // ArgListElement
 
 
-// inlined methods
-// ===============
-
-
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_ARG_LIST_ELEMENT_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF arg_list_element.hpp  =====

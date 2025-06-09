@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -17,15 +17,14 @@
 /// - celma::prog_args::detail::ArgHandlerCallableValue.
 
 
-#ifndef CELMA_PROG_ARGS_DETAIL_ARG_HANDLER_CALLABLE_HPP
-#define CELMA_PROG_ARGS_DETAIL_ARG_HANDLER_CALLABLE_HPP
+#pragma once
 
 
 #include <functional>
 #include <string>
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 /// Type of the callables (functions, methods) that can be defined as argument
@@ -38,12 +37,7 @@ using ArgHandlerCallable = std::function< void( bool)>;
 using ArgHandlerCallableValue = std::function< void( const std::string&, bool)>;
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
-
-
-#endif   // CELMA_PROG_ARGS_DETAIL_ARG_HANDLER_CALLABLE_HPP
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF arg_handler_callable.hpp  =====

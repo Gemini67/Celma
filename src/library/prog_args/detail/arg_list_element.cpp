@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2019 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -23,16 +23,16 @@
 #include <iostream>
 
 
-namespace celma { namespace prog_args { namespace detail {
+namespace celma::prog_args::detail {
 
 
 
 /// Returns the name/description of the given element type.
 ///
-/// @param[in]  et  The type of the element to return the name of.
-/// @return  The name of the element.
+/// @param[in]  et  Type of the element to return the name of.
+/// @returns  Name of the element.
 /// @since  1.23.1, 16.04.2019
-/* static */ const char* ArgListElement::typeName( Type et)
+/* static */ const char* ArgListElement::typeName( const Type et)
 {
 
    switch (et)
@@ -51,11 +51,12 @@ namespace celma { namespace prog_args { namespace detail {
 
 /// Stores the data of a single argument character.
 ///
-/// @param[in]  argi     The argument string index.
-/// @param[in]  argp     The position of the argument character in the string.
-/// @param[in]  argChar  The argument character.
+/// @param[in]  argi     Argument string index.
+/// @param[in]  argp     Position of the argument character in the string.
+/// @param[in]  argChar  Argument character.
 /// @since  0.2, 09.04.2016
-void ArgListElement::setArgChar( int argi, int argp, char argChar)
+void ArgListElement::setArgChar( const int argi, const int argp,
+   const char argChar)
 {
 
    mArgIndex    = argi;
@@ -72,10 +73,10 @@ void ArgListElement::setArgChar( int argi, int argp, char argChar)
 
 /// Stores the data of a long argument.
 ///
-/// @param[in]  argi     The argument string index.
-/// @param[in]  argName  The long argument.
+/// @param[in]  argi     Argument string index.
+/// @param[in]  argName  Long argument.
 /// @since  0.2, 09.04.2016
-void ArgListElement::setArgString( int argi, const std::string& argName)
+void ArgListElement::setArgString( const int argi, const std::string& argName)
 {
 
    mArgIndex    = argi;
@@ -92,10 +93,10 @@ void ArgListElement::setArgString( int argi, const std::string& argName)
 
 /// Stores a value.
 ///
-/// @param[in]  argi   The argument string index.
-/// @param[in]  value  The value (== the argument string).
+/// @param[in]  argi   Argument string index.
+/// @param[in]  value  Value (== the argument string).
 /// @since  0.2, 09.04.2016
-void ArgListElement::setValue( int argi, const std::string& value)
+void ArgListElement::setValue( const int argi, const std::string& value)
 {
 
    mArgIndex    = argi;
@@ -112,11 +113,12 @@ void ArgListElement::setValue( int argi, const std::string& value)
 
 /// Stores the data of a control character.
 ///
-/// @param[in]  argi      The argument string index.
-/// @param[in]  argp      The position of the control character in the string.
-/// @param[in]  ctrlChar  The control character.
+/// @param[in]  argi      Argument string index.
+/// @param[in]  argp      Position of the control character in the string.
+/// @param[in]  ctrlChar  Control character.
 /// @since  0.2, 09.04.2016
-void ArgListElement::setControl( int argi, int argp, char ctrlChar)
+void ArgListElement::setControl( const int argi, const int argp,
+   const char ctrlChar)
 {
 
    mArgIndex    = argi;
@@ -133,15 +135,11 @@ void ArgListElement::setControl( int argi, int argp, char ctrlChar)
 
 /// Prints the name and value of the given element type.
 ///
-/// @param[in]  os
-///    The stream to print to.
-/// @param[in]  et
-///    The element type to print.
-/// @return
-///    The stream as passed in.
-/// @since
-///    1.23.1, 16.04.2019
-std::ostream& operator <<( std::ostream& os, ArgListElement::Type et)
+/// @param[out]  os  Stream to print to.
+/// @param[in]   et  Element type to print.
+/// @returns  Stream as passed in.
+/// @since  1.23.1, 16.04.2019
+std::ostream& operator <<( std::ostream& os, const ArgListElement::Type et)
 {
 
    return os << ArgListElement::typeName( et) << " (" << static_cast< int>( et)
@@ -152,9 +150,9 @@ std::ostream& operator <<( std::ostream& os, ArgListElement::Type et)
 
 /// Prints the contents of an argument list element.
 ///
-/// @param[out]  os   The stream to write to.
-/// @param[in]   ale  The object to dump the data of.
-/// @return  The stream.
+/// @param[out]  os   Stream to write to.
+/// @param[in]   ale  Object to dump the data of.
+/// @returns  Stream as passed in.
 /// @since  0.2, 09.04.2016
 std::ostream& operator <<( std::ostream& os, const ArgListElement& ale)
 {
@@ -188,9 +186,7 @@ std::ostream& operator <<( std::ostream& os, const ArgListElement& ale)
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF arg_list_element.cpp  =====

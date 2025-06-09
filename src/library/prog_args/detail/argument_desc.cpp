@@ -3,7 +3,7 @@
 **
 **    ####   ######  #       #    #   ####
 **   #    #  #       #       ##  ##  #    #
-**   #       ###     #       # ## #  ######    (C) 2016-2020 Rene Eng
+**   #       ###     #       # ## #  ######    (C) 2016-2025 Rene Eng
 **   #    #  #       #       #    #  #    #        LGPL
 **    ####   ######  ######  #    #  #    #
 **
@@ -19,7 +19,7 @@
 #include "celma/prog_args/detail/argument_desc.hpp"
 
 
-// STL includes
+// C+ Standard Library includes
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -32,15 +32,12 @@
 #include "celma/prog_args/detail/typed_arg_base.hpp"
 
 
-namespace celma { namespace prog_args { namespace detail {
-
-
-using std::string;
+namespace celma::prog_args::detail {
 
 
 
 /// Constructor.
-/// @param[in]  usage_params  The object that contains the parameters for
+/// @param[in]  usage_params  Object that contains the parameters for
 ///                           printing the usage.
 /// @since  1.1.0, 21.11.2017  (added paramater arg_desc_params)
 /// @since  0.2, 10.04.2016
@@ -56,12 +53,12 @@ ArgumentDesc::ArgumentDesc( shared_usage_params_t& usage_params):
 
 
 /// Adds an argument.
-/// @param[in]  arg_desc  The string with the description.
+/// @param[in]  arg_desc  String with the description.
 /// @param[in]  arg_obj   Pointer to the object that handles this argument.
 /// @since  1.1.0, 17.11.2017  (removed key parameter, object may not be NULL
 ///         anymore)
 /// @since  0.2, 10.04.2016
-void ArgumentDesc::addArgument( const string& arg_desc, TypedArgBase* arg_obj)
+void ArgumentDesc::addArgument( const std::string& arg_desc, TypedArgBase* arg_obj)
 {
 
    assert( arg_obj != nullptr);
@@ -94,7 +91,7 @@ void ArgumentDesc::setCaption( const char* mandatory, const char* optional)
 
 
 /// Specifies the line length to use when printing the usage.
-/// @param[in]  useLen  The new line length to use.<br>
+/// @param[in]  useLen  New line length to use.<br>
 ///                     The value must be in the range 60 <= useLen < 240.
 /// @since  0.2, 10.04.2016
 void ArgumentDesc::setLineLength( int useLen)
@@ -156,9 +153,9 @@ void ArgumentDesc::print( std::ostream& os) const
 
 
 /// Finally prints the arguments.
-/// @param[out]  os                The stream to write to.
-/// @param[in]   tb                The object used to format the description
-///                                of the parameters.
+/// @param[out]  os                Stream to write to.
+/// @param[in]   tb                Object used to format the description of
+///                                the parameters.
 /// @param[in]   printIsMandatory  Specifies if the mandatory (\c true) or
 ///                                non-mandatory (\c false) parameters should
 ///                                be printed now.
@@ -168,7 +165,7 @@ void ArgumentDesc::print( std::ostream& os) const
 ///                                description should be printed on the same
 ///                                line, \c false otherwise (printed on two
 ///                                lines).
-/// @param[in]   max_length        The maximum length of all arguments.
+/// @param[in]   max_length        Maximum length of all arguments.
 /// @since  0.2, 10.04.2016
 void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
    bool printIsMandatory, int* printed, bool sameLine, int max_length) const
@@ -252,12 +249,12 @@ void ArgumentDesc::printArguments( std::ostream& os, format::TextBlock& tb,
 /// Returns the description (usage) text for the given argument.
 ///
 /// @param[in]  arg_key
-///    The short and/or long argument to return the description for.
+///    Short and/or long argument to return the description for.
 /// @return
 ///    Either the description or an empty string.
 /// @since
 ///    1.14.0, 01.10.2018
-const string ArgumentDesc::getArgDesc( const ArgumentKey& arg_key) const
+const std::string ArgumentDesc::getArgDesc( const ArgumentKey& arg_key) const
 {
 
    for (auto const& entry : mArguments)
@@ -266,15 +263,15 @@ const string ArgumentDesc::getArgDesc( const ArgumentKey& arg_key) const
          return entry.mDescription;
    } // end for
 
-   return string();
+   return std::string();
 } // ArgumentDesc::getArgDesc
 
 
 
 /// Prints the contents of the storage to the specified stream.
-/// @param[out]  os  the stream to write to.
-/// @param[in]   ad  The object to dump the contents of the storage of.
-/// @return  The stream as passed as parameter.
+/// @param[out]  os  Stream to write to.
+/// @param[in]   ad  Object to dump the contents of the storage of.
+/// @return  Stream as passed in.
 /// @since  0.2, 10.04.2016
 std::ostream& operator <<( std::ostream& os, const ArgumentDesc& ad)
 {
@@ -319,9 +316,9 @@ bool ArgumentDesc::ArgDesc::doPrint( bool printIsMandatory, bool printHidden,
 
 /// Returns the key string of the argument with the specified contents.
 /// @param[in]  usage_contents  Contents of the key string to return.
-/// @return  The key string with the given contents.
+/// @return  Key string with the given contents.
 /// @since  1.1.0, 20.11.2017
-string ArgumentDesc::ArgDesc::key( UsageParams::Contents usage_contents) const
+std::string ArgumentDesc::ArgDesc::key( UsageParams::Contents usage_contents) const
 {
 
    if (usage_contents == UsageParams::Contents::all)
@@ -333,21 +330,19 @@ string ArgumentDesc::ArgDesc::key( UsageParams::Contents usage_contents) const
 
    if (usage_contents == UsageParams::Contents::shortOnly)
    {
-      string  result( "-");
+      std::string  result( "-");
       result.append( 1, mpArgObj->key().argChar());
       return result;
    } // end if
 
-   string  result( "--");
+   std::string  result( "--");
    result.append( mpArgObj->key().argString());
    return result;
 } // ArgumentDesc::ArgDesc::key
 
 
 
-} // namespace detail
-} // namespace prog_args
-} // namespace celma
+} // namespace celma::prog_args::detail
 
 
 // =====  END OF argument_desc.cpp  =====
